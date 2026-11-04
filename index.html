@@ -12,7 +12,7 @@
 <meta property="og:title" content="SMR Graphics · SMR Digital · SMR Plates">
 <meta property="og:description" content="Design, print, signage, clothing, social media, websites, apps and number plates. High quality, quick turnaround, great value.">
 <meta property="og:url" content="https://smrgraphics.co.uk/">
-<meta property="og:image" content="https://smrgraphics.co.uk/assets/og.jpg">
+<meta property="og:image" content="https://smrgraphics.co.uk/assets/og-share.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="apple-touch-icon" href="assets/icon.png">
 <link rel="icon" href="assets/icon.png">
@@ -45,7 +45,7 @@ h3{font-size:19px;font-weight:700}
 .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--mut)}
 .eyebrow::before{content:"";width:22px;height:2px;border-radius:2px;background:var(--grad)}
 .lede{color:var(--mut);font-size:17px;max-width:620px}
-section{position:relative;padding:84px 0}
+section{position:relative;padding:84px 0;scroll-margin-top:144px}
 .sec-head{display:grid;gap:14px;margin-bottom:38px}
 
 /* ---------- ambient background ---------- */
@@ -477,7 +477,7 @@ footer{border-top:1px solid var(--line);padding:46px 0 calc(110px + var(--safe-b
   footer{padding-bottom:50px}
 }
 @media (min-width:980px){
-  section{padding:120px 0}
+  section{padding:120px 0;scroll-margin-top:96px}
   .bar{height:76px}
   .bar .switch{display:flex}
   .sub-bar{display:none}
@@ -631,7 +631,7 @@ footer{border-top:1px solid var(--line);padding:46px 0 calc(110px + var(--safe-b
         <p class="lede">Social media management, content creation, websites and your own ordering app. Everything you need to win customers online, at genuinely affordable prices.</p>
         <div class="btn-row">
           <a class="btn primary" href="#" data-quote>Book a free chat <svg data-i="arrow"></svg></a>
-          <a class="btn ghost" href="#d-apps" data-scroll>Apps &amp; websites</a>
+          <a class="btn ghost" href="#d-work" data-scroll>Apps &amp; websites</a>
         </div>
         <div class="trust"><span><svg data-i="check"></svg>Setup to full management</span><span><svg data-i="check"></svg>Photo &amp; video</span><span><svg data-i="check"></svg>Affordable plans</span></div>
       </div>
@@ -1070,7 +1070,7 @@ function go(brand,{scroll=true,push=true}={}){
   try{localStorage.setItem('smr-brand',brand)}catch(e){}
 }
 function buildDrawer(){
-  const L={graphics:[['g-services','Services'],['g-contact','Get a quote']],digital:[['d-social','Social media'],['d-work','Our work'],['d-apps','Apps & websites'],['d-contact','Get a quote']],plates:[['p-insta','Instagram'],['p-types','Plate styles'],['p-contact','Get a quote']]}[current];
+  const L={graphics:[['g-services','Services'],['g-contact','Get a quote']],digital:[['d-social','Social media'],['d-work','Apps & websites'],['d-contact','Get a quote']],plates:[['p-insta','Instagram'],['p-types','Plate styles'],['p-contact','Get a quote']]}[current];
   const others=BRANDS.filter(b=>b!==current).map(b=>`<a data-go="${b}" style="color:var(--mut)">SMR ${b[0].toUpperCase()+b.slice(1)} →</a>`).join('');
   document.getElementById('drawer').innerHTML=L.map(([id,t])=>`<a href="#${id}" data-scroll>${t}</a>`).join('')+`<a href="https://www.instagram.com/${CONTACT.instagram[current]}/" target="_blank" rel="noopener">Instagram</a>`+others;
 }
