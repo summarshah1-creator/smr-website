@@ -133,7 +133,7 @@ body[data-brand="plates"] .btn.primary{color:#170f00}
 .stage-in{position:relative;flex:none;width:360px;height:400px;transform:scale(var(--sc,1));transform-origin:top center}
 .obj{position:absolute;--r:0deg;transform:rotate(var(--r));animation:bob 7s ease-in-out infinite;will-change:transform}
 @keyframes bob{0%,100%{transform:rotate(var(--r)) translateY(0)}50%{transform:rotate(calc(var(--r) - 1.5deg)) translateY(-9px)}}
-.o-banner{left:0;top:4px;width:118px;height:360px;display:flex;flex-direction:column;align-items:center;animation-duration:9s}
+.o-banner{left:0;top:40px;width:118px;height:auto;display:flex;flex-direction:column;align-items:center;animation-duration:9s}
 .bn-cap{width:100%;height:8px;border-radius:4px;background:linear-gradient(#f0f0f5,#8d8d99);position:relative;z-index:1}
 .bn-panel{flex:1;width:92%;margin-top:-2px;background:linear-gradient(180deg,#14142a,#0d0d1a 60%);border:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;align-items:center;padding:16px 10px 12px;text-align:center;overflow:hidden;position:relative;box-shadow:0 30px 50px rgba(0,0,0,.55)}
 .bn-panel::before{content:"";position:absolute;inset:auto -40% -30% -40%;height:60%;background:radial-gradient(circle,var(--glow),transparent 65%)}
@@ -462,6 +462,119 @@ footer{border-top:1px solid var(--line);padding:46px 0 calc(110px + var(--safe-b
 .rv.d1{transition-delay:.08s}.rv.d2{transition-delay:.16s}.rv.d3{transition-delay:.24s}
 
 
+
+/* ============ GRAPHICS: light sections + real-work mock-ups ============ */
+.light-run{position:relative;margin-top:30px;border-radius:44px;overflow:hidden;background:#fff;box-shadow:0 -30px 80px rgba(0,0,0,.35)}
+.lt{--ink:#16131f;--mut:#5a5670;--dim:#8b879f;--card:#fff;--line:rgba(30,15,80,.09);--line2:rgba(30,15,80,.16);background:#fff;color:var(--ink);padding:72px 0}
+.lt.lav{background:#f6f3ff}
+.lt .lede{color:var(--mut)}
+.lt .chip{background:#fff}
+.lt .chip.on{background:#16131f;color:#fff;border-color:#16131f}
+.lt .svc{background:#fff;box-shadow:0 12px 30px rgba(40,20,120,.06)}
+.lt .svc .ic{background:#f1ecff;border-color:transparent;color:#5b3bff}
+.lt .step{background:#fff;box-shadow:0 12px 30px rgba(40,20,120,.06)}
+.lt .usp{background:#fff}
+.w-block{display:grid;gap:34px;align-items:center}
+.w-copy h3,.w-h{font-size:clamp(26px,6.4vw,38px);font-weight:800;margin-bottom:10px}
+.w-copy p{color:var(--mut);font-size:16px;max-width:440px}
+.spec{display:inline-block;margin-top:14px;padding:6px 12px;border-radius:999px;background:#f1ecff;color:#4b2fd6;font-size:12.5px;font-weight:700;letter-spacing:.02em}
+.lav .spec{background:#fff}
+.cap{margin-top:14px;text-align:center;font-size:12.5px;font-weight:700;color:var(--dim);letter-spacing:.02em}
+.scene{position:relative;--p:0;perspective:1400px}
+.flip{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .12s linear}
+.flip .face{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:inherit;box-shadow:0 24px 44px rgba(30,15,80,.22),0 2px 6px rgba(30,15,80,.12)}
+.flip .face.back{transform:rotateY(180deg)}
+/* business cards */
+.cards{height:330px;max-width:420px;margin:0 auto;width:100%}
+.bcard{position:absolute;width:250px;aspect-ratio:var(--ar);border-radius:8px;transition:transform 1.1s cubic-bezier(.2,.9,.25,1.15),opacity .8s}
+.bcard .flip{border-radius:8px}
+.bcard.c1{left:0;top:10px;transform:translateY(-140px) rotate(-30deg);opacity:0}
+.bcard.c2{right:0;top:150px;transform:translateY(-200px) rotate(28deg);opacity:0;transition-delay:.15s}
+.cards.in .bcard.c1{transform:rotate(-7deg);opacity:1}
+.cards.in .bcard.c2{transform:rotate(6deg);opacity:1}
+.cards .c1 .flip{transform:rotateY(calc(min(1,max(0,var(--p)*1.6 - .25))*180deg))}
+.cards .c2 .flip{transform:rotateY(calc(min(1,max(0,var(--p)*1.6 - .55))*-180deg))}
+/* A5 leaflets */
+.leaflets{height:300px;max-width:400px;margin:0 auto;width:100%}
+.a5{position:absolute;top:20px;width:150px;aspect-ratio:1/1.414;border-radius:3px}
+.a5 .flip{border-radius:3px}
+.a5.l1{left:calc(50% - 158px);transform:rotate(calc(-4deg - var(--p)*5deg)) translateX(calc(var(--p)*-6px))}
+.a5.l2{left:calc(50% + 4px);top:36px;transform:rotate(calc(4deg + var(--p)*5deg)) translateX(calc(var(--p)*6px))}
+.leaflets .l1 .flip{transform:rotateY(calc(min(1,max(0,var(--p)*1.6 - .3))*180deg))}
+.leaflets .l2 .flip{transform:rotateY(calc(min(1,max(0,var(--p)*1.6 - .55))*-180deg))}
+/* booklet + fold (shared hinge model) */
+.booklet-wrap,.fold-wrap{margin-top:46px}
+.book,.fold{position:relative;margin:0 auto;transform-style:preserve-3d;transform:translateX(calc((1 - min(1,var(--p)*1.4))*-25%)) rotateX(8deg)}
+.book{width:min(340px,100%);aspect-ratio:2/1.414}
+.fold{width:min(350px,100%);aspect-ratio:1400/990}
+.pg,.flap{position:absolute;top:0;left:50%;width:50%;height:100%}
+.pg img,.flap img{width:100%;height:100%;object-fit:cover;display:block}
+.pg{box-shadow:0 24px 44px rgba(30,15,80,.2)}
+.fold .pg,.fold .face{background-size:200% 100%;background-repeat:no-repeat}
+.flap{transform-origin:0 50%;transform-style:preserve-3d;transform:rotateY(calc(min(1,var(--p)*1.4)*-180deg))}
+.flap .face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;box-shadow:0 24px 44px rgba(30,15,80,.18)}
+.flap .face.back{transform:rotateY(180deg)}
+.flap::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.18),transparent 30%);pointer-events:none;opacity:calc(1 - var(--p))}
+/* A3 menu */
+.menus{display:grid;place-items:center;padding:10px 0}
+.a3menu{width:240px;aspect-ratio:var(--ar);border-radius:4px;transform:rotate(-3deg)}
+.a3menu .flip{border-radius:4px;transform:rotateY(calc(min(1,max(0,var(--p)*1.5 - .3))*180deg))}
+/* menu board */
+.board-wrap{margin-top:56px;display:flex;flex-direction:column;align-items:center}
+.board{width:min(300px,86%);padding:10px;background:linear-gradient(145deg,#3a3a44,#141418);border-radius:10px;box-shadow:0 40px 70px rgba(30,15,80,.3);transform:translateY(var(--py,0px))}
+.board img{display:block;width:100%;border-radius:3px}
+/* vinyl banners */
+.vinyls{display:grid;gap:30px}
+.vinyl{position:relative;width:100%;aspect-ratio:3/1;filter:drop-shadow(0 22px 30px rgba(30,15,80,.2))}
+.vinyl .art{position:absolute;inset:0;clip-path:inset(0 calc((1 - min(1,var(--p)*1.3))*100%) 0 0);background:#fff}
+.vinyl.v2 .art{clip-path:inset(0 calc((1 - min(1,max(0,var(--p)*1.3 - .2)))*100%) 0 0)}
+.vinyl img{width:100%;height:100%;display:block}
+.vinyl .art::before,.vinyl .art::after{content:"";position:absolute;left:1.5%;right:1.5%;height:10px;background:radial-gradient(circle at 5px 5px,#d9d9de 2.6px,#8a8a94 3.2px,transparent 3.6px) 0 0/calc(100% / 7) 10px repeat-x;z-index:2}
+.vinyl .art::before{top:1.5%}.vinyl .art::after{bottom:1.5%}
+.vinyl .roll{position:absolute;top:-3%;bottom:-3%;width:16px;left:calc(min(1,var(--p)*1.3)*100% - 8px);border-radius:8px;background:linear-gradient(90deg,#cfcfd6,#fff 40%,#b9b9c4);box-shadow:0 6px 14px rgba(0,0,0,.25);opacity:calc((1 - min(1,var(--p)*1.3))*8)}
+.vinyl.v2 .roll{left:calc(min(1,max(0,var(--p)*1.3 - .2))*100% - 8px);opacity:calc((1 - min(1,max(0,var(--p)*1.3 - .2)))*8)}
+/* roller banners */
+.rollers{margin-top:46px;display:flex;justify-content:center;align-items:flex-end;gap:14px;padding-top:10px}
+.rollers .cap{position:absolute;left:0;right:0;bottom:-34px}
+.roller{position:relative;display:flex;flex-direction:column;align-items:center;width:min(108px,29%)}
+.roller .sheet{position:relative;width:100%;aspect-ratio:var(--ar);overflow:hidden}
+.roller .sheet img{display:block;width:100%;height:100%;transform:translateY(calc((1 - min(1,max(0,var(--p)*1.5 - var(--o))))*100%))}
+.roller .rail{position:absolute;left:-2px;right:-2px;height:5px;border-radius:3px;background:linear-gradient(#f2f2f5,#9a9aa5);top:calc((1 - min(1,max(0,var(--p)*1.5 - var(--o))))*100%)}
+.roller .base{display:block;width:118%;height:12px;border-radius:6px;background:linear-gradient(#e8e8ee,#7d7d88);box-shadow:0 10px 18px rgba(30,15,80,.25)}
+.rollers{margin-bottom:34px}
+/* posters */
+.posters{display:flex;justify-content:center;align-items:flex-start;gap:16px;min-height:280px}
+.poster{width:min(160px,46%);padding:8px;background:#fff;border:6px solid #1b1b22;box-shadow:0 30px 50px rgba(30,15,80,.25);transform:translateY(var(--py,0px))}
+.poster img{display:block;width:100%}
+.poster.p2{margin-top:44px}
+/* placeholders */
+.ph-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.ph{display:flex;flex-direction:column;align-items:center;text-align:center;padding:16px 8px;border-radius:18px;background:#fff;border:1.5px dashed #cbbfff}
+.ph svg{width:100%;max-width:130px;height:auto;margin-bottom:8px}
+.ph b{font-size:13.5px;line-height:1.25}
+.ph span{margin-top:4px;font-size:11px;font-weight:700;color:#7b5cff;text-transform:uppercase;letter-spacing:.06em}
+/* hero: real artwork inside illustrated frames */
+.bn-panel.art{padding:0;flex:none;width:92%;aspect-ratio:850/2000;background:#fff}
+.bn-panel.art::before{display:none}
+.bn-panel.art img,.o-card.art img,.o-flyer.art img{display:block;width:100%;height:100%;object-fit:cover}
+.o-card.art{padding:0;overflow:hidden;background:#fff;height:134px}
+.o-flyer.art{padding:0;overflow:hidden;background:#fff}
+@media (min-width:720px){
+  .lt{padding:110px 0}
+  .w-block{grid-template-columns:1fr 1.15fr;gap:60px}
+  .w-block.rev .w-copy{order:2}
+  .cards{height:420px}.bcard{width:330px}.bcard.c2{top:190px}
+  .leaflets{height:400px;max-width:480px}.a5{width:200px}.a5.l1{left:calc(50% - 210px)}
+  .book{width:520px}.fold{width:560px}
+  .a3menu{width:320px}
+  .board{width:380px}
+  .vinyls{grid-template-columns:1fr 1fr;gap:40px}.vinyls .cap{grid-column:1/-1}
+  .roller{width:150px}.rollers{gap:40px}
+  .poster{width:230px}
+  .ph svg{max-width:170px}.ph{padding:26px 14px}.ph b{font-size:16px}
+}
+@media (prefers-reduced-motion:reduce){.scene,.board,.poster{--p:1!important;--py:0px!important}.bcard{transition:none}}
+
 /* ---------- intro splash ---------- */
 #splash{position:fixed;inset:0;z-index:999;background:#07070d;display:grid;place-items:center;overflow:hidden;animation:spOut 3.4s cubic-bezier(.4,0,.2,1) forwards;cursor:pointer}
 #splash .bg{position:absolute;inset:-20%;opacity:0}
@@ -592,9 +705,9 @@ setTimeout(done,3700);})();
         <div class="trust"><span><svg data-i="check"></svg>High quality</span><span><svg data-i="check"></svg>Fast turnaround</span><span><svg data-i="check"></svg>Great value</span></div>
       </div>
       <div class="stage" aria-hidden="true"><div class="stage-in">
-        <div class="obj o-banner"><div class="bn-cap"></div><div class="bn-panel"><span class="m"></span><small>graphics</small><div class="bn-circle"></div><b>NEW<br>SEASON</b><div class="bn-l"></div><div class="bn-l s"></div><span class="bn-cta">Shop now</span></div><div class="bn-base"></div></div>
-        <div class="obj o-card"><div><span class="m"></span><small>graphics</small></div><div class="ln"></div></div>
-        <div class="obj o-flyer"><div class="ph"></div><div class="t">GRAND<br>OPENING</div><div class="l"></div><div class="l"></div><div class="l"></div></div>
+        <div class="obj o-banner"><div class="bn-cap"></div><div class="bn-panel art"><img src="assets/work/raiseup-roller.webp" alt=""></div><div class="bn-base"></div></div>
+        <div class="obj o-card art"><img src="assets/work/crochet-front.webp" alt=""></div>
+        <div class="obj o-flyer art"><img src="assets/work/fuegos-poster.webp" alt=""></div>
         <svg class="obj o-hoodie" viewBox="0 0 240 236"><defs><linearGradient id="hg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3b3b52"/><stop offset=".55" stop-color="#23232f"/><stop offset="1" stop-color="#13131a"/></linearGradient><linearGradient id="hs" x1="0" x2="1"><stop offset="0" stop-color="#000" stop-opacity=".35"/><stop offset=".25" stop-color="#000" stop-opacity="0"/><stop offset=".75" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".4"/></linearGradient><pattern id="rib" width="4" height="10" patternUnits="userSpaceOnUse"><rect width="4" height="10" fill="#17171f"/><rect width="1.4" height="10" fill="#0d0d13"/></pattern></defs>
 <path d="M82 60 C76 30 96 6 120 6 C144 6 164 30 158 60 Z" fill="#1c1c27"/>
 <path d="M92 44 C78 48 60 52 49 61 C37 71 33 92 29 122 L19 196 L46 199 L60 120 L62 214 Q120 222 178 214 L180 120 L194 199 L221 196 L211 122 C207 92 203 71 191 61 C180 52 162 48 148 44 Z" fill="url(#hg)"/>
@@ -631,7 +744,105 @@ setTimeout(done,3700);})();
     <div class="marquee"><div class="track" data-marquee></div></div>
   </div>
 
-  <section id="g-services">
+
+  <!-- ============ OUR WORK: real customer artwork on mock-ups ============
+       To swap artwork: replace the image in assets/work/ with a new file of the same name and shape. -->
+  <div class="light-run" id="g-work">
+  <section class="lt">
+    <div class="wrap">
+      <div class="sec-head rv"><span class="eyebrow">Our work</span><h2>Real designs, for<br><span class="grad-text">real businesses.</span></h2><p class="lede">Everything below is genuine work we've designed and printed for our customers, shown at true proportions.</p></div>
+      <div class="w-block">
+        <div class="w-copy rv"><h3>Business &amp; loyalty cards</h3><p>Crisp, double-sided cards that people actually keep. Scroll to flip them over.</p><span class="spec">85 × 55 mm · double-sided</span></div>
+        <div class="scene cards" data-scroll>
+          <div class="bcard c1" style="--ar:1.49"><div class="flip"><img class="face" src="assets/work/crochet-front.webp" alt="Crochet by Si business card, front" loading="lazy"><img class="face back" src="assets/work/crochet-back.webp" alt="Crochet by Si business card, back" loading="lazy"></div></div>
+          <div class="bcard c2" style="--ar:1.545"><div class="flip"><img class="face" src="assets/work/timed-front.webp" alt="Tim &amp; Ed Cafe loyalty card, front" loading="lazy"><img class="face back" src="assets/work/timed-back.webp" alt="Tim &amp; Ed Cafe loyalty card, back" loading="lazy"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="lt lav">
+    <div class="wrap">
+      <div class="w-block rev">
+        <div class="w-copy rv"><h3>Leaflets &amp; flyers</h3><p>Double-sided A5 flyers that grab attention, and folded leaflets that tell the full story.</p><span class="spec">A5 double-sided · 4-page A4 leaflet</span></div>
+        <div class="scene leaflets" data-scroll>
+          <div class="a5 l1"><div class="flip"><img class="face" src="assets/work/beefking-front.webp" alt="Beef King A5 leaflet, front" loading="lazy"><img class="face back" src="assets/work/beefking-back.webp" alt="Beef King A5 leaflet, back" loading="lazy"></div></div>
+          <div class="a5 l2"><div class="flip"><img class="face" src="assets/work/snw-front.webp" alt="Smash N Wings A5 leaflet, front" loading="lazy"><img class="face back" src="assets/work/snw-back.webp" alt="Smash N Wings A5 leaflet, back" loading="lazy"></div></div>
+        </div>
+      </div>
+      <div class="scene booklet-wrap" data-scroll>
+        <div class="book" style="--ar:1.414">
+          <div class="pg right"><img src="assets/work/medflow-3.webp" alt="Medflow Dynamics leaflet, page 3" loading="lazy"></div>
+          <div class="flap"><img class="face" src="assets/work/medflow-1.webp" alt="Medflow Dynamics leaflet, cover" loading="lazy"><img class="face back" src="assets/work/medflow-2.webp" alt="Medflow Dynamics leaflet, page 2" loading="lazy"></div>
+        </div>
+        <p class="cap">Medflow Dynamics · 4-page A4 leaflet</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="lt">
+    <div class="wrap">
+      <div class="w-block">
+        <div class="w-copy rv"><h3>Menus</h3><p>Table menus, folded takeaway menus and big wall menu boards, designed to sell.</p><span class="spec">A3 double-sided · folded A4 · 1.5 m menu board</span></div>
+        <div class="scene menus" data-scroll>
+          <div class="a3menu" style="--ar:.803"><div class="flip"><img class="face" src="assets/work/kaya-front.webp" alt="Kaya Lounge A3 menu, front" loading="lazy"><img class="face back" src="assets/work/kaya-back.webp" alt="Kaya Lounge A3 menu, back" loading="lazy"></div></div>
+        </div>
+      </div>
+      <div class="scene fold-wrap" data-scroll>
+        <div class="fold">
+          <div class="pg right" style="background-image:url(assets/work/krispy-inside.webp);background-position:100% 0"></div>
+          <div class="flap"><div class="face" style="background-image:url(assets/work/krispy-outside.webp);background-position:100% 0"></div><div class="face back" style="background-image:url(assets/work/krispy-inside.webp);background-position:0 0"></div></div>
+        </div>
+        <p class="cap">Krispy · folded takeaway menu</p>
+      </div>
+      <div class="board-wrap rv">
+        <div class="board" data-par="-0.06"><img src="assets/work/chaiikhana-board.webp" alt="Chaiikhana menu board" loading="lazy"></div>
+        <p class="cap">Chaiikhana · 1.5 m menu board</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="lt lav">
+    <div class="wrap">
+      <div class="sec-head rv" style="margin-bottom:26px"><h3 class="w-h">Banners &amp; roller banners</h3><p class="lede" style="font-size:16px">Heavy-duty vinyl banners with eyelets, and pull-up roller banners for events and shops.</p></div>
+      <div class="scene vinyls" data-scroll>
+        <div class="vinyl"><div class="art"><img src="assets/work/halal-expo-banner.webp" alt="Luton Halal Shopping Expo vinyl banner" loading="lazy"></div><i class="roll"></i></div>
+        <div class="vinyl v2"><div class="art"><img src="assets/work/promptmove-banner.webp" alt="Promptmove vinyl banner" loading="lazy"></div><i class="roll"></i></div>
+        <p class="cap">3 m × 1 m vinyl banners</p>
+      </div>
+      <div class="scene rollers" data-scroll>
+        <div class="roller" style="--o:0;--ar:.425"><div class="sheet"><img src="assets/work/chunk-roller.webp" alt="Chunk roller banner" loading="lazy"><i class="rail"></i></div><i class="base"></i></div>
+        <div class="roller" style="--o:.18;--ar:.425"><div class="sheet"><img src="assets/work/raiseup-roller.webp" alt="The Raise Up Foundation roller banner" loading="lazy"><i class="rail"></i></div><i class="base"></i></div>
+        <div class="roller" style="--o:.36;--ar:.398"><div class="sheet"><img src="assets/work/alpha360-roller.webp" alt="Alpha 360 roller banner" loading="lazy"><i class="rail"></i></div><i class="base"></i></div>
+        <p class="cap">2 m × 85 cm roller banners</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="lt">
+    <div class="wrap">
+      <div class="w-block rev">
+        <div class="w-copy rv"><h3>Posters</h3><p>Launch posters and event posters that stop people in their tracks.</p><span class="spec">A3 &amp; launch posters</span></div>
+        <div class="scene posters">
+          <div class="poster p1 rv" data-par="-0.05"><img src="assets/work/fuegos-poster.webp" alt="Fuegos Luton grand opening poster" loading="lazy"></div>
+          <div class="poster p2 rv d1" data-par="0.04"><img src="assets/work/meeran-poster.webp" alt="Meeran Tours Al-Aqsa tour poster" loading="lazy"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="lt lav">
+    <div class="wrap">
+      <div class="sec-head rv" style="margin-bottom:26px"><h3 class="w-h">Stickers, clothing &amp; signage</h3><p class="lede" style="font-size:16px">We print these every week. More real examples coming soon.</p></div>
+      <div class="ph-grid">
+        <div class="ph rv"><svg viewBox="0 0 160 120"><path d="M40 20 Q80 4 120 22 Q148 40 136 76 Q124 108 82 104 Q34 106 24 72 Q14 38 40 20Z" fill="#fff" stroke="#7b5cff" stroke-width="2.5" stroke-dasharray="6 5"/><path d="M118 92 Q132 84 136 76 Q128 98 118 92Z" fill="#e9e3ff"/></svg><b>Stickers</b><span>Your design here</span></div>
+        <div class="ph rv d1"><svg viewBox="0 0 160 120"><path d="M56 14 L68 10 Q80 20 92 10 L104 14 L134 32 L124 52 L110 46 L110 110 L50 110 L50 46 L36 52 L26 32 Z" fill="#fff" stroke="#7b5cff" stroke-width="2.5" stroke-linejoin="round"/><rect x="64" y="38" width="32" height="30" rx="4" fill="none" stroke="#7b5cff" stroke-width="2" stroke-dasharray="5 4"/></svg><b>Clothing &amp; uniforms</b><span>Your design here</span></div>
+        <div class="ph rv d2"><svg viewBox="0 0 160 120"><rect x="16" y="14" width="128" height="30" rx="4" fill="#fff" stroke="#7b5cff" stroke-width="2.5" stroke-dasharray="6 5"/><rect x="30" y="52" width="100" height="60" fill="none" stroke="#c9bfff" stroke-width="2"/><rect x="66" y="66" width="28" height="46" fill="#e9e3ff"/></svg><b>Shop signs</b><span>Your design here</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="g-services" class="lt">
     <div class="wrap">
       <div class="sec-head rv"><span class="eyebrow">What we do</span><h2>Everything your brand<br><span class="grad-text">needs to show up.</span></h2></div>
       <div class="chips rv" data-filter="g">
@@ -645,7 +856,7 @@ setTimeout(done,3700);})();
     </div>
   </section>
 
-  <section style="padding-top:0">
+  <section class="lt lav">
     <div class="wrap">
       <div class="sec-head rv"><span class="eyebrow">How it works</span><h2>Simple. Fast.<br><span class="grad-text">Done properly.</span></h2></div>
       <div class="steps">
@@ -655,6 +866,7 @@ setTimeout(done,3700);})();
       </div>
     </div>
   </section>
+  </div><!-- /light-run -->
 
   <section style="padding-top:0"><div class="wrap"><div class="sec-head rv"><span class="eyebrow">Also from SMR</span></div><div class="xsell" data-xsell="graphics"></div></div></section>
   <section class="contact" style="padding-top:0"></section>
@@ -1102,6 +1314,7 @@ function go(brand,{scroll=true,push=true}={}){
   buildDrawer();
   if(scroll&&!first)window.scrollTo({top:0,behavior:'instant'in window?'instant':'auto'});
   observe();
+  requestAnimationFrame(()=>window.updScroll&&updScroll());
   try{localStorage.setItem('smr-brand',brand)}catch(e){}
 }
 function buildDrawer(){
@@ -1131,6 +1344,17 @@ document.getElementById('menuBtn').addEventListener('click',()=>document.body.cl
 window.addEventListener('hashchange',()=>{const h=location.hash.slice(1);if(BRANDS.includes(h))go(h,{push:false})});
 window.addEventListener('resize',movePills);
 
+
+/* ---- Scroll-linked mock-up animations (Graphics "Our work") ---- */
+const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const SCN=[...document.querySelectorAll('[data-scroll]')], PAR=[...document.querySelectorAll('[data-par]')];
+let scT=0;
+function updScroll(){scT=0;const vh=innerHeight;
+  SCN.forEach(el=>{if(!el.offsetParent)return;const r=el.getBoundingClientRect();const st=vh*.95,en=vh*.25;const v=RM?1:Math.max(0,Math.min(1,(st-r.top)/(st-en)));el.style.setProperty('--p',v.toFixed(3));if(v>0)el.classList.add('in')});
+  if(!RM)PAR.forEach(el=>{if(!el.offsetParent)return;const r=el.getBoundingClientRect();if(r.bottom<-200||r.top>vh+200)return;el.style.setProperty('--py',((r.top+r.height/2-vh/2)*parseFloat(el.dataset.par)).toFixed(1)+'px')});
+}
+window.addEventListener('scroll',()=>{if(!scT)scT=requestAnimationFrame(updScroll)},{passive:true});
+window.addEventListener('resize',updScroll);
 /* ---- Reveal + dock ---- */
 let io;
 function observe(){
@@ -1149,6 +1373,7 @@ document.getElementById('yr').textContent=new Date().getFullYear();
 paintIcons();
 go(defaultBrand(),{scroll:false});
 drawPlate();
+window.updScroll=updScroll;updScroll();
 document.fonts&&document.fonts.ready.then(movePills);
 </script>
 </body>
