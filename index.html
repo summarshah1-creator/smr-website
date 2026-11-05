@@ -500,8 +500,8 @@ footer{border-top:1px solid var(--line);padding:46px 0 calc(110px + var(--safe-b
 .cards.in .c3{transform:rotate(4deg)}
 .cards.in .c1{transform:rotate(-7deg)}
 .cards.in .c2{transform:rotate(6deg)}
-.cards .c1 .flip{transform:rotateY(calc(min(1,max(0,(var(--p) - 0.5)/0.18000000000000005))*180deg))}
-.cards .c3 .flip{transform:rotateY(calc(min(1,max(0,(var(--p) - .58)/.18))*-180deg))}
+.cards .c1 .flip{transform:rotateY(calc(min(1,max(0,(var(--p) - 0.42)/0.16))*180deg))}
+.cards .c3 .flip{transform:rotateY(calc(min(1,max(0,(var(--p) - 0.36)/0.16))*-180deg))}
 /* A5 leaflets */
 .leaflets{height:250px;max-width:400px;margin:0 auto;width:100%}
 .a5{position:absolute;top:10px;width:150px;aspect-ratio:1/1.414;border-radius:3px}
@@ -509,24 +509,24 @@ footer{border-top:1px solid var(--line);padding:46px 0 calc(110px + var(--safe-b
 .a5 .face{object-fit:cover}
 .a5.l1{left:calc(50% - 158px);transform:rotate(-5deg)}
 .a5.l2{left:calc(50% + 4px);top:26px;transform:rotate(5deg)}
-.leaflets .l1 .flip{transform:rotateY(calc(min(1,max(0,(var(--p) - 0.48)/0.18000000000000005))*180deg))}
-.leaflets .l2 .flip{transform:rotateY(calc(min(1,max(0,(var(--p) - 0.56)/0.17999999999999994))*-180deg))}
+.leaflets .l1 .flip{transform:rotateY(calc(min(1,max(0,(var(--p) - 0.36)/0.16))*180deg))}
+.leaflets .l2 .flip{transform:rotateY(calc(min(1,max(0,(var(--p) - 0.42)/0.16))*-180deg))}
 /* booklet + fold (hinge) */
 .booklet-wrap{margin-top:14px}
-.book,.fold{position:relative;margin:0 auto;transform-style:preserve-3d;transform:translateX(calc((1 - min(1,max(0,(var(--p) - 0.42)/0.24000000000000005)))*-25%)) rotateX(8deg)}
+.book,.fold{position:relative;margin:0 auto;transform-style:preserve-3d;transform:translateX(calc((1 - min(1,max(0,(var(--p) - 0.3)/0.22000000000000005)))*-25%)) rotateX(8deg)}
 .book{width:min(330px,100%);aspect-ratio:2/1.414}
 .fold{width:min(340px,100%);aspect-ratio:1400/990}
 .pg,.flap{position:absolute;top:0;left:50%;width:50%;height:100%}
 .pg img,.flap img{width:100%;height:100%;object-fit:cover;display:block}
 .pg{box-shadow:0 24px 44px rgba(30,15,80,.2)}
 .fold .pg,.fold .face{background-size:200% 100%;background-repeat:no-repeat}
-.flap{transform-origin:0 50%;transform-style:preserve-3d;transform:rotateY(calc(min(1,max(0,(var(--p) - 0.42)/0.24000000000000005))*-180deg))}
+.flap{transform-origin:0 50%;transform-style:preserve-3d;transform:rotateY(calc(min(1,max(0,(var(--p) - 0.3)/0.22000000000000005))*-180deg))}
 .flap .face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;box-shadow:0 24px 44px rgba(30,15,80,.18)}
 .flap .face.back{transform:rotateY(180deg)}
 /* A3 menu: full page, never cropped */
 .menus{display:grid;place-items:center}
 .a3menu{width:230px;aspect-ratio:612/858.75;transform:rotate(-3deg)}
-.a3menu .flip{transform:rotateY(calc(min(1,max(0,(var(--p) - 0.48)/0.20000000000000007))*180deg))}
+.a3menu .flip{transform:rotateY(calc(min(1,max(0,(var(--p) - 0.36)/0.18))*180deg))}
 .a3menu .face{border-radius:3px}
 .menu-row2{display:grid;gap:18px;margin-top:18px;align-items:center}
 .board-wrap{display:flex;flex-direction:column;align-items:center}
@@ -558,10 +558,9 @@ footer{border-top:1px solid var(--line);padding:46px 0 calc(110px + var(--safe-b
 .poster.p2{margin-top:38px}
 /* polo: spins to the back */
 .polo{display:grid;place-items:center}
-.polo-in{position:relative;width:min(270px,74%);aspect-ratio:700/875;--s:1;--sh:0;--dir:90deg;transform:scaleX(var(--s));filter:drop-shadow(0 26px 28px rgba(30,15,80,.28))}
-.polo-in img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
-.polo-in .pb{opacity:0}
-.polo-in .shade{position:absolute;inset:0;-webkit-mask:url(assets/work/snw-polo-front.webp) center/contain no-repeat;mask:url(assets/work/snw-polo-front.webp) center/contain no-repeat;background:linear-gradient(var(--dir),rgba(10,0,30,.75),rgba(10,0,30,.15) 55%,rgba(255,255,255,.18));opacity:var(--sh)}
+.polo-in{width:min(270px,74%);aspect-ratio:700/875;transform:rotate(-2deg)}
+.polo .flip{transform:rotateY(calc(min(1,max(0,(var(--p) - 0.36)/0.2))*180deg))}
+.polo .face{box-shadow:none;filter:drop-shadow(0 26px 28px rgba(30,15,80,.28))}
 /* round sticker with a peeled edge */
 .sticker{display:grid;place-items:center}
 .stk{width:min(230px,62%);height:auto;overflow:visible;filter:drop-shadow(0 22px 26px rgba(30,15,80,.25));transform:rotate(calc(-8deg + var(--p)*10deg))}
@@ -594,6 +593,45 @@ img.o-hoodie{height:auto;object-fit:contain;filter:drop-shadow(0 26px 30px rgba(
   .shop{height:460px}
 }
 @media (prefers-reduced-motion:reduce){.scene,.board,.poster{--p:.3!important;--py:0px!important}.vinyl,.roller{--u:1!important}.bcard{transition:none}}
+
+
+/* ============ DIGITAL: app portfolio ============ */
+.d-light{margin-top:0}
+.pf-tabs{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -20px 16px;padding:2px 20px}
+.pf-tabs::-webkit-scrollbar{display:none}
+.pf-tab{flex:none;display:flex;align-items:center;gap:8px;padding:10px 16px;border-radius:999px;border:1.5px solid var(--line2);background:#fff;font-weight:800;font-size:14px;color:var(--ink);cursor:pointer;transition:.25s}
+.pf-tab i{width:10px;height:10px;border-radius:50%}
+.pf-tab.on{background:#16131f;color:#fff;border-color:#16131f}
+.pf-panel{display:none;border-radius:28px;background:var(--bgc);padding:22px 0 18px;overflow:hidden;position:relative}
+.pf-panel.on{display:block;animation:pfIn .5s var(--ease)}
+@keyframes pfIn{from{opacity:0;transform:translateY(14px)}}
+.pf-panel[data-app="allure"]{color:#2b2416}.pf-panel[data-app="snw"],.pf-panel[data-app="kaya"]{color:#fff}
+.pf-info{padding:0 22px}
+.pf-tag{display:inline-block;padding:4px 10px;border-radius:999px;background:var(--ac);color:#16131f;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.pf-info h3{font-size:28px;font-weight:800;margin:10px 0 2px}
+.pf-info p{opacity:.75;font-size:14.5px}
+.pf-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.pf-chips span{padding:6px 11px;border-radius:999px;font-size:12px;font-weight:700;background:rgba(127,127,127,.16)}
+.pf-row{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:20px 22px 6px;-webkit-overflow-scrolling:touch}
+.pf-row::-webkit-scrollbar{display:none}
+.pf-ph{flex:none;scroll-snap-align:center;border:0;background:none;padding:0;color:inherit;cursor:zoom-in;display:flex;flex-direction:column;align-items:center;gap:10px;font:inherit}
+.pf-frame{display:block;width:170px;aspect-ratio:540/1169;border-radius:26px;padding:6px;background:#0b0b10;box-shadow:0 0 0 1.5px rgba(255,255,255,.12),0 22px 40px rgba(0,0,0,.35);transition:transform .35s var(--ease)}
+.pf-frame img{display:block;width:100%;height:100%;object-fit:cover;object-position:top;border-radius:21px}
+.pf-ph:hover .pf-frame{transform:translateY(-6px)}
+.pf-ph b{font-size:12.5px;font-weight:800;opacity:.85}
+.pf-lb{position:fixed;inset:0;z-index:300;background:rgba(8,8,15,.9);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:grid;place-items:center;opacity:0;pointer-events:none;transition:opacity .3s}
+.pf-lb.open{opacity:1;pointer-events:auto}
+.pf-lbf{width:min(330px,74vw);aspect-ratio:540/1169;max-height:80vh;border-radius:40px;padding:9px;background:#0b0b10;box-shadow:0 0 0 2px #2a2a38,0 40px 90px rgba(0,0,0,.6)}
+.pf-lbf img{width:100%;height:100%;object-fit:cover;object-position:top;border-radius:32px}
+.pf-lbc{position:absolute;bottom:calc(18px + var(--safe-b));left:0;right:0;text-align:center;font-weight:800;color:#fff}
+.pf-x{position:absolute;top:calc(14px + var(--safe-t));right:14px;width:46px;height:46px;border-radius:50%;border:0;background:rgba(255,255,255,.12);color:#fff;font-size:28px;cursor:pointer}
+.pf-nav{position:absolute;top:50%;margin-top:-26px;width:52px;height:52px;border-radius:50%;border:0;background:rgba(255,255,255,.12);color:#fff;font-size:34px;line-height:1;cursor:pointer}
+.pf-nav.pv{left:10px}.pf-nav.nx{right:10px}
+#d-apps.lt .feat{background:#fff;box-shadow:0 12px 30px rgba(40,20,120,.06)}
+#d-apps.lt .compare{background:#fff}
+#d-apps.lt .compare .row:first-child{background:#f3efff}
+#d-apps.lt .compare .row>div:nth-child(2){color:#16131f}
+@media (min-width:720px){.pf-tabs{margin:0 0 18px;padding:0}.pf-panel{display:none;grid-template-columns:300px 1fr;align-items:center;padding:30px 0}.pf-panel.on{display:grid}.pf-info{padding:0 0 0 34px}.pf-frame{width:172px}.pf-row{padding:20px 30px 10px}}
 
 /* ---------- intro splash ---------- */
 #splash{position:fixed;inset:0;z-index:999;background:#07070d;display:grid;place-items:center;overflow:hidden;animation:spOut 3.4s cubic-bezier(.4,0,.2,1) forwards;cursor:pointer}
@@ -756,7 +794,7 @@ setTimeout(done,3700);})();
     <div class="wrap">
       <div class="sec-head rv"><span class="eyebrow">Our work</span><h2>Real designs, for<br><span class="grad-text">real businesses.</span></h2><p class="lede">Everything below is genuine work we've designed and printed for our customers, shown at true proportions.</p></div>
       <div class="w-block">
-        <div class="w-copy rv"><h3>Business &amp; loyalty cards</h3><p>Crisp, double-sided cards that people actually keep. Keep scrolling to flip them over.</p><span class="spec">85 × 55 mm · double-sided</span></div>
+        <div class="w-copy rv"><h3>Business &amp; loyalty cards</h3><p>Crisp, double-sided cards that people actually keep.</p></div>
         <div class="scene cards" data-scroll>
           <div class="bcard c3" style="--ar:1.543"><div class="flip"><img class="face" src="assets/work/hamzah-front.webp" alt="Hamzah Khan business card, front" loading="lazy"><img class="face back" src="assets/work/hamzah-back.webp" alt="Hamzah Khan business card, back" loading="lazy"></div></div>
           <div class="bcard c1" style="--ar:1.49"><div class="flip"><img class="face" src="assets/work/crochet-front.webp" alt="Crochet by Si business card, front" loading="lazy"><img class="face back" src="assets/work/crochet-back.webp" alt="Crochet by Si business card, back" loading="lazy"></div></div>
@@ -769,7 +807,7 @@ setTimeout(done,3700);})();
   <section class="lt lav">
     <div class="wrap">
       <div class="w-block rev">
-        <div class="w-copy rv"><h3>Leaflets &amp; flyers</h3><p>Double-sided A5 flyers that grab attention, and folded leaflets that tell the full story.</p><span class="spec">A5 double-sided · 4-page A4 leaflet</span></div>
+        <div class="w-copy rv"><h3>Leaflets &amp; flyers</h3><p>Double-sided A5 flyers that grab attention, and folded leaflets that tell the full story.</p></div>
         <div class="scene leaflets" data-scroll>
           <div class="a5 l1"><div class="flip"><img class="face" src="assets/work/beefking-front.webp" alt="Beef King A5 leaflet, front" loading="lazy"><img class="face back" src="assets/work/beefking-back.webp" alt="Beef King A5 leaflet, back" loading="lazy"></div></div>
           <div class="a5 l2"><div class="flip"><img class="face" src="assets/work/snw-front.webp" alt="Smash N Wings A5 leaflet, front" loading="lazy"><img class="face back" src="assets/work/snw-back.webp" alt="Smash N Wings A5 leaflet, back" loading="lazy"></div></div>
@@ -780,7 +818,6 @@ setTimeout(done,3700);})();
           <div class="pg right"><img src="assets/work/medflow-3.webp" alt="Medflow Dynamics leaflet, page 3" loading="lazy"></div>
           <div class="flap"><img class="face" src="assets/work/medflow-1.webp" alt="Medflow Dynamics leaflet, cover" loading="lazy"><img class="face back" src="assets/work/medflow-2.webp" alt="Medflow Dynamics leaflet, page 2" loading="lazy"></div>
         </div>
-        <p class="cap">Medflow Dynamics · 4-page A4 leaflet</p>
       </div>
     </div>
   </section>
@@ -788,7 +825,7 @@ setTimeout(done,3700);})();
   <section class="lt">
     <div class="wrap">
       <div class="w-block">
-        <div class="w-copy rv"><h3>Menus</h3><p>Table menus, folded takeaway menus and big wall menu boards, designed to sell.</p><span class="spec">A3 double-sided · folded A4 · 1.5 m menu board</span></div>
+        <div class="w-copy rv"><h3>Menus</h3><p>Table menus, folded takeaway menus and big wall menu boards, designed to sell.</p></div>
         <div class="scene menus" data-scroll>
           <div class="a3menu"><div class="flip"><img class="face" src="assets/work/kaya-front.webp" alt="Kaya Lounge A3 menu, front" loading="lazy"><img class="face back" src="assets/work/kaya-back.webp" alt="Kaya Lounge A3 menu, back" loading="lazy"></div></div>
         </div>
@@ -799,11 +836,9 @@ setTimeout(done,3700);})();
             <div class="pg right" style="background-image:url(assets/work/krispy-inside.webp);background-position:100% 0"></div>
             <div class="flap"><div class="face" style="background-image:url(assets/work/krispy-outside.webp);background-position:100% 0"></div><div class="face back" style="background-image:url(assets/work/krispy-inside.webp);background-position:0 0"></div></div>
           </div>
-          <p class="cap">Krispy · folded takeaway menu</p>
         </div>
         <div class="board-wrap rv">
           <div class="board" data-par="-0.05"><img src="assets/work/chaiikhana-board.webp" alt="Chaiikhana menu board" loading="lazy"></div>
-          <p class="cap">Chaiikhana · 1.5 m menu board</p>
         </div>
       </div>
     </div>
@@ -816,13 +851,11 @@ setTimeout(done,3700);})();
         <div class="vinyl" style="--o:0"><div class="art"><img src="assets/work/halal-expo-banner.webp" alt="Luton Halal Shopping Expo vinyl banner" loading="lazy"></div><i class="roll"></i></div>
         <div class="vinyl" style="--o:.08"><div class="art"><img src="assets/work/promptmove-banner.webp" alt="Promptmove vinyl banner" loading="lazy"></div><i class="roll"></i></div>
         <div class="vinyl" style="--o:.16"><div class="art"><img src="assets/work/toros-banner.webp" alt="Toro's Steakhouse Luton vinyl banner" loading="lazy"></div><i class="roll"></i></div>
-        <p class="cap">3 m × 1 m vinyl banners</p>
       </div>
       <div class="scene rollers" data-scroll>
         <div class="roller" style="--o:0"><div class="sheet"><img src="assets/work/jinnah-roller.webp" alt="Jinnah Cup roller banner" loading="lazy"><i class="rail"></i></div><i class="base"></i></div>
         <div class="roller" style="--o:.07"><div class="sheet"><img src="assets/work/raiseup-roller.webp" alt="The Raise Up Foundation roller banner" loading="lazy"><i class="rail"></i></div><i class="base"></i></div>
         <div class="roller" style="--o:.14"><div class="sheet"><img src="assets/work/alpha360-roller.webp" alt="Alpha 360 roller banner" loading="lazy"><i class="rail"></i></div><i class="base"></i></div>
-        <p class="cap">2 m × 85 cm roller banners</p>
       </div>
     </div>
   </section>
@@ -830,7 +863,7 @@ setTimeout(done,3700);})();
   <section class="lt">
     <div class="wrap">
       <div class="w-block rev">
-        <div class="w-copy rv"><h3>Posters</h3><p>Launch posters and event posters that stop people in their tracks.</p><span class="spec">A3 &amp; launch posters</span></div>
+        <div class="w-copy rv"><h3>Posters</h3><p>Event posters, launch posters and promotional posters of any kind, designed to stop people in their tracks.</p></div>
         <div class="scene posters">
           <div class="poster p1 rv" data-par="-0.05"><img src="assets/work/fuegos-poster.webp" alt="Fuegos Luton grand opening poster" loading="lazy"></div>
           <div class="poster p2 rv d1" data-par="0.04"><img src="assets/work/meeran-poster.webp" alt="Meeran Tours Al-Aqsa tour poster" loading="lazy"></div>
@@ -842,14 +875,19 @@ setTimeout(done,3700);})();
   <section class="lt lav">
     <div class="wrap">
       <div class="w-block">
-        <div class="w-copy rv"><h3>Uniforms &amp; clothing</h3><p>Embroidered and printed workwear that makes your team look the part. Scroll to see the back.</p><span class="spec">Embroidered polo · front &amp; back</span></div>
-        <div class="scene polo" data-scroll><div class="polo-in" id="polo"><img class="pf" src="assets/work/snw-polo-front.webp" alt="Smash N Wings embroidered staff polo, front" loading="lazy"><img class="pb" src="assets/work/snw-polo-back.webp" alt="Smash N Wings embroidered staff polo, back" loading="lazy"><i class="shade"></i></div></div>
+        <div class="w-copy rv"><h3>Uniforms &amp; clothing</h3><p>Embroidered and printed workwear that makes your team look the part. </p></div>
+        <div class="scene polo" data-scroll><div class="polo-in"><div class="flip"><img class="face" src="assets/work/snw-polo-front.webp" alt="Smash N Wings embroidered staff polo, front" loading="lazy"><img class="face back" src="assets/work/snw-polo-back.webp" alt="Smash N Wings embroidered staff polo, back" loading="lazy"></div></div></div>
       </div>
       <div class="w-block rev" style="margin-top:20px">
-        <div class="w-copy rv"><h3>Stickers</h3><p>Die-cut and round stickers for packaging, bags and windows.</p><span class="spec">Round die-cut sticker</span></div>
-        <div class="scene sticker" data-scroll><svg viewBox="0 0 200 200" class="stk"><defs><clipPath id="stkC"><circle cx="100" cy="100" r="96"/></clipPath><clipPath id="stkH"><path d="M-5 -5 H205 V100 L100 205 H-5Z"/></clipPath><linearGradient id="stkF" x1="1" y1="1" x2=".3" y2=".3"><stop offset="0" stop-color="#f4f4f7"/><stop offset=".55" stop-color="#ffffff"/><stop offset="1" stop-color="#cfcfd8"/></linearGradient><filter id="stkS" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="-3" dy="-2" stdDeviation="3" flood-color="#000" flood-opacity=".25"/></filter></defs>
-<g clip-path="url(#stkH)"><circle cx="100" cy="100" r="96" fill="#fff"/><g clip-path="url(#stkC)"><image href="assets/work/sweetlife-sticker.webp" x="10" y="10" width="180" height="180" clip-path="circle(88px at 90px 90px)"/></g></g>
-<g clip-path="url(#stkH)" filter="url(#stkS)"><circle cx="200" cy="200" r="96" fill="url(#stkF)"/></g></svg></div>
+        <div class="w-copy rv"><h3>Stickers</h3><p>Die-cut and round stickers for packaging, bags and windows.</p></div>
+        <div class="scene sticker" data-scroll><svg viewBox="0 0 200 200" class="stk"><defs>
+<clipPath id="stkKeep"><path d="M-10 -10 H210 V80 L80 210 H-10Z"/></clipPath>
+<clipPath id="stkArt"><circle cx="100" cy="100" r="89"/></clipPath>
+<linearGradient id="stkCurl" gradientUnits="userSpaceOnUse" x1="145" y1="145" x2="100" y2="100"><stop offset="0" stop-color="#c9c9d4"/><stop offset=".18" stop-color="#f4f4f8"/><stop offset=".55" stop-color="#ffffff"/><stop offset="1" stop-color="#dcdce6"/></linearGradient>
+<filter id="stkBlur" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="3"/></filter></defs>
+<g clip-path="url(#stkKeep)"><circle cx="100" cy="100" r="96" fill="#fff"/><image href="assets/work/sweetlife-sticker.webp" x="11" y="11" width="178" height="178" clip-path="url(#stkArt)" preserveAspectRatio="xMidYMid slice"/></g>
+<g clip-path="url(#stkKeep)"><circle cx="190" cy="190" r="96" fill="#000" opacity=".28" filter="url(#stkBlur)" transform="translate(-7 -7)"/><circle cx="190" cy="190" r="96" fill="url(#stkCurl)"/></g>
+<path d="M80 210 L210 80" stroke="rgba(0,0,0,.18)" stroke-width="1" clip-path="url(#stkKeep)"/></svg></div>
       </div>
     </div>
   </section>
@@ -858,7 +896,6 @@ setTimeout(done,3700);})();
     <div class="wrap">
       <div class="sec-head rv tight"><h3 class="w-h">Shop signs</h3><p class="lede" style="font-size:16px">Built-up 3D lettering and full shop fronts, designed and fitted.</p></div>
       <div class="scene shop" data-scroll><img src="assets/work/mrchkn-shop.webp" alt="Mr. CHKN shop front sign" loading="lazy"></div>
-      <p class="cap">Mr. CHKN · illuminated shop sign</p>
     </div>
   </section>
 
@@ -902,7 +939,7 @@ setTimeout(done,3700);})();
         <p class="lede">Social media management, content creation, websites and your own ordering app. Everything you need to win customers online, at genuinely affordable prices.</p>
         <div class="btn-row">
           <a class="btn primary" href="#" data-quote>Book a free chat <svg data-i="arrow"></svg></a>
-          <a class="btn ghost" href="#d-work" data-scroll>Apps &amp; websites</a>
+          <a class="btn ghost" href="#d-portfolio" data-scroll>See our apps</a>
         </div>
         <div class="trust"><span><svg data-i="check"></svg>Setup to full management</span><span><svg data-i="check"></svg>Photo &amp; video</span><span><svg data-i="check"></svg>Affordable plans</span></div>
       </div>
@@ -914,6 +951,65 @@ setTimeout(done,3700);})();
       </div>
     </div>
   </section>
+
+  <div class="light-run d-light">
+  <section class="lt" id="d-portfolio">
+    <div class="wrap">
+      <div class="sec-head rv tight"><span class="eyebrow">Apps &amp; websites</span><h2>Apps we've built for<br><span class="grad-text">local businesses.</span></h2><p class="lede">Each one custom-designed in the client's own brand. Tap a screen to take a closer look.</p></div>
+      <div class="pf-tabs rv"><button class="pf-tab on" data-app="allure" style="--ac:#b8862f"><i style="background:#b8862f"></i>Allure Club</button><button class="pf-tab" data-app="snw" style="--ac:#ffc21a"><i style="background:#ffc21a"></i>Smash N Wings</button><button class="pf-tab" data-app="kaya" style="--ac:#d4af37"><i style="background:#d4af37"></i>Kaya Lounge</button></div>
+      <div class="pf-panels rv"><div class="pf-panel on" data-app="allure" style="--ac:#b8862f;--bgc:#fbf6ec">
+        <div class="pf-info"><span class="pf-tag">Coming soon</span><h3>Allure Club</h3><p>Coffee &amp; dessert lounge · loyalty app</p><div class="pf-chips"><span>Digital stamp card</span><span>Weekly spin &amp; win</span><span>Member offers</span><span>Staff terminal</span></div></div>
+        <div class="pf-row"><button class="pf-ph" data-i="0"><span class="pf-frame"><img src="assets/apps/allure-home.webp" alt="Allure Club app: Join the club" loading="lazy"></span><b>Join the club</b></button><button class="pf-ph" data-i="1"><span class="pf-frame"><img src="assets/apps/allure-spin.webp" alt="Allure Club app: Spin the wheel" loading="lazy"></span><b>Spin the wheel</b></button><button class="pf-ph" data-i="2"><span class="pf-frame"><img src="assets/apps/allure-menu.webp" alt="Allure Club app: Live menu" loading="lazy"></span><b>Live menu</b></button><button class="pf-ph" data-i="3"><span class="pf-frame"><img src="assets/apps/allure-staff.webp" alt="Allure Club app: Staff stamp terminal" loading="lazy"></span><b>Staff stamp terminal</b></button></div></div><div class="pf-panel" data-app="snw" style="--ac:#ffc21a;--bgc:#2b0f5c">
+        <div class="pf-info"><span class="pf-tag">Coming soon</span><h3>Smash N Wings</h3><p>Smash burger &amp; wings takeaway · ordering app</p><div class="pf-chips"><span>Collection &amp; delivery</span><span>Deals carousel</span><span>Stamp rewards</span><span>Push notifications</span></div></div>
+        <div class="pf-row"><button class="pf-ph" data-i="0"><span class="pf-frame"><img src="assets/apps/snw-home.webp" alt="Smash N Wings app: Order in two taps" loading="lazy"></span><b>Order in two taps</b></button><button class="pf-ph" data-i="1"><span class="pf-frame"><img src="assets/apps/snw-menu.webp" alt="Smash N Wings app: Menu &amp; checkout" loading="lazy"></span><b>Menu &amp; checkout</b></button><button class="pf-ph" data-i="2"><span class="pf-frame"><img src="assets/apps/snw-spin.webp" alt="Smash N Wings app: Rewards club" loading="lazy"></span><b>Rewards club</b></button><button class="pf-ph" data-i="3"><span class="pf-frame"><img src="assets/apps/snw-push.webp" alt="Smash N Wings app: Push offers" loading="lazy"></span><b>Push offers</b></button></div></div><div class="pf-panel" data-app="kaya" style="--ac:#d4af37;--bgc:#0e0c08">
+        <div class="pf-info"><span class="pf-tag">Coming soon</span><h3>Kaya Lounge</h3><p>Shisha lounge · venue app</p><div class="pf-chips"><span>Full menu</span><span>What’s showing</span><span>Google reviews</span><span>Event alerts</span></div></div>
+        <div class="pf-row"><button class="pf-ph" data-i="0"><span class="pf-frame"><img src="assets/apps/kaya-home.webp" alt="Kaya Lounge app: Venue home" loading="lazy"></span><b>Venue home</b></button><button class="pf-ph" data-i="1"><span class="pf-frame"><img src="assets/apps/kaya-menu.webp" alt="Kaya Lounge app: Food, drinks &amp; shisha" loading="lazy"></span><b>Food, drinks &amp; shisha</b></button><button class="pf-ph" data-i="2"><span class="pf-frame"><img src="assets/apps/kaya-sports.webp" alt="Kaya Lounge app: Live sport listings" loading="lazy"></span><b>Live sport listings</b></button><button class="pf-ph" data-i="3"><span class="pf-frame"><img src="assets/apps/kaya-home2.webp" alt="Kaya Lounge app: Reviews &amp; info" loading="lazy"></span><b>Reviews &amp; info</b></button></div></div></div>
+    </div>
+  </section>
+  <section id="d-work" class="lt lav">
+    <div class="wrap">
+      <div class="sec-head rv"><span class="eyebrow">Recent work</span><h2>Smash N Wings,<br><span class="grad-text">Bedford.</span></h2><p class="lede">A full ordering website and app for a smash burger and wings takeaway: deals, rewards, collection and delivery, all under their own brand.</p></div>
+      <div class="work rv"><div class="work-glow"></div><img class="work-laptop" src="assets/snw-laptop.webp" alt="Smash N Wings ordering website on a laptop, designed by SMR Digital" width="1300" height="797" loading="lazy"><img class="work-phone" src="assets/snw-phone.webp" alt="Smash N Wings ordering app on a phone, designed by SMR Digital" width="410" height="1141" loading="lazy"></div>
+      <div class="work-tags rv"><span>Ordering website</span><span>Branded app</span><span>Collection &amp; delivery</span><span>Deals carousel</span><span>Stamp rewards</span><span>Live opening hours</span></div>
+      <div class="btn-row rv" style="margin-top:24px"><a class="btn primary" href="#" data-quote data-svc="Ordering app">Get one for your business <svg data-i="arrow"></svg></a></div>
+    </div>
+  </section>
+
+  <section id="d-apps" class="lt">
+    <div class="wrap app-grid">
+      <div class="rv">
+        <div class="phone">
+          <div class="scr">
+            <div class="isl"></div>
+            <div class="push"><span class="ai">YB</span><div><b>🔥 2-for-1 wings tonight</b>Tap to order now, ends 10pm</div></div>
+            <div class="app-top"><small>Good evening, Sam 👋</small><b>Hungry? Order in<br>2 taps.</b></div>
+            <div class="app-body">
+              <div class="loyal"><div class="h"><span>LOYALTY CARD</span><span style="color:#ff3d2e">5 / 8</span></div><div class="stamps"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i></div></div>
+              <div class="wheel-card"><div class="wheel"><div class="w"></div><div class="hub"></div></div><div><b>Spin the wheel</b><small>One free spin daily</small><br><span class="win">🎉 FREE DRINK</span></div></div>
+              <div class="menu-row"><div class="mi"><div class="im"></div><span>Wings <em>£6.99</em></span></div><div class="mi"><div class="im"></div><span>Burger <em>£7.49</em></span></div></div>
+            </div>
+          </div>
+          <div class="order-ticket">ORDER #1042<br>APP · COLLECTION<br>--------------<br>2x Wings&nbsp;&nbsp;&nbsp;13.98<br>1x Burger&nbsp;&nbsp;&nbsp;7.49<br>--------------<br><b>PAID&nbsp;&nbsp;&nbsp;&nbsp;£21.47</b></div>
+        </div>
+      </div>
+      <div>
+        <div class="sec-head rv"><span class="eyebrow">Websites &amp; apps</span><h2>Your own app.<br><span class="grad-text">Your customers.</span></h2><p class="lede">Websites and custom ordering apps with your branding, built for takeaways, restaurants, cafés and shops. Big-brand features at small-business prices.</p></div>
+        <div class="feat-grid" id="featGrid"></div>
+        <div class="compare rv">
+          <div class="row"><div></div><div>Your SMR app</div><div>Delivery platforms</div></div>
+          <div class="row"><div>Commission per order</div><div><span class="y">None</span></div><div><span class="n">Yes</span></div></div>
+          <div class="row"><div>Own your customer data</div><div><span class="y">✓</span></div><div><span class="n">✕</span></div></div>
+          <div class="row"><div>Push offers to customers</div><div><span class="y">✓</span></div><div><span class="n">✕</span></div></div>
+          <div class="row"><div>Your branding, your loyalty</div><div><span class="y">✓</span></div><div><span class="n">✕</span></div></div>
+          <div class="row"><div>Brings in new customers</div><div>With promotion</div><div><span class="y">✓</span></div></div>
+        </div>
+        <p class="legal-note rv">Good to know: an app works best alongside your social media, so customers find it and download it. We help you promote it so it pays for itself.</p>
+        <div class="btn-row rv" style="margin-top:22px"><a class="btn primary" href="#" data-quote data-svc="Ordering app">Talk about an app <svg data-i="arrow"></svg></a><a class="btn ghost" href="#" data-quote data-svc="Website">I need a website</a></div>
+      </div>
+    </div>
+  </section>
+  </div><!-- /light-run -->
+
 
   <section class="usp-sec" style="padding-top:0">
     <div class="wrap usps">
@@ -970,48 +1066,6 @@ setTimeout(done,3700);})();
     </div>
   </section>
 
-  <section id="d-work" style="padding-top:0">
-    <div class="wrap">
-      <div class="sec-head rv"><span class="eyebrow">Recent work</span><h2>Smash N Wings,<br><span class="grad-text">Bedford.</span></h2><p class="lede">A full ordering website and app for a smash burger and wings takeaway: deals, rewards, collection and delivery, all under their own brand.</p></div>
-      <div class="work rv"><div class="work-glow"></div><img class="work-laptop" src="assets/snw-laptop.webp" alt="Smash N Wings ordering website on a laptop, designed by SMR Digital" width="1300" height="797" loading="lazy"><img class="work-phone" src="assets/snw-phone.webp" alt="Smash N Wings ordering app on a phone, designed by SMR Digital" width="410" height="1141" loading="lazy"></div>
-      <div class="work-tags rv"><span>Ordering website</span><span>Branded app</span><span>Collection &amp; delivery</span><span>Deals carousel</span><span>Stamp rewards</span><span>Live opening hours</span></div>
-      <div class="btn-row rv" style="margin-top:24px"><a class="btn primary" href="#" data-quote data-svc="Ordering app">Get one for your business <svg data-i="arrow"></svg></a></div>
-    </div>
-  </section>
-
-  <section id="d-apps">
-    <div class="wrap app-grid">
-      <div class="rv">
-        <div class="phone">
-          <div class="scr">
-            <div class="isl"></div>
-            <div class="push"><span class="ai">YB</span><div><b>🔥 2-for-1 wings tonight</b>Tap to order now, ends 10pm</div></div>
-            <div class="app-top"><small>Good evening, Sam 👋</small><b>Hungry? Order in<br>2 taps.</b></div>
-            <div class="app-body">
-              <div class="loyal"><div class="h"><span>LOYALTY CARD</span><span style="color:#ff3d2e">5 / 8</span></div><div class="stamps"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i></div></div>
-              <div class="wheel-card"><div class="wheel"><div class="w"></div><div class="hub"></div></div><div><b>Spin the wheel</b><small>One free spin daily</small><br><span class="win">🎉 FREE DRINK</span></div></div>
-              <div class="menu-row"><div class="mi"><div class="im"></div><span>Wings <em>£6.99</em></span></div><div class="mi"><div class="im"></div><span>Burger <em>£7.49</em></span></div></div>
-            </div>
-          </div>
-          <div class="order-ticket">ORDER #1042<br>APP · COLLECTION<br>--------------<br>2x Wings&nbsp;&nbsp;&nbsp;13.98<br>1x Burger&nbsp;&nbsp;&nbsp;7.49<br>--------------<br><b>PAID&nbsp;&nbsp;&nbsp;&nbsp;£21.47</b></div>
-        </div>
-      </div>
-      <div>
-        <div class="sec-head rv"><span class="eyebrow">Websites &amp; apps</span><h2>Your own app.<br><span class="grad-text">Your customers.</span></h2><p class="lede">Websites and custom ordering apps with your branding, built for takeaways, restaurants, cafés and shops. Big-brand features at small-business prices.</p></div>
-        <div class="feat-grid" id="featGrid"></div>
-        <div class="compare rv">
-          <div class="row"><div></div><div>Your SMR app</div><div>Delivery platforms</div></div>
-          <div class="row"><div>Commission per order</div><div><span class="y">None</span></div><div><span class="n">Yes</span></div></div>
-          <div class="row"><div>Own your customer data</div><div><span class="y">✓</span></div><div><span class="n">✕</span></div></div>
-          <div class="row"><div>Push offers to customers</div><div><span class="y">✓</span></div><div><span class="n">✕</span></div></div>
-          <div class="row"><div>Your branding, your loyalty</div><div><span class="y">✓</span></div><div><span class="n">✕</span></div></div>
-          <div class="row"><div>Brings in new customers</div><div>With promotion</div><div><span class="y">✓</span></div></div>
-        </div>
-        <p class="legal-note rv">Good to know: an app works best alongside your social media, so customers find it and download it. We help you promote it so it pays for itself.</p>
-        <div class="btn-row rv" style="margin-top:22px"><a class="btn primary" href="#" data-quote data-svc="Ordering app">Talk about an app <svg data-i="arrow"></svg></a><a class="btn ghost" href="#" data-quote data-svc="Website">I need a website</a></div>
-      </div>
-    </div>
-  </section>
 
   <section style="padding-top:0"><div class="wrap"><div class="sec-head rv"><span class="eyebrow">Also from SMR</span></div><div class="xsell" data-xsell="digital"></div></div></section>
   <section class="contact" style="padding-top:0"></section>
@@ -1107,6 +1161,7 @@ setTimeout(done,3700);})();
   </div>
 </footer>
 
+<div class="pf-lb" id="pfLb" aria-hidden="true"><button class="pf-x" aria-label="Close">×</button><button class="pf-nav pv" aria-label="Previous">‹</button><div class="pf-lbf"><img alt=""></div><button class="pf-nav nx" aria-label="Next">›</button><p class="pf-lbc"></p></div>
 <div class="dock" id="dock">
   <a class="btn primary" href="#" data-quote>Get a free quote</a>
   <a class="btn wa" href="#" data-wa aria-label="WhatsApp us"><svg data-i="wa"></svg></a>
@@ -1353,7 +1408,7 @@ function go(brand,{scroll=true,push=true}={}){
   try{localStorage.setItem('smr-brand',brand)}catch(e){}
 }
 function buildDrawer(){
-  const L={graphics:[['g-services','Services'],['g-contact','Get a quote']],digital:[['d-social','Social media'],['d-work','Apps & websites'],['d-contact','Get a quote']],plates:[['p-insta','Instagram'],['p-types','Plate styles'],['p-contact','Get a quote']]}[current];
+  const L={graphics:[['g-services','Services'],['g-contact','Get a quote']],digital:[['d-portfolio','Apps & websites'],['d-social','Social media'],['d-contact','Get a quote']],plates:[['p-insta','Instagram'],['p-types','Plate styles'],['p-contact','Get a quote']]}[current];
   const others=BRANDS.filter(b=>b!==current).map(b=>`<a data-go="${b}" style="color:var(--mut)">SMR ${b[0].toUpperCase()+b.slice(1)} →</a>`).join('');
   document.getElementById('drawer').innerHTML=L.map(([id,t])=>`<a href="#${id}" data-scroll>${t}</a>`).join('')+`<a href="https://www.instagram.com/${CONTACT.instagram[current]}/" target="_blank" rel="noopener">Instagram</a>`+others;
 }
@@ -1386,15 +1441,22 @@ const SCN=[...document.querySelectorAll('[data-scroll]')], PAR=[...document.quer
 let scT=0;
 function updScroll(){scT=0;const vh=innerHeight;
   SCN.forEach(el=>{if(!el.offsetParent)return;const r=el.getBoundingClientRect();const c=r.top+r.height/2;const v=RM?.3:Math.max(0,Math.min(1,(vh-c)/(vh*.85)));el.style.setProperty('--p',v.toFixed(3));if(v>0)el.classList.add('in')});
-  const po=document.getElementById('polo');
-  if(po&&po.offsetParent){const pp=parseFloat(po.parentNode.style.getPropertyValue('--p'))||0;const t=Math.max(0,Math.min(1,(pp-.42)/.3));const a=t*Math.PI,c=Math.cos(a);
-    po.style.setProperty('--s',(.2+.8*Math.abs(c)).toFixed(3));po.style.setProperty('--sh',(Math.sin(a)*.85).toFixed(3));po.style.setProperty('--dir',c>0?'90deg':'270deg');
-    po.querySelector('.pf').style.opacity=c>=0?1:0;po.querySelector('.pb').style.opacity=c<0?1:0;
-    po.querySelector('.shade').style.webkitMaskImage=po.querySelector('.shade').style.maskImage=`url(${c>=0?po.querySelector('.pf').src:po.querySelector('.pb').src})`;}
   if(!RM)PAR.forEach(el=>{if(!el.offsetParent)return;const r=el.getBoundingClientRect();if(r.bottom<-200||r.top>vh+200)return;el.style.setProperty('--py',((r.top+r.height/2-vh/2)*parseFloat(el.dataset.par)).toFixed(1)+'px')});
 }
 window.addEventListener('scroll',()=>{if(!scT)scT=requestAnimationFrame(updScroll)},{passive:true});
 window.addEventListener('resize',updScroll);
+
+/* ---- App portfolio: tabs + lightbox ---- */
+document.querySelectorAll('.pf-tab').forEach(t=>t.addEventListener('click',()=>{document.querySelectorAll('.pf-tab').forEach(x=>x.classList.toggle('on',x===t));document.querySelectorAll('.pf-panel').forEach(p=>p.classList.toggle('on',p.dataset.app===t.dataset.app))}));
+(()=>{const lb=document.getElementById('pfLb'),img=lb.querySelector('img'),cap=lb.querySelector('.pf-lbc');let list=[],i=0;
+ const show=()=>{const b=list[i];img.src=b.querySelector('img').src;img.alt=b.querySelector('img').alt;cap.textContent=b.querySelector('b').textContent};
+ document.querySelectorAll('.pf-ph').forEach(b=>b.addEventListener('click',()=>{list=[...b.parentNode.children];i=list.indexOf(b);show();lb.classList.add('open');lb.setAttribute('aria-hidden','false')}));
+ const close=()=>{lb.classList.remove('open');lb.setAttribute('aria-hidden','true')};
+ lb.querySelector('.pf-x').onclick=close; lb.addEventListener('click',e=>{if(e.target===lb)close()});
+ lb.querySelector('.pv').onclick=()=>{i=(i-1+list.length)%list.length;show()}; lb.querySelector('.nx').onclick=()=>{i=(i+1)%list.length;show()};
+ addEventListener('keydown',e=>{if(!lb.classList.contains('open'))return;if(e.key==='Escape')close();if(e.key==='ArrowLeft')lb.querySelector('.pv').click();if(e.key==='ArrowRight')lb.querySelector('.nx').click()});
+ let sx=null;lb.addEventListener('touchstart',e=>sx=e.touches[0].clientX,{passive:true});lb.addEventListener('touchend',e=>{if(sx===null)return;const d=e.changedTouches[0].clientX-sx;if(Math.abs(d)>40)(d<0?lb.querySelector('.nx'):lb.querySelector('.pv')).click();sx=null});
+})();
 /* ---- Reveal + dock ---- */
 let io;
 function observe(){
