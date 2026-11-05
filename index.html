@@ -292,6 +292,9 @@ body[data-brand="plates"] .usp .ic svg{color:#170f00}
 .cc .bgx{position:absolute;inset:0;transition:transform .8s var(--ease)}
 .cc:hover .bgx{transform:scale(1.06)}
 .cc h3,.cc p{position:relative}
+.cc-ic{position:absolute;left:50%;top:34%;width:38%;max-width:96px;aspect-ratio:1;transform:translate(-50%,-50%);display:grid;place-items:center;border-radius:28%;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);color:#fff;transition:transform .5s var(--ease);z-index:1}
+.cc-ic svg{width:58%;height:58%;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.cc:hover .cc-ic{transform:translate(-50%,-56%) scale(1.06)}
 .cc p{font-size:12.5px;color:rgba(255,255,255,.75);line-height:1.4;margin-top:4px}
 .cc .bgx::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,rgba(0,0,0,.75))}
 .cc .rec{position:absolute;top:14px;left:14px;display:flex;align-items:center;gap:6px;font-size:11px;font-weight:800;letter-spacing:.1em;padding:5px 9px;border-radius:8px;background:rgba(0,0,0,.45)}
@@ -500,6 +503,7 @@ footer{border-top:1px solid var(--line);padding:46px 0 calc(110px + var(--safe-b
 .cards.in .c3{transform:rotate(4deg)}
 .cards.in .c1{transform:rotate(-7deg)}
 .cards.in .c2{transform:rotate(6deg)}
+.cards .c2 .flip{transform:rotateY(calc(min(1,max(0,(var(--p) - .48)/.16))*-180deg))}
 .cards .c1 .flip{transform:rotateY(calc(min(1,max(0,(var(--p) - 0.42)/0.16))*180deg))}
 .cards .c3 .flip{transform:rotateY(calc(min(1,max(0,(var(--p) - 0.36)/0.16))*-180deg))}
 /* A5 leaflets */
@@ -764,7 +768,7 @@ setTimeout(done,3700);})();
       </div>
       <div class="stage" aria-hidden="true"><div class="stage-in">
         <div class="obj o-banner"><div class="bn-cap"></div><div class="bn-panel art"><img src="assets/work/chunk-roller.webp" alt=""></div><div class="bn-base"></div></div>
-        <div class="obj o-card art"><img src="assets/work/chai-card.webp" alt=""></div>
+        <div class="obj o-card art"><img src="assets/work/chai-front.webp" alt=""></div>
         <div class="obj o-flyer art"><img src="assets/work/beefking-front.webp" alt=""></div>
         <img class="obj o-hoodie" src="assets/work/snw-polo-front.webp" alt="">
         <div class="obj o-sticker"><svg viewBox="0 0 100 100"><defs><path id="cp" d="M50 50 m-37 0 a37 37 0 1 1 74 0 a37 37 0 1 1 -74 0"/><linearGradient id="sg" x1="0" x2="1"><stop offset="0" stop-color="#2f6bff"/><stop offset="1" stop-color="#a43bff"/></linearGradient></defs><g class="ring"><text font-family="Sora,Arial,sans-serif" font-weight="700" font-size="8.6" fill="#111"><textPath href="#cp" textLength="226" lengthAdjust="spacing">SMR GRAPHICS • DESIGN • PRINT • </textPath></text></g><circle cx="50" cy="50" r="20" fill="url(#sg)"/><path d="M41 50.5 L47.5 57 L59 44" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
@@ -798,7 +802,7 @@ setTimeout(done,3700);})();
         <div class="scene cards" data-scroll>
           <div class="bcard c3" style="--ar:1.543"><div class="flip"><img class="face" src="assets/work/hamzah-front.webp" alt="Hamzah Khan business card, front" loading="lazy"><img class="face back" src="assets/work/hamzah-back.webp" alt="Hamzah Khan business card, back" loading="lazy"></div></div>
           <div class="bcard c1" style="--ar:1.49"><div class="flip"><img class="face" src="assets/work/crochet-front.webp" alt="Crochet by Si business card, front" loading="lazy"><img class="face back" src="assets/work/crochet-back.webp" alt="Crochet by Si business card, back" loading="lazy"></div></div>
-          <div class="bcard c2" style="--ar:1.75"><div class="flip"><img class="face" src="assets/work/chai-card.webp" alt="Chai Express business card" loading="lazy"></div></div>
+          <div class="bcard c2" style="--ar:1.75"><div class="flip"><img class="face" src="assets/work/chai-front.webp" alt="Chai Express card, front" loading="lazy"><img class="face back" src="assets/work/chai-back.webp" alt="Chai Express loyalty card, back" loading="lazy"></div></div>
         </div>
       </div>
     </div>
@@ -1058,10 +1062,10 @@ setTimeout(done,3700);})();
     <div class="wrap">
       <div class="sec-head rv"><span class="eyebrow">Content creation</span><h2>Scroll-stopping<br><span class="grad-text">photo &amp; video.</span></h2></div>
       <div class="create">
-        <div class="cc rv"><div class="bgx" style="background:radial-gradient(circle at 30% 30%,#ffcf6b,transparent 45%),linear-gradient(150deg,#ff6a3d,#7b1fa2)"></div><span class="rec"><i></i>REC</span><h3>Photo shoots</h3><p>Food, products, premises and team.</p></div>
-        <div class="cc rv d1"><div class="bgx" style="background:radial-gradient(circle at 70% 25%,#7df9ff,transparent 40%),linear-gradient(160deg,#2f6bff,#14143a)"></div><span class="rec"><i></i>REC</span><h3>Reels &amp; TikToks</h3><p>Short, punchy videos made to perform.</p></div>
-        <div class="cc rv d2"><div class="bgx" style="background:radial-gradient(circle at 40% 70%,#ff8fd8,transparent 45%),linear-gradient(140deg,#a43bff,#3b0f5c)"></div><h3>Graphics &amp; stories</h3><p>Offers, menus and announcements.</p></div>
-        <div class="cc rv d3"><div class="bgx" style="background:radial-gradient(circle at 60% 30%,#b6ffb0,transparent 40%),linear-gradient(150deg,#0f9d77,#0c2a3a)"></div><h3>Strategy</h3><p>What to post, when, and why it works.</p></div>
+        <div class="cc rv"><div class="bgx" style="background:radial-gradient(circle at 30% 30%,#ffcf6b,transparent 45%),linear-gradient(150deg,#ff6a3d,#7b1fa2)"></div><span class="cc-ic"><svg viewBox="0 0 48 48"><path d="M8 16h7l3-5h12l3 5h7v22H8z"/><circle cx="24" cy="26" r="7.5"/><circle cx="36" cy="20.5" r="1.2" fill="currentColor"/></svg></span><span class="rec"><i></i>REC</span><h3>Photo shoots</h3><p>Food, products, premises and team.</p></div>
+        <div class="cc rv d1"><div class="bgx" style="background:radial-gradient(circle at 70% 25%,#7df9ff,transparent 40%),linear-gradient(160deg,#2f6bff,#14143a)"></div><span class="cc-ic"><svg viewBox="0 0 48 48"><rect x="13" y="5" width="22" height="38" rx="5"/><path d="M21 18v12l10-6z" fill="currentColor"/><path d="M20 9h8"/></svg></span><span class="rec"><i></i>REC</span><h3>Reels &amp; TikToks</h3><p>Short, punchy videos made to perform.</p></div>
+        <div class="cc rv d2"><div class="bgx" style="background:radial-gradient(circle at 40% 70%,#ff8fd8,transparent 45%),linear-gradient(140deg,#a43bff,#3b0f5c)"></div><span class="cc-ic"><svg viewBox="0 0 48 48"><rect x="7" y="9" width="27" height="31" rx="4"/><rect x="14" y="5" width="27" height="31" rx="4" fill="rgba(255,255,255,.12)"/><path d="M18 28l6-7 5 5 4-4 5 6"/><circle cx="22" cy="14" r="2.5"/></svg></span><h3>Graphics &amp; stories</h3><p>Offers, menus and announcements.</p></div>
+        <div class="cc rv d3"><div class="bgx" style="background:radial-gradient(circle at 60% 30%,#b6ffb0,transparent 40%),linear-gradient(150deg,#0f9d77,#0c2a3a)"></div><span class="cc-ic"><svg viewBox="0 0 48 48"><path d="M8 40h32"/><path d="M12 34V24M20 34V16M28 34V20M36 34V10"/><path d="M10 18l9-7 8 4 11-8"/><path d="M33 7h5v5"/></svg></span><h3>Strategy</h3><p>What to post, when, and why it works.</p></div>
       </div>
     </div>
   </section>
