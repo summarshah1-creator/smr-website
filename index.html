@@ -528,8 +528,10 @@ footer{border-top:1px solid var(--line);padding:46px 0 calc(110px + var(--safe-b
 .flap .face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;box-shadow:0 24px 44px rgba(30,15,80,.18)}
 .flap .face.back{transform:rotateY(180deg)}
 /* A3 menu: full page, never cropped */
-.menus{display:grid;place-items:center}
-.a3menu{width:230px;aspect-ratio:612/858.75;transform:rotate(-3deg)}
+.menus{display:flex;justify-content:center;align-items:flex-start;gap:14px}
+.a3menu{width:min(165px,46%);aspect-ratio:612/858.75;transform:rotate(-3deg)}
+.a3menu.nye{aspect-ratio:1748/2480;transform:rotate(3deg);margin-top:30px}
+.a3menu.nye .flip{transform:rotateY(calc(min(1,max(0,(var(--p) - .44)/.18))*-180deg))}
 .a3menu .flip{transform:rotateY(calc(min(1,max(0,(var(--p) - 0.36)/0.18))*180deg))}
 .a3menu .face{border-radius:3px}
 .menu-row2{display:grid;gap:18px;margin-top:18px;align-items:center}
@@ -585,7 +587,7 @@ img.o-hoodie{height:auto;object-fit:contain;filter:drop-shadow(0 26px 30px rgba(
   .cards{height:400px}.bcard{width:300px}.bcard.c3{margin-left:-150px}.bcard.c1{top:100px}.bcard.c2{top:200px}
   .leaflets{height:360px;max-width:480px}.a5{width:200px}.a5.l1{left:calc(50% - 210px)}
   .book{width:500px}.fold{width:520px}
-  .a3menu{width:300px}
+  .a3menu{width:240px}
   .menu-row2{grid-template-columns:1.2fr 1fr;margin-top:10px}
   .board{width:330px}
   .vinyls{grid-template-columns:1fr 1fr;gap:30px}
@@ -831,7 +833,7 @@ setTimeout(done,3700);})();
       <div class="w-block">
         <div class="w-copy rv"><h3>Menus</h3><p>Table menus, folded takeaway menus and big wall menu boards, designed to sell.</p></div>
         <div class="scene menus" data-scroll>
-          <div class="a3menu"><div class="flip"><img class="face" src="assets/work/kaya-front.webp" alt="Kaya Lounge A3 menu, front" loading="lazy"><img class="face back" src="assets/work/kaya-back.webp" alt="Kaya Lounge A3 menu, back" loading="lazy"></div></div>
+          <div class="a3menu"><div class="flip"><img class="face" src="assets/work/kaya-front.webp" alt="Kaya Lounge A3 menu, front" loading="lazy"><img class="face back" src="assets/work/kaya-back.webp" alt="Kaya Lounge A3 menu, back" loading="lazy"></div></div><div class="a3menu nye"><div class="flip"><img class="face" src="assets/work/timed-nye-front.webp" alt="Tim &amp; Ed Cafe New Year's Eve menu, front" loading="lazy"><img class="face back" src="assets/work/timed-nye-back.webp" alt="Tim &amp; Ed Cafe New Year's Eve dinner menu, back" loading="lazy"></div></div>
         </div>
       </div>
       <div class="menu-row2">
