@@ -75,6 +75,13 @@ body[data-brand="plates"] .switch button.on{color:#140d00}
 .switch .pill{position:absolute;top:4px;bottom:4px;left:4px;border-radius:999px;background:var(--grad);box-shadow:0 6px 20px var(--glow);transition:transform .5s var(--ease),width .5s var(--ease),background .6s}
 .bar .switch{display:none}
 .sub-bar{padding:0 0 12px}
+.svcstrip{background:#fff;color:#111;overflow:hidden;height:32px;display:flex;align-items:center;-webkit-mask:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
+.svc-track{display:flex;flex:none;white-space:nowrap;animation:svcMove var(--svc-t,40s) linear infinite;will-change:transform}
+.svc-track span{font-family:Sora,sans-serif;font-weight:600;font-size:13px;letter-spacing:.01em;display:inline-flex;align-items:center}
+.svc-track span::after{content:"";width:6px;height:6px;border-radius:50%;margin:0 16px;background:linear-gradient(110deg,var(--a1),var(--a2))}
+body[data-brand="plates"] .svcstrip{display:none}
+@keyframes svcMove{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.svc-track{animation-duration:120s}}
 .sub-bar .switch{display:flex;width:100%}
 .sub-bar .switch button{flex:1;padding:9px 6px}
 .menu-btn{width:44px;height:44px;border-radius:14px;border:1px solid var(--line2);background:rgba(255,255,255,.04);display:grid;place-items:center;cursor:pointer}
@@ -774,6 +781,7 @@ setTimeout(done,3700);})();
       </nav>
     </div>
   </div>
+  <div class="svcstrip" id="svcStrip" aria-label="Our services"><div class="svc-track" id="svcTrack"></div></div>
 </header>
 
 <div class="drawer" id="drawer"></div>
@@ -784,7 +792,7 @@ setTimeout(done,3700);})();
   <section class="hero">
     <div class="wrap hero-grid">
       <div>
-        <div class="ticker"><span class="dot"></span>We do&nbsp;<b><span>Logos</span><span>Banners</span><span>Uniforms</span><span>Sign boards</span><span>Stickers</span><span>Menus</span><span>Logos</span></b></div>
+        
         <h1><span class="line"><span>Your brand,</span></span><span class="line"><span class="grad-text">designed &amp;</span></span><span class="line"><span class="grad-text">printed right.</span></span></h1>
         <p class="lede">Logos, print, signage and custom clothing for businesses that want to look the part. Professional quality and quick turnaround, at prices that make sense.</p>
         <div class="btn-row">
@@ -976,7 +984,7 @@ setTimeout(done,3700);})();
   <section class="hero">
     <div class="wrap hero-grid">
       <div>
-        <div class="ticker"><span class="dot"></span>We build&nbsp;<b><span>Ordering apps</span><span>Websites</span><span>Booking systems</span><span>Loyalty apps</span><span>Admin dashboards</span><span>Ordering apps</span></b></div>
+        
         <h1><span class="line"><span>High-end apps</span></span><span class="line"><span>&amp; websites.</span></span><span class="line"><span class="grad-text">Insanely affordable.</span></span></h1>
         <p class="lede">Custom-built in your brand, with the back end to run it: orders, bookings, loyalty and your own admin dashboard.</p>
         <div class="btn-row">
@@ -1082,7 +1090,7 @@ setTimeout(done,3700);})();
   <section class="hero">
     <div class="wrap hero-grid">
       <div>
-        <div class="ticker"><span class="dot"></span>We do&nbsp;<b><span>Social media</span><span>Content</span><span>Reels</span><span>Photo shoots</span><span>Strategy</span><span>Social media</span></b></div>
+        
         <h1><span class="line"><span>Get seen.</span></span><span class="line"><span>Get followed.</span></span><span class="line"><span class="grad-text">Grow online.</span></span></h1>
         <p class="lede">Social media management, content creation and strategy for local businesses. We set it up, make the content and keep it posting.</p>
         <div class="btn-row">
@@ -1485,6 +1493,12 @@ function setSub(word,animate){
   w.classList.add('in');sub.appendChild(w);w.style.backgroundImage=getComputedStyle(w).backgroundImage;
   requestAnimationFrame(()=>requestAnimationFrame(()=>w.classList.remove('in')));
 }
+const SVC={
+  graphics:['Logo design','Branding','Leaflets & flyers','Menus','Business cards','Banners','Roller banners','Posters','Signboards','Stickers','Uniforms & embroidery','Printing'],
+  digital:['Websites','Ordering apps','Online ordering systems','Booking systems','Loyalty & rewards','Admin dashboards','Business management software','Shop tablet & printing','Push notifications','White-label apps','Hosting & support'],
+  marketing:['Social media management','Videography','Video editing','Photography','Reels & TikToks','Social post design','Content planning','Websites & SEO','Google Business profile']
+};
+function setSvc(brand){const L=SVC[brand];if(!L)return;const tr=document.getElementById('svcTrack');const one=L.concat(L).map(s=>`<span>${s.replace(/&/g,'&amp;')}</span>`).join('');tr.innerHTML=one+one;tr.style.setProperty('--svc-t',(L.length*7)+'s')}
 function movePills(){document.querySelectorAll('[data-switch]').forEach(sw=>{const on=sw.querySelector('button.on'),p=sw.querySelector('.pill');p.style.opacity=on?'':'0';if(!on||!sw.offsetParent)return;p.style.width=on.offsetWidth+'px';p.style.transform=`translateX(${on.offsetLeft-4}px)`})}
 let current=null;
 function go(brand,{scroll=true,push=true}={}){
@@ -1495,7 +1509,7 @@ function go(brand,{scroll=true,push=true}={}){
   document.body.dataset.brand=brand;
   document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id==='v-'+brand));
   document.querySelectorAll('[data-switch] button').forEach(b=>b.classList.toggle('on',b.dataset.brand===brand));
-  movePills();setSub(brand,!first);
+  movePills();setSub(brand,!first);setSvc(brand);
   const v=document.getElementById('v-'+brand);document.title=v.dataset.title.replace(/&amp;/g,'&');
   if(push){const onPlates=/^\/plates\/?$/.test(location.pathname);
     try{if(brand==='plates'){if(!onPlates)history.replaceState(null,'','/plates')}else if(onPlates)history.replaceState(null,'','/#'+brand);else if(location.hash!=='#'+brand)history.replaceState(null,'','#'+brand)}catch(e){if(location.hash!=='#'+brand)location.hash=brand}}

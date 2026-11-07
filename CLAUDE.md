@@ -24,6 +24,7 @@ Owner: Summar (SMR Graphics / SMR Digital / SMR Plates, Luton). He edits the sit
 - Client logo carousel "Trusted by businesses & charities" on Graphics and Digital: `assets/clients/*.webp`, listed in `CLIENTS` in index.html. Logos have backgrounds removed and were recoloured only where needed for contrast on dark.
 - Digital: "Recent work: Smash N Wings, Bedford" (laptop + phone mockups) sits above Websites & apps. Cross-sell at the bottom of each tab (XSFOR): Digital → Marketing + Graphics.
 - Plates order: builder → USP strip → Instagram auto-carousel (@smr.plates posts) → plate styles → private reg search.
+- Header: a white scrolling services strip under the top bar (SVC list in index.html, per tab; hidden on Plates). It replaced the "We do / We build" tickers on Digital, Graphics and Marketing (Plates keeps its ticker).
 - Graphics hero: pull-up banner, business card, leaflet, hoodie, spinning "SMR GRAPHICS • DESIGN • PRINT" badge (only the text ring spins).
 
 ## Private Demo Manager (`/demo/`, `/demo-admin/`)
