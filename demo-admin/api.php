@@ -40,7 +40,10 @@ function link_row(array $l): array {
         $st->execute([$l['id']]);
         $expiry = (int) $st->fetchColumn();
     }
-    return ['id' => (int) $l['id'], 'label' => $l['label'], 'url' => link_url($l['token']), 'pin' => $l['pin'], 'apps' => link_apps($l),
+    $st2 = db()->prepare('SELECT COUNT(*) AS n, MAX(last_seen) AS seen, (SELECT last_app FROM sessions WHERE link_id = ? ORDER BY last_seen DESC LIMIT 1) AS app FROM sessions WHERE link_id = ?');
+    $st2->execute([$l['id'], $l['id']]);
+    $ss = $st2->fetch() ?: [];
+    return ['id' => (int) $l['id'], 'label' => $l['label'], 'devices' => (int) ($ss['n'] ?? 0), 'last_seen' => (int) ($ss['seen'] ?? 0), 'last_app' => (string) ($ss['app'] ?? ''), 'url' => link_url($l['token']), 'pin' => $l['pin'], 'apps' => link_apps($l),
         'mode' => $l['mode'], 'max_uses' => $max, 'uses' => (int) $l['uses'], 'duration' => (int) $l['duration'], 'tips' => (int) $l['tips'],
         'created_at' => (int) $l['created_at'], 'activated_at' => (int) $l['activated_at'], 'expires_at' => $expiry,
         'status' => $status, 'left' => $left];
@@ -152,7 +155,29 @@ case 'list':
     }
     $links = [];
     foreach (db()->query('SELECT * FROM links ORDER BY id DESC LIMIT 300') as $l) $links[] = link_row($l);
-    json_out(['demos' => $demos, 'links' => $links, 'now' => now(), 'storage' => strpos(private_dir(), SITE_ROOT) === 0 ? 'inside' : 'outside']);
+    $events = db()->query('SELECT e.type, e.text, e.at, e.link_id, l.label FROM events e LEFT JOIN links l ON l.id = e.link_id ORDER BY e.id DESC LIMIT 20')->fetchAll();
+    $pushN = (int) db()->query('SELECT COUNT(*) FROM push_subs')->fetchColumn();
+    json_out(['demos' => $demos, 'links' => $links, 'events' => $events, 'push_devices' => $pushN, 'now' => now(), 'storage' => strpos(private_dir(), SITE_ROOT) === 0 ? 'inside' : 'outside']);
+
+case 'push_key':
+    require_once dirname(__DIR__) . '/demo-lib/push.php';
+    json_out(['key' => vapid_keys()['public']]);
+
+case 'push_subscribe':
+    $ep = (string) ($in['endpoint'] ?? '');
+    $k = (array) ($in['keys'] ?? []);
+    if (!preg_match('#^https://[^\s]+$#', $ep) || empty($k['p256dh']) || empty($k['auth'])) json_out(['error' => 'Notifications could not be set up on this device.'], 400);
+    db()->prepare('INSERT OR REPLACE INTO push_subs (endpoint, p256dh, auth, created_at) VALUES (?,?,?,?)')->execute([$ep, (string) $k['p256dh'], (string) $k['auth'], now()]);
+    require_once dirname(__DIR__) . '/demo-lib/push.php';
+    json_out_then(['ok' => true], function () { push_all('SMR Admin', 'Notifications are on. You will hear when someone opens a demo.', '/demo-admin/#live', 'welcome'); });
+
+case 'push_unsubscribe':
+    db()->prepare('DELETE FROM push_subs WHERE endpoint = ?')->execute([(string) ($in['endpoint'] ?? '')]);
+    json_out(['ok' => true]);
+
+case 'push_test':
+    require_once dirname(__DIR__) . '/demo-lib/push.php';
+    json_out_then(['ok' => true], function () { push_all('SMR Admin', 'Test notification: it works.', '/demo-admin/#live', 'test'); });
 
 case 'link_create':
     $apps = array_values(array_unique(array_filter(array_map('strval', (array) ($in['apps'] ?? [])), function ($s) { return (bool) demo_by_slug($s); })));
@@ -175,12 +200,12 @@ case 'link_extend':
     $mins = max(1, min(24 * 60, (int) ($in['minutes'] ?? 15)));
     $add = $mins * 60; $now = now();
     if ($l['mode'] === 'shared') {
-        if ($l['activated_at']) db()->prepare('UPDATE links SET expires_at = MAX(expires_at, ?) + ?, revoked = 0 WHERE id = ?')->execute([$now, $add, $l['id']]);
+        if ($l['activated_at']) db()->prepare('UPDATE links SET expires_at = MAX(expires_at, CAST(? AS INTEGER)) + ?, revoked = 0 WHERE id = ?')->execute([$now, $add, $l['id']]);
         else db()->prepare('UPDATE links SET duration = duration + ?, revoked = 0 WHERE id = ?')->execute([$mins, $l['id']]);
     } else {
         $n = db()->prepare('SELECT COUNT(*) FROM sessions WHERE link_id = ?');
         $n->execute([$l['id']]);
-        if ((int) $n->fetchColumn()) db()->prepare('UPDATE sessions SET expires_at = MAX(expires_at, ?) + ? WHERE link_id = ?')->execute([$now, $add, $l['id']]);
+        if ((int) $n->fetchColumn()) db()->prepare('UPDATE sessions SET expires_at = MAX(expires_at, CAST(? AS INTEGER)) + ? WHERE link_id = ?')->execute([$now, $add, $l['id']]);
         else db()->prepare('UPDATE links SET duration = duration + ? WHERE id = ?')->execute([$mins, $l['id']]);
         db()->prepare('UPDATE links SET revoked = 0 WHERE id = ?')->execute([$l['id']]);
     }

@@ -73,7 +73,7 @@ header('Permissions-Policy: geolocation=(self), camera=(self), microphone=()');
 
 if (strpos($mime, 'text/html') === 0) {
     if (!$admin) {
-        db()->prepare('UPDATE sessions SET last_seen = ? WHERE id = ?')->execute([now(), $sess['id']]);
+        db()->prepare('UPDATE sessions SET last_seen = ?, last_app = ? WHERE id = ?')->execute([now(), $slug, $sess['id']]);
     }
     $top = $admin ? '/demo/?preview=1#app=' . $slug : '/demo/?k=' . rawurlencode($link['token']) . '#app=' . $slug;
     $html = (string) file_get_contents($real);

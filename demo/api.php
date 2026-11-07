@@ -13,7 +13,23 @@ if ($a === 'state') {
     if (!$vs) json_out(['state' => 'none', 'now' => now()]);
     [$l, $s] = $vs;
     $st = session_state($l, $s);
-    json_out(['state' => $st, 'now' => now(), 'expires_at' => $st === 'ok' ? session_expiry($l, $s) : 0]);
+    $exp = session_expiry($l, $s);
+    $out = ['state' => $st, 'now' => now(), 'expires_at' => $st === 'ok' ? $exp : 0];
+    // Tell the owner when time is nearly up, and when it has ended (once per expiry time).
+    $shared = $l['mode'] === 'shared';
+    $flag = null;
+    if ($st === 'ok' && $exp - now() <= 300) $flag = ['warned_exp', 'low', 'has 5 minutes left on their demo. Tap to extend.'];
+    if ($st === 'expired') $flag = ['ended_exp', 'ended', "'s demo time has run out."];
+    if ($flag) {
+        $q = $shared ? db()->prepare("UPDATE links SET {$flag[0]} = ? WHERE id = ? AND {$flag[0]} != ?")
+                     : db()->prepare("UPDATE sessions SET {$flag[0]} = ? WHERE id = ? AND {$flag[0]} != ?");
+        $q->execute([$exp, $shared ? $l['id'] : $s['id'], $exp]);
+        if ($q->rowCount() > 0) {
+            require_once dirname(__DIR__) . '/demo-lib/push.php';
+            json_out_then($out, function () use ($l, $flag) { link_event($l, $flag[1], $flag[2]); });
+        }
+    }
+    json_out($out);
 }
 
 if ($a === 'redeem' && $method === 'POST') {
@@ -72,7 +88,12 @@ if ($a === 'redeem' && $method === 'POST') {
             ->execute([hash('sha256', $raw), $l['id'], $now, $exp, $now, substr((string) ($_SERVER['HTTP_USER_AGENT'] ?? ''), 0, 200)]);
         $pdo->exec('COMMIT');
         set_cookie(VISITOR_COOKIE, $raw, $now + 30 * 86400, '/demo/', 'Lax');
-        json_out(['ok' => true, 'state' => 'ok']);
+        $n = (int) $l['uses'] + 1;
+        $mins = (int) round(($exp - $now) / 60);
+        require_once dirname(__DIR__) . '/demo-lib/push.php';
+        json_out_then(['ok' => true, 'state' => 'ok'], function () use ($l, $n, $mins) {
+            link_event($l, 'opened', 'opened the demo' . ($n > 1 ? ' (open no. ' . $n . ')' : '') . ' · ' . $mins . ' min left');
+        });
     } catch (Throwable $e) {
         if ($pdo->inTransaction()) $pdo->exec('ROLLBACK');
         json_out(['error' => 'Something went wrong. Please try again.'], 500);

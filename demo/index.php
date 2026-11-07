@@ -94,6 +94,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .timer.crit{border-color:rgba(255,84,112,.7);background:rgba(255,84,112,.16);animation:pulse 1s ease-in-out infinite}.timer.crit b{color:var(--bad)}
 @keyframes pulse{50%{box-shadow:0 0 0 4px rgba(255,84,112,.18)}}
 .hbtn{height:38px;padding:0 12px;border-radius:12px;display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:13px;white-space:nowrap}
+.hbtn.homebtn{background:rgba(255,255,255,.06);border:1px solid var(--line);font-size:14px}.hbtn.homebtn svg{width:17px;height:17px}
+body.owner .hbtn.all,body.owner .viewsw+.hbtn,body.owner .hbtn.exit{display:none}
 .hbtn.all{background:var(--grad);color:#fff;box-shadow:0 6px 18px -8px rgba(214,59,255,.7)}
 .hbtn.all svg{width:15px;height:15px}
 .hbtn.icon{width:38px;padding:0;justify-content:center;border:1px solid var(--line);background:rgba(255,255,255,.04)}
@@ -202,7 +204,7 @@ h1 em{font-style:normal;background:var(--grad);-webkit-background-clip:text;back
 @media print{body *{display:none!important}body::after{content:"SMR Digital demos are not available to print.";display:block;padding:40px;font:16px sans-serif}}
 </style>
 </head>
-<body>
+<body<?= $preview ? ' class="owner"' : '' ?>>
 <div class="glow"></div>
 
 <?php if ($view === 'showroom'): ?>
@@ -211,9 +213,13 @@ h1 em{font-style:normal;background:var(--grad);-webkit-background-clip:text;back
     <small>Designed &amp; Built by</small>
     <span class="lg"><?= $mark ?><span>Digital</span></span>
   </a>
-  <div class="timer<?= $preview ? ' owner' : '' ?>" id="timer" role="timer" aria-live="off">
-    <small><?= $preview ? 'Owner' : 'Session expires in' ?></small><b id="clock"><?= $preview ? 'No limit' : '--:--' ?></b>
+  <?php if ($preview): ?>
+  <a class="hbtn homebtn" href="/demo-admin/#demos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h5v-6h4v6h5V10"/></svg>Home</a>
+  <?php else: ?>
+  <div class="timer" id="timer" role="timer" aria-live="off">
+    <small>Session expires in</small><b id="clock">--:--</b>
   </div>
+  <?php endif; ?>
   <button class="hbtn all" data-home type="button" aria-label="All demos">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3.5" y="3.5" width="7" height="7" rx="2"/><rect x="13.5" y="3.5" width="7" height="7" rx="2"/><rect x="3.5" y="13.5" width="7" height="7" rx="2"/><rect x="13.5" y="13.5" width="7" height="7" rx="2"/></svg>
     <span class="lbl-long">All Demos</span><span class="lbl-short">All</span>
@@ -375,9 +381,9 @@ var show=function(slug){
     document.title='SMR Digital · Private demos';clearTimeout(tipT);$('tip').classList.remove('on');mini.classList.remove('on');
   }
 };
-var route=function(){var m=/app=([a-z0-9-]+)/.exec(location.hash);show(m?m[1]:null)};
+var route=function(){var m=/app=([a-z0-9-]+)/.exec(location.hash);if(B.preview&&!m){location.replace('/demo-admin/#demos');return}show(m?m[1]:null)};
 grid.addEventListener('click',function(e){var c=e.target.closest('[data-open]');if(c)location.hash='app='+c.getAttribute('data-open')});
-document.querySelectorAll('[data-home]').forEach(function(b){b.addEventListener('click',function(e){e.preventDefault();if(location.hash)history.pushState(null,'',location.pathname+location.search);show(null)})});
+document.querySelectorAll('[data-home]').forEach(function(b){b.addEventListener('click',function(e){e.preventDefault();if(B.preview){location.href='/demo-admin/#demos';return}if(location.hash)history.pushState(null,'',location.pathname+location.search);show(null)})});
 window.addEventListener('hashchange',route);window.addEventListener('popstate',route);
 
 /* menu */

@@ -128,7 +128,51 @@ input:focus,textarea:focus,select:focus{border-color:rgba(214,59,255,.6);box-sha
 .filt{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
 .filt button{height:32px;padding:0 12px;border-radius:999px;border:1px solid var(--line);font-size:12.5px;font-weight:700;color:var(--muted)}
 .filt button.on{color:#fff;border-color:rgba(214,59,255,.6);background:rgba(214,59,255,.12)}
-@media(max-width:600px){.top{flex-wrap:wrap}.tabs{order:3;width:100%}.tabs button{flex:1}.logo b{display:none}}
+.btn.icon{width:38px;padding:0}
+.top{flex-wrap:wrap}
+.top .tabs{order:3;width:100%}.top .tabs button{flex:1;position:relative}
+.cnt{display:inline-grid;place-items:center;min-width:18px;height:18px;padding:0 5px;margin-left:6px;border-radius:9px;background:#3ddc97;color:#062b14;font-size:11px;font-weight:800;vertical-align:1px}.cnt:empty{display:none}
+.rows{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:18px;overflow:hidden;background:rgba(255,255,255,.02)}
+.rw{display:flex;align-items:center;gap:6px;padding:0 6px 0 0;border-top:1px solid var(--line)}
+.rw:first-child{border-top:0}
+.rw .open{flex:1;min-width:0;display:flex;align-items:center;gap:13px;padding:11px 12px;color:var(--ink);text-decoration:none}
+.rw .open:active{background:rgba(255,255,255,.04)}
+.rw img{width:46px;height:46px;border-radius:12px;object-fit:cover;flex:none;box-shadow:0 0 0 1px rgba(255,255,255,.08)}
+.rw span{min-width:0;display:flex;flex-direction:column;gap:2px}
+.rw b{font-size:15.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rw small{font-size:12.5px;color:var(--muted)}
+.rw.off img{opacity:.45}
+.tag{font-style:normal;font-size:10px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--warn);margin-left:6px}.tag.bad{color:var(--bad)}
+.dots{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;color:var(--muted);flex:none}
+.dots:hover,.dots:active{background:rgba(255,255,255,.06);color:var(--ink)}
+.dots svg,.btn.icon svg{width:20px;height:20px}
+.scrim{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.55);opacity:0;pointer-events:none;transition:.2s}
+.scrim.on{opacity:1;pointer-events:auto}
+.sheet{position:fixed;z-index:90;left:0;right:0;bottom:0;max-height:88vh;overflow:auto;background:#14141f;border-top-left-radius:22px;border-top-right-radius:22px;border:1px solid var(--line);padding:8px 16px calc(18px + env(safe-area-inset-bottom));transform:translateY(105%);transition:transform .25s ease;max-width:560px;margin:0 auto}
+.sheet.on{transform:none}
+.grab{width:40px;height:5px;border-radius:3px;background:rgba(255,255,255,.18);margin:4px auto 12px}
+.sheet h2{margin-bottom:6px}
+.sh-h{display:flex;gap:12px;align-items:center;padding:4px 4px 12px;border-bottom:1px solid var(--line);margin-bottom:6px}
+.sh-h img{width:44px;height:44px;border-radius:12px}
+.sh-h b{display:block;font-size:16px}.sh-h small{color:var(--muted);font-size:12.5px}
+.it{display:flex;width:100%;align-items:center;gap:10px;padding:14px 8px;border-radius:12px;font-weight:700;font-size:15px;text-align:left}
+.it:hover,.it:active{background:rgba(255,255,255,.05)}
+.it.bad{color:#ff9db0}.it.muted{color:var(--muted);justify-content:center}
+.grid4{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.grid4 .btn{height:56px;font-size:16px}
+.notif{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:14px;border-radius:16px;border:1px solid rgba(61,220,151,.35);background:rgba(61,220,151,.06);margin-bottom:14px}
+.notif b{display:block}.notif span{font-size:13px;color:var(--muted)}
+.lk .icons{align-items:center}.lk .icons span{font-size:13px;color:var(--muted);margin-left:4px}
+.lk .line{font-size:13px;color:var(--muted);margin:2px 0 10px}
+.lk .left{display:flex;align-items:baseline;gap:10px;margin:0 0 12px}.lk .left span{font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.lk .left b{font-family:Sora,sans-serif;font-size:28px;font-variant-numeric:tabular-nums;color:#7ff0bd}
+.lk.low .left b{color:var(--warn)}
+.lk.active{border-color:rgba(61,220,151,.35)}
+.lk.expired,.lk.revoked{opacity:.75}
+.feed{display:flex;flex-direction:column;gap:2px}
+.ev{display:flex;align-items:center;gap:10px;padding:10px 4px;border-bottom:1px solid var(--line);font-size:13.5px}
+.ev i{width:8px;height:8px;border-radius:50%;background:#cfc4ff;flex:none}.ev.opened i{background:#3ddc97}.ev.low i{background:var(--warn)}.ev.ended i{background:var(--bad)}
+.ev span{flex:1;min-width:0}.ev small{color:var(--muted);font-size:12px;white-space:nowrap}
+@media(max-width:600px){.logo b{display:none}}
 </style>
 </head>
 <body>
@@ -155,23 +199,25 @@ f.addEventListener('submit',function(e){e.preventDefault();err.textContent='';
 <div class="wrap">
   <div class="top">
     <div class="logo"><?= $mark ?><span>Digital</span><b>Admin</b></div>
-    <div class="tabs" role="tablist"><button class="on" data-tab="links" role="tab">Send demos</button><button data-tab="demos" role="tab">Demos</button></div>
-    <a class="btn sm pri" href="/demo/?preview=1" title="Open every demo with no PIN and no time limit">My demos</a>
-    <button class="btn sm" id="more" title="Account">Account</button>
+    <button class="btn sm icon" id="acct" aria-label="Settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></button>
+    <nav class="tabs" role="tablist">
+      <button data-tab="demos" role="tab">My demos</button>
+      <button data-tab="send" role="tab">Send</button>
+      <button data-tab="live" role="tab">Live<span class="cnt" id="livecnt"></span></button>
+    </nav>
   </div>
 
-  <div class="panel hidden" id="account">
-    <h2>Account</h2>
-    <div class="row">
-      <input type="password" id="curpw" placeholder="Current PIN" inputmode="numeric" style="max-width:200px" autocomplete="off">
-      <input type="password" id="newpw" placeholder="New PIN (6+ digits)" inputmode="numeric" style="max-width:200px" autocomplete="off">
-      <button class="btn sm" id="savepw">Change PIN</button>
-      <button class="btn sm bad" id="logout">Log out</button>
+  <!-- MY DEMOS -->
+  <section id="tab-demos" class="tab">
+    <div class="bar">
+      <div><h1>My demos</h1><p class="sub">Tap an app to open it. No PIN, no time limit.</p></div>
+      <button class="btn sm" id="newdemo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Add app</button>
     </div>
-  </div>
+    <div class="rows" id="demos"></div>
+  </section>
 
-  <!-- LINKS -->
-  <section id="tab-links">
+  <!-- SEND -->
+  <section id="tab-send" class="tab hidden">
     <form class="panel send" id="linkform">
       <h1>Send demos</h1>
       <p class="sub">Pick the apps, create the link, then send it on WhatsApp with the PIN.</p>
@@ -196,33 +242,28 @@ f.addEventListener('submit',function(e){e.preventDefault();err.textContent='';
       <button class="btn pri big" type="submit">Create link</button>
     </form>
     <div class="panel result hidden" id="created"></div>
-    <h2 style="margin-top:22px">Sent links</h2>
-    <div class="filt" id="filt"><button class="on" data-f="all">All</button><button data-f="live">Active / waiting</button><button data-f="expired">Expired</button><button data-f="revoked">Revoked</button></div>
-    <div class="list" id="links"></div>
   </section>
 
-  <!-- DEMOS -->
-  <section id="tab-demos" class="hidden">
-    <div class="bar">
-      <div><h1>Demos</h1><p class="sub">Upload a built website or Flutter Web app as a ZIP (for Flutter, zip the <b>build/web</b> folder). Use sample data only.</p></div>
-      <button class="btn pri" id="newdemo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Add demo</button>
-    </div>
-    <form class="panel hidden" id="demoform">
-      <h2>Add a demo</h2>
-      <label class="f" for="dn">App name</label><input type="text" id="dn" maxlength="60" placeholder="e.g. Kebab House" required>
-      <label class="f" for="dt">Short line (optional)</label><input type="text" id="dt" maxlength="90" placeholder="e.g. Takeaway ordering app · Dunstable">
-      <label class="f" for="dz">ZIP of the built app</label><input type="file" id="dz" accept=".zip,application/zip" required>
-      <div class="prog hidden" id="dprog"><i></i></div>
-      <div class="err" id="derr"></div>
-      <div class="row"><button class="btn pri" type="submit">Upload</button><button class="btn" type="button" id="dcancel">Cancel</button></div>
-    </form>
-    <div class="list" id="demos"></div>
+  <!-- LIVE -->
+  <section id="tab-live" class="tab hidden">
+    <div class="bar"><div><h1>Live links</h1><p class="sub">Who has opened a demo, how long they have left, and extend or end it.</p></div></div>
+    <div class="notif hidden" id="notif"><div><b>Get notified</b><span>When someone opens a demo, and when their time is nearly up.</span></div><button class="btn sm pri" id="notifon">Turn on</button></div>
+    <div class="filt" id="filt"><button class="on" data-f="live">Live &amp; waiting</button><button data-f="ended">Ended</button><button data-f="all">All</button></div>
+    <div class="list" id="links"></div>
+    <h2 style="margin-top:26px">Recent activity</h2>
+    <div class="feed" id="feed"></div>
   </section>
 </div>
+
+<!-- bottom sheet -->
+<div class="scrim" id="scrim"></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true"><div class="grab"></div><div id="sheetin"></div></div>
+<input type="file" id="fzip" accept=".zip,application/zip" hidden>
+<input type="file" id="ficon" accept="image/png,image/jpeg,image/webp" hidden>
 <div class="toast" id="toast"></div>
 <script>
 (function(){
-var CSRF=<?= json_encode($tok['csrf']) ?>,D=[],L=[],skew=0,filter='all';
+var CSRF=<?= json_encode($tok['csrf']) ?>,D=[],L=[],E=[],skew=0,filter='live',pushN=0;
 var $=function(id){return document.getElementById(id)};
 var esc=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})};
 var toast=function(m,bad){var t=$('toast');t.textContent=m;t.classList.toggle('bad',!!bad);t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(function(){t.classList.remove('on')},3200)};
@@ -230,11 +271,11 @@ var api=function(a,body,form){
   var o={method:'POST',credentials:'same-origin',headers:{'X-CSRF':CSRF}};
   if(form)o.body=form;else{o.headers['Content-Type']='application/json';o.body=JSON.stringify(body||{})}
   return fetch('api.php?a='+a,o).then(function(r){return r.json().catch(function(){return{error:'Server error ('+r.status+')'}})}).then(function(j){if(j.login){location.reload()}if(j.error)throw new Error(j.error);return j})};
-var fmtT=function(t){if(!t)return'—';var d=new Date(t*1000);return d.toLocaleDateString('en-GB',{day:'numeric',month:'short'})+', '+d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})};
-var fmtLeft=function(s){if(s<=0)return'—';var h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return(h?h+'h ':'')+(h?String(m).padStart(2,'0'):m)+'m '+String(x).padStart(2,'0')+'s'};
 var nowS=function(){return Math.floor(Date.now()/1000+skew)};
-var STAT={active:'Active',not_activated:'Not opened yet',uses_left:'Waiting',expired:'Expired',revoked:'Revoked'};
-var MODE={single:'One person',shared:'Shared timer',limited:'Limited uses'};
+var fmtT=function(t){if(!t)return'';var d=new Date(t*1000),td=new Date();var same=d.toDateString()===td.toDateString();return(same?'Today':d.toLocaleDateString('en-GB',{day:'numeric',month:'short'}))+' '+d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})};
+var fmtD=function(t){return t?new Date(t*1000).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}):''};
+var ago=function(t){var s=nowS()-t;if(s<60)return'just now';if(s<3600)return Math.floor(s/60)+' min ago';if(s<86400)return Math.floor(s/3600)+' h ago';return fmtT(t)};
+var fmtLeft=function(s){if(s<=0)return'0:00';var h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return(h?h+':'+String(m).padStart(2,'0'):m)+':'+String(x).padStart(2,'0')};
 var demoBy=function(s){for(var i=0;i<D.length;i++)if(D[i].slug===s)return D[i]};
 var andList=function(a){return a.length<2?a.join(''):a.slice(0,-1).join(', ')+' and '+a[a.length-1]};
 var durTxt=function(m){return m>=60&&m%60===0?(m===60?'1 hour':(m/60)+' hours'):m+' minutes'};
@@ -247,109 +288,159 @@ var shareText=function(l){var names=l.apps.map(function(s){var d=demoBy(s);retur
     +'\n\nYou have '+durTxt(l.duration)+' from when you enter the PIN. Any questions, just message me.\n\nSummar, SMR Digital'};
 var waUrl=function(text,phone){var n=String(phone||'').replace(/\D/g,'');if(n.indexOf('00')===0)n=n.slice(2);else if(n.charAt(0)==='0')n='44'+n.slice(1);
   return 'https://wa.me/'+(n.length>=10?n:'')+'?text='+encodeURIComponent(text)};
-var copy=function(t){(navigator.clipboard&&navigator.clipboard.writeText?navigator.clipboard.writeText(t):Promise.reject()).then(function(){toast('Copied link and PIN')}).catch(function(){var a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');toast('Copied link and PIN')}catch(e){prompt('Copy this:',t)}a.remove()})};
+var copy=function(t,msg){(navigator.clipboard&&navigator.clipboard.writeText?navigator.clipboard.writeText(t):Promise.reject()).then(function(){toast(msg||'Copied')}).catch(function(){var a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');toast(msg||'Copied')}catch(e){}a.remove()})};
+var ICON={dots:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>'};
 
-/* tabs */
-document.querySelectorAll('[data-tab]').forEach(function(b){b.addEventListener('click',function(){document.querySelectorAll('[data-tab]').forEach(function(x){x.classList.toggle('on',x===b)});$('tab-links').classList.toggle('hidden',b.dataset.tab!=='links');$('tab-demos').classList.toggle('hidden',b.dataset.tab!=='demos')})});
-$('more').addEventListener('click',function(){$('account').classList.toggle('hidden')});
-$('logout').addEventListener('click',function(){api('logout').then(function(){location.reload()})});
-$('savepw').addEventListener('click',function(){api('password',{current:$('curpw').value,'new':$('newpw').value}).then(function(){toast('PIN changed');$('curpw').value=$('newpw').value=''}).catch(function(e){toast(e.message,true)})});
+/* ---------- tabs (hash) ---------- */
+var showTab=function(t){if(['demos','send','live'].indexOf(t)<0)t='demos';
+  document.querySelectorAll('[data-tab]').forEach(function(b){b.classList.toggle('on',b.dataset.tab===t)});
+  document.querySelectorAll('.tab').forEach(function(s){s.classList.toggle('hidden',s.id!=='tab-'+t)});window.scrollTo(0,0);if(t==='live'&&typeof load==='function'&&D.length)load()};
+document.querySelectorAll('[data-tab]').forEach(function(b){b.addEventListener('click',function(){if(location.hash!=='#'+b.dataset.tab)history.replaceState(null,'','#'+b.dataset.tab);showTab(b.dataset.tab)})});
+window.addEventListener('hashchange',function(){showTab(location.hash.slice(1))});
+showTab(location.hash.slice(1));
 
-/* load */
-var load=function(){return api('list').then(function(j){D=j.demos;L=j.links;skew=j.now-Date.now()/1000;renderPick();renderLinks();renderDemos()}).catch(function(e){toast(e.message,true)})};
+/* ---------- sheet ---------- */
+var sheet=$('sheet'),scrim=$('scrim');
+var openSheet=function(html,bind){$('sheetin').innerHTML=html;sheet.classList.add('on');scrim.classList.add('on');if(bind)bind($('sheetin'))};
+var closeSheet=function(){sheet.classList.remove('on');scrim.classList.remove('on')};
+scrim.addEventListener('click',closeSheet);
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeSheet()});
+var item=function(act,label,icon,cls){return '<button class="it'+(cls?' '+cls:'')+'" data-act="'+act+'">'+(icon||'')+'<span>'+label+'</span></button>'};
 
-/* ---------- links ---------- */
+/* ---------- load ---------- */
+var load=function(){return api('list').then(function(j){D=j.demos;L=j.links;E=j.events||[];pushN=j.push_devices||0;skew=j.now-Date.now()/1000;renderDemos();renderPick();renderLinks();renderFeed();renderNotif()}).catch(function(e){toast(e.message,true)})};
+
+/* ---------- my demos ---------- */
+var renderDemos=function(){$('demos').innerHTML=D.length?D.map(function(d){
+  return '<div class="rw'+(d.enabled?'':' off')+'" data-slug="'+esc(d.slug)+'"><a class="open" href="/demo/?preview=1#app='+esc(d.slug)+'"><img src="'+esc(d.icon)+'" alt=""><span><b>'+esc(d.name)+(d.enabled?'':' <i class="tag">Hidden</i>')+(d.files_ok?'':' <i class="tag bad">Files missing</i>')+'</b><small>Updated '+fmtD(d.updated_at)+'</small></span></a>'
+   +'<button class="dots" data-opts aria-label="Options for '+esc(d.name)+'">'+ICON.dots+'</button></div>'}).join(''):'<div class="empty">No demos yet.</div>'};
+var curSlug=null;
+$('demos').addEventListener('click',function(e){var b=e.target.closest('[data-opts]');if(!b)return;var slug=b.closest('[data-slug]').dataset.slug,d=demoBy(slug);curSlug=slug;
+  openSheet('<div class="sh-h"><img src="'+esc(d.icon)+'" alt=""><div><b>'+esc(d.name)+'</b><small>'+esc(d.tagline)+'</small></div></div>'
+    +item('open','Open demo')+item('send','Send this demo')+item('edit','Edit name, text and feature tour')+item('icon','Change icon')+item('zip','Replace with a new ZIP')
+    +item('toggle',d.enabled?'Hide from customers':'Show to customers')+(d.source==='seed'?'':item('del','Delete','', 'bad'))+item('close','Cancel','','muted'),
+  function(el){el.addEventListener('click',function(ev){var it=ev.target.closest('[data-act]');if(!it)return;var a=it.dataset.act;
+    if(a==='close')closeSheet();
+    if(a==='open')location.href='/demo/?preview=1#app='+slug;
+    if(a==='send'){closeSheet();document.querySelectorAll('#pick input').forEach(function(i){i.checked=i.value===slug});location.hash='send'}
+    if(a==='icon'){closeSheet();$('ficon').click()}
+    if(a==='zip'){closeSheet();$('fzip').click()}
+    if(a==='toggle')api('demo_save',{slug:slug,enabled:d.enabled?0:1}).then(function(){closeSheet();toast(d.enabled?'Hidden':'Visible again');load()}).catch(function(e){toast(e.message,true)});
+    if(a==='del'){if(confirm('Delete '+d.name+' and its files?'))api('demo_delete',{slug:slug}).then(function(){closeSheet();toast('Deleted');load()}).catch(function(e){toast(e.message,true)})}
+    if(a==='edit')editDemo(d)})})});
+var editDemo=function(d){openSheet('<h2>Edit '+esc(d.name)+'</h2><form id="ef"><label class="f">Name</label><input type="text" name="name" value="'+esc(d.name)+'" maxlength="60">'
+   +'<label class="f">Short line</label><input type="text" name="tagline" value="'+esc(d.tagline)+'" maxlength="90">'
+   +'<label class="f">Description</label><textarea name="description" maxlength="400">'+esc(d.description)+'</textarea>'
+   +'<label class="f">Feature tour (one point per line)</label><textarea name="tips" maxlength="1500" style="min-height:150px">'+esc(d.tips_text)+'</textarea>'
+   +'<div class="row" style="margin-top:12px"><label class="f" style="margin:0">Card colour</label><input type="color" name="accent" value="'+esc(d.accent)+'" style="width:48px;height:36px;border:0;background:none"><label class="f" style="margin:0 0 0 10px">Order</label><input type="number" name="sort" value="'+d.sort+'" style="width:90px;height:38px"></div>'
+   +'<div class="row" style="margin-top:14px"><button class="btn pri" type="submit">Save</button><button class="btn" type="button" data-x>Cancel</button></div></form>',
+  function(el){el.querySelector('[data-x]').onclick=closeSheet;el.querySelector('#ef').addEventListener('submit',function(e){e.preventDefault();var f=e.target,o={slug:d.slug};
+    ['name','tagline','description','tips','accent','sort'].forEach(function(k){o[k]=f.elements[k].value});
+    api('demo_save',o).then(function(){closeSheet();toast('Saved');load()}).catch(function(er){toast(er.message,true)})})})};
+var upload=function(a,fd,done){var x=new XMLHttpRequest();x.open('POST','api.php?a='+a);x.setRequestHeader('X-CSRF',CSRF);
+  toast('Uploading…');
+  x.upload.onprogress=function(e){if(e.lengthComputable)toast('Uploading '+Math.round(e.loaded/e.total*100)+'%')};
+  x.onload=function(){var j;try{j=JSON.parse(x.responseText)}catch(e){j={error:x.status===413?'That file is too big for the server.':'Server error ('+x.status+')'}}if(j.error)toast(j.error,true);else{done(j);load()}};
+  x.onerror=function(){toast('Upload failed. Check your connection.',true)};x.send(fd)};
+$('ficon').addEventListener('change',function(){if(!this.files[0]||!curSlug)return;var fd=new FormData();fd.append('slug',curSlug);fd.append('icon',this.files[0]);this.value='';upload('demo_icon',fd,function(){toast('Icon updated')})});
+$('fzip').addEventListener('change',function(){if(!this.files[0])return;var fd=new FormData();fd.append('zip',this.files[0]);this.value='';
+  if(curSlug){fd.append('slug',curSlug);upload('demo_upload',fd,function(j){toast('Demo replaced ('+j.files+' files)')})}
+  else{fd.append('name',newName);upload('demo_upload',fd,function(j){toast('Demo added ('+j.files+' files)')})}});
+var newName='';
+$('newdemo').addEventListener('click',function(){openSheet('<h2>Add an app</h2><p class="sub">Upload a ZIP of the built website or Flutter Web app (for Flutter, zip the build/web folder). Use sample data only.</p><label class="f">App name</label><input type="text" id="nn" maxlength="60" placeholder="e.g. Kebab House"><div class="row" style="margin-top:14px"><button class="btn pri" data-go>Choose ZIP</button><button class="btn" data-x>Cancel</button></div>',
+  function(el){el.querySelector('[data-x]').onclick=closeSheet;el.querySelector('[data-go]').onclick=function(){newName=el.querySelector('#nn').value.trim();if(!newName){toast('Give the app a name first',true);return}curSlug=null;closeSheet();$('fzip').click()}})});
+
+/* ---------- send ---------- */
 var renderPick=function(){var keep={};document.querySelectorAll('#pick input:checked').forEach(function(i){keep[i.value]=1});
-  $('pick').innerHTML=D.filter(function(d){return d.enabled}).map(function(d){return '<label><input type="checkbox" value="'+esc(d.slug)+'"'+(keep[d.slug]?' checked':'')+'><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><img src="'+esc(d.icon)+'" alt=""><b>'+esc(d.name)+'</b><small>'+esc(d.tagline)+'</small></label>'}).join('')||'<p class="sub">No demos yet. Add one in the Demos tab.</p>'};
+  $('pick').innerHTML=D.filter(function(d){return d.enabled}).map(function(d){return '<label><input type="checkbox" value="'+esc(d.slug)+'"'+(keep[d.slug]?' checked':'')+'><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><img src="'+esc(d.icon)+'" alt=""><b>'+esc(d.name)+'</b><small>'+esc(d.tagline)+'</small></label>'}).join('')||'<p class="sub">No demos yet.</p>'};
 $('selall').addEventListener('click',function(){var all=document.querySelectorAll('#pick input'),any=[].some.call(all,function(i){return!i.checked});all.forEach(function(i){i.checked=any});this.textContent=any?'Clear all':'Select all'});
 var dur=45;
 $('dur').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;dur=+b.dataset.m;$('durc').value='';this.querySelectorAll('button').forEach(function(x){x.classList.toggle('on',x===b)})});
 $('durc').addEventListener('input',function(){var v=+this.value;if(v>=5){dur=v;$('dur').querySelectorAll('button').forEach(function(x){x.classList.remove('on')})}});
+var showMessage=function(l,phone){var c=$('created');c.classList.remove('hidden');
+  c.innerHTML='<h2>Link ready'+(l.label?' for '+esc(l.label):'')+'</h2><p class="sub">Check the message, then send it. You can edit it first.</p>'
+    +'<textarea class="msg" id="msgtxt"></textarea>'
+    +'<a class="btn big wa" id="wasend" target="_blank" rel="noopener" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 19.1L4 20z"/></svg>Send on WhatsApp</a>'
+    +'<div class="acts" style="margin-top:10px"><button class="btn sm" data-c>Copy message</button><button class="btn sm" data-x>Done</button></div>';
+  var ta=c.querySelector('#msgtxt'),wa=c.querySelector('#wasend');ta.value=shareText(l);
+  var upd=function(){wa.href=waUrl(ta.value,phone)};upd();ta.addEventListener('input',upd);
+  wa.addEventListener('click',function(){setTimeout(function(){toast('Sent links are in the Live tab')},800)});
+  c.querySelector('[data-c]').onclick=function(){copy(ta.value,'Message copied')};c.querySelector('[data-x]').onclick=function(){c.classList.add('hidden')};
+  c.scrollIntoView({behavior:'smooth',block:'start'})};
 $('linkform').addEventListener('submit',function(e){e.preventDefault();$('lerr').textContent='';
   var apps=[].map.call(document.querySelectorAll('#pick input:checked'),function(i){return i.value});
-  if(!apps.length){$('lerr').textContent='Choose at least one demo.';return}
-  var mode=document.querySelector('[name=mode]:checked').value;
+  if(!apps.length){$('lerr').textContent='Choose at least one app.';return}
+  var mode=document.querySelector('[name=mode]:checked').value,phone=$('ph').value;
   api('link_create',{label:$('lb').value,apps:apps,mode:mode,max_uses:+$('maxu').value,duration:dur,tips:$('tips').checked}).then(function(j){
-    var phone=$('ph').value;$('lb').value='';$('ph').value='';document.querySelectorAll('#pick input').forEach(function(i){i.checked=false});
-    var l=j.link,c=$('created');c.classList.remove('hidden');
-    c.innerHTML='<h2>Link ready'+(l.label?' for '+esc(l.label):'')+'</h2><p class="sub">Check the message, then send it. You can edit it first.</p>'
-      +'<textarea class="msg" id="msgtxt"></textarea>'
-      +'<a class="btn big wa" id="wasend" target="_blank" rel="noopener" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 19.1L4 20z"/></svg>Send on WhatsApp</a>'
-      +'<div class="acts" style="margin-top:10px"><button class="btn sm" data-c>Copy message</button><button class="btn sm" data-x>Done</button></div>';
-    var ta=c.querySelector('#msgtxt'),wa=c.querySelector('#wasend');ta.value=shareText(l);
-    var upd=function(){wa.href=waUrl(ta.value,phone)};upd();ta.addEventListener('input',upd);
-    c.querySelector('[data-c]').onclick=function(){copy(ta.value)};c.querySelector('[data-x]').onclick=function(){c.classList.add('hidden')};
-    c.scrollIntoView({behavior:'smooth',block:'start'});
-    load()}).catch(function(e){$('lerr').textContent=e.message})});
+    $('lb').value='';$('ph').value='';document.querySelectorAll('#pick input').forEach(function(i){i.checked=false});
+    load().then(function(){showMessage(j.link,phone)})}).catch(function(er){$('lerr').textContent=er.message})});
 
-$('filt').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;filter=b.dataset.f;this.querySelectorAll('button').forEach(function(x){x.classList.toggle('on',x===b)});renderLinks()});
+/* ---------- live ---------- */
+var STAT={active:'Live now',not_activated:'Not opened yet',uses_left:'Waiting',expired:'Ended',revoked:'Ended early'};
 var leftOf=function(l){return l.status==='active'?Math.max(0,l.expires_at-nowS()):0};
+var isLive=function(l){return l.status==='active'||l.status==='not_activated'||l.status==='uses_left'};
 var renderLinks=function(){
-  var list=L.filter(function(l){if(filter==='all')return true;if(filter==='live')return l.status==='active'||l.status==='not_activated'||l.status==='uses_left';return l.status===filter});
+  var n=L.filter(function(l){return l.status==='active'}).length;$('livecnt').textContent=n?n:'';
+  var list=L.filter(function(l){return filter==='all'||(filter==='live'?isLive(l):!isLive(l))});
   $('links').innerHTML=list.length?list.map(function(l){
-    var uses=l.mode==='shared'?l.uses+' opened':l.uses+' of '+l.max_uses+' used';
-    return '<div class="lk" data-id="'+l.id+'"><div class="hd"><b>'+esc(l.label||'Untitled link')+'</b><span class="badge '+l.status+'">'+STAT[l.status]+'</span></div>'
-    +'<div class="icons">'+l.apps.map(function(s){var d=demoBy(s);return d?'<img src="'+esc(d.icon)+'" alt="'+esc(d.name)+'" title="'+esc(d.name)+'">':''}).join('')+'</div>'
-    +'<div class="meta"><span>Access<b>'+MODE[l.mode]+' · '+l.duration+' min</b></span><span>Uses<b>'+uses+'</b></span><span>Created<b>'+fmtT(l.created_at)+'</b></span><span>First opened<b>'+fmtT(l.activated_at)+'</b></span><span>Expires<b>'+fmtT(l.expires_at)+'</b></span><span>Time left<b data-left>'+fmtLeft(leftOf(l))+'</b></span></div>'
-    +'<div class="cred"><span class="pin">'+esc(l.pin)+'</span><code>'+esc(l.url)+'</code></div>'
-    +'<div class="acts"><button class="btn sm pri" data-a="copy">Copy link &amp; PIN</button>'
-    +'<button class="btn sm" data-a="ext15">+15 min</button><button class="btn sm" data-a="ext30">+30 min</button>'
-    +'<button class="btn sm" data-a="newpin">New PIN</button>'
-    +(l.status!=='revoked'?'<button class="btn sm bad" data-a="revoke">Revoke</button>':'')
-    +'<button class="btn sm bad" data-a="del" title="Delete link">Delete</button></div></div>'}).join(''):'<div class="empty">No links here yet. Tap <b>New demo link</b> to make one.</div>'};
+    var names=l.apps.map(function(s){var d=demoBy(s);return d?d.name:s});
+    var app=l.last_app&&demoBy(l.last_app)?demoBy(l.last_app).name:'';
+    var line=l.status==='not_activated'?'Sent '+fmtT(l.created_at)+' · not opened yet'
+      :l.status==='active'?'Opened '+fmtT(l.activated_at)+(app?' · last looked at '+esc(app):'')+(l.devices>1?' · '+l.devices+' devices':'')
+      :l.activated_at?'Opened '+fmtT(l.activated_at)+(app?' · last looked at '+esc(app):''):'Sent '+fmtT(l.created_at);
+    return '<div class="lk '+l.status+'" data-id="'+l.id+'"><div class="hd"><b>'+esc(l.label||'No name')+'</b><span class="badge '+l.status+'">'+STAT[l.status]+'</span></div>'
+    +'<div class="icons">'+l.apps.map(function(s){var d=demoBy(s);return d?'<img src="'+esc(d.icon)+'" alt="" title="'+esc(d.name)+'">':''}).join('')+'<span>'+esc(andList(names))+'</span></div>'
+    +'<p class="line">'+line+'</p>'
+    +(l.status==='active'?'<div class="left"><span>Time left</span><b data-left>'+fmtLeft(leftOf(l))+'</b></div>':'')
+    +'<div class="acts"><button class="btn sm pri" data-a="extend">'+(l.status==='active'?'Extend':(l.status==='expired'||l.status==='revoked'?'Give more time':'Add time'))+'</button>'
+    +(isLive(l)?'<button class="btn sm bad" data-a="end">End now</button>':'')
+    +'<button class="btn sm icon" data-a="more" aria-label="More">'+ICON.dots+'</button></div></div>'}).join(''):'<div class="empty">'+(filter==='live'?'No live links. Send some demos from the <b>Send</b> tab.':'Nothing here yet.')+'</div>'};
+$('filt').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;filter=b.dataset.f;this.querySelectorAll('button').forEach(function(x){x.classList.toggle('on',x===b)});renderLinks()});
+var run=function(act,body,msg){return api(act,body).then(function(){closeSheet();toast(msg);load()}).catch(function(e){toast(e.message,true)})};
 $('links').addEventListener('click',function(e){var b=e.target.closest('[data-a]');if(!b)return;var id=+b.closest('[data-id]').dataset.id,l=L.filter(function(x){return x.id===id})[0],a=b.dataset.a;
-  if(a==='copy')return copy(shareText(l));
-  var run=function(act,body,msg){b.disabled=true;api(act,body).then(function(){toast(msg);load()}).catch(function(e){toast(e.message,true);b.disabled=false})};
-  if(a==='ext15')run('link_extend',{id:id,minutes:15},'Added 15 minutes');
-  if(a==='ext30')run('link_extend',{id:id,minutes:30},'Added 30 minutes');
-  if(a==='newpin'&&confirm('Make a new PIN for this link? The old PIN stops working and the timer resets.'))run('link_newpin',{id:id},'New PIN made');
-  if(a==='revoke'&&confirm('Revoke this link? Anyone using it is shown the expired screen straight away.'))run('link_revoke',{id:id},'Link revoked');
-  if(a==='del'&&confirm('Delete this link for good?'))run('link_delete',{id:id},'Link deleted')});
-setInterval(function(){document.querySelectorAll('#links [data-id]').forEach(function(el){var l=L.filter(function(x){return x.id===+el.dataset.id})[0];if(l&&l.status==='active'){var s=leftOf(l);el.querySelector('[data-left]').textContent=fmtLeft(s);if(s<=0)load()}})},1000);
+  if(a==='extend')openSheet('<h2>Add time'+(l.label?' for '+esc(l.label):'')+'</h2><p class="sub">'+(l.status==='active'?'Added on to the time they have left.':(l.activated_at?'Their demo opens again straight away with this much time.':'Makes their session longer when they open it.'))+'</p><div class="grid4"><button class="btn" data-m="10">+10 min</button><button class="btn" data-m="15">+15 min</button><button class="btn" data-m="30">+30 min</button><button class="btn" data-m="60">+1 hour</button></div><button class="btn big" data-x style="margin-top:10px">Cancel</button>',
+    function(el){el.querySelector('[data-x]').onclick=closeSheet;el.querySelectorAll('[data-m]').forEach(function(m){m.onclick=function(){run('link_extend',{id:id,minutes:+m.dataset.m},'Added '+m.textContent.replace('+',''))}})});
+  if(a==='end'&&confirm('End this demo now? They will see the expired screen straight away.'))run('link_revoke',{id:id},'Demo ended');
+  if(a==='more')openSheet('<h2>'+esc(l.label||'Demo link')+'</h2><div class="cred"><span class="pin">'+esc(l.pin)+'</span><code>'+esc(l.url)+'</code></div>'
+    +item('copy','Copy message')+item('wa','Send again on WhatsApp')+item('pin','New PIN (old one stops working)')+item('del','Delete link','','bad')+item('close','Cancel','','muted'),
+    function(el){el.addEventListener('click',function(ev){var it=ev.target.closest('[data-act]');if(!it)return;var x=it.dataset.act;
+      if(x==='close')closeSheet();
+      if(x==='copy'){copy(shareText(l),'Message copied');closeSheet()}
+      if(x==='wa'){window.open(waUrl(shareText(l),''),'_blank');closeSheet()}
+      if(x==='pin'&&confirm('Make a new PIN? The old PIN stops working and the timer resets.'))run('link_newpin',{id:id},'New PIN made');
+      if(x==='del'&&confirm('Delete this link for good?'))run('link_delete',{id:id},'Link deleted')})})});
+setInterval(function(){var reload=false;document.querySelectorAll('#links [data-left]').forEach(function(el){var l=L.filter(function(x){return x.id===+el.closest('[data-id]').dataset.id})[0];if(!l)return;var s=leftOf(l);el.textContent=fmtLeft(s);el.closest('.lk').classList.toggle('low',s<=300);if(s<=0)reload=true});if(reload)load()},1000);
+var EV={opened:'opened',low:'low',ended:'ended'};
+var renderFeed=function(){$('feed').innerHTML=E.length?E.map(function(e){var who=e.label||'Someone';return '<div class="ev '+esc(EV[e.type]||'')+'"><i></i><span><b>'+esc(who)+'</b>'+(e.text.charAt(0)==="'"?'':' ')+esc(e.text.replace(' Tap to extend.',''))+'</span><small>'+ago(e.at)+'</small></div>'}).join(''):'<div class="empty">No activity yet.</div>'};
 
-/* ---------- demos ---------- */
-$('newdemo').addEventListener('click',function(){$('demoform').classList.remove('hidden');$('dn').focus()});
-$('dcancel').addEventListener('click',function(){$('demoform').classList.add('hidden')});
-var upload=function(fd,prog,done,fail){var x=new XMLHttpRequest();x.open('POST','api.php?a='+fd.get('_a'));x.setRequestHeader('X-CSRF',CSRF);
-  x.upload.onprogress=function(e){if(e.lengthComputable&&prog){prog.classList.remove('hidden');prog.firstChild.style.width=(e.loaded/e.total*100)+'%'}};
-  x.onload=function(){var j;try{j=JSON.parse(x.responseText)}catch(e){j={error:x.status===413?'That file is too big for the server.':'Server error ('+x.status+')'}}if(j.error)fail(j.error);else done(j)};
-  x.onerror=function(){fail('Upload failed. Check your connection.')};fd.delete('_a');x.send(fd)};
-$('demoform').addEventListener('submit',function(e){e.preventDefault();var f=$('dz').files[0];if(!f){$('derr').textContent='Choose the ZIP file.';return}
-  var fd=new FormData();fd.append('_a','demo_upload');fd.append('name',$('dn').value);fd.append('tagline',$('dt').value);fd.append('zip',f);$('derr').textContent='';
-  var btn=this.querySelector('[type=submit]');btn.disabled=true;btn.textContent='Uploading…';
-  upload(fd,$('dprog'),function(j){btn.disabled=false;btn.textContent='Upload';$('demoform').reset();$('demoform').classList.add('hidden');$('dprog').classList.add('hidden');toast('Demo added ('+j.files+' files)');load()},function(m){btn.disabled=false;btn.textContent='Upload';$('derr').textContent=m;$('dprog').classList.add('hidden')})});
+/* ---------- notifications ---------- */
+var pushOK='serviceWorker' in navigator&&'PushManager' in window&&'Notification' in window;
+var standalone=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone;
+var renderNotif=function(){var n=$('notif');if(!pushOK){if(/iPhone|iPad/.test(navigator.userAgent)&&!standalone){n.classList.remove('hidden');n.innerHTML='<div><b>Get notified</b><span>Add SMR Admin to your Home Screen first (Share, then Add to Home Screen), open it from there, then turn on notifications.</span></div>'}return}
+  navigator.serviceWorker.getRegistration('/demo-admin/').then(function(r){return r&&r.pushManager.getSubscription()}).then(function(sub){n.classList.toggle('hidden',!!sub&&Notification.permission==='granted')})};
+var b64=function(s){s=s.replace(/-/g,'+').replace(/_/g,'/');var p=s.length%4?4-s.length%4:0;var r=atob(s+'===='.slice(0,p)),a=new Uint8Array(r.length);for(var i=0;i<r.length;i++)a[i]=r.charCodeAt(i);return a};
+var enablePush=function(){if(!pushOK){toast('This browser cannot show notifications',true);return Promise.resolve()}
+  return Notification.requestPermission().then(function(p){if(p!=='granted')throw new Error('Notifications were not allowed. You can allow them in your phone settings.');
+    return Promise.all([navigator.serviceWorker.register('/demo-admin/sw.js',{scope:'/demo-admin/'}).then(function(){return navigator.serviceWorker.ready}),api('push_key')])})
+  .then(function(r){return r[0].pushManager.getSubscription().then(function(s){return s||r[0].pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64(r[1].key)})})})
+  .then(function(sub){return api('push_subscribe',sub.toJSON())}).then(function(){toast('Notifications are on');load()}).catch(function(e){toast(e.message,true)})};
+$('notifon').addEventListener('click',enablePush);
+if(pushOK)navigator.serviceWorker.register('/demo-admin/sw.js',{scope:'/demo-admin/'}).catch(function(){});
 
-var renderDemos=function(){$('demos').innerHTML=D.length?D.map(function(d){
-  return '<div class="dm" data-slug="'+esc(d.slug)+'"><img src="'+esc(d.icon)+'" alt=""><div class="tx">'
-   +'<div class="row" style="gap:8px"><b>'+esc(d.name)+'</b>'+(d.enabled?'':'<span class="badge expired">Hidden</span>')+(d.files_ok?'':'<span class="badge revoked">Files missing</span>')+'<span class="badge not_activated">'+(d.source==='seed'?'From website':'Uploaded')+'</span></div>'
-   +'<p>'+esc(d.tagline)+'</p>'
-   +'<div class="acts"><a class="btn sm" target="_blank" rel="noopener" href="/demo/?preview=1#app='+esc(d.slug)+'">Preview</a><button class="btn sm" data-d="edit">Edit details</button>'
-   +'<label class="btn sm" style="cursor:pointer">Replace ZIP<input type="file" accept=".zip" data-d="zip" hidden></label>'
-   +'<label class="btn sm" style="cursor:pointer">Change icon<input type="file" accept="image/png,image/jpeg,image/webp" data-d="icon" hidden></label>'
-   +'<button class="btn sm" data-d="toggle">'+(d.enabled?'Hide':'Show')+'</button>'
-   +(d.source==='seed'?'':'<button class="btn sm bad" data-d="del">Delete</button>')+'</div>'
-   +'<div class="prog hidden"><i></i></div>'
-   +'<form class="hidden" data-form><label class="f">Name</label><input type="text" name="name" value="'+esc(d.name)+'" maxlength="60">'
-   +'<label class="f">Short line</label><input type="text" name="tagline" value="'+esc(d.tagline)+'" maxlength="90">'
-   +'<label class="f">Description</label><textarea name="description" maxlength="400">'+esc(d.description)+'</textarea>'
-   +'<label class="f">Quick tour tips (one per line)</label><textarea name="tips" maxlength="1500">'+esc(d.tips_text)+'</textarea>'
-   +'<div class="row" style="margin-top:10px"><label class="f" style="margin:0">Card colour</label><input type="color" name="accent" value="'+esc(d.accent)+'" style="width:48px;height:36px;border:0;background:none"><label class="f" style="margin:0 0 0 10px">Order</label><input type="number" name="sort" value="'+d.sort+'" style="width:90px;height:38px"></div>'
-   +'<div class="row" style="margin-top:12px"><button class="btn pri sm" type="submit">Save</button><button class="btn sm" type="button" data-d="close">Cancel</button></div></form>'
-   +'</div></div>'}).join(''):'<div class="empty">No demos yet.</div>'};
-$('demos').addEventListener('click',function(e){var b=e.target.closest('[data-d]');if(!b||b.tagName==='INPUT')return;var box=b.closest('[data-slug]'),slug=box.dataset.slug,d=demoBy(slug);
-  if(b.dataset.d==='edit')box.querySelector('[data-form]').classList.remove('hidden');
-  if(b.dataset.d==='close')box.querySelector('[data-form]').classList.add('hidden');
-  if(b.dataset.d==='toggle')api('demo_save',{slug:slug,enabled:d.enabled?0:1}).then(function(){toast(d.enabled?'Hidden from new links and the showroom':'Visible again');load()}).catch(function(e){toast(e.message,true)});
-  if(b.dataset.d==='del'&&confirm('Delete '+d.name+' and its files?'))api('demo_delete',{slug:slug}).then(function(){toast('Demo deleted');load()}).catch(function(e){toast(e.message,true)})});
-$('demos').addEventListener('submit',function(e){e.preventDefault();var f=e.target,slug=f.closest('[data-slug]').dataset.slug,o={slug:slug};
-  ['name','tagline','description','tips','accent','sort'].forEach(function(k){o[k]=f.elements[k].value});
-  api('demo_save',o).then(function(){toast('Saved');load()}).catch(function(e){toast(e.message,true)})});
-$('demos').addEventListener('change',function(e){var i=e.target;if(!i.dataset||!i.files||!i.files[0])return;var box=i.closest('[data-slug]'),slug=box.dataset.slug,fd=new FormData();
-  if(i.dataset.d==='zip'){if(!confirm('Replace the files for this demo with '+i.files[0].name+'?')){i.value='';return}fd.append('_a','demo_upload');fd.append('slug',slug);fd.append('zip',i.files[0])}
-  else{fd.append('_a','demo_icon');fd.append('slug',slug);fd.append('icon',i.files[0])}
-  var kind=i.dataset.d;upload(fd,box.querySelector('.prog'),function(j){toast(kind==='zip'?'Demo replaced ('+j.files+' files)':'Icon updated');load()},function(m){toast(m,true);box.querySelector('.prog').classList.add('hidden')});i.value=''});
+/* ---------- settings ---------- */
+$('acct').addEventListener('click',function(){openSheet('<h2>Settings</h2>'
+  +'<label class="f">Notifications</label><div class="row"><button class="btn sm pri" data-act="pushon">Turn on for this device</button><button class="btn sm" data-act="pushtest">Send a test</button></div><p class="sub" style="margin-top:6px">'+(pushN?pushN+' device'+(pushN>1?'s':'')+' getting notifications.':'No devices getting notifications yet.')+'</p>'
+  +'<label class="f">Change PIN</label><div class="row"><input type="password" id="curpw" placeholder="Current PIN" inputmode="numeric" style="max-width:160px"><input type="password" id="newpw" placeholder="New PIN (6+ digits)" inputmode="numeric" style="max-width:180px"><button class="btn sm" data-act="pin">Save</button></div>'
+  +'<div class="row" style="margin-top:18px"><button class="btn sm bad" data-act="logout">Log out</button><button class="btn sm" data-act="close">Close</button></div>',
+  function(el){el.addEventListener('click',function(e){var b=e.target.closest('[data-act]');if(!b)return;var a=b.dataset.act;
+    if(a==='close')closeSheet();
+    if(a==='pushon')enablePush().then(closeSheet);
+    if(a==='pushtest')api('push_test').then(function(){toast(pushN?'Test sent':'Turn notifications on first')}).catch(function(e){toast(e.message,true)});
+    if(a==='pin')api('password',{current:el.querySelector('#curpw').value,'new':el.querySelector('#newpw').value}).then(function(){toast('PIN changed');closeSheet()}).catch(function(e){toast(e.message,true)});
+    if(a==='logout')api('logout').then(function(){location.reload()})})})});
 
-load();setInterval(load,60000);
+load();setInterval(load,30000);
+document.addEventListener('visibilitychange',function(){if(!document.hidden)load()});
 })();
 </script>
 <?php endif; ?>

@@ -68,7 +68,34 @@ function migrate(PDO $pdo): void {
     $pdo->exec("CREATE TABLE IF NOT EXISTS attempts (k TEXT NOT NULL, at INTEGER NOT NULL)");
     $pdo->exec("CREATE INDEX IF NOT EXISTS attempts_k ON attempts(k, at)");
     $pdo->exec("CREATE TABLE IF NOT EXISTS admin (id INTEGER PRIMARY KEY CHECK (id = 1), pass_hash TEXT NOT NULL, created_at INTEGER)");
+    $pdo->exec("CREATE TABLE IF NOT EXISTS events (id INTEGER PRIMARY KEY, link_id INTEGER, type TEXT, text TEXT, at INTEGER)");
+    $pdo->exec("CREATE TABLE IF NOT EXISTS push_subs (endpoint TEXT PRIMARY KEY, p256dh TEXT NOT NULL, auth TEXT NOT NULL, created_at INTEGER)");
+    add_col($pdo, 'links', 'warned_exp', 'INTEGER DEFAULT 0');
+    add_col($pdo, 'links', 'ended_exp', 'INTEGER DEFAULT 0');
+    add_col($pdo, 'sessions', 'warned_exp', 'INTEGER DEFAULT 0');
+    add_col($pdo, 'sessions', 'ended_exp', 'INTEGER DEFAULT 0');
+    add_col($pdo, 'sessions', 'last_app', "TEXT DEFAULT ''");
     $pdo->exec("CREATE TABLE IF NOT EXISTS admin_tokens (id TEXT PRIMARY KEY, csrf TEXT NOT NULL, created_at INTEGER, expires_at INTEGER)");
+}
+
+function add_col(PDO $pdo, string $table, string $col, string $type): void {
+    foreach ($pdo->query('PRAGMA table_info(' . $table . ')') as $c) if ($c['name'] === $col) return;
+    $pdo->exec("ALTER TABLE $table ADD COLUMN $col $type");
+}
+
+/* Send the response now and keep working (e.g. notifications) without making the visitor wait. */
+function json_out_then($data, callable $after): void {
+    http_response_code(200);
+    header('Content-Type: application/json; charset=utf-8');
+    header('Cache-Control: no-store');
+    $body = json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+    header('Content-Length: ' . strlen($body));
+    header('Connection: close');
+    echo $body;
+    if (function_exists('fastcgi_finish_request')) fastcgi_finish_request(); else { @ob_flush(); flush(); }
+    ignore_user_abort(true);
+    try { $after(); } catch (Throwable $e) {}
+    exit;
 }
 
 /* Demos shipped in the repo (demo-data/seed). A new seed version re-points the demo at the seed files. */
