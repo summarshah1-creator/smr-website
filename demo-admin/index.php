@@ -123,6 +123,8 @@ input:focus,textarea:focus,select:focus{border-color:rgba(214,59,255,.6);box-sha
 .btn.big{width:100%;height:52px;font-size:16px;margin-top:6px;border-radius:15px}
 .btn.wa{background:#25d366;border:0;color:#062b14}
 .msg{min-height:190px;font-size:14px}
+.usedbn{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;padding:12px 14px;margin:-4px 0 12px;border-radius:14px;background:rgba(61,220,151,.12);border:1px solid rgba(61,220,151,.45)}
+.usedbn b{color:#7ff0bd;font-size:14.5px}.usedbn span{flex:1 1 200px;font-size:13px;color:var(--muted)}
 .newpin{font-family:Sora,sans-serif;font-size:34px;letter-spacing:.2em;margin:4px 0 10px}
 .prog{height:6px;border-radius:9px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:10px}
 .prog i{display:block;height:100%;width:0;background:var(--grad);transition:width .2s}
@@ -296,7 +298,7 @@ var ICON={dots:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="
 /* ---------- tabs (hash) ---------- */
 var showTab=function(t){if(['demos','send','live'].indexOf(t)<0)t='demos';
   document.querySelectorAll('[data-tab]').forEach(function(b){b.classList.toggle('on',b.dataset.tab===t)});
-  document.querySelectorAll('.tab').forEach(function(s){s.classList.toggle('hidden',s.id!=='tab-'+t)});window.scrollTo(0,0);if(t==='live'&&typeof load==='function'&&D.length)load()};
+  document.querySelectorAll('.tab').forEach(function(s){s.classList.toggle('hidden',s.id!=='tab-'+t)});window.scrollTo(0,0);if(t==='live'&&typeof load==='function'&&D.length)load();if(t!=='send'&&$('created').dataset.used&&typeof resetSend==='function')resetSend()};
 document.querySelectorAll('[data-tab]').forEach(function(b){b.addEventListener('click',function(){if(location.hash!=='#'+b.dataset.tab)history.replaceState(null,'','#'+b.dataset.tab);showTab(b.dataset.tab)})});
 window.addEventListener('hashchange',function(){showTab(location.hash.slice(1))});
 showTab(location.hash.slice(1));
@@ -359,7 +361,11 @@ $('selall').addEventListener('click',function(){var all=document.querySelectorAl
 var dur=45;
 $('dur').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;dur=+b.dataset.m;$('durc').value='';this.querySelectorAll('button').forEach(function(x){x.classList.toggle('on',x===b)})});
 $('durc').addEventListener('input',function(){var v=+this.value;if(v>=5){dur=v;$('dur').querySelectorAll('button').forEach(function(x){x.classList.remove('on')})}});
-var showMessage=function(l,phone){var c=$('created');c.classList.remove('hidden');
+var resetT;
+var resetSend=function(){clearTimeout(resetT);var c=$('created');c.classList.add('hidden');c.innerHTML='';delete c.dataset.used;
+  document.querySelectorAll('#pick input').forEach(function(i){i.checked=false});$('lb').value='';$('ph').value='';$('lerr').textContent='';
+  if(!$('tab-send').classList.contains('hidden')){window.scrollTo({top:0,behavior:'smooth'});toast('Ready for a new link')}};
+var showMessage=function(l,phone){var c=$('created');clearTimeout(resetT);delete c.dataset.used;c.classList.remove('hidden');
   c.innerHTML='<h2>Link ready'+(l.label?' for '+esc(l.label):'')+'</h2><p class="sub">Pick a message, check it, then send it. You can edit it first.</p>'
     +'<div class="filt" style="margin:12px 0 8px"><button class="on" data-kind="short">Link &amp; PIN</button><button data-kind="full">Full message</button></div>'
     +'<textarea class="msg" id="msgtxt"></textarea>'
@@ -368,8 +374,13 @@ var showMessage=function(l,phone){var c=$('created');c.classList.remove('hidden'
   var ta=c.querySelector('#msgtxt'),wa=c.querySelector('#wasend');ta.value=linkPin(l);
   c.querySelectorAll('[data-kind]').forEach(function(k){k.onclick=function(){c.querySelectorAll('[data-kind]').forEach(function(x){x.classList.toggle('on',x===k)});ta.value=k.dataset.kind==='full'?shareText(l):linkPin(l);upd()}});
   var upd=function(){wa.href=waUrl(ta.value,phone)};upd();ta.addEventListener('input',upd);
-  wa.addEventListener('click',function(){setTimeout(function(){toast('Sent links are in the Live tab')},800)});
-  c.querySelector('[data-c]').onclick=function(){copy(shareText(l),'Full message copied')};c.querySelector('[data-lp]').onclick=function(){copy(linkPin(l),'Link and PIN copied')};c.querySelector('[data-x]').onclick=function(){c.classList.add('hidden')};
+  /* Once it's been copied or sent, show that clearly and clear the box after 2 minutes so the same link isn't sent twice by mistake. */
+  var used=function(how){if(c.dataset.used)return;c.dataset.used='1';
+    var bn=document.createElement('div');bn.className='usedbn';bn.innerHTML='<b>✓ '+how+(l.label?' for '+esc(l.label):'')+'</b><span>This link belongs to '+(l.label?esc(l.label):'that person')+'. For someone else, make a new one.</span><button class="btn sm pri" type="button" data-new>New link</button>';
+    c.insertBefore(bn,c.firstChild);bn.querySelector('[data-new]').onclick=resetSend;
+    clearTimeout(resetT);resetT=setTimeout(resetSend,120000)};
+  wa.addEventListener('click',function(){used('Sent on WhatsApp');setTimeout(function(){toast('Sent links are in the Live tab')},800)});
+  c.querySelector('[data-c]').onclick=function(){copy(shareText(l),'Full message copied');used('Copied')};c.querySelector('[data-lp]').onclick=function(){copy(linkPin(l),'Link and PIN copied');used('Copied')};c.querySelector('[data-x]').onclick=resetSend;
   c.scrollIntoView({behavior:'smooth',block:'start'})};
 $('linkform').addEventListener('submit',function(e){e.preventDefault();$('lerr').textContent='';
   var apps=[].map.call(document.querySelectorAll('#pick input:checked'),function(i){return i.value});

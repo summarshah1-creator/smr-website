@@ -183,6 +183,12 @@ h1 em{font-style:normal;background:var(--grad);-webkit-background-clip:text;back
 /* app view */
 .stage{position:fixed;z-index:10;left:0;right:0;bottom:0;top:calc(var(--hh) + env(safe-area-inset-top));background:#000;display:none}
 .stage.on{display:block}
+/* App open: lay the page out like a normal full-height web app (header + app in the page flow, nothing
+   pinned with position:fixed), which is how the apps behave on their own in iPhone Safari. */
+body.appmode{height:100%;overflow:hidden;display:flex;flex-direction:column}
+body.appmode .hd{position:relative;flex:none}
+body.appmode .stage{position:relative;top:auto;left:auto;right:auto;bottom:auto;flex:1 1 auto;min-height:0}
+body.appmode .glow{display:none}
 .stage iframe{display:block;width:100%;height:100%;border:0;background:#fff}
 .stage .dev{width:100%;height:100%}
 @media(min-width:900px){
@@ -425,12 +431,12 @@ var show=function(slug){
   closeMenu();
   if(slug&&bySlug[slug]){
     if(current!==slug){fresh();frame.src='/demo/run/'+encodeURIComponent(slug)+'/';current=slug}
-    stage.classList.add('on');home.style.display='none';document.body.classList.add('locked');
+    stage.classList.add('on');home.style.display='none';document.body.classList.add('locked','appmode');window.scrollTo(0,0);
     document.title=bySlug[slug].name+' Demo - SMR Digital';
     startTips(slug,false);
   }else{
     if(current){frame.src='about:blank';current=null}
-    stage.classList.remove('on');home.style.display='';document.body.classList.remove('locked');
+    stage.classList.remove('on');home.style.display='';document.body.classList.remove('locked','appmode');
     document.title=<?= json_encode($pageTitle) ?>;clearTimeout(tipT);$('tip').classList.remove('on');mini.classList.remove('on');
   }
 };
