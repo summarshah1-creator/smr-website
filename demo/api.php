@@ -7,14 +7,25 @@ security_headers(false);
 $a = $_GET['a'] ?? '';
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
+/* Version stamps so open pages pick up app updates by themselves. */
+function versions(?array $slugs): array {
+    $v = [];
+    foreach (db()->query('SELECT slug, updated_at, enabled FROM demos') as $d) {
+        if ($slugs === null || in_array($d['slug'], $slugs, true)) $v[$d['slug']] = (int) $d['updated_at'] . ':' . (int) $d['enabled'];
+    }
+    $build = 0;
+    foreach (['index.php', 'serve.php', 'api.php'] as $f) $build = max($build, (int) @filemtime(__DIR__ . '/' . $f));
+    return ['apps' => $v, 'build' => $build];
+}
+
 if ($a === 'state') {
-    if (isset($_GET['preview']) && admin_token()) json_out(['state' => 'preview', 'now' => now()]);
+    if (isset($_GET['preview']) && admin_token()) json_out(['state' => 'preview', 'now' => now()] + versions(null));
     $vs = visitor_session();
     if (!$vs) json_out(['state' => 'none', 'now' => now()]);
     [$l, $s] = $vs;
     $st = session_state($l, $s);
     $exp = session_expiry($l, $s);
-    $out = ['state' => $st, 'now' => now(), 'expires_at' => $st === 'ok' ? $exp : 0];
+    $out = ['state' => $st, 'now' => now(), 'expires_at' => $st === 'ok' ? $exp : 0] + versions(link_apps($l));
     // Tell the owner when time is nearly up, and when it has ended (once per expiry time).
     $shared = $l['mode'] === 'shared';
     $flag = null;

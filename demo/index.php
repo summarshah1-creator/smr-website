@@ -481,7 +481,19 @@ var toastT;var toast=function(msg,bad){var t=$('toast');t.textContent=msg;t.styl
 route();
 
 /* ---------- session clock (server is the source of truth) ---------- */
-if(B.preview)return;
+/* ---------- live updates: when an app is updated in SMR Admin (or by Claude), open pages update themselves ---------- */
+var ver=null,verKey=function(j){return JSON.stringify(j.apps||{})};
+var applyVersions=function(j){if(!j||!j.apps)return;
+  if(!ver){ver={apps:j.apps,build:j.build};return}
+  var old=ver;ver={apps:j.apps,build:j.build};
+  if(j.build!==old.build||Object.keys(j.apps).join()!==Object.keys(old.apps).join()){location.reload();return}
+  var changed=Object.keys(j.apps).filter(function(k){return j.apps[k]!==old.apps[k]});
+  if(!changed.length)return;
+  if(current&&changed.indexOf(current)>=0){var sl=current;fresh();frame.src='/demo/run/'+encodeURIComponent(sl)+'/?u='+Date.now();toast('This app has just been updated',false)}
+  if(!current)location.reload()};
+var pollVer=function(){fetch('/demo/api.php?a=state'+(B.preview?'&preview=1':''),{credentials:'same-origin',cache:'no-store'}).then(function(r){return r.json()}).then(applyVersions).catch(function(){})};
+pollVer();
+if(B.preview){setInterval(pollVer,20000);document.addEventListener('visibilitychange',function(){if(!document.hidden)pollVer()});return}
 var offset=B.now-Date.now()/1000,expires=B.expires,warned=false,timer=$('timer'),clock=$('clock');
 var tick=function(){
   if(stopped)return;
@@ -499,9 +511,9 @@ var check=function(final){if(checking||stopped)return;checking=true;
   fetch('/demo/api.php?a=state',{credentials:'same-origin',cache:'no-store'}).then(function(r){return r.json()}).then(function(j){
     checking=false;
     if(j.state!=='ok'){expiredOn();return}
-    offset=j.now-Date.now()/1000;expires=j.expires_at;
+    offset=j.now-Date.now()/1000;expires=j.expires_at;applyVersions(j);
   }).catch(function(){checking=false;if(final&&expires-(Date.now()/1000+offset)<=-5)expiredOn()})};
-tick();setInterval(tick,1000);setInterval(check,30000);
+tick();setInterval(tick,1000);setInterval(check,20000);
 document.addEventListener('visibilitychange',function(){if(!document.hidden)check(false)});
 })();
 </script>

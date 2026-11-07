@@ -3,7 +3,7 @@
 if (!defined('SMR_DEMO')) { http_response_code(404); exit; }
 
 /* Starting admin PIN (bcrypt). Once the owner changes it in Account, the stored one in the database is used instead. */
-const ADMIN_PIN_HASH = '$2y$10$/Ox20Bw9b0Zh.LZRKN0EVO7PbGuNICoXK3zJ4qS5rP5OOICQrSnF.';
+const ADMIN_PIN_HASH = '$2y$10$8mBG3fIyP.eZPNsBuJW5sOD1rywHHvO8lZC.r0A6WgTNdWpImceD6';
 const VISITOR_COOKIE = 'smr_demo';
 const ADMIN_COOKIE = 'smr_admin';
 const DEFAULT_MINUTES = 45;
@@ -338,7 +338,7 @@ function link_status(array $l): array {
 /* ---------- admin auth ---------- */
 function admin_hash(): string {
     // Passwords set with the old setup code (before the PIN switch) are ignored.
-    $h = db()->query('SELECT pass_hash FROM admin WHERE id = 1 AND created_at > 1794063536')->fetchColumn();
+    $h = db()->query('SELECT pass_hash FROM admin WHERE id = 1 AND created_at > 1794082375')->fetchColumn();
     return $h ? (string) $h : ADMIN_PIN_HASH;
 }
 function admin_token(): ?array {

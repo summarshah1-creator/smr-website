@@ -114,6 +114,15 @@ input:focus,textarea:focus,select:focus{border-color:rgba(214,59,255,.6);box-sha
 .auth .panel{width:100%;max-width:400px}
 .auth .logo{justify-content:center;margin:0 0 18px}
 .auth .logo svg{height:22px}.auth .logo span{font-size:22px}
+.pindots{display:flex;justify-content:center;gap:16px;margin:22px 0 4px}
+.pindots i{width:16px;height:16px;border-radius:50%;border:2px solid rgba(255,255,255,.35);transition:.15s}
+.pindots i.on{background:linear-gradient(110deg,#5b5bff,#d63bff);border-color:transparent;transform:scale(1.1)}
+.pindots.shake{animation:shake .4s}
+@keyframes shake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+.keys{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:290px;margin:14px auto 0}
+.keys button{height:66px;border-radius:50%;width:66px;margin:0 auto;font:600 26px Sora,system-ui,sans-serif;background:rgba(255,255,255,.06);border:1px solid var(--line);-webkit-tap-highlight-color:transparent}
+.keys button:active{background:rgba(214,59,255,.3)}
+.keys button svg{width:26px;height:26px}
 .err{color:#ff9db0;font-weight:600;min-height:20px;margin-top:10px;font-size:14px}
 .result{border:1px solid rgba(61,220,151,.4);background:rgba(61,220,151,.06)}
 .send{border-color:rgba(214,59,255,.35);background:linear-gradient(180deg,rgba(214,59,255,.08),rgba(91,91,255,.03))}
@@ -185,19 +194,29 @@ input:focus,textarea:focus,select:focus{border-color:rgba(214,59,255,.6);box-sha
   <form class="panel" id="auth" autocomplete="off">
     <div class="logo"><?= $mark ?><span>Digital</span></div>
     <h1 style="text-align:center">SMR Admin</h1>
-    <p class="sub" style="text-align:center">Enter your admin PIN.</p>
-    <input type="password" id="pin" inputmode="numeric" pattern="[0-9]*" maxlength="12" autocomplete="off" aria-label="Admin PIN" autofocus style="margin-top:18px;text-align:center;font-size:24px;letter-spacing:.4em;height:56px">
-    <div class="err" id="err" role="alert"></div>
-    <button class="btn pri" style="width:100%;margin-top:8px;height:48px" type="submit">Log in</button>
+    <p class="sub" style="text-align:center">Enter your PIN</p>
+    <div class="pindots" id="dots" aria-live="polite"><i></i><i></i><i></i><i></i></div>
+    <div class="err" id="err" role="alert" style="text-align:center"></div>
+    <div class="keys" id="keys">
+      <button type="button" data-k="1">1</button><button type="button" data-k="2">2</button><button type="button" data-k="3">3</button>
+      <button type="button" data-k="4">4</button><button type="button" data-k="5">5</button><button type="button" data-k="6">6</button>
+      <button type="button" data-k="7">7</button><button type="button" data-k="8">8</button><button type="button" data-k="9">9</button>
+      <span></span><button type="button" data-k="0">0</button><button type="button" data-k="del" aria-label="Delete"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 5H9l-6 7 6 7h12z"/><path d="M14 10l4 4M18 10l-4 4"/></svg></button>
+    </div>
   </form>
 </div>
 <script>
-(function(){var f=document.getElementById('auth'),err=document.getElementById('err'),pin=document.getElementById('pin');
-pin.addEventListener('input',function(){pin.value=pin.value.replace(/\D/g,'')});
-f.addEventListener('submit',function(e){e.preventDefault();err.textContent='';
-  fetch('api.php?a=login',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({pin:pin.value})})
-  .then(function(r){return r.json()}).then(function(j){if(j.ok)location.reload();else{err.textContent=j.error||'Something went wrong.';pin.value='';pin.focus()}})
-  .catch(function(){err.textContent='No connection.'})});})();
+(function(){var err=document.getElementById('err'),dots=document.querySelectorAll('#dots i'),pin='',busy=false;
+var paint=function(){dots.forEach(function(d,i){d.classList.toggle('on',i<pin.length)})};
+var send=function(){busy=true;
+  fetch('api.php?a=login',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({pin:pin})})
+  .then(function(r){return r.json()}).then(function(j){if(j.ok){location.reload();return}
+    err.textContent=j.error||'Something went wrong.';document.getElementById('dots').classList.add('shake');setTimeout(function(){document.getElementById('dots').classList.remove('shake');pin='';paint();busy=false},450)})
+  .catch(function(){err.textContent='No connection.';pin='';paint();busy=false})};
+var press=function(k){if(busy)return;err.textContent='';if(k==='del')pin=pin.slice(0,-1);else if(pin.length<4)pin+=k;paint();if(pin.length===4)send()};
+document.getElementById('keys').addEventListener('click',function(e){var b=e.target.closest('[data-k]');if(b)press(b.dataset.k)});
+document.addEventListener('keydown',function(e){if(/^\d$/.test(e.key))press(e.key);else if(e.key==='Backspace')press('del')});
+})();
 </script>
 <?php else: ?>
 <div class="wrap">
@@ -313,7 +332,8 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeSheet()
 var item=function(act,label,icon,cls){return '<button class="it'+(cls?' '+cls:'')+'" data-act="'+act+'">'+(icon||'')+'<span>'+label+'</span></button>'};
 
 /* ---------- load ---------- */
-var load=function(){return api('list').then(function(j){D=j.demos;L=j.links;E=j.events||[];pushN=j.push_devices||0;skew=j.now-Date.now()/1000;renderDemos();renderPick();renderLinks();renderFeed();renderNotif()}).catch(function(e){toast(e.message,true)})};
+var build0=0;
+var load=function(){return api('list').then(function(j){if(build0&&j.build&&j.build!==build0){location.reload();return}build0=j.build;D=j.demos;L=j.links;E=j.events||[];pushN=j.push_devices||0;skew=j.now-Date.now()/1000;renderDemos();renderPick();renderLinks();renderFeed();renderNotif()}).catch(function(e){toast(e.message,true)})};
 
 /* ---------- my demos ---------- */
 var renderDemos=function(){$('demos').innerHTML=D.length?D.map(function(d){
@@ -448,7 +468,7 @@ if(pushOK)navigator.serviceWorker.register('/demo-admin/sw.js',{scope:'/demo-adm
 /* ---------- settings ---------- */
 $('acct').addEventListener('click',function(){openSheet('<h2>Settings</h2>'
   +'<label class="f">Notifications</label><div class="row"><button class="btn sm pri" data-act="pushon">Turn on for this device</button><button class="btn sm" data-act="pushtest">Send a test</button></div><p class="sub" style="margin-top:6px">'+(pushN?pushN+' device'+(pushN>1?'s':'')+' getting notifications.':'No devices getting notifications yet.')+'</p>'
-  +'<label class="f">Change PIN</label><div class="row"><input type="password" id="curpw" placeholder="Current PIN" inputmode="numeric" style="max-width:160px"><input type="password" id="newpw" placeholder="New PIN (6+ digits)" inputmode="numeric" style="max-width:180px"><button class="btn sm" data-act="pin">Save</button></div>'
+  +'<label class="f">Change PIN</label><div class="row"><input type="password" id="curpw" placeholder="Current PIN" inputmode="numeric" style="max-width:160px"><input type="password" id="newpw" placeholder="New 4-digit PIN" inputmode="numeric" maxlength="4" style="max-width:180px"><button class="btn sm" data-act="pin">Save</button></div>'
   +'<div class="row" style="margin-top:18px"><button class="btn sm bad" data-act="logout">Log out</button><button class="btn sm" data-act="close">Close</button></div>',
   function(el){el.addEventListener('click',function(e){var b=e.target.closest('[data-act]');if(!b)return;var a=b.dataset.act;
     if(a==='close')closeSheet();

@@ -13,7 +13,7 @@ $ipKey = 'admin:' . hash('sha256', client_ip());
 
 /* ---------- login (PIN) ---------- */
 if ($a === 'login') {
-    if (too_many($ipKey, 6, 900) || too_many('admin:all', 30, 3600)) json_out(['error' => 'Too many attempts. Wait 15 minutes and try again.'], 429);
+    if (too_many($ipKey, 6, 900) || too_many('admin:all', 20, 3600)) json_out(['error' => 'Too many attempts. Wait 15 minutes and try again.'], 429);
     $pin = preg_replace('/\s/', '', (string) ($in['pin'] ?? ''));
     if ($pin === '' || !password_verify($pin, admin_hash())) { note_fail($ipKey); note_fail('admin:all'); usleep(400000); json_out(['error' => 'Wrong PIN.'], 403); }
     json_out(['ok' => true] + admin_login_cookie());
@@ -142,7 +142,7 @@ case 'logout':
 case 'password':
     if (!password_verify(preg_replace('/\s/', '', (string) ($in['current'] ?? '')), admin_hash())) json_out(['error' => 'Your current PIN is not right.'], 403);
     $new = preg_replace('/\s/', '', (string) ($in['new'] ?? ''));
-    if (!preg_match('/^\d{6,12}$/', $new)) json_out(['error' => 'Use 6 to 12 digits for the new PIN.'], 400);
+    if (!preg_match('/^\d{4}$/', $new)) json_out(['error' => 'Use 4 digits for the new PIN.'], 400);
     db()->prepare('INSERT OR REPLACE INTO admin (id, pass_hash, created_at) VALUES (1, ?, ?)')->execute([password_hash($new, PASSWORD_DEFAULT), now()]);
     db()->prepare('DELETE FROM admin_tokens WHERE id != ?')->execute([$tok['id']]);
     json_out(['ok' => true]);
@@ -157,7 +157,8 @@ case 'list':
     foreach (db()->query('SELECT * FROM links ORDER BY id DESC LIMIT 300') as $l) $links[] = link_row($l);
     $events = db()->query('SELECT e.type, e.text, e.at, e.link_id, l.label FROM events e LEFT JOIN links l ON l.id = e.link_id ORDER BY e.id DESC LIMIT 20')->fetchAll();
     $pushN = (int) db()->query('SELECT COUNT(*) FROM push_subs')->fetchColumn();
-    json_out(['demos' => $demos, 'links' => $links, 'events' => $events, 'push_devices' => $pushN, 'now' => now(), 'storage' => strpos(private_dir(), SITE_ROOT) === 0 ? 'inside' : 'outside']);
+    $build = max((int) @filemtime(__DIR__ . '/index.php'), (int) @filemtime(__DIR__ . '/api.php'));
+    json_out(['build' => $build, 'demos' => $demos, 'links' => $links, 'events' => $events, 'push_devices' => $pushN, 'now' => now(), 'storage' => strpos(private_dir(), SITE_ROOT) === 0 ? 'inside' : 'outside']);
 
 case 'push_key':
     require_once dirname(__DIR__) . '/demo-lib/push.php';
