@@ -64,16 +64,19 @@ return json_decode(<<<'JSON'
  },
  {
   "slug": "cafegrill",
-  "version": "2026-11-07g",
+  "version": "2026-11-07h",
   "name": "Café Grill",
   "accent": "#d0293a",
-  "tagline": "Two-branch café ordering · Luton & St Albans",
-  "description": "Pick a branch, browse the breakfast, brunch and grill menu, and order for collection. Opening times are live per branch.",
+  "tagline": "Café ordering & rewards · Leagrave Road, Luton",
+  "description": "Order-ahead app for Café Grill in Luton: all-day breakfast, brunch, grill and Cakes Danieli desserts, for collection or eat in, with a stamp card.",
   "tips": [
-   "One app covers two branches: customers pick Luton or St Albans and see that branch's menu and opening times.",
-   "Live open/closed status shows whether a branch is taking orders right now.",
-   "Customers order for collection or eat in, with photos for every dish.",
-   "A stamp card and spin-to-win reward regulars at both branches."
+   "Customers order ahead for collection or eat in, and skip the queue.",
+   "Eating in? They order from the table and the food is brought over.",
+   "Live open/closed status shows whether the café is taking orders right now.",
+   "The full menu has photos: all-day breakfast, benedicts, the grill, wings and burgers.",
+   "Cakes Danieli has its own section, with cake slices and dessert pots, to sell more desserts.",
+   "Every order earns a stamp: a free hot drink at 4 and a free burger meal at 8.",
+   "Google reviews and directions are built in, so new customers trust you and find you."
   ]
  },
  {
