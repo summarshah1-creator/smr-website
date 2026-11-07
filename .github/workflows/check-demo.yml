@@ -1,0 +1,12 @@
+name: Check demo protection
+on: workflow_dispatch
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Status codes
+        run: |
+          for u in /demo/ "/demo/?k=abcdefghijklmnopqrstu" /demo/run/kaya/ /demo-data/seed/seeds.json /demo-data/seed/kaya/index.html /demo-data/seed/_icons/kaya.webp /demo-lib/bootstrap.php /demo-admin/ /demo/icon.php?s=kaya /; do
+            echo "$(curl -s -o /tmp/b -w '%{http_code}' "https://smrdigital.co.uk$u") $u $(head -c 160 /tmp/b | tr '\n' ' ')"
+          done
+          curl -sI https://smrdigital.co.uk/demo/ | grep -iE 'content-security|x-frame|server'
