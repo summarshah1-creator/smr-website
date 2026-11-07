@@ -265,6 +265,20 @@ function demo_public(array $d): array {
 /* ---------- links & visitor sessions ---------- */
 function link_apps(array $l): array { return json_decode($l['apps'], true) ?: []; }
 
+/* Readable link: /app-demo/<app name(s)>/<token>. The name part is only for people reading the link. */
+function url_slug(string $s): string {
+    $s = strtr($s, ['é' => 'e', 'è' => 'e', 'ê' => 'e', 'á' => 'a', 'à' => 'a', 'ó' => 'o', 'ö' => 'o', 'ü' => 'u', 'ç' => 'c', '&' => ' and ']);
+    return trim(substr(trim(preg_replace('/[^a-z0-9]+/', '-', strtolower($s)), '-'), 0, 60), '-');
+}
+function link_path(array $l): string {
+    $names = [];
+    foreach (link_apps($l) as $slug) { $d = demo_by_slug($slug); if ($d) $names[] = $d['name']; }
+    if (count($names) === 1) $name = url_slug($names[0]);
+    elseif (count($names) >= 2 && count($names) <= 3) $name = url_slug(implode(' and ', $names));
+    else $name = 'smr-digital-apps';
+    return '/app-demo/' . ($name !== '' ? $name : 'smr-digital') . '/' . $l['token'];
+}
+
 /* Expiry timestamp that applies to one visitor session (server is the only source of truth). */
 function session_expiry(array $l, array $s): int {
     return $l['mode'] === 'shared' ? (int) $l['expires_at'] : (int) $s['expires_at'];

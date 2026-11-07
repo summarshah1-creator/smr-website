@@ -10,3 +10,9 @@ DirectoryIndex index.html
   ExpiresByType image/jpeg "access plus 7 days"
   ExpiresByType application/javascript "access plus 1 day"
 </IfModule>
+
+# Private app demo links: /app-demo/<app-name>/<token> (handled by the demo showroom)
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteRule ^app-demo/[a-z0-9-]+/([A-Za-z0-9_-]{16,64})/?$ demo/index.php?k=$1 [L,QSA]
+</IfModule>

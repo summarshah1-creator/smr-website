@@ -11,7 +11,7 @@ $mark = preg_replace('/<svg /', '<svg aria-hidden="true" ', (string) @file_get_c
 <html lang="en-GB">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
 <meta name="theme-color" content="#08080f">
 <title>SMR Admin</title>
@@ -24,6 +24,7 @@ $mark = preg_replace('/<svg /', '<svg aria-hidden="true" ', (string) @file_get_c
 <meta name="apple-mobile-web-app-title" content="SMR Admin">
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Manrope:wght@400;500;600;700;800&family=Poppins:wght@300&display=swap" rel="stylesheet">
 <style>
+html{touch-action:manipulation;-webkit-text-size-adjust:100%}
 :root{--bg:#08080f;--bg2:#0e0e1a;--card:#12121e;--line:rgba(255,255,255,.09);--ink:#f2f2fa;--muted:#a3a3bd;--a1:#5b5bff;--a2:#d63bff;--grad:linear-gradient(110deg,var(--a1),var(--a2));--ok:#3ddc97;--warn:#ffb547;--bad:#ff5470}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--ink);font:15px/1.45 Manrope,system-ui,sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh}
@@ -444,5 +445,6 @@ document.addEventListener('visibilitychange',function(){if(!document.hidden)load
 })();
 </script>
 <?php endif; ?>
+<script>/* app feel: no pinch or double-tap zoom */(function(){document.addEventListener('gesturestart',function(e){e.preventDefault()},{passive:false});document.addEventListener('gesturechange',function(e){e.preventDefault()},{passive:false});document.addEventListener('touchmove',function(e){if(e.touches&&e.touches.length>1)e.preventDefault()},{passive:false});})();</script>
 </body>
 </html>

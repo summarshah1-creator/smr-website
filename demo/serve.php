@@ -75,11 +75,14 @@ if (strpos($mime, 'text/html') === 0) {
     if (!$admin) {
         db()->prepare('UPDATE sessions SET last_seen = ?, last_app = ? WHERE id = ?')->execute([now(), $slug, $sess['id']]);
     }
-    $top = $admin ? '/demo/?preview=1#app=' . $slug : '/demo/?k=' . rawurlencode($link['token']) . '#app=' . $slug;
+    $top = $admin ? '/demo/?preview=1#app=' . $slug : link_path($link) . '#app=' . $slug;
     $html = (string) file_get_contents($real);
     // Flutter web builds use <base href="/">; point it at this demo's folder.
     $html = preg_replace('#<base\s+href=["\']/["\']\s*/?>#i', '<base href="/demo/run/' . $slug . '/">', $html, 1);
-    $guard = guard_snippet($top);
+    // Feel like an app: no zooming.
+    $vp = '<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">';
+    $html = preg_match('#<meta[^>]+name=["\']viewport["\'][^>]*>#i', $html) ? preg_replace('#<meta[^>]+name=["\']viewport["\'][^>]*>#i', $vp, $html, 1) : $html;
+    $guard = guard_snippet($top) . (strpos($html, $vp) === false ? $vp : '');
     if (preg_match('#<head[^>]*>#i', $html, $hm, PREG_OFFSET_CAPTURE)) {
         $at = $hm[0][1] + strlen($hm[0][0]);
         $html = substr($html, 0, $at) . $guard . substr($html, $at);
@@ -123,10 +126,11 @@ fclose($fp);
 function guard_snippet(string $top): string {
     $topJs = json_encode($top, JSON_UNESCAPED_SLASHES);
     return '<style id="smr-demo-guard">img,video,svg{-webkit-user-drag:none;-webkit-touch-callout:none}'
-        . 'body{-webkit-user-select:none;user-select:none}'
+        . 'html{touch-action:manipulation}body{-webkit-user-select:none;user-select:none}'
         . 'input,textarea,select,[contenteditable],[contenteditable] *{-webkit-user-select:text;user-select:text}'
         . '@media print{html,body{display:none!important}}</style>'
         . '<script>(function(){'
+        . 'document.addEventListener(\'gesturestart\',function(e){e.preventDefault()},{passive:false});document.addEventListener(\'gesturechange\',function(e){e.preventDefault()},{passive:false});document.addEventListener(\'touchmove\',function(e){if(e.touches&&e.touches.length>1)e.preventDefault()},{passive:false});'
         . 'try{if(window.top===window.self){location.replace(' . $topJs . ');return}}catch(e){}'
         . 'try{var sw=navigator.serviceWorker;if(sw){if(sw.getRegistrations)sw.getRegistrations().then(function(r){r.forEach(function(x){x.unregister()})});'
         . 'var off=function(){return Promise.reject(new Error("Service workers are off in SMR demos"))};'

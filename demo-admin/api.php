@@ -24,11 +24,11 @@ if (!$tok) json_out(['error' => 'Please log in again.', 'login' => true], 401);
 if (!hash_equals($tok['csrf'], (string) ($_SERVER['HTTP_X_CSRF'] ?? ''))) json_out(['error' => 'Please reload the page.'], 403);
 
 /* ---------- helpers ---------- */
-function link_url(string $token): string {
+function link_url(array $l): string {
     $host = preg_replace('/[^A-Za-z0-9.:-]/', '', (string) ($_SERVER['HTTP_HOST'] ?? 'smrgraphics.co.uk'));
     $host = preg_replace('/^www\./', '', $host);
     $local = preg_match('/^(127\.|localhost)/', $host);
-    return ($local ? 'http' : 'https') . '://' . $host . '/demo/?k=' . rawurlencode($token);
+    return ($local ? 'http' : 'https') . '://' . $host . link_path($l);
 }
 function link_row(array $l): array {
     [$status, $left] = link_status($l);
@@ -43,7 +43,7 @@ function link_row(array $l): array {
     $st2 = db()->prepare('SELECT COUNT(*) AS n, MAX(last_seen) AS seen, (SELECT last_app FROM sessions WHERE link_id = ? ORDER BY last_seen DESC LIMIT 1) AS app FROM sessions WHERE link_id = ?');
     $st2->execute([$l['id'], $l['id']]);
     $ss = $st2->fetch() ?: [];
-    return ['id' => (int) $l['id'], 'label' => $l['label'], 'devices' => (int) ($ss['n'] ?? 0), 'last_seen' => (int) ($ss['seen'] ?? 0), 'last_app' => (string) ($ss['app'] ?? ''), 'url' => link_url($l['token']), 'pin' => $l['pin'], 'apps' => link_apps($l),
+    return ['id' => (int) $l['id'], 'label' => $l['label'], 'devices' => (int) ($ss['n'] ?? 0), 'last_seen' => (int) ($ss['seen'] ?? 0), 'last_app' => (string) ($ss['app'] ?? ''), 'url' => link_url($l), 'pin' => $l['pin'], 'apps' => link_apps($l),
         'mode' => $l['mode'], 'max_uses' => $max, 'uses' => (int) $l['uses'], 'duration' => (int) $l['duration'], 'tips' => (int) $l['tips'],
         'created_at' => (int) $l['created_at'], 'activated_at' => (int) $l['activated_at'], 'expires_at' => $expiry,
         'status' => $status, 'left' => $left];

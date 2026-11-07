@@ -19,7 +19,7 @@ if ($preview) {
     foreach (db()->query('SELECT * FROM demos ORDER BY sort, name') as $d) $demos[] = demo_public($d) + ['enabled' => (int) $d['enabled']];
 } else {
     $vs = visitor_session();
-    if ($token === '' && $vs) { header('Location: /demo/?k=' . rawurlencode($vs[0]['token']), true, 302); exit; }
+    if ($token === '' && $vs) { header('Location: ' . link_path($vs[0]), true, 302); exit; }
     if ($token !== '') {
         $link = link_by_token($token);
         if (!$link) {
@@ -62,7 +62,7 @@ $boot = ['view' => $view, 'token' => $token, 'preview' => $preview, 'now' => now
 <html lang="en-GB">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
 <meta name="theme-color" content="#08080f">
 <title>SMR Digital · Private demos</title>
@@ -71,6 +71,7 @@ $boot = ['view' => $view, 'token' => $token, 'preview' => $preview, 'now' => now
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Manrope:wght@400;500;600;700&family=Poppins:wght@300&display=swap" rel="stylesheet">
 <style>
+html{touch-action:manipulation;-webkit-text-size-adjust:100%}
 :root{--bg:#08080f;--bg2:#0e0e1a;--card:#13131f;--line:rgba(255,255,255,.09);--ink:#f2f2fa;--muted:#a3a3bd;--a1:#5b5bff;--a2:#d63bff;--grad:linear-gradient(110deg,var(--a1),var(--a2));--hh:58px;--warn:#ffb547;--bad:#ff5470}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
@@ -438,5 +439,6 @@ tick();setInterval(tick,1000);setInterval(check,30000);
 document.addEventListener('visibilitychange',function(){if(!document.hidden)check(false)});
 })();
 </script>
+<script>/* app feel: no pinch or double-tap zoom */(function(){document.addEventListener('gesturestart',function(e){e.preventDefault()},{passive:false});document.addEventListener('gesturechange',function(e){e.preventDefault()},{passive:false});document.addEventListener('touchmove',function(e){if(e.touches&&e.touches.length>1)e.preventDefault()},{passive:false});})();</script>
 </body>
 </html>

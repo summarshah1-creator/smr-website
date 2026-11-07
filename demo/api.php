@@ -87,7 +87,7 @@ if ($a === 'redeem' && $method === 'POST') {
         $pdo->prepare('INSERT INTO sessions (id, link_id, created_at, expires_at, last_seen, ua) VALUES (?,?,?,?,?,?)')
             ->execute([hash('sha256', $raw), $l['id'], $now, $exp, $now, substr((string) ($_SERVER['HTTP_USER_AGENT'] ?? ''), 0, 200)]);
         $pdo->exec('COMMIT');
-        set_cookie(VISITOR_COOKIE, $raw, $now + 30 * 86400, '/demo/', 'Lax');
+        set_cookie(VISITOR_COOKIE, $raw, $now + 30 * 86400, '/', 'Lax');
         $n = (int) $l['uses'] + 1;
         $mins = (int) round(($exp - $now) / 60);
         require_once dirname(__DIR__) . '/demo-lib/push.php';

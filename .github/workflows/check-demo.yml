@@ -10,7 +10,7 @@ jobs:
             echo "== $h"; curl -sS -o /dev/null -w '%{http_code} %{remote_ip}\n' -A 'Mozilla/5.0 SMR-check' --max-time 20 "https://$h/" || true
           done
           H=https://smrgraphics.co.uk
-          for u in /demo/ "/demo/?k=abcdefghijklmnopqrstu" /demo/run/kaya/ /demo-data/seed/seeds.php /demo-data/seed/kaya.pack.php /demo-data/private-path.php /demo-data/seed/kaya/index.html /demo-lib/bootstrap.php /demo-admin/ "/demo/icon.php?s=kaya" /demo-admin/manifest.webmanifest /demo-admin/sw.js /demo-lib/push.php /demo-data/seed/mikael.pack.php; do
+          for u in /app-demo/test/abcdefghijklmnopqrstu /demo/ "/demo/?k=abcdefghijklmnopqrstu" /demo/run/kaya/ /demo-data/seed/seeds.php /demo-data/seed/kaya.pack.php /demo-data/private-path.php /demo-data/seed/kaya/index.html /demo-lib/bootstrap.php /demo-admin/ "/demo/icon.php?s=kaya" /demo-admin/manifest.webmanifest /demo-admin/sw.js /demo-lib/push.php /demo-data/seed/mikael.pack.php; do
             code=$(curl -s -o /tmp/b -w '%{http_code}' -A 'Mozilla/5.0 SMR-check' --max-time 20 "$H$u" || echo ERR)
             echo "$code $u $(head -c 200 /tmp/b 2>/dev/null | tr '\n' ' ')"
           done
