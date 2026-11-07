@@ -80,7 +80,7 @@ if (strpos($mime, 'text/html') === 0) {
     // Flutter web builds use <base href="/">; point it at this demo's folder.
     $html = preg_replace('#<base\s+href=["\']/["\']\s*/?>#i', '<base href="/demo/run/' . $slug . '/">', $html, 1);
     // Feel like an app: no zooming.
-    $vp = '<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">';
+    $vp = '<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">';
     $html = preg_match('#<meta[^>]+name=["\']viewport["\'][^>]*>#i', $html) ? preg_replace('#<meta[^>]+name=["\']viewport["\'][^>]*>#i', $vp, $html, 1) : $html;
     $guard = guard_snippet($top) . (strpos($html, $vp) === false ? $vp : '');
     if (preg_match('#<head[^>]*>#i', $html, $hm, PREG_OFFSET_CAPTURE)) {

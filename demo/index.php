@@ -77,7 +77,7 @@ $boot = ['view' => $view, 'token' => $token, 'preview' => $preview, 'now' => now
 <html lang="en-GB">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="robots" content="noindex,nofollow">
 <meta name="theme-color" content="#08080f">
 <title><?= h($pageTitle) ?></title>
@@ -194,14 +194,14 @@ h1 em{font-style:normal;background:var(--grad);-webkit-background-clip:text;back
 .tip .row{display:flex;justify-content:flex-end;gap:8px;margin-top:10px}
 .tip .row button{padding:7px 13px;border-radius:10px;font-weight:700;font-size:13px;border:1px solid var(--line)}
 .tip .row .nx{background:var(--grad);border:0;color:#fff}
-.tip{left:auto;bottom:auto;top:calc(var(--hh) + env(safe-area-inset-top) + 10px);right:max(10px,env(safe-area-inset-right));width:min(270px,calc(100vw - 90px));padding:10px 11px 9px;border-radius:14px;font-size:12.5px;line-height:1.4;background:rgba(14,14,26,.62);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(214,59,255,.3);box-shadow:0 8px 24px -10px rgba(0,0,0,.6)}
+.tip{left:0;right:0;margin:0 auto;bottom:auto;top:calc(var(--hh) + env(safe-area-inset-top) + 10px);width:min(270px,calc(100vw - 90px));padding:10px 11px 9px;border-radius:14px;font-size:12.5px;line-height:1.4;background:rgba(14,14,26,.62);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(214,59,255,.3);box-shadow:0 8px 24px -10px rgba(0,0,0,.6)}
 .tip.on{animation:tipin .35s ease}
 @keyframes tipin{from{opacity:0;transform:translateY(-6px)}}
 .tip .tt{font-size:9.5px;margin-bottom:4px}
 .tip .tt button{width:24px;height:24px}
 .tip .row{margin-top:7px;gap:6px}
 .tip .row button{padding:5px 10px;font-size:12px;border-radius:9px}
-.tipmini{position:fixed;z-index:40;top:calc(var(--hh) + env(safe-area-inset-top) + 10px);right:max(10px,env(safe-area-inset-right));height:30px;padding:0 11px;border-radius:999px;background:rgba(14,14,26,.6);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(214,59,255,.35);color:#e3d8ff;font-size:12px;font-weight:800;display:none;align-items:center;gap:5px}
+.tipmini{position:fixed;z-index:40;top:calc(var(--hh) + env(safe-area-inset-top) + 8px);left:50%;transform:translateX(-50%);height:30px;padding:0 11px;border-radius:999px;background:rgba(14,14,26,.6);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(214,59,255,.35);color:#e3d8ff;font-size:12px;font-weight:800;display:none;align-items:center;gap:5px}
 .tipmini.on{display:inline-flex}
 .timer.owner{border-color:rgba(61,220,151,.45);background:rgba(61,220,151,.08)}.timer.owner b{color:#7ff0bd;font-size:13px}
 .toast{position:fixed;z-index:70;left:50%;top:calc(var(--hh) + env(safe-area-inset-top) + 12px);transform:translate(-50%,-20px);opacity:0;pointer-events:none;padding:12px 16px;border-radius:14px;background:#2a1420;border:1px solid rgba(255,84,112,.6);color:#ffd7de;font-weight:700;font-size:14px;transition:.3s;width:max-content;max-width:calc(100vw - 24px);text-align:center}
@@ -273,18 +273,19 @@ h1 em{font-style:normal;background:var(--grad);-webkit-background-clip:text;back
 </nav>
 
 <main id="home">
-  <span class="eyebrow"><i></i><?= $preview ? 'Owner view · all demos' : 'Private demo' ?></span>
+  <span class="eyebrow"><i></i><?= $preview ? 'Owner view · all demos' : 'Private preview' ?></span>
   <?php if ($preview): ?>
   <h1>Your <em>demo apps</em></h1>
   <p class="lead">Tap any app to open it, then <b>All Demos</b> to come back. No PIN and no time limit here.
   <?php else: ?>
-  <h1>Have a look at <em>our apps</em></h1>
-  <p class="lead">Here are demos of some of the apps SMR Digital has designed and built, each with different features. Tap one to try it: everything uses sample data, so press any button you like. Use <b>All Demos</b> at the top to come back here.
+  <?php $one = count($demos) === 1; ?>
+  <h1><?= $one ? 'Your app <em>preview</em>' : 'Apps shared <em>with you</em>' ?></h1>
+  <p class="lead"><?= $one ? 'Tap the app below to explore it.' : 'Tap any app below to explore it.' ?> Whether it's being built for you or it's an example of our work, it's a feel for what's possible. Use <b>All Demos</b> at the top to come back here.
   <?php endif; ?></p>
   <div class="grid" id="grid"></div>
   <div class="note">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v5h1"/></svg>
-    <span>These are live previews of apps SMR Digital designed and built. Your own version would carry your branding, menu and prices. <a href="<?= h($waHelp) ?>" target="_blank" rel="noopener">Ask a question</a></span>
+    <span>Everything runs on sample data, so press any button you like. Some apps open already signed in to a demo account, so you can see all the features. <a href="<?= h($waHelp) ?>" target="_blank" rel="noopener">Ask a question</a></span>
   </div>
 </main>
 
@@ -303,19 +304,20 @@ h1 em{font-style:normal;background:var(--grad);-webkit-background-clip:text;back
 <div class="center">
   <form class="panel" id="pinform" autocomplete="off">
     <div class="big"><small>Designed &amp; Built by</small><span class="lg"><?= $mark ?><span>Digital</span></span></div>
-    <span class="eyebrow"><i></i>Private demo</span>
-    <h1>Have a look at <em>our apps</em></h1>
+    <span class="eyebrow"><i></i>Private preview</span>
+    <h1><?= count($pinApps) === 1 ? 'Your app <em>preview</em>' : 'Your app <em>previews</em>' ?></h1>
     <?php if ($pinApps): ?>
-    <p class="lead"><?= count($pinApps) === 1 ? 'This is the app you are about to view:' : 'These are the ' . count($pinApps) . ' apps you are about to view:' ?></p>
+    <p class="lead"><?= count($pinApps) === 1 ? 'Shared with you by SMR Digital:' : 'The ' . count($pinApps) . ' apps shared with you by SMR Digital:' ?></p>
     <div class="pinapps"><?php foreach ($pinApps as $pa): ?><span><img src="<?= h($pa['icon']) ?>" alt="" width="52" height="52" draggable="false"><small><?= h($pa['name']) ?></small></span><?php endforeach; ?></div>
     <?php endif; ?>
     <p class="lead" style="margin-top:14px">Enter the 6-digit PIN that came with your link to open <?= count($pinApps) === 1 ? 'it' : 'them' ?>. This link was made just for you.</p>
+    <p class="small" style="margin-top:6px">Some apps open signed in to a demo account, so you can see all the features.</p>
     <label class="pinbox" id="pinbox" for="pin">
       <span></span><span></span><span></span><span></span><span></span><span></span>
       <input id="pin" name="pin" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="one-time-code" aria-label="6-digit PIN" autofocus>
     </label>
     <div class="err" id="err" role="alert"></div>
-    <button class="btn pri" id="go" type="submit" disabled>Open my demos</button>
+    <button class="btn pri" id="go" type="submit" disabled>Open</button>
     <p class="small">Your session starts as soon as the PIN is accepted. No PIN? <a href="<?= h($waAsk) ?>" target="_blank" rel="noopener">Request one</a></p>
   </form>
 </div>
@@ -374,8 +376,8 @@ if(B.view==='pin'){
     .then(function(r){
       if(r.j.ok){go.textContent='Opening…';location.replace(location.pathname+location.search);return}
       if(r.j.error==='expired'||r.j.error==='used'){expiredOn();return}
-      err.textContent=r.j.error||'Something went wrong.';pin.value='';busy=false;go.textContent='Open my demos';paint();pin.focus()})
-    .catch(function(){err.textContent='No connection. Please try again.';busy=false;go.textContent='Open my demos';paint()})};
+      err.textContent=r.j.error||'Something went wrong.';pin.value='';busy=false;go.textContent='Open';paint();pin.focus()})
+    .catch(function(){err.textContent='No connection. Please try again.';busy=false;go.textContent='Open';paint()})};
   pin.addEventListener('input',paint);pin.addEventListener('focus',paint);pin.addEventListener('blur',paint);
   $('pinform').addEventListener('submit',function(e){e.preventDefault();if(pin.value.length===6)submit()});
   paint();
