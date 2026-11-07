@@ -174,6 +174,12 @@ h1 em{font-style:normal;background:var(--grad);-webkit-background-clip:text;back
 .note{margin-top:26px;display:flex;gap:10px;align-items:flex-start;color:var(--muted);font-size:13px;line-height:1.5;padding:14px 16px;border-radius:16px;border:1px dashed var(--line)}
 .note svg{width:18px;height:18px;flex:none;margin-top:1px;color:#cfc4ff}
 .note a{color:#e3c8ff;font-weight:700}
+.wa-direct{margin-top:14px;display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:18px;background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.4)}
+.wa-direct:active{transform:scale(.99)}
+.wa-direct .ic{width:44px;height:44px;border-radius:50%;background:#25d366;color:#fff;display:grid;place-items:center;flex:none}
+.wa-direct .ic svg{width:24px;height:24px}
+.wa-direct .tx{flex:1;min-width:0}.wa-direct b{display:block;font-size:15.5px}.wa-direct small{display:block;color:var(--muted);font-size:13px;line-height:1.4;margin-top:2px}
+.wa-direct .arr svg{width:18px;height:18px;color:#7be3a6}
 /* app view */
 .stage{position:fixed;z-index:10;left:0;right:0;bottom:0;top:calc(var(--hh) + env(safe-area-inset-top));background:#000;display:none}
 .stage.on{display:block}
@@ -274,7 +280,6 @@ h1 em{font-style:normal;background:var(--grad);-webkit-background-clip:text;back
 <nav class="menu" id="menu" aria-label="Demo menu">
   <button type="button" data-home><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3.5" y="3.5" width="7" height="7" rx="2"/><rect x="13.5" y="3.5" width="7" height="7" rx="2"/><rect x="3.5" y="13.5" width="7" height="7" rx="2"/><rect x="13.5" y="13.5" width="7" height="7" rx="2"/></svg>All Demos</button>
   <button type="button" id="tipsbtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.3 2.4c-.5.2-.8.7-.8 1.2v.4M12 17h.01"/></svg>Show this app's features</button>
-  <a href="<?= h($waHelp) ?>" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 19.1L4 20z"/></svg>Message SMR on WhatsApp</a>
   <hr>
   <a href="<?= $preview ? '/demo-admin/' : h(MAIN_SITE) ?>"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 4h4a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-4M10 16l4-4-4-4M14 12H4"/></svg><?= $preview ? 'Back to SMR Admin' : 'Exit demo' ?></a>
 </nav>
@@ -292,8 +297,15 @@ h1 em{font-style:normal;background:var(--grad);-webkit-background-clip:text;back
   <div class="grid" id="grid"></div>
   <div class="note">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v5h1"/></svg>
-    <span>Everything runs on sample data, so press any button you like. Some apps open already signed in to a demo account, so you can see all the features. <a href="<?= h($waHelp) ?>" target="_blank" rel="noopener">Ask a question</a></span>
+    <span>Everything runs on sample data, so press any button you like. Some apps open already signed in to a demo account, so you can see all the features.</span>
   </div>
+  <?php if (!$preview): ?>
+  <a class="wa-direct" href="https://wa.me/<?= WHATSAPP ?>" target="_blank" rel="noopener">
+    <span class="ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.3 0 .5l-.3.5-.4.4c-.1.1-.3.3-.1.6.2.3.7 1.2 1.6 1.9 1.1.9 2 1.2 2.3 1.4.3.1.5.1.6-.1l.9-1.1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.4z"/></svg></span>
+    <span class="tx"><b>Message me on WhatsApp</b><small>Questions or want to go ahead? Chat to Summar at SMR Digital directly.</small></span>
+    <span class="arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>
+  </a>
+  <?php endif; ?>
 </main>
 
 <div class="stage" id="stage"><div class="dev"><iframe id="frame" title="Demo app" allow="geolocation; camera; clipboard-write; fullscreen" referrerpolicy="same-origin"></iframe></div></div>
