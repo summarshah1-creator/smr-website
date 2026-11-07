@@ -127,7 +127,9 @@ function sync_seeds(PDO $pdo): void {
                 name = ?, tagline = ?, description = ?, tips = ?, accent = ?, sort = ? WHERE id = ?")
                 ->execute(['seed:' . $s['slug'], $s['version'] ?? '1', $now, 'seed:' . $s['slug'],
                     $s['name'], $s['tagline'] ?? '', $s['description'] ?? '', implode("\n", $s['tips'] ?? []), $s['accent'] ?? '#5b5bff', ($i + 1) * 10, $d['id']]);
-        }
+        } else { continue; }
+        // A seed can ship hidden ("hidden": true): kept in storage, not shown or sendable until shown again in SMR Admin.
+        if (array_key_exists('hidden', $s)) $pdo->prepare('UPDATE demos SET enabled = ? WHERE slug = ?')->execute([$s['hidden'] ? 0 : 1, $s['slug']]);
     }
     @file_put_contents($flag, $stamp);
 }

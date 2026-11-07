@@ -136,7 +136,7 @@ return json_decode(<<<'JSON'
  },
  {
   "slug": "valor",
-  "version": "2026-11-07c",
+  "version": "2026-11-07d",
   "name": "Valor Barbers",
   "accent": "#e9dccb",
   "tagline": "Barbershop website & booking · Eaton Green, Luton",
@@ -147,7 +147,8 @@ return json_decode(<<<'JSON'
    "Add-on treatments and products can be added to a booking, with discount codes and a pay-in-store option.",
    "The shop sells the products used in the chair, ready to collect at the next cut.",
    "Real Booksy and Google ratings, the latest reviews, the shop sign, a live map and opening hours, all on one page."
-  ]
+  ],
+  "hidden": true
  }
 ]
 JSON
