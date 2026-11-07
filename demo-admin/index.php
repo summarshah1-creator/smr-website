@@ -163,7 +163,8 @@ input:focus,textarea:focus,select:focus{border-color:rgba(214,59,255,.6);box-sha
 .notif{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:14px;border-radius:16px;border:1px solid rgba(61,220,151,.35);background:rgba(61,220,151,.06);margin-bottom:14px}
 .notif b{display:block}.notif span{font-size:13px;color:var(--muted)}
 .lk .icons{align-items:center}.lk .icons span{font-size:13px;color:var(--muted);margin-left:4px}
-.lk .line{font-size:13px;color:var(--muted);margin:2px 0 10px}
+.lk .line{font-size:13px;color:var(--muted);margin:2px 0 4px}
+.lk .views{font-size:13px;color:var(--muted);margin:0 0 10px}.lk .views b{color:#fff;font-size:14px}
 .lk .left{display:flex;align-items:baseline;gap:10px;margin:0 0 12px}.lk .left span{font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em}
 .lk .left b{font-family:Sora,sans-serif;font-size:28px;font-variant-numeric:tabular-nums;color:#7ff0bd}
 .lk.low .left b{color:var(--warn)}
@@ -394,6 +395,7 @@ var renderLinks=function(){
     return '<div class="lk '+l.status+'" data-id="'+l.id+'"><div class="hd"><b>'+esc(l.label||'No name')+'</b><span class="badge '+l.status+'">'+STAT[l.status]+'</span></div>'
     +'<div class="icons">'+l.apps.map(function(s){var d=demoBy(s);return d?'<img src="'+esc(d.icon)+'" alt="" title="'+esc(d.name)+'">':''}).join('')+'<span>'+esc(andList(names))+'</span></div>'
     +'<p class="line">'+line+'</p>'
+    +'<p class="views"><b>'+(l.views||0)+'</b> '+(l.views===1?'click':'clicks')+' on the link'+(l.last_view?' · last opened '+fmtT(l.last_view):'')+'</p>'
     +(l.status==='active'?'<div class="left"><span>Time left</span><b data-left>'+fmtLeft(leftOf(l))+'</b></div>':'')
     +'<div class="acts"><button class="btn sm pri" data-a="extend">'+(l.status==='active'?'Extend':(l.status==='expired'||l.status==='revoked'?'Give more time':'Add time'))+'</button>'
     +(isLive(l)?'<button class="btn sm bad" data-a="end">End now</button>':'')

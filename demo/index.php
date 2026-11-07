@@ -52,6 +52,13 @@ if ($preview) {
     }
 }
 
+// Count every time the link itself is opened (not link-preview robots, not the owner).
+if ($link && !$preview && !admin_token()) {
+    $ua = (string) ($_SERVER['HTTP_USER_AGENT'] ?? '');
+    if ($ua !== '' && !preg_match('/bot|crawl|spider|preview|facebookexternalhit|whatsapp|telegram|slack|discord|skype|linkedin|embedly|curl|wget|python|headless/i', $ua)) {
+        db()->prepare('UPDATE links SET views = views + 1, last_view = ? WHERE id = ?')->execute([now(), $link['id']]);
+    }
+}
 // Link previews (WhatsApp, iMessage...): app icon + "<App> Demo - SMR Digital".
 $pageTitle = 'SMR Digital · Private demos';
 $og = null;

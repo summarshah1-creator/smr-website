@@ -75,6 +75,8 @@ function migrate(PDO $pdo): void {
     add_col($pdo, 'sessions', 'warned_exp', 'INTEGER DEFAULT 0');
     add_col($pdo, 'sessions', 'ended_exp', 'INTEGER DEFAULT 0');
     add_col($pdo, 'sessions', 'last_app', "TEXT DEFAULT ''");
+    add_col($pdo, 'links', 'views', 'INTEGER DEFAULT 0');
+    add_col($pdo, 'links', 'last_view', 'INTEGER DEFAULT 0');
     $pdo->exec("CREATE TABLE IF NOT EXISTS admin_tokens (id TEXT PRIMARY KEY, csrf TEXT NOT NULL, created_at INTEGER, expires_at INTEGER)");
 }
 

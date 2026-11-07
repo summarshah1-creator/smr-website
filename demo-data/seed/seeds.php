@@ -5,7 +5,7 @@ return json_decode(<<<'JSON'
 [
  {
   "slug": "mikael",
-  "version": "2026-11-07c",
+  "version": "2026-11-07d",
   "name": "Mikael Café",
   "accent": "#7a1730",
   "tagline": "Café & patisserie ordering · Luton",

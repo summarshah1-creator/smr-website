@@ -43,7 +43,7 @@ function link_row(array $l): array {
     $st2 = db()->prepare('SELECT COUNT(*) AS n, MAX(last_seen) AS seen, (SELECT last_app FROM sessions WHERE link_id = ? ORDER BY last_seen DESC LIMIT 1) AS app FROM sessions WHERE link_id = ?');
     $st2->execute([$l['id'], $l['id']]);
     $ss = $st2->fetch() ?: [];
-    return ['id' => (int) $l['id'], 'label' => $l['label'], 'devices' => (int) ($ss['n'] ?? 0), 'last_seen' => (int) ($ss['seen'] ?? 0), 'last_app' => (string) ($ss['app'] ?? ''), 'url' => link_url($l), 'pin' => $l['pin'], 'apps' => link_apps($l),
+    return ['id' => (int) $l['id'], 'label' => $l['label'], 'views' => (int) $l['views'], 'last_view' => (int) $l['last_view'], 'devices' => (int) ($ss['n'] ?? 0), 'last_seen' => (int) ($ss['seen'] ?? 0), 'last_app' => (string) ($ss['app'] ?? ''), 'url' => link_url($l), 'pin' => $l['pin'], 'apps' => link_apps($l),
         'mode' => $l['mode'], 'max_uses' => $max, 'uses' => (int) $l['uses'], 'duration' => (int) $l['duration'], 'tips' => (int) $l['tips'],
         'created_at' => (int) $l['created_at'], 'activated_at' => (int) $l['activated_at'], 'expires_at' => $expiry,
         'status' => $status, 'left' => $left];
