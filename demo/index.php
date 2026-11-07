@@ -13,6 +13,7 @@ $expires = 0;
 $tips = true;
 $link = null;
 $pinApps = [];
+$pinLen = 4;
 
 if ($preview) {
     $view = 'showroom';
@@ -41,6 +42,7 @@ if ($preview) {
             [$st] = link_status($link);
             $view = ($st === 'revoked' || $st === 'expired') ? 'expired' : 'pin';
             if ($view === 'pin') {
+                $pinLen = max(4, strlen((string) $link['pin']));
                 $all = [];
                 foreach (db()->query('SELECT * FROM demos WHERE enabled = 1') as $d) $all[$d['slug']] = $d;
                 foreach (link_apps($link) as $slug) if (isset($all[$slug])) {
@@ -236,6 +238,7 @@ body.appmode .glow{display:none}
 .panel .lead{margin:0 auto}
 .pinbox{margin:26px auto 0;display:flex;gap:8px;justify-content:center;position:relative}
 .pinbox span{width:46px;height:58px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.04);display:grid;place-items:center;font-family:Sora,sans-serif;font-size:24px;font-weight:700;transition:border-color .2s,background .2s}
+.pinbox.n4{gap:12px}.pinbox.n4 span{width:60px;height:68px;font-size:30px;border-radius:16px}
 .pinbox span.f{border-color:rgba(214,59,255,.55);background:rgba(214,59,255,.08)}
 .pinbox span.cur{border-color:#cfc4ff;box-shadow:0 0 0 3px rgba(207,196,255,.15)}
 .pinbox input{position:absolute;inset:0;width:100%;height:100%;opacity:.01;font-size:16px;letter-spacing:40px;color:transparent;caret-color:transparent;background:transparent;border:0;outline:0}
@@ -336,11 +339,11 @@ body.appmode .glow{display:none}
     <p class="lead"><?= count($pinApps) === 1 ? 'Shared with you by SMR Digital:' : 'The ' . count($pinApps) . ' apps shared with you by SMR Digital:' ?></p>
     <div class="pinapps"><?php foreach ($pinApps as $pa): ?><span><img src="<?= h($pa['icon']) ?>" alt="" width="52" height="52" draggable="false"><small><?= h($pa['name']) ?></small></span><?php endforeach; ?></div>
     <?php endif; ?>
-    <p class="lead" style="margin-top:14px">Enter the 6-digit PIN that came with your link to open <?= count($pinApps) === 1 ? 'it' : 'them' ?>. This link was made just for you.</p>
+    <p class="lead" style="margin-top:14px">Enter the <?= $pinLen ?>-digit PIN that came with your link to open <?= count($pinApps) === 1 ? 'it' : 'them' ?>. This link was made just for you.</p>
     <p class="small" style="margin-top:6px">Some apps open signed in to a demo account, so you can see all the features.</p>
-    <label class="pinbox" id="pinbox" for="pin">
-      <span></span><span></span><span></span><span></span><span></span><span></span>
-      <input id="pin" name="pin" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="one-time-code" aria-label="6-digit PIN" autofocus>
+    <label class="pinbox n<?= $pinLen ?>" id="pinbox" for="pin">
+      <?= str_repeat('<span></span>', $pinLen) ?>
+      <input id="pin" name="pin" inputmode="numeric" pattern="[0-9]*" maxlength="<?= $pinLen ?>" autocomplete="one-time-code" aria-label="<?= $pinLen ?>-digit PIN" autofocus>
     </label>
     <div class="err" id="err" role="alert"></div>
     <button class="btn pri" id="go" type="submit" disabled>Open</button>
@@ -392,9 +395,9 @@ document.addEventListener('dragstart',function(e){if(e.target.tagName==='IMG')e.
 /* ---------- PIN screen ---------- */
 if(B.view==='pin'){
   var pin=$('pin'),boxes=$('pinbox').querySelectorAll('span'),go=$('go'),err=$('err');
-  var paint=function(){var v=pin.value.replace(/\D/g,'').slice(0,6);if(pin.value!==v)pin.value=v;
+  var paint=function(){var N=boxes.length,v=pin.value.replace(/\D/g,'').slice(0,N);if(pin.value!==v)pin.value=v;
     boxes.forEach(function(b,i){b.textContent=v[i]?'•':'';b.classList.toggle('f',!!v[i]);b.classList.toggle('cur',i===v.length&&document.activeElement===pin)});
-    go.disabled=v.length!==6;if(v.length===6&&!busy)submit()};
+    go.disabled=v.length!==N;if(v.length===N&&!busy)submit()};
   var busy=false;
   var submit=function(){if(busy)return;busy=true;go.disabled=true;go.textContent='Checking…';err.textContent='';
     fetch('/demo/api.php?a=redeem',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({token:B.token,pin:pin.value})})
@@ -405,7 +408,7 @@ if(B.view==='pin'){
       err.textContent=r.j.error||'Something went wrong.';pin.value='';busy=false;go.textContent='Open';paint();pin.focus()})
     .catch(function(){err.textContent='No connection. Please try again.';busy=false;go.textContent='Open';paint()})};
   pin.addEventListener('input',paint);pin.addEventListener('focus',paint);pin.addEventListener('blur',paint);
-  $('pinform').addEventListener('submit',function(e){e.preventDefault();if(pin.value.length===6)submit()});
+  $('pinform').addEventListener('submit',function(e){e.preventDefault();if(pin.value.length===boxes.length)submit()});
   paint();
 }
 

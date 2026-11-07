@@ -147,7 +147,8 @@ function same_origin(): bool {
 }
 function client_ip(): string { return $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0'; }
 function rand_token(int $bytes = 24): string { return rtrim(strtr(base64_encode(random_bytes($bytes)), '+/', '-_'), '='); }
-function new_pin(): string { return str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT); }
+/* 4-digit PINs, easy to remember. Wrong guesses are rate-limited per device and per link. */
+function new_pin(): string { return str_pad((string) random_int(0, 9999), 4, '0', STR_PAD_LEFT); }
 function h($s): string { return htmlspecialchars((string) $s, ENT_QUOTES, 'UTF-8'); }
 
 function set_cookie(string $name, string $value, int $expires, string $path, string $samesite): void {

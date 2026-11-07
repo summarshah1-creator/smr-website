@@ -47,7 +47,7 @@ if ($a === 'redeem' && $method === 'POST') {
         json_out(['error' => 'Too many wrong PINs. Please wait 15 minutes and try again.'], 429);
     }
     if ((int) $link['revoked']) json_out(['error' => 'expired'], 410);
-    if (strlen($pin) !== 6 || !hash_equals((string) $link['pin'], $pin)) {
+    if (strlen($pin) !== strlen((string) $link['pin']) || !hash_equals((string) $link['pin'], $pin)) {
         note_fail($ipKey); note_fail($linkKey);
         json_out(['error' => 'That PIN is not right. Please check it and try again.'], 403);
     }
