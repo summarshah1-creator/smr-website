@@ -115,17 +115,34 @@
   ]
  },
  {
+  "slug": "valor-app",
+  "version": "2026-11-07a",
+  "name": "Valor Barbers App",
+  "accent": "#d8ccb6",
+  "tagline": "Customer & staff app · Eaton Green, Luton",
+  "description": "Branded barbershop app: booking, Valor Club loyalty card, shop, waitlist and push offers, plus a staff app for the barbers and owner.",
+  "tips": [
+   "Customers join Valor Club free. Their card collects a stamp every cut and the 10th cut is free.",
+   "Booking takes seconds: pick a barber who's online, a service and a time. Full? Join the waitlist and get pinged when a slot opens.",
+   "After each visit customers rate the cut. Happy customers are sent straight to leave a Google review.",
+   "Staff app (Me tab → staff link): barbers accept bookings, block out time, go offline and keep private client notes like 'no razor on the neck'.",
+   "The owner sends push offers to everyone or only people who haven't been in for a month, and sees revenue, regulars and feedback reports.",
+   "No app store or commission: customers add it to their home screen from a link or QR code."
+  ]
+ },
+ {
   "slug": "valor",
-  "version": "2026-11-07b",
+  "version": "2026-11-07c",
   "name": "Valor Barbers",
   "accent": "#e9dccb",
   "tagline": "Barbershop website & booking · Eaton Green, Luton",
-  "description": "Barbershop site with services and prices, the barbers, a gallery of cuts and booking.",
+  "description": "Barbershop site with per-barber prices, live barber status, booking with add-ons, a product shop, real reviews and find us.",
   "tips": [
-   "Customers see every service and price, then tap Book a slot.",
-   "Each barber has their own profile, so customers can choose who cuts their hair.",
-   "A gallery of real cuts shows off the shop's work.",
-   "Opening times, reviews and directions are all on one page."
+   "Every barber has their own prices. Customers pick a barber, a service and a time, then book in under a minute.",
+   "Each barber card shows if they're online today and their next free slot, updated live from the staff app.",
+   "Add-on treatments and products can be added to a booking, with discount codes and a pay-in-store option.",
+   "The shop sells the products used in the chair, ready to collect at the next cut.",
+   "Real Booksy and Google ratings, the latest reviews, the shop sign, a live map and opening hours, all on one page."
   ]
  }
 ]
