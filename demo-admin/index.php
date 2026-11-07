@@ -203,6 +203,7 @@ f.addEventListener('submit',function(e){e.preventDefault();err.textContent='';
 <div class="wrap">
   <div class="top">
     <div class="logo"><?= $mark ?><span>Digital</span><b>Admin</b></div>
+    <button class="btn sm icon" id="refresh" aria-label="Refresh" title="Refresh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg></button>
     <button class="btn sm icon" id="acct" aria-label="Settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></button>
     <nav class="tabs" role="tablist">
       <button data-tab="demos" role="tab">My demos</button>
@@ -457,7 +458,16 @@ $('acct').addEventListener('click',function(){openSheet('<h2>Settings</h2>'
     if(a==='logout')api('logout').then(function(){location.reload()})})})});
 
 load();setInterval(load,30000);
-document.addEventListener('visibilitychange',function(){if(!document.hidden)load()});
+/* Refresh: clear anything the browser kept and load the newest version of SMR Admin. */
+var hardRefresh=function(){toast('Refreshing…');var tab=location.hash||'#demos';
+  var clear=window.caches&&caches.keys?caches.keys().then(function(ks){return Promise.all(ks.map(function(k){return caches.delete(k)}))}):Promise.resolve();
+  try{Object.keys(sessionStorage).forEach(function(k){sessionStorage.removeItem(k)})}catch(e){}
+  clear.catch(function(){}).then(function(){location.replace(location.pathname+'?r='+Date.now()+tab)})};
+$('refresh').addEventListener('click',hardRefresh);
+if(/[?&]r=\d/.test(location.search))history.replaceState(null,'',location.pathname+location.hash);
+var hiddenAt=0;
+document.addEventListener('visibilitychange',function(){if(document.hidden){hiddenAt=Date.now();return}
+  if(hiddenAt&&Date.now()-hiddenAt>10*60*1000){location.reload();return}load()});
 })();
 </script>
 <?php endif; ?>

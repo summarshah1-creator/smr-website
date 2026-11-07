@@ -99,7 +99,12 @@ if (strpos($mime, 'text/html') === 0) {
 // Static asset (with byte ranges for video on iPhone).
 $size = filesize($real);
 header('Content-Type: ' . $mime);
-header('Cache-Control: private, max-age=600');
+// Always ask the server if there's a newer version (cheap 304 when unchanged), so app updates show at once.
+$etag = '"' . substr(md5($real . '|' . filemtime($real) . '|' . $size), 0, 20) . '"';
+header('Cache-Control: private, no-cache');
+header('ETag: ' . $etag);
+header('Last-Modified: ' . gmdate('D, d M Y H:i:s', filemtime($real)) . ' GMT');
+if (!isset($_SERVER['HTTP_RANGE']) && trim((string) ($_SERVER['HTTP_IF_NONE_MATCH'] ?? '')) === $etag) { http_response_code(304); exit; }
 header('Accept-Ranges: bytes');
 $start = 0; $end = $size - 1;
 if (isset($_SERVER['HTTP_RANGE']) && preg_match('/bytes=(\d*)-(\d*)/', $_SERVER['HTTP_RANGE'], $r)) {

@@ -267,6 +267,7 @@ body.appmode .glow{display:none}
     <span class="lg"><?= $mark ?><span>Digital</span></span>
   </a>
   <?php if ($preview): ?>
+  <button class="hbtn icon" id="apprefresh" type="button" aria-label="Reload this app" title="Reload this app"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg></button>
   <a class="hbtn homebtn" href="/demo-admin/#demos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h5v-6h4v6h5V10"/></svg>Home</a>
   <?php else: ?>
   <div class="timer" id="timer" role="timer" aria-live="off">
@@ -444,6 +445,7 @@ var show=function(slug){
     document.title=<?= json_encode($pageTitle) ?>;hideTips();
   }
 };
+var ar=$('apprefresh');if(ar)ar.addEventListener('click',function(){if(!current)return;var sl=current;fresh();frame.src='/demo/run/'+encodeURIComponent(sl)+'/?r='+Date.now();toast('Reloaded with the latest version',false)});
 var route=function(){var m=/app=([a-z0-9-]+)/.exec(location.hash);if(B.preview&&!m){location.replace('/demo-admin/#demos');return}show(m?m[1]:null)};
 grid.addEventListener('click',function(e){var c=e.target.closest('[data-open]');if(c)location.hash='app='+c.getAttribute('data-open')});
 document.querySelectorAll('[data-home]').forEach(function(b){b.addEventListener('click',function(e){e.preventDefault();if(B.preview){location.href='/demo-admin/#demos';return}if(location.hash)history.pushState(null,'',location.pathname+location.search);show(null)})});
