@@ -129,5 +129,35 @@
    "The owner sends push offers to everyone or only people who haven't been in for a month, and sees revenue, regulars and feedback reports.",
    "No app store or commission: customers add it to their home screen from a link or QR code."
   ]
+ },
+ {
+  "slug": "forkys",
+  "version": "2026-11-07a",
+  "name": "Forkys Desserts",
+  "accent": "#e9579e",
+  "tagline": "Dessert ordering app · collection & delivery",
+  "description": "Dessert shop app for Forkys in Luton: order ahead for collection or delivery, collect stamps and win rewards.",
+  "tips": [
+   "Customers pick collection or delivery first, then order ahead and skip the queue.",
+   "Signature desserts like the Bruce Cake and Matilda Cake sit front and centre, with real photos.",
+   "The cookie drop is a swipeable carousel. Tap any cookie to see it up close.",
+   "Can't decide? Spin the fork and the app picks a dessert for them.",
+   "Every order adds a stamp: free custard at 4 and a free Matilda Cake at 8, which keeps customers coming back."
+  ]
+ },
+ {
+  "slug": "choccos",
+  "version": "2026-11-07a",
+  "name": "Chocco's Dessert Parlour",
+  "accent": "#d4127e",
+  "tagline": "Dessert parlour app · collection, eat in & delivery",
+  "description": "Ordering and rewards app for Chocco's Dessert Parlour in Luton: collection, eat in at the table, or delivery.",
+  "tips": [
+   "Customers choose collection, eat in or delivery before they order.",
+   "Eating in? They add their table number and order without queuing at the counter.",
+   "Waffles, crêpes, cakes and shakes are laid out with photos, and go to the basket in one tap.",
+   "Every order earns a stamp: a free topping upgrade at 4 and a free dessert at 8.",
+   "Opening times, directions and a call button are on the Visit tab."
+  ]
  }
 ]

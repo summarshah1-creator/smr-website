@@ -1,0 +1,30 @@
+name: Set demo details
+on:
+  workflow_dispatch:
+    inputs:
+      match:
+        description: Part of the app name or slug
+        required: true
+      file:
+        description: JSON file in .github/tools/details/ (name, tagline, description, tips, accent)
+        required: true
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Save details through the admin API
+        env:
+          PIN: ${{ secrets.ADMIN_PIN || '1275' }}
+          MATCH: ${{ inputs.match }}
+          FILE: .github/tools/details/${{ inputs.file }}
+        run: |
+          H=https://smrgraphics.co.uk; A=$H/demo-admin/api.php
+          CSRF=$(curl -sf -c c.txt -b c.txt -H "Origin: $H" -H 'Content-Type: application/json' -d "{\"pin\":\"$PIN\"}" "$A?a=login" | jq -r .csrf)
+          curl -sf -b c.txt -H "Origin: $H" -H "X-CSRF: $CSRF" -X POST -H "Content-Type: application/json" -d "{}" "$A?a=list" > list.json
+          SLUG=$(jq -r --arg m "$MATCH" '[.demos[]|select((.slug+" "+.name)|ascii_downcase|contains($m|ascii_downcase))][0].slug // empty' list.json)
+          test -n "$SLUG" || { echo "No app matches $MATCH"; exit 1; }
+          echo "Saving details for $SLUG"
+          jq --arg s "$SLUG" '. + {slug:$s}' "$FILE" > body.json
+          curl -s -b c.txt -H "Origin: $H" -H "X-CSRF: $CSRF" -H "Content-Type: application/json" -d @body.json "$A?a=demo_save" | tee out.json
+          jq -e .ok out.json
