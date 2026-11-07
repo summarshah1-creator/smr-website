@@ -2,7 +2,8 @@
 /* SMR Digital Demo Manager: shared code. Not web accessible (.htaccess deny + this guard). */
 if (!defined('SMR_DEMO')) { http_response_code(404); exit; }
 
-const SETUP_CODE_SHA256 = '0d86de806dee2f998187c08390b54826c99f5b9ba864c249cf7c93b7314a9526';
+/* Starting admin PIN (bcrypt). Once the owner changes it in Account, the stored one in the database is used instead. */
+const ADMIN_PIN_HASH = '$2y$10$/Ox20Bw9b0Zh.LZRKN0EVO7PbGuNICoXK3zJ4qS5rP5OOICQrSnF.';
 const VISITOR_COOKIE = 'smr_demo';
 const ADMIN_COOKIE = 'smr_admin';
 const DEFAULT_MINUTES = 30;
@@ -286,7 +287,11 @@ function link_status(array $l): array {
 }
 
 /* ---------- admin auth ---------- */
-function admin_exists(): bool { return (bool) db()->query('SELECT COUNT(*) FROM admin')->fetchColumn(); }
+function admin_hash(): string {
+    // Passwords set with the old setup code (before the PIN switch) are ignored.
+    $h = db()->query('SELECT pass_hash FROM admin WHERE id = 1 AND created_at > 1794063536')->fetchColumn();
+    return $h ? (string) $h : ADMIN_PIN_HASH;
+}
 function admin_token(): ?array {
     $raw = $_COOKIE[ADMIN_COOKIE] ?? '';
     if (!preg_match('/^[A-Za-z0-9_-]{30,64}$/', $raw)) return null;

@@ -1,5 +1,5 @@
 <?php
-/* Demo Manager admin API. Every action except setup/login needs the admin cookie + CSRF header. */
+/* Demo Manager admin API. Every action except login needs the admin cookie + CSRF header. */
 define('SMR_DEMO', 1);
 require dirname(__DIR__) . '/demo-lib/bootstrap.php';
 security_headers(false);
@@ -11,21 +11,11 @@ $isJson = strpos($_SERVER['CONTENT_TYPE'] ?? '', 'application/json') === 0;
 $in = $isJson ? (json_decode((string) file_get_contents('php://input'), true) ?: []) : $_POST;
 $ipKey = 'admin:' . hash('sha256', client_ip());
 
-/* ---------- setup & login ---------- */
-if ($a === 'setup') {
-    if (admin_exists()) json_out(['error' => 'The admin password is already set. Please log in.'], 409);
-    if (too_many($ipKey, 6, 900)) json_out(['error' => 'Too many attempts. Wait 15 minutes.'], 429);
-    $code = strtoupper(trim((string) ($in['code'] ?? '')));
-    if (!hash_equals(SETUP_CODE_SHA256, hash('sha256', $code))) { note_fail($ipKey); json_out(['error' => 'That setup code is not right.'], 403); }
-    $pw = (string) ($in['password'] ?? '');
-    if (strlen($pw) < 10) json_out(['error' => 'Use at least 10 characters for the password.'], 400);
-    db()->prepare('INSERT INTO admin (id, pass_hash, created_at) VALUES (1, ?, ?)')->execute([password_hash($pw, PASSWORD_DEFAULT), now()]);
-    json_out(['ok' => true] + admin_login_cookie());
-}
+/* ---------- login (PIN) ---------- */
 if ($a === 'login') {
-    if (too_many($ipKey, 6, 900)) json_out(['error' => 'Too many attempts. Wait 15 minutes.'], 429);
-    $hash = db()->query('SELECT pass_hash FROM admin WHERE id = 1')->fetchColumn();
-    if (!$hash || !password_verify((string) ($in['password'] ?? ''), $hash)) { note_fail($ipKey); usleep(400000); json_out(['error' => 'Wrong password.'], 403); }
+    if (too_many($ipKey, 6, 900) || too_many('admin:all', 30, 3600)) json_out(['error' => 'Too many attempts. Wait 15 minutes and try again.'], 429);
+    $pin = preg_replace('/\s/', '', (string) ($in['pin'] ?? ''));
+    if ($pin === '' || !password_verify($pin, admin_hash())) { note_fail($ipKey); note_fail('admin:all'); usleep(400000); json_out(['error' => 'Wrong PIN.'], 403); }
     json_out(['ok' => true] + admin_login_cookie());
 }
 
@@ -147,10 +137,10 @@ case 'logout':
     json_out(['ok' => true]);
 
 case 'password':
-    $hash = db()->query('SELECT pass_hash FROM admin WHERE id = 1')->fetchColumn();
-    if (!password_verify((string) ($in['current'] ?? ''), $hash)) json_out(['error' => 'Your current password is not right.'], 403);
-    if (strlen((string) ($in['new'] ?? '')) < 10) json_out(['error' => 'Use at least 10 characters.'], 400);
-    db()->prepare('UPDATE admin SET pass_hash = ? WHERE id = 1')->execute([password_hash((string) $in['new'], PASSWORD_DEFAULT)]);
+    if (!password_verify(preg_replace('/\s/', '', (string) ($in['current'] ?? '')), admin_hash())) json_out(['error' => 'Your current PIN is not right.'], 403);
+    $new = preg_replace('/\s/', '', (string) ($in['new'] ?? ''));
+    if (!preg_match('/^\d{6,12}$/', $new)) json_out(['error' => 'Use 6 to 12 digits for the new PIN.'], 400);
+    db()->prepare('INSERT OR REPLACE INTO admin (id, pass_hash, created_at) VALUES (1, ?, ?)')->execute([password_hash($new, PASSWORD_DEFAULT), now()]);
     db()->prepare('DELETE FROM admin_tokens WHERE id != ?')->execute([$tok['id']]);
     json_out(['ok' => true]);
 

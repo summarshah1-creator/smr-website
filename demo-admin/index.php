@@ -5,7 +5,7 @@ require dirname(__DIR__) . '/demo-lib/bootstrap.php';
 security_headers(true);
 header('Cache-Control: no-store');
 $tok = admin_token();
-$mode = $tok ? 'app' : (admin_exists() ? 'login' : 'setup');
+$mode = $tok ? 'app' : 'login';
 $mark = preg_replace('/<svg /', '<svg aria-hidden="true" ', (string) @file_get_contents(SITE_ROOT . '/assets/smr-mark.svg'), 1);
 ?><!doctype html>
 <html lang="en-GB">
@@ -121,28 +121,21 @@ input:focus,textarea:focus,select:focus{border-color:rgba(214,59,255,.6);box-sha
 <body>
 <?php if ($mode !== 'app'): ?>
 <div class="auth">
-  <form class="panel" id="auth">
+  <form class="panel" id="auth" autocomplete="off">
     <div class="logo"><?= $mark ?><span>Digital</span></div>
-    <h1 style="text-align:center"><?= $mode === 'setup' ? 'Set up Demo Manager' : 'Demo Manager' ?></h1>
-    <p class="sub" style="text-align:center"><?= $mode === 'setup' ? 'Enter the one-time setup code, then choose your admin password.' : 'Log in to manage demos and PIN links.' ?></p>
-    <?php if ($mode === 'setup'): ?>
-      <label class="f" for="code">Setup code</label><input type="text" id="code" autocomplete="off" autocapitalize="characters" placeholder="SMR-XXXX-XXXX" required>
-      <label class="f" for="pw">New password (10+ characters)</label><input type="password" id="pw" autocomplete="new-password" minlength="10" required>
-      <label class="f" for="pw2">Confirm password</label><input type="password" id="pw2" autocomplete="new-password" required>
-    <?php else: ?>
-      <label class="f" for="pw">Password</label><input type="password" id="pw" autocomplete="current-password" required autofocus>
-    <?php endif; ?>
+    <h1 style="text-align:center">Demo Manager</h1>
+    <p class="sub" style="text-align:center">Enter your admin PIN.</p>
+    <input type="password" id="pin" inputmode="numeric" pattern="[0-9]*" maxlength="12" autocomplete="off" aria-label="Admin PIN" autofocus style="margin-top:18px;text-align:center;font-size:24px;letter-spacing:.4em;height:56px">
     <div class="err" id="err" role="alert"></div>
-    <button class="btn pri" style="width:100%;margin-top:8px;height:48px" type="submit"><?= $mode === 'setup' ? 'Save password and continue' : 'Log in' ?></button>
+    <button class="btn pri" style="width:100%;margin-top:8px;height:48px" type="submit">Log in</button>
   </form>
 </div>
 <script>
-(function(){var f=document.getElementById('auth'),err=document.getElementById('err'),setup=<?= $mode === 'setup' ? 'true' : 'false' ?>;
+(function(){var f=document.getElementById('auth'),err=document.getElementById('err'),pin=document.getElementById('pin');
+pin.addEventListener('input',function(){pin.value=pin.value.replace(/\D/g,'')});
 f.addEventListener('submit',function(e){e.preventDefault();err.textContent='';
-  var pw=document.getElementById('pw').value,body={password:pw};
-  if(setup){if(pw!==document.getElementById('pw2').value){err.textContent='The passwords do not match.';return}body.code=document.getElementById('code').value}
-  fetch('api.php?a='+(setup?'setup':'login'),{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify(body)})
-  .then(function(r){return r.json()}).then(function(j){if(j.ok)location.reload();else err.textContent=j.error||'Something went wrong.'})
+  fetch('api.php?a=login',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({pin:pin.value})})
+  .then(function(r){return r.json()}).then(function(j){if(j.ok)location.reload();else{err.textContent=j.error||'Something went wrong.';pin.value='';pin.focus()}})
   .catch(function(){err.textContent='No connection.'})});})();
 </script>
 <?php else: ?>
@@ -157,9 +150,9 @@ f.addEventListener('submit',function(e){e.preventDefault();err.textContent='';
   <div class="panel hidden" id="account">
     <h2>Account</h2>
     <div class="row">
-      <input type="password" id="curpw" placeholder="Current password" style="max-width:240px" autocomplete="current-password">
-      <input type="password" id="newpw" placeholder="New password (10+)" style="max-width:240px" autocomplete="new-password">
-      <button class="btn sm" id="savepw">Change password</button>
+      <input type="password" id="curpw" placeholder="Current PIN" inputmode="numeric" style="max-width:200px" autocomplete="off">
+      <input type="password" id="newpw" placeholder="New PIN (6+ digits)" inputmode="numeric" style="max-width:200px" autocomplete="off">
+      <button class="btn sm" id="savepw">Change PIN</button>
       <button class="btn sm bad" id="logout">Log out</button>
     </div>
   </div>
@@ -238,7 +231,7 @@ var copy=function(t){(navigator.clipboard&&navigator.clipboard.writeText?navigat
 document.querySelectorAll('[data-tab]').forEach(function(b){b.addEventListener('click',function(){document.querySelectorAll('[data-tab]').forEach(function(x){x.classList.toggle('on',x===b)});$('tab-links').classList.toggle('hidden',b.dataset.tab!=='links');$('tab-demos').classList.toggle('hidden',b.dataset.tab!=='demos')})});
 $('more').addEventListener('click',function(){$('account').classList.toggle('hidden')});
 $('logout').addEventListener('click',function(){api('logout').then(function(){location.reload()})});
-$('savepw').addEventListener('click',function(){api('password',{current:$('curpw').value,'new':$('newpw').value}).then(function(){toast('Password changed');$('curpw').value=$('newpw').value=''}).catch(function(e){toast(e.message,true)})});
+$('savepw').addEventListener('click',function(){api('password',{current:$('curpw').value,'new':$('newpw').value}).then(function(){toast('PIN changed');$('curpw').value=$('newpw').value=''}).catch(function(e){toast(e.message,true)})});
 
 /* load */
 var load=function(){return api('list').then(function(j){D=j.demos;L=j.links;skew=j.now-Date.now()/1000;renderPick();renderLinks();renderDemos()}).catch(function(e){toast(e.message,true)})};
