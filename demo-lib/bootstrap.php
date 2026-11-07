@@ -6,7 +6,7 @@ if (!defined('SMR_DEMO')) { http_response_code(404); exit; }
 const ADMIN_PIN_HASH = '$2y$10$/Ox20Bw9b0Zh.LZRKN0EVO7PbGuNICoXK3zJ4qS5rP5OOICQrSnF.';
 const VISITOR_COOKIE = 'smr_demo';
 const ADMIN_COOKIE = 'smr_admin';
-const DEFAULT_MINUTES = 30;
+const DEFAULT_MINUTES = 45;
 const WHATSAPP = '447931814538';
 const MAIN_SITE = '/#digital';
 const MAX_ZIP_BYTES = 200 * 1024 * 1024;     // uncompressed total
@@ -92,9 +92,12 @@ function sync_seeds(PDO $pdo): void {
                 'seed:' . $s['slug'], 'seed:' . $s['slug'], $s['accent'] ?? '#5b5bff', $s['version'] ?? '1', ($i + 1) * 10, $now, $now]);
         } elseif (($d['seed_version'] ?? '') !== ($s['version'] ?? '1')) {
             // Newer files pushed from chat: point the demo back at the seed files (text the admin edited stays).
+            // New version pushed from chat: new files and the shipped text (name, tour, etc.).
             $pdo->prepare("UPDATE demos SET dir = ?, source = 'seed', seed_version = ?, updated_at = ?,
-                icon = CASE WHEN icon LIKE 'up:%' THEN icon ELSE ? END WHERE id = ?")
-                ->execute(['seed:' . $s['slug'], $s['version'] ?? '1', $now, 'seed:' . $s['slug'], $d['id']]);
+                icon = CASE WHEN icon LIKE 'up:%' THEN icon ELSE ? END,
+                name = ?, tagline = ?, description = ?, tips = ?, accent = ?, sort = ? WHERE id = ?")
+                ->execute(['seed:' . $s['slug'], $s['version'] ?? '1', $now, 'seed:' . $s['slug'],
+                    $s['name'], $s['tagline'] ?? '', $s['description'] ?? '', implode("\n", $s['tips'] ?? []), $s['accent'] ?? '#5b5bff', ($i + 1) * 10, $d['id']]);
         }
     }
     @file_put_contents($flag, $stamp);
@@ -302,7 +305,7 @@ function admin_token(): ?array {
 function admin_login_cookie(): array {
     $raw = rand_token(32);
     $csrf = rand_token(24);
-    $exp = now() + 12 * 3600;
+    $exp = now() + 30 * 86400;
     db()->prepare('INSERT INTO admin_tokens (id, csrf, created_at, expires_at) VALUES (?,?,?,?)')->execute([hash('sha256', $raw), $csrf, now(), $exp]);
     db()->prepare('DELETE FROM admin_tokens WHERE expires_at < ?')->execute([now()]);
     set_cookie(ADMIN_COOKIE, $raw, $exp, '/', 'Strict');

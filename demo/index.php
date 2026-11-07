@@ -12,6 +12,7 @@ $demos = [];
 $expires = 0;
 $tips = true;
 $link = null;
+$pinApps = [];
 
 if ($preview) {
     $view = 'showroom';
@@ -39,6 +40,14 @@ if ($preview) {
         } else {
             [$st] = link_status($link);
             $view = ($st === 'revoked' || $st === 'expired') ? 'expired' : 'pin';
+            if ($view === 'pin') {
+                $all = [];
+                foreach (db()->query('SELECT * FROM demos WHERE enabled = 1') as $d) $all[$d['slug']] = $d;
+                foreach (link_apps($link) as $slug) if (isset($all[$slug])) {
+                    $pd = demo_public($all[$slug]);
+                    $pinApps[] = ['name' => $pd['name'], 'icon' => $pd['icon'] . '&k=' . rawurlencode($token)];
+                }
+            }
         }
     }
 }
@@ -138,6 +147,10 @@ h1 em{font-style:normal;background:var(--grad);-webkit-background-clip:text;back
 .viewsw{display:none}
 @media(min-width:900px){.viewsw{display:inline-flex}}
 /* tips */
+.pinapps{display:flex;flex-wrap:wrap;justify-content:center;gap:12px 10px;margin:16px auto 0;max-width:360px}
+.pinapps span{display:flex;flex-direction:column;align-items:center;gap:6px;width:66px}
+.pinapps img{width:52px;height:52px;border-radius:14px;object-fit:cover;box-shadow:0 0 0 1px rgba(255,255,255,.1),0 8px 20px -10px rgba(0,0,0,.8)}
+.pinapps small{font-size:11px;font-weight:700;color:var(--muted);line-height:1.2;text-align:center}
 .tip{position:fixed;z-index:40;left:max(12px,env(safe-area-inset-left));bottom:calc(14px + env(safe-area-inset-bottom));width:min(340px,calc(100vw - 24px));padding:14px 14px 12px;border-radius:18px;background:rgba(20,20,34,.97);border:1px solid rgba(214,59,255,.35);box-shadow:0 18px 50px -12px rgba(0,0,0,.8);display:none;font-size:14px;line-height:1.45}
 .tip.on{display:block;animation:up .35s ease}
 @keyframes up{from{opacity:0;transform:translateY(10px)}}
@@ -147,6 +160,16 @@ h1 em{font-style:normal;background:var(--grad);-webkit-background-clip:text;back
 .tip .row{display:flex;justify-content:flex-end;gap:8px;margin-top:10px}
 .tip .row button{padding:7px 13px;border-radius:10px;font-weight:700;font-size:13px;border:1px solid var(--line)}
 .tip .row .nx{background:var(--grad);border:0;color:#fff}
+.tip{left:auto;bottom:auto;top:calc(var(--hh) + env(safe-area-inset-top) + 10px);right:max(10px,env(safe-area-inset-right));width:min(270px,calc(100vw - 90px));padding:10px 11px 9px;border-radius:14px;font-size:12.5px;line-height:1.4;background:rgba(14,14,26,.62);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(214,59,255,.3);box-shadow:0 8px 24px -10px rgba(0,0,0,.6)}
+.tip.on{animation:tipin .35s ease}
+@keyframes tipin{from{opacity:0;transform:translateY(-6px)}}
+.tip .tt{font-size:9.5px;margin-bottom:4px}
+.tip .tt button{width:24px;height:24px}
+.tip .row{margin-top:7px;gap:6px}
+.tip .row button{padding:5px 10px;font-size:12px;border-radius:9px}
+.tipmini{position:fixed;z-index:40;top:calc(var(--hh) + env(safe-area-inset-top) + 10px);right:max(10px,env(safe-area-inset-right));height:30px;padding:0 11px;border-radius:999px;background:rgba(14,14,26,.6);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(214,59,255,.35);color:#e3d8ff;font-size:12px;font-weight:800;display:none;align-items:center;gap:5px}
+.tipmini.on{display:inline-flex}
+.timer.owner{border-color:rgba(61,220,151,.45);background:rgba(61,220,151,.08)}.timer.owner b{color:#7ff0bd;font-size:13px}
 .toast{position:fixed;z-index:70;left:50%;top:calc(var(--hh) + env(safe-area-inset-top) + 12px);transform:translate(-50%,-20px);opacity:0;pointer-events:none;padding:12px 16px;border-radius:14px;background:#2a1420;border:1px solid rgba(255,84,112,.6);color:#ffd7de;font-weight:700;font-size:14px;transition:.3s;width:max-content;max-width:calc(100vw - 24px);text-align:center}
 .toast.on{opacity:1;transform:translate(-50%,0)}
 /* pin + expired + landing */
@@ -188,8 +211,8 @@ h1 em{font-style:normal;background:var(--grad);-webkit-background-clip:text;back
     <small>Designed &amp; Built by</small>
     <span class="lg"><?= $mark ?><span>Digital</span></span>
   </a>
-  <div class="timer" id="timer" role="timer" aria-live="off">
-    <small><?= $preview ? 'Admin' : 'Session expires in' ?></small><b id="clock"><?= $preview ? 'Preview' : '--:--' ?></b>
+  <div class="timer<?= $preview ? ' owner' : '' ?>" id="timer" role="timer" aria-live="off">
+    <small><?= $preview ? 'Owner' : 'Session expires in' ?></small><b id="clock"><?= $preview ? 'No limit' : '--:--' ?></b>
   </div>
   <button class="hbtn all" data-home type="button" aria-label="All demos">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3.5" y="3.5" width="7" height="7" rx="2"/><rect x="13.5" y="3.5" width="7" height="7" rx="2"/><rect x="3.5" y="13.5" width="7" height="7" rx="2"/><rect x="13.5" y="13.5" width="7" height="7" rx="2"/></svg>
@@ -201,20 +224,25 @@ h1 em{font-style:normal;background:var(--grad);-webkit-background-clip:text;back
   <button class="hbtn icon" id="menubtn" type="button" aria-label="Menu" aria-expanded="false" aria-controls="menu">
     <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.9"/><circle cx="12" cy="12" r="1.9"/><circle cx="12" cy="19" r="1.9"/></svg>
   </button>
-  <a class="hbtn exit" href="<?= h(MAIN_SITE) ?>">Exit</a>
+  <a class="hbtn exit" href="<?= $preview ? '/demo-admin/' : h(MAIN_SITE) ?>"><?= $preview ? 'Admin' : 'Exit' ?></a>
 </header>
 <nav class="menu" id="menu" aria-label="Demo menu">
   <button type="button" data-home><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3.5" y="3.5" width="7" height="7" rx="2"/><rect x="13.5" y="3.5" width="7" height="7" rx="2"/><rect x="3.5" y="13.5" width="7" height="7" rx="2"/><rect x="13.5" y="13.5" width="7" height="7" rx="2"/></svg>All Demos</button>
-  <button type="button" id="tipsbtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.3 2.4c-.5.2-.8.7-.8 1.2v.4M12 17h.01"/></svg>Show tips for this app</button>
+  <button type="button" id="tipsbtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.3 2.4c-.5.2-.8.7-.8 1.2v.4M12 17h.01"/></svg>Show this app's features</button>
   <a href="<?= h($waHelp) ?>" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 19.1L4 20z"/></svg>Message SMR on WhatsApp</a>
   <hr>
-  <a href="<?= h(MAIN_SITE) ?>"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 4h4a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-4M10 16l4-4-4-4M14 12H4"/></svg>Exit demo</a>
+  <a href="<?= $preview ? '/demo-admin/' : h(MAIN_SITE) ?>"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 4h4a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-4M10 16l4-4-4-4M14 12H4"/></svg><?= $preview ? 'Back to SMR Admin' : 'Exit demo' ?></a>
 </nav>
 
 <main id="home">
-  <span class="eyebrow"><i></i><?= $preview ? 'Admin preview · all demos' : 'Private demo' ?></span>
-  <h1>Explore your <em>SMR Digital</em> demos</h1>
-  <p class="lead">Tap an app to try it. Everything inside uses sample data, so press any button you like. Use <b>All Demos</b> at the top to come back here.</p>
+  <span class="eyebrow"><i></i><?= $preview ? 'Owner view · all demos' : 'Private demo' ?></span>
+  <?php if ($preview): ?>
+  <h1>Your <em>demo apps</em></h1>
+  <p class="lead">Tap any app to open it, then <b>All Demos</b> to come back. No PIN and no time limit here.
+  <?php else: ?>
+  <h1>Have a look at <em>our apps</em></h1>
+  <p class="lead">Here are demos of some of the apps SMR Digital has designed and built, each with different features. Tap one to try it: everything uses sample data, so press any button you like. Use <b>All Demos</b> at the top to come back here.
+  <?php endif; ?></p>
   <div class="grid" id="grid"></div>
   <div class="note">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v5h1"/></svg>
@@ -224,11 +252,12 @@ h1 em{font-style:normal;background:var(--grad);-webkit-background-clip:text;back
 
 <div class="stage" id="stage"><div class="dev"><iframe id="frame" title="Demo app" allow="geolocation; camera; clipboard-write; fullscreen" referrerpolicy="same-origin"></iframe></div></div>
 
-<div class="tip" id="tip" role="dialog" aria-live="polite" aria-label="Quick tour">
-  <div class="tt"><span id="tipn">Quick tour</span><button type="button" id="tipx" aria-label="Close tips"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+<div class="tip" id="tip" role="dialog" aria-live="polite" aria-label="Feature tour">
+  <div class="tt"><span id="tipn">Feature tour</span><button type="button" id="tipx" aria-label="Close tips"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
   <div id="tipt"></div>
   <div class="row"><button type="button" id="tipskip">Skip</button><button type="button" class="nx" id="tipnext">Next</button></div>
 </div>
+<button class="tipmini" id="tipmini" type="button" aria-label="Show the feature tour">? Features</button>
 <div class="toast" id="toast" role="alert"></div>
 <?php endif; ?>
 
@@ -237,8 +266,12 @@ h1 em{font-style:normal;background:var(--grad);-webkit-background-clip:text;back
   <form class="panel" id="pinform" autocomplete="off">
     <div class="big"><small>Designed &amp; Built by</small><span class="lg"><?= $mark ?><span>Digital</span></span></div>
     <span class="eyebrow"><i></i>Private demo</span>
-    <h1>Enter your <em>demo PIN</em></h1>
-    <p class="lead">Type the 6-digit PIN that came with your link.</p>
+    <h1>Have a look at <em>our apps</em></h1>
+    <?php if ($pinApps): ?>
+    <p class="lead"><?= count($pinApps) === 1 ? 'This is the app you are about to view:' : 'These are the ' . count($pinApps) . ' apps you are about to view:' ?></p>
+    <div class="pinapps"><?php foreach ($pinApps as $pa): ?><span><img src="<?= h($pa['icon']) ?>" alt="" width="52" height="52" draggable="false"><small><?= h($pa['name']) ?></small></span><?php endforeach; ?></div>
+    <?php endif; ?>
+    <p class="lead" style="margin-top:14px">Enter the 6-digit PIN that came with your link to open <?= count($pinApps) === 1 ? 'it' : 'them' ?>. This link was made just for you.</p>
     <label class="pinbox" id="pinbox" for="pin">
       <span></span><span></span><span></span><span></span><span></span><span></span>
       <input id="pin" name="pin" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="one-time-code" aria-label="6-digit PIN" autofocus>
@@ -325,18 +358,21 @@ var phone=true;try{phone=localStorage.getItem('smrDemoView')!=='full'}catch(e){}
 var setPhone=function(){stage.classList.toggle('phone',phone)};setPhone();
 $('viewsw').addEventListener('click',function(){phone=!phone;setPhone();try{localStorage.setItem('smrDemoView',phone?'phone':'full')}catch(e){}});
 
+/* Each time an app is opened it starts from scratch (intro, empty basket). */
+var fresh=function(){try{for(var i=localStorage.length-1;i>=0;i--){var k=localStorage.key(i);if(k&&k.indexOf('smrDemo')!==0)localStorage.removeItem(k)}}catch(e){}
+  try{for(var j=sessionStorage.length-1;j>=0;j--){var q=sessionStorage.key(j);if(q&&q.indexOf('smrTip')!==0)sessionStorage.removeItem(q)}}catch(e){}};
 var show=function(slug){
   if(stopped)return;
   closeMenu();
   if(slug&&bySlug[slug]){
-    if(current!==slug){frame.src='/demo/run/'+encodeURIComponent(slug)+'/';current=slug}
+    if(current!==slug){fresh();frame.src='/demo/run/'+encodeURIComponent(slug)+'/';current=slug}
     stage.classList.add('on');home.style.display='none';document.body.classList.add('locked');
     document.title=bySlug[slug].name+' · SMR Digital demo';
     startTips(slug,false);
   }else{
     if(current){frame.src='about:blank';current=null}
     stage.classList.remove('on');home.style.display='';document.body.classList.remove('locked');
-    document.title='SMR Digital · Private demos';$('tip').classList.remove('on');
+    document.title='SMR Digital · Private demos';clearTimeout(tipT);$('tip').classList.remove('on');mini.classList.remove('on');
   }
 };
 var route=function(){var m=/app=([a-z0-9-]+)/.exec(location.hash);show(m?m[1]:null)};
@@ -355,14 +391,17 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeMenu()}
 var tip=$('tip'),tipI=0,tipList=[];
 var seen=function(s){try{return sessionStorage.getItem('smrTip:'+s)==='1'}catch(e){return false}};
 var markSeen=function(s){try{sessionStorage.setItem('smrTip:'+s,'1')}catch(e){}};
-var paintTip=function(){$('tipn').textContent='Quick tour · '+(tipI+1)+' of '+tipList.length;$('tipt').textContent=tipList[tipI];$('tipnext').textContent=tipI===tipList.length-1?'Done':'Next';$('tipskip').style.display=tipI===tipList.length-1?'none':''};
-var startTips=function(slug,force){var d=bySlug[slug];tipList=(d&&d.tips)||[];
-  if(!tipList.length||(!force&&(!B.tips||seen(slug)))){tip.classList.remove('on');return}
-  tipI=0;paintTip();tip.classList.add('on')};
-var endTips=function(){tip.classList.remove('on');if(current)markSeen(current)};
+var paintTip=function(){$('tipn').textContent='Feature tour · '+(tipI+1)+' of '+tipList.length;$('tipt').textContent=tipList[tipI];$('tipnext').textContent=tipI===tipList.length-1?'Done':'Next';$('tipskip').style.display=tipI===tipList.length-1?'none':''};
+var tipT,mini=$('tipmini');
+var startTips=function(slug,force){var d=bySlug[slug];tipList=(d&&d.tips)||[];clearTimeout(tipT);tip.classList.remove('on');mini.classList.remove('on');
+  if(!tipList.length)return;
+  if(!force&&(!B.tips||seen(slug))){mini.classList.add('on');return}
+  tipT=setTimeout(function(){if(current!==slug)return;tipI=0;paintTip();tip.classList.add('on')},force?0:4000)};
+var endTips=function(){tip.classList.remove('on');if(current){markSeen(current);mini.classList.add('on')}};
+mini.addEventListener('click',function(){if(current)startTips(current,true)});
 $('tipnext').addEventListener('click',function(){if(tipI<tipList.length-1){tipI++;paintTip()}else endTips()});
 $('tipskip').addEventListener('click',endTips);$('tipx').addEventListener('click',endTips);
-$('tipsbtn').addEventListener('click',function(){closeMenu();if(current)startTips(current,true);else{toast('Open an app first, then tap Show tips.',false)}});
+$('tipsbtn').addEventListener('click',function(){closeMenu();if(current)startTips(current,true);else{toast('Open an app first, then tap this again.',false)}});
 
 var toastT;var toast=function(msg,bad){var t=$('toast');t.textContent=msg;t.style.borderColor=bad===false?'rgba(207,196,255,.5)':'';t.style.background=bad===false?'#1b1830':'';t.style.color=bad===false?'#eee':'';t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(function(){t.classList.remove('on')},5000)};
 

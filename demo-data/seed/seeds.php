@@ -4,102 +4,132 @@ if (!defined('SMR_DEMO')) { http_response_code(404); exit; }
 return json_decode(<<<'JSON'
 [
  {
+  "slug": "mikael",
+  "version": "2026-11-07b",
+  "name": "Mikael",
+  "accent": "#7a1730",
+  "tagline": "Café & patisserie ordering · Luton",
+  "description": "Order-ahead café app with new item alerts, a stamp card, spin-to-win rewards and a QR membership code.",
+  "tips": [
+   "Your customers land on a home screen with your newest item front and centre, ready to add to the basket in one tap.",
+   "They order ahead for collection, so the order is waiting when they arrive.",
+   "A digital stamp card fills up with every order and gives a free treat at the end, so regulars come back.",
+   "Spin & Win gives customers a reason to open the app again, with prizes you control.",
+   "Find us shows your address, opening times and directions, and the QR button opens their membership code."
+  ]
+ },
+ {
   "slug": "allure",
-  "version": "2026-11-07",
+  "version": "2026-11-07b",
   "name": "Allure Club",
   "accent": "#C9A14A",
   "tagline": "Coffee & desserts loyalty app · Luton",
   "description": "Members club app with QR membership card, rewards and menu, plus the staff terminal and owner dashboard that run behind it.",
   "tips": [
-   "Use the tabs at the top to switch between the Customer app, Staff terminal and Admin dashboard.",
-   "Open My Club to see the membership QR and stamp card.",
-   "Everything is sample data, so tap around freely."
+   "This is a members club: each customer gets a QR membership card on their phone instead of a paper card.",
+   "Stamps and rewards build up automatically every visit, and birthday treats can be sent out.",
+   "Tap the Staff terminal tab at the top: staff scan the customer's QR and add stamps in seconds.",
+   "The Admin dashboard tab is the owner's side: members, rewards, offers and push notifications in one place.",
+   "Push notifications let you send an offer to every member's phone without paying for ads."
   ]
  },
  {
   "slug": "flava",
-  "version": "2026-11-07",
+  "version": "2026-11-07b",
   "name": "Flava Box",
   "accent": "#e8692c",
   "tagline": "Online ordering & rewards · Luton",
   "description": "Build-your-box ordering with pre-orders, a rewards club, spin-to-win and direct WhatsApp checkout. No commission on orders.",
   "tips": [
-   "Tap Build your box to try the step-by-step order builder.",
-   "Rewards shows the stamp club and spin-to-win.",
-   "The basket checks out without taking payment in this demo."
+   "Customers build their own box step by step, which keeps ordering quick and stops mistakes.",
+   "When the shop is closed they can still pre-order for later, so you don't lose the sale.",
+   "Deals and a rewards club sit inside the app, with stamps and spin-to-win to bring people back.",
+   "Orders go straight to you with no commission taken by a delivery platform.",
+   "Order again puts a customer's last order back in the basket in one tap."
   ]
  },
  {
   "slug": "crave",
-  "version": "2026-11-07",
+  "version": "2026-11-07b",
   "name": "Crave Corner",
   "accent": "#b8913f",
   "tagline": "Dessert ordering app · collection & eat in",
   "description": "Dessert café app with collection or eat-in ordering, a digital stamp card and rewards.",
   "tips": [
-   "Choose Collection or Eat in to start an order.",
-   "Your stamps fill up as you order.",
-   "Nothing is charged: this is sample data."
+   "Customers choose collection or eat in before they order, so the kitchen knows what's coming.",
+   "The full menu has photos and prices, and items go to the basket in one tap.",
+   "A stamp card fills up with each order, with spin-to-win prizes on top.",
+   "Reviews and directions are built in, so new customers can find you and trust you."
   ]
  },
  {
   "slug": "cafegrill",
-  "version": "2026-11-07",
+  "version": "2026-11-07b",
   "name": "Café Grill",
   "accent": "#d0293a",
   "tagline": "Two-branch café ordering · Luton & St Albans",
   "description": "Pick a branch, browse the breakfast, brunch and grill menu, and order for collection. Opening times are live per branch.",
   "tips": [
-   "Choose Luton or St Albans to open that branch's menu.",
-   "Add a few items and open the basket."
+   "One app covers two branches: customers pick Luton or St Albans and see that branch's menu and opening times.",
+   "Live open/closed status shows whether a branch is taking orders right now.",
+   "Customers order for collection or eat in, with photos for every dish.",
+   "A stamp card and spin-to-win reward regulars at both branches."
   ]
  },
  {
   "slug": "chunk",
-  "version": "2026-11-07",
+  "version": "2026-11-07b",
   "name": "Chunk",
   "accent": "#c98a4b",
   "tagline": "Stuffed cookie shop app · Luton & Rotherham",
-  "description": "Customer ordering for two locations, with the owner's dashboard for orders and stock included.",
+  "description": "Customer ordering for two locations, with photos, allergen info, offers and delivery or collection.",
   "tips": [
-   "Pick a location to see the cookie menu.",
-   "The owner dashboard is part of the demo: its demo PIN is 1234."
+   "Customers pick a location first, so each shop gets its own orders.",
+   "Every cookie has its photo, price and allergen info.",
+   "Offers and push notifications can be sent to customers' phones.",
+   "Customers choose delivery or collection, and the order comes straight to the shop with no platform fees."
   ]
  },
  {
   "slug": "kaya",
-  "version": "2026-11-07",
+  "version": "2026-11-07b",
   "name": "Kaya Lounge",
   "accent": "#c9a14a",
   "tagline": "Shisha lounge, food & live sport · Luton",
   "description": "Venue app with the full menu, live sport fixtures on the big screens and directions.",
   "tips": [
-   "Use the bottom bar for Menu, Sports and Find us.",
-   "Sports shows what is on the screens this week."
+   "The full menu sits in the app, so customers can browse before they arrive.",
+   "Sports shows which games are on the big screens this week, a big reason for people to visit.",
+   "Customers can leave reviews and get directions straight from the app.",
+   "No app store needed: customers open it from a link or a QR code on the table."
   ]
  },
  {
   "slug": "goldwash",
-  "version": "2026-11-07",
+  "version": "2026-11-07b",
   "name": "Gold Wash",
   "accent": "#d8b25a",
   "tagline": "Car wash & valeting · Luton",
   "description": "Prices for every service, the Gold Club stamp card (every 8th wash free) and directions.",
   "tips": [
-   "Open Prices to see every service.",
-   "Rewards shows the Gold Club stamp card."
+   "Prices for every wash and valet are clear, so customers know what to expect before they arrive.",
+   "The Gold Club stamp card gives every 8th wash free, so customers keep coming back to you.",
+   "Referrals reward customers for bringing a friend.",
+   "A gallery and reviews show the quality of the work."
   ]
  },
  {
   "slug": "valor",
-  "version": "2026-11-07",
+  "version": "2026-11-07b",
   "name": "Valor Barbers",
   "accent": "#e9dccb",
   "tagline": "Barbershop website & booking · Eaton Green, Luton",
   "description": "Barbershop site with services and prices, the barbers, a gallery of cuts and booking.",
   "tips": [
-   "Tap Book a slot to see the booking flow.",
-   "Scroll down for the barbers and the gallery of cuts."
+   "Customers see every service and price, then tap Book a slot.",
+   "Each barber has their own profile, so customers can choose who cuts their hair.",
+   "A gallery of real cuts shows off the shop's work.",
+   "Opening times, reviews and directions are all on one page."
   ]
  }
 ]

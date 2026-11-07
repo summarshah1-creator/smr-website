@@ -14,8 +14,14 @@ $mark = preg_replace('/<svg /', '<svg aria-hidden="true" ', (string) @file_get_c
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
 <meta name="theme-color" content="#08080f">
-<title>Demo Manager · SMR Digital</title>
-<link rel="icon" href="/assets/icon.png">
+<title>SMR Admin</title>
+<link rel="icon" href="/demo-admin/icon-192.png">
+<link rel="manifest" href="/demo-admin/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/demo-admin/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SMR Admin">
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Manrope:wght@400;500;600;700;800&family=Poppins:wght@300&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#08080f;--bg2:#0e0e1a;--card:#12121e;--line:rgba(255,255,255,.09);--ink:#f2f2fa;--muted:#a3a3bd;--a1:#5b5bff;--a2:#d63bff;--grad:linear-gradient(110deg,var(--a1),var(--a2));--ok:#3ddc97;--warn:#ffb547;--bad:#ff5470}
@@ -109,6 +115,13 @@ input:focus,textarea:focus,select:focus{border-color:rgba(214,59,255,.6);box-sha
 .auth .logo svg{height:22px}.auth .logo span{font-size:22px}
 .err{color:#ff9db0;font-weight:600;min-height:20px;margin-top:10px;font-size:14px}
 .result{border:1px solid rgba(61,220,151,.4);background:rgba(61,220,151,.06)}
+.send{border-color:rgba(214,59,255,.35);background:linear-gradient(180deg,rgba(214,59,255,.08),rgba(91,91,255,.03))}
+.two{display:grid;grid-template-columns:1fr;gap:0 14px}@media(min-width:640px){.two{grid-template-columns:1fr 1fr}}
+.more{margin-top:14px;border-top:1px solid var(--line);padding-top:12px}
+.more summary{cursor:pointer;font-weight:700;color:#cfc4ff;font-size:13.5px}
+.btn.big{width:100%;height:52px;font-size:16px;margin-top:6px;border-radius:15px}
+.btn.wa{background:#25d366;border:0;color:#062b14}
+.msg{min-height:190px;font-size:14px}
 .newpin{font-family:Sora,sans-serif;font-size:34px;letter-spacing:.2em;margin:4px 0 10px}
 .prog{height:6px;border-radius:9px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:10px}
 .prog i{display:block;height:100%;width:0;background:var(--grad);transition:width .2s}
@@ -123,7 +136,7 @@ input:focus,textarea:focus,select:focus{border-color:rgba(214,59,255,.6);box-sha
 <div class="auth">
   <form class="panel" id="auth" autocomplete="off">
     <div class="logo"><?= $mark ?><span>Digital</span></div>
-    <h1 style="text-align:center">Demo Manager</h1>
+    <h1 style="text-align:center">SMR Admin</h1>
     <p class="sub" style="text-align:center">Enter your admin PIN.</p>
     <input type="password" id="pin" inputmode="numeric" pattern="[0-9]*" maxlength="12" autocomplete="off" aria-label="Admin PIN" autofocus style="margin-top:18px;text-align:center;font-size:24px;letter-spacing:.4em;height:56px">
     <div class="err" id="err" role="alert"></div>
@@ -141,9 +154,9 @@ f.addEventListener('submit',function(e){e.preventDefault();err.textContent='';
 <?php else: ?>
 <div class="wrap">
   <div class="top">
-    <div class="logo"><?= $mark ?><span>Digital</span><b>Demo Manager</b></div>
-    <div class="tabs" role="tablist"><button class="on" data-tab="links" role="tab">Access links</button><button data-tab="demos" role="tab">Demos</button></div>
-    <a class="btn sm" href="/demo/?preview=1" target="_blank" rel="noopener" title="See the showroom with every demo">Preview</a>
+    <div class="logo"><?= $mark ?><span>Digital</span><b>Admin</b></div>
+    <div class="tabs" role="tablist"><button class="on" data-tab="links" role="tab">Send demos</button><button data-tab="demos" role="tab">Demos</button></div>
+    <a class="btn sm pri" href="/demo/?preview=1" title="Open every demo with no PIN and no time limit">My demos</a>
     <button class="btn sm" id="more" title="Account">Account</button>
   </div>
 
@@ -159,31 +172,31 @@ f.addEventListener('submit',function(e){e.preventDefault();err.textContent='';
 
   <!-- LINKS -->
   <section id="tab-links">
-    <div class="bar">
-      <div><h1>Access links</h1><p class="sub">Each link has its own 6-digit PIN and timer. Send both to the person you are pitching.</p></div>
-      <button class="btn pri" id="newlink"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>New demo link</button>
-    </div>
-
-    <form class="panel hidden" id="linkform">
-      <h2>New demo link</h2>
-      <label class="f" for="lb">Who is it for? (only you see this)</label>
-      <input type="text" id="lb" placeholder="e.g. Ahmed, Kebab House Dunstable" maxlength="80">
-      <div class="row" style="justify-content:space-between;margin-top:14px"><label class="f" style="margin:0">Demos they can open</label><button type="button" class="btn sm" id="selall">Select all</button></div>
+    <form class="panel send" id="linkform">
+      <h1>Send demos</h1>
+      <p class="sub">Pick the apps, create the link, then send it on WhatsApp with the PIN.</p>
+      <div class="row" style="justify-content:space-between;margin-top:16px"><label class="f" style="margin:0">1. Which apps?</label><button type="button" class="btn sm" id="selall">Select all</button></div>
       <div class="pick" id="pick" style="margin-top:8px"></div>
-      <label class="f">Access type</label>
-      <div class="seg">
-        <label><input type="radio" name="mode" value="single" checked>One person<small>PIN works once. The timer starts when they enter it.</small></label>
-        <label><input type="radio" name="mode" value="shared">Shared, one timer<small>Anyone with the PIN, one clock from the first use.</small></label>
-        <label><input type="radio" name="mode" value="limited">Limited uses<small>PIN works <input type="number" id="maxu" value="3" min="2" max="500" style="width:64px;height:30px;padding:0 6px;display:inline-block"> times, each with its own timer.</small></label>
+      <div class="two">
+        <div><label class="f" for="lb">2. Their name (optional)</label><input type="text" id="lb" placeholder="e.g. Ahmed, Kebab House" maxlength="80"></div>
+        <div><label class="f" for="ph">Their WhatsApp number (optional)</label><input type="tel" id="ph" placeholder="07..." inputmode="tel" maxlength="20"></div>
       </div>
-      <label class="f">Session length</label>
-      <div class="chips" id="dur"><button type="button" data-m="15">15 min</button><button type="button" data-m="30" class="on">30 min</button><button type="button" data-m="45">45 min</button><button type="button" data-m="60">1 hour</button><button type="button" data-m="120">2 hours</button><input type="number" id="durc" min="5" max="10080" placeholder="mins" aria-label="Custom minutes"></div>
-      <label class="toggle"><input type="checkbox" id="tips" checked>Show the quick tour tips when they open each app</label>
+      <details class="more"><summary>More options (45 minutes, one shared timer)</summary>
+        <label class="f">Access type</label>
+        <div class="seg">
+          <label><input type="radio" name="mode" value="shared" checked>Shared, one timer<small>Works on any of their devices. One clock from the first time the PIN is used.</small></label>
+          <label><input type="radio" name="mode" value="single">One device<small>PIN works once, on one device.</small></label>
+          <label><input type="radio" name="mode" value="limited">Limited uses<small>PIN works <input type="number" id="maxu" value="3" min="2" max="500" style="width:64px;height:30px;padding:0 6px;display:inline-block"> times, each with its own timer.</small></label>
+        </div>
+        <label class="f">Session length</label>
+        <div class="chips" id="dur"><button type="button" data-m="15">15 min</button><button type="button" data-m="30">30 min</button><button type="button" data-m="45" class="on">45 min</button><button type="button" data-m="60">1 hour</button><button type="button" data-m="120">2 hours</button><input type="number" id="durc" min="5" max="10080" placeholder="mins" aria-label="Custom minutes"></div>
+        <label class="toggle"><input type="checkbox" id="tips" checked>Show the feature tour in each app</label>
+      </details>
       <div class="err" id="lerr"></div>
-      <div class="row"><button class="btn pri" type="submit">Create link and PIN</button><button class="btn" type="button" id="cancel">Cancel</button></div>
+      <button class="btn pri big" type="submit">Create link</button>
     </form>
-
     <div class="panel result hidden" id="created"></div>
+    <h2 style="margin-top:22px">Sent links</h2>
     <div class="filt" id="filt"><button class="on" data-f="all">All</button><button data-f="live">Active / waiting</button><button data-f="expired">Expired</button><button data-f="revoked">Revoked</button></div>
     <div class="list" id="links"></div>
   </section>
@@ -223,8 +236,17 @@ var nowS=function(){return Math.floor(Date.now()/1000+skew)};
 var STAT={active:'Active',not_activated:'Not opened yet',uses_left:'Waiting',expired:'Expired',revoked:'Revoked'};
 var MODE={single:'One person',shared:'Shared timer',limited:'Limited uses'};
 var demoBy=function(s){for(var i=0;i<D.length;i++)if(D[i].slug===s)return D[i]};
-var shareText=function(l){var names=l.apps.map(function(s){var d=demoBy(s);return d?d.name:s}).join(', ');
-  return 'Here is your private SMR Digital demo'+(names?' ('+names+')':'')+':\n'+l.url+'\nPIN: '+l.pin+'\nYour '+(l.duration>=60&&l.duration%60===0?(l.duration/60)+'-hour':l.duration+'-minute')+' session starts when you enter the PIN.'};
+var andList=function(a){return a.length<2?a.join(''):a.slice(0,-1).join(', ')+' and '+a[a.length-1]};
+var durTxt=function(m){return m>=60&&m%60===0?(m===60?'1 hour':(m/60)+' hours'):m+' minutes'};
+var shareText=function(l){var names=l.apps.map(function(s){var d=demoBy(s);return d?d.name:s}),one=names.length===1;
+  var first=(l.label||'').split(',')[0].trim().split(/\s+/)[0]||'';
+  return 'Hi'+(first?' '+first:'')+',\n\n'
+    +(one?"Here's the demo we spoke about ("+names[0]+"). Have a little look around the app."
+         :"Here are the demos we spoke about ("+andList(names)+"). Have a look through the apps.")
+    +'\n\nOpen here: '+l.url+'\nYour PIN: '+l.pin
+    +'\n\nYou have '+durTxt(l.duration)+' from when you enter the PIN. Any questions, just message me.\n\nSummar, SMR Digital'};
+var waUrl=function(text,phone){var n=String(phone||'').replace(/\D/g,'');if(n.indexOf('00')===0)n=n.slice(2);else if(n.charAt(0)==='0')n='44'+n.slice(1);
+  return 'https://wa.me/'+(n.length>=10?n:'')+'?text='+encodeURIComponent(text)};
 var copy=function(t){(navigator.clipboard&&navigator.clipboard.writeText?navigator.clipboard.writeText(t):Promise.reject()).then(function(){toast('Copied link and PIN')}).catch(function(){var a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');toast('Copied link and PIN')}catch(e){prompt('Copy this:',t)}a.remove()})};
 
 /* tabs */
@@ -240,22 +262,23 @@ var load=function(){return api('list').then(function(j){D=j.demos;L=j.links;skew
 var renderPick=function(){var keep={};document.querySelectorAll('#pick input:checked').forEach(function(i){keep[i.value]=1});
   $('pick').innerHTML=D.filter(function(d){return d.enabled}).map(function(d){return '<label><input type="checkbox" value="'+esc(d.slug)+'"'+(keep[d.slug]?' checked':'')+'><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><img src="'+esc(d.icon)+'" alt=""><b>'+esc(d.name)+'</b><small>'+esc(d.tagline)+'</small></label>'}).join('')||'<p class="sub">No demos yet. Add one in the Demos tab.</p>'};
 $('selall').addEventListener('click',function(){var all=document.querySelectorAll('#pick input'),any=[].some.call(all,function(i){return!i.checked});all.forEach(function(i){i.checked=any});this.textContent=any?'Clear all':'Select all'});
-var dur=30;
+var dur=45;
 $('dur').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;dur=+b.dataset.m;$('durc').value='';this.querySelectorAll('button').forEach(function(x){x.classList.toggle('on',x===b)})});
 $('durc').addEventListener('input',function(){var v=+this.value;if(v>=5){dur=v;$('dur').querySelectorAll('button').forEach(function(x){x.classList.remove('on')})}});
-$('newlink').addEventListener('click',function(){$('linkform').classList.remove('hidden');$('created').classList.add('hidden');$('lb').focus()});
-$('cancel').addEventListener('click',function(){$('linkform').classList.add('hidden')});
 $('linkform').addEventListener('submit',function(e){e.preventDefault();$('lerr').textContent='';
   var apps=[].map.call(document.querySelectorAll('#pick input:checked'),function(i){return i.value});
   if(!apps.length){$('lerr').textContent='Choose at least one demo.';return}
   var mode=document.querySelector('[name=mode]:checked').value;
   api('link_create',{label:$('lb').value,apps:apps,mode:mode,max_uses:+$('maxu').value,duration:dur,tips:$('tips').checked}).then(function(j){
-    $('linkform').classList.add('hidden');$('lb').value='';
+    var phone=$('ph').value;$('lb').value='';$('ph').value='';document.querySelectorAll('#pick input').forEach(function(i){i.checked=false});
     var l=j.link,c=$('created');c.classList.remove('hidden');
-    c.innerHTML='<h2>Link ready'+(l.label?' for '+esc(l.label):'')+'</h2><p class="sub">Send the link and PIN together. The '+l.duration+'-minute timer starts when the PIN is entered.</p>'
-      +'<div class="newpin">'+esc(l.pin)+'</div><div class="cred"><code>'+esc(l.url)+'</code></div>'
-      +'<div class="acts"><button class="btn pri sm" data-c>Copy link &amp; PIN</button><a class="btn sm" target="_blank" rel="noopener" href="https://wa.me/?text='+encodeURIComponent(shareText(l))+'">Send on WhatsApp</a><button class="btn sm" data-x>Close</button></div>';
-    c.querySelector('[data-c]').onclick=function(){copy(shareText(l))};c.querySelector('[data-x]').onclick=function(){c.classList.add('hidden')};
+    c.innerHTML='<h2>Link ready'+(l.label?' for '+esc(l.label):'')+'</h2><p class="sub">Check the message, then send it. You can edit it first.</p>'
+      +'<textarea class="msg" id="msgtxt"></textarea>'
+      +'<a class="btn big wa" id="wasend" target="_blank" rel="noopener" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 19.1L4 20z"/></svg>Send on WhatsApp</a>'
+      +'<div class="acts" style="margin-top:10px"><button class="btn sm" data-c>Copy message</button><button class="btn sm" data-x>Done</button></div>';
+    var ta=c.querySelector('#msgtxt'),wa=c.querySelector('#wasend');ta.value=shareText(l);
+    var upd=function(){wa.href=waUrl(ta.value,phone)};upd();ta.addEventListener('input',upd);
+    c.querySelector('[data-c]').onclick=function(){copy(ta.value)};c.querySelector('[data-x]').onclick=function(){c.classList.add('hidden')};
     c.scrollIntoView({behavior:'smooth',block:'start'});
     load()}).catch(function(e){$('lerr').textContent=e.message})});
 

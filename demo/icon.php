@@ -12,6 +12,11 @@ if ($demo) {
         [$l, $s] = $vs;
         $ok = session_state($l, $s) === 'ok' && in_array($slug, link_apps($l), true);
     }
+    // The PIN screen shows the icons of the apps in that link.
+    if (!$ok && ($l = link_by_token((string) ($_GET['k'] ?? '')))) {
+        [$st] = link_status($l);
+        $ok = $st !== 'revoked' && $st !== 'expired' && in_array($slug, link_apps($l), true);
+    }
 }
 $path = $ok ? demo_icon_path($demo) : null;
 if ($ok && !$path) {
