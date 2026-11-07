@@ -372,7 +372,7 @@ $('fzip').addEventListener('change',function(){if(!this.files[0])return;var fd=n
   if(curSlug){fd.append('slug',curSlug);upload('demo_upload',fd,function(j){toast('Demo replaced ('+j.files+' files)')})}
   else{fd.append('name',newName);upload('demo_upload',fd,function(j){toast('Demo added ('+j.files+' files)')})}});
 var newName='';
-$('newdemo').addEventListener('click',function(){openSheet('<h2>Add an app</h2><p class="sub">Upload the app's HTML file (for example one downloaded from Claude), or a ZIP of a built website or Flutter Web app (for Flutter, zip the build/web folder).</p><label class="f">App name</label><input type="text" id="nn" maxlength="60" placeholder="e.g. Kebab House"><div class="row" style="margin-top:14px"><button class="btn pri" data-go>Choose file</button><button class="btn" data-x>Cancel</button></div>',
+$('newdemo').addEventListener('click',function(){openSheet('<h2>Add an app</h2><p class="sub">Upload the app&#39;s HTML file (for example one downloaded from Claude), or a ZIP of a built website or Flutter Web app (for Flutter, zip the build/web folder).</p><label class="f">App name</label><input type="text" id="nn" maxlength="60" placeholder="e.g. Kebab House"><div class="row" style="margin-top:14px"><button class="btn pri" data-go>Choose file</button><button class="btn" data-x>Cancel</button></div>',
   function(el){el.querySelector('[data-x]').onclick=closeSheet;el.querySelector('[data-go]').onclick=function(){newName=el.querySelector('#nn').value.trim();if(!newName){toast('Give the app a name first',true);return}curSlug=null;closeSheet();$('fzip').click()}})});
 
 /* ---------- send ---------- */
