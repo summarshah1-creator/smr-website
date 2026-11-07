@@ -6,7 +6,12 @@ jobs:
     steps:
       - name: Status codes
         run: |
-          for u in /demo/ "/demo/?k=abcdefghijklmnopqrstu" /demo/run/kaya/ /demo-data/seed/seeds.json /demo-data/seed/kaya/index.html /demo-data/seed/_icons/kaya.webp /demo-lib/bootstrap.php /demo-admin/ /demo/icon.php?s=kaya /; do
-            echo "$(curl -s -o /tmp/b -w '%{http_code}' "https://smrdigital.co.uk$u") $u $(head -c 160 /tmp/b | tr '\n' ' ')"
+          for h in smrgraphics.co.uk www.smrgraphics.co.uk smrdigital.co.uk www.smrdigital.co.uk; do
+            echo "== $h"; curl -sS -o /dev/null -w '%{http_code} %{remote_ip}\n' -A 'Mozilla/5.0 SMR-check' --max-time 20 "https://$h/" || true
           done
-          curl -sI https://smrdigital.co.uk/demo/ | grep -iE 'content-security|x-frame|server'
+          H=https://smrgraphics.co.uk
+          for u in /demo/ "/demo/?k=abcdefghijklmnopqrstu" /demo/run/kaya/ /demo-data/seed/seeds.json /demo-data/seed/kaya/index.html /demo-data/seed/_icons/kaya.webp /demo-lib/bootstrap.php /demo-admin/ "/demo/icon.php?s=kaya"; do
+            code=$(curl -s -o /tmp/b -w '%{http_code}' -A 'Mozilla/5.0 SMR-check' --max-time 20 "$H$u" || echo ERR)
+            echo "$code $u $(head -c 200 /tmp/b 2>/dev/null | tr '\n' ' ')"
+          done
+          curl -sI -A 'Mozilla/5.0 SMR-check' $H/demo/ | grep -iE 'HTTP/|content-security|x-frame|server' || true
