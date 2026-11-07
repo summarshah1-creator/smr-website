@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CHUNK — Stuffed Cookies · Luton &amp; Rotherham</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
+<style>
+.pin-ic{width:1.05em;height:1.05em;flex:none;vertical-align:-.15em}
+.locbar .ll{display:inline-flex;align-items:center;gap:6px}.locbar .pin-ic{color:#f0b46e}
+#hero .copy .pin .pin-ic{color:#f0b46e}
+.pinrow{display:flex!important;align-items:center;gap:6px}.pinrow .pin-ic{color:#f0b46e}
+.marquee .pin-ic{color:#f0b46e;width:.9em;height:.9em}
+:root{--navH:106px;--navFull:106px;
+  --brown:#442814; --deep:#2a1a0f; --choc:#5a3720; --cream:#f6ebda; --paper:#fbf4e8;
+  --box:#f1e2d2; --box2:#e8d3bf; --caramel:#c8843a; --kraft:#b98d58; --wa:#25d366;
+  --ink:#2a1a0f; --muted:#7a5d48; --line:#e4d2bd;
+  --r:22px; --head:'Fredoka',system-ui,sans-serif; --body:'DM Sans',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+html{overflow-x:clip;overscroll-behavior:none;background:var(--paper)}body{overscroll-behavior:none}body{font-family:var(--body);background:var(--paper);color:var(--ink);overflow-x:clip;line-height:1.5}
+body.locked{overflow:hidden}
+img{display:block;max-width:100%}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+a{color:inherit}
+h1,h2,h3,.head{font-family:var(--head);font-weight:700;line-height:1.02;letter-spacing:-.01em}
+.wrap{max-width:1180px;margin:0 auto;padding:0 22px}
+.bubble{color:var(--cream);-webkit-text-stroke:.09em var(--brown);paint-order:stroke fill;text-shadow:0 .06em 0 var(--brown)}
+.eyebrow{font-family:var(--head);font-weight:600;font-size:14px;letter-spacing:.14em;text-transform:uppercase;color:var(--caramel)}
+.btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--head);font-weight:600;font-size:17px;padding:14px 24px;border-radius:999px;background:var(--brown);color:var(--cream);text-decoration:none;transition:transform .2s,box-shadow .2s;box-shadow:0 4px 0 var(--deep)}
+.btn:hover{transform:translateY(-2px);box-shadow:0 6px 0 var(--deep)}
+.btn:active{transform:translateY(2px);box-shadow:0 1px 0 var(--deep)}
+.btn.light{background:var(--cream);color:var(--brown);box-shadow:0 4px 0 #d9c3a8}
+.btn.wa{background:var(--wa);color:#063d1c;box-shadow:0 4px 0 #128c4a}
+.btn.ghost{background:transparent;color:var(--brown);box-shadow:inset 0 0 0 2px var(--brown)}
+.btn[disabled]{opacity:.45;pointer-events:none}
+.wa-ic{width:20px;height:20px;flex:none}
+section{position:relative}
+.sec{padding:110px 0}
+.sec-head{text-align:center;max-width:720px;margin:0 auto 46px}
+.sec-head h2{font-size:clamp(40px,6vw,68px);margin:8px 0 14px}
+.sec-head p{color:var(--muted);font-size:18px}
+
+/* ---------- INTRO ---------- */
+#intro{position:fixed;inset:0;z-index:100;background:var(--brown);display:grid;place-items:center;transition:transform 1s cubic-bezier(.7,0,.2,1)}
+#intro canvas{position:absolute;inset:0;width:100%;height:100%}
+#intro .tag{position:absolute;left:0;right:0;top:calc(50% + min(11vw,108px));text-align:center;font-family:var(--head);font-weight:600;color:var(--cream);font-size:clamp(11px,1.25vw,14px);letter-spacing:.32em;text-transform:uppercase;opacity:0;transform:translateY(10px);transition:all .6s}
+#intro .tag.on{opacity:.9;transform:none}
+#intro .drip{position:absolute;left:0;right:0;top:100%;height:90px;width:100%}
+#intro.gone{transform:translateY(calc(-100% - 100px))}
+#intro .intro-loc{position:absolute;left:0;right:0;text-align:center;color:var(--cream);opacity:0;transform:translateY(14px);transition:opacity .7s,transform .7s;pointer-events:none;z-index:2}
+#intro .intro-loc.on{opacity:1;transform:none;pointer-events:auto}
+#intro .intro-loc span{display:block;font-family:var(--head);font-weight:600;font-size:15px;letter-spacing:.06em;margin-bottom:12px;opacity:.85}
+#intro .intro-loc div{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+#intro .intro-loc button{display:inline-flex;align-items:center;gap:8px;font-family:var(--head);font-weight:700;font-size:18px;padding:13px 26px 13px 20px;border-radius:999px;background:#fff;color:var(--brown);box-shadow:0 5px 0 #d9c3a8,0 14px 24px -10px rgba(0,0,0,.5);transition:transform .25s,box-shadow .25s}
+#intro .intro-loc button .pin-ic{width:20px;height:20px;color:var(--caramel)}
+#intro .intro-loc button:hover,#intro .intro-loc button.on{transform:translateY(-3px);box-shadow:0 8px 0 #d9c3a8,0 18px 26px -10px rgba(0,0,0,.5)}
+#intro .intro-loc button:active{transform:translateY(2px);box-shadow:0 2px 0 #d9c3a8}
+#intro .skip{position:absolute;right:18px;bottom:18px;color:var(--cream);opacity:.6;font-size:13px;letter-spacing:.1em;text-transform:uppercase}
+
+/* ---------- NAV ---------- */
+nav.top{position:fixed;top:0;left:0;right:0;z-index:40;transition:background .3s,box-shadow .3s}
+
+nav.top .bar .wrap{display:flex;align-items:center;gap:26px;height:64px}
+.locbar{background:var(--brown);color:var(--cream);font-size:14px;max-height:48px;overflow:hidden;transition:max-height .4s ease}
+nav.top.solid .locbar{max-height:0}
+.locbar .wrap{display:flex;align-items:center;justify-content:center;gap:14px;height:42px}
+.locbar .ll{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.locseg{display:flex;background:rgba(246,235,218,.12);border-radius:999px;padding:3px;flex:none}
+.locseg button{font-family:var(--head);font-weight:600;font-size:14px;padding:5px 14px;border-radius:999px;color:var(--cream);transition:background .3s,color .3s}
+.locseg button.on{background:var(--cream);color:var(--brown)}
+.locbar.ask .locseg{animation:askp 2.2s ease-in-out infinite}
+@keyframes askp{50%{box-shadow:0 0 0 5px rgba(240,180,110,.45)}}
+nav.top .n{background:var(--cream);color:var(--brown);border-radius:99px;padding:0 8px;font-size:13px}
+.newdot{font-style:normal;font-size:10px;font-weight:700;letter-spacing:.06em;background:var(--caramel);color:#fff;padding:2px 6px;border-radius:6px;vertical-align:3px;margin-left:4px}
+.burger{display:none;width:44px;height:44px;border-radius:50%;background:var(--cream);flex-direction:column;align-items:center;justify-content:center;gap:4px;flex:none}
+.burger span{display:block;width:18px;height:2px;background:var(--brown);border-radius:2px;transition:transform .35s,opacity .35s}
+.burger.on span:nth-child(1){transform:translateY(6px) rotate(45deg)}.burger.on span:nth-child(2){opacity:0}.burger.on span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+.mmenu{position:absolute;top:100%;left:0;right:0;background:var(--paper);padding:6px 22px 26px;display:flex;flex-direction:column;opacity:0;transform:translateY(-10px);pointer-events:none;transition:opacity .35s,transform .35s;box-shadow:0 24px 30px -20px rgba(42,26,15,.45)}
+.mmenu.on{opacity:1;transform:none;pointer-events:auto}
+.mmenu a{font-family:var(--head);font-weight:600;font-size:24px;padding:12px 0;border-bottom:1px solid var(--line);text-decoration:none}
+@media(min-width:861px){.mmenu{display:none}}
+nav.top .logo{height:30px;width:auto}
+nav.top .links{display:flex;gap:22px;margin-left:auto;font-family:var(--head);font-weight:600;font-size:16px}
+nav.top .links a{text-decoration:none;opacity:.8}
+nav.top .links a:hover{opacity:1}
+nav.top .btn{padding:10px 18px;font-size:15px}
+@media(max-width:860px){nav.top .links{display:none} nav.top .btn{margin-left:auto} .burger{display:flex} nav.top .bar .wrap{gap:10px;height:60px} .locbar{font-size:13px}.locbar .wrap{gap:10px;justify-content:space-between}.locseg button{padding:5px 11px;font-size:13px}}
+nav.top .bar{transition:background .3s}nav.top.solid .bar{background:rgba(251,244,232,.94);backdrop-filter:blur(10px);box-shadow:0 1px 0 var(--line)}
+
+/* ---------- HERO ---------- */
+#hero{min-height:100svh;background:var(--cream);overflow:hidden;display:flex;align-items:center}
+.hero-grid{display:grid;grid-template-columns:1fr 1.05fr;align-items:center;gap:10px;width:100%;padding-top:calc(var(--navFull) + 24px);padding-bottom:40px}
+#hero .copy{position:relative;z-index:2}
+#hero .copy .pin{display:inline-flex;align-items:center;gap:8px;background:var(--brown);color:var(--cream);font-family:var(--head);font-weight:600;padding:8px 16px;border-radius:999px;font-size:15px}
+#hero h1{font-size:clamp(44px,5.4vw,82px);margin:18px 0 14px}
+#hero h1 .bubble{display:inline-block}
+#hero .lead{font-size:clamp(17px,1.8vw,20px);max-width:500px;color:var(--choc)}
+#hero .ctas{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+#hero .cutoff{margin-top:22px;display:inline-flex;gap:10px;align-items:center;font-weight:500;background:rgba(255,255,255,.7);padding:8px 14px;border-radius:12px;font-size:15px}
+#hero .cutoff b{font-family:var(--head)}
+.dot{width:9px;height:9px;border-radius:50%;background:#2fbf5a;box-shadow:0 0 0 4px rgba(47,191,90,.2);animation:pulse 1.6s infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 8px rgba(47,191,90,0)}}
+.ring{position:relative;isolation:isolate;z-index:0;height:min(600px,74vh);touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none}
+.ring:active{cursor:grabbing}
+.ring .ck{position:absolute;left:50%;top:46%;will-change:transform,opacity;backface-visibility:hidden;-webkit-tap-highlight-color:transparent}
+.ring .ck img{width:100%;pointer-events:none;-webkit-user-drag:none;filter:drop-shadow(0 14px 10px rgba(42,26,15,.16))}
+.ring .floor{position:absolute;left:50%;top:76%;width:70%;height:9%;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(closest-side,rgba(68,40,20,.28),transparent)}
+.ring .lbl{position:absolute;left:50%;bottom:2%;transform:translateX(-50%);text-align:center;white-space:nowrap}
+.ring .lbl b{display:block;font-family:var(--head);font-size:clamp(22px,2.4vw,30px);transition:opacity .2s ease;min-height:1.2em}
+.ring .lbl{z-index:30;pointer-events:none}
+.ring .lbl .spin-hint{display:inline-flex;align-items:center;gap:6px;margin-top:6px;font-size:13px;font-weight:600;color:var(--brown);background:rgba(255,255,255,.75);padding:6px 12px;border-radius:999px}
+.spin-hint i{font-style:normal;display:inline-block;animation:sp 2.4s ease-in-out infinite}@keyframes sp{50%{transform:rotate(-180deg)}}
+@media(max-width:860px){#hero .copy{display:flex;flex-direction:column;align-items:flex-start}#hero .newtile{width:100%}.hero-grid{grid-template-columns:1fr;padding-top:var(--navFull);gap:0}.ring{height:330px;order:-1;margin:0 -10px}.ring .ck{top:40%}.ring .floor{top:66%}#hero h1{margin-top:14px}}
+/* notice ribbon */
+.notice{display:flex;align-items:center;justify-content:center;gap:10px;background:var(--caramel);color:#fff;font-weight:700;font-size:14px;padding:8px 44px 8px 16px;position:relative;text-align:center}
+.notice[hidden]{display:none}
+.notice .nt-spk{animation:twinkle 1.4s ease-in-out infinite;display:inline-block}
+.notice button{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.2);color:#fff;font-size:12px}
+nav.top.solid .notice{display:none}
+/* live chat */
+.chatfab{position:fixed;left:18px;bottom:18px;z-index:45;display:flex;align-items:center;gap:8px;background:var(--cream);color:var(--brown);font-family:var(--head);font-weight:600;padding:11px 16px 11px 13px;border-radius:999px;box-shadow:0 0 0 2px var(--brown),0 10px 26px -8px rgba(42,26,15,.55);transition:transform .3s}
+.chatfab:hover{transform:translateY(-2px)}
+.chatfab .cdot{position:absolute;top:-3px;right:-3px;width:14px;height:14px;border-radius:50%;background:#e2483d;box-shadow:0 0 0 2px var(--cream)}
+.chatbox{position:fixed;left:18px;bottom:18px;z-index:62;width:min(370px,calc(100vw - 24px));height:min(540px,calc(100svh - 120px));background:var(--paper);border-radius:24px;box-shadow:0 30px 60px -20px rgba(42,26,15,.6),0 0 0 1px var(--line);display:flex;flex-direction:column;overflow:hidden;transform:translateY(20px) scale(.96);opacity:0;pointer-events:none;transition:all .35s cubic-bezier(.3,1.3,.5,1);transform-origin:bottom left}
+.chatbox.on{transform:none;opacity:1;pointer-events:auto}
+.chatbox header{background:var(--brown);color:var(--cream);padding:16px 18px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.chatbox header b{font-family:var(--head);font-size:18px;display:block}
+.chatbox header small{opacity:.75;font-size:12.5px}
+.chatbox header button{width:34px;height:34px;border-radius:50%;background:rgba(246,235,218,.15);color:var(--cream);flex:none}
+.cb-body{flex:1;overflow-y:auto;padding:16px 14px;display:flex;flex-direction:column;gap:8px;background:var(--cream)}
+.cb-body:empty{display:none}
+.msg{max-width:82%;padding:9px 13px;border-radius:18px;font-size:14.5px;line-height:1.4;white-space:pre-wrap;word-wrap:break-word}
+.msg.customer{align-self:flex-end;background:var(--brown);color:var(--cream);border-bottom-right-radius:6px}
+.msg.staff{align-self:flex-start;background:#fff;color:var(--ink);border-bottom-left-radius:6px;box-shadow:0 1px 0 var(--line)}
+.msg time{display:block;font-size:10.5px;opacity:.6;margin-top:3px}
+.cb-sys{align-self:center;font-size:12px;color:var(--muted);background:rgba(255,255,255,.6);padding:4px 10px;border-radius:999px}
+.cb-start{padding:22px 18px;display:flex;flex-direction:column;gap:12px;flex:1;justify-content:center;background:var(--cream)}
+.cb-start[hidden],.cb-input[hidden]{display:none}
+.cb-start p{font-size:15px;color:var(--choc)}
+.cb-start input,.cb-input input{font:inherit;font-size:16px;padding:12px 14px;border-radius:14px;border:2px solid var(--line);background:#fff;color:var(--ink);width:100%}
+.cb-start input:focus,.cb-input input:focus{outline:none;border-color:var(--brown)}
+.cb-start .btn{justify-content:center}
+.cb-input{display:flex;gap:8px;padding:10px;border-top:1px solid var(--line);background:var(--paper)}
+.cb-input button{width:46px;height:46px;border-radius:50%;background:var(--brown);color:var(--cream);font-size:18px;flex:none}
+body.in-builder .chatfab{transform:translateY(130px)}
+@media(max-width:600px){.chatfab span{display:none}.chatfab{padding:12px}}
+.cnt.off{opacity:.45;filter:grayscale(1)}
+.cnt .cnt-st{position:absolute;left:0;right:0;bottom:4px;font-size:9.5px;font-weight:700;opacity:.9}
+.cnt.off{padding-bottom:18px}
+.opt.off,.ex.off{opacity:.4;filter:grayscale(1)}
+/* new arrival tile */
+.newtile{margin-top:18px;display:flex;align-items:center;gap:14px;max-width:470px;background:#fffaf2;color:var(--brown);text-decoration:none;border-radius:20px;padding:12px 18px 12px 10px;box-shadow:0 0 0 2px var(--brown),0 16px 30px -14px rgba(42,26,15,.5);transition:transform .4s cubic-bezier(.3,1.4,.5,1);position:relative;overflow:hidden}
+.newtile:hover{transform:translateY(-3px) rotate(-.5deg)}
+.newtile::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 35%,rgba(200,132,58,.16) 50%,transparent 65%);transform:translateX(-100%);animation:shine 4s ease-in-out 3s infinite}
+@keyframes shine{30%,100%{transform:translateX(100%)}}
+.newtile .nt-bowl{width:84px;flex:none;filter:drop-shadow(0 6px 8px rgba(0,0,0,.4));animation:bob 4s ease-in-out infinite}
+.nt{display:flex;flex-direction:column;line-height:1.2;flex:1}
+.nt-tag{align-self:flex-start;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:var(--caramel);color:#fff;padding:3px 8px;border-radius:6px;margin-bottom:4px}
+.nt-logo{height:36px;width:auto;max-width:100%;object-fit:contain;object-position:left;margin:2px 0 4px}
+.nt small{font-size:13px;color:var(--muted);font-weight:500}
+.nt-p{font-family:var(--head);font-weight:700;font-size:22px;display:flex;flex-direction:column;align-items:center}
+.nt-p i{font-style:normal;font-size:18px;opacity:.7;transition:transform .3s}
+.newtile:hover .nt-p i{transform:translateX(4px)}
+@keyframes bob{50%{transform:translateY(-8px) rotate(-2deg)}}
+/* ---------- MARQUEE ---------- */
+.marquee{background:var(--brown);color:var(--cream);overflow:hidden;padding:16px 0;font-family:var(--head);font-weight:600;font-size:22px;white-space:nowrap}
+.marquee .track{display:inline-flex;gap:40px;animation:mq 30s linear infinite;padding-left:40px}
+.marquee span{display:inline-flex;align-items:center;gap:40px}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+/* ---------- BOX VISUAL ---------- */
+.boxwrap{position:relative}
+.sleeve,.drawer{position:absolute;inset:0;border-radius:10px}
+.drawer{background:var(--box2);padding:3.2%;box-shadow:0 30px 60px -20px rgba(42,26,15,.45),inset 0 0 0 2px #e0c8b2}
+.tray{width:100%;height:100%;display:grid;gap:2.6%;background:#e6cdb6;border-radius:4px;padding:2.6%;box-shadow:inset 0 6px 14px rgba(90,55,32,.25)}
+.cell{position:relative;background:linear-gradient(160deg,#f6e6d6,#ecd6c1);border-radius:3px;box-shadow:inset 0 3px 8px rgba(90,55,32,.22),inset 0 -1px 0 rgba(255,255,255,.6);display:grid;place-items:center}
+.cell img{width:92%;height:auto;max-height:92%;object-fit:contain;filter:drop-shadow(0 6px 6px rgba(42,26,15,.35));will-change:transform}
+.sleeve{background:linear-gradient(135deg,#f6e9dc 0%,#efdccb 55%,#e6cfbb 100%);box-shadow:0 30px 60px -20px rgba(42,26,15,.5),inset 0 0 0 1px rgba(255,255,255,.6),inset 0 -8px 20px rgba(160,120,90,.15);display:grid;place-items:center;z-index:2;inset:-1.4%}
+.sleeve img{width:62%}
+.sleeve .notch{position:absolute;width:13%;aspect-ratio:1;border-radius:50%;background:var(--box2);box-shadow:inset 0 3px 6px rgba(90,55,32,.3)}
+.landscape .sleeve .notch{right:-6.5%;top:50%;transform:translateY(-50%)}
+.portrait .sleeve .notch{bottom:-6.5%;left:50%;transform:translateX(-50%);width:20%}
+.portrait .sleeve img{width:80%;transform:rotate(-90deg)}
+.landscape .tray{grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,1fr)}
+.portrait .tray{grid-template-columns:repeat(2,1fr);grid-template-rows:repeat(3,1fr)}
+
+/* ---------- REVEAL ---------- */
+#reveal{height:340vh;background:var(--paper)}
+#reveal .stick{position:sticky;top:0;height:100svh;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#reveal .stage{position:relative;display:grid;place-items:center;flex:1;width:100%}
+#reveal .cap{position:absolute;left:0;right:0;top:calc(var(--navH) + 18px);text-align:center;padding:0 20px;z-index:3}
+#reveal .cap h2{font-size:clamp(32px,5vw,60px);transition:opacity .35s,transform .35s}
+#reveal .cap p{color:var(--muted);font-size:18px;margin-top:8px}
+#reveal .cap .swap{opacity:0;transform:translateY(16px)}
+#reveal .tab-hint{position:absolute;font-family:var(--head);font-weight:600;color:var(--caramel);font-size:16px;display:flex;align-items:center;gap:6px;z-index:4;pointer-events:none;transition:opacity .3s}
+#reveal .endcta{position:absolute;bottom:7vh;left:50%;transform:translate(-50%,20px);opacity:0;transition:all .4s;z-index:4;display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+#reveal .endcta.on{opacity:1;transform:translate(-50%,0)}
+#reveal .progress{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);width:120px;height:4px;border-radius:4px;background:var(--line);overflow:hidden}
+#reveal .progress i{display:block;height:100%;background:var(--brown);width:0}
+
+/* ---------- FLAVOURS ---------- */
+.menu-page{position:fixed;inset:0;z-index:58;background:var(--cream);overflow-y:auto;overscroll-behavior:contain;transform:translateY(100%);visibility:hidden;transition:transform .65s cubic-bezier(.7,0,.2,1),visibility 0s .65s}
+.menu-page.on{transform:none;visibility:visible;transition:transform .65s cubic-bezier(.7,0,.2,1)}
+.mp-head{position:sticky;top:0;z-index:3;background:rgba(246,235,218,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.mp-head .wrap{display:flex;justify-content:space-between;align-items:center;padding-top:10px;padding-bottom:10px}
+.mp-head h2{font-size:clamp(22px,2.6vw,30px)}
+.mp-head .x{width:40px;height:40px;border-radius:50%;background:var(--brown);color:var(--cream);font-size:20px;flex:none}
+.mp-sub{color:var(--muted);font-size:14.5px;margin:14px 0 12px;max-width:640px}
+.menu-page .tabs{justify-content:flex-start;margin-bottom:22px}
+.mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px;padding-bottom:120px}
+.mp-foot{position:sticky;bottom:16px;text-align:center;margin-top:-90px;padding-bottom:4px;z-index:3}
+.mp-foot .btn{box-shadow:0 4px 0 var(--deep),0 14px 30px -10px rgba(42,26,15,.6)}
+@media(max-width:600px){
+  .mgrid{grid-template-columns:1fr;gap:12px}
+  .mgrid .card{flex-direction:row;align-items:center;gap:14px;padding:12px 12px 12px 10px}
+  .mgrid .card .pic{width:104px;flex:none;margin:0}
+  .mgrid .card .badge{top:8px;left:8px;font-size:9.5px;padding:3px 7px}
+  .mgrid .card h3{font-size:19px}
+  .mgrid .card p{font-size:13px;line-height:1.4}
+  .mgrid .card .row{margin-top:8px}
+  .mgrid .card .add{width:36px;height:36px;font-size:20px}
+}
+.card .ct{display:flex;flex-direction:column;flex:1;min-width:0}
+.tabs{display:flex;justify-content:center;gap:8px;margin-bottom:38px;flex-wrap:wrap}
+.tabs button{font-family:var(--head);font-weight:600;font-size:17px;padding:10px 22px;border-radius:999px;box-shadow:inset 0 0 0 2px var(--brown);color:var(--brown);transition:.2s}
+.tabs button.on{background:var(--brown);color:var(--cream)}
+.rail-wrap{position:relative}
+.rail{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;padding:10px max(22px,calc((100vw - 1180px)/2 + 22px)) 30px;scrollbar-width:none;scroll-padding:0 max(22px,calc((100vw - 1180px)/2 + 22px))}
+.rail::-webkit-scrollbar{display:none}
+.rail .card{flex:none;width:290px;scroll-snap-align:start}
+@media(max-width:600px){.rail .card{width:78vw}}
+.arr{position:absolute;top:42%;width:52px;height:52px;border-radius:50%;background:var(--brown);color:var(--cream);font-size:26px;z-index:3;display:grid;place-items:center;box-shadow:0 8px 20px -6px rgba(42,26,15,.5);transition:opacity .2s}
+.arr.l{left:max(10px,calc((100vw - 1180px)/2 - 10px))}.arr.r{right:max(10px,calc((100vw - 1180px)/2 - 10px))}
+.arr[disabled]{opacity:0;pointer-events:none}
+@media(max-width:700px){.arr{display:none}}
+.rail-meta{display:flex;justify-content:center;align-items:center;gap:14px;color:var(--muted);font-size:14px;font-weight:500}
+.rail-bar{width:160px;height:4px;border-radius:4px;background:var(--line);overflow:hidden}.rail-bar i{display:block;height:100%;background:var(--brown);width:20%;transition:transform .1s}
+.card{background:var(--paper);border-radius:var(--r);padding:20px 20px 22px;position:relative;box-shadow:0 1px 0 var(--line),0 12px 30px -18px rgba(42,26,15,.35);transition:transform .3s;display:flex;flex-direction:column;cursor:pointer}
+.card:hover{transform:translateY(-4px)}
+.card .pic{aspect-ratio:1;display:grid;place-items:center;margin:-4px 0 12px}
+.card .pic img{width:88%;transition:transform .7s cubic-bezier(.2,.8,.2,1);filter:drop-shadow(0 14px 14px rgba(42,26,15,.28))}
+.card:hover .pic img{transform:rotate(28deg) scale(1.06)}
+.badge{position:absolute;top:16px;left:16px;font-family:var(--head);font-weight:600;font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:999px;background:var(--brown);color:var(--cream)}
+.badge.sig{background:var(--caramel);color:#fff}
+.card h3{font-size:24px;margin-bottom:6px}
+.card p{font-size:14.5px;color:var(--muted);flex:1}
+.card .row{display:flex;align-items:center;justify-content:space-between;margin-top:14px;gap:10px}
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{font-size:11px;font-weight:700;letter-spacing:.03em;padding:3px 8px;border-radius:6px;background:#efe0cc;color:var(--choc)}
+.chip.nut{background:#f7d9c2;color:#8a3d12}
+.add{width:42px;height:42px;border-radius:50%;background:var(--brown);color:var(--cream);font-size:24px;line-height:1;display:grid;place-items:center;flex:none;transition:transform .2s}
+.add:hover{transform:scale(1.1) rotate(90deg)}
+
+/* ---------- BUILDER ---------- */
+#build{background:var(--paper)}
+.builder{display:grid;grid-template-columns:1.05fr 1fr;gap:44px;align-items:start}
+@media(max-width:900px){.builder{grid-template-columns:1fr}}
+.build-box{position:sticky;top:calc(var(--navH) + 16px)}
+.build-box .boxwrap{width:100%;aspect-ratio:1.56}
+.build-box .drawer{position:relative;inset:auto;width:100%;height:100%}
+.build-box .cell{cursor:pointer}
+.build-box .cell.empty::after{content:attr(data-n);font-family:var(--head);font-weight:600;color:#c9ad92;font-size:clamp(20px,3vw,32px)}
+.build-box .cell img.pop{animation:drop .55s cubic-bezier(.3,1.5,.5,1)}
+@keyframes drop{0%{transform:translateY(-60%) scale(1.5) rotate(-50deg);opacity:0}100%{transform:none;opacity:1}}
+.build-box .cell img.out{animation:out .3s forwards}
+@keyframes out{to{transform:scale(.3) rotate(90deg);opacity:0}}
+.build-meta{display:flex;align-items:center;justify-content:space-between;margin:20px 4px 0;gap:12px;flex-wrap:wrap}
+.count{font-family:var(--head);font-weight:700;font-size:28px}
+.count small{font-size:16px;color:var(--muted);font-weight:500}
+.mini-btns{display:flex;gap:8px}
+.mini-btns button{font-family:var(--head);font-weight:600;font-size:14px;padding:8px 14px;border-radius:999px;box-shadow:inset 0 0 0 2px var(--line);color:var(--choc)}
+.mini-btns button:hover{box-shadow:inset 0 0 0 2px var(--brown)}
+.picker h3{font-size:22px;margin:0 0 12px}
+.picker h3:not(:first-child){margin-top:26px}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:10px}
+.pick{background:var(--cream);border-radius:16px;padding:10px 8px 10px;text-align:center;transition:transform .15s,box-shadow .15s;position:relative}
+.pick:hover{transform:translateY(-2px);box-shadow:0 0 0 2px var(--brown)}
+.pick.unavailable{background:#ece3d6}
+.pick.unavailable img{filter:grayscale(1) opacity(.45)}
+.pick.unavailable > span:not(.inf){color:#a8998a}
+.pick.unavailable:hover{box-shadow:0 0 0 2px #cdbfae}
+.na-tag{display:inline-block;font-style:normal;font-size:10px;font-weight:700;color:#8f7f70;background:#fff;border:1px solid #ddd0c0;padding:2px 7px;border-radius:999px;margin-top:5px;white-space:nowrap;line-height:1.4;vertical-align:3px}
+/* coming soon — exciting */
+.pick.soon{background:linear-gradient(150deg,#fbe3c4 0%,#f6c891 55%,#eaa65e 100%);overflow:hidden;box-shadow:0 0 0 2px #e9a35b,0 10px 20px -12px rgba(200,132,58,.8)}
+.pick.soon::before{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.55) 48%,transparent 66%);transform:translateX(-120%);animation:soonShine 2.8s ease-in-out infinite}
+@keyframes soonShine{55%,100%{transform:translateX(120%)}}
+.pick.soon img{filter:blur(2.5px) saturate(.9) drop-shadow(0 5px 5px rgba(42,26,15,.25));animation:soonBob 2.6s ease-in-out infinite}
+@keyframes soonBob{50%{transform:translateY(-4px) rotate(-6deg)}}
+.pick.soon > span:not(.inf):not(.q){color:var(--deep)}
+.soon-tag{display:inline-flex;align-items:center;gap:4px;font-style:normal;font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap;color:#fff;background:var(--brown);padding:3px 8px;border-radius:999px;margin-top:5px;line-height:1.3;vertical-align:3px;position:relative}
+.soon-tag .spk{width:10px;height:10px;color:#f6c46e;animation:twinkle 1.4s ease-in-out infinite}
+@keyframes twinkle{50%{transform:scale(.55) rotate(45deg);opacity:.6}}
+.pick .soon-tag,.pick .na-tag{margin:5px auto 0;max-width:100%;white-space:normal;justify-content:center;font-size:9px;letter-spacing:.02em;padding:3px 7px;text-align:center}
+.modal .txt .m-note.soon{color:#fff}
+.modal .txt .m-note.soon b{color:#fff}
+.card.unavailable .pic img{filter:grayscale(1) opacity(.45) drop-shadow(0 10px 10px rgba(42,26,15,.12))}
+.card.unavailable h3,.card.unavailable p{color:#a8998a}
+.card.off:hover .pic img{transform:none}
+.card.soon{background:linear-gradient(150deg,#fff6ea,#fbe3c4);box-shadow:0 0 0 2px #f0c48e,0 12px 30px -18px rgba(200,132,58,.7)}
+.card.soon .pic img{filter:blur(3px) drop-shadow(0 12px 12px rgba(42,26,15,.25));animation:soonBob 2.6s ease-in-out infinite}
+.m-note{font-family:var(--head);font-weight:600;font-size:17px;color:var(--muted);background:#ece3d6;border-radius:12px;padding:10px 14px;align-self:flex-start}
+.m-note.soon{display:flex;align-items:center;gap:12px;background:linear-gradient(120deg,var(--caramel),#e9a35b);color:#fff;padding:14px 18px;border-radius:16px;align-self:stretch;position:relative;overflow:hidden;box-shadow:0 12px 24px -12px rgba(200,132,58,.9)}
+.m-note.soon::before{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.35) 48%,transparent 66%);transform:translateX(-120%);animation:soonShine 2.8s ease-in-out infinite}
+.m-note.soon .spk{width:26px;height:26px;flex:none;color:#fff3d6;animation:twinkle 1.4s ease-in-out infinite}
+.m-note.soon b{display:block;font-size:22px;line-height:1.1}
+.m-note.soon small{font-family:var(--body);font-weight:500;font-size:13.5px;opacity:.9}
+.modal .vis.off img{filter:grayscale(1) opacity(.5)}
+.modal .vis.soon{background:radial-gradient(circle,#fbe3c4,#f6ebda 70%)}
+.modal .vis.soon img{filter:blur(6px) drop-shadow(0 20px 20px rgba(42,26,15,.3))}
+.pick:active{transform:scale(.95)}
+.pick img{width:74%;margin:0 auto 6px;filter:drop-shadow(0 5px 5px rgba(42,26,15,.25))}
+.pick span{font-size:12.5px;font-weight:700;line-height:1.15;display:block}
+.pick .q{position:absolute;top:6px;right:6px;min-width:22px;height:22px;border-radius:11px;background:var(--brown);color:var(--cream);font-size:12px;font-weight:700;display:none;place-items:center;padding:0 6px}
+.pick.has .q{display:grid}
+.pick .inf{position:absolute;top:6px;left:6px;width:24px;height:24px;border-radius:50%;background:#fff;color:var(--brown);font-family:Georgia,serif;font-style:italic;font-weight:700;font-size:14px;display:grid;place-items:center;box-shadow:0 0 0 1.5px var(--line);z-index:2}
+.pick .inf:hover{background:var(--brown);color:var(--cream)}
+.pick .inf::before{content:"";position:absolute;inset:-8px}
+.build-cta{margin-top:26px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;background:var(--cream);border-radius:var(--r);padding:18px 20px}
+.ib{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 0 0 1.5px var(--line);font-family:Georgia,serif;font-style:italic;font-size:12px;color:var(--brown)}
+@media(max-width:600px){#build .sec-head{margin-bottom:18px}#build .sec-head h2{font-size:34px;margin:4px 0 6px}#build .sec-head p{font-size:14.5px}#build.sec{padding-top:50px}}
+.build-cta .price{font-family:var(--head);font-weight:700;font-size:34px}
+
+/* ---------- CHUNKERS ---------- */
+#chunkers{background:var(--brown);color:var(--cream);overflow:hidden}
+#chunkers .sec-head p{color:#e3cdb3}
+#chunkers .eyebrow{color:#f0b46e}
+.ch-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:44px;align-items:start}
+.ch-stage{position:sticky;top:calc(var(--navH) + 20px);align-self:start;text-align:center}
+.ch-sum{display:flex;flex-direction:column;align-items:center;gap:2px;margin-top:18px}
+.ch-sum .eyebrow{color:#f0b46e;font-size:12px}
+.ch-sum b{font-family:var(--head);font-size:22px}
+.ch-sum #sumD{opacity:.8;font-size:15px}
+.ch-sum-row{display:none}
+@media(max-width:900px){
+  .ch-grid{grid-template-columns:minmax(0,1fr);gap:18px}.ch-ctrl{min-width:0}
+  .ch-stage{top:var(--navH);z-index:6;background:var(--brown);margin:0 -22px;padding:12px 22px 14px;display:grid;grid-template-columns:46% minmax(0,1fr);gap:14px;align-items:center;text-align:left;box-shadow:0 14px 18px -14px rgba(0,0,0,.7)}
+  .ch-stage .tbowl{max-width:none}
+  .ch-sum{align-items:flex-start;margin:0}
+  .ch-sum b{font-size:18px;line-height:1.15}
+  .ch-sum #sumD{font-size:13.5px}
+  .ch-sum-row{display:flex;align-items:center;gap:10px;margin-top:10px}
+  .ch-sum-row .price{font-family:var(--head);font-weight:700;font-size:24px}
+  .ch-sum-row .btn{padding:9px 16px;font-size:15px}
+  .ch-stage .hint-s{grid-column:1/-1;margin:0;text-align:center;font-size:12px}
+  .ch-cta{display:none}
+  .ch-ctrl h3{font-size:18px;margin-bottom:8px}.ch-ctrl h3:not(:first-child){margin-top:18px}
+  #chDip{flex-wrap:wrap;gap:8px}
+  .opt{flex:none}.opt.t{padding:8px 14px;font-size:14px}
+  .extras{grid-template-columns:1fr 1fr}
+  .slots{grid-template-columns:repeat(6,1fr)!important;gap:5px}.slot{font-size:10px;padding:4px 2px}
+  .build-box{top:var(--navH);z-index:6;background:var(--paper);margin:0 -22px;padding:10px 22px 8px;box-shadow:0 14px 18px -16px rgba(42,26,15,.5)}
+  .build-box .boxwrap{max-width:320px;margin:0 auto}
+  .build-meta{margin-top:8px}.count{font-size:22px}
+  .build-cta{position:sticky;bottom:10px;z-index:6;box-shadow:0 10px 24px -10px rgba(42,26,15,.55);padding:7px 7px 7px 14px;gap:10px;flex-wrap:nowrap;border-radius:999px;margin-top:16px}
+  .build-cta .price{font-size:19px}
+  #bStatus{font-size:12.5px!important;line-height:1.2;min-width:0!important}
+  #bAdd{padding:9px 14px;font-size:14px;white-space:nowrap;box-shadow:0 3px 0 var(--deep)}
+  body.in-builder .fab{transform:translateY(130px)}
+}
+.ch-intro{text-align:center;max-width:720px;margin:0 auto 50px}
+.ch-logo{display:inline-block;background:var(--cream);border-radius:24px;padding:18px 26px 14px;margin:14px 0 18px;transform:rotate(-2deg);box-shadow:0 18px 30px -16px rgba(0,0,0,.6)}
+.ch-logo img{width:min(440px,70vw)}
+.ch-intro h2{font-size:clamp(28px,3.6vw,44px);margin:0 0 12px}
+.ch-intro p{color:#e3cdb3;font-size:17px}
+@media(max-width:860px){.ch-intro{margin-bottom:26px}}
+.tbowl{position:relative;width:100%;max-width:470px;aspect-ratio:1;margin:0 auto}
+.tbowl .rim{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 200deg,#e8c896,#b88a52,#d6b07a,#a57744,#e8c896);box-shadow:0 34px 50px -10px rgba(0,0,0,.55)}
+.tbowl .floor{position:absolute;inset:5.5%;border-radius:50%;background:radial-gradient(circle at 50% 42%,#c99c64 0,#b0844f 55%,#8e6436 100%);box-shadow:inset 0 16px 34px rgba(50,28,8,.6),inset 0 -6px 14px rgba(255,225,180,.18)}
+.tbowl .tpot{position:absolute;left:50%;top:50%;width:33%;transform:translate(-50%,-50%);z-index:2}
+.tbowl .tpot img{width:100%;filter:drop-shadow(0 8px 8px rgba(0,0,0,.4))}
+.tbowl .tpot.swap img{animation:sauce .6s cubic-bezier(.3,1.5,.5,1)}
+@keyframes sauce{0%{transform:scale(.6) rotate(-90deg);opacity:0}}
+#minis{position:absolute;inset:0;z-index:3;pointer-events:none}
+.tbowl .m{position:absolute;width:30%;transform:translate(-50%,-50%);pointer-events:auto;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.tbowl .m img{width:100%;filter:drop-shadow(0 8px 7px rgba(40,20,5,.5));transition:transform .2s}
+.tbowl .m:hover img{transform:scale(1.05)}
+.tbowl .m.in img{animation:mdrop .55s cubic-bezier(.3,1.5,.5,1) both}
+@keyframes mdrop{0%{transform:scale(1.6) rotate(-60deg);opacity:0}}
+.ch-ctrl h3{font-size:22px;margin-bottom:12px}
+.chn{float:right;font-size:15px;background:var(--cream);color:var(--brown);padding:3px 10px;border-radius:999px}
+.ch-note{font-size:14px;opacity:.8;margin:-6px 0 12px}
+.cnts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.cnt{position:relative;display:flex;align-items:center;justify-content:center;text-align:center;min-height:58px;padding:10px 8px;border-radius:16px;background:rgba(246,235,218,.08);box-shadow:inset 0 0 0 2px rgba(246,235,218,.22);color:var(--cream);font-weight:700;font-size:14.5px;line-height:1.2;transition:background .2s,box-shadow .2s,color .2s}
+.cnt:active{transform:scale(.97)}
+.cnt.has{background:var(--cream);color:var(--brown);box-shadow:none}
+.cnt .q{position:absolute;top:-8px;right:-6px;min-width:26px;height:26px;border-radius:13px;background:var(--caramel);color:#fff;font-family:var(--head);font-size:15px;display:none;place-items:center;padding:0 6px;box-shadow:0 3px 8px rgba(0,0,0,.3)}
+.cnt.has .q{display:grid;animation:qpop .3s}
+@keyframes qpop{50%{transform:scale(1.3)}}
+.cnt .mn{position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);width:24px;height:24px;border-radius:50%;background:var(--brown);color:var(--cream);font-size:16px;line-height:1;display:none;place-items:center;box-shadow:0 0 0 2px var(--cream)}
+.cnt.has .mn{display:grid}
+.ch-clear{margin-top:14px;font-size:13px;font-weight:700;text-decoration:underline;opacity:.75;color:var(--cream)}
+.tbowl .m.empty{border-radius:50%;aspect-ratio:1;box-shadow:inset 0 0 0 2px rgba(255,240,215,.35);background:rgba(60,35,12,.18);display:grid;place-items:center;color:rgba(255,240,215,.55);font-family:var(--head);font-weight:600;font-size:clamp(14px,2.4vw,22px);cursor:default}
+.tbowl .m.empty img{display:none}
+.tbowl .m.empty::after{content:attr(data-n)}
+.btn.light[disabled]{opacity:.45;pointer-events:none}
+.ch-ctrl h3:not(:first-child){margin-top:26px}
+.opts{display:flex;flex-wrap:wrap;gap:10px}
+.opt{display:flex;align-items:center;gap:10px;background:rgba(246,235,218,.08);box-shadow:inset 0 0 0 2px rgba(246,235,218,.2);border-radius:16px;padding:8px 14px 8px 8px;font-weight:700;font-size:14.5px;transition:.15s;color:var(--cream)}
+.opt img{width:42px;height:42px;object-fit:contain}
+.opt .stack{display:flex}
+.opt .stack img{width:30px;height:30px;margin-right:-10px}
+.opt.on{background:var(--cream);color:var(--brown);box-shadow:none}
+.opt.t{padding:10px 16px;font-size:15px}
+.slot small{display:block;font-size:10px;opacity:.6}
+.slot{padding:8px 4px!important;font-size:12px!important}
+.ex{padding:8px 10px!important}
+.tbowl .tpot{cursor:pointer}
+.opt:hover{box-shadow:inset 0 0 0 2px var(--cream)}
+.slots[hidden]{display:none}.slots{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-top:12px}
+.slot{background:rgba(246,235,218,.08);border-radius:14px;padding:6px 4px;text-align:center;font-size:11px;font-weight:700;box-shadow:inset 0 0 0 2px rgba(246,235,218,.18);color:var(--cream)}
+.slot img{width:80%;margin:0 auto 2px}
+.slot:hover{box-shadow:inset 0 0 0 2px var(--cream)}
+.extras{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.ex{display:flex;align-items:center;gap:8px;background:rgba(246,235,218,.08);border-radius:14px;padding:6px 8px;font-size:13px;font-weight:700}
+.ex img{width:34px;height:34px}
+.ex .st{margin-left:auto;display:flex;align-items:center;gap:6px}
+.ex .st button{width:26px;height:26px;border-radius:50%;background:var(--cream);color:var(--brown);font-weight:700}
+.ch-cta{margin-top:28px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.ch-cta .price{font-family:var(--head);font-weight:700;font-size:34px}
+.hint-s{font-size:13px;opacity:.7;margin-top:8px}
+
+/* ---------- HOW ---------- */
+#how{background:var(--cream)}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;counter-reset:s}
+@media(max-width:900px){.steps{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.steps{grid-template-columns:1fr}}
+.step{background:var(--paper);border-radius:var(--r);padding:26px 22px;position:relative}
+.step .n{font-family:var(--head);font-weight:700;font-size:54px;line-height:1}
+.step h3{font-size:22px;margin:10px 0 6px}
+.step p{color:var(--muted);font-size:15px}
+.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:22px}
+@media(max-width:800px){.facts{grid-template-columns:1fr}}
+.fact{background:var(--brown);color:var(--cream);border-radius:var(--r);padding:24px;display:flex;gap:16px;align-items:center}
+.fact .ic{font-size:34px}
+.fact b{font-family:var(--head);font-size:22px;display:block;line-height:1.1}
+.fact span{font-size:14.5px;opacity:.85}
+
+/* ---------- OFFERS ---------- */
+#offers{background:var(--paper)}
+.offers{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:18px}
+@media(max-width:900px){.offers{grid-template-columns:1fr}}
+.offer{border-radius:28px;padding:30px;position:relative;overflow:hidden;min-height:260px;display:flex;flex-direction:column;justify-content:flex-end}
+.offer.big{background:var(--brown);color:var(--cream)}
+.offer.c2{background:var(--caramel);color:#fff}
+.offer.c3{background:var(--box);color:var(--brown)}
+.offer>*:not(.deco){position:relative;z-index:1}.offer{min-height:300px}.offer .amt{font-family:var(--head);font-weight:700;font-size:72px;line-height:.9}
+.offer h3{font-size:26px;margin:6px 0}
+.offer p{opacity:.85;font-size:15px;max-width:300px}
+.offer img.deco{position:absolute;right:-34px;top:-34px;width:170px;transform:rotate(-14deg);filter:drop-shadow(0 18px 18px rgba(0,0,0,.3));animation:spin 30s linear infinite}
+.offer.big img.deco{width:220px;right:-40px;top:-40px}
+@keyframes spin{to{transform:rotate(346deg)}}
+
+/* ---------- REVIEWS ---------- */
+#reviews{background:var(--cream);overflow:hidden}
+.rv-track{display:flex;gap:18px;width:max-content;animation:mq 60s linear infinite;padding:10px 0 30px}
+.rv-track:hover{animation-play-state:paused}
+.rv{width:300px;flex:none;border-radius:22px;padding:22px;position:relative;box-shadow:0 14px 30px -18px rgba(42,26,15,.4)}
+.rv .stars{color:#e8a33a;letter-spacing:2px;font-size:17px}
+.rv p{margin:10px 0 14px;font-size:16px;line-height:1.45}
+.rv .who{font-size:13px;font-weight:700;opacity:.75}
+.rv .sample{position:absolute;top:14px;right:14px;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.5;border:1px dashed currentColor;padding:2px 6px;border-radius:6px}
+.rv.s1{background:var(--paper);transform:rotate(-1.5deg)}
+.rv.s2{background:var(--brown);color:var(--cream);transform:rotate(1deg)}
+.rv.s3{background:#fff6c9;transform:rotate(1.8deg);border-radius:4px;font-family:'Fredoka';box-shadow:0 18px 20px -14px rgba(0,0,0,.4)}
+.rv.s4{background:#dcf8c6;border-radius:18px 18px 18px 4px;transform:rotate(-1deg)}
+.rv.s5{background:var(--caramel);color:#fff;transform:rotate(-.5deg)}
+.rv-note{text-align:center;font-size:13px;color:var(--muted)}
+
+/* ---------- IG ---------- */
+#insta{background:var(--paper);overflow:hidden}
+.ig-row{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;padding:6px 22px 24px;scrollbar-width:none}
+.ig-row::-webkit-scrollbar{display:none}
+.ig{flex:none;width:250px;aspect-ratio:4/5;border-radius:20px;position:relative;overflow:hidden;scroll-snap-align:center;text-decoration:none;display:flex;flex-direction:column;justify-content:flex-end;padding:16px;color:#fff}
+.ig img{position:absolute;width:115%;left:50%;top:40%;transform:translate(-50%,-50%) rotate(var(--rot,0deg));transition:transform .6s}
+.ig:hover img{transform:translate(-50%,-50%) rotate(calc(var(--rot,0deg) + 25deg)) scale(1.05)}
+.ig::after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 45%,rgba(30,16,8,.8))}
+.ig .cap{position:relative;z-index:2;font-weight:700;font-size:14px;line-height:1.3}
+.ig .ic{position:absolute;top:12px;right:12px;z-index:2;width:26px;height:26px}
+.ig-cta{text-align:center;margin-top:10px}
+
+/* ---------- ALLERGENS ---------- */
+#allergens{background:var(--cream)}
+.al-note{background:var(--paper);border-left:6px solid var(--caramel);border-radius:14px;padding:18px 20px;margin-bottom:22px;font-size:15px}
+.al-table{background:var(--paper);border-radius:var(--r);overflow:auto}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:620px}
+th,td{padding:12px 14px;text-align:left;border-bottom:1px solid var(--line)}
+th{font-family:var(--head);font-weight:600;font-size:15px;background:#f3e4cf;position:sticky;top:0}
+td.y{font-weight:700;color:var(--brown)}
+td.n{color:#c8b39c}
+td .tn{display:inline-flex;align-items:center;gap:8px}
+td .tn img{width:30px;height:30px}
+
+/* ---------- FOOTER ---------- */
+footer{background:var(--deep);color:var(--cream);padding:90px 0 40px;position:relative}
+footer .drip{position:absolute;top:-1px;left:0;width:100%;height:70px}
+.foot{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px}
+@media(max-width:800px){.foot{grid-template-columns:1fr}}
+.foot img.lg{width:240px;margin-bottom:18px}
+.foot h4{font-family:var(--head);font-size:20px;margin-bottom:12px}
+.foot p,.foot a{font-size:15px;opacity:.85;line-height:1.9;text-decoration:none;display:block}
+.foot a:hover{opacity:1}
+.legal{margin-top:50px;padding-top:20px;border-top:1px solid rgba(246,235,218,.15);font-size:13px;opacity:.6;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+
+/* ---------- ORDER SHEET ---------- */
+.fab{position:fixed;right:18px;bottom:18px;z-index:45;display:flex;align-items:center;gap:10px;background:var(--brown);color:var(--cream);font-family:var(--head);font-weight:600;padding:12px 18px 12px 14px;border-radius:999px;box-shadow:0 10px 30px -8px rgba(42,26,15,.6);transform:translateY(120px);transition:transform .4s cubic-bezier(.3,1.4,.5,1)}
+.fab.on{transform:none}
+.fab .n{background:var(--cream);color:var(--brown);border-radius:999px;min-width:26px;height:26px;display:grid;place-items:center;font-size:14px;padding:0 6px}
+.fab.bump{animation:fb .5s}
+@keyframes fb{40%{transform:scale(1.15)}}
+.sheet-bg{position:fixed;inset:0;background:rgba(42,26,15,.5);z-index:60;opacity:0;pointer-events:none;transition:opacity .3s}
+.sheet-bg.on{opacity:1;pointer-events:auto}
+.sheet{position:fixed;top:0;right:0;bottom:0;width:min(460px,100%);background:var(--paper);z-index:61;transform:translateX(105%);transition:transform .45s cubic-bezier(.7,0,.2,1);display:flex;flex-direction:column}
+.sheet.on{transform:none}
+.sheet header{display:flex;align-items:center;justify-content:space-between;padding:20px 22px;border-bottom:1px solid var(--line)}
+.sheet header h3{font-size:28px;margin-bottom:8px}.sheetloc{background:var(--cream);display:inline-flex}.sheetloc button{color:var(--brown)}.sheetloc button.on{background:var(--brown);color:var(--cream)}
+.sheet .x{width:40px;height:40px;border-radius:50%;background:var(--cream);font-size:20px}
+.sheet .body{flex:1;overflow:auto;padding:18px 22px}
+.item{display:flex;gap:12px;padding:14px 0;border-bottom:1px dashed var(--line)}
+.item .thumbs{display:grid;grid-template-columns:repeat(3,22px);gap:2px;flex:none;background:var(--box2);padding:5px;border-radius:8px;height:fit-content}
+.item .thumbs img{width:22px;height:22px}
+.item .info{flex:1;font-size:13.5px;color:var(--muted)}
+.item .info b{display:block;font-family:var(--head);font-size:18px;color:var(--ink);font-weight:600}
+.item .pr{font-family:var(--head);font-weight:600;font-size:18px}
+.item .rm{font-size:12px;text-decoration:underline;color:var(--muted);margin-top:4px}
+.empty-o{text-align:center;color:var(--muted);padding:40px 10px}
+.empty-o img{width:120px;margin:0 auto 12px;opacity:.9}
+.fld{margin-top:16px}
+.fld label{display:block;font-weight:700;font-size:13px;margin-bottom:6px}
+.fld input,.fld textarea{width:100%;font:inherit;font-size:15px;padding:12px 14px;border-radius:12px;border:2px solid var(--line);background:#fff;color:var(--ink)}
+.fld input:focus,.fld textarea:focus{outline:none;border-color:var(--brown)}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.seg button{padding:12px;border-radius:12px;box-shadow:inset 0 0 0 2px var(--line);font-weight:700;font-size:14px;text-align:left}
+.seg button small{display:block;font-weight:500;color:var(--muted)}
+.seg button.on{box-shadow:inset 0 0 0 2px var(--brown);background:var(--cream)}
+.sheet footer{position:static;background:var(--cream);color:var(--ink);padding:16px 22px 20px}
+.tot{display:flex;justify-content:space-between;font-family:var(--head);font-weight:700;font-size:24px;margin-bottom:12px}
+.sheet .btn.wa{width:100%;justify-content:center}
+.fine{font-size:12px;color:var(--muted);margin-top:10px;text-align:center}
+
+/* modal */
+.modal{position:fixed;inset:0;z-index:70;display:grid;place-items:center;padding:20px;pointer-events:none;opacity:0;transition:opacity .3s}
+.modal.on{opacity:1;pointer-events:auto}
+.modal .bg{position:absolute;inset:0;background:rgba(42,26,15,.6)}
+.modal .card2{position:relative;background:var(--paper);border-radius:28px;max-width:760px;width:100%;display:grid;grid-template-columns:1fr 1fr;overflow:hidden;transform:scale(.9);transition:transform .35s cubic-bezier(.3,1.4,.5,1)}
+.modal.on .card2{transform:none}
+.modal .vis{background:var(--cream);display:grid;place-items:center;padding:30px}
+.modal .vis img{width:100%;animation:spin 24s linear infinite;filter:drop-shadow(0 20px 20px rgba(42,26,15,.3))}
+.modal .txt{padding:34px 30px;display:flex;flex-direction:column;gap:12px}
+.modal .txt h3{font-size:36px}
+.modal .txt p{color:var(--muted)}
+.modal .x{position:absolute;top:12px;right:12px;width:40px;height:40px;border-radius:50%;background:var(--paper);z-index:2;font-size:20px}
+@media(max-width:640px){.modal .card2{grid-template-columns:1fr}.modal .vis{padding:20px 60px}}
+
+.toast{position:fixed;left:50%;top:calc(var(--navH) + 12px);transform:translate(-50%,-20px);background:var(--deep);color:var(--cream);padding:12px 20px;border-radius:999px;font-weight:700;font-size:14px;z-index:80;opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+.flyer{position:fixed;z-index:90;pointer-events:none;width:70px;transition:transform .7s cubic-bezier(.5,-0.3,.6,1),opacity .7s}
+
+.reveal-up{opacity:0;transform:translateY(30px);transition:opacity .8s,transform .8s}
+.reveal-up.in{opacity:1;transform:none}
+
+@media(max-width:600px){
+  .sec{padding:80px 0}
+  
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
+</style>
+</head>
+<body class="locked">
+
+<!-- INTRO -->
+<div id="intro" aria-hidden="true">
+  <canvas id="introCv"></canvas>
+  <div class="tag" id="introTag">Stuffed · Gooey · Seriously chunky</div>
+  <svg class="drip" viewBox="0 0 1200 90" preserveAspectRatio="none"><path fill="#442814" d="M0 0H1200V20C1170 20 1165 70 1140 70S1110 25 1080 25 1050 55 1020 55 990 15 950 15 925 85 895 85 870 30 840 30 810 50 780 50 750 10 720 10 695 65 665 65 640 25 610 25 585 75 555 75 530 20 500 20 470 45 440 45 410 15 380 15 355 80 325 80 300 30 270 30 245 55 215 55 190 20 160 20 135 70 105 70 80 25 50 25 25 50 0 50Z"/></svg>
+  <div class="intro-loc" id="introLoc"><span>Choose your location</span><div><button data-iloc="luton"><svg class="pin-ic" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M12 2C7.9 2 4.8 5.1 4.8 9.1c0 5.3 6.2 11.9 6.6 12.4.3.3.9.3 1.2 0 .4-.5 6.6-7.1 6.6-12.4C19.2 5.1 16.1 2 12 2Zm0 4.4a2.8 2.8 0 1 1 0 5.6 2.8 2.8 0 0 1 0-5.6Z"/></svg>Luton</button><button data-iloc="rotherham"><svg class="pin-ic" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M12 2C7.9 2 4.8 5.1 4.8 9.1c0 5.3 6.2 11.9 6.6 12.4.3.3.9.3 1.2 0 .4-.5 6.6-7.1 6.6-12.4C19.2 5.1 16.1 2 12 2Zm0 4.4a2.8 2.8 0 1 1 0 5.6 2.8 2.8 0 0 1 0-5.6Z"/></svg>Rotherham</button></div></div>
+</div>
+
+<nav class="top" id="nav">
+  <div class="locbar"><div class="wrap">
+    <span class="ll"><svg class="pin-ic" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M12 2C7.9 2 4.8 5.1 4.8 9.1c0 5.3 6.2 11.9 6.6 12.4.3.3.9.3 1.2 0 .4-.5 6.6-7.1 6.6-12.4C19.2 5.1 16.1 2 12 2Zm0 4.4a2.8 2.8 0 1 1 0 5.6 2.8 2.8 0 0 1 0-5.6Z"/></svg><span id="locLbl">Where are you ordering from?</span></span>
+    <div class="locseg"><button data-loc="luton">Luton</button><button data-loc="rotherham">Rotherham</button></div>
+  </div></div>
+  <div class="bar"><div class="wrap">
+    <a href="#hero"><img class="logo" src="img/logo.png" alt="CHUNK"></a>
+    <div class="links">
+      <a href="#menu">Menu</a><a href="#build">Build a box</a><a href="#chunkers">CHUNKers <i class="newdot">NEW</i></a><a href="#how">How to order</a><a href="#allergens">Allergens</a>
+    </div>
+    <button class="btn" data-open-order>Order <span class="n" id="navCount">0</span></button>
+    <button class="burger" id="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  </div></div>
+  <div class="notice" id="notice" hidden><span class="nt-spk">✦</span><span id="noticeTxt"></span><button id="noticeX" aria-label="Dismiss">✕</button></div>
+  <div class="mmenu" id="mmenu">
+    <a href="#menu">Menu</a><a href="#build">Build a box</a><a href="#chunkers">CHUNKers <i class="newdot">NEW</i></a><a href="#how">How to order</a><a href="#offers">Prices</a><a href="#reviews">Reviews</a><a href="#allergens">Allergens</a><a href="#insta">Instagram</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="wrap hero-grid">
+    <div class="copy">
+      
+      <h1>Cookies with<br><span class="bubble">serious</span> CHUNK.</h1>
+      <p class="lead">Thick, gooey, stuffed-to-the-edge cookies in a box of 6. Pick your flavours, send it on WhatsApp, and we'll bake it for tomorrow.</p>
+      <div class="ctas">
+        <a class="btn" href="#build">Build your box · £20</a>
+        <a class="btn light" href="#menu">See the menu</a>
+      </div>
+      <a class="newtile" href="#chunkers"><img class="nt-bowl" src="img/bowl.webp" alt=""><span class="nt"><span class="nt-tag">New arrival · Meet the</span><img class="nt-logo" src="img/chunkers_logo.png" alt="CHUNKers"><small>Your choice of mini cookies with a dip of your choice</small></span><span class="nt-p">£7.50<i>→</i></span></a>
+      <div class="cutoff"><span class="dot"></span><span id="cutoff">Order by <b>12pm</b> for next-day</span></div>
+    </div>
+    <div class="ring" id="ring" aria-label="Spinning cookie showcase">
+      <div class="floor"></div>
+      <div class="lbl"><b id="ringName">&nbsp;</b><span class="spin-hint"><i>⟲</i> Drag to spin · tap a cookie for more info</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee"><div class="track" id="mq"></div></div>
+
+<!-- REVEAL -->
+<section id="reveal">
+  <div class="stick">
+    <div class="cap">
+      <h2 id="capT">This is a CHUNK box.</h2>
+      <p id="capP">Scroll down to open it.</p>
+    </div>
+    <div class="stage" id="stage">
+      <div class="boxwrap" id="rvBox">
+        <div class="drawer"><div class="tray" id="rvTray"></div></div>
+        <div class="sleeve"><img src="img/logo.png" alt=""><span class="notch"></span></div>
+      </div>
+      <div class="tab-hint" id="tabHint">keep scrolling ↓</div>
+    </div>
+    <div class="endcta" id="endCta"><a class="btn" href="#build">Fill your own box</a><a class="btn light" href="#menu">See the menu</a></div>
+    <div class="progress"><i id="rvProg"></i></div>
+  </div>
+</section>
+
+<!-- FLAVOURS -->
+<div class="menu-page" id="menuPage" aria-hidden="true">
+  <div class="mp-head"><div class="wrap">
+    <h2>The menu</h2>
+    <button class="x" id="mpX" aria-label="Close menu">✕</button>
+  </div></div>
+  <div class="wrap">
+    <p class="mp-sub">Three classics that never leave, plus our signature flavours. Every cookie is thick, soft-centred and loaded. Mix any 6 in a box for £20. Tap + to add one to your box.</p>
+    <div class="tabs" id="tabs">
+      <button data-f="all" class="on">All</button>
+      <button data-f="classic">Classics</button>
+      <button data-f="signature">Signatures</button>
+    </div>
+    <div class="mgrid" id="grid"></div>
+  </div>
+  <div class="mp-foot"><a class="btn" href="#build">Build your box · £20 <span id="mpCount"></span></a></div>
+</div>
+
+<!-- BUILDER -->
+<section id="build" class="sec">
+  <div class="wrap">
+    <div class="sec-head reveal-up">
+      <div class="eyebrow">Box of 6 · £20</div>
+      <h2>Build your box</h2>
+      <p>Tap a flavour to add it. Tap <b class="ib">i</b> for details, or tap a cookie in the box to take it out.</p>
+    </div>
+    <div class="builder">
+      <div class="build-box">
+        <div class="boxwrap landscape"><div class="drawer"><div class="tray" id="bTray"></div></div></div>
+        <div class="build-meta">
+          <div class="count"><span id="bCount">0</span><small> / 6 chosen</small></div>
+          <div class="mini-btns"><button id="bRandom">🎲 Surprise me</button><button id="bClear">Clear</button></div>
+        </div>
+      </div>
+      <div class="picker" id="picker"></div>
+    </div>
+    <div class="build-cta">
+      <div class="price">£20</div>
+      <div style="flex:1;min-width:180px;color:var(--muted);font-size:15px" id="bStatus">Choose 6 cookies to fill your box.</div>
+      <button class="btn" id="bAdd" disabled>Add to order</button>
+    </div>
+  </div>
+</section>
+
+<!-- CHUNKERS -->
+<section id="chunkers" class="sec">
+  <div class="wrap">
+    <div class="ch-intro reveal-up">
+      <div class="eyebrow">New arrival · Meet the</div>
+      <div class="ch-logo"><img src="img/chunkers_logo.png" alt="CHUNKers"></div>
+      <h2>Mini cookies. Big flavour. <span style="color:#f0b46e">Dip included.</span></h2>
+      <p>6 mini cookies in a bowl with a dip of your choice. Build yours below: tap the cookies or the dip in the bowl to swap them.</p>
+    </div>
+    <div class="ch-grid" id="chBuild">
+      <div class="ch-stage">
+        <div class="tbowl" id="bowl"><div class="rim"></div><div class="floor"></div><div class="tpot" id="pot"><img id="potImg" src="img/dip_nutella.webp" alt=""></div><div id="minis"></div></div>
+        <div class="ch-sum"><span class="eyebrow">Your bowl</span><b id="sumV">Assorted · 2 of each</b><span id="sumD">Nutella dip</span><div class="ch-sum-row"><span class="price" id="sumP">£7.50</span><button class="btn light" id="chAdd2">Add</button></div></div>
+        <p class="hint-s">Tap a cookie or the dip in the bowl to swap it</p>
+      </div>
+      <div class="ch-ctrl">
+        <h3>1. Choose your cookies <span class="chn" id="chN">0 / 6</span></h3>
+        <p class="ch-note">Choose up to 6 in any mix. Tap a flavour to add one.</p>
+        <div class="cnts" id="chVar"></div>
+        <button class="ch-clear" id="chClear">Clear cookies</button>
+        <h3>2. Choose your dip</h3>
+        <div class="opts" id="chDip"></div>
+        <h3>Extra dip pots <span style="font-weight:500;font-size:16px;opacity:.7">· £1 each</span></h3>
+        <div class="extras" id="chEx"></div>
+        <div class="ch-cta">
+          <div class="price" id="chPrice">£7.50</div>
+          <button class="btn light" id="chAdd">Add CHUNKers to order</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW -->
+<section id="how" class="sec">
+  <div class="wrap">
+    <div class="sec-head reveal-up">
+      <div class="eyebrow">How to order</div>
+      <h2>Four steps to CHUNK</h2>
+      <p>No accounts, no checkout. You send us your order on WhatsApp and a real person confirms it.</p>
+    </div>
+    <div class="steps">
+      <div class="step reveal-up"><div class="n bubble">1</div><h3>Build it</h3><p>Fill a box of 6 and/or a CHUNKers bowl right here on the site.</p></div>
+      <div class="step reveal-up"><div class="n bubble">2</div><h3>Send on WhatsApp</h3><p>Tap send. Your order lands in our WhatsApp, already written out.</p></div>
+      <div class="step reveal-up"><div class="n bubble">3</div><h3>We confirm</h3><p>We reply to confirm your date and send payment details. Bank transfer or cash.</p></div>
+      <div class="step reveal-up"><div class="n bubble">4</div><h3>Get CHUNKed</h3><p>Collect locally, or we deliver for <span class="feeTxt">£5</span>.</p></div>
+    </div>
+    <div class="facts">
+      <div class="fact reveal-up"><span class="ic">⏰</span><div><b>Order by <span class="cutTxt">12pm</span></b><span>for <span class="leadTxt">next-day</span>. Orders after the cut-off are baked the day after.</span></div></div>
+      <div class="fact reveal-up"><span class="ic">🚗</span><div><b><span class="feeTxt">£5</span> local delivery</b><span>Local delivery in Luton or Rotherham, or free collection.</span></div></div>
+      <div class="fact reveal-up"><span class="ic">💷</span><div><b>Bank transfer or cash</b><span>We send payment details when we confirm.</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- OFFERS -->
+<section id="offers" class="sec">
+  <div class="wrap">
+    <div class="sec-head reveal-up"><div class="eyebrow">Prices &amp; deals</div><h2>Simple pricing</h2></div>
+    <div class="offers">
+      <div class="offer big reveal-up"><img class="deco" src="img/c_ferrero.webp" alt=""><div class="amt">£20</div><h3>Box of 6</h3><p>Mix any 6 classic and signature flavours. Separated in our CHUNK box so nothing gets squashed.</p></div>
+      <div class="offer c2 reveal-up"><img class="deco" src="img/c_redvelvet.webp" alt=""><div class="amt">£7.50</div><h3>CHUNKers bowl</h3><p>6 mini cookies and a dip of your choice.</p></div>
+      <div class="offer c3 reveal-up"><img class="deco" src="img/dip_pistachio.webp" alt="" style="width:170px"><div class="amt">£1</div><h3>Extra dip pots</h3><p>White choc, Nutella, Pistachio, Biscoff or Kinder.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section id="reviews" class="sec">
+  <div class="sec-head reveal-up" style="padding:0 22px"><div class="eyebrow">Reviews</div><h2>People are CHUNKed</h2></div>
+  <div class="rv-track" id="rvTrack"></div>
+  <p class="rv-note">Example reviews shown for layout. Replace with real customer messages before launch.</p>
+</section>
+
+<!-- INSTAGRAM -->
+<section id="insta" class="sec">
+  <div class="sec-head reveal-up" style="padding:0 22px"><div class="eyebrow"><span class="ig-h">@chunk_aholic</span></div><h2>Follow us on Instagram</h2><p>New drops, restocks and limited editions land on Instagram first.</p></div>
+  <div class="ig-row" id="igRow"></div>
+  <div class="ig-cta"><a class="btn ig-l" href="https://www.instagram.com/chunk_aholic/" target="_blank" rel="noopener">Follow <span class="ig-h">@chunk_aholic</span></a></div>
+</section>
+
+<!-- ALLERGENS -->
+<section id="allergens" class="sec">
+  <div class="wrap">
+    <div class="sec-head reveal-up"><div class="eyebrow">Allergen info</div><h2>What's inside</h2></div>
+    <div class="al-note"><b>Got an allergy? Message us before you order.</b> All our cookies are made in a kitchen that handles gluten, milk, egg, soya, tree nuts and peanuts, so we can't guarantee any product is free from traces.</div>
+    <div class="al-table"><table id="alTable"></table></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <svg class="drip" viewBox="0 0 1200 70" preserveAspectRatio="none"><path fill="#f6ebda" d="M0 0H1200V10C1170 10 1165 50 1140 50S1110 15 1080 15 1050 40 1020 40 990 8 950 8 925 60 895 60 870 18 840 18 810 35 780 35 750 6 720 6 695 48 665 48 640 15 610 15 585 55 555 55 530 12 500 12 470 32 440 32 410 8 380 8 355 58 325 58 300 18 270 18 245 40 215 40 190 12 160 12 135 50 105 50 80 15 50 15 25 35 0 35Z"/></svg>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <img class="lg" src="img/logo_cream.png" alt="CHUNK">
+        <p>Thick, stuffed cookies, baked fresh in Luton and Rotherham. Order on WhatsApp, collect locally or get it delivered.</p>
+        <div style="display:flex;gap:10px;margin-top:18px;flex-wrap:wrap">
+          <a class="btn wa" id="waAsk" href="#" target="_blank" rel="noopener" style="display:inline-flex;opacity:1;line-height:1.2"><svg class="wa-ic" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.4 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7a11 11 0 0 1-4.3-3.8c-.3-.4-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .6l-.4.6-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.6 2a7.4 7.4 0 0 0 2.3 1.4c.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.4Z"/></svg>Ask us a question</a>
+        </div>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <div id="locContact"><p>Luton WhatsApp: <b>07700 900123</b></p><p>Rotherham WhatsApp: <b>07700 900456</b></p></div>
+        <a class="ig-l" href="https://www.instagram.com/chunk_aholic/" target="_blank" rel="noopener">Instagram: <span class="ig-h">@chunk_aholic</span></a>
+        <p id="locPin" class="pinrow"><svg class="pin-ic" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M12 2C7.9 2 4.8 5.1 4.8 9.1c0 5.3 6.2 11.9 6.6 12.4.3.3.9.3 1.2 0 .4-.5 6.6-7.1 6.6-12.4C19.2 5.1 16.1 2 12 2Zm0 4.4a2.8 2.8 0 1 1 0 5.6 2.8 2.8 0 0 1 0-5.6Z"/></svg><span>Luton · Rotherham</span></p>
+      </div>
+      <div>
+        <h4>Ordering</h4>
+        <p>Order by <span class="cutTxt">12pm</span> for <span class="leadTxt">next-day</span></p>
+        <p><span class="feeTxt">£5</span> local delivery</p>
+        <p id="locCollect">Free collection</p>
+        <p>Bank transfer or cash</p>
+      </div>
+    </div>
+    <div class="legal"><span>© <span id="yr"></span> CHUNK · Luton &amp; Rotherham</span><span>Allergen information is on this page. If in doubt, message us before ordering.</span></div>
+  </div>
+</footer>
+
+<!-- ORDER SHEET -->
+<button class="fab" id="fab" data-open-order>🍪 Your order <span class="n" id="fabN">0</span></button>
+<div class="sheet-bg" id="sheetBg"></div>
+<aside class="sheet" id="sheet" aria-label="Your order">
+  <header><div><h3>Your order</h3><div class="locseg sheetloc"><button data-loc="luton">Luton</button><button data-loc="rotherham">Rotherham</button></div></div><button class="x" id="sheetX" aria-label="Close">✕</button></header>
+  <div class="body">
+    <div id="items"></div>
+    <div id="orderForm">
+      <div class="fld"><label>Collection or delivery?</label>
+        <div class="seg" id="fulfil"><button data-v="collect" class="on">Collection<small><span class="locname">Local</span> · free</small></button><button data-v="deliver">Delivery<small><span class="locname">Local</span> · +<span class="feeTxt">£5</span></small></button></div>
+      </div>
+      <p class="fine" id="fulfilNote" style="text-align:left;margin-top:8px"></p>
+      <div class="fld" id="addrF" hidden><label for="oAddr">Delivery postcode / area</label><input id="oAddr" placeholder="e.g. LU2"></div>
+      <div class="fld"><label for="oDate">When do you want it?</label><input type="date" id="oDate"><div class="fine" style="text-align:left" id="dateNote"></div></div>
+      <div class="fld"><label for="oName">Your name</label><input id="oName" placeholder="Name"></div>
+      <div class="fld"><label for="oPhone">Mobile number</label><input id="oPhone" type="tel" inputmode="tel" placeholder="07…"></div>
+      <div class="fld"><label for="oNotes">Anything else? (allergies, gift note…)</label><textarea id="oNotes" rows="2"></textarea></div>
+    </div>
+  </div>
+  <footer>
+    <div class="tot"><span>Total</span><span id="oTotal">£0</span></div>
+    <a class="btn wa" id="waSend" href="#" target="_blank" rel="noopener"><svg class="wa-ic" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.4 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7a11 11 0 0 1-4.3-3.8c-.3-.4-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .6l-.4.6-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.6 2a7.4 7.4 0 0 0 2.3 1.4c.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.4Z"/></svg>Send order on WhatsApp</a>
+    <p class="fine">Opens WhatsApp with your order written out. We'll reply to confirm and send payment details.</p>
+  </footer>
+</aside>
+
+<div class="modal" id="modal"><div class="bg"></div><div class="card2"><button class="x" aria-label="Close">✕</button><div class="vis"><img id="mImg" alt=""></div><div class="txt"><span class="badge" id="mBadge" style="position:static;align-self:flex-start"></span><h3 id="mName"></h3><p id="mDesc"></p><div class="chips" id="mChips"></div><p class="m-note" id="mNote" hidden></p><div style="margin-top:auto;display:flex;gap:10px;flex-wrap:wrap"><button class="btn" id="mAdd">Add to my box</button></div></div></div></div>
+<div class="toast" id="toast"></div>
+<button class="chatfab" id="chatFab" aria-label="Chat with us"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M4 4h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H9l-5 4v-4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Zm3 6.2a1.3 1.3 0 1 0 0 2.6 1.3 1.3 0 0 0 0-2.6Zm5 0a1.3 1.3 0 1 0 0 2.6 1.3 1.3 0 0 0 0-2.6Zm5 0a1.3 1.3 0 1 0 0 2.6 1.3 1.3 0 0 0 0-2.6Z"/></svg><span>Chat</span><i class="cdot" id="chatDot" hidden></i></button>
+<div class="chatbox" id="chatBox" aria-label="Live chat">
+  <header><div><b>Chat with CHUNK <span class="locname">Luton</span></b><small>We usually reply within the hour</small></div><button id="chatX" aria-label="Close chat">✕</button></header>
+  <div class="cb-body" id="chatBody"></div>
+  <form class="cb-start" id="chatStart"><p>Hi! 👋 Ask us anything: flavours, orders, allergies, events.</p><input id="chatName" placeholder="Your name" required maxlength="40"><button class="btn" type="submit">Start chat</button></form>
+  <form class="cb-input" id="chatForm" hidden><input id="chatMsg" placeholder="Type a message…" autocomplete="off" maxlength="600"><button type="submit" aria-label="Send">➤</button></form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script src="chunk-data.js"></script>
+<script>
+/* =================== DATA =================== */
+// Placeholder numbers — swap for the real ones
+let LOCS=CHUNK.snap.locations;
+var orderRef='CH'+Math.floor(1000+Math.random()*9000);
+let LOC=null;try{LOC=localStorage.getItem('chunk_loc');if(!LOCS[LOC])LOC=null;}catch(e){}
+const BASE = ['Gluten','Milk','Egg','Soya'];
+const F=[], FL={};
+function loadProducts(){F.length=0;Object.keys(FL).forEach(k=>delete FL[k]);
+  CHUNK.cookies().forEach(p=>{const f={id:p.id,name:p.name,t:p.cat==='classic'?'classic':'signature',d:p.desc,a:p.allergens||[],src:p.img||('img/c_'+p.id+'.webp')};f.all=[...BASE,...f.a];F.push(f);FL[f.id]=f;});
+  ['milk','double','redvelvet'].forEach(id=>{if(!FL[id])FL[id]={id,name:id,t:'classic',d:'',a:[],all:BASE,src:'img/c_'+id+'.webp',hidden:true};});
+  applyStatus();}
+function applyStatus(){const L=LOC||'luton';Object.values(FL).forEach(f=>f.st=CHUNK.status(L,f.id));}
+const stText=f=>f.st==='soon'?'Coming soon':'Currently unavailable';
+const miniSt=id=>CHUNK.status(LOC||'luton','mini_'+id), dipSt=id=>CHUNK.status(LOC||'luton','dip_'+id);
+loadProducts();
+const MINIS = [{id:'milk',name:'Milk Chocolate'},{id:'double',name:'Double Chocolate'},{id:'redvelvet',name:'Red Velvet'}];
+const DIPS = [{id:'white',name:'White Chocolate',a:['Milk','Soya']},{id:'nutella',name:'Nutella',a:['Milk','Soya','Hazelnut']},{id:'pistachio',name:'Pistachio',a:['Milk','Pistachio']},{id:'biscoff',name:'Lotus Biscoff',a:['Gluten','Soya']},{id:'kinder',name:'Kinder',a:['Milk','Soya','Hazelnut']}];
+const DL = Object.fromEntries(DIPS.map(d=>[d.id,d]));
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const gbp=n=>'£'+(Number.isInteger(n)?n:n.toFixed(2));
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('on'),1900);}
+const imgCache={}; function loadImg(src){if(!imgCache[src]){const i=new Image();i.src=src;imgCache[src]=i;}return imgCache[src];}
+
+/* =================== LOCATION / NAV / SCROLL =================== */
+function setLoc(l,quiet){LOC=l;try{localStorage.setItem('chunk_loc',l);}catch(e){}
+  $$('[data-loc]').forEach(b=>b.classList.toggle('on',b.dataset.loc===l));
+  $$('.locname').forEach(e=>e.textContent=LOCS[l].name);
+  $('#locLbl').textContent=`Ordering from ${LOCS[l].name}`;$('.locbar').classList.remove('ask');
+  $('#waAsk').href=`https://wa.me/${LOCS[l].wa}?text=${encodeURIComponent(`Hi CHUNK ${LOCS[l].name}! 🍪 I've got a question:`)}`;
+  const L=LOCS[l];$$('.ig-h').forEach(e=>e.textContent='@'+L.ig);$$('.ig-l').forEach(a=>a.href=`https://www.instagram.com/${L.ig}/`);$('#locContact').innerHTML=`<p>WhatsApp (${L.name}): <b>${L.num}</b></p>`;$('#locPin').lastChild.textContent=L.name;$('#locCollect').textContent=`Free collection in ${L.name}`;
+  if(typeof refreshAll==='function')refreshAll();if(typeof renderOrder==='function')renderOrder();if(!quiet)toast(`Ordering from ${L.name}`);}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-loc]');if(b)setLoc(b.dataset.loc);});
+function barH(){return $('#nav .bar').offsetHeight;}
+function navH(){const lb=$('.locbar'),full=lb.scrollHeight+barH(),cur=$('#nav').classList.contains('solid')?barH():full;const r=document.documentElement.style;r.setProperty('--navFull',full+'px');r.setProperty('--navH',cur+'px');return cur;}
+addEventListener('resize',navH);
+let scrollAnim=null;
+function smoothTo(y){cancelAnimationFrame(scrollAnim);const st=scrollY,d=Math.max(0,y)-st;if(reduce||Math.abs(d)<4){scrollTo(0,st+d);return;}
+  const dur=Math.min(2200,Math.max(1000,Math.abs(d)*.32));let t0=null;
+  const step=ts=>{if(t0===null)t0=ts;const k=Math.min(1,(ts-t0)/dur),e=k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2;scrollTo(0,st+d*e);if(k<1)scrollAnim=requestAnimationFrame(step);};
+  scrollAnim=requestAnimationFrame(step);}
+['wheel','touchstart','keydown'].forEach(ev=>addEventListener(ev,()=>cancelAnimationFrame(scrollAnim),{passive:true}));
+function goTo(sel){if(sel==='#menu'){openMenu();return;}closeMenuPage();const el=document.querySelector(sel);if(!el)return;smoothTo(el.getBoundingClientRect().top+scrollY-(sel==='#hero'?0:barH()-2));}
+document.addEventListener('click',e=>{const a=e.target.closest('a[href^="#"]');if(!a)return;const h=a.getAttribute('href');if(h.length<2)return;e.preventDefault();closeMenu();goTo(h);});
+function closeMenu(){$('#mmenu').classList.remove('on');$('#burger').classList.remove('on');$('#burger').setAttribute('aria-expanded','false');}
+$('#burger').onclick=()=>{const on=!$('#mmenu').classList.contains('on');$('#mmenu').classList.toggle('on',on);$('#burger').classList.toggle('on',on);$('#burger').setAttribute('aria-expanded',on);};
+
+/* =================== INTRO =================== */
+(function intro(){
+  const el=$('#intro'), cv=$('#introCv'), ctx=cv.getContext('2d');
+  let W,H,dpr=Math.min(devicePixelRatio||1,2);
+  const logo=new Image(); logo.src='img/logo_cream.png';
+  const off=document.createElement('canvas'), octx=off.getContext('2d');
+  let crumbs=[], t0=null, bitten=false, bitten2=false, done=false, raf;
+  function size(){W=innerWidth;H=innerHeight;cv.width=W*dpr;cv.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);}
+  size(); addEventListener('resize',size);
+  const COLS=['#f6ebda','#f6ebda','#e9d3b4','#c8843a','#a86a32','#f6ebda'];
+  function burst(x,y,n,spread,up){for(let i=0;i<n;i++){const a=Math.random()*Math.PI*2,s=Math.random()*spread;crumbs.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-(up||0)*Math.random(),r:2+Math.random()*7,rot:Math.random()*6,vr:(Math.random()-.5)*.4,c:COLS[(Math.random()*COLS.length)|0],sides:4+((Math.random()*3)|0)});}}
+  function bite(cx,cy,R){octx.save();octx.globalCompositeOperation='destination-out';
+    [[0,0,1],[R*.75,R*.35,.62],[-R*.45,R*.78,.6],[R*.2,-R*.8,.55]].forEach(([dx,dy,k])=>{octx.beginPath();octx.arc(cx+dx,cy+dy,R*k,0,7);octx.fill();});octx.restore();}
+  function poly(c){ctx.save();ctx.translate(c.x,c.y);ctx.rotate(c.rot);ctx.fillStyle=c.c;ctx.beginPath();for(let i=0;i<c.sides;i++){const a=i/c.sides*Math.PI*2,rr=c.r*(.7+((i*7919)%5)/12);ctx.lineTo(Math.cos(a)*rr,Math.sin(a)*rr);}ctx.closePath();ctx.fill();ctx.restore();}
+  let lw,lh,lx,ly;
+  function prep(){lw=Math.min(W*.78,760);lh=lw*logo.height/logo.width;$('#introTag').style.top=(H/2+lh/2+16)+'px';$('#introLoc').style.top=(H/2+lh/2+64)+'px';off.width=logo.width;off.height=logo.height;octx.drawImage(logo,0,0);}
+  function frame(ts){
+    if(!t0){t0=ts;prep();}
+    const t=(ts-t0)/1000; ctx.clearRect(0,0,W,H);
+    // logo scale: pop in with overshoot
+    let s=t<.55?1-Math.pow(1-t/.55,3)*1:1; s=t<.55? s*1.08 : (t<.8?1.08-(t-.55)/.25*.08:1);
+    let shake=0;
+    if(t>1.0&&!bitten){bitten=true;const R=off.height*.42;bite(off.width*.965,off.height*.06,R);
+      burst(W/2+lw*.47,H/2-lh*.45,90,9,6);}
+    if(t>1.0&&t<1.25)shake=(1.25-t)*24;
+    if(t>1.55&&!bitten2){bitten2=true;const R=off.height*.3;bite(off.width*.03,off.height*.98,R);burst(W/2-lw*.48,H/2+lh*.46,60,7,5);$('#introTag').classList.add('on');setTimeout(()=>$('#introLoc').classList.add('on'),450);}
+    if(t>1.55&&t<1.75)shake=(1.75-t)*20;
+    if(t>0.6&&t<2.4&&Math.random()<.5){crumbs.push({x:W/2+(Math.random()-.5)*lw*.9,y:H/2+lh*.4,vx:(Math.random()-.5)*1,vy:Math.random()*1.5,r:1.5+Math.random()*3.5,rot:0,vr:.1,c:COLS[(Math.random()*COLS.length)|0],sides:5});}
+    lx=W/2;ly=H/2;
+    ctx.save();ctx.translate(lx+(Math.random()-.5)*shake,ly+(Math.random()-.5)*shake);ctx.scale(s,s);ctx.drawImage(off,-lw/2,-lh/2,lw,lh);ctx.restore();
+    crumbs.forEach(c=>{c.vy+=.35;c.vx*=.99;c.x+=c.vx;c.y+=c.vy;c.rot+=c.vr;poly(c);});
+    crumbs=crumbs.filter(c=>c.y<H+40);
+    if(!done)raf=requestAnimationFrame(frame);
+  }
+  function finish(){if(done)return;done=true;el.classList.add('gone');document.body.classList.remove('locked');setTimeout(()=>{cancelAnimationFrame(raf);el.remove();},1100);window.dispatchEvent(new Event('introdone'));}
+  
+  $('#introLoc').addEventListener('click',e=>{const b=e.target.closest('[data-iloc]');if(!b)return;e.stopPropagation();$$('#introLoc button').forEach(x=>x.classList.toggle('on',x===b));setLoc(b.dataset.iloc,true);setTimeout(finish,350);});
+  if(LOC)$$('#introLoc button').forEach(x=>x.classList.toggle('on',x.dataset.iloc===LOC));
+  if(reduce){$('#introTag').classList.add('on');$('#introLoc').classList.add('on');if(LOC)finish();return;}
+  logo.onload=()=>{raf=requestAnimationFrame(frame);};
+  if(logo.complete)logo.onload();
+  if(LOC)setTimeout(finish,4800); // returning visitors continue automatically
+})();
+
+/* =================== NAV / MISC =================== */
+addEventListener('scroll',()=>{const on=scrollY>40,n=$('#nav');if(n.classList.contains('solid')!==on){n.classList.toggle('solid',on);navH();}},{passive:true});
+$('#yr').textContent=new Date().getFullYear();
+$('#mq').innerHTML=[0,1].map(()=>'<span>🍪 BOX OF 6 · £20</span><span><svg class="pin-ic" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M12 2C7.9 2 4.8 5.1 4.8 9.1c0 5.3 6.2 11.9 6.6 12.4.3.3.9.3 1.2 0 .4-.5 6.6-7.1 6.6-12.4C19.2 5.1 16.1 2 12 2Zm0 4.4a2.8 2.8 0 1 1 0 5.6 2.8 2.8 0 0 1 0-5.6Z"/></svg> LUTON &amp; ROTHERHAM</span><span>⏰ ORDER BY 12PM FOR NEXT-DAY</span><span>🚗 £5 LOCAL DELIVERY</span><span>🥣 CHUNKers · MINIS + DIP</span><span>💬 ORDER ON WHATSAPP</span>').join('');
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{threshold:.15});
+$$('.reveal-up').forEach(e=>io.observe(e));
+function locCfg(){return LOCS[LOC||'luton']||{};}
+function hh(h){h=+h;return h===0?'12am':h<12?h+'am':h===12?'12pm':(h-12)+'pm';}
+function dayWord(n){return n<=1?'next-day':n+' days later';}
+function cutoffText(){const c=locCfg(),cut=+(c.cutoff??12),ld=+(c.leadDays??1),n=new Date(),h=n.getHours();
+  if(h<cut){const m=(cut*60)-(h*60+n.getMinutes());return `Order in <b>${Math.floor(m/60)}h ${m%60}m</b> for ${ld<=1?'next-day':'collection in '+ld+' days'}`;}
+  const d=new Date(Date.now()+(ld+1)*864e5);return `Order by <b>${hh(cut)} tomorrow</b> for ${d.toLocaleDateString('en-GB',{weekday:'long'})}`;}
+function leadText(){const c=locCfg();$$('.cutTxt').forEach(e=>e.textContent=hh(c.cutoff??12));$$('.leadTxt').forEach(e=>e.textContent=dayWord(+(c.leadDays??1)));$$('.feeTxt').forEach(e=>e.textContent='£'+(c.deliveryFee??5));}
+function tickCut(){$('#cutoff').innerHTML=cutoffText();} tickCut(); setInterval(tickCut,30000);
+
+/* =================== HERO CAROUSEL RING =================== */
+(function hero(){
+  const ring=$('#ring'), ids=['ferrero','lotus','redvelvet','monster','jammie','maltesers','milk','kinder','pistachio','snickers'].filter(id=>FL[id]&&!FL[id].hidden);
+  const N=ids.length, els=ids.map((id,i)=>{const d=document.createElement('div');d.className='ck';d.dataset.id=id;d.innerHTML=`<img src="${FL[id].src}" alt="${FL[id].name}" draggable="false">`;ring.appendChild(d);d._spin=Math.random()*360;d._z=-1;return d;});
+  const nameEl=$('#ringName');
+  let ang=0,target=0,vel=.3,base=.3,last=0,run=false,k=0,started=false,drag=false,moved=0,t=0,W=0,H=0,S=0;
+  let shown=-1,pend=-1,pendT=0,fadeT=0;
+  function measure(){W=ring.clientWidth;H=ring.clientHeight;const mob=W<600;S=mob?W*.33:Math.min(W*.34,H*.42,250);els.forEach(el=>el.style.width=S+'px');}
+  measure();addEventListener('resize',measure);
+  function setName(i,ts){ // calm crossfade: only once the front cookie has settled
+    if(i!==pend){pend=i;pendT=ts;}
+    if(pend===shown||fadeT||ts-pendT<(drag?260:120))return;
+    fadeT=ts;nameEl.style.opacity=0;
+    setTimeout(()=>{shown=pend;nameEl.textContent=FL[ids[shown]].name;nameEl.style.opacity=1;fadeT=0;},200);}
+  function frame(ts){if(!run)return;const dt=Math.min((ts-(last||ts))/1000,.05);last=ts;t+=dt;
+    if(drag){ang+=(target-ang)*Math.min(1,dt*18);}
+    else{vel+=(base-vel)*Math.min(1,dt*1.2);ang+=vel*dt;target=ang;}
+    if(started)k=Math.min(1,k+dt/1.3);const ke=1-Math.pow(1-k,3);
+    const mob=W<600,Rx=mob?W*.33:Math.min(W*.42,340),Ry=Rx*.3;
+    const sp=Math.max(0,Math.min(1.4,scrollY/(innerHeight*.9)));
+    let best=-2,bi=0;
+    for(let i=0;i<N;i++){const el=els[i],th=ang+i*Math.PI*2/N,dep=(Math.sin(th)+1)/2;if(dep>best){best=dep;bi=i;}
+      const sc=(.42+.58*dep)*ke, x=Math.cos(th)*Rx*(.3+.7*ke)*(1+sp*.5), y=Math.sin(th)*Ry-(1-ke)*120+sp*sp*(260+i%3*140), rot=el._spin+t*(8+i%4*3)+sp*200*(i%2?1:-1);
+      const z=Math.round(dep*20);if(z!==el._z){el.style.zIndex=z;el._z=z;}
+      el.style.opacity=((.55+.45*dep)*ke*(1-Math.max(0,sp-.8))).toFixed(3);
+      el.style.transform=`translate3d(${(x-S/2).toFixed(1)}px,${(y-S/2).toFixed(1)}px,0) scale(${sc.toFixed(3)}) rotate(${rot.toFixed(1)}deg)`;}
+    if(k>.5)setName(bi,ts);
+    requestAnimationFrame(frame);}
+  // forgiving drag: any gesture within ~60° of horizontal spins; steeper gestures scroll the page
+  let mode=null,sx=0,sy=0,lx=0,ly=0,lt=0,v=0;
+  ring.addEventListener('pointerdown',e=>{drag=true;target=ang;v=0;mode=e.pointerType==='mouse'?'spin':null;sx=lx=e.clientX;sy=ly=e.clientY;lt=performance.now();moved=0;try{ring.setPointerCapture(e.pointerId);}catch(_){}});
+  ring.addEventListener('pointermove',e=>{if(!drag)return;const now=performance.now(),dx=e.clientX-lx,dy=e.clientY-ly,dtm=Math.max(8,now-lt)/1000;
+    if(!mode){const tx=e.clientX-sx,ty=e.clientY-sy;if(Math.hypot(tx,ty)<7)return;mode=Math.abs(tx)>=Math.abs(ty)*.58?'spin':'scroll';}
+    if(mode==='spin'){const d=(dx+dy*.2)*.006;moved+=Math.abs(dx)+Math.abs(dy);target+=d;v=v*.7+(d/dtm)*.3;}
+    else{moved+=Math.abs(dy);window.scrollBy(0,-dy);}
+    lx=e.clientX;ly=e.clientY;lt=now;});
+  const end=()=>{if(!drag)return;if(mode==='spin'){ang=target;vel=Math.max(-4,Math.min(4,v));}drag=false;mode=null;};
+  ring.addEventListener('pointerup',end);ring.addEventListener('pointercancel',end);
+  ring.addEventListener('click',e=>{const c=e.target.closest('.ck');if(c&&moved<8)openModal(c.dataset.id);});
+  new IntersectionObserver(es=>{run=es[0].isIntersecting;if(run){last=0;requestAnimationFrame(frame);}}).observe(ring);
+  addEventListener('introdone',()=>setTimeout(()=>{started=true;measure();},250));
+  if(reduce){started=true;k=1;base=0;}
+})();
+
+/* =================== BOX REVEAL =================== */
+(function reveal(){
+  const sec=$('#reveal'), box=$('#rvBox'), tray=$('#rvTray'), drawer=box.querySelector('.drawer'), sleeve=box.querySelector('.sleeve');
+  const order=['milk','lotus','redvelvet','ferrero','double','pistachio'];
+  const swaps=[['monster','kinder','snickers','cookiescream','brookie','jammie']];
+  tray.innerHTML=order.map(id=>`<div class="cell"><img src="${FL[id].src}" alt="${FL[id].name}"></div>`).join('');
+  const cells=[...tray.querySelectorAll('img')];
+  let land=true,L=0,W=0,H=0,lastSwap=-1;
+  const caps=[[0,'This is a CHUNK box.','Scroll down to open it.'],[.12,'Keep scrolling…','It slides open like a shoebox.'],[.46,'6 cookies. Zero squashing.','Every cookie gets its own spot.'],[.74,'Mix any 6. £20.','Classics, signatures, whatever you fancy.']];
+  let capI=-1;
+  function layout(){const vw=innerWidth,vh=innerHeight;land=vw>=760;box.className='boxwrap '+(land?'landscape':'portrait');
+    if(land){W=Math.min(vw*.42,540,vh*.55*1.56);H=W/1.56;L=W;}else{W=Math.min(vw*.6,300);H=W*1.56;L=H;if(H*1.75>vh*.72){H=vh*.72/1.75;W=H/1.56;L=H;}}
+    box.style.width=W+'px';box.style.height=H+'px';onScroll();}
+  const cl=(x)=>Math.max(0,Math.min(1,x)), ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+  function onScroll(){
+    const r=sec.getBoundingClientRect(),total=sec.offsetHeight-innerHeight;const p=cl(-r.top/total);
+    $('#rvProg').style.width=(p*100)+'%';
+    const a=ease(cl((p-.1)/.32)), b=ease(cl((p-.44)/.2));
+    const sep=.42*L;
+    let dOff=sep*a*(1-b), sOff=-sep*a - b*L*1.3, sRot=-b*10, sOp=1-b;
+    const intro=ease(cl(p/.08)); const sc=.85+.15*intro;
+    const ax=land?'X':'Y';
+    drawer.style.transform=`translate${ax}(${dOff}px)`;
+    sleeve.style.transform=`translate${ax}(${sOff}px) rotate(${sRot}deg)`;sleeve.style.opacity=sOp;
+    box.style.transform=`scale(${sc}) rotate(${(1-intro)*-6}deg)`;
+    const th=$('#tabHint');th.style.opacity=(p<.12)?1:0;th.style.left='50%';th.style.top=`calc(50% + ${H/2+26}px)`;th.style.transform='translateX(-50%)';
+    // cookies wobble as revealed
+    cells.forEach((im,i)=>{const t=cl((p-.6-i*.025)/.1);im.style.transform=`translateY(${-Math.sin(t*Math.PI)*10}px) rotate(${Math.sin(t*Math.PI)*12}deg)`;});
+    // flavour swaps near end
+    const si=p>.84?1:0;
+    if(si!==lastSwap){const set=si===0?order:swaps[si-1];cells.forEach((im,i)=>{im.animate([{opacity:1,transform:'scale(1)'},{opacity:0,transform:'scale(.85)'},{opacity:1,transform:'scale(1)'}],{duration:1100,delay:i*180,easing:'ease-in-out'});setTimeout(()=>{im.src=FL[set[i]].src;},550+i*180);});lastSwap=si;}
+    let ci=0;caps.forEach((c,i)=>{if(p>=c[0])ci=i;});
+    if(ci!==capI){capI=ci;const T=$('#capT'),P=$('#capP');T.classList.add('swap');setTimeout(()=>{T.textContent=caps[ci][1];P.textContent=caps[ci][2];T.classList.remove('swap');},200);}
+    $('#endCta').classList.toggle('on',p>.8);
+  }
+  addEventListener('scroll',onScroll,{passive:true});addEventListener('resize',layout);layout();
+})();
+
+/* =================== FLAVOUR GRID & MODAL =================== */
+const chipHTML=list=>list.map(a=>`<span class="chip ${/Hazel|Pista|Peanut/.test(a)?'nut':''}">${a}</span>`).join('');
+let gridTab='all';function renderGrid(f){gridTab=f;$('#grid').innerHTML=F.filter(x=>f==='all'||x.t===f).map(x=>`
+  <article class="card ${x.st!=='ok'?'off '+x.st:''}" data-id="${x.id}">
+    <span class="badge ${x.t==='signature'?'sig':''}">${x.t==='classic'?'Classic':'Signature'}</span>
+    <div class="pic"><img loading="lazy" src="${x.src}" alt="${x.name} cookie"></div>
+    <div class="ct"><h3>${x.name}${x.st==='soon'?' <em class="soon-tag"><svg class=\"spk\" viewBox=\"0 0 24 24\"><path fill=\"currentColor\" d=\"M12 1l2.6 7.4L22 11l-7.4 2.6L12 21l-2.6-7.4L2 11l7.4-2.6z\"/></svg>Coming soon</em>':x.st==='unavailable'?' <em class="na-tag">Currently unavailable</em>':''}</h3><p>${x.d}</p>
+    <div class="row"><div class="chips">${chipHTML(x.a.length?x.a:['Gluten','Milk','Egg'])}</div>${x.st==='ok'?`<button class="add" data-add="${x.id}" aria-label="Add ${x.name} to box">+</button>`:''}</div></div>
+  </article>`).join('');}
+renderGrid('all');
+function openMenu(){closeMenu();$('#menuPage').classList.add('on');$('#menuPage').setAttribute('aria-hidden','false');document.body.classList.add('locked');}
+function closeMenuPage(){if(!$('#menuPage').classList.contains('on'))return;$('#menuPage').classList.remove('on');$('#menuPage').setAttribute('aria-hidden','true');document.body.classList.remove('locked');}
+$('#mpX').onclick=closeMenuPage;addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#modal').classList.contains('on'))closeMenuPage();});
+$('#tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;$$('#tabs button').forEach(x=>x.classList.toggle('on',x===b));renderGrid(b.dataset.f);});
+$('#grid').addEventListener('click',e=>{const add=e.target.closest('[data-add]');if(add){e.stopPropagation();addToBox(add.dataset.add,add);return;}const c=e.target.closest('.card');if(c)openModal(c.dataset.id);});
+let mId=null;
+function openModal(id){const f=FL[id];mId=id;$('#mImg').src=f.src;$('#mName').textContent=f.name;$('#mDesc').textContent=f.d;$('#mBadge').textContent=f.t==='classic'?'Classic':'Signature';$('#mBadge').className='badge '+(f.t==='signature'?'sig':'');$('#mChips').innerHTML=chipHTML(f.all);const off=f.st!=='ok';$('#mNote').hidden=!off;$('#mNote').className='m-note '+f.st;$('#mNote').innerHTML=f.st==='soon'?'<svg class="spk" viewBox="0 0 24 24"><path fill="currentColor" d="M12 1l2.6 7.4L22 11l-7.4 2.6L12 21l-2.6-7.4L2 11l7.4-2.6z"/></svg><span><b>Coming soon</b><small>Keep an eye on our Instagram for the drop.</small></span>':(off?stText(f):'');$('#mAdd').style.display=off?'none':'';$('#modal .vis').classList.toggle('off',f.st==='unavailable');$('#modal .vis').classList.toggle('soon',f.st==='soon');$('#modal').classList.add('on');}
+$('#modal').addEventListener('click',e=>{if(e.target.closest('.bg')||e.target.closest('.x'))$('#modal').classList.remove('on');});
+$('#mAdd').onclick=e=>{addToBox(mId,$('#mImg'));$('#modal').classList.remove('on');};
+
+/* =================== BOX BUILDER =================== */
+let box=Array(6).fill(null);
+const bTray=$('#bTray');
+bTray.innerHTML=box.map((_,i)=>`<div class="cell empty" data-i="${i}" data-n="${i+1}"></div>`).join('');
+function renderPicker(){$('#picker').innerHTML=['classic','signature'].map(t=>`<h3>${t==='classic'?'Classics':'Signatures'}</h3><div class="pgrid">${F.filter(f=>f.t===t&&!f.hidden).map(f=>`<button class="pick ${f.st!=='ok'?'off '+f.st:''}" data-p="${f.id}"><span class="q"></span><span class="inf" data-info="${f.id}" role="button" aria-label="About ${f.name}">i</span><img loading="lazy" src="${f.src}" alt=""><span>${f.name}</span>${f.st==='soon'?'<em class="soon-tag"><svg class=\"spk\" viewBox=\"0 0 24 24\"><path fill=\"currentColor\" d=\"M12 1l2.6 7.4L22 11l-7.4 2.6L12 21l-2.6-7.4L2 11l7.4-2.6z\"/></svg>Coming soon</em>':f.st==='unavailable'?'<em class="na-tag">Currently unavailable</em>':''}</button>`).join('')}</div>`).join('');}
+renderPicker();
+function flyTo(fromEl,src,toEl,cb){if(reduce||!fromEl){cb();return;}const a=fromEl.getBoundingClientRect(),b=toEl.getBoundingClientRect();const f=document.createElement('img');f.src=src;f.className='flyer';f.style.left=a.left+a.width/2-35+'px';f.style.top=a.top+a.height/2-35+'px';document.body.appendChild(f);
+  requestAnimationFrame(()=>{f.style.transform=`translate(${b.left+b.width/2-a.left-a.width/2}px,${b.top+b.height/2-a.top-a.height/2}px) rotate(360deg) scale(.6)`;f.style.opacity=.4;});setTimeout(()=>{f.remove();cb();},700);}
+function renderBox(popI){const cells=[...bTray.children];box.forEach((id,i)=>{const c=cells[i];if(id==='__')return;if(id&&!FL[id]){box[i]=null;id=null;}if(id){if(!c.firstChild||c.firstChild.dataset.id!==id){c.innerHTML=`<img data-id="${id}" src="${FL[id].src}" alt="${FL[id].name}" ${i===popI?'class="pop"':''}>`;}c.classList.remove('empty');}else{c.innerHTML='';c.classList.add('empty');}});
+  const n=box.filter(x=>x&&x!=='__').length;$('#bCount').textContent=n;$('#mpCount').textContent=n?`(${n}/6)`:'';$('#bAdd').disabled=n<6;$('#bStatus').textContent=n<6?`${6-n} more to go`:'Box full! 🎉';
+  const counts={};box.forEach(id=>id&&(counts[id]=(counts[id]||0)+1));$$('.pick').forEach(p=>{const q=counts[p.dataset.p]||0;p.classList.toggle('has',q>0);p.querySelector('.q').textContent=q;});}
+function addToBox(id,fromEl){if(FL[id].st!=='ok'){openModal(id);return;}const i=box.indexOf(null);if(i<0){toast('Box is full. Tap a cookie in the box to swap it.');if(!$('#menuPage').classList.contains('on'))goTo('#build');return;}
+  box[i]='__';const target=bTray.children[i];
+  const inView=!$('#menuPage').classList.contains('on')&&target.getBoundingClientRect().top<innerHeight&&target.getBoundingClientRect().bottom>0;
+  const go=()=>{box[i]=id;renderBox(i);if(!inView)toast(`${FL[id].name} added to your box (${box.filter(x=>x&&x!=='__').length}/6)`);};
+  if(inView)flyTo(fromEl,FL[id].src,target,go);else go();}
+$('#picker').addEventListener('click',e=>{const offp=e.target.closest('.pick.off');if(offp){openModal(offp.dataset.p);return;}const inf=e.target.closest('[data-info]');if(inf){e.stopPropagation();openModal(inf.dataset.info);return;}const p=e.target.closest('.pick');if(p)addToBox(p.dataset.p,p.querySelector('img'));});
+bTray.addEventListener('click',e=>{const c=e.target.closest('.cell');if(!c||!box[c.dataset.i])return;const im=c.querySelector('img');im.classList.add('out');setTimeout(()=>{box[c.dataset.i]=null;renderBox();},280);});
+$('#bClear').onclick=()=>{box=Array(6).fill(null);renderBox();};
+$('#bRandom').onclick=()=>{const pool=F.filter(f=>f.st==='ok').sort(()=>Math.random()-.5);box=pool.slice(0,6).map(f=>f.id);[...bTray.children].forEach(c=>c.innerHTML='');renderBox();bTray.querySelectorAll('img').forEach((im,i)=>{im.style.animationDelay=i*90+'ms';im.classList.add('pop');});};
+$('#bAdd').onclick=()=>{addItem({type:'box',flavours:[...box],price:20});box=Array(6).fill(null);renderBox();};
+renderBox();
+
+/* =================== CHUNKERS =================== */
+const ch={slots:[],dip:'nutella',extras:{}};
+const minisEl=$('#minis');
+const ROT=[12,77,140,205,260,320];
+const POS=[0,1,2,3,4,5].map(k=>{const a=(-90+60*k)*Math.PI/180;return [50+31.5*Math.cos(a),50+31.5*Math.sin(a)];});
+const MN={milk:'Milk Chocolate',double:'Double Chocolate',redvelvet:'Red Velvet'};
+minisEl.innerHTML=POS.map(([x,y],i)=>`<div class="m empty" data-i="${i}" style="left:${x}%;top:${y}%"><img alt="">${''}</div>`).join('');
+$('#chVar').innerHTML=Object.entries(MN).map(([id,n])=>`<button class="cnt" data-add="${id}">${n}<span class="q">0</span><span class="mn" data-rem="${id}" role="button" aria-label="Remove one ${n}">−</span></button>`).join('');
+function renderBowl(changed){
+  [...minisEl.children].forEach((m,i)=>{const id=ch.slots[i],im=m.querySelector('img');
+    if(!id){m.classList.add('empty');m.dataset.n=i+1;im.dataset.id='';m.firstChild.nextSibling&&0;m.setAttribute('aria-label','Empty spot');return;}
+    const anim=changed===i;m.classList.remove('empty');
+    if(im.dataset.id!==id||anim){if(!reduce){m.classList.remove('in');void m.offsetWidth;m.classList.add('in');}
+      im.src=FL[id].src;im.dataset.id=id;im.alt=MN[id]+' mini cookie';im.style.rotate=ROT[i]+'deg';}});
+  const c={milk:0,double:0,redvelvet:0};ch.slots.forEach(id=>c[id]++);
+  $$('#chVar .cnt').forEach(b=>{const q=c[b.dataset.add];b.classList.toggle('has',q>0);b.querySelector('.q').textContent=q;});
+  $('#chN').textContent=`${ch.slots.length} / 6`;price();}
+$('#chVar').addEventListener('click',e=>{const r=e.target.closest('[data-rem]');if(r){e.stopPropagation();const k=ch.slots.lastIndexOf(r.dataset.rem);if(k>-1){ch.slots.splice(k,1);renderBowl();}return;}
+  const b=e.target.closest('[data-add]');if(!b)return;if(b.classList.contains('off')){toast(`${MN[b.dataset.add]} minis: ${b.dataset.st==='soon'?'coming soon':'currently unavailable'}`);return;}if(ch.slots.length>=6){toast('Your bowl is full (6). Tap − or Clear to change it.');return;}ch.slots.push(b.dataset.add);renderBowl(ch.slots.length-1);});
+$('#chClear').onclick=()=>{ch.slots=[];renderBowl();};
+minisEl.addEventListener('click',e=>{const m=e.target.closest('.m');if(!m||m.classList.contains('empty'))return;const i=+m.dataset.i,o=['milk','double','redvelvet'];ch.slots[i]=o[(o.indexOf(ch.slots[i])+1)%3];renderBowl(i);});
+$('#chDip').innerHTML=DIPS.map(d=>`<button class="opt t" data-d="${d.id}">${d.name}</button>`).join('');
+$('#chEx').innerHTML=DIPS.map(d=>`<div class="ex">${d.name.replace('Chocolate','Choc').replace('Lotus ','')}<span class="st"><button data-m="${d.id}" aria-label="Remove extra ${d.name}">−</button><b data-c="${d.id}">0</b><button data-p="${d.id}" aria-label="Add extra ${d.name}">+</button></span></div>`).join('');
+function setDip(d){ch.dip=d;setTimeout(price);$$('#chDip .opt').forEach(b=>b.classList.toggle('on',b.dataset.d===d));const pot=$('#pot');pot.classList.remove('swap');void pot.offsetWidth;pot.classList.add('swap');$('#potImg').src=`img/dip_${d}.webp`;}
+$('#pot').addEventListener('click',()=>{let i=DIPS.findIndex(d=>d.id===ch.dip);for(let k=0;k<DIPS.length;k++){i=(i+1)%DIPS.length;if(dipSt(DIPS[i].id)==='ok'){setDip(DIPS[i].id);return;}}});
+$('#chDip').addEventListener('click',e=>{const b=e.target.closest('[data-d]');if(!b)return;if(b.classList.contains('off')){toast(`${DL[b.dataset.d].name} dip: ${b.title.toLowerCase()}`);return;}setDip(b.dataset.d);});
+$('#chEx').addEventListener('click',e=>{const p=e.target.closest('[data-p]'),m=e.target.closest('[data-m]');if(p&&dipSt(p.dataset.p)==='ok')ch.extras[p.dataset.p]=(ch.extras[p.dataset.p]||0)+1;if(m)ch.extras[m.dataset.m]=Math.max(0,(ch.extras[m.dataset.m]||0)-1);DIPS.forEach(d=>$(`[data-c="${d.id}"]`).textContent=ch.extras[d.id]||0);price();});
+function chTotal(){return 7.5+Object.values(ch.extras).reduce((a,b)=>a+b,0);}
+function price(){const full=ch.slots.length===6;$('#chPrice').textContent=gbp(chTotal());$('#sumP').textContent=gbp(chTotal());
+  $('#sumV').textContent=ch.slots.length?summarise(ch.slots).replace(/ Chocolate/g,' Choc'):'Choose 6 mini cookies';
+  const ex=Object.values(ch.extras).reduce((a,b)=>a+b,0);$('#sumD').textContent=DL[ch.dip].name+' dip'+(ex?` + ${ex} extra dip${ex>1?'s':''}`:'')+(full?'':` · ${6-ch.slots.length} more to go`);
+  $('#chAdd').disabled=!full;$('#chAdd2').disabled=!full;}
+$('#chAdd2').onclick=()=>$('#chAdd').click();
+$('#chAdd').onclick=()=>{if(ch.slots.length<6)return;addItem({type:'chunkers',slots:[...ch.slots],dip:ch.dip,extras:{...ch.extras},price:chTotal()});ch.slots=[];ch.extras={};DIPS.forEach(d=>$(`[data-c="${d.id}"]`).textContent=0);renderBowl();};
+function renderChAvail(){
+  $$('#chVar .cnt').forEach(b=>{const st=miniSt(b.dataset.add);b.classList.toggle('off',st!=='ok');b.dataset.st=st;let t=b.querySelector('.cnt-st');if(st!=='ok'){if(!t){t=document.createElement('small');t.className='cnt-st';b.appendChild(t);}t.textContent=st==='soon'?'Coming soon':'Currently unavailable';}else if(t)t.remove();});
+  $$('#chDip .opt').forEach(b=>{const st=dipSt(b.dataset.d);b.classList.toggle('off',st!=='ok');b.title=st==='ok'?'':(st==='soon'?'Coming soon':'Currently unavailable');});
+  $$('#chEx .ex').forEach((e,i)=>e.classList.toggle('off',dipSt(DIPS[i].id)!=='ok'));
+  if(dipSt(ch.dip)!=='ok'){const d=DIPS.find(x=>dipSt(x.id)==='ok');if(d)setDip(d.id);}}
+renderBowl();setDip('nutella');renderChAvail();
+
+/* =================== ORDER =================== */
+let items=[],fulfil='collect';
+try{items=JSON.parse(localStorage.getItem('chunk_order')||'[]');}catch(e){}
+function save(){try{localStorage.setItem('chunk_order',JSON.stringify(items));}catch(e){}}
+function addItem(it){items.push(it);save();renderOrder();const fab=$('#fab');fab.classList.remove('bump');void fab.offsetWidth;fab.classList.add('bump');toast(it.type==='box'?'Box of 6 added to your order 🍪':'CHUNKers added to your order 🥣');}
+function summarise(list){const c={};list.forEach(id=>c[id]=(c[id]||0)+1);return Object.entries(c).map(([id,n])=>`${n}× ${FL[id]?.name||MINIS.find(m=>m.id===id).name}`).join(', ');}
+function extrasTxt(ex){return Object.entries(ex).filter(([,n])=>n).map(([d,n])=>`${n}× ${DL[d].name}`).join(', ');}
+function total(){return items.reduce((a,b)=>a+b.price,0)+(fulfil==='deliver'&&items.length?+(locCfg().deliveryFee??5):0);}
+function minDate(){const c=locCfg(),n=new Date(),d=new Date(n);d.setDate(d.getDate()+(+(c.leadDays??1))+(n.getHours()<+(c.cutoff??12)?0:1));return d;}
+const iso=d=>d.toISOString().slice(0,10);
+function renderOrder(){
+  const n=items.length;$('#fabN').textContent=n;$('#navCount').textContent=n;$('#fab').classList.toggle('on',n>0);
+  $('#items').innerHTML=n?items.map((it,i)=>it.type==='box'?`<div class="item"><div class="thumbs">${it.flavours.map(id=>`<img src="${FL[id].src}" alt="">`).join('')}</div><div class="info"><b>Box of 6</b>${summarise(it.flavours)}<br><button class="rm" data-rm="${i}">Remove</button></div><div class="pr">£20</div></div>`
+    :`<div class="item"><div class="thumbs"><img src="img/dip_${it.dip}.webp" alt="" style="grid-column:2"><img src="${FL[it.slots[0]].src}" alt=""><img src="${FL[it.slots[1]].src}" alt=""><img src="${FL[it.slots[2]].src}" alt=""></div><div class="info"><b>CHUNKers bowl</b>${summarise(it.slots)} · ${DL[it.dip].name} dip${extrasTxt(it.extras)?'<br>Extra dips: '+extrasTxt(it.extras):''}<br><button class="rm" data-rm="${i}">Remove</button></div><div class="pr">${gbp(it.price)}</div></div>`).join('')
+    :`<div class="empty-o"><img src="img/c_milk.webp" alt=""><p>Your order is empty.<br>Build a box or a CHUNKers bowl to get started.</p></div>`;
+  $('#orderForm').hidden=!n;$('#fulfilNote').textContent=LOC?(fulfil==='deliver'?LOCS[LOC].deliver:LOCS[LOC].collect):'Choose Luton or Rotherham to see collection and delivery details.';
+  const t=total();$('#oTotal').textContent=gbp(t);
+  const md=minDate();const di=$('#oDate');di.min=iso(md);if(!di.value||di.value<di.min)di.value=iso(md);
+  {const c=locCfg();$('#dateNote').textContent=new Date().getHours()<+(c.cutoff??12)?`Ordering before ${hh(c.cutoff??12)}, so the earliest date is shown above.`:`It's past ${hh(c.cutoff??12)}, so the earliest date is shown above.`;}
+  const ds=new Date(di.value+'T12:00').toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
+  const LN=LOC?LOCS[LOC].name:'';const lines=[`Hi CHUNK ${LN}! 🍪 I'd like to place an order:`,''];
+  items.forEach((it,i)=>{if(it.type==='box')lines.push(`📦 Box of 6 (£20): ${summarise(it.flavours)}`);else lines.push(`🥣 CHUNKers bowl (${gbp(it.price)}): ${summarise(it.slots)}, ${DL[it.dip].name} dip${extrasTxt(it.extras)?' + extra dips: '+extrasTxt(it.extras):''}`);});
+  lines.push('',fulfil==='deliver'?`🚗 Delivery in ${LN} (+£${locCfg().deliveryFee??5})${$('#oAddr').value?' – '+$('#oAddr').value:''}`:`🛍️ Collection (${LN})`);
+  lines.push(`📅 Date: ${ds}`);if($('#oName').value)lines.push(`👤 Name: ${$('#oName').value}`);if($('#oPhone').value)lines.push(`📱 ${$('#oPhone').value}`);lines.push(`🧾 Ref: ${orderRef}`);if($('#oNotes').value)lines.push(`📝 Notes: ${$('#oNotes').value}`);
+  lines.push('',`Total: ${gbp(t)}`,'Payment: bank transfer or cash, please confirm 🙏');
+  const ws=$('#waSend'),ok=n&&LOC;ws.href=LOC?`https://wa.me/${LOCS[LOC].wa}?text=${encodeURIComponent(lines.join('\n'))}`:'#';ws.style.pointerEvents=ok?'':'none';ws.style.opacity=ok?'':'.45';ws.lastChild.textContent=LOC?`Send order to CHUNK ${LOCS[LOC].name}`:'Choose Luton or Rotherham above';
+}
+$('#items').addEventListener('click',e=>{const r=e.target.closest('[data-rm]');if(r){items.splice(+r.dataset.rm,1);save();renderOrder();}});
+$('#fulfil').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;fulfil=b.dataset.v;$$('#fulfil button').forEach(x=>x.classList.toggle('on',x===b));$('#addrF').hidden=fulfil!=='deliver';renderOrder();});
+['#oDate','#oName','#oPhone','#oNotes','#oAddr'].forEach(s=>$(s).addEventListener('input',renderOrder));
+function openOrder(){if(!LOC)$('.locbar').classList.add('ask');$('#sheet').classList.add('on');$('#sheetBg').classList.add('on');renderOrder();}
+function closeOrder(){$('#sheet').classList.remove('on');$('#sheetBg').classList.remove('on');}
+document.addEventListener('click',e=>{if(e.target.closest('[data-open-order]'))openOrder();});
+$('#sheetX').onclick=closeOrder;$('#sheetBg').onclick=closeOrder;
+addEventListener('keydown',e=>{if(e.key==='Escape'){closeOrder();$('#modal').classList.remove('on');}});
+$('#waAsk').addEventListener('click',e=>{if(!LOC){e.preventDefault();toast('Choose Luton or Rotherham at the top first');$('.locbar').classList.add('ask');smoothTo(0);}});
+renderOrder();
+
+/* =================== REVIEWS =================== */
+const RV=[
+ ['the ferrero one 😭😭 genuinely the best cookie i’ve had in luton no lie','Aisha · Luton','s1'],
+ ['Ordered a box for my mum’s birthday and she hid the last two from everyone 😂 10/10','Danny','s2'],
+ ['these aren’t cookies they’re a whole meal 🍪🔥','Zain','s3'],
+ ['Red velvet centre is unreal. Came perfectly packed, nothing squashed','Priya · Stopsley','s4'],
+ ['got the cookie monster ones for the kids and they went feral 💙💙','Hannah','s5'],
+ ['CHUNKers with pistachio dip for the footy, gone in 5 mins. getting 2 next time','Kash','s1'],
+ ['Thought £20 was a lot till I saw the size of them. Worth every penny','Sophie','s2'],
+ ['the biscoff 🤤🤤🤤','Mo','s4'],
+ ['Messaged at 10am, collected the next day, so easy. Lovely people too ☺️','Jade · Luton','s3'],
+];
+const rvHTML=RV.map(([t,w,s])=>`<div class="rv ${s}"><span class="sample">Sample</span><div class="stars">★★★★★</div><p>${t}</p><div class="who">— ${w}</div></div>`).join('');
+$('#rvTrack').innerHTML=rvHTML+rvHTML;
+
+/* =================== INSTAGRAM =================== */
+const IG=[['MEET THE ALL-NEW CHUNKers 🍪','redvelvet','#7a2a22'],['Mini cookies. Big flavour. Dip included.','double','#2a1a0f'],['Introducing the next Limited Edition Box…','brookie','#5a3720'],['Cookie Monster is back 💙','monster','#1f6f86'],['Ferrero Rocher drop 🔥','ferrero','#8a5a2b'],['Biscoff lovers, this one’s for you','lotus','#c8843a'],['Jammie Dodger ❤️','jammie','#b23b3b'],['Pistachio season 💚','pistachio','#6f7d3a']];
+const igIc='<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="#fff"/></svg>';
+$('#igRow').innerHTML=IG.map(([c,id,bg],i)=>`<a class="ig ig-l" href="https://www.instagram.com/chunk_aholic/" target="_blank" rel="noopener" style="background:${bg};--rot:${i*37}deg">${igIc}<img loading="lazy" src="${FL[id].src}" alt=""><span class="cap">${c}</span></a>`).join('');
+
+/* =================== ALLERGENS =================== */
+const COLS=['Gluten','Milk','Egg','Soya','Hazelnut','Pistachio','Peanut'];
+function renderAllergens(){$('#alTable').innerHTML=`<thead><tr><th>Product</th>${COLS.map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>`+
+ F.filter(f=>!f.hidden).map(f=>`<tr><td><span class="tn"><img loading="lazy" src="${f.src}" alt="">${f.name}</span></td>${COLS.map(c=>f.all.includes(c)?'<td class="y">●</td>':'<td class="n">–</td>').join('')}</tr>`).join('')+
+ MINIS.map(m=>`<tr><td><span class="tn"><img loading="lazy" src="img/mini_${m.id}.webp" alt="">CHUNKers · ${m.name}</span></td>${COLS.map(c=>(FL[m.id].all.includes(c)&&!(m.id==='milk'&&c==='Hazelnut'))||BASE.includes(c)?'<td class="y">●</td>':'<td class="n">–</td>').join('')}</tr>`).join('')+
+ DIPS.map(d=>`<tr><td><span class="tn"><img loading="lazy" src="img/dip_${d.id}.webp" alt="">${d.name} dip</span></td>${COLS.map(c=>d.a.includes(c)?'<td class="y">●</td>':'<td class="n">–</td>').join('')}</tr>`).join('')+'</tbody>';}
+renderAllergens();
+/* =================== LIVE DATA HOOKS =================== */
+function renderNotice(){const n=(locCfg().notice)||{};const el=$('#notice');let dis=null;try{dis=sessionStorage.getItem('chunk_notice_x');}catch(e){}
+  const show=!!(LOC&&n.on&&n.text&&dis!==n.text);el.hidden=!show;if(show)$('#noticeTxt').textContent=n.text;navH();}
+$('#noticeX').onclick=()=>{try{sessionStorage.setItem('chunk_notice_x',(locCfg().notice||{}).text||'');}catch(e){}renderNotice();};
+function refreshAll(){LOCS=CHUNK.snap.locations;applyStatus();renderGrid(gridTab);renderPicker();renderBox();renderAllergens();renderChAvail();leadText();tickCut();renderNotice();}
+CHUNK.onChange(()=>{loadProducts();refreshAll();if(typeof renderOrder==='function')renderOrder();});
+leadText();
+/* save the order to the CHUNK app when sent */
+$('#waSend').addEventListener('click',()=>{if(!items.length||!LOC)return;
+  CHUNK.placeOrder({ref:orderRef,location:LOC,items:JSON.parse(JSON.stringify(items)),total:total(),fulfil,address:$('#oAddr').value,date:$('#oDate').value,name:$('#oName').value,phone:$('#oPhone').value,notes:$('#oNotes').value})
+    .catch(e=>console.warn(e));
+  const r=orderRef;setTimeout(()=>{items=[];save();orderRef='CH'+Math.floor(1000+Math.random()*9000);renderOrder();closeOrder();toast(`Order ${r} sent 🎉 We'll confirm on WhatsApp`);},800);});
+/* =================== LIVE CHAT (switched off for now: set to true to bring it back) =================== */
+const LIVE_CHAT_ON=false;
+if(!LIVE_CHAT_ON){document.getElementById('chatFab').remove();document.getElementById('chatBox').remove();}
+else (function chat(){const box=$('#chatBox'),body=$('#chatBody');let sess=null,timer=null,seen=0;
+  try{sess=JSON.parse(localStorage.getItem('chunk_chat')||'null');}catch(e){}
+  const fmt=t=>new Date(t).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+  const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  function draw(msgs){body.innerHTML='<div class="cb-sys">You\'re chatting with CHUNK '+esc(LOCS[sess.loc]?.name||'')+'</div>'+(msgs.length?'':'<div class="msg staff">Hi '+esc(sess.name)+'! 👋 What can we help with?</div>')+msgs.map(m=>`<div class="msg ${m.from}">${esc(m.body)}<time>${fmt(m.at)}</time></div>`).join('');body.scrollTop=body.scrollHeight;}
+  async function pull(){if(!sess)return;try{const m=await CHUNK.chatFetch(sess.id,sess.token);const staff=m.filter(x=>x.from==='staff').length;
+    if(box.classList.contains('on')){draw(m);seen=staff;try{localStorage.setItem('chunk_chat_seen',staff);}catch(e){}}else{const s0=+(localStorage.getItem('chunk_chat_seen')||0);$('#chatDot').hidden=staff<=s0;}}catch(e){console.warn(e);}}
+  function ui(){const has=!!sess;$('#chatStart').hidden=has;$('#chatForm').hidden=!has;if(has)pull();else body.innerHTML='';}
+  function open(){box.classList.add('on');ui();clearInterval(timer);timer=setInterval(pull,4000);setTimeout(()=>(sess?$('#chatMsg'):$('#chatName')).focus(),300);}
+  function close(){box.classList.remove('on');clearInterval(timer);timer=setInterval(pull,20000);}
+  $('#chatFab').onclick=()=>{if(!LOC){toast('Choose Luton or Rotherham first');$('.locbar').classList.add('ask');smoothTo(0);return;}open();};
+  $('#chatX').onclick=close;
+  $('#chatStart').addEventListener('submit',async e=>{e.preventDefault();const name=$('#chatName').value.trim();if(!name)return;
+    try{const r=await CHUNK.chatStart(LOC,name);sess={id:r.id,token:r.token,name,loc:LOC};localStorage.setItem('chunk_chat',JSON.stringify(sess));ui();}catch(err){toast('Chat is unavailable right now, please use WhatsApp');}});
+  $('#chatForm').addEventListener('submit',async e=>{e.preventDefault();const v=$('#chatMsg').value.trim();if(!v)return;$('#chatMsg').value='';
+    try{await CHUNK.chatSend(sess.id,sess.token,v);pull();}catch(err){toast('Message not sent, try again');}});
+  addEventListener('storage',e=>{if(e.key==='chunk_db_v1')pull();});
+  if(sess)timer=setInterval(pull,20000);
+})();
+
+navH();
+if(LOC)setLoc(LOC,true);else $('.locbar').classList.add('ask');
+const bio=new IntersectionObserver(es=>{document.body.classList.toggle('in-builder',es.some(e=>e.isIntersecting)||[...document.querySelectorAll('#build,#chBuild')].some(el=>{const r=el.getBoundingClientRect();return r.top<innerHeight&&r.bottom>0;}));},{threshold:0});
+['#build','#chBuild'].forEach(s=>bio.observe(document.querySelector(s)));
+</script>
+</body>
+</html>

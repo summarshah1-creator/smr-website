@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Gold Wash Luton</title>
+<meta name="description" content="Gold Wash: premium indoor car wash and valeting in Luton. Open 7 days, 11:00 to 23:00. No booking needed. 8th wash free with Gold Club.">
+<meta name="theme-color" content="#080808">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Gold Wash">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="assets/icon-180.png">
+<link rel="icon" href="assets/icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: a phone-first app shell. Black canvas, white type, gold only where it means something (prices, rewards, the logo). */
+:root{
+  --black:#080808; --charcoal:#191919; --surface:#121212; --raised:#1d1d1d;
+  --gold:#C8A45D; --champagne:#E3C88A; --antique:#806126;
+  --white:#FFFFFF; --text:#FFFFFF; --muted:#A8A8A8; --line:rgba(200,164,93,.24); --hair:rgba(255,255,255,.08);
+  --display:"Cormorant Garamond", "Times New Roman", Georgia, serif;
+  --body:"Manrope", "Helvetica Neue", Arial, sans-serif;
+  --ease:cubic-bezier(.22,.8,.24,1);
+  --g:clamp(16px,4.5vw,40px);
+  --bar:64px; --tabs:68px;
+  --st:env(safe-area-inset-top,0px); --sb:env(safe-area-inset-bottom,0px);
+  --gold-grad:linear-gradient(135deg,#f3e1b0 0%,var(--champagne) 22%,var(--gold) 52%,#a8843f 72%,var(--champagne) 100%);
+  color-scheme:dark;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
+html,body{margin:0;background:var(--black);color:var(--text)}
+body{font:400 16px/1.6 var(--body);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img,video{max-width:100%;display:block}
+a{color:inherit}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--champagne);outline-offset:3px;border-radius:6px}
+h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.06;margin:0;text-wrap:balance;color:var(--white)}
+p{margin:0}
+.gold-text{background:var(--gold-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.muted{color:var(--muted)}
+.tag{display:inline-block;font:700 10px/1 var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--black);background:var(--champagne);padding:4px 7px;border-radius:4px;vertical-align:middle}
+.label{font:700 11px/1 var(--body);letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:50px;padding:0 24px;border-radius:14px;font:700 15px/1 var(--body);letter-spacing:.02em;text-decoration:none;cursor:pointer;border:1px solid transparent;transition:transform .25s var(--ease),border-color .25s,background .25s}
+.btn:active{transform:scale(.97)}
+.btn-gold{background:var(--gold-grad);color:#120d03;box-shadow:0 10px 30px -12px rgba(200,164,93,.6)}
+.btn-white{background:var(--white);color:var(--black)}
+.btn-line{border-color:rgba(255,255,255,.28);color:var(--white);background:rgba(8,8,8,.35);backdrop-filter:blur(6px)}
+.btn-block{width:100%}
+.ico{width:20px;height:20px;flex:none}
+
+/* ---------- App bar ---------- */
+.appbar{position:fixed;inset:0 0 auto 0;z-index:40;height:calc(var(--bar) + var(--st));padding:var(--st) var(--g) 0;display:flex;align-items:center;gap:16px;transition:background .35s,border-color .35s;border-bottom:1px solid transparent}
+.appbar.solid{background:rgba(8,8,8,.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-color:var(--hair)}
+.logo-slot{display:block;width:128px;aspect-ratio:1391/554;flex:none;text-decoration:none}
+.toptabs{display:none;margin:0 auto;gap:6px;background:rgba(255,255,255,.05);border:1px solid var(--hair);padding:5px;border-radius:14px}
+.toptabs a{padding:9px 16px;border-radius:10px;text-decoration:none;font:600 14px/1 var(--body);color:rgba(255,255,255,.75)}
+.toptabs a[aria-current="page"]{background:var(--white);color:var(--black)}
+.bar-right{margin-left:auto;display:flex;gap:10px;align-items:center}
+.status{display:inline-flex;align-items:center;gap:8px;font:700 12px/1 var(--body);padding:9px 12px;border-radius:999px;background:rgba(8,8,8,.55);border:1px solid var(--hair);white-space:nowrap}
+.status i{width:8px;height:8px;border-radius:50%;background:#5fcf8c;box-shadow:0 0 0 3px rgba(95,207,140,.22)}
+.status.closed i{background:#d26c5b;box-shadow:0 0 0 3px rgba(210,108,91,.22)}
+.icon-btn{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:rgba(8,8,8,.55);border:1px solid var(--hair);text-decoration:none}
+@media (min-width:900px){.toptabs{display:flex}.logo-slot{width:156px}.tabbar{display:none!important}}
+
+/* ---------- Bottom tab bar ---------- */
+.tabbar{position:fixed;inset:auto 0 0 0;z-index:40;height:calc(var(--tabs) + var(--sb));padding:0 8px var(--sb);display:grid;grid-template-columns:repeat(4,1fr);background:rgba(10,10,10,.94);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1px solid var(--hair)}
+.tabbar a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;text-decoration:none;font:600 11px/1 var(--body);color:#8d8d8d;position:relative}
+.tabbar a svg{width:23px;height:23px}
+.tabbar a[aria-current="page"]{color:var(--white)}
+.tabbar a[aria-current="page"] svg{color:var(--gold)}
+.tabbar a[aria-current="page"]::before{content:"";position:absolute;top:0;width:28px;height:2px;border-radius:2px;background:var(--gold)}
+
+/* ---------- Views ---------- */
+main{padding-bottom:calc(var(--tabs) + var(--sb) + 24px)}
+@media (min-width:900px){main{padding-bottom:40px}}
+.view{display:none}
+.view.active{display:block;animation:viewIn .45s var(--ease)}
+@keyframes viewIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.page{max-width:1080px;margin:0 auto;padding:calc(var(--bar) + var(--st) + 22px) var(--g) 0}
+.page-head{margin-bottom:24px}
+.page-head h1{font-size:clamp(38px,6vw,58px);margin-top:10px}
+.page-head p{color:var(--muted);margin-top:10px;max-width:54ch}
+.section{margin-top:44px}
+.section-title{display:flex;align-items:end;justify-content:space-between;gap:16px;margin-bottom:16px}
+.section-title h2{font-size:clamp(28px,4vw,40px)}
+.section-title a{font:700 13px/1 var(--body);color:var(--champagne);text-decoration:none;white-space:nowrap}
+.card{background:var(--surface);border:1px solid var(--hair);border-radius:20px}
+
+/* ---------- Home ---------- */
+.hero video::-webkit-media-controls,.hero video::-webkit-media-controls-panel,.hero video::-webkit-media-controls-overlay-play-button,.hero video::-webkit-media-controls-start-playback-button{display:none!important;-webkit-appearance:none;opacity:0}
+.hero video{pointer-events:none}
+.hero{position:relative;min-height:min(60svh,600px);display:flex;align-items:flex-end;overflow:hidden;isolation:isolate}
+.hero video,.hero .poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 60%;z-index:-2}
+.hero::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(8,8,8,.7) 0%,rgba(8,8,8,.05) 28%,rgba(8,8,8,.25) 55%,var(--black) 100%),linear-gradient(90deg,rgba(8,8,8,.6),rgba(8,8,8,0) 70%)}
+.hero-inner{width:100%;max-width:1080px;margin:0 auto;padding:calc(var(--bar) + var(--st) + 30px) var(--g) 22px}
+.hero .label{display:inline-flex;gap:10px;align-items:center}
+.hero h1{font-size:clamp(44px,8vw,92px);max-width:11ch;margin:14px 0 14px}
+.hero p{color:rgba(255,255,255,.86);max-width:42ch;font-size:clamp(16px,1.6vw,18px)}
+.hero-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:24px;max-width:440px}
+.quick{max-width:1080px;margin:0 auto;padding:0 var(--g);display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.qt{padding:16px;border-radius:18px;background:var(--surface);border:1px solid var(--hair);text-decoration:none;display:flex;flex-direction:column;gap:6px;min-height:104px;transition:border-color .25s,transform .25s var(--ease)}
+.qt:hover{border-color:var(--line)}
+.qt:active{transform:scale(.98)}
+.qt b{font-family:var(--display);font-size:30px;line-height:1;font-weight:700}
+.qt span{font-size:13px;color:var(--muted);line-height:1.35}
+.qt.goldbg{background:linear-gradient(135deg,#1c160a,#0f0c06);border-color:var(--line)}
+@media (max-width:760px){.quick{grid-template-columns:1fr 1fr}}
+.services{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.svc{overflow:hidden;display:flex;flex-direction:column}
+.svc figure{margin:0;aspect-ratio:4/3;overflow:hidden;background:#0d0d0d}
+.svc img{width:100%;height:100%;object-fit:cover;transition:transform .9s var(--ease)}
+.svc:hover img{transform:scale(1.04)}
+.svc-body{padding:18px 18px 20px;display:flex;flex-direction:column;gap:8px}
+.svc-body h3{font-size:25px}
+.svc-body p{color:var(--muted);font-size:14.5px}
+.from{margin-top:4px;font:700 13px/1 var(--body);color:var(--champagne)}
+@media (max-width:900px){.services{grid-template-columns:1fr}.svc{flex-direction:row}.svc figure{width:38%;aspect-ratio:auto;flex:none}.svc-body h3{font-size:22px}}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.step{padding:18px;border-radius:18px;background:var(--surface);border:1px solid var(--hair)}
+.step .n{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font:800 13px/1 var(--body);color:var(--black);background:var(--gold-grad);margin-bottom:12px}
+.step h3{font-size:22px;margin-bottom:4px}
+.step p{font-size:14px;color:var(--muted)}
+@media (max-width:760px){.steps{grid-template-columns:1fr 1fr}}
+.lounge{display:grid;grid-template-columns:1.1fr 1fr;overflow:hidden}
+.lounge figure{margin:0;min-height:240px}
+.lounge img{width:100%;height:100%;object-fit:cover}
+.lounge div{padding:24px;display:flex;flex-direction:column;gap:10px;justify-content:center}
+.lounge h3{font-size:30px}
+.lounge ul{margin:6px 0 0;padding:0;list-style:none;display:grid;gap:8px;font-size:15px}
+.lounge li{display:flex;gap:10px;align-items:center}
+.lounge li::before{content:"";width:6px;height:6px;transform:rotate(45deg);background:var(--gold);flex:none}
+@media (max-width:760px){.lounge{grid-template-columns:1fr}.lounge figure{aspect-ratio:16/9;min-height:0}}
+.gallery{display:grid;grid-auto-flow:column;grid-auto-columns:clamp(150px,22%,220px);gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px;scrollbar-width:none}
+.gallery::-webkit-scrollbar{display:none}
+.gallery figure{margin:0;aspect-ratio:3/4;border-radius:16px;overflow:hidden;scroll-snap-align:start}
+.gallery img{width:100%;height:100%;object-fit:cover}
+.promo{display:flex;gap:18px;align-items:center;padding:20px;border-radius:20px;background:linear-gradient(120deg,#16120a,#0b0a07);border:1px solid var(--line);text-decoration:none}
+.promo .mini{width:96px;flex:none}
+.promo h3{font-size:24px}
+.promo p{font-size:14px;color:var(--muted);margin-top:4px}
+
+
+/* Gold Club tile */
+.club{display:block;margin:6px 0 0;text-decoration:none;position:relative;overflow:hidden;isolation:isolate;
+  background:radial-gradient(90% 140% at 100% 0%,rgba(227,200,138,.22),transparent 55%),linear-gradient(120deg,#17120a 0%,#0b0a08 55%,#141009 100%);
+  border-block:1px solid var(--line)}
+.club::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(110deg,transparent 35%,rgba(255,240,200,.10) 48%,transparent 60%);transform:translateX(-100%);animation:clubSweep 5s ease-in-out 1.2s infinite}
+@keyframes clubSweep{0%,50%{transform:translateX(-100%)}85%,100%{transform:translateX(100%)}}
+.club-in{max-width:1080px;margin:0 auto;padding:30px var(--g);display:grid;grid-template-columns:1.2fr .8fr;gap:22px;align-items:center}
+.club h2{font-size:clamp(36px,6vw,54px);margin:10px 0 8px}
+.club p{color:rgba(255,255,255,.85);font-size:16px}
+.club p b{color:var(--champagne)}
+.club-stamps{display:flex;gap:7px;margin:16px 0 20px}
+.club-stamps i{width:26px;height:26px;border-radius:50%;background:var(--gold-grad);box-shadow:0 4px 10px -4px rgba(200,164,93,.7);opacity:.95;animation:stampIn .5s var(--ease) both}
+.club-stamps i:nth-child(n+5){background:none;border:1.5px dashed rgba(255,255,255,.25);box-shadow:none}
+.club-stamps i.f{width:auto;padding:0 9px;border-radius:13px;border:1.5px solid var(--gold);font:800 10px/23px var(--body);letter-spacing:.1em;color:var(--champagne);font-style:normal;background:none}
+.club-btn{pointer-events:none}
+.club-card{perspective:900px;display:grid;place-items:center}
+.mcard{position:relative;width:100%;max-width:300px;aspect-ratio:1.586;border-radius:16px;overflow:hidden;transform:rotate(-6deg) rotateY(-10deg);
+  background:radial-gradient(120% 90% at 0% 0%,rgba(255,250,225,.55),transparent 45%),repeating-linear-gradient(100deg,rgba(255,255,255,.07) 0 1px,rgba(0,0,0,.05) 1px 3px),linear-gradient(135deg,#f6e6b8 0%,#dcc07a 24%,#b9954a 48%,#e8cf93 68%,#a3803c 100%);
+  box-shadow:0 30px 50px -24px rgba(200,164,93,.55),0 14px 30px -16px #000,inset 0 1px 0 rgba(255,255,255,.6)}
+.mcard::before{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.7) 45%,transparent 58%);transform:translateX(-120%);animation:cardSheen 4.2s ease-in-out .6s infinite;mix-blend-mode:soft-light}
+.mcard img{position:absolute;left:8%;top:12%;width:46%;filter:brightness(0);opacity:.82;mix-blend-mode:multiply}
+.mc-tier{position:absolute;right:7%;top:12%;font:800 8px/1 var(--body);letter-spacing:.22em;text-transform:uppercase;color:#1d1505;border:1px solid rgba(29,21,5,.5);padding:5px 7px;border-radius:999px}
+.mc-offer{position:absolute;right:8%;bottom:11%;font:800 9px/1.2 var(--body);letter-spacing:.14em;text-transform:uppercase;color:#1d1505;text-align:right}
+.mc-offer b{display:block;font-family:var(--display);font-size:26px;letter-spacing:0}
+@media (max-width:640px){.club-in{grid-template-columns:1fr}.club-in{padding-top:22px}.mcard{max-width:240px}}
+@media (min-width:1100px){.club{max-width:1080px;margin:6px auto 0;border:1px solid var(--line);border-radius:24px}}
+.quick{grid-template-columns:1fr 1fr!important;margin-top:12px}
+/* Taxi tile */
+.taxi-tile{display:grid;grid-template-columns:1fr 1.1fr;align-items:center;gap:10px;padding:24px;border-radius:24px;text-decoration:none;overflow:hidden;position:relative;
+  background:radial-gradient(70% 90% at 70% 30%,rgba(255,214,130,.16),transparent 60%),linear-gradient(135deg,#151515,#0a0a0a);border:1px solid var(--line)}
+.tt-price{display:flex;align-items:baseline;gap:10px;margin:8px 0 6px}
+.tt-price span{font-family:var(--display);font-weight:700;font-size:clamp(64px,12vw,96px);line-height:.9}
+.tt-price small{font:700 14px/1 var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--white)}
+.taxi-tile p{color:var(--muted);font-size:14.5px;max-width:34ch}
+.tt-car{width:100%;height:auto;overflow:visible}
+.tt-glow{animation:roofGlow 2.4s ease-in-out infinite}
+@keyframes roofGlow{0%,100%{opacity:.55}50%{opacity:1}}
+.tt-spark{transform-origin:300px 81px;animation:ttSpark 3.2s ease-in-out infinite}
+@keyframes ttSpark{0%,70%,100%{opacity:0;transform:scale(0)}82%{opacity:1;transform:scale(1)}}
+@media (max-width:640px){.taxi-tile{grid-template-columns:1fr}.tt-car{order:-1;margin:-6px 0 4px}}
+.community{display:flex;gap:14px;align-items:flex-start;padding:18px 6px 0}
+.community svg{width:26px;height:26px;color:var(--gold);flex:none;margin-top:2px}
+.community h3{font-size:24px}
+.community p{color:var(--muted);font-size:14.5px;margin-top:4px;max-width:60ch}
+@keyframes stampIn{from{transform:scale(.4);opacity:0}}
+.club-stamps i:nth-child(1){animation-delay:.1s}.club-stamps i:nth-child(2){animation-delay:.2s}.club-stamps i:nth-child(3){animation-delay:.3s}.club-stamps i:nth-child(4){animation-delay:.4s}
+
+/* ---------- Prices ---------- */
+.veh-legend{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.veh-legend div{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:14px;background:var(--surface);border:1px solid var(--hair);font:700 12px/1.2 var(--body);text-align:center}
+.veh-legend svg{width:38px;height:22px;color:var(--gold)}
+.plist{display:grid;gap:12px}
+.pcard{padding:18px}
+.pcard-top{display:flex;justify-content:space-between;gap:12px;align-items:start}
+.pcard h3{font-size:25px}
+.pcard p{color:var(--muted);font-size:14px;margin-top:4px}
+.pcard.feature{border-color:var(--line);background:linear-gradient(160deg,#17130b,var(--surface) 60%)}
+.ptag{font:800 10px/1 var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--black);background:var(--gold-grad);padding:6px 8px;border-radius:6px;white-space:nowrap}
+.prow{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+.prow div{padding:12px 6px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid var(--hair);text-align:center}
+.prow small{display:block;font:600 11px/1.2 var(--body);color:var(--muted);letter-spacing:.04em}
+.prow b{display:block;font:800 21px/1.1 var(--body);margin-top:6px;font-variant-numeric:tabular-nums;color:var(--white)}
+.taxi-card{padding:20px;display:flex;align-items:center;gap:18px;border-color:var(--line);background:linear-gradient(120deg,#1b150a,#0d0b07)}
+.taxi-card .big{font-family:var(--display);font-weight:700;font-size:64px;line-height:.9}
+.taxi-card h3{font-size:24px}
+.taxi-card p{font-size:14px;color:var(--muted);margin-top:4px}
+.addons{padding:6px 18px}
+.addons li{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:15px 0;border-bottom:1px solid var(--hair)}
+.addons li:last-child{border-bottom:0}
+.addons ul{list-style:none;margin:0;padding:0}
+.addons .nm{display:flex;align-items:center;gap:12px;font-weight:600}
+.addons .nm svg{width:20px;height:20px;color:var(--gold);flex:none}
+.addons .pr{font:800 16px/1 var(--body);color:var(--champagne);font-variant-numeric:tabular-nums;white-space:nowrap}
+.addon-pics{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.addon-pics figure{margin:0;border-radius:16px;overflow:hidden;aspect-ratio:16/10;position:relative}
+.addon-pics img{width:100%;height:100%;object-fit:cover}
+.addon-pics figcaption{position:absolute;left:10px;bottom:10px;font:700 12px/1 var(--body);background:rgba(8,8,8,.75);padding:7px 10px;border-radius:8px}
+.note{margin-top:12px;font-size:12.5px;color:var(--muted);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+@media (min-width:900px){.plist{grid-template-columns:1fr 1fr}.price-cols{display:grid;grid-template-columns:1.3fr 1fr;gap:28px;align-items:start}}
+
+/* ---------- Rewards ---------- */
+.rewards-hero{display:grid;gap:26px}
+@media (min-width:900px){.rewards-hero{grid-template-columns:1.05fr 1fr;align-items:start}}
+.card-stage{perspective:1100px;display:grid;place-items:center;padding:8px 0 4px}
+.gcard{position:relative;width:min(100%,430px);aspect-ratio:1.586;border-radius:22px;overflow:hidden;transform-style:preserve-3d;transition:transform .5s var(--ease);
+  background:
+   radial-gradient(120% 90% at 0% 0%,rgba(255,250,225,.55),transparent 45%),
+   repeating-linear-gradient(100deg,rgba(255,255,255,.07) 0 1px,rgba(0,0,0,.05) 1px 3px),
+   linear-gradient(135deg,#f6e3ae 0%,#d9b867 24%,#b48a3a 48%,#e6c985 68%,#9e7630 100%);
+  box-shadow:0 40px 70px -30px rgba(200,164,93,.55),0 18px 40px -20px rgba(0,0,0,.9),inset 0 1px 0 rgba(255,255,255,.6),inset 0 -1px 0 rgba(80,55,10,.5)}
+.gcard::before{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.65) 45%,rgba(255,255,255,0) 58%);transform:translateX(-120%);animation:cardSheen 4.8s ease-in-out 1s infinite;mix-blend-mode:soft-light}
+.gcard::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at var(--mx,30%) var(--my,20%),rgba(255,255,255,.35),transparent 40%);opacity:.8;pointer-events:none}
+@keyframes cardSheen{0%,55%{transform:translateX(-120%)}85%,100%{transform:translateX(120%)}}
+.gc-in{position:absolute;inset:0;padding:6.5% 7%;display:flex;flex-direction:column;color:#1d1505;z-index:1}
+.gc-top{display:flex;justify-content:space-between;align-items:start}
+.gc-logo{width:46%;filter:brightness(0) saturate(100%);opacity:.82;mix-blend-mode:multiply}
+.gc-tier{font:800 10px/1 var(--body);letter-spacing:.24em;text-transform:uppercase;border:1px solid rgba(29,21,5,.55);padding:6px 9px;border-radius:999px}
+.gc-chip{width:13%;aspect-ratio:1.3;border-radius:6px;margin-top:6%;background:linear-gradient(135deg,#f7e8bd,#b38a3c 55%,#e9d08f);box-shadow:inset 0 0 0 1px rgba(80,55,10,.45);position:relative}
+.gc-chip::after{content:"";position:absolute;inset:22% 18%;border:1px solid rgba(80,55,10,.4);border-radius:3px}
+.gc-bottom{margin-top:auto;display:flex;justify-content:space-between;align-items:end;gap:12px}
+.gc-name{font:800 clamp(14px,4vw,19px)/1.1 var(--body);letter-spacing:.12em;text-transform:uppercase;text-shadow:0 1px 0 rgba(255,245,210,.5)}
+.gc-num{font:700 clamp(11px,2.8vw,13px)/1 var(--body);letter-spacing:.18em;margin-top:8px;font-variant-numeric:tabular-nums;opacity:.85}
+.gc-offer{text-align:right;font:800 clamp(10px,2.6vw,12px)/1.25 var(--body);letter-spacing:.14em;text-transform:uppercase}
+.gc-offer b{display:block;font-family:var(--display);font-size:clamp(26px,7vw,34px);letter-spacing:0;line-height:1}
+.gspark{position:absolute;width:var(--s);height:var(--s);margin:calc(var(--s)/-2) 0 0 calc(var(--s)/-2);z-index:2;pointer-events:none;opacity:0;animation:cardTwinkle 3.6s ease-in-out infinite;animation-delay:var(--d)}
+.gspark svg{width:100%;height:100%;filter:drop-shadow(0 0 4px rgba(255,255,255,.95))}
+@keyframes cardTwinkle{0%,70%,100%{opacity:0;transform:scale(0) rotate(0)}80%{opacity:1;transform:scale(1) rotate(20deg)}90%{opacity:0;transform:scale(.3) rotate(45deg)}}
+.stamps-card{padding:20px}
+.stamps{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:16px 0 14px}
+.stamp{aspect-ratio:1;border-radius:50%;display:grid;place-items:center;border:1.5px dashed rgba(255,255,255,.2);font:800 13px/1 var(--body);color:#666;position:relative;transition:.4s var(--ease)}
+.stamp.on{border:0;background:var(--gold-grad);color:#130e03;box-shadow:0 8px 20px -10px rgba(200,164,93,.8)}
+.stamp.on svg{width:46%;height:46%}
+.stamp.free{border:1.5px solid var(--gold);color:var(--champagne);font-size:11px;letter-spacing:.08em}
+.stamp.free.ready{background:var(--white);color:var(--black);border-color:var(--white);animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(227,200,138,.55)}50%{box-shadow:0 0 0 9px rgba(227,200,138,0)}}
+.progress{height:6px;border-radius:6px;background:rgba(255,255,255,.08);overflow:hidden}
+.progress i{display:block;height:100%;width:0;background:var(--gold-grad);transition:width .6s var(--ease)}
+.form{padding:20px;display:grid;gap:14px}
+.field{display:grid;gap:7px}
+.field label{font:700 13px/1 var(--body)}
+.field input{height:52px;border-radius:14px;border:1px solid rgba(255,255,255,.14);background:#0d0d0d;color:var(--white);padding:0 16px;font:500 16px var(--body)}
+.field input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(200,164,93,.18)}
+.check{display:flex;gap:12px;align-items:flex-start;font-size:13.5px;color:var(--muted)}
+.check input{width:20px;height:20px;accent-color:var(--gold);margin-top:1px;flex:none}
+.err{color:#ff9a88;font-size:13px;min-height:1em}
+.howr{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.howr .step{padding:16px}
+@media (max-width:620px){.howr{grid-template-columns:1fr}}
+.demo-tools{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.chip-btn{border:1px solid var(--hair);background:rgba(255,255,255,.04);border-radius:10px;padding:10px 12px;font:600 13px/1 var(--body);cursor:pointer}
+.toast{position:fixed;left:50%;bottom:calc(var(--tabs) + var(--sb) + 16px);transform:translate(-50%,20px);opacity:0;z-index:60;background:var(--white);color:var(--black);font:700 14px/1.3 var(--body);padding:13px 18px;border-radius:14px;transition:.35s var(--ease);pointer-events:none;max-width:90vw;text-align:center}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@media (min-width:900px){.toast{bottom:28px}}
+
+/* Referral + reminders */
+.perk{padding:20px;margin-top:12px}
+.perk h3{font-size:24px}
+.perk p{color:var(--muted);font-size:14px;margin-top:6px}
+.refcode{display:flex;gap:10px;align-items:center;margin-top:14px;padding:8px 8px 8px 16px;border-radius:14px;border:1px dashed var(--gold);background:rgba(200,164,93,.06)}
+.refcode span{font:800 20px/1 var(--body);letter-spacing:.14em;color:var(--champagne);font-variant-numeric:tabular-nums}
+.refcode .btn{margin-left:auto;min-height:42px;padding:0 16px;font-size:14px;border-radius:11px}
+.reflist{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:8px}
+.reflist li{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:11px 14px;border-radius:12px;background:rgba(255,255,255,.04);font-size:14px}
+.reflist .st{font:800 10px/1 var(--body);letter-spacing:.1em;text-transform:uppercase;padding:5px 8px;border-radius:6px;white-space:nowrap}
+.st.pending{background:rgba(255,255,255,.08);color:var(--muted)}
+.st.done{background:var(--gold-grad);color:#130e03}
+.row{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-top:14px}
+.switch{position:relative;width:52px;height:30px;flex:none}
+.switch input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer;z-index:1}
+.switch span{position:absolute;inset:0;border-radius:15px;background:#333;transition:.25s}
+.switch span::after{content:"";position:absolute;left:3px;top:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:.25s var(--ease)}
+.switch input:checked+span{background:var(--gold)}
+.switch input:checked+span::after{transform:translateX(22px)}
+.switch input:focus-visible+span{outline:2px solid var(--champagne);outline-offset:2px}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:12px;padding:4px;border-radius:12px;background:rgba(255,255,255,.05)}
+.seg label{position:relative;text-align:center;padding:10px 4px;border-radius:9px;font:700 13px/1 var(--body);color:var(--muted);cursor:pointer}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg label:has(input:checked){background:var(--white);color:var(--black)}
+.seg label:has(input:focus-visible){outline:2px solid var(--champagne)}
+.remind-info{margin-top:12px;font-size:13.5px;color:rgba(255,255,255,.85)}
+.remind-info b{color:var(--champagne)}
+.notif{position:fixed;left:50%;top:calc(10px + var(--st));z-index:120;width:min(94vw,400px);transform:translate(-50%,-140%);transition:transform .5s var(--ease);display:flex;gap:12px;align-items:flex-start;padding:13px 14px;border-radius:18px;background:rgba(30,30,30,.92);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.1);box-shadow:0 20px 40px -12px #000}
+.notif.show{transform:translate(-50%,0)}
+.notif img{width:38px;height:38px;border-radius:9px;flex:none}
+.notif b{display:block;font-size:13px}
+.notif small{float:right;color:var(--muted);font-size:11px;font-weight:500}
+.notif p{font-size:13.5px;line-height:1.35;color:rgba(255,255,255,.9);margin-top:2px}
+
+/* ---------- Find us ---------- */
+.find-grid{display:grid;gap:12px}
+@media (min-width:900px){.find-grid{grid-template-columns:1.35fr 1fr;align-items:start}}
+.map{position:relative;border-radius:20px;overflow:hidden;border:1px solid var(--line);aspect-ratio:4/3;background:#0d0d0d}
+@media (min-width:900px){.map{aspect-ratio:auto;height:100%;min-height:520px}}
+.map iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.map canvas{position:absolute;inset:0;width:100%;height:100%}
+.map-chip{position:absolute;left:12px;right:12px;bottom:12px;display:flex;align-items:center;gap:12px;background:rgba(8,8,8,.9);backdrop-filter:blur(8px);border:1px solid var(--line);border-radius:16px;padding:12px}
+.map-chip .pin{width:38px;height:38px;border-radius:12px;background:var(--gold-grad);display:grid;place-items:center;color:#130e03;flex:none}
+.map-chip b{display:block;font-size:15px}
+.map-chip span{font-size:12.5px;color:var(--muted)}
+.map-chip .btn{margin-left:auto;min-height:40px;padding:0 14px;font-size:13px;border-radius:11px}
+.info{padding:20px}
+.info h3{font-size:24px;margin-bottom:10px}
+.info address{font-style:normal;font-size:17px;line-height:1.55}
+.hours{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.hours td{padding:10px 0;border-bottom:1px solid var(--hair);font-size:15px}
+.hours tr:last-child td{border-bottom:0}
+.hours td:last-child{text-align:right;color:var(--muted)}
+.hours tr.today td{font-weight:800;color:var(--white)}
+.hours tr.today td:first-child::after{content:"Today";margin-left:8px;font:800 9px/1 var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--black);background:var(--champagne);padding:3px 6px;border-radius:4px;vertical-align:2px}
+.actions2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.phone{font:800 24px/1 var(--body);text-decoration:none;font-variant-numeric:tabular-nums}
+.social{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.social a{display:flex;align-items:center;gap:10px;padding:14px;border-radius:14px;border:1px solid var(--hair);background:rgba(255,255,255,.03);text-decoration:none;font:700 13.5px/1.2 var(--body)}
+.social a small{display:block;font-weight:500;color:var(--muted);font-size:12px;margin-top:3px}
+.social svg{width:24px;height:24px;flex:none}
+footer{max-width:1080px;margin:44px auto 0;padding:24px var(--g) 8px;border-top:1px solid var(--hair);font-size:12.5px;color:var(--muted);display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between}
+footer a{color:var(--champagne);text-decoration:none}
+
+/* ---------- Logo (shared between header and intro) ---------- */
+.brand{position:relative;display:block;width:100%;aspect-ratio:1391/554}
+.brand img{position:absolute;inset:0;width:100%;height:100%}
+.brand .l-clean{opacity:0}
+.brand .l-orig{opacity:1}
+.brand.building .l-clean{opacity:1}
+.brand.building .l-orig{opacity:0}
+.brand.final .l-orig{opacity:1;transition:opacity .55s ease}
+.brand.final .l-clean{opacity:0;transition:opacity .7s ease .2s}
+.brand.flying{position:fixed;z-index:101;transform-origin:0 0;will-change:transform}
+.brand.entering{animation:logoIn 1.1s var(--ease) .3s both}
+@keyframes logoIn{from{opacity:0;transform:scale(.86)}to{opacity:1;transform:scale(1)}}
+.sheen{position:absolute;inset:0;pointer-events:none;opacity:0;-webkit-mask:url(assets/logo-original-sm.png) center/100% 100% no-repeat;mask:url(assets/logo-original-sm.png) center/100% 100% no-repeat;background:linear-gradient(105deg,transparent 40%,rgba(255,252,236,.9) 50%,transparent 60%) no-repeat;background-size:260% 100%}
+.sheen.run{animation:sheen 1.7s cubic-bezier(.45,0,.35,1) forwards}
+@keyframes sheen{0%{opacity:1;background-position:150% 0}100%{opacity:1;background-position:-60% 0}}
+.fx{position:absolute;inset:0;pointer-events:none}
+.spark{position:absolute;width:var(--s);height:var(--s);margin:calc(var(--s)/-2) 0 0 calc(var(--s)/-2);opacity:0}
+.spark svg{width:100%;height:100%;filter:drop-shadow(0 0 6px rgba(255,238,190,.95))}
+.spark.blink{animation:blink .85s ease-out forwards}
+@keyframes blink{0%{opacity:0;transform:scale(0) rotate(-25deg)}35%{opacity:1;transform:scale(1) rotate(0)}100%{opacity:0;transform:scale(.2) rotate(30deg)}}
+.spark.settle{animation:settle .7s var(--ease) forwards}
+@keyframes settle{0%{opacity:0;transform:scale(0) rotate(-40deg)}100%{opacity:1;transform:scale(1) rotate(0)}}
+.gb{position:absolute;border-radius:50%;width:var(--d);height:var(--d);margin:calc(var(--d)/-2) 0 0 calc(var(--d)/-2);
+  background:radial-gradient(circle at 34% 28%,#fffbe8 0 7%,#f0dc98 16%,#d2b060 42%,#9c7a34 70%,#5d4516 100%);
+  box-shadow:inset 0 -2px 4px rgba(60,35,0,.45),0 0 8px rgba(255,210,120,.25)}
+.gb.ghost{background:radial-gradient(circle at 32% 28%,rgba(255,255,255,.9) 0 7%,rgba(255,240,200,.14) 10% 45%,rgba(227,200,138,.12) 62%,rgba(255,236,190,.5) 74%,transparent 78%);box-shadow:inset 0 0 0 1px rgba(255,240,200,.35)}
+.burst{position:absolute;width:var(--d);height:var(--d);margin:calc(var(--d)/-2) 0 0 calc(var(--d)/-2);border-radius:50%;border:1.5px solid rgba(255,236,180,.85);animation:burst .4s ease-out forwards}
+.burst::before{content:"";position:absolute;left:50%;top:50%;width:3px;height:3px;margin:-1.5px;border-radius:50%;background:#ffefc2;box-shadow:calc(var(--d)*.6) 0 0 0 #ffefc2,calc(var(--d)*-.55) calc(var(--d)*.22) 0 0 #ffe3a0,0 calc(var(--d)*-.6) 0 0 #ffefc2,calc(var(--d)*.35) calc(var(--d)*.5) 0 0 #ffe3a0}
+@keyframes burst{from{transform:scale(.8);opacity:1}to{transform:scale(1.7);opacity:0}}
+
+/* ---------- Intro ---------- */
+.intro{position:fixed;inset:0;z-index:100;background:var(--black);display:grid;place-items:center;transition:opacity .9s var(--ease)}
+.intro.reveal{opacity:0;pointer-events:none}
+.intro-glow{position:absolute;width:80vmin;height:80vmin;border-radius:50%;background:radial-gradient(circle,rgba(200,164,93,.2),rgba(200,164,93,.05) 42%,transparent 70%);opacity:0;animation:glow 1.6s var(--ease) .1s forwards}
+@keyframes glow{to{opacity:1}}
+.intro-stage{position:relative;width:min(66vw,470px)}
+.intro-skip{position:absolute;right:18px;bottom:calc(18px + var(--sb));background:none;border:1px solid rgba(200,164,93,.45);color:var(--champagne);font:700 12px/1 var(--body);letter-spacing:.16em;text-transform:uppercase;padding:12px 18px;border-radius:999px;cursor:pointer}
+@media (prefers-reduced-motion:reduce){.view.active{animation:none}.gcard::before,.gspark{animation:none}}
+</style>
+</head>
+<body>
+
+<div class="intro" id="intro" aria-hidden="true" hidden>
+  <div class="intro-glow"></div>
+  <div class="intro-stage" id="introStage"></div>
+  <button class="intro-skip" id="skipIntro" type="button">Skip intro</button>
+</div>
+
+<!-- ============ APP BAR ============ -->
+<header class="appbar" id="appbar">
+  <a href="#home" class="logo-slot" id="logoSlot" aria-label="Gold Wash home">
+    <span class="brand" id="brand">
+      <img class="l-clean" src="assets/logo-clean-sm.png" alt="" width="520" height="207">
+      <img class="l-orig" src="assets/logo-original-sm.png" srcset="assets/logo-original-sm.png 520w, assets/logo-original.png 1391w" sizes="(min-width:900px) 156px, 128px" alt="Gold Wash" width="520" height="207">
+      <span class="sheen" id="sheen"></span>
+      <span class="fx" id="fx"></span>
+    </span>
+  </a>
+  <nav class="toptabs" aria-label="Sections">
+    <a href="#home" data-tab="home">Home</a>
+    <a href="#prices" data-tab="prices">Prices</a>
+    <a href="#rewards" data-tab="rewards">Rewards</a>
+    <a href="#find-us" data-tab="find-us">Find us</a>
+  </nav>
+  <div class="bar-right">
+    <span class="status" id="status"><i></i><span id="statusText">Open 11:00–23:00</span></span>
+  </div>
+</header>
+
+<main>
+<!-- ================= HOME ================= -->
+<section class="view" id="view-home" data-view="home" aria-label="Home">
+  <div class="hero">
+    <img class="poster" src="assets/hero-poster.jpg" alt="">
+    <video id="heroVideo" autoplay muted loop playsinline preload="auto" poster="assets/hero-poster.jpg" disablepictureinpicture disableremoteplayback aria-hidden="true">
+      <source src="assets/hero.mp4" type="video/mp4">
+    </video>
+    <div class="hero-inner">
+      <span class="label">Indoor car wash &amp; valeting · Luton</span>
+      <h1>The <span class="gold-text">gold standard</span> of car care.</h1>
+      <div class="hero-actions">
+        <a class="btn btn-gold" href="#prices">See prices</a>
+        <a class="btn btn-line" href="#rewards">Gold Club</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gold Club tile: edge to edge -->
+  <a class="club" href="#rewards" aria-label="Join the Gold Club">
+    <div class="club-in">
+      <div class="club-copy">
+        <span class="label">Gold Club · Free to join</span>
+        <h2>Join the <span class="gold-text">Gold Club</span></h2>
+        <p>Collect a stamp every wash. Your <b>8th wash is free</b>.</p>
+        <div class="club-stamps" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="f">FREE</i></div>
+        <span class="btn btn-gold club-btn">Sign up free →</span>
+      </div>
+      <div class="club-card" aria-hidden="true">
+        <div class="mcard">
+          <img src="assets/logo-clean-sm.png" alt="">
+          <span class="mc-tier">Gold Club</span>
+          <span class="mc-offer"><b>8th</b> wash free</span>
+          <span class="gspark" style="left:22%;top:24%;--s:16px;--d:.3s"></span>
+          <span class="gspark" style="left:80%;top:70%;--s:12px;--d:1.8s"></span>
+        </div>
+      </div>
+    </div>
+  </a>
+
+  <div class="quick">
+    <a class="qt" href="#find-us"><b>11–11</b><span>Open 7 days, 11:00 to 23:00</span></a>
+    <a class="qt" href="#find-us"><b>Drive in</b><span>No booking, no waiting list</span></a>
+  </div>
+
+  <div class="page" style="padding-top:0">
+    <div class="section">
+      <div class="section-title"><h2>Our services</h2><a href="#prices">All prices →</a></div>
+      <div class="services">
+        <article class="card svc">
+          <figure><img src="assets/svc-snowfoam.jpg" alt="Black 4x4 covered in snow foam being hand washed" loading="lazy"></figure>
+          <div class="svc-body"><h3>Snow foam wash</h3><p>Thick pre-wash foam lifts the dirt, then a careful hand wash, rinse and dry.</p><span class="from">From £12</span></div>
+        </article>
+        <article class="card svc">
+          <figure><img src="assets/svc-wheels.jpg" alt="Alloy wheel being scrubbed with a foam brush" loading="lazy"></figure>
+          <div class="svc-body"><h3>Wheels &amp; tyres</h3><p>Alloys deep-cleaned, arches rinsed and tyres dressed for a finished look.</p><span class="from">Included in every wash</span></div>
+        </article>
+        <article class="card svc">
+          <figure><img src="assets/svc-valet.jpg" alt="Car seat being vacuumed during a valet" loading="lazy"></figure>
+          <div class="svc-body"><h3>Full valet</h3><p>Inside and out: vacuum, seats, dash, glass, trims, wheels and tyre shine.</p><span class="from">From £45</span></div>
+        </article>
+      </div>
+    </div>
+
+    <div class="section">
+      <a class="taxi-tile" href="#prices" aria-label="Taxi offer: £10 wash">
+        <div class="tt-copy">
+          <span class="label">Taxi drivers</span>
+          <div class="tt-price"><span class="gold-text">£10</span><small>taxi wash</small></div>
+          <p>Every licensed taxi, any size, any time we're open. In and back on the road fast.</p>
+        </div>
+        <svg class="tt-car" viewBox="0 0 420 190" role="img" aria-label="Illustration of a taxi with its roof light on">
+          <defs>
+            <linearGradient id="tBody" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a2a2a"/><stop offset=".5" stop-color="#141414"/><stop offset="1" stop-color="#050505"/></linearGradient>
+            <linearGradient id="tLine" x1="0" x2="1"><stop offset="0" stop-color="#806126"/><stop offset=".5" stop-color="#E3C88A"/><stop offset="1" stop-color="#806126"/></linearGradient>
+            <linearGradient id="tGlass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3b3b3b"/><stop offset="1" stop-color="#0c0c0c"/></linearGradient>
+            <radialGradient id="tGlow" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ffd98a" stop-opacity=".75"/><stop offset="1" stop-color="#ffd98a" stop-opacity="0"/></radialGradient>
+            <linearGradient id="tBeam2" x1="1" x2="0"><stop offset="0" stop-color="#fff1c9" stop-opacity=".45"/><stop offset="1" stop-color="#fff1c9" stop-opacity="0"/></linearGradient>
+          </defs>
+          <ellipse cx="210" cy="172" rx="190" ry="10" fill="#000" opacity=".6"/>
+          <path d="M26 113 L-60 92 L-60 140 Z" fill="url(#tBeam2)"/>
+          <!-- roof light -->
+          <ellipse class="tt-glow" cx="214" cy="40" rx="70" ry="30" fill="url(#tGlow)"/>
+          <rect x="182" y="30" width="64" height="20" rx="5" fill="#f4d58a" stroke="#806126" stroke-width="1.5"/>
+          <text x="214" y="45" text-anchor="middle" font-family="Manrope, Arial, sans-serif" font-weight="800" font-size="13" letter-spacing="3" fill="#1a1204">TAXI</text>
+          <rect x="196" y="50" width="36" height="5" rx="1" fill="#1a1a1a"/>
+          <!-- body -->
+          <path d="M22 132 C20 112 34 102 62 98 L120 92 C142 74 168 58 206 56 L262 56 C292 58 316 74 338 92 L372 98 C394 102 404 114 402 132 L400 146 L22 146 Z" fill="url(#tBody)" stroke="#2f2f2f" stroke-width="1.2"/>
+          <path d="M132 92 C150 76 172 66 204 64 L212 64 L212 92 Z" fill="url(#tGlass)"/>
+          <path d="M220 64 L258 64 C284 66 302 76 320 92 L220 92 Z" fill="url(#tGlass)"/>
+          <path d="M30 116 L396 116" stroke="url(#tLine)" stroke-width="3" stroke-linecap="round"/>
+          <path d="M216 64 L216 140" stroke="#000" stroke-opacity=".5"/>
+          <path d="M392 108 C398 110 401 116 400 122 L388 121 Z" fill="#b8402e"/>
+          <path d="M24 108 C30 106 40 106 46 108 L44 118 C36 119 28 119 23 118 Z" fill="#fff3d0"/>
+          <!-- wheels -->
+          <g class="tt-wheel"><circle cx="96" cy="146" r="25" fill="#0a0a0a" stroke="#2c2c2c" stroke-width="3"/><circle cx="96" cy="146" r="13" fill="none" stroke="#C8A45D" stroke-width="2.5"/><path d="M96 133v26M83 146h26M87 137l18 18M105 137l-18 18" stroke="#806126" stroke-width="2"/></g>
+          <g class="tt-wheel"><circle cx="326" cy="146" r="25" fill="#0a0a0a" stroke="#2c2c2c" stroke-width="3"/><circle cx="326" cy="146" r="13" fill="none" stroke="#C8A45D" stroke-width="2.5"/><path d="M326 133v26M313 146h26M317 137l18 18M335 137l-18 18" stroke="#806126" stroke-width="2"/></g>
+          <!-- sparkle on the paint -->
+          <path class="tt-spark" d="M300 70c1 8 3 10 11 11-8 1-10 3-11 11-1-8-3-10-11-11 8-1 10-3 11-11z" fill="#fff6da"/>
+        </svg>
+      </a>
+      <div class="community">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10Z"/></svg>
+        <div><h3>Looking after our community</h3><p>Luton's taxi drivers keep the town moving. Our £10 taxi wash is our way of looking after the people who look after everyone else.</p></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title"><h2>How it works</h2></div>
+      <div class="steps">
+        <div class="step"><div class="n">1</div><h3>Drive in</h3><p>Pull straight into our indoor bay.</p></div>
+        <div class="step"><div class="n">2</div><h3>Choose</h3><p>Pick a wash and any extras.</p></div>
+        <div class="step"><div class="n">3</div><h3>Relax</h3><p>Wait in our warm seating area.</p></div>
+        <div class="step"><div class="n">4</div><h3>Drive off</h3><p>Pay on collection, spotless.</p></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="card lounge">
+        <figure><img src="assets/lounge.jpg" alt="Indoor waiting area overlooking the wash bay" loading="lazy"></figure>
+        <div>
+          <span class="label">Waiting area</span>
+          <h3>Wait in comfort, rain or shine</h3>
+          <ul><li>Warm, dry indoor seating</li><li>View straight into the bay</li><li>Open until 11pm every day</li></ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title"><h2>Fresh from the bay</h2><a href="https://www.instagram.com/goldwashluton/">@goldwashluton</a></div>
+      <div class="gallery">
+        <figure><img src="assets/gallery-1.jpg" alt="Purple supercar with doors raised in the Gold Wash bay" loading="lazy"></figure>
+        <figure><img src="assets/gallery-2.jpg" alt="Blue sports car in snow foam" loading="lazy"></figure>
+        <figure><img src="assets/gallery-3.jpg" alt="Hand washing a foamed car door" loading="lazy"></figure>
+        <figure><img src="assets/gallery-4.jpg" alt="Clean alloy wheel and brake caliper" loading="lazy"></figure>
+        <figure><img src="assets/gallery-5.jpg" alt="Pressure washing a sports car indoors" loading="lazy"></figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PRICES ================= -->
+<section class="view" id="view-prices" data-view="prices" aria-label="Prices">
+  <div class="page">
+    <div class="page-head">
+      <span class="label">Price list</span>
+      <h1>Prices</h1>
+      <p>Every price for every vehicle size, on one screen. Pay on the day; there's nothing to book.</p>
+    </div>
+    <div class="price-cols">
+      <div>
+        <div class="veh-legend" aria-hidden="true">
+          <div><svg viewBox="0 0 48 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17h42M6 17v-3l6-6h18l7 6h6v3"/><circle cx="14" cy="18" r="3.5" fill="#121212"/><circle cx="35" cy="18" r="3.5" fill="#121212"/></svg>Car</div>
+          <div><svg viewBox="0 0 48 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18h42M5 18v-6l4-7h26l6 7h4v6"/><circle cx="14" cy="18" r="3.5" fill="#121212"/><circle cx="35" cy="18" r="3.5" fill="#121212"/></svg>SUV / 4x4</div>
+          <div><svg viewBox="0 0 48 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18h42M4 18V5h32l7 7h2v6"/><circle cx="13" cy="18" r="3.5" fill="#121212"/><circle cx="36" cy="18" r="3.5" fill="#121212"/></svg>7-seater / Van</div>
+        </div>
+        <div class="plist">
+          <article class="card pcard">
+            <div class="pcard-top"><div><h3>Snow foam wash</h3><p>Snow foam, hand wash, wheels, rinse &amp; dry</p></div></div>
+            <div class="prow"><div><small>Car</small><b>£12</b></div><div><small>SUV</small><b>£15</b></div><div><small>7-seater</small><b>£18</b></div></div>
+          </article>
+          <article class="card pcard">
+            <div class="pcard-top"><div><h3>Inside &amp; out</h3><p>Snow foam wash plus vacuum and dash wipe</p></div></div>
+            <div class="prow"><div><small>Car</small><b>£20</b></div><div><small>SUV</small><b>£25</b></div><div><small>7-seater</small><b>£30</b></div></div>
+          </article>
+          <article class="card pcard feature">
+            <div class="pcard-top"><div><h3>Full valet</h3><p>Deep interior clean, glass, trims, wheels &amp; tyre shine</p></div><span class="ptag">Most popular</span></div>
+            <div class="prow"><div><small>Car</small><b>£45</b></div><div><small>SUV</small><b>£55</b></div><div><small>7-seater</small><b>£65</b></div></div>
+          </article>
+          <article class="card pcard">
+            <div class="pcard-top"><div><h3>Wheels &amp; tyres detail</h3><p>Deep alloy clean, arches and tyre dressing</p></div></div>
+            <div class="prow"><div><small>Car</small><b>£10</b></div><div><small>SUV</small><b>£12</b></div><div><small>7-seater</small><b>£14</b></div></div>
+          </article>
+        </div>
+        <div class="card taxi-card" style="margin-top:12px">
+          <div class="big gold-text">£10</div>
+          <div><span class="label">Taxi special</span><h3 style="margin-top:6px">Taxi wash for £10</h3><p>For licensed taxis, any size. Drive in whenever we're open.</p></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-title" style="margin-top:28px"><h2>Add-ons</h2></div>
+        <div class="addon-pics">
+          <figure><img src="assets/extra-fluids.jpg" alt="Screenwash being poured into a washer reservoir" loading="lazy"><figcaption>Fluids top-up</figcaption></figure>
+          <figure><img src="assets/extra-tyres.jpg" alt="Tyre pressure being checked with a gauge" loading="lazy"><figcaption>Tyre pressures</figcaption></figure>
+        </div>
+        <div class="card addons">
+          <ul>
+            <li><span class="nm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11Z"/></svg>Screenwash top-up</span><span class="pr">£3</span></li>
+            <li><span class="nm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3"/><path d="M12 3.5v5M12 15.5v5M3.5 12h5M15.5 12h5"/></svg>Tyre pressure check</span><span class="pr">£3</span></li>
+            <li><span class="nm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8Z"/></svg>Tyre shine</span><span class="pr">£3</span></li>
+            <li><span class="nm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 3h6v3l3 4v9a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-9l3-4Z"/></svg>Air freshener</span><span class="pr">£2</span></li>
+            <li><span class="nm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 18 18 4M14 4h4v4"/></svg>Wiper blade fitting</span><span class="pr">from £10</span></li>
+          </ul>
+        </div>
+        <p class="note"><span class="tag">Example prices</span>Placeholder figures for this demo, apart from the £10 taxi offer.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= REWARDS ================= -->
+<section class="view" id="view-rewards" data-view="rewards" aria-label="Gold Club">
+  <div class="page">
+    <div class="page-head">
+      <span class="label">Gold Club</span>
+      <h1>Your <span class="gold-text">8th wash</span> is free</h1>
+      <p>Join free, show your card each visit and collect a stamp. After 7 washes, the next one is on us. Refer a friend for a bonus stamp.</p>
+    </div>
+    <div class="rewards-hero">
+      <div class="card-stage">
+        <div class="gcard" id="gcard" role="img" aria-label="Gold Wash rewards card">
+          <div class="gc-in">
+            <div class="gc-top">
+              <img class="gc-logo" src="assets/logo-clean-sm.png" alt="">
+              <span class="gc-tier">Gold Club</span>
+            </div>
+            <div class="gc-chip"></div>
+            <div class="gc-bottom">
+              <div>
+                <div class="gc-name" id="gcName">Your name</div>
+                <div class="gc-num" id="gcNum">GW ···· ····</div>
+              </div>
+              <div class="gc-offer"><b>8th</b>wash free</div>
+            </div>
+          </div>
+          <span class="gspark" style="left:18%;top:18%;--s:22px;--d:0s"></span>
+          <span class="gspark" style="left:78%;top:30%;--s:16px;--d:1.2s"></span>
+          <span class="gspark" style="left:56%;top:78%;--s:18px;--d:2.3s"></span>
+          <span class="gspark" style="left:90%;top:84%;--s:13px;--d:.7s"></span>
+        </div>
+      </div>
+
+      <div>
+        <!-- Signed-out state -->
+        <form class="card form" id="joinForm" novalidate>
+          <h3 style="font-size:28px">Join Gold Club</h3>
+          <div class="field"><label for="jName">Full name</label><input id="jName" name="name" autocomplete="name" placeholder="e.g. Sam Khan" required></div>
+          <div class="field"><label for="jPhone">Mobile number</label><input id="jPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="07…" required></div>
+          <div class="field"><label for="jEmail">Email (optional)</label><input id="jEmail" name="email" type="email" autocomplete="email" placeholder="you@example.com"></div>
+          <div class="field"><label for="jReg">Vehicle reg (optional)</label><input id="jReg" name="reg" autocomplete="off" placeholder="AB12 CDE" style="text-transform:uppercase"></div>
+          <div class="field"><label for="jRef">Referral code (optional)</label><input id="jRef" name="ref" autocomplete="off" placeholder="e.g. SAM-482" style="text-transform:uppercase"></div>
+          <label class="check" for="jTerms"><input type="checkbox" id="jTerms">I agree to the Gold Club terms and to receive offers from Gold Wash.</label>
+          <div class="err" id="jErr" role="alert"></div>
+          <button class="btn btn-gold btn-block" type="submit">Create my gold card</button>
+        </form>
+
+        <!-- Signed-in state -->
+        <div class="card stamps-card" id="stampsCard" hidden>
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+            <h3 style="font-size:26px" id="stampTitle">Your stamps</h3>
+            <span class="label" id="stampCount">0 / 7</span>
+          </div>
+          <div class="stamps" id="stamps" aria-live="polite"></div>
+          <div class="progress"><i id="prog"></i></div>
+          <p class="muted" style="margin-top:12px;font-size:14px" id="stampMsg">Show your card at the counter after each wash.</p>
+          <div class="demo-tools">
+            <button class="chip-btn" type="button" id="addStamp">+ Add a wash (staff demo)</button>
+            <button class="chip-btn" type="button" id="leave">Sign out</button>
+          </div>
+          <p class="note"><span class="tag">Demo</span>Your card is saved on this device only. The live version would store members securely.</p>
+        </div>
+
+        <div class="card perk" id="referCard" hidden>
+          <span class="label">Refer a friend</span>
+          <h3 style="margin-top:8px">Give a friend the Gold Club, get a free stamp</h3>
+          <p>Share your code. When your friend joins and has their first wash, you get a free stamp.</p>
+          <div class="refcode"><span id="refCode">GOLD-000</span><button class="btn btn-gold" type="button" id="shareRef">Share</button></div>
+          <ul class="reflist" id="refList"></ul>
+          <div class="demo-tools"><button class="chip-btn" type="button" id="simRef">Simulate: a friend joins (staff demo)</button></div>
+        </div>
+
+        <div class="card perk" id="remindCard" hidden>
+          <span class="label">Wash reminders</span>
+          <div class="row" style="margin-top:8px">
+            <div><h3>Remind me monthly</h3><p style="margin-top:4px">We'll nudge you if it's been a month since your last wash.</p></div>
+            <label class="switch" aria-label="Wash reminders"><input type="checkbox" id="remToggle" checked><span></span></label>
+          </div>
+          <div class="seg" id="remSeg" role="radiogroup" aria-label="Send reminders by">
+            <label><input type="radio" name="remBy" value="app" checked>App alert</label>
+            <label><input type="radio" name="remBy" value="sms">Text</label>
+            <label><input type="radio" name="remBy" value="email">Email</label>
+          </div>
+          <p class="remind-info" id="remInfo"></p>
+          <div class="demo-tools"><button class="chip-btn" type="button" id="previewRem">Preview a reminder</button></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title"><h2>How Gold Club works</h2></div>
+      <div class="howr">
+        <div class="step"><div class="n">1</div><h3>Sign up free</h3><p>Takes 30 seconds. Your gold card appears straight away.</p></div>
+        <div class="step"><div class="n">2</div><h3>Collect stamps</h3><p>Show your card at the counter. One stamp per paid wash.</p></div>
+        <div class="step"><div class="n">3</div><h3>8th wash free</h3><p>After 7 stamps your next wash is free. Refer a friend to earn a bonus stamp.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FIND US ================= -->
+<section class="view" id="view-find-us" data-view="find-us" aria-label="Find us">
+  <div class="page">
+    <div class="page-head">
+      <span class="label">Find us</span>
+      <h1>Come and see us</h1>
+      <p>Just off Arundel Road in Luton. Drive straight in.</p>
+    </div>
+    <div class="find-grid">
+      <div class="map" id="map">
+        <canvas id="mapCanvas" aria-hidden="true"></canvas>
+        <div class="map-chip">
+          <div class="pin"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z"/></svg></div>
+          <div><b>Gold Wash</b><span>Unit 1, 81 Arundel Road, LU4 8DY</span></div>
+          <a class="btn btn-white" href="https://www.google.com/maps/search/?api=1&amp;query=Unit+1+81+Arundel+Road+Luton+LU4+8DY">Open map</a>
+        </div>
+      </div>
+      <div style="display:grid;gap:12px">
+        <div class="card info">
+          <h3>Address</h3>
+          <address>Gold Wash<br>Unit 1, 81 Arundel Road<br>Luton, LU4 8DY</address>
+          <div class="actions2">
+            <a class="btn btn-gold" href="https://www.google.com/maps/dir/?api=1&amp;destination=Unit+1+81+Arundel+Road+Luton+LU4+8DY">Directions</a>
+            <a class="btn btn-line" href="tel:+441582000000">Call</a>
+          </div>
+        </div>
+        <div class="card info">
+          <h3>Opening hours</h3>
+          <table class="hours" id="hours"><tbody>
+            <tr data-d="1"><td>Monday</td><td>11:00 – 23:00</td></tr>
+            <tr data-d="2"><td>Tuesday</td><td>11:00 – 23:00</td></tr>
+            <tr data-d="3"><td>Wednesday</td><td>11:00 – 23:00</td></tr>
+            <tr data-d="4"><td>Thursday</td><td>11:00 – 23:00</td></tr>
+            <tr data-d="5"><td>Friday</td><td>11:00 – 23:00</td></tr>
+            <tr data-d="6"><td>Saturday</td><td>11:00 – 23:00</td></tr>
+            <tr data-d="0"><td>Sunday</td><td>11:00 – 23:00</td></tr>
+          </tbody></table>
+        </div>
+        <div class="card info">
+          <h3>Contact</h3>
+          <a class="phone" href="tel:+441582000000">01582 000 000</a> <span class="tag">Example number</span>
+          <div class="social">
+            <a href="https://www.instagram.com/goldwashluton/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg><span>Instagram<small>@goldwashluton</small></span></a>
+            <a href="https://www.tiktok.com/@goldwashluton"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.6 3c.3 2.2 1.6 3.6 3.9 3.8v3.1c-1.4.1-2.7-.3-3.9-1v6.3c0 3.6-2.6 5.8-5.6 5.8-3.2 0-5.6-2.5-5.6-5.6 0-3.4 2.9-5.9 6.4-5.4v3.2c-1.6-.4-3.2.6-3.2 2.2 0 1.3 1 2.4 2.4 2.4 1.5 0 2.5-1 2.5-2.9V3h3.1Z"/></svg><span>TikTok<small>@goldwashluton</small></span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>© <span id="yr">2026</span> Gold Wash · Unit 1, 81 Arundel Road, Luton LU4 8DY</span>
+  <span>Website by <a href="#home">SMR Digital</a> · Demonstration</span>
+</footer>
+</main>
+
+<!-- ============ BOTTOM TABS (phone) ============ -->
+<nav class="tabbar" aria-label="App">
+  <a href="#home" data-tab="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 10.5 12 4l8 6.5V20h-5v-6H9v6H4Z"/></svg>Home</a>
+  <a href="#prices" data-tab="prices"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M3 12V4h8l10 10-8 8Z"/><circle cx="7.5" cy="8.5" r="1.5"/></svg>Prices</a>
+  <a href="#rewards" data-tab="rewards"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="2.5" y="5.5" width="19" height="13" rx="2.5"/><path d="M2.5 10h19"/><path d="M15 15h3"/></svg>Rewards</a>
+  <a href="#find-us" data-tab="find-us"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 21s7-6.5 7-11.5a7 7 0 0 0-14 0C5 14.5 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Find us</a>
+</nav>
+
+<div class="toast" id="toast" role="status"></div>
+<div class="notif" id="notif" role="status" aria-live="polite"><img src="assets/icon-180.png" alt=""><div><b>Gold Wash <small>now</small></b><p id="notifText"></p></div></div>
+
+<script>
+(function(){
+  var SITE = { address:"Unit 1 81 Arundel Road Luton LU4 8DY", open:11, close:23 };
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var $ = function(id){ return document.getElementById(id); };
+  var store = { get:function(k){ try{ return JSON.parse(localStorage.getItem(k)); }catch(e){ return null; } },
+                set:function(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} },
+                del:function(k){ try{ localStorage.removeItem(k); }catch(e){} } };
+  var STAR = '<svg viewBox="0 0 40 40"><path d="M20 0C21 15 25 19 40 20 25 21 21 25 20 40 19 25 15 21 0 20 15 19 19 15 20 0Z" fill="#FFF7E0"/><circle cx="20" cy="20" r="3.2" fill="#fff"/></svg>';
+  function toast(msg){ var t=$('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toast.t); toast.t=setTimeout(function(){t.classList.remove('show')},2400); }
+
+  /* ---------- Routing between app screens ---------- */
+  var VIEWS = ['home','prices','rewards','find-us'];
+  var appbar = $('appbar');
+  function show(){
+    var v = (location.hash||'').slice(1); if (VIEWS.indexOf(v)<0) v='home';
+    document.querySelectorAll('.view').forEach(function(s){ s.classList.toggle('active', s.dataset.view===v); });
+    document.querySelectorAll('[data-tab]').forEach(function(a){ if(a.dataset.tab===v) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current'); });
+    window.scrollTo(0,0); onScroll();
+    if (v==='home') playVideo();
+    if (v==='find-us') initMap();
+  }
+  function onScroll(){ var home = $('view-home').classList.contains('active'); appbar.classList.toggle('solid', !home || scrollY>30); }
+  addEventListener('hashchange', show); addEventListener('scroll', onScroll, {passive:true});
+
+  /* ---------- Hero video: always autoplays, muted, on loop ---------- */
+  var vid = $('heroVideo');
+  vid.muted = true; vid.defaultMuted = true; vid.setAttribute('muted','');
+  function playVideo(){ if(!vid.paused) return; vid.muted = true; var p = vid.play(); if (p && p.catch) p.catch(function(){}); }
+  playVideo();
+  ['loadedmetadata','loadeddata','canplay','canplaythrough'].forEach(function(ev){ vid.addEventListener(ev, playVideo); });
+  var tries = 0, kick = setInterval(function(){ if(!vid.paused || ++tries > 20){ clearInterval(kick); return; } playVideo(); }, 400);
+  vid.addEventListener('pause', function(){ if ($('view-home').classList.contains('active') && !document.hidden) setTimeout(playVideo, 300); });
+  ['touchstart','pointerdown','click','scroll','keydown'].forEach(function(ev){ addEventListener(ev, function(){ if (vid.paused && $('view-home').classList.contains('active')) playVideo(); }, {passive:true}); });
+  document.addEventListener('visibilitychange', function(){ if(!document.hidden) playVideo(); });
+
+  /* ---------- Open / closed + today ---------- */
+  try {
+    var parts = new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/London',weekday:'short',hour:'2-digit',hour12:false}).formatToParts(new Date());
+    var wd = parts.find(function(p){return p.type==='weekday'}).value, hr = parseInt(parts.find(function(p){return p.type==='hour'}).value,10)%24;
+    var row = document.querySelector('#hours tr[data-d="'+['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].indexOf(wd)+'"]'); if(row) row.classList.add('today');
+    var open = hr>=SITE.open && hr<SITE.close;
+    $('statusText').textContent = open ? 'Open · until 23:00' : 'Closed · opens 11:00';
+    if(!open) $('status').classList.add('closed');
+  } catch(e){}
+  $('yr').textContent = new Date().getFullYear();
+
+  /* ---------- Map: live Google Map on the real site; drawn map inside preview frames (which block it) ---------- */
+  var mapDone=false;
+  function initMap(){
+    if (mapDone) { drawMap(); return; } mapDone = true;
+    if (window.self === window.top){
+      var f=document.createElement('iframe');
+      f.src='https://www.google.com/maps?q='+encodeURIComponent(SITE.address)+'&z=16&output=embed';
+      f.title='Map showing Gold Wash'; f.loading='lazy'; f.referrerPolicy='no-referrer-when-downgrade';
+      $('map').insertBefore(f,$('map').firstChild); $('mapCanvas').remove();
+    } else { drawMap(); addEventListener('resize', drawMap); }
+  }
+  function drawMap(){
+    var c=$('mapCanvas'); if(!c) return; var r=c.getBoundingClientRect(); if(!r.width) return;
+    var d=Math.min(devicePixelRatio||1,2); c.width=r.width*d; c.height=r.height*d;
+    var x=c.getContext('2d'); x.scale(d,d); var W=r.width,H=r.height;
+    x.fillStyle='#0d0d0d'; x.fillRect(0,0,W,H); x.fillStyle='#151515';
+    for(var i=0;i<14;i++)for(var j=0;j<10;j++) x.fillRect(i*W/11-8+(j%2)*16, j*H/8-6, W/11-12, H/8-12);
+    function road(p,w,col){ x.beginPath(); x.moveTo(p[0][0]*W,p[0][1]*H); for(var k=1;k<p.length;k++) x.lineTo(p[k][0]*W,p[k][1]*H); x.strokeStyle=col; x.lineWidth=w; x.lineCap='round'; x.lineJoin='round'; x.stroke(); }
+    road([[0,.74],[.35,.64],[.6,.6],[1,.48]],14,'#272727'); road([[.18,0],[.24,.42],[.3,1]],10,'#222');
+    road([[.72,0],[.68,.5],[.76,1]],10,'#222'); road([[0,.24],[.5,.3],[1,.2]],7,'#1f1f1f'); road([[.05,.95],[.5,.87],[.95,.9]],6,'#1d1d1d');
+    road([[.24,.42],[.48,.45],[.68,.5]],6,'rgba(200,164,93,.6)');
+    x.fillStyle='rgba(255,255,255,.45)'; x.font='700 11px Manrope, sans-serif'; x.fillText('ARUNDEL ROAD', W*.28, H*.42-12);
+    x.fillStyle='rgba(255,255,255,.2)'; x.fillText('LUTON · LU4', W*.76, H*.14);
+    var px=W*.5,py=H*.42, g=x.createRadialGradient(px,py,0,px,py,70); g.addColorStop(0,'rgba(200,164,93,.35)'); g.addColorStop(1,'rgba(200,164,93,0)');
+    x.fillStyle=g; x.beginPath(); x.arc(px,py,70,0,7); x.fill(); x.fillStyle='#E3C88A'; x.beginPath(); x.arc(px,py,8,0,7); x.fill();
+    x.strokeStyle='rgba(227,200,138,.6)'; x.lineWidth=1.5; x.beginPath(); x.arc(px,py,16,0,7); x.stroke();
+  }
+
+  /* ---------- Gold Club ---------- */
+  var KEY_M='goldwash_member';
+  document.querySelectorAll('.gspark').forEach(function(s){ s.innerHTML=STAR; });
+  var gcard=$('gcard');
+  if (!reduce) {
+    gcard.addEventListener('pointermove', function(e){ var r=gcard.getBoundingClientRect(), px=(e.clientX-r.left)/r.width, py=(e.clientY-r.top)/r.height;
+      gcard.style.transform='rotateY('+((px-.5)*14)+'deg) rotateX('+((.5-py)*12)+'deg)'; gcard.style.setProperty('--mx',px*100+'%'); gcard.style.setProperty('--my',py*100+'%'); });
+    gcard.addEventListener('pointerleave', function(){ gcard.style.transform=''; });
+  }
+  function render(){
+    var m = store.get(KEY_M);
+    $('joinForm').hidden = !!m; $('stampsCard').hidden = !m; $('referCard').hidden = !m; $('remindCard').hidden = !m;
+    $('gcName').textContent = m ? m.name : 'Your name';
+    $('gcNum').textContent = m ? m.id : 'GW ···· ····';
+    if(!m) return;
+    var n = m.stamps, html='';
+    for (var i=1;i<=8;i++){
+      if (i<8) html += '<div class="stamp'+(i<=n?' on':'')+'" aria-label="Wash '+i+(i<=n?' stamped':'')+'">'+(i<=n?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5 10 17 19 7"/></svg>':i)+'</div>';
+      else html += '<div class="stamp free'+(n>=7?' ready':'')+'">FREE</div>';
+    }
+    $('stamps').innerHTML = html;
+    $('stampCount').textContent = Math.min(n,7)+' / 7';
+    $('prog').style.width = (Math.min(n,7)/7*100)+'%';
+    $('stampTitle').textContent = 'Hi '+m.name.split(' ')[0];
+    $('stampMsg').textContent = n>=7 ? 'Your next wash is FREE. Show this card at the counter.' : (7-n)+' more wash'+(7-n===1?'':'es')+' until your free one.';
+    $('addStamp').textContent = n>=7 ? 'Redeem free wash (staff demo)' : '+ Add a wash (staff demo)';
+    // referrals
+    $('refCode').textContent = m.ref;
+    var refs = m.refs||[];
+    $('refList').innerHTML = refs.length ? refs.map(function(r){ return '<li><span>'+r.name+'</span><span class="st '+(r.done?'done':'pending')+'">'+(r.done?'+1 stamp earned':'Joined · awaiting first wash')+'</span></li>'; }).join('') : '<li><span class="muted">No referrals yet</span></li>';
+    var pending = refs.some(function(r){ return !r.done; });
+    $('simRef').textContent = pending ? 'Simulate: friend has first wash (staff demo)' : 'Simulate: a friend joins (staff demo)';
+    // reminders
+    var rem = m.rem || {on:true, by:'app'};
+    $('remToggle').checked = rem.on; $('remSeg').style.opacity = rem.on ? 1 : .4;
+    document.querySelectorAll('input[name=remBy]').forEach(function(i){ i.checked = i.value===rem.by; i.disabled = !rem.on; });
+    var last = m.lastWash || m.joined, next = new Date(last + 30*864e5);
+    var days = Math.floor((Date.now()-last)/864e5);
+    var by = {app:'an app alert', sms:'a text', email:'an email'}[rem.by];
+    $('remInfo').innerHTML = rem.on
+      ? (m.lastWash ? 'Last wash: <b>'+(days===0?'today':days+' day'+(days===1?'':'s')+' ago')+'</b>. ' : 'No washes yet. ')+'If we don\'t see you, you\'ll get '+by+' on <b>'+next.toLocaleDateString('en-GB',{day:'numeric',month:'long'})+'</b>.'
+      : 'Reminders are off.';
+  }
+  function update(fn){ var m=store.get(KEY_M); if(!m) return; fn(m); store.set(KEY_M,m); render(); return m; }
+  function notify(text){ $('notifText').textContent=text; var n=$('notif'); n.classList.add('show'); clearTimeout(notify.t); notify.t=setTimeout(function(){ n.classList.remove('show'); },4200); }
+  var FRIENDS=['Aisha','Danny','Priya','Omar','Jade','Bilal','Chloe','Yusuf'];
+  $('simRef').addEventListener('click', function(){
+    update(function(m){
+      m.refs = m.refs||[];
+      var p = m.refs.filter(function(r){ return !r.done; })[0];
+      if (p){ p.done = true; if (m.stamps<7) m.stamps++; toast(p.name+' had their first wash. You earned a free stamp!'); }
+      else { var nm = FRIENDS[m.refs.length % FRIENDS.length]; m.refs.push({name:nm, done:false}); toast(nm+' joined with your code.'); }
+    });
+  });
+  $('shareRef').addEventListener('click', function(){
+    var m=store.get(KEY_M); if(!m) return;
+    var url = location.origin + location.pathname + '?ref=' + encodeURIComponent(m.ref) + '#rewards';
+    var text = 'Join the Gold Club at Gold Wash Luton with my code '+m.ref+'. Collect stamps and your 8th wash is free: '+url;
+    function copy(){ if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function(){ toast('Invite copied. Paste it to a friend.'); }, function(){ toast('Your code: '+m.ref); }); else toast('Your code: '+m.ref); }
+    if (navigator.share) navigator.share({title:'Gold Wash Gold Club', text:text}).catch(function(e){ if(e && e.name!=='AbortError') copy(); });
+    else copy();
+  });
+  $('remToggle').addEventListener('change', function(e){ update(function(m){ m.rem = m.rem||{by:'app'}; m.rem.on = e.target.checked; }); toast(e.target.checked ? 'Monthly reminders on.' : 'Reminders off.'); });
+  document.querySelectorAll('input[name=remBy]').forEach(function(i){ i.addEventListener('change', function(){ update(function(m){ m.rem = m.rem||{on:true}; m.rem.by = i.value; }); }); });
+  $('previewRem').addEventListener('click', function(){
+    var m=store.get(KEY_M); var first = m ? m.name.split(' ')[0] : 'there';
+    notify('Hi '+first+', it\'s been a month since your last wash. Pop in today, we\'re open till 11pm. You\'re '+(m?Math.max(0,7-m.stamps):7)+' stamps from a free wash.');
+  });
+  $('joinForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var name=$('jName').value.trim(), phone=$('jPhone').value.replace(/\s+/g,''), err=$('jErr');
+    if (name.length<2) { err.textContent='Please enter your name.'; $('jName').focus(); return; }
+    if (!/^(\+44|0)7\d{9}$/.test(phone)) { err.textContent='Please enter a UK mobile number, e.g. 07123 456789.'; $('jPhone').focus(); return; }
+    if (!$('jTerms').checked) { err.textContent='Please tick the box to agree to the terms.'; return; }
+    err.textContent='';
+    var id='GW '+String(Math.floor(1000+Math.random()*9000))+' '+String(Math.floor(1000+Math.random()*9000));
+    var refBy = $('jRef').value.trim().toUpperCase();
+    var myRef = (name.split(' ')[0].replace(/[^A-Za-z]/g,'').toUpperCase().slice(0,6)||'GOLD')+'-'+String(Math.floor(100+Math.random()*900));
+    store.set(KEY_M,{name:name,phone:phone,email:$('jEmail').value.trim(),reg:$('jReg').value.trim().toUpperCase(),id:id,stamps:0,joined:Date.now(),ref:myRef,referredBy:refBy||null,refs:[],rem:{on:true,by:'app'}});
+    render(); window.scrollTo({top:0,behavior:'smooth'});
+    toast(refBy ? 'Welcome, '+name.split(' ')[0]+'! Code '+refBy+' applied: your friend gets a stamp after your first wash.' : 'Welcome to the Gold Club, '+name.split(' ')[0]+'!');
+  });
+  $('addStamp').addEventListener('click', function(){
+    var m=store.get(KEY_M); if(!m) return;
+    if (m.stamps>=7){ m.stamps=0; m.lastWash=Date.now(); store.set(KEY_M,m); render(); toast('Free wash redeemed. Your card starts again.'); return; }
+    m.stamps++; m.lastWash=Date.now(); store.set(KEY_M,m); render();
+    toast(m.stamps>=7 ? 'Your 8th wash is free!' : 'Stamp added: '+m.stamps+' of 7');
+  });
+  $('leave').addEventListener('click', function(){ store.del(KEY_M); render(); toast('Signed out of this device.'); });
+  try { var rq = new URLSearchParams(location.search).get('ref'); if (rq) $('jRef').value = rq.toUpperCase(); } catch(e){}
+  (function(){ var m=store.get(KEY_M); if(m && !m.ref){ m.ref=(m.name.split(' ')[0].toUpperCase().slice(0,6))+'-'+String(Math.floor(100+Math.random()*900)); m.refs=[]; m.rem={on:true,by:'app'}; store.set(KEY_M,m); } })();
+  render();
+
+  show();
+
+  /* ---------- Intro: bubbles leave the back of the car, sparkles glisten, ends on the logo exactly as supplied ---------- */
+  var KEY='goldwash_intro_seen', seen=false;
+  try { seen = sessionStorage.getItem(KEY)==='1'; } catch(e){}
+  if (seen || reduce) return;
+  try { sessionStorage.setItem(KEY,'1'); } catch(e){}
+
+  var brand=$('brand'), slot=$('logoSlot'), intro=$('intro'), stage=$('introStage'), fx=$('fx'), sheen=$('sheen');
+  var timers=[], done=false; function at(ms,fn){ timers.push(setTimeout(fn,ms)); }
+  intro.hidden=false; document.body.style.overflow='hidden';
+  var ph=document.createElement('span'); ph.style.cssText='display:block;width:100%;aspect-ratio:1391/554';
+  slot.style.visibility='hidden'; slot.appendChild(ph);
+  stage.appendChild(brand); brand.classList.add('building','entering');
+
+  // Exact positions in the supplied logo (% of logo width / height; size as % of width)
+  var BUBBLES=[[86.36,7.09,4.6],[79.14,12.48,4.96],[84.13,21.32,4.96],[90.47,27.8,7.33],[79.38,24.95,3.02],[84.09,33.92,3.59]];
+  var SPARKS=[[31.34,24.01,9],[20.7,42.6,6.5],[70.09,29.42,9],[93.67,45.85,6],[97.27,60.11,4.8],[4.03,86.82,5],[54.49,89.71,4.8]];
+  var REAR=[93,46]; // back of the car, where the bubbles come from
+  function W(){ return stage.getBoundingClientRect().width; }
+  function el(cls,lx,ly,size){ var e=document.createElement('span'); e.className=cls; e.style.left=lx+'%'; e.style.top=ly+'%'; e.style.setProperty(cls.indexOf('spark')>-1?'--s':'--d', size+'px'); fx.appendChild(e); return e; }
+  function pop(e, lx, ly, d){ var b=el('burst',lx,ly,d); e.remove(); setTimeout(function(){b.remove()},420); }
+  function sparkle(lx,ly,size,cls){ var s=el('spark',lx,ly,size); s.innerHTML=STAR; requestAnimationFrame(function(){ s.classList.add(cls); }); return s; }
+
+  // transient foam bubbles: rise from the rear, drift, burst
+  function looseBubble(){
+    var w=W(), d=w*(0.012+Math.random()*0.035), sx=REAR[0]-Math.random()*8, sy=REAR[1]+Math.random()*6;
+    var e=el('gb ghost',sx,sy,d), dx=-(4+Math.random()*16), dy=-(25+Math.random()*45), t=900+Math.random()*700;
+    var a=e.animate([{transform:'translate(0,0) scale(.4)',opacity:0},{opacity:1,offset:.15},{transform:'translate('+dx/100*w+'px,'+dy/100*stage.getBoundingClientRect().height+'px) scale(1.1)',opacity:1}],{duration:t,easing:'cubic-bezier(.3,.6,.4,1)',fill:'forwards'});
+    a.onfinish=function(){ pop(e, sx+dx, sy+dy, d*1.1); };
+  }
+  // gold bubbles that travel from the rear and settle into their exact places in the logo
+  var keepers=[];
+  function keeperBubble(b,i){
+    var w=W(), h=stage.getBoundingClientRect().height, d=b[2]/100*w;
+    var e=el('gb',b[0],b[1],d); keepers.push(e);
+    var fromX=(REAR[0]-b[0])/100*w, fromY=(REAR[1]-b[1])/100*h;
+    e.animate([{transform:'translate('+fromX+'px,'+fromY+'px) scale(.25)',opacity:0},{opacity:1,offset:.25},{transform:'translate('+(fromX*.2)+'px,'+(fromY*.1)+'px) scale(1.12)',offset:.8},{transform:'translate(0,0) scale(1)',opacity:1}],{duration:1150,easing:'cubic-bezier(.22,.8,.24,1)',fill:'forwards'});
+  }
+  var finals=[];
+  function run(){ sheen.classList.remove('run'); void sheen.offsetWidth; sheen.classList.add('run'); }
+
+  [[70,40],[40,70],[12,55],[60,82],[85,20]].forEach(function(p,i){ at(1300+i*170, function(){ var s=sparkle(p[0],p[1],W()*.035,'blink'); setTimeout(function(){s.remove()},900); }); });
+  BUBBLES.forEach(function(b,i){ at(1700+i*120, function(){ keeperBubble(b,i); }); });
+  SPARKS.forEach(function(s,i){ at(2550+i*80, function(){ finals.push(sparkle(s[0],s[1],s[2]/100*W()*1.05,'settle')); }); });
+  // Hand over to the supplied logo: same positions, so the final frame is the original artwork
+  at(3300, function(){ brand.classList.add('final'); keepers.concat(finals).forEach(function(e){ e.animate([{opacity:1},{opacity:0}],{duration:600,delay:150,fill:'forwards'}); }); });
+  at(3650, run);
+  at(4500, finish);
+
+  function finish(){
+    if (done) return; done=true; timers.forEach(clearTimeout);
+    brand.classList.remove('entering'); brand.classList.add('final');
+    fx.innerHTML=''; sheen.classList.remove('run');
+    window.scrollTo(0,0);
+    var from=brand.getBoundingClientRect(), to=ph.getBoundingClientRect();
+    brand.style.width=from.width+'px'; brand.style.left=from.left+'px'; brand.style.top=from.top+'px';
+    brand.classList.add('flying'); document.body.appendChild(brand); intro.classList.add('reveal');
+    var a=brand.animate([{transform:'translate(0,0) scale(1)'},{transform:'translate('+(to.left-from.left)+'px,'+(to.top-from.top)+'px) scale('+(to.width/from.width)+')'}],{duration:900,easing:'cubic-bezier(.65,0,.25,1)',fill:'forwards'});
+    a.onfinish=function(){
+      brand.classList.remove('flying','building','final'); brand.style.cssText=''; a.cancel();
+      ph.remove(); slot.appendChild(brand); slot.style.visibility='';
+      intro.remove(); document.body.style.overflow=''; playVideo();
+    };
+  }
+  $('skipIntro').addEventListener('click', finish);
+  addEventListener('keydown', function(e){ if(e.key==='Escape') finish(); });
+})();
+</script>
+</body>
+</html>

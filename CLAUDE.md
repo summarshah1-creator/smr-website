@@ -24,3 +24,11 @@ Owner: Summar (SMR Graphics / SMR Digital / SMR Plates, Luton). He edits the sit
 - Digital: "Recent work: Smash N Wings, Bedford" (laptop + phone mockups) sits above Websites & apps.
 - Plates order: builder → USP strip → Instagram auto-carousel (@smr.plates posts) → plate styles → private reg search.
 - Graphics hero: pull-up banner, business card, leaflet, hoodie, spinning "SMR GRAPHICS • DESIGN • PRINT" badge (only the text ring spins).
+
+## Private Demo Manager (`/demo/`, `/demo-admin/`)
+- PHP + SQLite on the same SiteGround plan. No other services.
+- `/demo-admin/`: owner login (password set once with the setup code, stored bcrypt). Tabs: Access links (create link + 6-digit PIN, pick demos, mode single / shared timer / limited uses, length, tips on/off; Copy, +15/+30 min, New PIN, Revoke, Delete) and Demos (edit text/tips/colour/order, change icon, replace by ZIP, add new ZIP, hide).
+- `/demo/?k=TOKEN`: visitor enters the PIN, then sees the showroom (fixed SMR header with countdown, All Demos, menu, Exit). Apps open in a same-origin iframe from `/demo/run/<slug>/`, which goes through `demo/serve.php` (checks session, allowed app, expiry; injects light copy deterrents; blocks service workers and .map files). The server is the only clock.
+- Code: `demo-lib/bootstrap.php` (shared, denied), `demo/` (index, api, serve, icon), `demo-admin/` (index, api). Database and uploaded ZIPs live outside public_html in `../smr-demo-private/` (fallback `demo-data/private/`, denied).
+- Demos shipped with the site: `demo-data/seed/<slug>/` (denied by .htaccess, served only via serve.php) + `demo-data/seed/_icons/<slug>.webp` + `demo-data/seed/seeds.json`.
+- "Update demo apps": fetch the latest artifact files, replace `demo-data/seed/<slug>/`, bump that slug's `version` in seeds.json (this re-points the demo at the new files even if a ZIP had replaced it), commit, push. Artifact slugs: allure c52cd17f-5dd1-4135-9c7f-6e4ca6eb7b6d, goldwash 697a70d7-7712-4dc1-81ac-b2b955477787, kaya c1925389-ad6e-4ced-84ac-393e6ff72f87, crave 8d0b1845-57f3-4211-a2db-becfb3f4754e, cafegrill cf270c9a-c41e-4d5a-9692-d847ead41a01, chunk f910ea26-2986-4fd4-9f48-f5907d1b8566, flava 92d03168-d262-4762-a0e5-56765dffc541, valor 1b4c7c9a-e4ff-481a-b260-7b81c665be2c. Gold Wash's hero.mp4 is too big to fetch from the artifact (poster image shows instead).
