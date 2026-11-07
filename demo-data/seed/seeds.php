@@ -64,7 +64,7 @@ return json_decode(<<<'JSON'
  },
  {
   "slug": "cafegrill",
-  "version": "2026-11-07f",
+  "version": "2026-11-07g",
   "name": "Café Grill",
   "accent": "#d0293a",
   "tagline": "Two-branch café ordering · Luton & St Albans",
