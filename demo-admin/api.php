@@ -35,9 +35,10 @@ if (!hash_equals($tok['csrf'], (string) ($_SERVER['HTTP_X_CSRF'] ?? ''))) json_o
 
 /* ---------- helpers ---------- */
 function link_url(string $token): string {
-    $host = $_SERVER['HTTP_HOST'] ?? 'smrdigital.co.uk';
-    if (preg_match('/(^|\.)smr(graphics|digital)\.co\.uk$/', $host)) $host = 'smrdigital.co.uk';
-    return (is_https() || $host === 'smrdigital.co.uk' ? 'https' : 'http') . '://' . $host . '/demo/?k=' . rawurlencode($token);
+    $host = preg_replace('/[^A-Za-z0-9.:-]/', '', (string) ($_SERVER['HTTP_HOST'] ?? 'smrgraphics.co.uk'));
+    $host = preg_replace('/^www\./', '', $host);
+    $local = preg_match('/^(127\.|localhost)/', $host);
+    return ($local ? 'http' : 'https') . '://' . $host . '/demo/?k=' . rawurlencode($token);
 }
 function link_row(array $l): array {
     [$status, $left] = link_status($l);
@@ -266,7 +267,7 @@ case 'demo_icon':
 case 'demo_delete':
     $d = demo_by_slug((string) ($in['slug'] ?? ''));
     if (!$d) json_out(['error' => 'Demo not found.'], 404);
-    $seed = is_file(SEED_DIR . '/' . $d['slug'] . '/index.html');
+    $seed = is_file(SEED_DIR . '/' . $d['slug'] . '.pack.php');
     if ($seed) {
         // Demos that ship with the website can only be hidden (they would come back on the next update).
         db()->prepare("UPDATE demos SET enabled = 0, updated_at = ? WHERE id = ?")->execute([now(), $d['id']]);

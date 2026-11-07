@@ -7,7 +7,7 @@ const VISITOR_COOKIE = 'smr_demo';
 const ADMIN_COOKIE = 'smr_admin';
 const DEFAULT_MINUTES = 30;
 const WHATSAPP = '447931814538';
-const MAIN_SITE = 'https://smrdigital.co.uk/#digital';
+const MAIN_SITE = '/#digital';
 const MAX_ZIP_BYTES = 200 * 1024 * 1024;     // uncompressed total
 const MAX_ZIP_FILES = 6000;
 
@@ -16,15 +16,20 @@ define('SEED_DIR', SITE_ROOT . '/demo-data/seed');
 
 date_default_timezone_set('Europe/London');
 
-/* Private storage: outside the web root when the host allows it, otherwise the denied demo-data folder. */
+/* Private storage: outside the web root when the host allows it. Otherwise an unguessable folder
+   inside demo-data (the host serves static files directly, so .htaccess alone is not enough). */
 function private_dir(): string {
     static $dir = null;
     if ($dir !== null) return $dir;
     $outside = dirname(SITE_ROOT) . '/smr-demo-private';
-    if (is_dir($outside) || @mkdir($outside, 0750, true)) {
-        if (is_writable($outside)) { $dir = $outside; return $dir; }
+    if ((is_dir($outside) || @mkdir($outside, 0750, true)) && is_writable($outside)) { $dir = $outside; return $dir; }
+    $cfg = SITE_ROOT . '/demo-data/private-path.php';
+    $name = is_file($cfg) ? (string) include $cfg : '';
+    if (!preg_match('/^p-[a-f0-9]{32}$/', $name)) {
+        $name = 'p-' . bin2hex(random_bytes(16));
+        file_put_contents($cfg, "<?php\nif (!defined('SMR_DEMO')) { http_response_code(404); exit; }\nreturn '" . $name . "';\n");
     }
-    $inside = SITE_ROOT . '/demo-data/private';
+    $inside = SITE_ROOT . '/demo-data/' . $name;
     if (!is_dir($inside)) @mkdir($inside, 0750, true);
     if (!file_exists($inside . '/.htaccess')) @file_put_contents($inside . '/.htaccess', "Require all denied\n");
     $dir = $inside;
@@ -67,12 +72,13 @@ function migrate(PDO $pdo): void {
 
 /* Demos shipped in the repo (demo-data/seed). A new seed version re-points the demo at the seed files. */
 function sync_seeds(PDO $pdo): void {
-    $file = SEED_DIR . '/seeds.json';
+    $file = SEED_DIR . '/seeds.php';
     if (!is_file($file)) return;
     $stamp = (string) filemtime($file) . ':' . filesize($file);
     $flag = private_dir() . '/.seeds-synced';
     if (is_file($flag) && trim((string) file_get_contents($flag)) === $stamp) return;
-    $seeds = json_decode((string) file_get_contents($file), true) ?: [];
+    $seeds = include $file;
+    if (!is_array($seeds)) return;
     $now = time();
     foreach ($seeds as $i => $s) {
         $row = $pdo->prepare('SELECT * FROM demos WHERE slug = ?');
@@ -82,12 +88,12 @@ function sync_seeds(PDO $pdo): void {
             $pdo->prepare('INSERT INTO demos (slug,name,tagline,description,tips,source,dir,icon,accent,seed_version,enabled,sort,created_at,updated_at)
                 VALUES (?,?,?,?,?,?,?,?,?,?,1,?,?,?)')->execute([
                 $s['slug'], $s['name'], $s['tagline'] ?? '', $s['description'] ?? '', implode("\n", $s['tips'] ?? []), 'seed',
-                'seed:' . $s['slug'], 'seed:_icons/' . $s['slug'] . '.webp', $s['accent'] ?? '#5b5bff', $s['version'] ?? '1', ($i + 1) * 10, $now, $now]);
+                'seed:' . $s['slug'], 'seed:' . $s['slug'], $s['accent'] ?? '#5b5bff', $s['version'] ?? '1', ($i + 1) * 10, $now, $now]);
         } elseif (($d['seed_version'] ?? '') !== ($s['version'] ?? '1')) {
             // Newer files pushed from chat: point the demo back at the seed files (text the admin edited stays).
             $pdo->prepare("UPDATE demos SET dir = ?, source = 'seed', seed_version = ?, updated_at = ?,
                 icon = CASE WHEN icon LIKE 'up:%' THEN icon ELSE ? END WHERE id = ?")
-                ->execute(['seed:' . $s['slug'], $s['version'] ?? '1', $now, 'seed:_icons/' . $s['slug'] . '.webp', $d['id']]);
+                ->execute(['seed:' . $s['slug'], $s['version'] ?? '1', $now, 'seed:' . $s['slug'], $d['id']]);
         }
     }
     @file_put_contents($flag, $stamp);
@@ -151,17 +157,72 @@ function demo_by_slug(string $slug): ?array {
     $st->execute([$slug]);
     return $st->fetch() ?: null;
 }
+/* Seed demos ship as demo-data/seed/<slug>.pack.php (exits if requested, then a ZIP).
+   They are unpacked once per version into private storage and served from there. */
+function seed_cache(string $slug, string $version): ?string {
+    $safeV = preg_replace('/[^A-Za-z0-9._-]/', '_', $version !== '' ? $version : '1');
+    $base = private_dir() . '/seed/' . $slug;
+    $dir = $base . '/' . $safeV;
+    if (is_file($dir . '/app/index.html')) return $dir;
+    $pack = SEED_DIR . '/' . $slug . '.pack.php';
+    if (!is_file($pack) || !class_exists('ZipArchive')) return null;
+    $lock = fopen(private_dir() . '/.unpack.lock', 'c');
+    flock($lock, LOCK_EX);
+    try {
+        if (is_file($dir . '/app/index.html')) return $dir;
+        $raw = (string) file_get_contents($pack);
+        $at = strpos($raw, '__halt_compiler();');
+        if ($at === false) return null;
+        if (!is_dir($base)) @mkdir($base, 0750, true);
+        $tmpZip = $base . '/.tmp-' . bin2hex(random_bytes(4)) . '.zip';
+        file_put_contents($tmpZip, substr($raw, $at + strlen('__halt_compiler();')));
+        unset($raw);
+        $tmpDir = $base . '/.tmp-' . bin2hex(random_bytes(4));
+        $z = new ZipArchive();
+        $ok = $z->open($tmpZip) === true;
+        if ($ok) {
+            for ($i = 0; $i < $z->numFiles; $i++) {
+                $n = (string) $z->getNameIndex($i);
+                if ($n === '' || $n[0] === '/' || preg_match('#(^|/)\.\.(/|$)#', $n)) { $ok = false; break; }
+            }
+            $ok = $ok && $z->extractTo($tmpDir);
+            $z->close();
+        }
+        @unlink($tmpZip);
+        if (!$ok || !is_file($tmpDir . '/app/index.html')) { rrmdir_any($tmpDir); return null; }
+        foreach (glob($base . '/*', GLOB_ONLYDIR) ?: [] as $old) rrmdir_any($old); // older versions
+        rename($tmpDir, $dir);
+        return $dir;
+    } finally {
+        flock($lock, LOCK_UN);
+        fclose($lock);
+    }
+}
+function rrmdir_any(string $dir): void {
+    if (!is_dir($dir)) return;
+    $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST);
+    foreach ($it as $f) { $f->isDir() && !$f->isLink() ? @rmdir($f->getPathname()) : @unlink($f->getPathname()); }
+    @rmdir($dir);
+}
 function demo_root(array $d): ?string {
     [$kind, $rel] = array_pad(explode(':', $d['dir'], 2), 2, '');
-    $base = $kind === 'seed' ? SEED_DIR : private_dir() . '/uploads';
-    $path = realpath($base . '/' . $rel);
+    if ($kind === 'seed') {
+        $c = seed_cache($rel, (string) $d['seed_version']);
+        $path = $c ? realpath($c . '/app') : false;
+    } else {
+        $path = realpath(private_dir() . '/uploads/' . $rel);
+    }
     return $path && is_dir($path) ? $path : null;
 }
 function demo_icon_path(array $d): ?string {
     if (!$d['icon']) return null;
     [$kind, $rel] = array_pad(explode(':', $d['icon'], 2), 2, '');
-    $base = $kind === 'seed' ? SEED_DIR : private_dir() . '/media';
-    $p = realpath($base . '/' . $rel);
+    if ($kind === 'seed') {
+        $c = seed_cache($d['slug'], (string) $d['seed_version']);
+        $p = $c ? realpath($c . '/icon.webp') : false;
+    } else {
+        $p = realpath(private_dir() . '/media/' . basename($rel));
+    }
     return $p && is_file($p) ? $p : null;
 }
 function demo_public(array $d): array {

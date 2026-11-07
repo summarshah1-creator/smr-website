@@ -14,6 +14,16 @@ if ($demo) {
     }
 }
 $path = $ok ? demo_icon_path($demo) : null;
+if ($ok && !$path) {
+    // No icon uploaded yet: a simple branded letter tile.
+    $letter = h(mb_strtoupper(mb_substr(trim($demo['name']), 0, 1)) ?: 'S');
+    security_headers(false);
+    header('Content-Type: image/svg+xml');
+    header('Cache-Control: private, max-age=300');
+    echo '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5b5bff"/><stop offset="1" stop-color="#d63bff"/></linearGradient></defs>'
+        . '<rect width="256" height="256" fill="url(#g)"/><text x="128" y="128" dy=".35em" text-anchor="middle" font-family="Sora,Arial,sans-serif" font-weight="700" font-size="128" fill="#fff">' . $letter . '</text></svg>';
+    exit;
+}
 if (!$path || !($mime = mime_for($path)) || strpos($mime, 'image/') !== 0) { http_response_code(404); exit; }
 security_headers(false);
 header('Content-Type: ' . $mime);
