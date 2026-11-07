@@ -64,7 +64,7 @@ return json_decode(<<<'JSON'
  },
  {
   "slug": "cafegrill",
-  "version": "2026-11-07b",
+  "version": "2026-11-07f",
   "name": "Café Grill",
   "accent": "#d0293a",
   "tagline": "Two-branch café ordering · Luton & St Albans",
@@ -120,7 +120,7 @@ return json_decode(<<<'JSON'
  },
  {
   "slug": "valor-app",
-  "version": "2026-11-07a",
+  "version": "2026-11-07f",
   "name": "Valor Barbers App",
   "accent": "#d8ccb6",
   "tagline": "Customer & staff app · Eaton Green, Luton",
