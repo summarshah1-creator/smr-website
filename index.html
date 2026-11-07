@@ -135,6 +135,7 @@ body[data-brand="plates"] .btn.primary{color:#170f00}
 .trust{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:26px;color:var(--mut);font-size:14px;font-weight:600;animation:fade 1s .6s both}
 .trust span{display:flex;align-items:center;gap:7px}
 .trust svg{width:17px;height:17px;color:var(--a2);transition:color .6s}
+@media (max-width:719px){.trust{flex-wrap:nowrap;gap:9px;font-size:clamp(10px,2.95vw,13px);white-space:nowrap}.trust span{gap:5px}.trust svg{width:14px;height:14px;flex:none}}
 
 /* graphics hero visual */
 .stage{position:relative;height:400px;display:flex;justify-content:center;perspective:1000px}
@@ -487,6 +488,11 @@ footer{border-top:1px solid var(--line);padding:46px 0 calc(110px + var(--safe-b
 /* ---------- sticky mobile CTA ---------- */
 .dock{position:fixed;left:12px;right:12px;bottom:calc(12px + var(--safe-b));z-index:45;display:flex;gap:8px;padding:8px;border-radius:22px;background:rgba(18,18,28,.82);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid var(--line2);box-shadow:0 20px 50px rgba(0,0,0,.5);transform:translateY(140%);transition:transform .5s var(--ease)}
 .dock.show{transform:none}
+.totop{position:fixed;right:14px;bottom:calc(90px + var(--safe-b));z-index:44;width:46px;height:46px;border-radius:50%;border:1px solid var(--line2);background:rgba(18,18,28,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);color:#fff;display:grid;place-items:center;cursor:pointer;box-shadow:0 14px 34px rgba(0,0,0,.45);opacity:0;transform:translateY(12px) scale(.9);pointer-events:none;transition:opacity .35s,transform .35s var(--ease)}
+.totop.show{opacity:1;transform:none;pointer-events:auto}
+.totop svg{width:20px;height:20px}
+.totop::before{content:"";position:absolute;inset:-1px;border-radius:50%;padding:1px;background:linear-gradient(110deg,var(--a1),var(--a2));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+@media (min-width:720px){.totop{right:24px;bottom:28px;width:50px;height:50px}}
 .dock .btn{height:48px;flex:1;font-size:15px;padding:0 12px}
 .dock .wa{flex:none;width:48px;padding:0;background:#25d366;color:#fff}
 
@@ -667,6 +673,107 @@ img.o-hoodie{height:auto;object-fit:contain;filter:drop-shadow(0 26px 30px rgba(
 #d-apps.lt .compare .row>div:nth-child(2){color:#16131f}
 @media (min-width:720px){.pf-tabs{margin:0 0 18px;padding:0}.pf-panel{display:none;grid-template-columns:300px 1fr;align-items:center;padding:30px 0}.pf-panel.on{display:grid}.pf-info{padding:0 0 0 34px}.pf-frame{width:180px}.pf-row{padding:20px 30px 10px}}
 
+
+/* ---------- Digital hero: customer app → shop tablet → owner dashboard ---------- */
+.d-hero .hero-grid{gap:30px}
+.flow{position:relative;display:flex;flex-direction:column;align-items:center;gap:0;font-family:Manrope,sans-serif}
+.fl-step{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center}
+.fl-lab{margin-top:12px;max-width:250px}
+.fl-lab b{display:block;font-family:Sora,sans-serif;font-size:15px;color:var(--ink)}
+.fl-lab span{display:block;font-size:12.5px;color:var(--mut);line-height:1.4;margin-top:2px}
+.fl-link{position:relative;width:2px;height:44px;margin:10px 0;background:linear-gradient(var(--line2),var(--line2))}
+.fl-link i{position:absolute;left:50%;top:0;width:8px;height:8px;margin-left:-4px;border-radius:50%;background:linear-gradient(110deg,var(--a1),var(--a2));box-shadow:0 0 12px var(--a2);animation:flDotV 1.8s linear infinite}
+.fl-link i::after{content:"";position:absolute;inset:0;border-radius:50%;background:inherit;animation:flDotV2 1.8s linear infinite .9s}
+@keyframes flDotV{from{top:-4px;opacity:0}15%{opacity:1}85%{opacity:1}to{top:calc(100% - 4px);opacity:0}}
+@keyframes flDotV2{from{transform:translateY(0)}to{transform:translateY(0)}}
+.fl-dev{position:relative;background:#0c0c16;border:1px solid var(--line2);box-shadow:0 30px 60px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.03) inset}
+.fl-scr{position:absolute;inset:6px;border-radius:inherit;overflow:hidden;background:#15151f;padding:10px;display:flex;flex-direction:column;gap:6px;font-size:10px;color:var(--ink);text-align:left}
+.fl-scr small{color:var(--mut);font-size:8.5px;font-weight:600}
+/* phone */
+.fl-phone{width:150px;height:290px;border-radius:28px}
+.fl-phone .fl-scr{border-radius:22px;padding:14px 9px 9px}
+.fp-top{display:flex;justify-content:space-between;align-items:center}
+.fp-top b{font-family:Sora,sans-serif;font-size:11px}
+.fp-dot{width:16px;height:16px;border-radius:50%;background:linear-gradient(110deg,var(--a1),var(--a2))}
+.fp-card{border-radius:12px;padding:9px;background:linear-gradient(135deg,var(--a1),var(--a2));display:flex;flex-direction:column;gap:2px}
+.fp-card small{color:rgba(255,255,255,.8)}
+.fp-card b{font-family:Sora,sans-serif;font-size:15px}
+.fp-ev{display:flex;gap:7px;align-items:center;padding:6px;border-radius:10px;background:rgba(255,255,255,.05);border:1px solid var(--line);font-weight:700;opacity:0;transform:translateY(8px);animation:flIn 9s infinite}
+.fp-ev small{display:block;font-weight:600}
+.fp-ev i{flex:none;width:20px;height:20px;border-radius:7px;display:grid;place-items:center;font-style:normal;font-size:10px;background:rgba(255,255,255,.08)}
+.fp-ev .stars{color:#ffcf4a;letter-spacing:1px}
+.fe2{animation-delay:1s}.fe3{animation-delay:2s}
+@keyframes flIn{0%{opacity:0;transform:translateY(8px)}6%,88%{opacity:1;transform:none}96%,100%{opacity:0;transform:translateY(-4px)}}
+.fp-stamps{margin-top:auto;display:grid;grid-template-columns:repeat(8,1fr);gap:3px}
+.fp-stamps span{aspect-ratio:1;border-radius:50%;background:linear-gradient(110deg,var(--a1),var(--a2));display:grid;place-items:center;font-size:7px}
+.fp-stamps span.on{animation:flStamp 9s infinite}
+.fp-stamps span.gift{background:rgba(255,255,255,.1)}
+@keyframes flStamp{0%,30%{background:rgba(255,255,255,.1)}36%,100%{background:linear-gradient(110deg,var(--a1),var(--a2))}}
+/* tablet */
+.fl-tab{width:300px;height:200px;border-radius:18px}
+.fl-tab .fl-scr{border-radius:12px}
+.ft-top,.fd-top{display:flex;justify-content:space-between;align-items:center}
+.ft-top b,.fd-top b{font-family:Sora,sans-serif;font-size:11px}
+.ft-live{font-size:9px;font-weight:700;color:#3ee08f}
+.ft-cols{display:grid;grid-template-columns:1.1fr 1fr;gap:8px;flex:1;min-height:0}
+.ft-orders,.ft-tasks{display:flex;flex-direction:column;gap:4px;min-width:0}
+.ft-tk{padding:5px 7px;border-radius:8px;background:rgba(255,255,255,.05);border:1px solid var(--line);font-weight:600;white-space:nowrap;overflow:hidden}
+.ft-tk small{display:block;overflow:hidden;text-overflow:ellipsis}
+.ft-tk.new{border-color:transparent;background:linear-gradient(110deg,color-mix(in srgb,var(--a1) 35%,transparent),color-mix(in srgb,var(--a2) 35%,transparent));animation:flTk 3s infinite}
+.ft-tk.dim{opacity:.5}
+@keyframes flTk{0%,100%{box-shadow:0 0 0 0 transparent}50%{box-shadow:0 0 0 3px color-mix(in srgb,var(--a2) 35%,transparent)}}
+.ft-row{display:flex;align-items:center;gap:6px;padding:4px 0;border-bottom:1px solid var(--line);font-weight:600;white-space:nowrap}
+.ft-row em{margin-left:auto;font-style:normal;color:var(--mut);font-size:8.5px}
+.ft-row i{flex:none;width:11px;height:11px;border-radius:4px;border:1.5px solid var(--line2);display:grid;place-items:center}
+.ft-row i.ok,.ft-anim i{background:#2bc77a;border-color:#2bc77a}
+.ft-row i.ok::after,.ft-anim i::after{content:"";width:5px;height:3px;border:solid #fff;border-width:0 0 1.5px 1.5px;transform:rotate(-45deg) translateY(-1px)}
+.ft-anim i{animation:flChk 9s infinite}
+.ft-anim i::after{animation:flChk2 9s infinite}
+@keyframes flChk{0%,45%{background:transparent;border-color:var(--line2)}50%,100%{background:#2bc77a;border-color:#2bc77a}}
+@keyframes flChk2{0%,45%{opacity:0}50%,100%{opacity:1}}
+/* laptop */
+.fl-lap{width:320px;height:205px;border-radius:14px 14px 4px 4px}
+.fl-lap .fl-scr{border-radius:8px;inset:7px}
+.fl-base{width:370px;height:12px;margin-top:-1px;border-radius:2px 2px 12px 12px;background:linear-gradient(#2a2a3a,#16161f);box-shadow:0 18px 30px rgba(0,0,0,.5)}
+.fd-top span{font-size:9px;color:var(--mut);font-weight:700}
+.fd-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
+.fd-kpis div{padding:6px;border-radius:8px;background:rgba(255,255,255,.05);border:1px solid var(--line);display:flex;flex-direction:column;gap:1px;min-width:0}
+.fd-kpis small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fd-kpis b{font-family:Sora,sans-serif;font-size:12.5px}
+.fd-kpis em{font-style:normal;font-size:8.5px;font-weight:700;color:#3ee08f}
+.fd-chart{flex:1;min-height:0;display:flex;align-items:flex-end;gap:6px;padding:6px 4px 0;border-bottom:1px solid var(--line)}
+.fd-chart span{flex:1;height:var(--h);border-radius:4px 4px 0 0;background:linear-gradient(var(--a2),color-mix(in srgb,var(--a1) 60%,transparent));transform-origin:bottom;animation:flBar 1.2s cubic-bezier(.2,.8,.2,1) both}
+.fd-chart span:nth-child(2){animation-delay:.08s}.fd-chart span:nth-child(3){animation-delay:.16s}.fd-chart span:nth-child(4){animation-delay:.24s}.fd-chart span:nth-child(5){animation-delay:.32s}.fd-chart span:nth-child(6){animation-delay:.4s}.fd-chart span:nth-child(7){animation-delay:.48s}
+.fd-chart .fd-last{animation:flBar 1.2s cubic-bezier(.2,.8,.2,1) .48s both,flGrow 9s ease-in-out infinite 2s}
+@keyframes flBar{from{transform:scaleY(0)}}
+@keyframes flGrow{0%,40%{transform:scaleY(.9)}55%,100%{transform:scaleY(1)}}
+.fd-alert{padding:4px 8px;border-radius:999px;background:rgba(255,190,60,.14);color:#ffcf6b;font-weight:700;font-size:9px}
+@media (min-width:720px) and (max-width:1099px){.d-hero .hero-grid{grid-template-columns:1fr;gap:48px}}
+@media (min-width:1100px){
+  .d-hero .hero-grid{grid-template-columns:.92fr 1.08fr;gap:36px}
+  .d-hero h1{font-size:clamp(46px,4.9vw,74px)}
+  .flow{display:block;height:560px;width:100%;max-width:600px;margin-left:auto}
+  .fl-link{display:none}
+  .fl-path{display:block!important;position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:4;overflow:visible}
+  .fl-step{position:absolute}
+  .fl-own{right:0;top:20px;z-index:1}
+  .fl-shop{left:0;top:270px;z-index:2}
+  .fl-cust{right:24px;top:236px;z-index:3}
+  .fl-phone{width:160px;height:310px;border-radius:30px}
+  .fl-tab{width:340px;height:220px}
+  .fl-lap{width:420px;height:262px}
+  .fl-base{width:480px}
+  .fl-scr{font-size:10.5px}
+  .fl-lab{position:absolute;margin:0;max-width:none;white-space:nowrap;display:flex;align-items:center;gap:8px;padding:6px 12px 6px 6px;border-radius:999px;background:rgba(20,20,32,.92);border:1px solid var(--line2);box-shadow:0 14px 30px rgba(0,0,0,.45);backdrop-filter:blur(8px)}
+  .fl-lab span{display:none}
+  .fl-lab b{font-size:12.5px}
+  .fl-lab::before{content:attr(data-n);width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font:700 11px Sora,sans-serif;color:#fff;background:linear-gradient(110deg,var(--a1),var(--a2))}
+  .fl-cust .fl-lab{right:-10px;bottom:-16px}
+  .fl-shop .fl-lab{left:16px;bottom:-16px}
+  .fl-own .fl-lab{right:24px;top:-18px}
+}
+.fl-dash{animation:flDash 1.2s linear infinite}@keyframes flDash{to{stroke-dashoffset:-30}}
+@media (prefers-reduced-motion:reduce){.flow *{animation:none!important;opacity:1!important;transform:none!important}}
 /* ---------- intro splash ---------- */
 #splash{position:fixed;inset:0;z-index:999;background:#07070d;display:grid;place-items:center;overflow:hidden;animation:spOut 3.4s cubic-bezier(.4,0,.2,1) forwards;cursor:pointer}
 #splash .bg{position:absolute;inset:-20%;opacity:0}
@@ -981,7 +1088,7 @@ setTimeout(done,3700);})();
 
 <!-- ======================= DIGITAL ======================= -->
 <div class="view" id="v-digital" data-title="SMR Digital — High-end Apps &amp; Websites, Affordable Prices">
-  <section class="hero">
+  <section class="hero d-hero">
     <div class="wrap hero-grid">
       <div>
         
@@ -993,11 +1100,54 @@ setTimeout(done,3700);})();
         </div>
         <div class="trust"><span><svg data-i="check"></svg>Your own brand</span><span><svg data-i="check"></svg>Back end built in</span><span><svg data-i="check"></svg>No commission</span></div>
       </div>
-      <div class="feed" aria-hidden="true">
-        <div class="post"><div class="ph"><b>Order in 2 taps</b></div><div class="meta"><span class="mt"><span class="stars">★★★★★</span>Your app</span><span class="mt" style="margin-left:auto">Live</span></div></div>
-        <div class="notif n1"><span class="ic">🛎</span><div>New order · £24.50<small>via your app</small></div></div>
-        <div class="notif n2"><span class="ic">📅</span><div>New booking<small>Saturday, 2:30pm</small></div></div>
-        <div class="notif n3"><span class="ic">★</span><div>Reward unlocked<small>8th coffee free</small></div></div>
+      <div class="flow" aria-label="Your customers' app, your shop tablet and your own dashboard, all connected">
+        <svg class="fl-path" viewBox="0 0 600 560" preserveAspectRatio="none" aria-hidden="true" style="display:none"><defs><linearGradient id="flg" x1="0" x2="1"><stop offset="0" stop-color="var(--a1)"/><stop offset="1" stop-color="var(--a2)"/></linearGradient><path id="flp" d="M478 470 C 430 520, 380 520, 342 480 M 200 270 C 210 220, 240 200, 300 190"/></defs><use href="#flp" fill="none" stroke="url(#flg)" stroke-width="2.5" stroke-dasharray="6 9" class="fl-dash"/></svg>
+        <div class="fl-step fl-cust">
+          <div class="fl-dev fl-phone"><div class="fl-scr">
+            <div class="fp-top"><b>Your app</b><span class="fp-dot"></span></div>
+            <div class="fp-card fp-hero"><small>Today's deal</small><b>2 for £12</b></div>
+            <div class="fp-ev fe1"><i>🛍</i><div>Order placed<small>Collection · £24.50</small></div></div>
+            <div class="fp-ev fe2"><i>📅</i><div>Table booked<small>Sat · 7:30pm · 4 people</small></div></div>
+            <div class="fp-ev fe3"><i>★</i><div>Feedback sent<small><span class="stars">★★★★★</span></small></div></div>
+            <div class="fp-stamps"><span></span><span></span><span></span><span></span><span></span><span></span><span class="on"></span><span class="gift">🎁</span></div>
+          </div></div>
+          <div class="fl-lab" data-n="1"><b>Your customers</b><span>Order, book, collect rewards and leave feedback.</span></div>
+        </div>
+        <div class="fl-link"><i></i></div>
+        <div class="fl-step fl-shop">
+          <div class="fl-dev fl-tab"><div class="fl-scr">
+            <div class="ft-top"><b>Shop tablet</b><span class="ft-live">● Live</span></div>
+            <div class="ft-cols">
+              <div class="ft-orders"><small>Incoming</small>
+                <div class="ft-tk new"><b>#142</b> Collection<small>2× Smash burger · Fries</small></div>
+                <div class="ft-tk"><b>#141</b> Delivery<small>Wings box · Shake</small></div>
+                <div class="ft-tk dim"><b>#140</b> Table 6<small>Ready ✓</small></div>
+              </div>
+              <div class="ft-tasks"><small>Today</small>
+                <div class="ft-row"><i class="ok"></i>Opening checks</div>
+                <div class="ft-row"><i class="ok"></i>Fridge temps</div>
+                <div class="ft-row ft-anim"><i></i>Toilets cleaned</div>
+                <div class="ft-row"><i class="ok"></i>Sami clocked in<em>08:58</em></div>
+              </div>
+            </div>
+          </div></div>
+          <div class="fl-lab" data-n="2"><b>Your shop</b><span>Orders, bookings, cleaning and staff on one screen.</span></div>
+        </div>
+        <div class="fl-link"><i></i></div>
+        <div class="fl-step fl-own">
+          <div class="fl-dev fl-lap"><div class="fl-scr">
+            <div class="fd-top"><b>Admin dashboard</b><span class="fd-alert">VAT return due in 6 days</span></div>
+            <div class="fd-kpis">
+              <div><small>Sales</small><b id="fdSales">£1,284</b><em>▲ 12%</em></div>
+              <div><small>Orders</small><b id="fdOrders">86</b><em>▲ 9</em></div>
+              <div><small>Staff on time</small><b>100%</b><em class="g">✓</em></div>
+              <div><small>Checklists</small><b id="fdChk">8/9</b><em class="g">✓</em></div>
+            </div>
+            <div class="fd-chart"><span style="--h:38%"></span><span style="--h:52%"></span><span style="--h:44%"></span><span style="--h:66%"></span><span style="--h:58%"></span><span style="--h:80%"></span><span class="fd-last" style="--h:92%"></span></div>
+          </div></div>
+          <div class="fl-base"></div>
+          <div class="fl-lab" data-n="3"><b>You, in control</b><span>Sales, staff, checklists and accounts, from anywhere.</span></div>
+        </div>
       </div>
     </div>
   </section>
@@ -1097,7 +1247,7 @@ setTimeout(done,3700);})();
           <a class="btn primary" href="#" data-quote>Book a free chat <svg data-i="arrow"></svg></a>
           <a class="btn ghost" href="#m-social" data-scroll>See the plans</a>
         </div>
-        <div class="trust"><span><svg data-i="check"></svg>Setup to full management</span><span><svg data-i="check"></svg>Photo &amp; video</span><span><svg data-i="check"></svg>Affordable plans</span></div>
+        <div class="trust"><span><svg data-i="check"></svg>Full management</span><span><svg data-i="check"></svg>Photo &amp; video</span><span><svg data-i="check"></svg>Affordable plans</span></div>
       </div>
       <div class="feed" aria-hidden="true">
         <div class="post"><div class="ph"><b>New menu drops Friday</b></div><div class="meta"><svg class="heart" data-i="heart"></svg>1,284 <svg data-i="chat"></svg>96 <svg data-i="send" style="margin-left:auto"></svg></div></div>
@@ -1261,6 +1411,7 @@ setTimeout(done,3700);})();
 </footer>
 
 <div class="pf-lb" id="pfLb" aria-hidden="true"><button class="pf-x" aria-label="Close">×</button><button class="pf-nav pv" aria-label="Previous">‹</button><div class="pf-lbf"><img alt=""></div><button class="pf-nav nx" aria-label="Next">›</button><p class="pf-lbc"></p></div>
+<button class="totop" id="toTop" aria-label="Back to top" title="Back to top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
 <div class="dock" id="dock">
   <a class="btn primary" href="#" data-quote>Get a free quote</a>
   <a class="btn wa" href="#" data-wa aria-label="WhatsApp us"><svg data-i="wa"></svg></a>
@@ -1499,6 +1650,9 @@ const SVC={
   marketing:['Social media management','Videography','Video editing','Photography','Reels & TikToks','Social post design','Content planning','Websites & SEO','Google Business profile']
 };
 function setSvc(brand){const L=SVC[brand];if(!L)return;const tr=document.getElementById('svcTrack');const one=L.concat(L).map(s=>`<span>${s.replace(/&/g,'&amp;')}</span>`).join('');tr.innerHTML=one+one;tr.style.setProperty('--svc-t',(L.length*7)+'s')}
+(function(){const s=document.getElementById('fdSales'),o=document.getElementById('fdOrders'),c=document.getElementById('fdChk');if(!s)return;let sales=1284,ord=86;
+ function cyc(){setTimeout(()=>{if(c)c.textContent='9/9'},4500);setTimeout(()=>{sales+=24.5;ord+=1;s.textContent='£'+Math.round(sales).toLocaleString('en-GB');o.textContent=ord},1600);setTimeout(()=>{if(c)c.textContent='8/9'},8900)}
+ cyc();setInterval(cyc,9000)})();
 function movePills(){document.querySelectorAll('[data-switch]').forEach(sw=>{const on=sw.querySelector('button.on'),p=sw.querySelector('.pill');p.style.opacity=on?'':'0';if(!on||!sw.offsetParent)return;p.style.width=on.offsetWidth+'px';p.style.transform=`translateX(${on.offsetLeft-4}px)`})}
 let current=null;
 function go(brand,{scroll=true,push=true}={}){
@@ -1566,6 +1720,8 @@ document.querySelectorAll('.pf-tab').forEach(t=>t.addEventListener('click',()=>{
  addEventListener('keydown',e=>{if(!lb.classList.contains('open'))return;if(e.key==='Escape')close();if(e.key==='ArrowLeft')lb.querySelector('.pv').click();if(e.key==='ArrowRight')lb.querySelector('.nx').click()});
  let sx=null;lb.addEventListener('touchstart',e=>sx=e.touches[0].clientX,{passive:true});lb.addEventListener('touchend',e=>{if(sx===null)return;const d=e.changedTouches[0].clientX-sx;if(Math.abs(d)>40)(d<0?lb.querySelector('.nx'):lb.querySelector('.pv')).click();sx=null});
 })();
+/* ---- Back to top ---- */
+(function(){const b=document.getElementById('toTop');let on=false;const f=()=>{const s=scrollY>700;if(s!==on){on=s;b.classList.toggle('show',s)}};window.addEventListener('scroll',f,{passive:true});f();b.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}))})();
 /* ---- Reveal + dock ---- */
 let io;
 function observe(){

@@ -25,6 +25,8 @@ Owner: Summar (SMR Graphics / SMR Digital / SMR Plates, Luton). He edits the sit
 - Digital: "Recent work: Smash N Wings, Bedford" (laptop + phone mockups) sits above Websites & apps. Cross-sell at the bottom of each tab (XSFOR): Digital → Marketing + Graphics.
 - Plates order: builder → USP strip → Instagram auto-carousel (@smr.plates posts) → plate styles → private reg search.
 - Header: a white scrolling services strip under the top bar (SVC list in index.html, per tab; hidden on Plates). It replaced the "We do / We build" tickers on Digital, Graphics and Marketing (Plates keeps its ticker).
+- Digital hero graphic (.flow): customer phone app → shop tablet (orders, cleaning checklist, staff clock-in) → owner laptop dashboard (sales, orders, staff on time, checklists, chart, VAT alert), numbered 1/2/3. Phone: stacked with labels; 1100px+: layered beside the headline with a dashed animated path.
+- Back-to-top button (#toTop) appears after 700px of scroll (above the mobile dock). Hero trust ticks stay on one line on mobile.
 - Graphics hero: pull-up banner, business card, leaflet, hoodie, spinning "SMR GRAPHICS • DESIGN • PRINT" badge (only the text ring spins).
 
 ## Private Demo Manager (`/demo/`, `/demo-admin/`)
