@@ -52,6 +52,21 @@ if ($preview) {
     }
 }
 
+// Link previews (WhatsApp, iMessage...): app icon + "<App> Demo - SMR Digital".
+$pageTitle = 'SMR Digital · Private demos';
+$og = null;
+if ($link && !$preview) {
+    $names = [];
+    foreach (link_apps($link) as $sl) { $dd = demo_by_slug($sl); if ($dd) $names[] = $dd['name']; }
+    if (count($names) === 1) $pageTitle = $names[0] . ' Demo - SMR Digital';
+    elseif (count($names) === 2) $pageTitle = $names[0] . ' & ' . $names[1] . ' Demos - SMR Digital';
+    else $pageTitle = 'App Demos - SMR Digital';
+    $scheme = is_https() || !preg_match('/^(127\.|localhost)/', (string) ($_SERVER['HTTP_HOST'] ?? '')) ? 'https' : 'http';
+    $base = $scheme . '://' . preg_replace('/[^A-Za-z0-9.:-]/', '', (string) ($_SERVER['HTTP_HOST'] ?? 'smrgraphics.co.uk'));
+    $og = ['title' => $pageTitle, 'url' => $base . link_path($link),
+        'image' => $base . '/demo/og.php?k=' . rawurlencode($link['token']) . '&v=' . substr(md5($link['apps']), 0, 6),
+        'desc' => (count($names) === 1 ? 'A private demo of the ' . $names[0] . ' app' : 'Private demos of ' . (count($names) > 1 ? implode(', ', array_slice($names, 0, -1)) . ' and ' . end($names) : 'our apps')) . ', designed & built by SMR Digital.'];
+}
 $mark = (string) @file_get_contents(SITE_ROOT . '/assets/smr-mark.svg');
 $mark = preg_replace('/<svg /', '<svg aria-hidden="true" focusable="false" ', $mark, 1);
 $waRequest = 'https://wa.me/' . WHATSAPP . '?text=' . rawurlencode("Hi Summar, my SMR Digital demo session has ended. Could I have a new PIN please?");
@@ -65,8 +80,24 @@ $boot = ['view' => $view, 'token' => $token, 'preview' => $preview, 'now' => now
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
 <meta name="theme-color" content="#08080f">
-<title>SMR Digital · Private demos</title>
+<title><?= h($pageTitle) ?></title>
+<?php if ($og): ?>
+<link rel="icon" href="<?= h($og['image']) ?>">
+<link rel="apple-touch-icon" href="<?= h($og['image']) ?>">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="SMR Digital">
+<meta property="og:title" content="<?= h($og['title']) ?>">
+<meta property="og:description" content="<?= h($og['desc']) ?>">
+<meta property="og:url" content="<?= h($og['url']) ?>">
+<meta property="og:image" content="<?= h($og['image']) ?>">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="600">
+<meta property="og:image:height" content="600">
+<meta name="twitter:card" content="summary">
+<meta name="description" content="<?= h($og['desc']) ?>">
+<?php else: ?>
 <link rel="icon" href="/assets/icon.png">
+<?php endif; ?>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Manrope:wght@400;500;600;700&family=Poppins:wght@300&display=swap" rel="stylesheet">
@@ -374,12 +405,12 @@ var show=function(slug){
   if(slug&&bySlug[slug]){
     if(current!==slug){fresh();frame.src='/demo/run/'+encodeURIComponent(slug)+'/';current=slug}
     stage.classList.add('on');home.style.display='none';document.body.classList.add('locked');
-    document.title=bySlug[slug].name+' · SMR Digital demo';
+    document.title=bySlug[slug].name+' Demo - SMR Digital';
     startTips(slug,false);
   }else{
     if(current){frame.src='about:blank';current=null}
     stage.classList.remove('on');home.style.display='';document.body.classList.remove('locked');
-    document.title='SMR Digital · Private demos';clearTimeout(tipT);$('tip').classList.remove('on');mini.classList.remove('on');
+    document.title=<?= json_encode($pageTitle) ?>;clearTimeout(tipT);$('tip').classList.remove('on');mini.classList.remove('on');
   }
 };
 var route=function(){var m=/app=([a-z0-9-]+)/.exec(location.hash);if(B.preview&&!m){location.replace('/demo-admin/#demos');return}show(m?m[1]:null)};

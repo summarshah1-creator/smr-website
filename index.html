@@ -31,6 +31,7 @@
 body{--grad:linear-gradient(110deg,var(--a1),var(--a2))}
 body[data-brand="digital"]{--a1:#5b5bff;--a2:#d63bff;--glow:rgba(200,70,255,.32)}
 body[data-brand="plates"]{--a1:#ffd23f;--a2:#ff7a2f;--glow:rgba(255,190,60,.25)}
+body[data-brand="marketing"]{--a1:#ff3d8b;--a2:#ff8a3d;--glow:rgba(255,90,140,.28)}
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
 body{background:var(--bg);color:var(--ink);font-family:Manrope,system-ui,sans-serif;font-size:16px;line-height:1.55;overflow-x:hidden;-webkit-font-smoothing:antialiased}
@@ -417,6 +418,26 @@ body[data-brand="plates"] .usp .ic svg{color:#170f00}
 .xs[data-go="graphics"] .bgg{background:linear-gradient(110deg,#2f6bff,#a43bff)}
 .xs[data-go="digital"] .bgg{background:linear-gradient(110deg,#5b5bff,#d63bff)}
 .xs[data-go="plates"] .bgg{background:linear-gradient(110deg,#ffd23f,#ff7a2f)}
+.new-tile-sec{padding-bottom:6px}
+.new-tile{position:relative;display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:20px;background:linear-gradient(#0e0e18,#0e0e18) padding-box,linear-gradient(110deg,#ffd23f,#ff7a2f) border-box;border:1.5px solid transparent;color:inherit;text-decoration:none;cursor:pointer;transition:transform .3s var(--ease)}
+.new-tile:hover{transform:translateY(-3px)}
+.nt-badge{position:absolute;top:-9px;left:16px;padding:3px 9px;border-radius:999px;background:linear-gradient(110deg,#ffd23f,#ff7a2f);color:#170f00;font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.nt-plate{flex:none;width:86px;height:26px;border-radius:5px;background:#ffd400;border:1.5px solid #111;display:grid;place-items:center;box-shadow:0 6px 16px -6px rgba(255,190,40,.6)}
+.nt-plate span{font:800 15px/1 Arial,Helvetica,sans-serif;color:#111;letter-spacing:.06em}
+.nt-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.nt-tx small{font-size:11.5px;color:var(--mut);font-weight:700;letter-spacing:.04em}
+.nt-tx b{font-family:Sora,system-ui,sans-serif;font-size:18px}
+.nt-tx em{font-style:normal;font-size:13px;font-weight:700;background:linear-gradient(110deg,#ffd23f,#ff7a2f);-webkit-background-clip:text;background-clip:text;color:transparent}
+.nt-go{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.06);border:1px solid var(--line2)}
+.nt-go svg{width:18px;height:18px}
+.back-link{display:flex;width:max-content;align-items:center;gap:6px;font-weight:700;font-size:14px;color:var(--mut);margin-bottom:14px;cursor:pointer}
+.back-link:hover{color:#fff}
+.xs[data-go="marketing"] .bgg{background:linear-gradient(110deg,#ff3d8b,#ff8a3d)}
+.hdr-plates{display:none;margin-left:auto;margin-right:6px;font-weight:700;font-size:14px;color:var(--mut);padding:0 6px;cursor:pointer}
+.hdr-plates:hover,body[data-brand="plates"] .hdr-plates{color:var(--ink,#fff)}
+.feed .meta .mt{display:flex;gap:6px;align-items:center}
+.feed .meta .stars{color:#ffcf4a;letter-spacing:1px}
+.price-line{margin-top:18px;font-weight:700;color:var(--mut);font-size:15px}.price-line b{color:#fff}
 .xs>div{position:relative}
 .xs .k{font-family:Poppins,system-ui,sans-serif;font-weight:300;letter-spacing:.5em;font-size:12px;color:var(--mut)}
 .xs b{display:block;font-family:Sora,system-ui,sans-serif;font-size:22px;margin:4px 0}
@@ -643,14 +664,14 @@ img.o-hoodie{height:auto;object-fit:contain;filter:drop-shadow(0 26px 30px rgba(
 #splash{position:fixed;inset:0;z-index:999;background:#07070d;display:grid;place-items:center;overflow:hidden;animation:spOut 3.4s cubic-bezier(.4,0,.2,1) forwards;cursor:pointer}
 #splash .bg{position:absolute;inset:-20%;opacity:0}
 #splash .bgA{background:radial-gradient(60% 45% at 25% 25%,rgba(47,107,255,.55),transparent 70%),radial-gradient(55% 45% at 80% 80%,rgba(164,59,255,.45),transparent 70%);animation:spA 3.4s linear forwards}
-#splash .bgB{background:radial-gradient(60% 45% at 25% 25%,rgba(110,70,255,.55),transparent 70%),radial-gradient(55% 45% at 80% 80%,rgba(226,60,220,.45),transparent 70%);animation:spB 3.4s linear forwards}
-#splash .bgC{background:radial-gradient(60% 45% at 25% 25%,rgba(255,170,40,.45),transparent 70%),radial-gradient(55% 45% at 80% 80%,rgba(255,100,40,.4),transparent 70%);animation:spC 3.4s linear forwards}
+#splash .bgB{background:radial-gradient(60% 45% at 25% 25%,rgba(255,61,139,.5),transparent 70%),radial-gradient(55% 45% at 80% 80%,rgba(255,138,61,.42),transparent 70%);animation:spB 3.4s linear forwards}
+#splash .bgC{background:radial-gradient(60% 45% at 25% 25%,rgba(110,70,255,.55),transparent 70%),radial-gradient(55% 45% at 80% 80%,rgba(226,60,220,.45),transparent 70%);animation:spC 3.4s linear forwards}
 #splash .inner{position:relative;--mw:min(76vw,560px);width:var(--mw);display:flex;flex-direction:column;align-items:center}
 #splash svg{display:block;width:100%;height:auto;animation:spMark 3.4s cubic-bezier(.2,.8,.2,1) forwards;filter:drop-shadow(0 0 40px rgba(140,100,255,.35))}
 #splash .words{position:relative;width:100%;height:calc(var(--mw)*.16);margin-top:calc(var(--mw)*.07)}
 #splash .w{position:absolute;inset:0;display:flex;justify-content:center;align-items:center;opacity:0}
 #splash .w span{font-family:Poppins,system-ui,sans-serif;font-weight:300;font-size:calc(var(--mw)*.085);letter-spacing:.5em;margin-right:-.5em;line-height:1;white-space:nowrap}
-#splash .w0 span{color:#8aa6ff}#splash .w1 span{color:#d59bff}#splash .w2 span{color:#ffc24a}
+#splash .w0 span{color:#8aa6ff}#splash .w1 span{color:#ff8fb3}#splash .w2 span{color:#d59bff}
 #splash .w0{animation:spW0 3.4s cubic-bezier(.2,.8,.2,1) forwards}
 #splash .w1{animation:spW1 3.4s cubic-bezier(.2,.8,.2,1) forwards}
 #splash .w2{animation:spW2 3.4s cubic-bezier(.2,.8,.2,1) forwards}
@@ -686,6 +707,7 @@ body.splashing{overflow:hidden}
   .sub-bar{display:none}
   .menu-btn{display:none}
   .btn.hdr-cta{display:inline-flex;height:46px;padding:0 20px;font-size:14px}
+  .hdr-plates{display:inline-block}
   .logo .mark{width:108px;height:28px}
   .logo .sub{width:108px;font-size:11.5px;gap:.4em;height:14px}
   .hero{min-height:calc(100vh - 76px)}
@@ -709,7 +731,7 @@ body.splashing{overflow:hidden}
 </style>
 </head>
 <body data-brand="graphics">
-<div id="splash" aria-hidden="true"><div class="bg bgA"></div><div class="bg bgB"></div><div class="bg bgC"></div><div class="inner"><svg viewBox="0 0 1000 256.4" xmlns="http://www.w3.org/2000/svg"><path fill="#fff" fill-rule="evenodd" d="M340.2 1.0 L340.2 255.3 L340.7 256.1 L399.6 255.8 L400.9 254.8 L400.6 103.9 L401.1 102.9 L402.2 102.9 L507.3 217.8 L509.9 220.4 L510.7 220.4 L617.9 103.4 L619.7 102.6 L620.2 103.4 L619.7 254.8 L620.7 256.1 L682.2 255.6 L682.7 255.1 L682.4 0.5 L627.7 0.5 L594.9 36.8 L510.4 133.2 L505.8 128.6 L422.1 32.7 L393.2 0.5 L340.7 0.5ZM712.8 0.8 L713.0 191.1 L822.3 85.4 L820.3 83.1 L792.2 63.5 L793.0 62.2 L807.9 61.7 L873.7 56.9 L905.4 55.3 L906.1 56.1 L906.1 59.4 L905.4 60.9 L896.6 112.1 L890.5 145.8 L889.7 147.3 L889.7 150.2 L888.9 150.9 L887.4 150.2 L886.3 148.1 L869.6 126.0 L868.9 126.0 L807.9 183.3 L807.9 184.1 L880.7 253.3 L884.0 255.8 L1000.0 255.6 L997.2 251.7 L926.5 173.3 L926.5 172.3 L927.7 171.3 L929.5 171.0 L938.5 167.2 L949.9 160.6 L957.8 154.2 L964.4 147.0 L970.8 138.1 L975.9 128.3 L980.1 116.5 L982.6 105.9 L984.0 96.9 L984.5 82.8 L982.9 67.6 L980.4 57.1 L976.8 46.5 L971.0 35.2 L964.3 25.9 L958.1 19.5 L948.8 12.5 L937.0 6.4 L925.9 2.9 L911.5 0.6 L808.2 0.0ZM28.8 27.0 L23.6 34.3 L20.2 40.1 L17.0 47.1 L14.1 55.5 L11.4 68.9 L11.5 87.4 L12.9 95.4 L15.0 102.6 L18.1 110.3 L22.4 118.5 L27.1 125.5 L32.5 131.9 L38.3 137.2 L44.7 142.0 L53.7 147.3 L64.8 151.8 L74.8 154.4 L87.9 156.2 L210.1 156.6 L237.9 157.3 L242.0 158.3 L245.8 160.1 L251.7 165.3 L254.1 168.7 L255.8 172.5 L256.9 177.2 L256.9 180.8 L254.8 187.8 L250.6 193.6 L244.8 197.9 L237.9 199.9 L44.5 200.1 L0.0 255.3 L0.3 256.4 L243.3 255.9 L251.2 254.9 L260.7 252.6 L267.9 250.1 L275.6 246.4 L282.1 242.5 L288.0 238.0 L294.7 231.5 L299.1 226.0 L303.5 219.3 L307.1 212.4 L309.7 206.0 L311.9 198.3 L313.3 191.3 L314.4 180.3 L313.1 167.1 L311.1 158.1 L308.7 150.7 L306.0 144.5 L301.6 136.8 L297.1 130.5 L291.6 124.2 L278.7 114.1 L269.7 109.1 L258.9 104.7 L246.9 101.7 L237.1 100.4 L154.3 100.0 L84.3 99.0 L77.2 96.1 L72.0 91.2 L68.3 84.1 L67.5 76.6 L68.0 73.0 L69.1 69.7 L73.6 63.1 L79.7 59.0 L87.4 57.0 L263.6 57.3 L264.8 56.3 L308.3 1.3 L308.0 0.5 L90.3 0.0 L78.7 0.6 L64.0 3.6 L51.2 8.9 L45.3 12.3 L39.1 16.8Z"/></svg><div class="words"><div class="w w0"><span>graphics</span></div><div class="w w1"><span>digital</span></div><div class="w w2"><span>plates</span></div></div></div></div>
+<div id="splash" aria-hidden="true"><div class="bg bgA"></div><div class="bg bgB"></div><div class="bg bgC"></div><div class="inner"><svg viewBox="0 0 1000 256.4" xmlns="http://www.w3.org/2000/svg"><path fill="#fff" fill-rule="evenodd" d="M340.2 1.0 L340.2 255.3 L340.7 256.1 L399.6 255.8 L400.9 254.8 L400.6 103.9 L401.1 102.9 L402.2 102.9 L507.3 217.8 L509.9 220.4 L510.7 220.4 L617.9 103.4 L619.7 102.6 L620.2 103.4 L619.7 254.8 L620.7 256.1 L682.2 255.6 L682.7 255.1 L682.4 0.5 L627.7 0.5 L594.9 36.8 L510.4 133.2 L505.8 128.6 L422.1 32.7 L393.2 0.5 L340.7 0.5ZM712.8 0.8 L713.0 191.1 L822.3 85.4 L820.3 83.1 L792.2 63.5 L793.0 62.2 L807.9 61.7 L873.7 56.9 L905.4 55.3 L906.1 56.1 L906.1 59.4 L905.4 60.9 L896.6 112.1 L890.5 145.8 L889.7 147.3 L889.7 150.2 L888.9 150.9 L887.4 150.2 L886.3 148.1 L869.6 126.0 L868.9 126.0 L807.9 183.3 L807.9 184.1 L880.7 253.3 L884.0 255.8 L1000.0 255.6 L997.2 251.7 L926.5 173.3 L926.5 172.3 L927.7 171.3 L929.5 171.0 L938.5 167.2 L949.9 160.6 L957.8 154.2 L964.4 147.0 L970.8 138.1 L975.9 128.3 L980.1 116.5 L982.6 105.9 L984.0 96.9 L984.5 82.8 L982.9 67.6 L980.4 57.1 L976.8 46.5 L971.0 35.2 L964.3 25.9 L958.1 19.5 L948.8 12.5 L937.0 6.4 L925.9 2.9 L911.5 0.6 L808.2 0.0ZM28.8 27.0 L23.6 34.3 L20.2 40.1 L17.0 47.1 L14.1 55.5 L11.4 68.9 L11.5 87.4 L12.9 95.4 L15.0 102.6 L18.1 110.3 L22.4 118.5 L27.1 125.5 L32.5 131.9 L38.3 137.2 L44.7 142.0 L53.7 147.3 L64.8 151.8 L74.8 154.4 L87.9 156.2 L210.1 156.6 L237.9 157.3 L242.0 158.3 L245.8 160.1 L251.7 165.3 L254.1 168.7 L255.8 172.5 L256.9 177.2 L256.9 180.8 L254.8 187.8 L250.6 193.6 L244.8 197.9 L237.9 199.9 L44.5 200.1 L0.0 255.3 L0.3 256.4 L243.3 255.9 L251.2 254.9 L260.7 252.6 L267.9 250.1 L275.6 246.4 L282.1 242.5 L288.0 238.0 L294.7 231.5 L299.1 226.0 L303.5 219.3 L307.1 212.4 L309.7 206.0 L311.9 198.3 L313.3 191.3 L314.4 180.3 L313.1 167.1 L311.1 158.1 L308.7 150.7 L306.0 144.5 L301.6 136.8 L297.1 130.5 L291.6 124.2 L278.7 114.1 L269.7 109.1 L258.9 104.7 L246.9 101.7 L237.1 100.4 L154.3 100.0 L84.3 99.0 L77.2 96.1 L72.0 91.2 L68.3 84.1 L67.5 76.6 L68.0 73.0 L69.1 69.7 L73.6 63.1 L79.7 59.0 L87.4 57.0 L263.6 57.3 L264.8 56.3 L308.3 1.3 L308.0 0.5 L90.3 0.0 L78.7 0.6 L64.0 3.6 L51.2 8.9 L45.3 12.3 L39.1 16.8Z"/></svg><div class="words"><div class="w w0"><span>graphics</span></div><div class="w w1"><span>marketing</span></div><div class="w w2"><span>digital</span></div></div></div></div>
 <script>
 (function(){var sp=document.getElementById('splash');var seen=false,reduce=false;
 try{seen=sessionStorage.getItem('smr-splash')==='1';sessionStorage.setItem('smr-splash','1')}catch(e){}
@@ -733,19 +755,20 @@ setTimeout(done,3700);})();
       </a>
       <nav class="switch" data-switch aria-label="Choose a service">
         <span class="pill"></span>
-        <button data-brand="graphics">Graphics</button>
         <button data-brand="digital">Digital</button>
-        <button data-brand="plates">Plates</button>
+        <button data-brand="graphics">Graphics</button>
+        <button data-brand="marketing">Marketing</button>
       </nav>
+      <a class="hdr-plates" href="/plates" data-go="plates">Plates</a>
       <a class="btn primary hdr-cta" href="#" data-quote>Get a quote</a>
       <button class="menu-btn" id="menuBtn" aria-label="Menu"><i></i></button>
     </div>
     <div class="sub-bar">
       <nav class="switch" data-switch aria-label="Choose a service">
         <span class="pill"></span>
-        <button data-brand="graphics">Graphics</button>
         <button data-brand="digital">Digital</button>
-        <button data-brand="plates">Plates</button>
+        <button data-brand="graphics">Graphics</button>
+        <button data-brand="marketing">Marketing</button>
       </nav>
     </div>
   </div>
@@ -776,6 +799,17 @@ setTimeout(done,3700);})();
         <div class="obj o-sticker"><svg viewBox="0 0 100 100"><defs><path id="cp" d="M50 50 m-37 0 a37 37 0 1 1 74 0 a37 37 0 1 1 -74 0"/><linearGradient id="sg" x1="0" x2="1"><stop offset="0" stop-color="#2f6bff"/><stop offset="1" stop-color="#a43bff"/></linearGradient></defs><g class="ring"><text font-family="Sora,Arial,sans-serif" font-weight="700" font-size="8.6" fill="#111"><textPath href="#cp" textLength="226" lengthAdjust="spacing">SMR GRAPHICS • DESIGN • PRINT • </textPath></text></g><circle cx="50" cy="50" r="20" fill="url(#sg)"/><path d="M41 50.5 L47.5 57 L59 44" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <div class="obj o-tag"><i></i>Proof approved</div>
       </div></div>
+    </div>
+  </section>
+
+  <section class="new-tile-sec" style="padding-top:0">
+    <div class="wrap">
+      <a class="new-tile rv" href="/plates" data-go="plates">
+        <span class="nt-badge">New</span>
+        <span class="nt-plate" aria-hidden="true"><span>SMR 1</span></span>
+        <span class="nt-tx"><small>Introducing a new service</small><b>Number plates</b><em>Try our new plate builder</em></span>
+        <span class="nt-go"><svg data-i="arrow"></svg></span>
+      </a>
     </div>
   </section>
 
@@ -936,24 +970,24 @@ setTimeout(done,3700);})();
 </div>
 
 <!-- ======================= DIGITAL ======================= -->
-<div class="view" id="v-digital" data-title="SMR Digital — Social Media, Websites &amp; Apps">
+<div class="view" id="v-digital" data-title="SMR Digital — High-end Apps &amp; Websites, Affordable Prices">
   <section class="hero">
     <div class="wrap hero-grid">
       <div>
-        <div class="ticker"><span class="dot"></span>We build&nbsp;<b><span>Social media</span><span>Content</span><span>Websites</span><span>Ordering apps</span><span>Loyalty</span><span>Strategy</span><span>Social media</span></b></div>
-        <h1><span class="line"><span>Get seen.</span></span><span class="line"><span>Get orders.</span></span><span class="line"><span class="grad-text">Grow online.</span></span></h1>
-        <p class="lede">Social media management, content creation, websites and your own ordering app. Everything you need to win customers online, at genuinely affordable prices.</p>
+        <div class="ticker"><span class="dot"></span>We build&nbsp;<b><span>Ordering apps</span><span>Websites</span><span>Booking systems</span><span>Loyalty apps</span><span>Admin dashboards</span><span>Ordering apps</span></b></div>
+        <h1><span class="line"><span>High-end apps</span></span><span class="line"><span>&amp; websites.</span></span><span class="line"><span class="grad-text">Insanely affordable.</span></span></h1>
+        <p class="lede">Custom-built in your brand, with the back end to run it: orders, bookings, loyalty and your own admin dashboard.</p>
         <div class="btn-row">
           <a class="btn primary" href="#" data-quote>Book a free chat <svg data-i="arrow"></svg></a>
           <a class="btn ghost" href="#d-portfolio" data-scroll>See our apps</a>
         </div>
-        <div class="trust"><span><svg data-i="check"></svg>Setup to full management</span><span><svg data-i="check"></svg>Photo &amp; video</span><span><svg data-i="check"></svg>Affordable plans</span></div>
+        <div class="trust"><span><svg data-i="check"></svg>Your own brand</span><span><svg data-i="check"></svg>Back end built in</span><span><svg data-i="check"></svg>No commission</span></div>
       </div>
       <div class="feed" aria-hidden="true">
-        <div class="post"><div class="ph"><b>New menu drops Friday</b></div><div class="meta"><svg class="heart" data-i="heart"></svg>1,284 <svg data-i="chat"></svg>96 <svg data-i="send" style="margin-left:auto"></svg></div></div>
-        <div class="notif n1"><span class="ic">♥</span><div>+240 likes<small>on your latest reel</small></div></div>
-        <div class="notif n2"><span class="ic">🛎</span><div>New order · £24.50<small>via your app</small></div></div>
-        <div class="notif n3"><span class="ic">★</span><div>New 5-star review<small>Google Business</small></div></div>
+        <div class="post"><div class="ph"><b>Order in 2 taps</b></div><div class="meta"><span class="mt"><span class="stars">★★★★★</span>Your app</span><span class="mt" style="margin-left:auto">Live</span></div></div>
+        <div class="notif n1"><span class="ic">🛎</span><div>New order · £24.50<small>via your app</small></div></div>
+        <div class="notif n2"><span class="ic">📅</span><div>New booking<small>Saturday, 2:30pm</small></div></div>
+        <div class="notif n3"><span class="ic">★</span><div>Reward unlocked<small>8th coffee free</small></div></div>
       </div>
     </div>
   </section>
@@ -1017,6 +1051,53 @@ setTimeout(done,3700);})();
   </div><!-- /light-run -->
 
 
+  <section id="d-features">
+    <div class="wrap">
+      <div class="sec-head rv"><span class="eyebrow">What you get</span><h2>Everything to run it,<br><span class="grad-text">not just an app.</span></h2><p class="lede">Every build comes with the back end behind it, set up for how your business works.</p></div>
+      <div class="usps">
+        <div class="usp rv"><div class="ic"><svg data-i="sliders"></svg></div><div><h3>Your own admin dashboard</h3><p>Change your menu, prices, photos, opening times and offers yourself, any time.</p></div></div>
+        <div class="usp rv d1"><div class="ic"><svg data-i="calendar"></svg></div><div><h3>Booking system</h3><p>Tables, appointments or slots, booked straight into your system.</p></div></div>
+        <div class="usp rv d2"><div class="ic"><svg data-i="tablet"></svg></div><div><h3>A tablet for your shop</h3><p>We can supply a tablet for your counter to take orders and run the admin side.</p></div></div>
+        <div class="usp rv"><div class="ic"><svg data-i="gift"></svg></div><div><h3>Loyalty that brings them back</h3><p>Stamp cards, rewards, spin-to-win and birthday treats, all built in.</p></div></div>
+        <div class="usp rv d1"><div class="ic"><svg data-i="bell"></svg></div><div><h3>Push offers &amp; text messages</h3><p>Send an offer to every customer's phone. Text messages available as an add-on.</p></div></div>
+        <div class="usp rv d2"><div class="ic"><svg data-i="pound"></svg></div><div><h3>No commission, ever</h3><p>One affordable monthly plan with updates and support included. Every order is yours.</p></div></div>
+      </div>
+      <div class="btn-row rv" style="margin-top:24px"><a class="btn primary" href="#" data-quote data-svc="Website + app + back end">Get a price for your business <svg data-i="arrow"></svg></a></div>
+    </div>
+  </section>
+
+  <div class="marquee-wrap" style="padding-bottom:10px">
+    <p class="mq-label">Trusted by businesses &amp; charities</p>
+    <div class="marquee"><div class="track" data-marquee></div></div>
+  </div>
+
+  <section style="padding-top:0"><div class="wrap"><div class="sec-head rv"><span class="eyebrow">Also from SMR</span><h2>Need marketing<br><span class="grad-text">or print as well?</span></h2></div><div class="xsell" data-xsell="digital"></div></div></section>
+  <section class="contact" style="padding-top:0"></section>
+</div>
+
+<!-- ======================= MARKETING ======================= -->
+<div class="view" id="v-marketing" data-title="SMR Marketing — Social Media, Content &amp; Strategy">
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="ticker"><span class="dot"></span>We do&nbsp;<b><span>Social media</span><span>Content</span><span>Reels</span><span>Photo shoots</span><span>Strategy</span><span>Social media</span></b></div>
+        <h1><span class="line"><span>Get seen.</span></span><span class="line"><span>Get followed.</span></span><span class="line"><span class="grad-text">Grow online.</span></span></h1>
+        <p class="lede">Social media management, content creation and strategy for local businesses. We set it up, make the content and keep it posting.</p>
+        <div class="btn-row">
+          <a class="btn primary" href="#" data-quote>Book a free chat <svg data-i="arrow"></svg></a>
+          <a class="btn ghost" href="#m-social" data-scroll>See the plans</a>
+        </div>
+        <div class="trust"><span><svg data-i="check"></svg>Setup to full management</span><span><svg data-i="check"></svg>Photo &amp; video</span><span><svg data-i="check"></svg>Affordable plans</span></div>
+      </div>
+      <div class="feed" aria-hidden="true">
+        <div class="post"><div class="ph"><b>New menu drops Friday</b></div><div class="meta"><svg class="heart" data-i="heart"></svg>1,284 <svg data-i="chat"></svg>96 <svg data-i="send" style="margin-left:auto"></svg></div></div>
+        <div class="notif n1"><span class="ic">♥</span><div>+240 likes<small>on your latest reel</small></div></div>
+        <div class="notif n2"><span class="ic">＋</span><div>+86 new followers<small>this week</small></div></div>
+        <div class="notif n3"><span class="ic">★</span><div>New 5-star review<small>Google Business</small></div></div>
+      </div>
+    </div>
+  </section>
+
   <section class="usp-sec" style="padding-top:0">
     <div class="wrap usps">
       <div class="usp rv"><div class="ic"><svg data-i="star"></svg></div><div><h3>Professional results</h3><p>Content and builds that look like a big brand, made for local businesses.</p></div></div>
@@ -1030,7 +1111,7 @@ setTimeout(done,3700);})();
     <div class="marquee"><div class="track" data-marquee></div></div>
   </div>
 
-  <section id="d-social">
+  <section id="m-social">
     <div class="wrap">
       <div class="sec-head rv"><span class="eyebrow">Social media management</span><h2>Pick how much<br><span class="grad-text">we take off your hands.</span></h2><p class="lede">We set up and optimise your accounts, create the content, and keep things posting, so you can focus on running the business.</p></div>
       <div class="platforms rv">
@@ -1060,7 +1141,7 @@ setTimeout(done,3700);})();
     </div>
   </section>
 
-  <section style="padding-top:0">
+  <section id="m-content" style="padding-top:0">
     <div class="wrap">
       <div class="sec-head rv"><span class="eyebrow">Content creation</span><h2>Scroll-stopping<br><span class="grad-text">photo &amp; video.</span></h2></div>
       <div class="create">
@@ -1073,7 +1154,7 @@ setTimeout(done,3700);})();
   </section>
 
 
-  <section style="padding-top:0"><div class="wrap"><div class="sec-head rv"><span class="eyebrow">Also from SMR</span></div><div class="xsell" data-xsell="digital"></div></div></section>
+  <section style="padding-top:0"><div class="wrap"><div class="sec-head rv"><span class="eyebrow">Also from SMR</span></div><div class="xsell" data-xsell="marketing"></div></div></section>
   <section class="contact" style="padding-top:0"></section>
 </div>
 
@@ -1082,6 +1163,7 @@ setTimeout(done,3700);})();
   <section class="hero">
     <div class="wrap hero-grid">
       <div>
+        <a class="back-link" href="/" data-go="graphics">← Back to SMR Graphics</a>
         <div class="ticker"><span class="dot"></span>Same day&nbsp;<b><span>4D plates</span><span>3D gel</span><span>4D gel</span><span>Hex plates</span><span>Bevelled</span><span>Private regs</span><span>4D plates</span></b></div>
         <h1><span class="line"><span>Plates that</span></span><span class="line"><span>turn heads.</span></span><span class="line"><span class="grad-text">Same day.</span></span></h1>
         <p class="lede" style="margin-bottom:0">Show plates, standard number plates and custom registrations. Top quality at the best prices, with same-day turnaround.</p>
@@ -1156,10 +1238,11 @@ setTimeout(done,3700);})();
 <footer>
   <div class="wrap">
     <div class="foot-grid">
-      <div class="foot-brand"><div class="mark"></div><p>Design, print, digital and plates. Professional quality, quick turnaround, great value.</p><p class="foot-contact"><a href="tel:+447931814538">07931 814538</a><a href="mailto:Summar@smrgraphics.co.uk">Summar@smrgraphics.co.uk</a></p><p class="foot-ig"><a href="https://www.instagram.com/smr.graphics/" target="_blank" rel="noopener"><svg data-i="insta"></svg>@smr.graphics</a><a href="https://www.instagram.com/smrdigitaluk/" target="_blank" rel="noopener"><svg data-i="insta"></svg>@smrdigitaluk</a><a href="https://www.instagram.com/smr.plates/" target="_blank" rel="noopener"><svg data-i="insta"></svg>@smr.plates</a></p></div>
+      <div class="foot-brand"><div class="mark"></div><p>High-end apps and websites, marketing, design and print. Professional quality at a price that makes sense.</p><p class="foot-contact"><a href="tel:+447931814538">07931 814538</a><a href="mailto:Summar@smrgraphics.co.uk">Summar@smrgraphics.co.uk</a></p><p class="foot-ig"><a href="https://www.instagram.com/smr.graphics/" target="_blank" rel="noopener"><svg data-i="insta"></svg>@smr.graphics</a><a href="https://www.instagram.com/smrdigitaluk/" target="_blank" rel="noopener"><svg data-i="insta"></svg>@smrdigitaluk</a><a href="https://www.instagram.com/smr.plates/" target="_blank" rel="noopener"><svg data-i="insta"></svg>@smr.plates</a></p></div>
       <div class="foot-cols">
+        <div><h4>Digital</h4><a data-go="digital">Ordering apps</a><a data-go="digital">Websites</a><a data-go="digital">Booking systems</a><a data-go="digital">Admin &amp; back end</a></div>
+        <div><h4>Marketing</h4><a data-go="marketing">Social media</a><a data-go="marketing">Content</a><a data-go="marketing">Photo &amp; video</a><a data-go="marketing">Strategy</a></div>
         <div><h4>Graphics</h4><a data-go="graphics">Logo &amp; branding</a><a data-go="graphics">Print</a><a data-go="graphics">Signage</a><a data-go="graphics">Clothing</a></div>
-        <div><h4>Digital</h4><a data-go="digital">Social media</a><a data-go="digital">Content</a><a data-go="digital">Websites</a><a data-go="digital">Apps</a></div>
         <div><h4>Plates</h4><a data-go="plates">Show plates</a><a data-go="plates">Road plates</a><a data-go="plates">Private regs</a><a data-go="plates">Same day</a></div>
       </div>
     </div>
@@ -1181,7 +1264,7 @@ const CONTACT = {
   phoneDisplay: "07931 814538",
   phoneTel: "+447931814538",
   email: "Summar@smrgraphics.co.uk",
-  instagram: { graphics: "smr.graphics", digital: "smrdigitaluk", plates: "smr.plates" }
+  instagram: { graphics: "smr.graphics", digital: "smrdigitaluk", marketing: "smrdigitaluk", plates: "smr.plates" }
 };
 const CLIENTS = [["smash-n-wings", "Smash N Wings", 0], ["kaya-lounge", "Kaya Lounge", 1], ["inspire-fm", "Inspire FM", 0], ["toros", "Toro\u2019s Steakhouse", 1], ["grand-royale", "Grand Royale", 0], ["beef-king", "Beef King", 1], ["krispy", "Krispy", 0], ["round-green-chippy", "Round Green Chippy", 1], ["chai-express", "Chai Express", 1], ["one-ummah", "One Ummah", 1], ["mane-men", "Mane Men", 1], ["chaiikhana", "Chaiikhana", 1], ["the-engine", "The Engine", 0], ["alloy-engineers", "Alloy Engineers", 0], ["frp", "FRP Security & Printing", 0], ["tutorbook", "TutorBook", 1], ["amee-jee", "Amee Jee", 1]]; // [logo file in assets/clients, name, square logo?]
 /* ======================== */
@@ -1223,6 +1306,8 @@ const I = {
   bell:'<path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0"/>',
   truck:'<path d="M1 4h14v12H1zM15 9h4l3 4v3h-7"/><circle cx="5.5" cy="18.5" r="2"/><circle cx="18.5" cy="18.5" r="2"/>',
   sliders:'<path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/>',
+  calendar:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+  tablet:'<rect x="4" y="2" width="16" height="20" rx="2.5"/><path d="M11 18h2"/>',
   globe:'<circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/>',
   phone:'<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/>',
   mail:'<rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/>',
@@ -1351,12 +1436,13 @@ document.querySelectorAll('.marquee').forEach(m=>{
 });
 
 /* ---- Cross-sell ---- */
-const XS={graphics:['graphics','SMR Graphics','Logos, print, signage & clothing.'],digital:['digital','SMR Digital','Social media, websites & ordering apps.'],plates:['plates','SMR Plates','Show plates & private regs, same day.']};
-document.querySelectorAll('[data-xsell]').forEach(x=>{x.innerHTML=Object.keys(XS).filter(k=>k!==x.dataset.xsell).map(k=>`<div class="xs rv" data-go="${k}"><div class="bgg"></div><div><span class="k">${XS[k][0]}</span><b>${XS[k][1]}</b><p>${XS[k][2]}</p></div><span class="arr"><svg data-i="arrow"></svg></span></div>`).join('')});
+const XS={graphics:['graphics','SMR Graphics','Graphic design & printing: logos, print, signage & clothing.'],digital:['digital','SMR Digital','High-end apps, websites & back-end systems.'],marketing:['marketing','SMR Marketing','Social media, content & strategy.'],plates:['plates','SMR Plates','Show plates & private regs, same day.']};
+const XSFOR={digital:['marketing','graphics'],graphics:['digital','marketing'],marketing:['digital','graphics'],plates:['digital','graphics']};
+document.querySelectorAll('[data-xsell]').forEach(x=>{x.innerHTML=XSFOR[x.dataset.xsell].map(k=>`<div class="xs rv" data-go="${k}"><div class="bgg"></div><div><span class="k">${XS[k][0]}</span><b>${XS[k][1]}</b><p>${XS[k][2]}</p></div><span class="arr"><svg data-i="arrow"></svg></span></div>`).join('')});
 
 /* ---- Contact block (per brand) ---- */
-const SVCOPTS={graphics:['Logo / branding','Leaflets / business cards / menus','Banners / sign boards / flags','Stickers / car vinyl','Clothing / uniforms / embroidery','Something else'],digital:['Social media: Starter','Social media: Growth','Social media: Pro','Photo / video shoot','Website','Ordering app','Something else'],plates:['Number plates','Show plates','Private registration','Something else']};
-const CT={graphics:['Let\'s make something','great together.'],digital:['Let\'s grow','your business.'],plates:['Get your plates','sorted today.']};
+const SVCOPTS={graphics:['Logo / branding','Leaflets / business cards / menus','Banners / sign boards / flags','Stickers / car vinyl','Clothing / uniforms / embroidery','Something else'],digital:['Website','Ordering app','Booking system','Loyalty app','Website + app + back end','Shop tablet & admin','Something else'],marketing:['Social media: Starter','Social media: Growth','Social media: Pro','Photo / video shoot','Content creation','Strategy','Something else'],plates:['Number plates','Show plates','Private registration','Something else']};
+const CT={graphics:['Let\'s make something','great together.'],digital:['Let\'s build','your app.'],marketing:['Let\'s grow','your business.'],plates:['Get your plates','sorted today.']};
 document.querySelectorAll('.view').forEach(v=>{
   const b=v.id.slice(2),sec=v.querySelector('section.contact');
   sec.id=b[0]+'-contact';
@@ -1386,7 +1472,7 @@ document.addEventListener('submit',e=>{
 function openWA(text){window.open('https://wa.me/'+CONTACT.whatsapp+'?text='+encodeURIComponent(text),'_blank','noopener')||(location.href='https://wa.me/'+CONTACT.whatsapp+'?text='+encodeURIComponent(text))}
 
 /* ---- Routing / brand switch ---- */
-const BRANDS=['graphics','digital','plates'];
+const BRANDS=['graphics','digital','marketing','plates'];
 const sub=document.getElementById('logoSub');
 function setSub(word,animate){
   const old=[...sub.children];
@@ -1394,10 +1480,10 @@ function setSub(word,animate){
   old.forEach((s,i)=>{s.style.transitionDelay=i*25+'ms';s.classList.add('out')});
   setTimeout(()=>{sub.innerHTML=[...word].map((c,i)=>`<span class="in" style="transition-delay:${i*35}ms">${c}</span>`).join('');requestAnimationFrame(()=>requestAnimationFrame(()=>sub.querySelectorAll('span').forEach(s=>s.classList.remove('in'))))},260);
 }
-function movePills(){document.querySelectorAll('[data-switch]').forEach(sw=>{const on=sw.querySelector('button.on'),p=sw.querySelector('.pill');if(!on||!sw.offsetParent)return;p.style.width=on.offsetWidth+'px';p.style.transform=`translateX(${on.offsetLeft-4}px)`})}
+function movePills(){document.querySelectorAll('[data-switch]').forEach(sw=>{const on=sw.querySelector('button.on'),p=sw.querySelector('.pill');p.style.opacity=on?'':'0';if(!on||!sw.offsetParent)return;p.style.width=on.offsetWidth+'px';p.style.transform=`translateX(${on.offsetLeft-4}px)`})}
 let current=null;
 function go(brand,{scroll=true,push=true}={}){
-  if(!BRANDS.includes(brand))brand='graphics';
+  if(!BRANDS.includes(brand))brand='digital';
   const first=current===null;
   if(brand===current){if(scroll)window.scrollTo({top:0,behavior:'smooth'});return}
   current=brand;
@@ -1406,7 +1492,8 @@ function go(brand,{scroll=true,push=true}={}){
   document.querySelectorAll('[data-switch] button').forEach(b=>b.classList.toggle('on',b.dataset.brand===brand));
   movePills();setSub(brand,!first);
   const v=document.getElementById('v-'+brand);document.title=v.dataset.title.replace(/&amp;/g,'&');
-  if(push&&location.hash!=='#'+brand){try{history.replaceState(null,'','#'+brand)}catch(e){location.hash=brand}}
+  if(push){const onPlates=/^\/plates\/?$/.test(location.pathname);
+    try{if(brand==='plates'){if(!onPlates)history.replaceState(null,'','/plates')}else if(onPlates)history.replaceState(null,'','/#'+brand);else if(location.hash!=='#'+brand)history.replaceState(null,'','#'+brand)}catch(e){if(location.hash!=='#'+brand)location.hash=brand}}
   buildDrawer();
   if(scroll&&!first)window.scrollTo({top:0,behavior:'instant'in window?'instant':'auto'});
   observe();
@@ -1414,19 +1501,16 @@ function go(brand,{scroll=true,push=true}={}){
   try{localStorage.setItem('smr-brand',brand)}catch(e){}
 }
 function buildDrawer(){
-  const L={graphics:[['g-services','Services'],['g-contact','Get a quote']],digital:[['d-portfolio','Apps & websites'],['d-social','Social media'],['d-contact','Get a quote']],plates:[['p-insta','Instagram'],['p-types','Plate styles'],['p-contact','Get a quote']]}[current];
+  const L={graphics:[['g-services','Services'],['g-contact','Get a quote']],digital:[['d-portfolio','Our apps'],['d-features','What you get'],['d-contact','Get a quote']],marketing:[['m-social','Social media'],['m-content','Content'],['m-contact','Get a quote']],plates:[['p-insta','Instagram'],['p-types','Plate styles'],['p-contact','Get a quote']]}[current];
   const others=BRANDS.filter(b=>b!==current).map(b=>`<a data-go="${b}" style="color:var(--mut)">SMR ${b[0].toUpperCase()+b.slice(1)} →</a>`).join('');
   document.getElementById('drawer').innerHTML=L.map(([id,t])=>`<a href="#${id}" data-scroll>${t}</a>`).join('')+`<a href="https://www.instagram.com/${CONTACT.instagram[current]}/" target="_blank" rel="noopener">Instagram</a>`+others;
 }
 function defaultBrand(){
   const h=location.hash.slice(1);
   if(BRANDS.includes(h))return h;
-  const host=location.hostname;
-  if(host.includes('smrdigital'))return 'digital';
-  if(host.includes('smrplates'))return 'plates';
-  if(host.includes('smrgraphics'))return 'graphics';
-  try{const s=localStorage.getItem('smr-brand');if(BRANDS.includes(s))return s}catch(e){}
-  return 'graphics';
+  if(/^\/plates\/?$/.test(location.pathname))return 'plates';
+  if(location.hostname.includes('smrplates'))return 'plates';
+  return 'digital';
 }
 document.addEventListener('click',e=>{
   const sw=e.target.closest('[data-switch] button');if(sw){go(sw.dataset.brand);return}
