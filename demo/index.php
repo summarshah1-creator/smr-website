@@ -464,15 +464,16 @@ var seen=function(s){try{return sessionStorage.getItem('smrTip:'+s)==='1'}catch(
 var markSeen=function(s){try{sessionStorage.setItem('smrTip:'+s,'1')}catch(e){}};
 var ft=$('ftour'),mini=$('tipmini'),tipT;
 var paintTip=function(){$('tipn').textContent='Feature '+(tipI+1)+' of '+tipList.length;$('tipt').textContent=tipList[tipI];$('tipnext').textContent=tipI===tipList.length-1?'Done':'Next'};
-var openTips=function(){paintTip();ft.classList.add('open');mini.setAttribute('aria-expanded','true')};
-var foldTips=function(){ft.classList.remove('open');mini.setAttribute('aria-expanded','false');if(current)markSeen(current)};
-var hideTips=function(){clearTimeout(tipT);ft.classList.remove('show','open')};
+var autoT;var auto=function(){clearInterval(autoT);autoT=setInterval(function(){if(!ft.classList.contains('open')){clearInterval(autoT);return}if(tipI<tipList.length-1){tipI++;paintTip()}else{clearInterval(autoT);endTips()}},7500)};
+var openTips=function(){paintTip();ft.classList.add('open');mini.setAttribute('aria-expanded','true');auto()};
+var foldTips=function(){clearInterval(autoT);ft.classList.remove('open');mini.setAttribute('aria-expanded','false');if(current)markSeen(current)};
+var hideTips=function(){clearTimeout(tipT);clearInterval(autoT);ft.classList.remove('show','open')};
 var startTips=function(slug,force){var d=bySlug[slug];tipList=(d&&d.tips)||[];hideTips();tipI=0;
   if(!tipList.length)return;
   tipT=setTimeout(function(){if(current!==slug)return;ft.classList.add('show');if(force||(B.tips&&!seen(slug)))openTips()},force?0:4500)};
 var endTips=function(){foldTips();tipI=0};
 mini.addEventListener('click',function(){if(ft.classList.contains('open'))foldTips();else openTips()});
-$('tipnext').addEventListener('click',function(){if(tipI<tipList.length-1){tipI++;paintTip()}else endTips()});
+$('tipnext').addEventListener('click',function(){if(tipI<tipList.length-1){tipI++;paintTip();auto()}else endTips()});
 $('tipskip').addEventListener('click',foldTips);$('tipx').addEventListener('click',foldTips);
 $('tipsbtn').addEventListener('click',function(){closeMenu();if(current)startTips(current,true);else{toast('Open an app first, then tap this again.',false)}});
 

@@ -131,6 +131,11 @@ function sync_seeds(PDO $pdo): void {
         // A seed can ship hidden ("hidden": true): kept in storage, not shown or sendable until shown again in SMR Admin.
         if (array_key_exists('hidden', $s)) $pdo->prepare('UPDATE demos SET enabled = ? WHERE slug = ?')->execute([$s['hidden'] ? 0 : 1, $s['slug']]);
     }
+    // A demo removed from seeds.json (and not replaced by an upload) is removed from SMR.
+    $keep = array_map(function ($s) { return $s['slug']; }, $seeds);
+    foreach ($pdo->query("SELECT id, slug FROM demos WHERE source = 'seed'")->fetchAll() as $d) {
+        if (!in_array($d['slug'], $keep, true)) $pdo->prepare('DELETE FROM demos WHERE id = ?')->execute([$d['id']]);
+    }
     @file_put_contents($flag, $stamp);
 }
 

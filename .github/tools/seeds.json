@@ -129,21 +129,5 @@
    "The owner sends push offers to everyone or only people who haven't been in for a month, and sees revenue, regulars and feedback reports.",
    "No app store or commission: customers add it to their home screen from a link or QR code."
   ]
- },
- {
-  "slug": "valor",
-  "version": "2026-11-07d",
-  "name": "Valor Barbers",
-  "accent": "#e9dccb",
-  "tagline": "Barbershop website & booking · Eaton Green, Luton",
-  "description": "Barbershop site with per-barber prices, live barber status, booking with add-ons, a product shop, real reviews and find us.",
-  "tips": [
-   "Every barber has their own prices. Customers pick a barber, a service and a time, then book in under a minute.",
-   "Each barber card shows if they're online today and their next free slot, updated live from the staff app.",
-   "Add-on treatments and products can be added to a booking, with discount codes and a pay-in-store option.",
-   "The shop sells the products used in the chair, ready to collect at the next cut.",
-   "Real Booksy and Google ratings, the latest reviews, the shop sign, a live map and opening hours, all on one page."
-  ],
-  "hidden": true
  }
 ]

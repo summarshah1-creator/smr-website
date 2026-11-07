@@ -131,7 +131,7 @@ fclose($fp);
 function guard_snippet(string $top): string {
     $topJs = json_encode($top, JSON_UNESCAPED_SLASHES);
     return '<style id="smr-demo-guard">img,video,svg{-webkit-user-drag:none;-webkit-touch-callout:none}'
-        . 'html{touch-action:manipulation}body{-webkit-user-select:none;user-select:none}'
+        . 'html{touch-action:manipulation}body{-webkit-user-select:none;user-select:none}img:not([src]),img[src=""]{visibility:hidden}'
         . 'input,textarea,select,[contenteditable],[contenteditable] *{-webkit-user-select:text;user-select:text}'
         . '@media print{html,body{display:none!important}}</style>'
         . '<script>(function(){'
