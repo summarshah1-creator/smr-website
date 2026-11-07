@@ -36,7 +36,7 @@ button{cursor:pointer;background:none;border:0}
 .top{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:10px;padding:calc(10px + env(safe-area-inset-top)) 16px 10px;background:rgba(8,8,15,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line);margin:0 -16px 18px}
 .logo{display:flex;align-items:center;gap:6px;margin-right:auto}
 .logo svg{height:15px;width:auto}
-.logo span{font-family:Poppins,sans-serif;font-weight:300;font-size:16px;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.logo span{font-family:Poppins,sans-serif;font-weight:300;font-size:16px;line-height:1.25;padding-bottom:.15em;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
 .logo b{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-left:6px;font-weight:700}
 .tabs{display:flex;gap:4px;padding:4px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid var(--line)}
 .tabs button{padding:8px 14px;border-radius:10px;font-weight:700;font-size:13.5px;color:var(--muted)}

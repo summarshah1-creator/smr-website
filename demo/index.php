@@ -125,9 +125,9 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .hd::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:1px;background:var(--grad);opacity:.55}
 .brand{display:flex;flex-direction:column;justify-content:center;gap:3px;min-width:0;margin-right:auto}
 .brand small{font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);white-space:nowrap;font-weight:600}
-.brand .lg{display:flex;align-items:center;gap:5px;height:15px}
+.brand .lg{display:flex;align-items:center;gap:5px;height:15px;overflow:visible}
 .brand .lg svg{height:13px;width:auto;display:block}
-.brand .lg span{font-family:Poppins,sans-serif;font-weight:300;font-size:14px;letter-spacing:.02em;line-height:1;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.brand .lg span{font-family:Poppins,sans-serif;font-weight:300;font-size:14px;letter-spacing:.02em;line-height:1.25;padding-bottom:.15em;margin-bottom:-.15em;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
 .timer{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:5px 10px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.04);line-height:1;min-width:86px;transition:background .3s,border-color .3s}
 .timer small{font-size:8.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:700;white-space:nowrap}
 .timer b{font-family:Sora,sans-serif;font-size:15px;font-variant-numeric:tabular-nums;margin-top:3px;letter-spacing:.02em}
@@ -233,7 +233,7 @@ body.appmode .glow{display:none}
 .panel .big small{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700}
 .panel .big .lg{display:flex;align-items:center;gap:8px}
 .panel .big svg{height:26px;width:auto}
-.panel .big span{font-family:Poppins,sans-serif;font-weight:300;font-size:27px;line-height:1;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.panel .big span{font-family:Poppins,sans-serif;font-weight:300;font-size:27px;line-height:1.25;padding-bottom:.15em;margin-bottom:-.15em;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
 .panel h1{font-size:clamp(24px,7vw,32px)}
 .panel .lead{margin:0 auto}
 .pinbox{margin:26px auto 0;display:flex;gap:8px;justify-content:center;position:relative}
