@@ -250,6 +250,14 @@ case 'demo_upload':
     }
     $folder = $slug . '-' . date('Ymd-His') . '-' . bin2hex(random_bytes(3));
     $dest = private_dir() . '/uploads/' . $folder;
+    // A single .html app (e.g. downloaded from Claude) is accepted as well as a ZIP.
+    $head = (string) @file_get_contents($f['tmp_name'], false, null, 0, 512);
+    $isHtml = preg_match('/\.html?$/i', (string) ($f['name'] ?? '')) || preg_match('/^\s*(<!doctype html|<html)/i', $head);
+    if ($isHtml) {
+        if (!@mkdir($dest, 0750, true) && !is_dir($dest)) json_out(['error' => 'Could not create the demo folder.'], 500);
+        if (!move_uploaded_file($f['tmp_name'], $dest . '/index.html')) { rrmdir($dest); json_out(['error' => 'Could not save the file.'], 500); }
+        $res = ['files' => 1, 'skipped' => 0];
+    } else
     try { $res = extract_build($f['tmp_name'], $dest); }
     catch (Throwable $e) { rrmdir($dest); json_out(['error' => $e->getMessage()], 400); }
     if ($existing) {

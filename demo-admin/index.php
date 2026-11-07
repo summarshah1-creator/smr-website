@@ -282,7 +282,7 @@ document.addEventListener('keydown',function(e){if(/^\d$/.test(e.key))press(e.ke
 <!-- bottom sheet -->
 <div class="scrim" id="scrim"></div>
 <div class="sheet" id="sheet" role="dialog" aria-modal="true"><div class="grab"></div><div id="sheetin"></div></div>
-<input type="file" id="fzip" accept=".zip,application/zip" hidden>
+<input type="file" id="fzip" accept=".zip,application/zip,.html,.htm,text/html" hidden>
 <input type="file" id="ficon" accept="image/png,image/jpeg,image/webp" hidden>
 <div class="toast" id="toast"></div>
 <script>
@@ -342,7 +342,7 @@ var renderDemos=function(){$('demos').innerHTML=D.length?D.map(function(d){
 var curSlug=null;
 $('demos').addEventListener('click',function(e){var b=e.target.closest('[data-opts]');if(!b)return;var slug=b.closest('[data-slug]').dataset.slug,d=demoBy(slug);curSlug=slug;
   openSheet('<div class="sh-h"><img src="'+esc(d.icon)+'" alt=""><div><b>'+esc(d.name)+'</b><small>'+esc(d.tagline)+'</small></div></div>'
-    +item('open','Open demo')+item('send','Send this demo')+item('edit','Edit name, text and feature tour')+item('icon','Change icon')+item('zip','Replace with a new ZIP')
+    +item('open','Open demo')+item('send','Send this demo')+item('edit','Edit name, text and feature tour')+item('icon','Change icon')+item('zip','Replace with a new file (HTML or ZIP)')
     +item('toggle',d.enabled?'Hide from customers':'Show to customers')+(d.source==='seed'?'':item('del','Delete','', 'bad'))+item('close','Cancel','','muted'),
   function(el){el.addEventListener('click',function(ev){var it=ev.target.closest('[data-act]');if(!it)return;var a=it.dataset.act;
     if(a==='close')closeSheet();
@@ -372,7 +372,7 @@ $('fzip').addEventListener('change',function(){if(!this.files[0])return;var fd=n
   if(curSlug){fd.append('slug',curSlug);upload('demo_upload',fd,function(j){toast('Demo replaced ('+j.files+' files)')})}
   else{fd.append('name',newName);upload('demo_upload',fd,function(j){toast('Demo added ('+j.files+' files)')})}});
 var newName='';
-$('newdemo').addEventListener('click',function(){openSheet('<h2>Add an app</h2><p class="sub">Upload a ZIP of the built website or Flutter Web app (for Flutter, zip the build/web folder). Use sample data only.</p><label class="f">App name</label><input type="text" id="nn" maxlength="60" placeholder="e.g. Kebab House"><div class="row" style="margin-top:14px"><button class="btn pri" data-go>Choose ZIP</button><button class="btn" data-x>Cancel</button></div>',
+$('newdemo').addEventListener('click',function(){openSheet('<h2>Add an app</h2><p class="sub">Upload the app's HTML file (for example one downloaded from Claude), or a ZIP of a built website or Flutter Web app (for Flutter, zip the build/web folder).</p><label class="f">App name</label><input type="text" id="nn" maxlength="60" placeholder="e.g. Kebab House"><div class="row" style="margin-top:14px"><button class="btn pri" data-go>Choose file</button><button class="btn" data-x>Cancel</button></div>',
   function(el){el.querySelector('[data-x]').onclick=closeSheet;el.querySelector('[data-go]').onclick=function(){newName=el.querySelector('#nn').value.trim();if(!newName){toast('Give the app a name first',true);return}curSlug=null;closeSheet();$('fzip').click()}})});
 
 /* ---------- send ---------- */
