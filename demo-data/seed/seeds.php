@@ -151,8 +151,8 @@ return json_decode(<<<'JSON'
  },
  {
   "slug": "choccos",
-  "version": "2026-11-07b",
-  "name": "Chocco's Dessert Parlour",
+  "version": "2026-11-07c",
+  "name": "Chocco's Luton",
   "accent": "#d4127e",
   "tagline": "Dessert parlour app · collection, eat in & delivery",
   "description": "Ordering and rewards app for Chocco's Dessert Parlour in Luton: collection, eat in at the table, or delivery.",
