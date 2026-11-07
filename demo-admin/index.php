@@ -14,7 +14,7 @@ $mark = preg_replace('/<svg /', '<svg aria-hidden="true" ', (string) @file_get_c
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
 <meta name="theme-color" content="#08080f">
-<title>SMR Admin</title>
+<title>Admin</title>
 <link rel="icon" href="/demo-admin/icon-192.png">
 <link rel="manifest" href="/demo-admin/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/demo-admin/apple-touch-icon.png">
@@ -193,7 +193,7 @@ input:focus,textarea:focus,select:focus{border-color:rgba(214,59,255,.6);box-sha
 <div class="auth">
   <form class="panel" id="auth" autocomplete="off">
     <div class="logo"><?= $mark ?><span>Digital</span></div>
-    <h1 style="text-align:center">SMR Admin</h1>
+    <h1 style="text-align:center">Admin</h1>
     <p class="sub" style="text-align:center">Enter your PIN</p>
     <div class="pindots" id="dots" aria-live="polite"><i></i><i></i><i></i><i></i></div>
     <div class="err" id="err" role="alert" style="text-align:center"></div>
