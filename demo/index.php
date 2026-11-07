@@ -204,24 +204,23 @@ body.appmode .glow{display:none}
 .pinapps span{display:flex;flex-direction:column;align-items:center;gap:6px;width:66px}
 .pinapps img{width:52px;height:52px;border-radius:14px;object-fit:cover;box-shadow:0 0 0 1px rgba(255,255,255,.1),0 8px 20px -10px rgba(0,0,0,.8)}
 .pinapps small{font-size:11px;font-weight:700;color:var(--muted);line-height:1.2;text-align:center}
-.tip{position:fixed;z-index:40;left:max(12px,env(safe-area-inset-left));bottom:calc(14px + env(safe-area-inset-bottom));width:min(340px,calc(100vw - 24px));padding:14px 14px 12px;border-radius:18px;background:rgba(20,20,34,.97);border:1px solid rgba(214,59,255,.35);box-shadow:0 18px 50px -12px rgba(0,0,0,.8);display:none;font-size:14px;line-height:1.45}
-.tip.on{display:block;animation:up .35s ease}
 @keyframes up{from{opacity:0;transform:translateY(10px)}}
-.tip .tt{display:flex;justify-content:space-between;align-items:center;font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:800;color:#cfc4ff;margin-bottom:6px}
-.tip .tt button{width:28px;height:28px;margin:-6px -6px -6px 0;border-radius:50%;display:grid;place-items:center}
-.tip .tt svg{width:15px;height:15px}
-.tip .row{display:flex;justify-content:flex-end;gap:8px;margin-top:10px}
-.tip .row button{padding:7px 13px;border-radius:10px;font-weight:700;font-size:13px;border:1px solid var(--line)}
-.tip .row .nx{background:var(--grad);border:0;color:#fff}
-.tip{left:0;right:0;margin:0 auto;bottom:auto;top:calc(var(--hh) + env(safe-area-inset-top) + 10px);width:min(270px,calc(100vw - 90px));padding:10px 11px 9px;border-radius:14px;font-size:12.5px;line-height:1.4;background:rgba(14,14,26,.62);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(214,59,255,.3);box-shadow:0 8px 24px -10px rgba(0,0,0,.6)}
-.tip.on{animation:tipin .35s ease}
-@keyframes tipin{from{opacity:0;transform:translateY(-6px)}}
-.tip .tt{font-size:9.5px;margin-bottom:4px}
-.tip .tt button{width:24px;height:24px}
-.tip .row{margin-top:7px;gap:6px}
-.tip .row button{padding:5px 10px;font-size:12px;border-radius:9px}
-.tipmini{position:fixed;z-index:40;top:calc(var(--hh) + env(safe-area-inset-top) + 8px);left:50%;transform:translateX(-50%);height:30px;padding:0 11px;border-radius:999px;background:rgba(14,14,26,.6);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(214,59,255,.35);color:#e3d8ff;font-size:12px;font-weight:800;display:none;align-items:center;gap:5px}
-.tipmini.on{display:inline-flex}
+/* App features: a tab hanging under the header, the card folds up into it */
+.ftour{position:fixed;z-index:40;left:50%;top:calc(var(--hh) + env(safe-area-inset-top));transform:translateX(-50%);display:none;flex-direction:column;align-items:center;width:min(290px,calc(100vw - 40px));pointer-events:none}
+.ftour.show{display:flex}
+.ft-tab{pointer-events:auto;display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 12px 1px;border-radius:0 0 14px 14px;background:rgba(20,18,36,.88);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(214,59,255,.4);border-top:0;color:#e9dfff;font-size:11.5px;font-weight:800;letter-spacing:.04em;box-shadow:0 8px 18px -10px rgba(0,0,0,.7);animation:tabin .35s ease}
+.ft-tab .sp{color:#e48bff}
+.ft-tab .chev{width:14px;height:14px;transition:transform .3s}
+.ftour.open .ft-tab .chev{transform:rotate(180deg)}
+@keyframes tabin{from{transform:translateY(-100%)}}
+.ft-card{pointer-events:auto;width:100%;margin-top:6px;padding:10px 11px 9px;border-radius:14px;font-size:12.5px;line-height:1.4;background:rgba(14,14,26,.66);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(214,59,255,.3);box-shadow:0 8px 24px -10px rgba(0,0,0,.6);transform-origin:top center;transform:translateY(-14px) scale(.92);opacity:0;visibility:hidden;transition:transform .3s cubic-bezier(.2,.8,.2,1),opacity .25s,visibility 0s .3s}
+.ftour.open .ft-card{transform:none;opacity:1;visibility:visible;transition:transform .3s cubic-bezier(.2,.8,.2,1),opacity .25s,visibility 0s}
+.ft-card .tt{display:flex;justify-content:space-between;align-items:center;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;font-weight:800;color:#cfc4ff;margin-bottom:4px}
+.ft-card .tt button{width:26px;height:26px;margin:-6px -6px -6px 0;border-radius:50%;display:grid;place-items:center}
+.ft-card .tt svg{width:15px;height:15px}
+.ft-card .row{display:flex;justify-content:flex-end;gap:6px;margin-top:7px}
+.ft-card .row button{padding:5px 10px;font-size:12px;border-radius:9px;font-weight:700;border:1px solid var(--line)}
+.ft-card .row .nx{background:var(--grad);border:0;color:#fff}
 .timer.owner{border-color:rgba(61,220,151,.45);background:rgba(61,220,151,.08)}.timer.owner b{color:#7ff0bd;font-size:13px}
 .toast{position:fixed;z-index:70;left:50%;top:calc(var(--hh) + env(safe-area-inset-top) + 12px);transform:translate(-50%,-20px);opacity:0;pointer-events:none;padding:12px 16px;border-radius:14px;background:#2a1420;border:1px solid rgba(255,84,112,.6);color:#ffd7de;font-weight:700;font-size:14px;transition:.3s;width:max-content;max-width:calc(100vw - 24px);text-align:center}
 .toast.on{opacity:1;transform:translate(-50%,0)}
@@ -316,12 +315,14 @@ body.appmode .glow{display:none}
 
 <div class="stage" id="stage"><div class="dev"><iframe id="frame" title="Demo app" allow="geolocation; camera; clipboard-write; fullscreen" referrerpolicy="same-origin"></iframe></div></div>
 
-<div class="tip" id="tip" role="dialog" aria-live="polite" aria-label="Feature tour">
-  <div class="tt"><span id="tipn">Feature tour</span><button type="button" id="tipx" aria-label="Close tips"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
-  <div id="tipt"></div>
-  <div class="row"><button type="button" id="tipskip">Skip</button><button type="button" class="nx" id="tipnext">Next</button></div>
+<div class="ftour" id="ftour">
+  <button class="ft-tab" id="tipmini" type="button" aria-expanded="false" aria-controls="tip"><span class="sp">✦</span>App features<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
+  <div class="ft-card tip" id="tip" role="region" aria-live="polite" aria-label="App features">
+    <div class="tt"><span id="tipn">Feature 1 of 1</span><button type="button" id="tipx" aria-label="Collapse"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg></button></div>
+    <div id="tipt"></div>
+    <div class="row"><button type="button" id="tipskip">Hide</button><button type="button" class="nx" id="tipnext">Next</button></div>
+  </div>
 </div>
-<button class="tipmini" id="tipmini" type="button" aria-label="Show the feature tour">? Features</button>
 <div class="toast" id="toast" role="alert"></div>
 <?php endif; ?>
 
@@ -380,7 +381,7 @@ body.appmode .glow{display:none}
 var B=<?= json_encode($boot, JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
 var $=function(id){return document.getElementById(id)};
 var esc=function(s){return String(s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})};
-var expiredOn=function(){var f=$('frame');if(f){f.src='about:blank';f.remove()}var t=$('tip');if(t)t.classList.remove('on');$('expired').classList.add('on');document.body.classList.add('locked');stopped=true};
+var expiredOn=function(){var f=$('frame');if(f){f.src='about:blank';f.remove()}var t=$('ftour');if(t)t.classList.remove('show','open');$('expired').classList.add('on');document.body.classList.add('locked');stopped=true};
 var stopped=B.view==='expired';
 if(stopped)document.body.classList.add('locked');
 
@@ -437,7 +438,7 @@ var show=function(slug){
   }else{
     if(current){frame.src='about:blank';current=null}
     stage.classList.remove('on');home.style.display='';document.body.classList.remove('locked','appmode');
-    document.title=<?= json_encode($pageTitle) ?>;clearTimeout(tipT);$('tip').classList.remove('on');mini.classList.remove('on');
+    document.title=<?= json_encode($pageTitle) ?>;hideTips();
   }
 };
 var route=function(){var m=/app=([a-z0-9-]+)/.exec(location.hash);if(B.preview&&!m){location.replace('/demo-admin/#demos');return}show(m?m[1]:null)};
@@ -456,16 +457,18 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeMenu()}
 var tip=$('tip'),tipI=0,tipList=[];
 var seen=function(s){try{return sessionStorage.getItem('smrTip:'+s)==='1'}catch(e){return false}};
 var markSeen=function(s){try{sessionStorage.setItem('smrTip:'+s,'1')}catch(e){}};
-var paintTip=function(){$('tipn').textContent='Feature tour · '+(tipI+1)+' of '+tipList.length;$('tipt').textContent=tipList[tipI];$('tipnext').textContent=tipI===tipList.length-1?'Done':'Next';$('tipskip').style.display=tipI===tipList.length-1?'none':''};
-var tipT,mini=$('tipmini');
-var startTips=function(slug,force){var d=bySlug[slug];tipList=(d&&d.tips)||[];clearTimeout(tipT);tip.classList.remove('on');mini.classList.remove('on');
+var ft=$('ftour'),mini=$('tipmini'),tipT;
+var paintTip=function(){$('tipn').textContent='Feature '+(tipI+1)+' of '+tipList.length;$('tipt').textContent=tipList[tipI];$('tipnext').textContent=tipI===tipList.length-1?'Done':'Next'};
+var openTips=function(){paintTip();ft.classList.add('open');mini.setAttribute('aria-expanded','true')};
+var foldTips=function(){ft.classList.remove('open');mini.setAttribute('aria-expanded','false');if(current)markSeen(current)};
+var hideTips=function(){clearTimeout(tipT);ft.classList.remove('show','open')};
+var startTips=function(slug,force){var d=bySlug[slug];tipList=(d&&d.tips)||[];hideTips();tipI=0;
   if(!tipList.length)return;
-  if(!force&&(!B.tips||seen(slug))){mini.classList.add('on');return}
-  tipT=setTimeout(function(){if(current!==slug)return;tipI=0;paintTip();tip.classList.add('on')},force?0:4000)};
-var endTips=function(){tip.classList.remove('on');if(current){markSeen(current);mini.classList.add('on')}};
-mini.addEventListener('click',function(){if(current)startTips(current,true)});
+  tipT=setTimeout(function(){if(current!==slug)return;ft.classList.add('show');if(force||(B.tips&&!seen(slug)))openTips()},force?0:4500)};
+var endTips=function(){foldTips();tipI=0};
+mini.addEventListener('click',function(){if(ft.classList.contains('open'))foldTips();else openTips()});
 $('tipnext').addEventListener('click',function(){if(tipI<tipList.length-1){tipI++;paintTip()}else endTips()});
-$('tipskip').addEventListener('click',endTips);$('tipx').addEventListener('click',endTips);
+$('tipskip').addEventListener('click',foldTips);$('tipx').addEventListener('click',foldTips);
 $('tipsbtn').addEventListener('click',function(){closeMenu();if(current)startTips(current,true);else{toast('Open an app first, then tap this again.',false)}});
 
 var toastT;var toast=function(msg,bad){var t=$('toast');t.textContent=msg;t.style.borderColor=bad===false?'rgba(207,196,255,.5)':'';t.style.background=bad===false?'#1b1830':'';t.style.color=bad===false?'#eee':'';t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(function(){t.classList.remove('on')},5000)};
