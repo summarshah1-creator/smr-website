@@ -304,7 +304,7 @@ return json_decode(<<<'JSON'
  },
  {
   "slug": "chaiikhana",
-  "version": "2026-11-08a",
+  "version": "2026-11-08b",
   "name": "Chaiikhana",
   "accent": "#E8438F",
   "tagline": "Chai café app · order ahead & rewards · Luton",
