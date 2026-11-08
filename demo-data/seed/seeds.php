@@ -284,6 +284,23 @@ return json_decode(<<<'JSON'
    "Staff app: barbers manage bookings, block out time and go offline; the dashboard shows bookings, orders and reports.",
    "No app store or commission: customers add it to their home screen from a link or QR code."
   ]
+ },
+ {
+  "slug": "chai-express",
+  "version": "2026-11-08a",
+  "name": "Chai Express",
+  "accent": "#1C4441",
+  "tagline": "Chai café app · order ahead & rewards · Luton",
+  "description": "Branded ordering and loyalty app for Chai Express: full menu, order ahead, Chai Club rewards, Spin & Win and events.",
+  "tips": [
+   "Your full menu with drink options and sizes, in your own brand colours.",
+   "Customers order ahead and pay in the app, then pick a collection time slot.",
+   "Chai Club: every order earns stamps automatically, with free drinks and tier levels as rewards.",
+   "Spin & Win once a week gives customers a reason to open the app and come back in.",
+   "Events, gift cards, birthday treats and refer-a-friend (both get a free karak) keep people talking about you.",
+   "Feedback and promo codes built in, plus quick links to Google reviews, Instagram and directions.",
+   "No app store or commission: customers add it to their home screen from a link or QR code."
+  ]
  }
 ]
 JSON
