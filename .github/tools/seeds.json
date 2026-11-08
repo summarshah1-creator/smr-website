@@ -212,5 +212,21 @@
    "Packages, a size guide and FAQs answer the usual questions before anyone has to call.",
    "Trusted-by client logos build confidence with new business customers."
   ]
+ },
+ {
+  "slug": "kahwa",
+  "version": "2026-11-08a",
+  "name": "Kahwa Café",
+  "accent": "#C79A5B",
+  "tagline": "Members app, staff terminal & admin · Luton",
+  "description": "Kahwa Club for Kahwa Café in Luton: stamps, Spin & Win, rewards and order-ahead for the café on Park Street and the trailer on Selbourne Road.",
+  "tips": [
+   "Customers pick the café or the trailer first, so menus, hours and collection all match where they are.",
+   "Every member gets a Kahwa Club card with a QR code: staff scan it and add stamps for qualifying drinks.",
+   "Spin & Win gives members a free spin every Friday, a reason to come back each week.",
+   "Order ahead lets regulars skip the queue and collect from Park Street or Selbourne Road.",
+   "Birthday croffles, referral bonuses and expiring-reward reminders bring people back without you chasing them.",
+   "The staff terminal and admin dashboard show members, vouchers, referrals and offers in one place."
+  ]
  }
 ]
