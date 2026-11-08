@@ -228,5 +228,40 @@
    "Birthday croffles, referral bonuses and expiring-reward reminders bring people back without you chasing them.",
    "The staff terminal and admin dashboard show members, vouchers, referrals and offers in one place."
   ]
+ },
+ {
+  "slug": "fade-district",
+  "version": "2026-11-08a",
+  "name": "Fade District",
+  "accent": "#c4222c",
+  "tagline": "Barbershop app · booking, club & shop · Biscot Road, Luton",
+  "description": "Branded barbershop app for Fade District in Luton: book a barber in seconds, the Fade District Club stamp card, a product shop and a waitlist, plus a staff app and dashboard.",
+  "tips": [
+   "Customers see which barbers are online today and their next free time, then book in about 30 seconds.",
+   "Every barber has their own profile and logo, so regulars can stick with their favourite.",
+   "Fade District Club is free to join: a stamp every visit and the 10th cut is free.",
+   "The lookbook shows real cuts from the shop. Customers tap 'Book this look' to book that style.",
+   "The shop sells beard oil, wax, clay and more for collection at the shop or at their next cut.",
+   "Fully booked? Customers join the waitlist and get a notification when a slot opens.",
+   "Staff app (Me tab → Staff app): barbers manage bookings, block out time and go offline; the dashboard shows orders and reports.",
+   "No app store or commission: customers add it to their home screen from a link or QR code."
+  ]
+ },
+ {
+  "slug": "junglees",
+  "version": "2026-11-08a",
+  "name": "Junglees",
+  "accent": "#e33634",
+  "tagline": "Burger & wings ordering app · 3 London branches",
+  "description": "Ordering app for Junglees: gourmet burgers and wild wings from Barkingside, Leyton and Enfield, for collection or delivery, with stamps and a weekly spin-to-win.",
+  "tips": [
+   "Customers pick their nearest branch first, so each shop gets its own orders, hours and menu.",
+   "Build your burger step by step, with unlimited free toppings and sauces shown with real photos.",
+   "Wings come in 7 in-house flavours, with dips, sides, shakes and drinks one tap away.",
+   "Every order earns a stamp, with a free milkshake and a free portion of wings as rewards.",
+   "Spin to win every Friday: free burgers, wings, drinks or dips go straight into the basket.",
+   "Collection or delivery, with live tracking so customers can see where their order is.",
+   "Orders come straight to the shop with no commission to delivery apps."
+  ]
  }
 ]
