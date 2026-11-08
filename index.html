@@ -637,41 +637,11 @@ img.o-hoodie{height:auto;object-fit:contain;filter:drop-shadow(0 26px 30px rgba(
 
 /* ============ DIGITAL: app portfolio ============ */
 .d-light{margin-top:0}
-.pf-tabs{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -20px 16px;padding:2px 20px}
-.pf-tabs::-webkit-scrollbar{display:none}
-.pf-tab{flex:none;display:flex;align-items:center;gap:8px;padding:10px 16px;border-radius:999px;border:1.5px solid var(--line2);background:#fff;font-weight:800;font-size:14px;color:var(--ink);cursor:pointer;transition:.25s}
-.pf-tab i{width:10px;height:10px;border-radius:50%}
-.pf-tab.on{background:#16131f;color:#fff;border-color:#16131f}
-.pf-panel{display:none;border-radius:28px;background:var(--bgc);padding:22px 0 18px;overflow:hidden;position:relative}
-.pf-panel.on{display:block;animation:pfIn .5s var(--ease)}
 @keyframes pfIn{from{opacity:0;transform:translateY(14px)}}
-.pf-panel[data-app="allure"]{color:#2b2416}.pf-panel[data-app="snw"],.pf-panel[data-app="kaya"]{color:#fff}
-.pf-info{padding:0 22px}
-.pf-tag{display:inline-block;padding:4px 10px;border-radius:999px;background:var(--ac);color:#16131f;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
-.pf-info h3{font-size:28px;font-weight:800;margin:10px 0 2px}
-.pf-info p{opacity:.75;font-size:14.5px}
-.pf-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
-.pf-chips span{padding:6px 11px;border-radius:999px;font-size:12px;font-weight:700;background:rgba(127,127,127,.16)}
-.pf-row{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:20px 22px 6px;-webkit-overflow-scrolling:touch}
-.pf-row::-webkit-scrollbar{display:none}
-.pf-ph{flex:none;scroll-snap-align:center;border:0;background:none;padding:0;color:inherit;cursor:zoom-in;display:flex;flex-direction:column;align-items:center;gap:10px;font:inherit}
-.pf-frame{display:block;width:190px;padding:5px;border-radius:24px;background:#0b0b10;box-shadow:0 0 0 1.5px rgba(255,255,255,.12),0 22px 40px rgba(0,0,0,.35);transition:transform .35s var(--ease)}
-.pf-frame img{display:block;width:100%;height:auto;aspect-ratio:540/1169;object-fit:contain;border-radius:19px}
-.pf-ph:hover .pf-frame{transform:translateY(-6px)}
-.pf-ph b{font-size:12.5px;font-weight:800;opacity:.85}
-.pf-lb{position:fixed;inset:0;z-index:300;background:rgba(8,8,15,.9);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:grid;place-items:center;opacity:0;pointer-events:none;transition:opacity .3s}
-.pf-lb.open{opacity:1;pointer-events:auto}
-.pf-lbf{padding:8px;border-radius:34px;background:#0b0b10;box-shadow:0 0 0 2px #2a2a38,0 40px 90px rgba(0,0,0,.6)}
-.pf-lbf img{display:block;height:min(74vh,calc(72vw * 2.165));width:auto;aspect-ratio:540/1169;object-fit:contain;border-radius:27px}
-.pf-lbc{position:absolute;bottom:calc(18px + var(--safe-b));left:0;right:0;text-align:center;font-weight:800;color:#fff}
-.pf-x{position:absolute;top:calc(14px + var(--safe-t));right:14px;width:46px;height:46px;border-radius:50%;border:0;background:rgba(255,255,255,.12);color:#fff;font-size:28px;cursor:pointer}
-.pf-nav{position:absolute;top:50%;margin-top:-26px;width:52px;height:52px;border-radius:50%;border:0;background:rgba(255,255,255,.12);color:#fff;font-size:34px;line-height:1;cursor:pointer}
-.pf-nav.pv{left:10px}.pf-nav.nx{right:10px}
 #d-apps.lt .feat{background:#fff;box-shadow:0 12px 30px rgba(40,20,120,.06)}
 #d-apps.lt .compare{background:#fff}
 #d-apps.lt .compare .row:first-child{background:#f3efff}
 #d-apps.lt .compare .row>div:nth-child(2){color:#16131f}
-@media (min-width:720px){.pf-tabs{margin:0 0 18px;padding:0}.pf-panel{display:none;grid-template-columns:300px 1fr;align-items:center;padding:30px 0}.pf-panel.on{display:grid}.pf-info{padding:0 0 0 34px}.pf-frame{width:180px}.pf-row{padding:20px 30px 10px}}
 
 
 /* ---------- Digital hero: customer app → shop tablet → owner dashboard ---------- */
@@ -774,6 +744,59 @@ img.o-hoodie{height:auto;object-fit:contain;filter:drop-shadow(0 26px 30px rgba(
 }
 .fl-dash{animation:flDash 1.2s linear infinite}@keyframes flDash{to{stroke-dashoffset:-30}}
 @media (prefers-reduced-motion:reduce){.flow *{animation:none!important;opacity:1!important;transform:none!important}}
+
+/* ---------- App showcase (Digital) ---------- */
+.sc-pick{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin:0 -20px 22px;padding:4px 20px 8px}
+.sc-pick::-webkit-scrollbar{display:none}
+.sc-card{flex:none;scroll-snap-align:center;display:flex;align-items:center;gap:12px;min-width:220px;padding:12px 16px 12px 12px;border-radius:20px;border:1.5px solid var(--line2);background:#fff;color:var(--ink);text-align:left;cursor:pointer;transition:transform .3s var(--ease),box-shadow .3s,border-color .3s}
+.sc-card img{width:48px;height:48px;border-radius:14px;object-fit:cover;flex:none;box-shadow:0 4px 12px rgba(0,0,0,.18)}
+.sc-card b{display:block;font-family:Sora,sans-serif;font-size:15px;line-height:1.2}
+.sc-card small{display:block;font-size:12px;color:var(--mut);margin-top:2px}
+.sc-card.on{border-color:var(--ac);box-shadow:0 0 0 3px color-mix(in srgb,var(--ac) 30%,transparent),0 14px 30px -14px rgba(30,15,80,.4);transform:translateY(-2px)}
+.sc{--ac:#ffc21a;--sbg:#1b0a38;display:grid;gap:22px;justify-items:center}
+.sc-stage{position:relative;display:flex;flex-direction:column;align-items:center;width:100%}
+.sc-glow{position:absolute;inset:6% 4% 10%;border-radius:40%;background:radial-gradient(closest-side,color-mix(in srgb,var(--ac) 45%,transparent),transparent);filter:blur(24px);transition:background .6s}
+.sc-bars{position:relative;display:flex;gap:5px;width:min(262px,68vw);margin-bottom:12px}
+.sc-bars i{flex:1;height:4px;border-radius:4px;background:rgba(30,15,80,.13);overflow:hidden}
+.sc-bars i b{display:block;height:100%;width:0;background:var(--ac);border-radius:4px}
+.sc-phone{position:relative;width:min(262px,68vw);aspect-ratio:390/844;border-radius:40px;padding:8px;background:#0b0b10;box-shadow:0 0 0 1.5px rgba(255,255,255,.08) inset,0 0 0 2px #23232f,0 40px 80px -30px rgba(20,10,50,.55)}
+.sc-phone video,.sc-phone .sc-poster{position:absolute;inset:8px;width:calc(100% - 16px);height:calc(100% - 16px);object-fit:cover;border-radius:32px;background:var(--sbg)}
+.sc-phone .sc-poster{opacity:0;transition:opacity .25s;pointer-events:none}
+.sc-phone .sc-poster.show{opacity:1}
+.sc-zone{position:absolute;top:0;bottom:0;width:30%;border:0;background:none;cursor:pointer;z-index:2;-webkit-tap-highlight-color:transparent}
+.sc-zone.l{left:0}.sc-zone.r{right:0}
+.sc-hint{margin-top:12px;font-size:13px;font-weight:700;color:var(--mut);display:flex;gap:6px;align-items:center;transition:opacity .4s}
+.sc-hint span{display:inline-block;animation:scNudge 1.4s ease-in-out infinite}
+.sc-hint.gone{opacity:0}
+@keyframes scNudge{50%{transform:translateX(5px)}}
+.sc-copy{width:100%;max-width:440px;text-align:center}
+.sc-app{display:none}
+.sc-cap small{display:block;font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--ac);filter:brightness(.8)}
+.sc-cap h3{font-family:Sora,sans-serif;font-size:24px;line-height:1.15;margin:6px 0 6px}
+.sc-cap p{color:var(--mut);font-size:15px;line-height:1.5;min-height:3em}
+.sc-cap.in{animation:scIn .45s var(--ease)}
+@keyframes scIn{from{opacity:0;transform:translateY(8px)}}
+.sc-list,.sc-arrows{display:none}
+@media (min-width:720px){
+  .sc-pick{margin:0 0 30px;padding:4px 2px 8px;display:grid;grid-template-columns:repeat(4,1fr);overflow:visible}
+  .sc-card{min-width:0}
+  .sc{grid-template-columns:auto 1fr;gap:56px;align-items:center;justify-items:stretch;max-width:980px;margin:0 auto}
+  .sc-phone,.sc-bars{width:310px}
+  .sc-hint{display:none}
+  .sc-copy{text-align:left;max-width:none}
+  .sc-app{display:flex;align-items:center;gap:12px;margin-bottom:22px}
+  .sc-app img{width:56px;height:56px;border-radius:16px}
+  .sc-app b{display:block;font-family:Sora,sans-serif;font-size:20px}.sc-app small{color:var(--mut);font-size:13px}
+  .sc-cap h3{font-size:30px}.sc-cap p{font-size:16.5px;max-width:460px}
+  .sc-list{display:flex;flex-direction:column;gap:6px;list-style:none;margin:22px 0 0;padding:0}
+  .sc-list button{display:flex;align-items:center;gap:12px;width:100%;padding:10px 12px;border-radius:14px;border:1px solid var(--line);background:#fff;color:var(--ink);font:600 14.5px Manrope,sans-serif;cursor:pointer;text-align:left;transition:all .25s}
+  .sc-list button span{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;flex:none;background:rgba(30,15,80,.07);font-size:12px;font-weight:800}
+  .sc-list li.on button{border-color:var(--ac);box-shadow:0 8px 20px -12px rgba(30,15,80,.35)}
+  .sc-list li.on button span{background:var(--ac);color:#16131f}
+  .sc-arrows{display:flex;gap:8px;margin-top:16px}
+  .sc-arr{width:44px;height:44px;border-radius:50%;border:1px solid var(--line2);background:#fff;font-size:22px;cursor:pointer;color:var(--ink)}
+}
+@media (prefers-reduced-motion:reduce){.sc-hint span{animation:none}}
 /* ---------- intro splash ---------- */
 #splash{position:fixed;inset:0;z-index:999;background:#07070d;display:grid;place-items:center;overflow:hidden;animation:spOut 3.4s cubic-bezier(.4,0,.2,1) forwards;cursor:pointer}
 #splash .bg{position:absolute;inset:-20%;opacity:0}
@@ -1155,15 +1178,26 @@ setTimeout(done,3700);})();
   <div class="light-run d-light">
   <section class="lt" id="d-portfolio">
     <div class="wrap">
-      <div class="sec-head rv tight"><span class="eyebrow">Apps &amp; websites</span><h2>Apps we've built for<br><span class="grad-text">local businesses.</span></h2><p class="lede">Each one custom-designed in the client's own brand. Tap a screen to take a closer look.</p></div>
-      <div class="pf-tabs rv"><button class="pf-tab on" data-app="allure" style="--ac:#b8862f"><i style="background:#b8862f"></i>Allure Club</button><button class="pf-tab" data-app="snw" style="--ac:#ffc21a"><i style="background:#ffc21a"></i>Smash N Wings</button><button class="pf-tab" data-app="kaya" style="--ac:#d4af37"><i style="background:#d4af37"></i>Kaya Lounge</button></div>
-      <div class="pf-panels rv"><div class="pf-panel on" data-app="allure" style="--ac:#b8862f;--bgc:#fbf6ec">
-        <div class="pf-info"><h3>Allure Club</h3><p>Coffee &amp; dessert lounge · loyalty app</p><div class="pf-chips"><span>Digital stamp card</span><span>Weekly spin &amp; win</span><span>Member offers</span><span>Staff terminal</span></div></div>
-        <div class="pf-row"><button class="pf-ph" data-i="0"><span class="pf-frame"><img src="assets/apps/allure-home.webp" alt="Allure Club app: Join the club" loading="lazy"></span><b>Join the club</b></button><button class="pf-ph" data-i="1"><span class="pf-frame"><img src="assets/apps/allure-spin.webp" alt="Allure Club app: Spin the wheel" loading="lazy"></span><b>Spin the wheel</b></button><button class="pf-ph" data-i="2"><span class="pf-frame"><img src="assets/apps/allure-menu.webp" alt="Allure Club app: Live menu" loading="lazy"></span><b>Live menu</b></button><button class="pf-ph" data-i="3"><span class="pf-frame"><img src="assets/apps/allure-staff.webp" alt="Allure Club app: Staff stamp terminal" loading="lazy"></span><b>Staff stamp terminal</b></button></div></div><div class="pf-panel" data-app="snw" style="--ac:#ffc21a;--bgc:#2b0f5c">
-        <div class="pf-info"><h3>Smash N Wings</h3><p>Smash burger &amp; wings takeaway · ordering app</p><div class="pf-chips"><span>Collection &amp; delivery</span><span>Deals carousel</span><span>Stamp rewards</span><span>Push notifications</span></div></div>
-        <div class="pf-row"><button class="pf-ph" data-i="0"><span class="pf-frame"><img src="assets/apps/snw-home.webp" alt="Smash N Wings app: Order in two taps" loading="lazy"></span><b>Order in two taps</b></button><button class="pf-ph" data-i="1"><span class="pf-frame"><img src="assets/apps/snw-menu.webp" alt="Smash N Wings app: Menu &amp; checkout" loading="lazy"></span><b>Menu &amp; checkout</b></button><button class="pf-ph" data-i="2"><span class="pf-frame"><img src="assets/apps/snw-spin.webp" alt="Smash N Wings app: Rewards club" loading="lazy"></span><b>Rewards club</b></button><button class="pf-ph" data-i="3"><span class="pf-frame"><img src="assets/apps/snw-push.webp" alt="Smash N Wings app: Push offers" loading="lazy"></span><b>Push offers</b></button></div></div><div class="pf-panel" data-app="kaya" style="--ac:#d4af37;--bgc:#0e0c08">
-        <div class="pf-info"><h3>Kaya Lounge</h3><p>Shisha lounge · venue app</p><div class="pf-chips"><span>Full menu</span><span>What’s showing</span><span>Google reviews</span><span>Event alerts</span></div></div>
-        <div class="pf-row"><button class="pf-ph" data-i="0"><span class="pf-frame"><img src="assets/apps/kaya-home.webp" alt="Kaya Lounge app: Venue home" loading="lazy"></span><b>Venue home</b></button><button class="pf-ph" data-i="1"><span class="pf-frame"><img src="assets/apps/kaya-menu.webp" alt="Kaya Lounge app: Food, drinks &amp; shisha" loading="lazy"></span><b>Food, drinks &amp; shisha</b></button><button class="pf-ph" data-i="2"><span class="pf-frame"><img src="assets/apps/kaya-sports.webp" alt="Kaya Lounge app: Live sport listings" loading="lazy"></span><b>Live sport listings</b></button><button class="pf-ph" data-i="3"><span class="pf-frame"><img src="assets/apps/kaya-home2.webp" alt="Kaya Lounge app: Reviews &amp; info" loading="lazy"></span><b>Reviews &amp; info</b></button></div></div></div>
+      <div class="sec-head rv tight"><span class="eyebrow">Apps &amp; websites</span><h2>See them<br><span class="grad-text">in action.</span></h2><p class="lede">Real apps we've built for local businesses, each in the client's own brand. Pick one and watch its best features.</p></div>
+      <div class="sc-pick rv" id="scPick" role="tablist" aria-label="Choose an app"></div>
+      <div class="sc rv" id="sc">
+        <div class="sc-stage">
+          <div class="sc-glow"></div>
+          <div class="sc-bars" id="scBars"></div>
+          <div class="sc-phone" id="scPhone">
+            <video id="scVid" muted playsinline preload="none" disablepictureinpicture aria-label="App feature video"></video>
+            <img id="scPoster" class="sc-poster" alt="">
+            <button class="sc-zone l" id="scPrev" aria-label="Previous feature"></button><button class="sc-zone r" id="scNext" aria-label="Next feature"></button>
+          </div>
+          <div class="sc-hint" id="scHint">Swipe for the next feature <span>→</span></div>
+        </div>
+        <div class="sc-copy">
+          <div class="sc-app" id="scApp"></div>
+          <div class="sc-cap" id="scCap"><small id="scNum"></small><h3 id="scT"></h3><p id="scD"></p></div>
+          <ol class="sc-list" id="scList"></ol>
+          <div class="sc-arrows"><button class="sc-arr" id="scP2" aria-label="Previous feature">‹</button><button class="sc-arr" id="scN2" aria-label="Next feature">›</button></div>
+        </div>
+      </div>
     </div>
   </section>
   <section id="d-work" class="lt lav">
@@ -1410,7 +1444,6 @@ setTimeout(done,3700);})();
   </div>
 </footer>
 
-<div class="pf-lb" id="pfLb" aria-hidden="true"><button class="pf-x" aria-label="Close">×</button><button class="pf-nav pv" aria-label="Previous">‹</button><div class="pf-lbf"><img alt=""></div><button class="pf-nav nx" aria-label="Next">›</button><p class="pf-lbc"></p></div>
 <button class="totop" id="toTop" aria-label="Back to top" title="Back to top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
 <div class="dock" id="dock">
   <a class="btn primary" href="#" data-quote>Get a free quote</a>
@@ -1710,15 +1743,63 @@ window.addEventListener('scroll',()=>{if(!scT)scT=requestAnimationFrame(updScrol
 window.addEventListener('resize',updScroll);
 
 /* ---- App portfolio: tabs + lightbox ---- */
-document.querySelectorAll('.pf-tab').forEach(t=>t.addEventListener('click',()=>{document.querySelectorAll('.pf-tab').forEach(x=>x.classList.toggle('on',x===t));document.querySelectorAll('.pf-panel').forEach(p=>p.classList.toggle('on',p.dataset.app===t.dataset.app))}));
-(()=>{const lb=document.getElementById('pfLb'),img=lb.querySelector('img'),cap=lb.querySelector('.pf-lbc');let list=[],i=0;
- const show=()=>{const b=list[i];img.src=b.querySelector('img').src;img.alt=b.querySelector('img').alt;cap.textContent=b.querySelector('b').textContent};
- document.querySelectorAll('.pf-ph').forEach(b=>b.addEventListener('click',()=>{list=[...b.parentNode.children];i=list.indexOf(b);show();lb.classList.add('open');lb.setAttribute('aria-hidden','false')}));
- const close=()=>{lb.classList.remove('open');lb.setAttribute('aria-hidden','true')};
- lb.querySelector('.pf-x').onclick=close; lb.addEventListener('click',e=>{if(e.target===lb)close()});
- lb.querySelector('.pv').onclick=()=>{i=(i-1+list.length)%list.length;show()}; lb.querySelector('.nx').onclick=()=>{i=(i+1)%list.length;show()};
- addEventListener('keydown',e=>{if(!lb.classList.contains('open'))return;if(e.key==='Escape')close();if(e.key==='ArrowLeft')lb.querySelector('.pv').click();if(e.key==='ArrowRight')lb.querySelector('.nx').click()});
- let sx=null;lb.addEventListener('touchstart',e=>sx=e.touches[0].clientX,{passive:true});lb.addEventListener('touchend',e=>{if(sx===null)return;const d=e.changedTouches[0].clientX-sx;if(Math.abs(d)>40)(d<0?lb.querySelector('.nx'):lb.querySelector('.pv')).click();sx=null});
+/* ---- App showcase: one video at a time ---- */
+const SHOW=[
+ {id:'snw',name:'Smash N Wings',type:'Takeaway ordering app',ac:'#ffc21a',bg:'#1b0a38',clips:[
+  ['Build your box','Customers pick a box and fill it their way. Bigger orders, less hassle at the counter.'],
+  ['Watch it fill up','Burger, wings, flavour and fries drop into the box as they choose. Ordering feels like a game.'],
+  ['Spin to win','A weekly spin with real prizes gives customers a reason to open the app every week.'],
+  ['Feedback that pays','A one-minute survey with 10% off as a thank-you. You hear the truth, and they come back.']]},
+ {id:'chunk',name:'Chunk',type:'Cookie shop app',ac:'#c8843a',bg:'#442814',clips:[
+  ['3D cookie carousel','Swipe to spin the cookies. Products look as good on screen as they do in the shop.'],
+  ['Build a box, or Surprise me','Tap cookies straight into the box, or let the app fill it. Quick for regulars, fun for new customers.'],
+  ['Gift wrap with a tag','The lid closes, the ribbon goes on and their message goes on the tag. An easy £2 extra on every gift.'],
+  ['Gift cards','Sell gift cards by email, collection or delivery. Money in now, new customers later.']]},
+ {id:'allure',name:'Allure Club',type:'Café loyalty app',ac:'#b8862f',bg:'#2b2416',clips:[
+  ['New item alerts','Launch a new drink and every member sees it first, right on the home screen.'],
+  ['Join the club','Customers sign up in seconds and get their own Allure card with their name on it.'],
+  ['Stamp card & member QR','They show their QR at the till, stamps go on automatically and rewards are ready to use.']]},
+ {id:'kaya',name:'Kaya Lounge',type:'Shisha lounge & live sport',ac:'#d4af37',bg:'#0f0d09',clips:[
+  ['Live sport on the big screens','Every fight night and big match listed, so fans know exactly when to come down.'],
+  ['The full menu','Food, drinks and shisha laid out beautifully, so guests know what they want before they arrive.'],
+  ['Reviews & finding you','Google reviews build trust, and directions and opening hours get people through the door.']]}
+];
+(()=>{const $=id=>document.getElementById(id),sc=$('sc');if(!sc)return;
+ const V=$('scVid'),P=$('scPoster'),bars=$('scBars'),list=$('scList');let a=0,c=0,raf=0,visible=false,fallback=false,ft=0,ft0=0,hinted=false;
+ const src=(app,i,ext)=>`assets/apps/vid/${app.id}${i+1}.${ext}`;
+ $('scPick').innerHTML=SHOW.map((s,i)=>`<button class="sc-card" role="tab" data-i="${i}" style="--ac:${s.ac}"><img src="assets/apps/icons/${s.id}.webp" alt="" loading="lazy"><span><b>${s.name}</b><small>${s.type}</small></span></button>`).join('');
+ function setApp(i,auto){a=i;c=0;const s=SHOW[a];sc.style.setProperty('--ac',s.ac);sc.style.setProperty('--sbg',s.bg);
+  document.querySelectorAll('.sc-card').forEach((b,j)=>{b.classList.toggle('on',j===a);b.setAttribute('aria-selected',j===a)});
+  if(!auto){const b=document.querySelector('.sc-card.on');b&&b.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'})}
+  $('scApp').innerHTML=`<img src="assets/apps/icons/${s.id}.webp" alt=""><span><b>${s.name}</b><small>${s.type}</small></span>`;
+  bars.innerHTML=s.clips.map(()=>'<i><b></b></i>').join('');
+  list.innerHTML=s.clips.map((k,j)=>`<li><button data-j="${j}"><span>${j+1}</span>${k[0]}</button></li>`).join('');
+  setClip(0)}
+ function setClip(j){const s=SHOW[a];c=(j+s.clips.length)%s.clips.length;const k=s.clips[c];
+  $('scNum').textContent=`Feature ${c+1} of ${s.clips.length}`;const cap=$('scCap');cap.classList.remove('in');void cap.offsetWidth;cap.classList.add('in');$('scT').textContent=k[0];$('scD').textContent=k[1];
+  [...bars.children].forEach((b,i)=>{b.className=i<c?'done':'';b.firstChild.style.width=i<c?'100%':'0%'});
+  [...list.children].forEach((li,i)=>li.classList.toggle('on',i===c));
+  P.src=src(s,c,'webp');P.classList.add('show');V.poster=src(s,c,'webp');V.src=src(s,c,'mp4');V.load();
+  const nx=s.clips[(c+1)%s.clips.length];if(nx){const im=new Image();im.src=src(s,(c+1)%s.clips.length,'webp')}
+  ft0=performance.now();play()}
+ function play(){if(!visible){V.pause();return}if(fallback){tick();return}
+  const pr=V.play();if(pr&&pr.catch)pr.catch(()=>{fallback=true;ft0=performance.now();tick()})}
+ V.addEventListener('playing',()=>{P.classList.remove('show');tick()});
+ V.addEventListener('ended',()=>next(true));
+ function tick(){cancelAnimationFrame(raf);const b=bars.children[c];if(!b)return;
+  let p;if(fallback){p=Math.min(1,(performance.now()-ft0)/4500);if(p>=1&&visible){next(true);return}}else p=V.duration?V.currentTime/V.duration:0;
+  b.firstChild.style.width=(p*100).toFixed(1)+'%';if(visible)raf=requestAnimationFrame(tick)}
+ function next(auto){if(auto&&!hinted){}setClip(c+1)}
+ function prev(){setClip(c-1)}
+ const hint=()=>{if(!hinted){hinted=true;$('scHint').classList.add('gone')}};
+ $('scNext').onclick=()=>{hint();next()};$('scPrev').onclick=()=>{hint();prev()};$('scN2').onclick=()=>next();$('scP2').onclick=()=>prev();
+ list.addEventListener('click',e=>{const b=e.target.closest('button');if(b)setClip(+b.dataset.j)});
+ $('scPick').addEventListener('click',e=>{const b=e.target.closest('.sc-card');if(b)setApp(+b.dataset.i)});
+ let sx=null,sy=null;const ph=$('scPhone');
+ ph.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
+ ph.addEventListener('touchend',e=>{if(sx===null)return;const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy)){hint();dx<0?next():prev()}sx=null},{passive:true});
+ new IntersectionObserver(es=>{es.forEach(en=>{visible=en.isIntersecting;if(visible){if(!V.src)setApp(0,true);else play()}else{V.pause();cancelAnimationFrame(raf)}})},{threshold:.35}).observe($('scPhone'));
+ document.addEventListener('visibilitychange',()=>{if(document.hidden)V.pause();else if(visible)play()});
 })();
 /* ---- Back to top ---- */
 (function(){const b=document.getElementById('toTop');let on=false;const f=()=>{const s=scrollY>700;if(s!==on){on=s;b.classList.toggle('show',s)}};window.addEventListener('scroll',f,{passive:true});f();b.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}))})();

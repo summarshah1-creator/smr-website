@@ -22,6 +22,7 @@ Owner: Summar (SMR Graphics / SMR Digital / SMR Plates, Luton). He edits the sit
 
 ## Content
 - Client logo carousel "Trusted by businesses & charities" on Graphics and Digital: `assets/clients/*.webp`, listed in `CLIENTS` in index.html. Logos have backgrounds removed and were recoloured only where needed for contrast on dark.
+- Digital app showcase (#d-portfolio, "See them in action."): swipeable app cards (Smash N Wings, Chunk, Allure Club, Kaya Lounge; `SHOW` in index.html) and one big phone that plays one short feature clip at a time with story progress bars, swipe/tap to skip, caption = feature + benefit (desktop: feature list + arrows). Clips are `assets/apps/vid/<app><n>.mp4` (~0.1–0.7 MB, silent H.264) with `.webp` posters; icons `assets/apps/icons/`. Only plays while on screen; if autoplay is blocked it steps through the posters. Clips were recorded with Playwright CDP screencast scripts (work folder, not in the repo).
 - Digital: "Recent work: Smash N Wings, Bedford" (laptop + phone mockups) sits above Websites & apps. Cross-sell at the bottom of each tab (XSFOR): Digital → Marketing + Graphics.
 - Plates order: builder → USP strip → Instagram auto-carousel (@smr.plates posts) → plate styles → private reg search.
 - Header: a white scrolling services strip under the top bar (SVC list in index.html, per tab; hidden on Plates). It replaced the "We do / We build" tickers on Digital, Graphics and Marketing (Plates keeps its ticker).
