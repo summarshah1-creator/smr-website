@@ -83,7 +83,7 @@ return json_decode(<<<'JSON'
  },
  {
   "slug": "chunk",
-  "version": "2026-11-07b",
+  "version": "2026-11-08a",
   "name": "Chunk",
   "accent": "#c98a4b",
   "tagline": "Stuffed cookie shop app · Luton & Rotherham",
@@ -92,7 +92,9 @@ return json_decode(<<<'JSON'
    "Customers pick a location first, so each shop gets its own orders.",
    "Every cookie has its photo, price and allergen info.",
    "Offers and push notifications can be sent to customers' phones.",
-   "Customers choose delivery or collection, and the order comes straight to the shop with no platform fees."
+   "Customers choose delivery or collection, and the order comes straight to the shop with no platform fees.",
+   "New: gift cards. Customers buy one for a friend: emailed, collected as a printed card, or delivered in a gift box.",
+   "New: gift wrap any box with a ribbon, bow and a handwritten tag message, for an extra £2."
   ]
  },
  {
