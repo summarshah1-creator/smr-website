@@ -33,6 +33,7 @@ Owner: Summar (SMR Graphics / SMR Digital / SMR Plates, Luton). He edits the sit
 - Header has a green WhatsApp button (.hdr-wa, data-wa) next to the menu / Get a quote; the old bottom quote dock is hidden. Back-to-top button (#toTop) appears after 700px of scroll. Hero trust ticks stay on one line on mobile.
 - Graphics work sections alternate white (.lt) and dark (.lt.dk) inside the light-run.
 - Header: no "Get a quote" button (removed at owner request); WhatsApp button only.
+- Graphics hero has no "Get a free quote" button (owner asked), only "See services".
 - Graphics hero: pull-up banner, business card, leaflet, hoodie, spinning "SMR GRAPHICS • DESIGN • PRINT" badge (only the text ring spins).
 
 ## Private Demo Manager (`/demo/`, `/demo-admin/`)
