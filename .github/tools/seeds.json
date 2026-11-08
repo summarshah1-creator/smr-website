@@ -60,7 +60,7 @@
  },
  {
   "slug": "cafegrill",
-  "version": "2026-11-08a",
+  "version": "2026-11-08b",
   "name": "Café Grill",
   "accent": "#d0293a",
   "tagline": "Café ordering & rewards · Leagrave Road, Luton",
@@ -73,6 +73,7 @@
    "Cakes Danieli has its own section, with cake slices and dessert pots, to sell more desserts.",
    "Every order earns a stamp: a free hot drink at 4 and a free burger meal at 8.",
    "Google reviews and directions are built in, so new customers trust you and find you.",
+   "Delivery buttons go straight to your Uber Eats and Deliveroo pages.",
    "On a laptop it opens as a full website with the same menu, so customers can order for collection from any screen."
   ]
  },
