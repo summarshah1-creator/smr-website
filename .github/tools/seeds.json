@@ -181,5 +181,21 @@
    "Every order earns a stamp: a free topping upgrade at 4 and a free dessert at 8.",
    "Opening times, directions and a call button are on the Visit tab."
   ]
+ },
+ {
+  "slug": "flamez",
+  "version": "2026-11-08a",
+  "name": "Flamez Luton",
+  "accent": "#ffd21f",
+  "tagline": "Smash burgers & Nashville chicken · ordering app · Luton",
+  "description": "Ordering app for Flamez in Luton: smash burgers, Nashville hot chicken, wings, tenders and Munch Boxes, for collection or delivery, with Flamez Club rewards.",
+  "tips": [
+   "Customers order direct for collection or delivery and pay online, with no commission to delivery apps.",
+   "Today's deals are one tap away from the home screen.",
+   "Flamez Club: a stamp on every order, so regulars keep coming back.",
+   "Spin and win: a weekly chance at prizes like a free Munch Box.",
+   "Delivery tracking shows customers where their order is.",
+   "Customers rate their order, and the shop admin sees every bit of feedback."
+  ]
  }
 ]
