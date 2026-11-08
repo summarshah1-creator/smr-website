@@ -197,5 +197,20 @@
    "Delivery tracking shows customers where their order is.",
    "Customers rate their order, and the shop admin sees every bit of feedback."
   ]
+ },
+ {
+  "slug": "frp",
+  "version": "2026-11-08a",
+  "name": "FRP — Fast Reliable Printing",
+  "accent": "#c9ccd1",
+  "tagline": "Embroidery, print & uniforms website · Luton",
+  "description": "Website for FRP in Luton: embroidery and print on workwear, uniforms and merch, with a mock-up studio and quote requests.",
+  "tips": [
+   "Customers browse the full garment range: polos, hoodies, caps, totes and more, with colours and sizes.",
+   "The mock-up studio lets them upload their logo and place it on a garment before they ask for a price.",
+   "Quote requests come in with the garment, sizes, quantities and artwork already filled in.",
+   "Packages, a size guide and FAQs answer the usual questions before anyone has to call.",
+   "Trusted-by client logos build confidence with new business customers."
+  ]
  }
 ]
