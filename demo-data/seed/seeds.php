@@ -50,7 +50,7 @@ return json_decode(<<<'JSON'
  },
  {
   "slug": "flava",
-  "version": "2026-11-07b",
+  "version": "2026-11-08a",
   "name": "Flava Box",
   "accent": "#e8692c",
   "tagline": "Online ordering & rewards · Luton",
