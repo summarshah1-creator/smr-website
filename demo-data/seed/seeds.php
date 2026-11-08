@@ -114,7 +114,7 @@ return json_decode(<<<'JSON'
  },
  {
   "slug": "kaya",
-  "version": "2026-11-07b",
+  "version": "2026-11-08a",
   "name": "Kaya Lounge",
   "accent": "#c9a14a",
   "tagline": "Shisha lounge, food & live sport · Luton",
