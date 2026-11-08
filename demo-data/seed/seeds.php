@@ -219,7 +219,7 @@ return json_decode(<<<'JSON'
  },
  {
   "slug": "kahwa",
-  "version": "2026-11-08a",
+  "version": "2026-11-08b",
   "name": "Kahwa Café",
   "accent": "#C79A5B",
   "tagline": "Members app, staff terminal & admin · Luton",
