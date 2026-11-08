@@ -188,7 +188,7 @@ case 'link_create':
     $dur = max(5, min(7 * 24 * 60, (int) ($in['duration'] ?? DEFAULT_MINUTES)));
     $token = rand_token(18);
     db()->prepare('INSERT INTO links (token, pin, label, apps, mode, max_uses, uses, duration, tips, created_at) VALUES (?,?,?,?,?,?,0,?,?,?)')
-        ->execute([$token, new_pin(), mb_substr(trim((string) ($in['label'] ?? '')), 0, 80), json_encode($apps), $mode, $max, $dur, !empty($in['tips']) ? 1 : 0, now()]);
+        ->execute([$token, !empty($in['nopin']) ? '' : new_pin(), mb_substr(trim((string) ($in['label'] ?? '')), 0, 80), json_encode($apps), $mode, $max, $dur, !empty($in['tips']) ? 1 : 0, now()]);
     json_out(['ok' => true, 'link' => link_row(get_link(['id' => db()->lastInsertId()]))]);
 
 case 'link_revoke':
@@ -215,7 +215,7 @@ case 'link_extend':
 case 'link_newpin':
     $l = get_link($in);
     db()->prepare('DELETE FROM sessions WHERE link_id = ?')->execute([$l['id']]);
-    db()->prepare('UPDATE links SET pin = ?, uses = 0, activated_at = NULL, expires_at = NULL, revoked = 0 WHERE id = ?')->execute([new_pin(), $l['id']]);
+    db()->prepare('UPDATE links SET pin = ?, uses = 0, activated_at = NULL, expires_at = NULL, revoked = 0 WHERE id = ?')->execute([(string) $l['pin'] === '' ? '' : new_pin(), $l['id']]);
     json_out(['ok' => true, 'link' => link_row(get_link($in))]);
 
 case 'link_delete':

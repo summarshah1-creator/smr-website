@@ -14,6 +14,7 @@ $tips = true;
 $link = null;
 $pinApps = [];
 $pinLen = 4;
+$noPin = false;
 
 if ($preview) {
     $view = 'showroom';
@@ -43,6 +44,7 @@ if ($preview) {
             $view = ($st === 'revoked' || $st === 'expired') ? 'expired' : 'pin';
             if ($view === 'pin') {
                 $pinLen = max(4, strlen((string) $link['pin']));
+                $noPin = (string) $link['pin'] === '';
                 $all = [];
                 foreach (db()->query('SELECT * FROM demos WHERE enabled = 1') as $d) $all[$d['slug']] = $d;
                 foreach (link_apps($link) as $slug) if (isset($all[$slug])) {
@@ -340,6 +342,13 @@ body.appmode .glow{display:none}
     <p class="lead"><?= count($pinApps) === 1 ? 'Shared with you by SMR Digital:' : 'The ' . count($pinApps) . ' apps shared with you by SMR Digital:' ?></p>
     <div class="pinapps"><?php foreach ($pinApps as $pa): ?><span><img src="<?= h($pa['icon']) ?>" alt="" width="52" height="52" draggable="false"><small><?= h($pa['name']) ?></small></span><?php endforeach; ?></div>
     <?php endif; ?>
+    <?php if ($noPin): ?>
+    <p class="lead" style="margin-top:14px">Tap <b>Open</b> to start. This link was made just for you.</p>
+    <p class="small" style="margin-top:6px">Some apps open signed in to a demo account, so you can see all the features.</p>
+    <div class="err" id="err" role="alert"></div>
+    <button class="btn pri" id="go" type="submit" style="margin-top:22px">Open</button>
+    <p class="small">Your session starts when you tap Open.</p>
+    <?php else: ?>
     <p class="lead" style="margin-top:14px">Enter the <?= $pinLen ?>-digit PIN that came with your link to open <?= count($pinApps) === 1 ? 'it' : 'them' ?>. This link was made just for you.</p>
     <p class="small" style="margin-top:6px">Some apps open signed in to a demo account, so you can see all the features.</p>
     <label class="pinbox n<?= $pinLen ?>" id="pinbox" for="pin">
@@ -349,6 +358,7 @@ body.appmode .glow{display:none}
     <div class="err" id="err" role="alert"></div>
     <button class="btn pri" id="go" type="submit" disabled>Open</button>
     <p class="small">Your session starts as soon as the PIN is accepted. No PIN? <a href="<?= h($waAsk) ?>" target="_blank" rel="noopener">Request one</a></p>
+    <?php endif; ?>
   </form>
 </div>
 <?php endif; ?>
@@ -394,7 +404,17 @@ document.addEventListener('contextmenu',function(e){if(!(e.target.closest&&e.tar
 document.addEventListener('dragstart',function(e){if(e.target.tagName==='IMG')e.preventDefault()});
 
 /* ---------- PIN screen ---------- */
-if(B.view==='pin'){
+if(B.view==='pin'&&!$('pin')){
+  var go0=$('go'),err0=$('err'),busy0=false;
+  $('pinform').addEventListener('submit',function(e){e.preventDefault();if(busy0)return;busy0=true;go0.disabled=true;go0.textContent='Opening…';err0.textContent='';
+    fetch('/demo/api.php?a=redeem',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({token:B.token,pin:''})})
+    .then(function(r){return r.json()})
+    .then(function(j){if(j.ok){location.replace(location.pathname+location.search);return}
+      if(j.error==='expired'||j.error==='used'){expiredOn();return}
+      err0.textContent=j.error||'Something went wrong.';busy0=false;go0.disabled=false;go0.textContent='Open'})
+    .catch(function(){err0.textContent='No connection. Please try again.';busy0=false;go0.disabled=false;go0.textContent='Open'})});
+}
+else if(B.view==='pin'){
   var pin=$('pin'),boxes=$('pinbox').querySelectorAll('span'),go=$('go'),err=$('err');
   var paint=function(){var N=boxes.length,v=pin.value.replace(/\D/g,'').slice(0,N);if(pin.value!==v)pin.value=v;
     boxes.forEach(function(b,i){b.textContent=v[i]?'•':'';b.classList.toggle('f',!!v[i]);b.classList.toggle('cur',i===v.length&&document.activeElement===pin)});

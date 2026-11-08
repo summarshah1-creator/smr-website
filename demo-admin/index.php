@@ -262,6 +262,7 @@ document.addEventListener('keydown',function(e){if(/^\d$/.test(e.key))press(e.ke
         <div class="chips" id="dur"><button type="button" data-m="15">15 min</button><button type="button" data-m="30">30 min</button><button type="button" data-m="45" class="on">45 min</button><button type="button" data-m="60">1 hour</button><button type="button" data-m="120">2 hours</button><input type="number" id="durc" min="5" max="10080" placeholder="mins" aria-label="Custom minutes"></div>
         <label class="toggle"><input type="checkbox" id="tips" checked>Show the feature tour in each app</label>
       </details>
+      <label class="toggle" style="margin-top:16px;align-items:flex-start"><input type="checkbox" id="usepin" checked style="flex:none;margin-top:1px"><span>Ask for a PIN<small style="display:block;color:var(--muted);font-weight:500;font-size:12.5px;margin-top:2px">Turn off to send just the link. They tap Open and they're in.</small></span></label>
       <div class="err" id="lerr"></div>
       <button class="btn pri big" type="submit">Create link</button>
     </form>
@@ -308,8 +309,9 @@ var shareText=function(l){var names=l.apps.map(function(s){var d=demoBy(s);retur
          :"Here are the demos we spoke about ("+andList(names)+"). Have a look through the apps.")
     +' Let me know what you think.'
     +'\n\n'+linkPin(l)
-    +'\n\nYou have '+durTxt(l.duration)+' from when you enter the PIN. Any questions, just message me.\n\nSummar, SMR Digital'};
-var linkPin=function(l){return 'Link to demo:\n'+l.url+'\n\nPIN to access demo:\n'+l.pin};
+    +'\n\nYou have '+durTxt(l.duration)+(l.pin?' from when you enter the PIN.':' from when you first open it.')+' Any questions, just message me.\n\nSummar, SMR Digital'};
+var linkPin=function(l){return 'Link to demo:\n'+l.url+(l.pin?'\n\nPIN to access demo:\n'+l.pin:'')};
+var lpName=function(l){return l.pin?'Link & PIN':'Link'};
 var waUrl=function(text,phone){var n=String(phone||'').replace(/\D/g,'');if(n.indexOf('00')===0)n=n.slice(2);else if(n.charAt(0)==='0')n='44'+n.slice(1);
   return 'https://wa.me/'+(n.length>=10?n:'')+'?text='+encodeURIComponent(text)};
 var copy=function(t,msg){(navigator.clipboard&&navigator.clipboard.writeText?navigator.clipboard.writeText(t):Promise.reject()).then(function(){toast(msg||'Copied')}).catch(function(){var a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');toast(msg||'Copied')}catch(e){}a.remove()})};
@@ -388,10 +390,10 @@ var resetSend=function(){clearTimeout(resetT);var c=$('created');c.classList.add
   if(!$('tab-send').classList.contains('hidden')){window.scrollTo({top:0,behavior:'smooth'});toast('Ready for a new link')}};
 var showMessage=function(l,phone){var c=$('created');clearTimeout(resetT);delete c.dataset.used;c.classList.remove('hidden');
   c.innerHTML='<h2>Link ready'+(l.label?' for '+esc(l.label):'')+'</h2><p class="sub">Pick a message, check it, then send it. You can edit it first.</p>'
-    +'<div class="filt" style="margin:12px 0 8px"><button class="on" data-kind="short">Link &amp; PIN</button><button data-kind="full">Full message</button></div>'
+    +'<div class="filt" style="margin:12px 0 8px"><button class="on" data-kind="short">'+esc(lpName(l))+'</button><button data-kind="full">Full message</button></div>'
     +'<textarea class="msg" id="msgtxt"></textarea>'
     +'<a class="btn big wa" id="wasend" target="_blank" rel="noopener" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 19.1L4 20z"/></svg>Send on WhatsApp</a>'
-    +'<div class="acts" style="margin-top:10px"><button class="btn sm" data-lp>Copy link &amp; PIN</button><button class="btn sm" data-c>Copy full message</button><button class="btn sm" data-x>Done</button></div>';
+    +'<div class="acts" style="margin-top:10px"><button class="btn sm" data-lp>Copy '+esc(lpName(l).toLowerCase())+'</button><button class="btn sm" data-c>Copy full message</button><button class="btn sm" data-x>Done</button></div>';
   var ta=c.querySelector('#msgtxt'),wa=c.querySelector('#wasend');ta.value=linkPin(l);
   c.querySelectorAll('[data-kind]').forEach(function(k){k.onclick=function(){c.querySelectorAll('[data-kind]').forEach(function(x){x.classList.toggle('on',x===k)});ta.value=k.dataset.kind==='full'?shareText(l):linkPin(l);upd()}});
   var upd=function(){wa.href=waUrl(ta.value,phone)};upd();ta.addEventListener('input',upd);
@@ -401,13 +403,13 @@ var showMessage=function(l,phone){var c=$('created');clearTimeout(resetT);delete
     c.insertBefore(bn,c.firstChild);bn.querySelector('[data-new]').onclick=resetSend;
     clearTimeout(resetT);resetT=setTimeout(resetSend,120000)};
   wa.addEventListener('click',function(){used('Sent on WhatsApp');setTimeout(function(){toast('Sent links are in the Live tab')},800)});
-  c.querySelector('[data-c]').onclick=function(){copy(shareText(l),'Full message copied');used('Copied')};c.querySelector('[data-lp]').onclick=function(){copy(linkPin(l),'Link and PIN copied');used('Copied')};c.querySelector('[data-x]').onclick=resetSend;
+  c.querySelector('[data-c]').onclick=function(){copy(shareText(l),'Full message copied');used('Copied')};c.querySelector('[data-lp]').onclick=function(){copy(linkPin(l),l.pin?'Link and PIN copied':'Link copied');used('Copied')};c.querySelector('[data-x]').onclick=resetSend;
   c.scrollIntoView({behavior:'smooth',block:'start'})};
 $('linkform').addEventListener('submit',function(e){e.preventDefault();$('lerr').textContent='';
   var apps=[].map.call(document.querySelectorAll('#pick input:checked'),function(i){return i.value});
   if(!apps.length){$('lerr').textContent='Choose at least one app.';return}
   var mode=document.querySelector('[name=mode]:checked').value,phone=$('ph').value;
-  api('link_create',{label:$('lb').value,apps:apps,mode:mode,max_uses:+$('maxu').value,duration:dur,tips:$('tips').checked}).then(function(j){
+  api('link_create',{label:$('lb').value,apps:apps,mode:mode,max_uses:+$('maxu').value,duration:dur,tips:$('tips').checked,nopin:!$('usepin').checked}).then(function(j){
     $('lb').value='';$('ph').value='';document.querySelectorAll('#pick input').forEach(function(i){i.checked=false});
     load().then(function(){showMessage(j.link,phone)})}).catch(function(er){$('lerr').textContent=er.message})});
 
@@ -438,14 +440,14 @@ $('links').addEventListener('click',function(e){var b=e.target.closest('[data-a]
   if(a==='extend')openSheet('<h2>Add time'+(l.label?' for '+esc(l.label):'')+'</h2><p class="sub">'+(l.status==='active'?'Added on to the time they have left.':(l.activated_at?'Their demo opens again straight away with this much time.':'Makes their session longer when they open it.'))+'</p><div class="grid4"><button class="btn" data-m="10">+10 min</button><button class="btn" data-m="15">+15 min</button><button class="btn" data-m="30">+30 min</button><button class="btn" data-m="60">+1 hour</button></div><button class="btn big" data-x style="margin-top:10px">Cancel</button>',
     function(el){el.querySelector('[data-x]').onclick=closeSheet;el.querySelectorAll('[data-m]').forEach(function(m){m.onclick=function(){run('link_extend',{id:id,minutes:+m.dataset.m},'Added '+m.textContent.replace('+',''))}})});
   if(a==='end'&&confirm('End this demo now? They will see the expired screen straight away.'))run('link_revoke',{id:id},'Demo ended');
-  if(a==='more')openSheet('<h2>'+esc(l.label||'Demo link')+'</h2><div class="cred"><span class="pin">'+esc(l.pin)+'</span><code>'+esc(l.url)+'</code></div>'
-    +item('lp','Copy link & PIN')+item('copy','Copy full message')+item('wa','Send again on WhatsApp')+item('pin','New PIN (old one stops working)')+item('del','Delete link','','bad')+item('close','Cancel','','muted'),
+  if(a==='more')openSheet('<h2>'+esc(l.label||'Demo link')+'</h2><div class="cred"><span class="pin">'+(l.pin?esc(l.pin):'No PIN')+'</span><code>'+esc(l.url)+'</code></div>'
+    +item('lp',l.pin?'Copy link & PIN':'Copy link')+item('copy','Copy full message')+item('wa','Send again on WhatsApp')+item('pin',l.pin?'New PIN (old one stops working)':'Restart link (timer resets)')+item('del','Delete link','','bad')+item('close','Cancel','','muted'),
     function(el){el.addEventListener('click',function(ev){var it=ev.target.closest('[data-act]');if(!it)return;var x=it.dataset.act;
       if(x==='close')closeSheet();
       if(x==='copy'){copy(shareText(l),'Message copied');closeSheet()}
-      if(x==='lp'){copy(linkPin(l),'Link and PIN copied');closeSheet()}
+      if(x==='lp'){copy(linkPin(l),l.pin?'Link and PIN copied':'Link copied');closeSheet()}
       if(x==='wa'){window.open(waUrl(linkPin(l),''),'_blank');closeSheet()}
-      if(x==='pin'&&confirm('Make a new PIN? The old PIN stops working and the timer resets.'))run('link_newpin',{id:id},'New PIN made');
+      if(x==='pin'&&confirm(l.pin?'Make a new PIN? The old PIN stops working and the timer resets.':'Restart this link? Their timer resets.'))run('link_newpin',{id:id},l.pin?'New PIN made':'Link restarted');
       if(x==='del'&&confirm('Delete this link for good?'))run('link_delete',{id:id},'Link deleted')})})});
 setInterval(function(){var reload=false;document.querySelectorAll('#links [data-left]').forEach(function(el){var l=L.filter(function(x){return x.id===+el.closest('[data-id]').dataset.id})[0];if(!l)return;var s=leftOf(l);el.textContent=fmtLeft(s);el.closest('.lk').classList.toggle('low',s<=300);if(s<=0)reload=true});if(reload)load()},1000);
 var EV={opened:'opened',low:'low',ended:'ended'};
