@@ -267,6 +267,23 @@ return json_decode(<<<'JSON'
    "Collection or delivery, with live tracking so customers can see where their order is.",
    "Orders come straight to the shop with no commission to delivery apps."
   ]
+ },
+ {
+  "slug": "twentynine",
+  "version": "2026-11-08a",
+  "name": "Twentynine Barbers",
+  "accent": "#d2a955",
+  "tagline": "Barbershop app · Turkish traditional grooming · Luton",
+  "description": "Branded app for Twentynine Barbers in Luton: book a barber in seconds, a stamp-card club, a grooming shop, before & after looks and reels, plus a staff app and dashboard.",
+  "tips": [
+   "Customers pick their barber, see the next free time and book in about 30 seconds.",
+   "Every barber has their own profile, so regulars can stick with their favourite.",
+   "The club card gives a stamp every visit, with a free cut as the reward.",
+   "Before & after photos and short reels show off the shop's real work.",
+   "The 29 Grooming shop sells beard oil, clay, wax and more, for collection in store.",
+   "Staff app: barbers manage bookings, block out time and go offline; the dashboard shows bookings, orders and reports.",
+   "No app store or commission: customers add it to their home screen from a link or QR code."
+  ]
  }
 ]
 JSON
