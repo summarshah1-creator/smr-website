@@ -64,7 +64,7 @@ return json_decode(<<<'JSON'
  },
  {
   "slug": "cafegrill",
-  "version": "2026-11-07h",
+  "version": "2026-11-08a",
   "name": "Café Grill",
   "accent": "#d0293a",
   "tagline": "Café ordering & rewards · Leagrave Road, Luton",
@@ -72,11 +72,12 @@ return json_decode(<<<'JSON'
   "tips": [
    "Customers order ahead for collection or eat in, and skip the queue.",
    "Eating in? They order from the table and the food is brought over.",
-   "Live open/closed status shows whether the café is taking orders right now.",
+   "The Find us box shows if the café is open now and when it next opens, so customers never turn up to a closed door.",
    "The full menu has photos: all-day breakfast, benedicts, the grill, wings and burgers.",
    "Cakes Danieli has its own section, with cake slices and dessert pots, to sell more desserts.",
    "Every order earns a stamp: a free hot drink at 4 and a free burger meal at 8.",
-   "Google reviews and directions are built in, so new customers trust you and find you."
+   "Google reviews and directions are built in, so new customers trust you and find you.",
+   "On a laptop it opens as a full website with the same menu, so customers can order for collection from any screen."
   ]
  },
  {
