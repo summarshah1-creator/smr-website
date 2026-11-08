@@ -1,0 +1,30 @@
+name: Fetch demo app files
+on:
+  workflow_dispatch:
+    inputs:
+      slug:
+        description: Demo slug (e.g. smash-n-wings)
+        required: true
+      paths:
+        description: Space-separated file paths inside the app (default index.html)
+        required: false
+        default: index.html
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download through an admin session
+        env:
+          PIN: ${{ secrets.ADMIN_PIN || '1275' }}
+          SLUG: ${{ inputs.slug }}
+          PATHS: ${{ inputs.paths }}
+        run: |
+          H=https://smrgraphics.co.uk; A=$H/demo-admin/api.php
+          curl -sf -c c.txt -b c.txt -H "Origin: $H" -H 'Content-Type: application/json' -d "{\"pin\":\"$PIN\"}" "$A?a=login" > /dev/null
+          mkdir -p out
+          for p in $PATHS; do mkdir -p "out/$(dirname "$p")"; curl -sf -b c.txt -o "out/$p" "$H/demo/run/$SLUG/$p"; ls -la "out/$p"; done
+      - uses: actions/upload-artifact@v4
+        with:
+          name: demo-files
+          path: out
+          retention-days: 1
