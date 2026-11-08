@@ -783,6 +783,10 @@ img.o-hoodie{height:auto;object-fit:contain;filter:drop-shadow(0 26px 30px rgba(
 .sc-cap.in{animation:scIn .45s var(--ease)}
 @keyframes scIn{from{opacity:0;transform:translateY(8px)}}
 .sc-list,.sc-arrows{display:none}
+.sc-cont{display:flex;justify-content:center;align-items:center;gap:6px;margin-top:14px;font-size:13px;font-weight:800;color:var(--mut);opacity:0;transition:opacity .4s}
+.sc-cont.on{opacity:1}
+.sc-cont span{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--ac,#ffc21a);color:#16131f;animation:scDown 1.2s ease-in-out infinite}
+@keyframes scDown{50%{transform:translateY(5px)}}
 .sc{gap:12px}
 .sc-copy{order:-1}
 .sc-cap{min-height:96px}
@@ -794,7 +798,7 @@ img.o-hoodie{height:auto;object-fit:contain;filter:drop-shadow(0 26px 30px rgba(
   .sc-pick{margin:0 0 30px;padding:4px 2px 8px;display:grid;grid-template-columns:repeat(4,1fr);overflow:visible}
   .sc-card{min-width:0}
   .sc{grid-template-columns:auto 1fr;gap:56px;align-items:center;justify-items:stretch;max-width:980px;margin:0 auto}
-  .sc-phone,.sc-bars{width:310px}
+  .sc-phone,.sc-bars{width:min(310px,calc((100vh - 170px) / 2.17))}
   .sc-hint{display:none}
   .sc-copy{text-align:left;max-width:none}
   .sc-app{display:flex;align-items:center;gap:12px;margin-bottom:22px}
@@ -1214,6 +1218,7 @@ setTimeout(done,3700);})();
           <div class="sc-arrows"><button class="sc-arr" id="scP2" aria-label="Previous feature">‹</button><button class="sc-arr" id="scN2" aria-label="Next feature">›</button></div>
         </div>
       </div>
+      <div class="sc-cont" id="scCont">Keep scrolling <span>↓</span></div>
     </div>
   </section>
   <section id="d-work" class="lt lav">
@@ -1737,7 +1742,7 @@ function defaultBrand(){
 document.addEventListener('click',e=>{
   const sw=e.target.closest('[data-switch] button');if(sw){go(sw.dataset.brand);return}
   const g=e.target.closest('[data-go]');if(g){e.preventDefault();document.body.classList.remove('menu-open');go(g.dataset.go);return}
-  if(e.target.closest('[data-go-top]')){e.preventDefault();window.scrollTo({top:0,behavior:'smooth'});return}
+  if(e.target.closest('[data-go-top]')){e.preventDefault();if(current!=='digital'){go('digital');window.scrollTo(0,0)}else window.scrollTo({top:0,behavior:'smooth'});return}
   const q=e.target.closest('[data-quote]');if(q){e.preventDefault();document.body.classList.remove('menu-open');const sec=document.getElementById(current[0]+'-contact');if(q.dataset.svc){const sel=sec.querySelector('select');[...sel.options].forEach(o=>{if(o.text===q.dataset.svc)sel.value=o.text})}sec.scrollIntoView({behavior:'smooth'});return}
   const w=e.target.closest('[data-wa]');if(w){e.preventDefault();openWA(`Hi ${XS[current][1]}! I'd like a quote please.`);return}
   const s=e.target.closest('[data-scroll]');if(s){e.preventDefault();document.body.classList.remove('menu-open');const t=document.getElementById(s.getAttribute('href').slice(1));if(t)setTimeout(()=>t.scrollIntoView({behavior:'smooth'}),60)}
@@ -1816,6 +1821,21 @@ const SHOW=[
  ph.addEventListener('touchend',e=>{if(sx===null)return;const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy)){hint();dx<0?next():prev()}sx=null},{passive:true});
  new IntersectionObserver(es=>{es.forEach(en=>{visible=en.isIntersecting;if(visible){if(!V.src)setApp(0,true);else play()}else{V.pause();cancelAnimationFrame(raf)}})},{threshold:.35}).observe($('scPhone'));
  document.addEventListener('visibilitychange',()=>{if(document.hidden)V.pause();else if(visible)play()});
+})();
+/* ---- Showcase: pause the scroll once at the bottom of the app showcase ---- */
+(()=>{const sec=document.getElementById('d-portfolio'),cont=document.getElementById('scCont');if(!sec)return;
+ let last=scrollY,lockUntil=0,done=false;
+ const target=()=>{const hd=document.querySelector('header').offsetHeight,sc=document.getElementById('sc'),top=sc.getBoundingClientRect().top+scrollY,bot=cont.getBoundingClientRect().bottom+scrollY;return Math.round(Math.min(top-hd-12,bot-innerHeight+16))};
+ const block=e=>{if(Date.now()<lockUntil){e.preventDefault()}};
+ addEventListener('wheel',block,{passive:false});addEventListener('touchmove',block,{passive:false});
+ addEventListener('keydown',e=>{if(Date.now()<lockUntil&&['ArrowDown','PageDown',' ','End'].includes(e.key))e.preventDefault()});
+ addEventListener('scroll',()=>{const y=scrollY;
+  if(current==='digital'&&!done&&sec.offsetParent){const T=target();
+   if(last<T-2&&y>=T-2){done=true;lockUntil=Date.now()+1100;window.scrollTo({top:T,behavior:'auto'});cont.classList.add('on');last=T;return}}
+  if(Date.now()<lockUntil&&y!==last&&done){window.scrollTo({top:last,behavior:'auto'});return}
+  if(cont.classList.contains('on')&&Math.abs(y-last)>260)cont.classList.remove('on');
+  if(y<target()-innerHeight*.6)done=false;
+  if(Date.now()>=lockUntil)last=y},{passive:true});
 })();
 /* ---- Back to top ---- */
 (function(){const b=document.getElementById('toTop');let on=false;const f=()=>{const s=scrollY>700;if(s!==on){on=s;b.classList.toggle('show',s)}};window.addEventListener('scroll',f,{passive:true});f();b.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}))})();
