@@ -31,6 +31,8 @@ Owner: Summar (SMR Graphics / SMR Digital / SMR Plates, Luton). He edits the sit
 - No pull-down bounce: html/body overscroll-behavior:none (header stays put, no background showing).
 - No zoom on the main site: viewport maximum-scale=1/user-scalable=no, touch-action:manipulation, and pinch / double-tap / ctrl+wheel / ctrl+plus blocked (script in <head>).
 - Header has a green WhatsApp button (.hdr-wa, data-wa) next to the menu / Get a quote; the old bottom quote dock is hidden. Back-to-top button (#toTop) appears after 700px of scroll. Hero trust ticks stay on one line on mobile.
+- Graphics work sections alternate white (.lt) and dark (.lt.dk) inside the light-run.
+- Header: no "Get a quote" button (removed at owner request); WhatsApp button only.
 - Graphics hero: pull-up banner, business card, leaflet, hoodie, spinning "SMR GRAPHICS • DESIGN • PRINT" badge (only the text ring spins).
 
 ## Private Demo Manager (`/demo/`, `/demo-admin/`)

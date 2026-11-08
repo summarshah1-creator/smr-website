@@ -511,6 +511,7 @@ footer{border-top:1px solid var(--line);padding:46px 0 calc(110px + var(--safe-b
 .light-run{position:relative;margin-top:20px;border-radius:40px 40px 0 0;overflow:hidden;background:#fff;box-shadow:0 -30px 80px rgba(0,0,0,.35)}
 .lt{--ink:#16131f;--mut:#5a5670;--dim:#8b879f;--card:#fff;--line:rgba(30,15,80,.09);--line2:rgba(30,15,80,.16);background:#fff;color:var(--ink);padding:34px 0}
 .lt.lav{background:#f6f3ff}
+.lt.dk{--ink:#f4f3fb;--mut:#a3a1b8;--dim:#6f6d86;--card:#161624;--line:rgba(255,255,255,.08);--line2:rgba(255,255,255,.14);background:#0d0d18;color:var(--ink)}
 .lt .lede{color:var(--mut)}
 .lt .sec-head{margin-bottom:18px}
 .lt .sec-head.tight{gap:6px}
@@ -519,6 +520,9 @@ footer{border-top:1px solid var(--line);padding:46px 0 calc(110px + var(--safe-b
 .lt .svc{background:#fff;box-shadow:0 12px 30px rgba(40,20,120,.06)}
 .lt .svc .ic{background:#f1ecff;border-color:transparent;color:#5b3bff}
 .lt .step{background:#fff;box-shadow:0 12px 30px rgba(40,20,120,.06)}
+.lt.dk .chip{background:rgba(255,255,255,.06);color:var(--ink)}.lt.dk .chip.on{background:#fff;color:#16131f;border-color:#fff}
+.lt.dk .svc,.lt.dk .step{background:var(--card);box-shadow:none}
+.lt.dk .svc .ic{background:rgba(255,255,255,.08);color:#fff}
 .w-block{display:grid;gap:18px;align-items:center}
 .w-copy h3,.w-h{font-size:clamp(26px,6.4vw,38px);font-weight:800;margin-bottom:8px}
 .w-copy p{color:var(--mut);font-size:16px;max-width:440px}
@@ -921,7 +925,6 @@ setTimeout(done,3700);})();
       </nav>
       <a class="hdr-plates" href="/plates" data-go="plates">Plates</a>
       <a class="hdr-wa" href="#" data-wa aria-label="WhatsApp us" title="WhatsApp us"><svg data-i="wa"></svg></a>
-      <a class="btn primary hdr-cta" href="#" data-quote>Get a quote</a>
       <button class="menu-btn" id="menuBtn" aria-label="Menu"><i></i></button>
     </div>
     <div class="sub-bar">
@@ -1006,7 +1009,7 @@ setTimeout(done,3700);})();
     </div>
   </section>
 
-  <section class="lt lav">
+  <section class="lt dk">
     <div class="wrap">
       <div class="w-block rev">
         <div class="w-copy rv"><h3>Leaflets &amp; flyers</h3><p>Double-sided A5 flyers that grab attention, and folded leaflets that tell the full story.</p></div>
@@ -1046,7 +1049,7 @@ setTimeout(done,3700);})();
     </div>
   </section>
 
-  <section class="lt lav">
+  <section class="lt dk">
     <div class="wrap">
       <div class="sec-head rv tight"><h3 class="w-h">Banners &amp; roller banners</h3><p class="lede" style="font-size:16px">Heavy-duty vinyl banners with corner eyelets, and pull-up roller banners for events and shops.</p></div>
       <div class="scene vinyls" data-scroll>
@@ -1074,7 +1077,7 @@ setTimeout(done,3700);})();
     </div>
   </section>
 
-  <section class="lt lav">
+  <section class="lt dk">
     <div class="wrap">
       <div class="w-block">
         <div class="w-copy rv"><h3>Uniforms &amp; clothing</h3><p>Embroidered and printed workwear that makes your team look the part. </p></div>
@@ -1101,7 +1104,7 @@ setTimeout(done,3700);})();
     </div>
   </section>
 
-  <section id="g-services" class="lt">
+  <section id="g-services" class="lt dk">
     <div class="wrap">
       <div class="sec-head rv"><span class="eyebrow">What we do</span><h2>Everything your brand<br><span class="grad-text">needs to show up.</span></h2></div>
       <div class="chips rv" data-filter="g">
@@ -1115,7 +1118,7 @@ setTimeout(done,3700);})();
     </div>
   </section>
 
-  <section class="lt lav">
+  <section class="lt">
     <div class="wrap">
       <div class="sec-head rv"><span class="eyebrow">How it works</span><h2>Simple. Fast.<br><span class="grad-text">Done properly.</span></h2></div>
       <div class="steps">
