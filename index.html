@@ -84,7 +84,7 @@ body[data-brand="plates"] .svcstrip{display:none}
 @media (prefers-reduced-motion:reduce){.svc-track{animation-duration:120s}}
 .sub-bar .switch{display:flex;width:100%}
 .sub-bar .switch button{flex:1;padding:9px 6px}
-.menu-btn{width:44px;height:44px;border-radius:14px;border:1px solid var(--line2);background:rgba(255,255,255,.04);display:grid;place-items:center;cursor:pointer}
+.menu-btn{width:38px;height:38px;border-radius:12px;border:1px solid var(--line2);background:rgba(255,255,255,.04);display:grid;place-items:center;cursor:pointer}
 .menu-btn i{display:block;width:18px;height:2px;background:#fff;border-radius:2px;position:relative;transition:.3s}
 .menu-btn i::before,.menu-btn i::after{content:"";position:absolute;left:0;width:18px;height:2px;background:#fff;border-radius:2px;transition:.3s}
 .menu-btn i::before{top:-6px}.menu-btn i::after{top:6px}
@@ -92,9 +92,9 @@ body.menu-open .menu-btn i{background:transparent}
 body.menu-open .menu-btn i::before{top:0;transform:rotate(45deg)}
 body.menu-open .menu-btn i::after{top:0;transform:rotate(-45deg)}
 .btn.hdr-cta{display:none}
-.hdr-wa{flex:none;width:44px;height:44px;border-radius:14px;display:grid;place-items:center;background:#25d366;color:#fff;margin-left:auto;margin-right:8px;box-shadow:0 8px 20px -8px rgba(37,211,102,.7);transition:transform .2s}
+.hdr-wa{flex:none;width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:#25d366;color:#fff;margin-left:auto;margin-right:-10px;box-shadow:0 8px 20px -8px rgba(37,211,102,.7);transition:transform .2s}
 .hdr-wa:active{transform:scale(.94)}
-.hdr-wa svg{width:22px;height:22px}
+.hdr-wa svg{width:20px;height:20px}
 .dock{display:none!important}
 .drawer{position:fixed;inset:0;z-index:40;background:rgba(8,8,15,.94);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);padding:150px 24px 40px;display:flex;flex-direction:column;gap:6px;opacity:0;pointer-events:none;transition:opacity .35s}
 body.menu-open .drawer{opacity:1;pointer-events:auto}
@@ -862,7 +862,8 @@ body.splashing{overflow:hidden}
   .sub-bar{display:none}
   .menu-btn{display:none}
   .btn.hdr-cta{display:inline-flex;height:46px;padding:0 20px;font-size:14px}
-  .hdr-wa{margin-left:0;margin-right:10px;width:46px;height:46px}
+  .hdr-wa{margin-left:0;margin-right:10px;width:46px;height:46px;border-radius:14px}
+  .hdr-wa svg{width:22px;height:22px}
   .hdr-plates{display:inline-block}
   .logo{gap:10px}
   .logo .mark{width:92px;height:23.6px}
