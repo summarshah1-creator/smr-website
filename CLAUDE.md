@@ -28,6 +28,7 @@ Owner: Summar (SMR Graphics / SMR Digital / SMR Plates, Luton). He edits the sit
 - Header: a white scrolling services strip under the top bar (SVC list in index.html, per tab; hidden on Plates). It replaced the "We do / We build" tickers on Digital, Graphics and Marketing (Plates keeps its ticker).
 - Digital hero graphic (.flow): customer phone app → shop tablet (orders, cleaning checklist, staff clock-in) → owner laptop dashboard (sales, orders, staff on time, checklists, chart, VAT alert), numbered 1/2/3. Phone: stacked with labels; 1100px+: layered beside the headline with a dashed animated path.
 - The SMR logo always goes to the Digital tab (top of page).
+- No pull-down bounce: html/body overscroll-behavior:none (header stays put, no background showing).
 - No zoom on the main site: viewport maximum-scale=1/user-scalable=no, touch-action:manipulation, and pinch / double-tap / ctrl+wheel / ctrl+plus blocked (script in <head>).
 - Header has a green WhatsApp button (.hdr-wa, data-wa) next to the menu / Get a quote; the old bottom quote dock is hidden. Back-to-top button (#toTop) appears after 700px of scroll. Hero trust ticks stay on one line on mobile.
 - Graphics hero: pull-up banner, business card, leaflet, hoodie, spinning "SMR GRAPHICS • DESIGN • PRINT" badge (only the text ring spins).
