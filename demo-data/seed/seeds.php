@@ -354,6 +354,24 @@ return json_decode(<<<'JSON'
    "A sponsorship section shows businesses what they get back, with an enquiry form that goes straight to the team.",
    "Open holiday camps show how many places are left and a Book your place form, plus volunteering, donations and the team behind NGS."
   ]
+ },
+ {
+  "slug": "courtney",
+  "version": "2026-11-09a",
+  "ver": "1.0",
+  "name": "The Courtney Foundation",
+  "accent": "#0e8f98",
+  "tagline": "Community charity website & app · Luton",
+  "description": "Website and community app for The Courtney Foundation, a Luton charity supporting people new to the UK and people facing hardship: Raise Up Cafe, one-to-one support, holiday clubs, Pass It On, First Steps and the Everybody Knows campaign.",
+  "tips": [
+   "A welcoming homepage that explains what the charity does in plain words and points people straight to help, volunteering or donating.",
+   "First Steps gives people new to Luton a personal checklist they can save with a PIN and come back to.",
+   "Pass It On lets the community offer and ask for items, with a team panel so staff can manage requests.",
+   "Holiday clubs show what's coming up, let parents get reminders and include a team panel for staff.",
+   "The Raise Up Cafe page covers refreshments, stay & play, free clothes and the one-to-one support drop-in.",
+   "The Everybody Knows campaign shares the monthly Islamophobia report, findings and where to get help in Luton.",
+   "Clear ways to volunteer, ask for support, donate or partner, plus a wall of the funders and partners behind it."
+  ]
  }
 ]
 JSON
