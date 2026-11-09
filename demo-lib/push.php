@@ -50,7 +50,7 @@ function vapid_header(string $endpoint): string {
     $v = vapid_keys();
     $u = parse_url($endpoint);
     $aud = $u['scheme'] . '://' . $u['host'] . (isset($u['port']) ? ':' . $u['port'] : '');
-    $jwt = b64u(json_encode(['typ' => 'JWT', 'alg' => 'ES256'])) . '.' . b64u(json_encode(['aud' => $aud, 'exp' => time() + 12 * 3600, 'sub' => 'mailto:Summar@smrgraphics.co.uk']));
+    $jwt = b64u(json_encode(['typ' => 'JWT', 'alg' => 'ES256'])) . '.' . b64u(json_encode(['aud' => $aud, 'exp' => time() + 12 * 3600, 'sub' => 'mailto:summar@smrgraphics.co.uk']));
     openssl_sign($jwt, $sig, $v['key'], OPENSSL_ALGO_SHA256);
     return 'vapid t=' . $jwt . '.' . b64u(der_to_raw($sig)) . ', k=' . $v['public'];
 }

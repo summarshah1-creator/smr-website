@@ -167,6 +167,7 @@ input:focus,textarea:focus,select:focus{border-color:rgba(214,59,255,.6);box-sha
 .cmp label.f:first-child{margin-top:0}
 .cmp textarea{min-height:240px}
 .mailfrom{font-size:12.5px;color:var(--muted);margin-bottom:4px}
+.sigprev{margin-top:10px;padding:2px 14px 14px;border-radius:16px;background:#fff;overflow:hidden}.sigprev:empty{display:none}
 .top .tabs button{padding:8px 4px;white-space:nowrap;font-size:13px}
 .filt button{height:32px;padding:0 12px;border-radius:999px;border:1px solid var(--line);font-size:12.5px;font-weight:700;color:var(--muted)}
 .filt button.on{color:#fff;border-color:rgba(214,59,255,.6);background:rgba(214,59,255,.12)}
@@ -347,6 +348,7 @@ document.addEventListener('keydown',function(e){if(/^\d$/.test(e.key))press(e.ke
     <label class="f" for="cpcc">Cc (optional)</label><input type="text" id="cpcc" inputmode="email" autocapitalize="off">
     <label class="f" for="cpsub">Subject</label><input type="text" id="cpsub" maxlength="200">
     <label class="f" for="cpbody">Message</label><textarea id="cpbody"></textarea>
+    <div class="sigprev" id="cpsig"></div>
     <div class="err" id="cperr"></div>
   </form>
 </div>
@@ -566,6 +568,12 @@ var mailSetup=function(edit){var c=M.cfg||{};$('mailf').classList.add('hidden');
    +'<label class="f" for="ms-host">Mail server</label><input type="text" id="ms-host" autocapitalize="off" value="'+esc(c.host||'')+'">'
    +'<p class="sub" style="font-size:12.5px">If it won\'t connect, use the server name from SiteGround: Site Tools → Email → Accounts → ⋮ → Mail Configuration (it looks like gxxx.siteground.biz).</p>'
    +'<label class="f" for="ms-name">Name people see</label><input type="text" id="ms-name" maxlength="80" value="'+esc(c.name||'')+'">'
+   +'<h2 style="margin:22px 0 2px">Signature</h2><p class="sub">Added to the bottom of every email you send from here.</p>'
+   +'<label class="toggle"><input type="checkbox" id="ms-sigon"'+(!c.sig||c.sig.on?' checked':'')+'>Add my signature</label>'
+   +'<div class="two"><div><label class="f" for="ms-sname">Your name</label><input type="text" id="ms-sname" maxlength="60" value="'+esc(c.sig?c.sig.name:'Summar Shah')+'"></div>'
+   +'<div><label class="f" for="ms-stitle">Job title</label><input type="text" id="ms-stitle" maxlength="60" value="'+esc(c.sig?c.sig.title:'Director')+'"></div></div>'
+   +'<label class="f" for="ms-sphone">Phone (leave blank to hide)</label><input type="text" id="ms-sphone" maxlength="30" inputmode="tel" value="'+esc(c.sig?c.sig.phone:'07931 814538')+'">'
+   +(c.sig_html?'<div class="sigprev">'+c.sig_html+'</div>':'')
    +'<div class="err" id="ms-err"></div>'
    +'<div class="row" style="margin-top:6px"><button class="btn pri" type="submit">'+(c.set?'Save':'Connect')+'</button>'+(edit?'<button class="btn" type="button" data-ms="cancel">Cancel</button><button class="btn bad" type="button" data-ms="forget">Disconnect</button>':'')+'</div></form>';
   var f=$('msetup');
@@ -573,7 +581,7 @@ var mailSetup=function(edit){var c=M.cfg||{};$('mailf').classList.add('hidden');
     if(b.dataset.ms==='cancel')mailOpen(true);
     if(b.dataset.ms==='forget'&&confirm('Disconnect your email from SMR Admin? Your emails stay in your mailbox.'))api('mail_forget').then(function(){M.cfg=null;M.rows=[];mBadge(0);toast('Email disconnected');mailInit(true)}).catch(function(er){toast(er.message,true)})});
   f.addEventListener('submit',function(e){e.preventDefault();var btn=f.querySelector('[type=submit]');btn.disabled=true;btn.textContent='Connecting…';$('ms-err').textContent='';
-    api('mail_setup',{email:$('ms-email').value,password:$('ms-pass').value,host:$('ms-host').value,name:$('ms-name').value})
+    api('mail_setup',{email:$('ms-email').value,password:$('ms-pass').value,host:$('ms-host').value,name:$('ms-name').value,sig_on:$('ms-sigon').checked,sig_name:$('ms-sname').value,sig_title:$('ms-stitle').value,sig_phone:$('ms-sphone').value})
     .then(function(j){M.cfg=j;M.rows=[];toast('Email connected');mailOpen(true)})
     .catch(function(er){$('ms-err').textContent=er.message;btn.disabled=false;btn.textContent=c.set?'Save':'Connect'})})};
 var renderMail=function(){$('mailf').classList.remove('hidden');$('mailbtns').classList.remove('hidden');
@@ -628,7 +636,7 @@ var CP={};
 var compose=function(o){if(!M.cfg){toast('Loading email…');mailInit().then(function(){compose(o)});return}
   if(!M.cfg.set){toast('Connect your email first');location.hash='mail';return}
   CP=o||{};$('cptitle').textContent=CP.reply?'Reply':'New email';$('cpfrom').textContent='From: '+(M.cfg.name?M.cfg.name+' <'+M.cfg.email+'>':M.cfg.email);
-  $('cpto').value=CP.to||'';$('cpcc').value='';$('cpsub').value=CP.subject||'';$('cpbody').value=CP.body||'';$('cperr').textContent='';
+  $('cpsig').innerHTML=M.cfg.sig_html||'';$('cpto').value=CP.to||'';$('cpcc').value='';$('cpsub').value=CP.subject||'';$('cpbody').value=CP.body||'';$('cperr').textContent='';
   ovOpen('compose');setTimeout(function(){var el=CP.to?$('cpbody'):$('cpto');el.focus();if(el===$('cpbody'))el.setSelectionRange(0,0)},260)};
 var cpBusy=false;
 $('compose').addEventListener('click',function(e){var b=e.target.closest('[data-cp]');if(!b)return;

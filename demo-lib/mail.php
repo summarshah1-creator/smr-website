@@ -28,13 +28,14 @@ function mail_cfg(): ?array {
     $r = db()->query('SELECT * FROM mail_cfg WHERE id = 1')->fetch();
     if (!$r || !$r['email'] || !$r['pass']) return null;
     $r['password'] = mail_decrypt($r['pass']);
+    $r['email'] = strtolower($r['email']);
     return $r['password'] === '' ? null : $r;
 }
 function mail_cfg_public(): array {
     mail_table();
     $r = db()->query('SELECT email, name, host FROM mail_cfg WHERE id = 1')->fetch() ?: [];
-    return ['set' => (bool) mail_cfg(), 'email' => $r['email'] ?? 'Summar@smrgraphics.co.uk', 'name' => $r['name'] ?? 'Summar | SMR Digital',
-        'host' => $r['host'] ?? 'mail.smrgraphics.co.uk'];
+    return ['set' => (bool) mail_cfg(), 'email' => strtolower($r['email'] ?? 'summar@smrgraphics.co.uk'), 'name' => $r['name'] ?? 'Summar | SMR Digital',
+        'host' => $r['host'] ?? 'mail.smrgraphics.co.uk', 'sig' => ($g = mail_sig()), 'sig_html' => $g['on'] ? mail_sig_html($g, '/assets/email/sig-brand.gif') : ''];
 }
 function mail_cfg_save(string $email, string $name, string $host, string $pass): void {
     mail_table();
@@ -43,6 +44,58 @@ function mail_cfg_save(string $email, string $name, string $host, string $pass):
     db()->prepare('INSERT OR REPLACE INTO mail_cfg (id, email, name, host, pass, updated_at) VALUES (1,?,?,?,?,?)')->execute([$email, $name, $host, $enc, time()]);
 }
 function mail_cfg_clear(): void { mail_table(); db()->exec('DELETE FROM mail_cfg'); }
+
+/* ---------- signature ---------- */
+function mail_sig_cols(): void {
+    mail_table();
+    add_col(db(), 'mail_cfg', 'sig_on', 'INTEGER DEFAULT 1');
+    add_col(db(), 'mail_cfg', 'sig_name', "TEXT DEFAULT 'Summar Shah'");
+    add_col(db(), 'mail_cfg', 'sig_title', "TEXT DEFAULT 'Director'");
+    add_col(db(), 'mail_cfg', 'sig_phone', "TEXT DEFAULT '07931 814538'");
+}
+function mail_sig(): array {
+    mail_sig_cols();
+    $r = db()->query('SELECT sig_on, sig_name, sig_title, sig_phone, email FROM mail_cfg WHERE id = 1')->fetch() ?: [];
+    return ['on' => (int) ($r['sig_on'] ?? 1) === 1, 'name' => $r['sig_name'] ?? 'Summar Shah', 'title' => $r['sig_title'] ?? 'Director',
+        'phone' => $r['sig_phone'] ?? '07931 814538', 'email' => strtolower($r['email'] ?? 'summar@smrgraphics.co.uk')];
+}
+function mail_sig_save(bool $on, string $name, string $title, string $phone): void {
+    mail_sig_cols();
+    db()->prepare('UPDATE mail_cfg SET sig_on = ?, sig_name = ?, sig_title = ?, sig_phone = ? WHERE id = 1')->execute([$on ? 1 : 0, $name, $title, $phone]);
+}
+function mail_sig_text(array $g): string {
+    $l = ['-- ', $g['name'] . ($g['title'] !== '' ? ', ' . $g['title'] : ''), 'SMR · Digital · Graphics · Marketing'];
+    $c = array_filter([$g['phone'], $g['email'], 'smrgraphics.co.uk']);
+    $l[] = implode(' · ', $c);
+    return implode("\r\n", $l);
+}
+/* $img = src for the brand picture (cid:… in emails, a URL in the preview). */
+function mail_sig_html(array $g, string $img): string {
+    $e = function ($s) { return htmlspecialchars((string) $s, ENT_QUOTES, 'UTF-8'); };
+    $font = "font-family:Helvetica,Arial,sans-serif;";
+    $row = function ($label, $value, $href) use ($e, $font) {
+        return '<tr><td style="' . $font . 'font-size:10px;line-height:18px;font-weight:bold;letter-spacing:1px;color:#8b7bff;padding:0 10px 0 0;white-space:nowrap;vertical-align:top">' . $label . '</td>'
+            . '<td style="' . $font . 'font-size:13px;line-height:18px;white-space:nowrap"><a href="' . $e($href) . '" style="color:#ece9ff;text-decoration:none">' . $e($value) . '</a></td></tr>';
+    };
+    $rows = '';
+    if ($g['phone'] !== '') $rows .= $row('CALL', $g['phone'], 'tel:+44' . ltrim(preg_replace('/\D/', '', $g['phone']), '0'));
+    if ($g['email'] !== '') $rows .= $row('EMAIL', $g['email'], 'mailto:' . $g['email']);
+    $rows .= $row('WEB', 'smrgraphics.co.uk', 'https://smrgraphics.co.uk');
+    // Side by side on wide screens, stacked on phones (two inline blocks; Outlook gets a table).
+    return '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#0c0c18" style="width:100%;max-width:524px;background:#0c0c18;border-radius:16px;border-collapse:separate;margin-top:22px">'
+        . '<tr><td style="padding:14px 18px 16px 20px;font-size:0;line-height:0">'
+        . '<!--[if mso]><table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td width="226" valign="middle"><![endif]-->'
+        . '<div style="display:inline-block;vertical-align:middle;width:226px;max-width:100%;padding:4px 0">'
+        . '<a href="https://smrgraphics.co.uk" style="text-decoration:none"><img src="' . $e($img) . '" width="200" height="104" alt="SMR · Digital · Graphics · Marketing" style="display:block;width:200px;height:104px;border:0"></a></div>'
+        . '<!--[if mso]></td><td width="258" valign="middle"><![endif]-->'
+        . '<div style="display:inline-block;vertical-align:middle;width:258px;max-width:100%;padding:6px 0 4px 18px;border-left:1px solid #2c2a4a;box-sizing:border-box">'
+        . '<div style="' . $font . 'font-size:18px;line-height:22px;font-weight:bold;color:#ffffff;white-space:nowrap">' . $e($g['name']) . '</div>'
+        . ($g['title'] !== '' ? '<div style="' . $font . 'font-size:12px;line-height:18px;font-weight:bold;letter-spacing:1.5px;text-transform:uppercase;color:#d07bff;padding:2px 0 10px">' . $e($g['title']) . '</div>' : '<div style="height:10px;font-size:0;line-height:0">&nbsp;</div>')
+        . '<table role="presentation" cellpadding="0" cellspacing="0" border="0">' . $rows . '</table></div>'
+        . '<!--[if mso]></td></tr></table><![endif]-->'
+        . '</td></tr></table>';
+}
+function mail_sig_png(): string { return (string) @file_get_contents(SITE_ROOT . '/assets/email/sig-brand.gif'); }
 
 function mail_stream(string $host, int $port, int $timeout = 20) {
     $ctx = stream_context_create(['ssl' => ['verify_peer' => true, 'verify_peer_name' => true, 'SNI_enabled' => true, 'peer_name' => $host]]);
@@ -320,10 +373,41 @@ function mail_build(array $cfg, array $to, array $cc, string $subject, string $t
     $h[] = 'Message-ID: ' . $mid;
     if ($inReplyTo !== '') { $h[] = 'In-Reply-To: ' . $inReplyTo; $h[] = 'References: ' . trim($refs . ' ' . $inReplyTo); }
     $h[] = 'MIME-Version: 1.0';
-    $h[] = 'Content-Type: text/plain; charset=UTF-8';
-    $h[] = 'Content-Transfer-Encoding: quoted-printable';
-    $text = preg_replace("/\r\n?|\n/", "\r\n", $text);
-    return [implode("\r\n", $h) . "\r\n\r\n" . quoted_printable_encode($text) . "\r\n", $mid];
+    $text = preg_replace("/\r\n?|\n/", "\n", $text);
+    $g = mail_sig();
+    $png = $g['on'] ? mail_sig_png() : '';
+    if ($png === '') {
+        $h[] = 'Content-Type: text/plain; charset=UTF-8';
+        $h[] = 'Content-Transfer-Encoding: quoted-printable';
+        return [implode("\r\n", $h) . "\r\n\r\n" . quoted_printable_encode(str_replace("\n", "\r\n", $text)) . "\r\n", $mid];
+    }
+    // Your words, then the signature, then any quoted email (reply / forward).
+    $own = $text; $quote = '';
+    if (preg_match('/^(On .{3,200} wrote:|-{5,} Forwarded email -{5,})$/m', $text, $qm, PREG_OFFSET_CAPTURE)) { $own = substr($text, 0, $qm[0][1]); $quote = substr($text, $qm[0][1]); }
+    $own = rtrim($own);
+    $plain = $own . "\n\n" . str_replace("\r\n", "\n", mail_sig_text($g)) . ($quote !== '' ? "\n\n" . $quote : '');
+    $esc = function ($s) { return nl2br(htmlspecialchars($s, ENT_QUOTES, 'UTF-8'), false); };
+    $font = 'font-family:Helvetica,Arial,sans-serif;font-size:15px;line-height:1.55;color:#16161d';
+    $qhtml = '';
+    if ($quote !== '') {
+        $ql = explode("\n", $quote); $first = array_shift($ql);
+        $ql = array_map(function ($l) { return preg_replace('/^> ?/', '', $l); }, $ql);
+        $qhtml = '<div style="' . $font . ';margin-top:24px;color:#555">' . $esc($first) . '</div><blockquote style="margin:6px 0 0;padding:0 0 0 12px;border-left:3px solid #d9d4f2;' . $font . ';color:#555">' . $esc(implode("\n", $ql)) . '</blockquote>';
+    }
+    $cid = 'sig-' . bin2hex(random_bytes(6)) . '@smrgraphics.co.uk';
+    $html = '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="margin:0;padding:0">'
+        . '<div style="' . $font . '">' . $esc($own) . '</div>' . mail_sig_html($g, 'cid:' . $cid) . $qhtml . '</body></html>';
+    $b1 = 'r' . bin2hex(random_bytes(10)); $b2 = 'a' . bin2hex(random_bytes(10));
+    $h[] = 'Content-Type: multipart/related; boundary="' . $b1 . '"; type="multipart/alternative"';
+    $crlf = function ($s) { return preg_replace("/\r?\n/", "\r\n", $s); };
+    $body = '--' . $b1 . "\r\nContent-Type: multipart/alternative; boundary=\"" . $b2 . "\"\r\n\r\n"
+        . '--' . $b2 . "\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n" . quoted_printable_encode($crlf($plain)) . "\r\n"
+        . '--' . $b2 . "\r\nContent-Type: text/html; charset=UTF-8\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n" . quoted_printable_encode($crlf($html)) . "\r\n"
+        . '--' . $b2 . "--\r\n"
+        . '--' . $b1 . "\r\nContent-Type: image/gif; name=\"smr.gif\"\r\nContent-Transfer-Encoding: base64\r\nContent-ID: <" . $cid . ">\r\nContent-Disposition: inline; filename=\"smr.gif\"\r\n\r\n"
+        . chunk_split(base64_encode($png), 76, "\r\n")
+        . '--' . $b1 . "--\r\n";
+    return [implode("\r\n", $h) . "\r\n\r\n" . $body, $mid];
 }
 function smtp_send(array $cfg, array $rcpts, string $msg): void {
     $s = mail_stream($cfg['host'], 465);
