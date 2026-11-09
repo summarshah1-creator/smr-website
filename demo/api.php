@@ -78,7 +78,7 @@ if ($a === 'redeem' && $method === 'POST') {
             json_out(['ok' => true, 'state' => session_state($vs[0], $vs[1])]);
         }
 
-        $dur = max(1, (int) $l['duration']) * 60;
+        $dur = (int) $l['duration'] === 0 ? NO_LIMIT_TS - $now : max(1, (int) $l['duration']) * 60;
         if ($l['mode'] === 'shared') {
             if (!$l['activated_at']) {
                 $pdo->prepare('UPDATE links SET activated_at = ?, expires_at = ?, uses = uses + 1 WHERE id = ?')->execute([$now, $now + $dur, $l['id']]);
@@ -103,7 +103,7 @@ if ($a === 'redeem' && $method === 'POST') {
         $mins = (int) round(($exp - $now) / 60);
         require_once dirname(__DIR__) . '/demo-lib/push.php';
         json_out_then(['ok' => true, 'state' => 'ok'], function () use ($l, $n, $mins) {
-            link_event($l, 'opened', 'opened the demo' . ($n > 1 ? ' (open no. ' . $n . ')' : '') . ' · ' . $mins . ' min left');
+            link_event($l, 'opened', 'opened the demo' . ($n > 1 ? ' (open no. ' . $n . ')' : '') . ' · ' . ($mins > 50 * 365 * 1440 ? 'no time limit' : ($mins >= 1440 ? floor($mins / 1440) . ' days left' : $mins . ' min left')));
         });
     } catch (Throwable $e) {
         if ($pdo->inTransaction()) $pdo->exec('ROLLBACK');

@@ -291,7 +291,7 @@ document.addEventListener('keydown',function(e){if(/^\d$/.test(e.key))press(e.ke
           <label><input type="radio" name="mode" value="limited">Limited uses<small>PIN works <input type="number" id="maxu" value="3" min="2" max="500" style="width:64px;height:30px;padding:0 6px;display:inline-block"> times, each with its own timer.</small></label>
         </div>
         <label class="f">Session length</label>
-        <div class="chips" id="dur"><button type="button" data-m="15">15 min</button><button type="button" data-m="30">30 min</button><button type="button" data-m="45" class="on">45 min</button><button type="button" data-m="60">1 hour</button><button type="button" data-m="120">2 hours</button><button type="button" data-m="1440">1 day</button><button type="button" data-m="10080">1 week</button><button type="button" data-m="43200">30 days</button><input type="number" id="durc" min="5" max="43200" placeholder="mins" aria-label="Custom minutes"></div>
+        <div class="chips" id="dur"><button type="button" data-m="15">15 min</button><button type="button" data-m="30">30 min</button><button type="button" data-m="45" class="on">45 min</button><button type="button" data-m="60">1 hour</button><button type="button" data-m="120">2 hours</button><button type="button" data-m="1440">1 day</button><button type="button" data-m="10080">1 week</button><button type="button" data-m="43200">30 days</button><button type="button" data-m="0">No limit</button><input type="number" id="durc" min="5" max="43200" placeholder="mins" aria-label="Custom minutes"></div>
         <label class="toggle"><input type="checkbox" id="tips" checked>Show the feature tour in each app</label>
       </details>
       <label class="toggle" style="margin-top:16px;align-items:flex-start"><input type="checkbox" id="direct" style="flex:none;margin-top:1px"><span>Open straight into it<small style="display:block;color:var(--muted);font-weight:500;font-size:12.5px;margin-top:2px">For one app or website. No demo list or menus, just an SMR Digital Demo bar with the version number, your website and WhatsApp. Always shows the latest version.</small></span></label>
@@ -306,7 +306,7 @@ document.addEventListener('keydown',function(e){if(/^\d$/.test(e.key))press(e.ke
   <section id="tab-live" class="tab hidden">
     <div class="bar"><div><h1>Live links</h1><p class="sub">Who has opened a demo, how long they have left, and extend or end it.</p></div></div>
     <div class="notif hidden" id="notif"><div><b>Get notified</b><span>When someone opens a demo, and when their time is nearly up.</span></div><button class="btn sm pri" id="notifon">Turn on</button></div>
-    <div class="filt" id="filt"><button class="on" data-f="live">Live &amp; waiting</button><button data-f="ended">Ended</button><button data-f="all">All</button></div>
+    <div class="filt" id="filt"><button class="on" data-f="live">Live &amp; waiting</button><button data-f="open">Open links</button><button data-f="ended">Ended</button><button data-f="all">All</button></div>
     <div class="list" id="links"></div>
     <h2 style="margin-top:26px">Recent activity</h2>
     <div class="feed" id="feed"></div>
@@ -374,19 +374,19 @@ var nowS=function(){return Math.floor(Date.now()/1000+skew)};
 var fmtT=function(t){if(!t)return'';var d=new Date(t*1000),td=new Date();var same=d.toDateString()===td.toDateString();return(same?'Today':d.toLocaleDateString('en-GB',{day:'numeric',month:'short'}))+' '+d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})};
 var fmtD=function(t){return t?new Date(t*1000).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}):''};
 var ago=function(t){var s=nowS()-t;if(s<60)return'just now';if(s<3600)return Math.floor(s/60)+' min ago';if(s<86400)return Math.floor(s/3600)+' h ago';return fmtT(t)};
-var fmtLeft=function(s){if(s<=0)return'0:00';var h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return(h?h+':'+String(m).padStart(2,'0'):m)+':'+String(x).padStart(2,'0')};
+var fmtLeft=function(s){if(s<=0)return'0:00';if(s>=86400)return Math.floor(s/86400)+'d '+Math.floor(s%86400/3600)+'h';var h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return(h?h+':'+String(m).padStart(2,'0'):m)+':'+String(x).padStart(2,'0')};
 var demoBy=function(s){for(var i=0;i<D.length;i++)if(D[i].slug===s)return D[i]};
 var andList=function(a){return a.length<2?a.join(''):a.slice(0,-1).join(', ')+' and '+a[a.length-1]};
-var durTxt=function(m){if(m>=1440&&m%1440===0){var d=m/1440;return d===7?'1 week':d===1?'1 day':d+' days'}return m>=60&&m%60===0?(m===60?'1 hour':(m/60)+' hours'):m+' minutes'};
+var durTxt=function(m){if(!m)return'no time limit';if(m>=1440&&m%1440===0){var d=m/1440;return d===7?'1 week':d===1?'1 day':d+' days'}return m>=60&&m%60===0?(m===60?'1 hour':(m/60)+' hours'):m+' minutes'};
 var shareText=function(l){var names=l.apps.map(function(s){var d=demoBy(s);return d?d.name:s}),one=names.length===1;
   if(l.direct)return "Here's the latest version of "+names[0]+" for you to look over. Let me know what you think."
     +'\n\n'+linkPin(l)
-    +'\n\nThe same link always shows the newest version, so you can check back after each update. It stays open for '+durTxt(l.duration)+(l.pin?' from when you enter the PIN.':' from when you first open it.')+' Any questions, just message me.\n\nSummar, SMR Digital';
+    +'\n\nThe same link always shows the newest version, so you can check back after each update.'+(l.duration?' It stays open for '+durTxt(l.duration)+(l.pin?' from when you enter the PIN.':' from when you first open it.'):'')+' Any questions, just message me.\n\nSummar, SMR Digital';
   return (one?"Here's the demo we spoke about ("+names[0]+"). Have a little look around the app."
          :"Here are the demos we spoke about ("+andList(names)+"). Have a look through the apps.")
     +' Let me know what you think.'
     +'\n\n'+linkPin(l)
-    +'\n\nYou have '+durTxt(l.duration)+(l.pin?' from when you enter the PIN.':' from when you first open it.')+' Any questions, just message me.\n\nSummar, SMR Digital'};
+    +'\n\n'+(l.duration?'You have '+durTxt(l.duration)+(l.pin?' from when you enter the PIN.':' from when you first open it.')+' ':'There is no time limit, so take a look whenever suits you. ')+'Any questions, just message me.\n\nSummar, SMR Digital'};
 var linkPin=function(l){return 'Link to demo:\n'+l.url+(l.pin?'\n\nPIN to access demo:\n'+l.pin:'')};
 var lpName=function(l){return l.pin?'Link & PIN':'Link'};
 var waUrl=function(text,phone){var n=String(phone||'').replace(/\D/g,'');if(n.indexOf('00')===0)n=n.slice(2);else if(n.charAt(0)==='0')n='44'+n.slice(1);
@@ -463,7 +463,7 @@ var dur=45;
 $('dur').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;dur=+b.dataset.m;$('durc').value='';this.querySelectorAll('button').forEach(function(x){x.classList.toggle('on',x===b)})});
 var moreSum=function(){var m=$('moresum');if(m)m.textContent=m.textContent.replace(/\(([^,]*)/,'('+durTxt(dur))};
 $('dur').addEventListener('click',moreSum);$('durc').addEventListener('input',moreSum);
-$('direct').addEventListener('change',function(){if(this.checked&&dur<1440){var b=$('dur').querySelector('[data-m="43200"]');if(b)b.click()}});
+$('direct').addEventListener('change',function(){if(this.checked&&dur>0&&dur<1440){var b=$('dur').querySelector('[data-m="43200"]');if(b)b.click()}});
 $('durc').addEventListener('input',function(){var v=+this.value;if(v>=5){dur=v;$('dur').querySelectorAll('button').forEach(function(x){x.classList.remove('on')})}});
 var resetT;
 var resetSend=function(){clearTimeout(resetT);var c=$('created');c.classList.add('hidden');c.innerHTML='';delete c.dataset.used;
@@ -501,13 +501,21 @@ var leftOf=function(l){return l.status==='active'?Math.max(0,l.expires_at-nowS()
 var isLive=function(l){return l.status==='active'||l.status==='not_activated'||l.status==='uses_left'};
 var renderLinks=function(){
   var n=L.filter(function(l){return l.status==='active'}).length;$('livecnt').textContent=n?n:'';
-  var list=L.filter(function(l){return filter==='all'||(filter==='live'?isLive(l):!isLive(l))});
+  var list=L.filter(function(l){return filter==='all'||(filter==='open'?l.open:(!l.open&&(filter==='live'?isLive(l):!isLive(l))))});
+  var oc=L.filter(function(l){return l.open}).length,ob=document.querySelector('#filt [data-f=open]');if(ob)ob.textContent='Open links'+(oc?' ('+oc+')':'');
   $('links').innerHTML=list.length?list.map(function(l){
     var names=l.apps.map(function(s){var d=demoBy(s);return d?d.name:s});
     var app=l.last_app&&demoBy(l.last_app)?demoBy(l.last_app).name:'';
     var line=l.status==='not_activated'?'Sent '+fmtT(l.created_at)+' · not opened yet'
       :l.status==='active'?'Opened '+fmtT(l.activated_at)+(app?' · last looked at '+esc(app):'')+(l.devices>1?' · '+l.devices+' devices':'')
       :l.activated_at?'Opened '+fmtT(l.activated_at)+(app?' · last looked at '+esc(app):''):'Sent '+fmtT(l.created_at);
+    if(l.open){var od=demoBy(l.apps[0]),off=l.status==='revoked';
+      return '<div class="lk '+(off?'revoked':'active')+'" data-id="'+l.id+'"><div class="hd"><b>'+esc(l.label||'No name')+'</b><span class="badge '+(off?'revoked':'active')+'">'+(off?'Turned off':'Open link')+'</span></div>'
+      +'<div class="icons">'+l.apps.map(function(s){var d=demoBy(s);return d?'<img src="'+esc(d.icon)+'" alt="" title="'+esc(d.name)+'">':''}).join('')+'<span>'+esc(andList(names))+(od&&od.ver?' · v'+esc(od.ver):'')+'</span></div>'
+      +'<p class="line">'+(off?'Turned off. Anyone with the link sees that it has ended.':'No time limit. Anyone with the link sees the latest version.')+(l.activated_at?' First opened '+fmtT(l.activated_at)+'.':' Not opened yet.')+'</p>'
+      +'<p class="views"><b>'+(l.views||0)+'</b> '+(l.views===1?'click':'clicks')+' on the link'+(l.last_view?' · last opened '+fmtT(l.last_view):'')+'</p>'
+      +'<div class="acts">'+(off?'<button class="btn sm pri" data-a="on">Turn back on</button>':'<button class="btn sm pri" data-a="cp">Copy link</button><button class="btn sm bad" data-a="end">Turn off</button>')
+      +'<button class="btn sm icon" data-a="more" aria-label="More">'+ICON.dots+'</button></div></div>'}
     return '<div class="lk '+l.status+'" data-id="'+l.id+'"><div class="hd"><b>'+esc(l.label||'No name')+'</b><span class="badge '+l.status+'">'+STAT[l.status]+'</span></div>'
     +'<div class="icons">'+l.apps.map(function(s){var d=demoBy(s);return d?'<img src="'+esc(d.icon)+'" alt="" title="'+esc(d.name)+'">':''}).join('')+'<span>'+esc(andList(names))+'</span></div>'
     +'<p class="line">'+line+'</p>'
@@ -521,6 +529,9 @@ var run=function(act,body,msg){return api(act,body).then(function(){closeSheet()
 $('links').addEventListener('click',function(e){var b=e.target.closest('[data-a]');if(!b)return;var id=+b.closest('[data-id]').dataset.id,l=L.filter(function(x){return x.id===id})[0],a=b.dataset.a;
   if(a==='extend')openSheet('<h2>Add time'+(l.label?' for '+esc(l.label):'')+'</h2><p class="sub">'+(l.status==='active'?'Added on to the time they have left.':(l.activated_at?'Their demo opens again straight away with this much time.':'Makes their session longer when they open it.'))+'</p><div class="grid4"><button class="btn" data-m="10">+10 min</button><button class="btn" data-m="15">+15 min</button><button class="btn" data-m="30">+30 min</button><button class="btn" data-m="60">+1 hour</button></div><button class="btn big" data-x style="margin-top:10px">Cancel</button>',
     function(el){el.querySelector('[data-x]').onclick=closeSheet;el.querySelectorAll('[data-m]').forEach(function(m){m.onclick=function(){run('link_extend',{id:id,minutes:+m.dataset.m},'Added '+m.textContent.replace('+',''))}})});
+  if(a==='cp'){copy(linkPin(l),l.pin?'Link and PIN copied':'Link copied');return}
+  if(a==='on'){run('link_extend',{id:id,minutes:1},'Link turned back on');return}
+  if(a==='end'&&l.open){if(confirm('Turn this link off? Anyone who opens it will see that it has ended. You can turn it back on.'))run('link_revoke',{id:id},'Link turned off');return}
   if(a==='end'&&confirm('End this demo now? They will see the expired screen straight away.'))run('link_revoke',{id:id},'Demo ended');
   if(a==='more')openSheet('<h2>'+esc(l.label||'Demo link')+'</h2><div class="cred"><span class="pin">'+(l.pin?esc(l.pin):'No PIN')+'</span><code>'+esc(l.url)+'</code></div>'
     +item('lp',l.pin?'Copy link & PIN':'Copy link')+item('copy','Copy full message')+item('wa','Send again on WhatsApp')+item('pin',l.pin?'New PIN (old one stops working)':'Restart link (timer resets)')+item('del','Delete link','','bad')+item('close','Cancel','','muted'),
@@ -530,7 +541,7 @@ $('links').addEventListener('click',function(e){var b=e.target.closest('[data-a]
       if(x==='lp'){copy(linkPin(l),l.pin?'Link and PIN copied':'Link copied');closeSheet()}
       if(x==='wa'){window.open(waUrl(linkPin(l),''),'_blank');closeSheet()}
       if(x==='pin'&&confirm(l.pin?'Make a new PIN? The old PIN stops working and the timer resets.':'Restart this link? Their timer resets.'))run('link_newpin',{id:id},l.pin?'New PIN made':'Link restarted');
-      if(x==='del'&&confirm('Delete this link for good?'))run('link_delete',{id:id},'Link deleted')})})});
+      if(x==='del'&&confirm('Delete this link for good?'+(l.open?' Anyone who opens it will see that it has been removed.':'')))run('link_delete',{id:id},'Link deleted')})})});
 setInterval(function(){var reload=false;document.querySelectorAll('#links [data-left]').forEach(function(el){var l=L.filter(function(x){return x.id===+el.closest('[data-id]').dataset.id})[0];if(!l)return;var s=leftOf(l);el.textContent=fmtLeft(s);el.closest('.lk').classList.toggle('low',s<=300);if(s<=0)reload=true});if(reload)load()},1000);
 var EV={opened:'opened',low:'low',ended:'ended'};
 var renderFeed=function(){$('feed').innerHTML=E.length?E.map(function(e){var who=e.label||'Someone';return '<div class="ev '+esc(EV[e.type]||'')+'"><i></i><span><b>'+esc(who)+'</b>'+(e.text.charAt(0)==="'"?'':' ')+esc(e.text.replace(' Tap to extend.',''))+'</span><small>'+ago(e.at)+'</small></div>'}).join(''):'<div class="empty">No activity yet.</div>'};

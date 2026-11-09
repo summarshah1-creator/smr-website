@@ -7,6 +7,7 @@ const ADMIN_PIN_HASH = '$2y$10$8mBG3fIyP.eZPNsBuJW5sOD1rywHHvO8lZC.r0A6WgTNdWpIm
 const VISITOR_COOKIE = 'smr_demo';
 const ADMIN_COOKIE = 'smr_admin';
 const DEFAULT_MINUTES = 45;
+const NO_LIMIT_TS = 4102444800; // 2100-01-01: links with no time limit (duration 0) expire then
 const WHATSAPP = '447931814538';
 const MAIN_SITE = '/#digital';
 const MAX_ZIP_BYTES = 200 * 1024 * 1024;     // uncompressed total
@@ -78,6 +79,7 @@ function migrate(PDO $pdo): void {
     add_col($pdo, 'links', 'views', 'INTEGER DEFAULT 0');
     add_col($pdo, 'links', 'last_view', 'INTEGER DEFAULT 0');
     add_col($pdo, 'links', 'direct', 'INTEGER DEFAULT 0');
+    $pdo->exec("CREATE TABLE IF NOT EXISTS gone_links (token TEXT PRIMARY KEY, deleted_at INTEGER)");
     add_col($pdo, 'demos', 'ver', "TEXT DEFAULT '1.0'");
     add_col($pdo, 'demos', 'seed_ver', "TEXT DEFAULT ''");
     $pdo->exec("CREATE TABLE IF NOT EXISTS admin_tokens (id TEXT PRIMARY KEY, csrf TEXT NOT NULL, created_at INTEGER, expires_at INTEGER)");
@@ -86,7 +88,8 @@ function migrate(PDO $pdo): void {
 /* Display version (1.0, 1.1 … 2.0): each update adds .1; a big change sets the next whole number. */
 function ver_bump(string $v): string {
     if (!preg_match('/^(\d+)(?:\.(\d+))?$/', trim($v), $m)) return '1.1';
-    return $m[1] . '.' . ((int) ($m[2] ?? 0) + 1);
+    $minor = (int) ($m[2] ?? 0) + 1;
+    return $minor > 9 ? ((int) $m[1] + 1) . '.0' : $m[1] . '.' . $minor; // 1.9 -> 2.0
 }
 function add_col(PDO $pdo, string $table, string $col, string $type): void {
     foreach ($pdo->query('PRAGMA table_info(' . $table . ')') as $c) if ($c['name'] === $col) return;

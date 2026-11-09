@@ -44,7 +44,7 @@ function link_row(array $l): array {
     $st2->execute([$l['id'], $l['id']]);
     $ss = $st2->fetch() ?: [];
     return ['id' => (int) $l['id'], 'label' => $l['label'], 'views' => (int) $l['views'], 'last_view' => (int) $l['last_view'], 'devices' => (int) ($ss['n'] ?? 0), 'last_seen' => (int) ($ss['seen'] ?? 0), 'last_app' => (string) ($ss['app'] ?? ''), 'url' => link_url($l), 'pin' => $l['pin'], 'apps' => link_apps($l),
-        'mode' => $l['mode'], 'max_uses' => $max, 'uses' => (int) $l['uses'], 'duration' => (int) $l['duration'], 'tips' => (int) $l['tips'], 'direct' => (int) ($l['direct'] ?? 0),
+        'mode' => $l['mode'], 'max_uses' => $max, 'uses' => (int) $l['uses'], 'duration' => (int) $l['duration'], 'tips' => (int) $l['tips'], 'direct' => (int) ($l['direct'] ?? 0), 'open' => (int) $l['duration'] === 0 ? 1 : 0,
         'created_at' => (int) $l['created_at'], 'activated_at' => (int) $l['activated_at'], 'expires_at' => $expiry,
         'status' => $status, 'left' => $left];
 }
@@ -288,8 +288,9 @@ case 'link_create':
     if (!$apps) json_out(['error' => 'Choose at least one demo.'], 400);
     $mode = in_array($in['mode'] ?? '', ['single', 'shared', 'limited'], true) ? $in['mode'] : 'single';
     $max = $mode === 'limited' ? max(2, min(500, (int) ($in['max_uses'] ?? 3))) : ($mode === 'single' ? 1 : 0);
-    $dur = max(5, min(30 * 24 * 60, (int) ($in['duration'] ?? DEFAULT_MINUTES)));
+    $dur = (int) ($in['duration'] ?? DEFAULT_MINUTES) === 0 ? 0 : max(5, min(30 * 24 * 60, (int) ($in['duration'] ?? DEFAULT_MINUTES)));
     $direct = !empty($in['direct']) ? 1 : 0;
+    if ($dur === 0) { $mode = 'shared'; $max = 0; } // open link: anyone with it, any time
     if ($direct && count($apps) !== 1) json_out(['error' => 'A direct link opens one app or website. Choose just one.'], 400);
     $token = rand_token(18);
     db()->prepare('INSERT INTO links (token, pin, label, apps, mode, max_uses, uses, duration, tips, created_at, direct) VALUES (?,?,?,?,?,?,0,?,?,?,?)')
@@ -305,6 +306,7 @@ case 'link_extend':
     $l = get_link($in);
     $mins = max(1, min(24 * 60, (int) ($in['minutes'] ?? 15)));
     $add = $mins * 60; $now = now();
+    if ((int) $l['duration'] === 0) { db()->prepare('UPDATE links SET revoked = 0 WHERE id = ?')->execute([$l['id']]); json_out(['ok' => true, 'link' => link_row(get_link($in))]); }
     if ($l['mode'] === 'shared') {
         if ($l['activated_at']) db()->prepare('UPDATE links SET expires_at = MAX(expires_at, CAST(? AS INTEGER)) + ?, revoked = 0 WHERE id = ?')->execute([$now, $add, $l['id']]);
         else db()->prepare('UPDATE links SET duration = duration + ?, revoked = 0 WHERE id = ?')->execute([$mins, $l['id']]);
@@ -325,6 +327,7 @@ case 'link_newpin':
 
 case 'link_delete':
     $l = get_link($in);
+    db()->prepare('INSERT OR REPLACE INTO gone_links (token, deleted_at) VALUES (?,?)')->execute([$l['token'], now()]);
     db()->prepare('DELETE FROM links WHERE id = ?')->execute([$l['id']]);
     json_out(['ok' => true]);
 

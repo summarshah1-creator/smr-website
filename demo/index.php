@@ -26,7 +26,9 @@ if ($preview) {
     if ($token !== '') {
         $link = link_by_token($token);
         if (!$link) {
-            $view = 'invalid';
+            $g = db()->prepare('SELECT 1 FROM gone_links WHERE token = ?');
+            $g->execute([$token]);
+            $view = $g->fetchColumn() ? 'removed' : 'invalid';
         } elseif ($vs && (int) $vs[0]['id'] === (int) $link['id']) {
             [$l, $s] = $vs;
             if (session_state($l, $s) === 'ok') {
@@ -78,14 +80,14 @@ if ($link && !$preview) {
     $base = $scheme . '://' . preg_replace('/[^A-Za-z0-9.:-]/', '', (string) ($_SERVER['HTTP_HOST'] ?? 'smrgraphics.co.uk'));
     $og = ['title' => $pageTitle, 'url' => $base . link_path($link),
         'image' => $base . '/demo/og.php?k=' . rawurlencode($link['token']) . '&v=' . substr(md5($link['apps']), 0, 6),
-        'desc' => (count($names) === 1 ? 'A private demo of the ' . $names[0] . ' app' : 'Private demos of ' . (count($names) > 1 ? implode(', ', array_slice($names, 0, -1)) . ' and ' . end($names) : 'our apps')) . ', designed & built by SMR Digital.'];
+        'desc' => (count($names) === 1 && ($od = demo_by_slug(link_apps($link)[0] ?? '')) && trim((string) ($od['tagline'] ?: $od['description'])) !== '') ? 'Demo · ' . trim((string) ($od['tagline'] ?: $od['description'])) . '. Designed & built by SMR Digital.' : (count($names) === 1 ? 'A private demo of the ' . $names[0] . ' app' : 'Private demos of ' . (count($names) > 1 ? implode(', ', array_slice($names, 0, -1)) . ' and ' . end($names) : 'our apps')) . ', designed & built by SMR Digital.'];
 }
 $mark = (string) @file_get_contents(SITE_ROOT . '/assets/smr-mark.svg');
 $mark = preg_replace('/<svg /', '<svg aria-hidden="true" focusable="false" ', $mark, 1);
 $waRequest = 'https://wa.me/' . WHATSAPP . '?text=' . rawurlencode("Hi Summar, my SMR Digital demo session has ended. Could I have a new PIN please?");
 $waAsk = 'https://wa.me/' . WHATSAPP . '?text=' . rawurlencode("Hi Summar, I'd like a demo of the SMR Digital apps please.");
 $waHelp = 'https://wa.me/' . WHATSAPP . '?text=' . rawurlencode("Hi Summar, I'm looking at the SMR Digital demos and have a question.");
-$boot = ['direct' => $direct, 'view' => $view, 'token' => $token, 'preview' => $preview, 'now' => now(), 'expires' => $expires, 'tips' => $tips, 'demos' => $demos];
+$boot = ['nolimit' => $expires > now() + 50 * 365 * 86400, 'direct' => $direct, 'view' => $view, 'token' => $token, 'preview' => $preview, 'now' => now(), 'expires' => $expires, 'tips' => $tips, 'demos' => $demos];
 ?><!doctype html>
 <html lang="en-GB">
 <head>
@@ -272,7 +274,7 @@ body.appmode .glow{display:none}
     <span class="lg"><?= $mark ?><span>Digital</span></span>
   </a>
   <span class="dtag"><i></i>Demo<?php if ($dd): ?><b id="dver">v<?= h($dd['ver']) ?></b><?php endif; ?></span>
-  <div class="timer" id="timer" role="timer" aria-live="off"><small>Ends in</small><b id="clock">--:--</b></div>
+  <div class="timer" id="timer" role="timer" aria-live="off"<?= $expires > now() + 50 * 365 * 86400 ? ' style="display:none"' : '' ?>><small>Ends in</small><b id="clock">--:--</b></div>
   <button class="hbtn icon viewsw" id="viewsw" type="button" title="Switch phone / full width" aria-label="Switch phone or full width view"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg></button>
   <a class="hbtn icon" href="<?= h(MAIN_SITE) ?>" target="_blank" rel="noopener" title="SMR Digital website" aria-label="SMR Digital website"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9.5"/><path d="M2.5 12h19M12 2.5a14.5 14.5 0 0 1 0 19M12 2.5a14.5 14.5 0 0 0 0 19"/></svg></a>
   <a class="hbtn wa" href="<?= h($waHelp) ?>" target="_blank" rel="noopener" aria-label="WhatsApp SMR Digital"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.5 1 2.7c.1.2 1.8 2.8 4.4 3.9 1.6.7 2.3.8 3.1.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3z"/></svg><span>WhatsApp</span></a>
@@ -288,7 +290,7 @@ body.appmode .glow{display:none}
   <button class="hbtn icon" id="apprefresh" type="button" aria-label="Reload this app" title="Reload this app"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg></button>
   <a class="hbtn homebtn" href="/demo-admin/#demos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h5v-6h4v6h5V10"/></svg>Home</a>
   <?php else: ?>
-  <div class="timer" id="timer" role="timer" aria-live="off">
+  <div class="timer" id="timer" role="timer" aria-live="off"<?= $expires > now() + 50 * 365 * 86400 ? ' style="display:none"' : '' ?>>
     <small>Session expires in</small><b id="clock">--:--</b>
   </div>
   <?php endif; ?>
@@ -394,15 +396,15 @@ body.appmode .glow{display:none}
 </div>
 <?php endif; ?>
 
-<div id="expired" class="<?= $view === 'expired' ? 'on' : '' ?>">
+<div id="expired" class="<?= $view === 'expired' || $view === 'removed' ? 'on' : '' ?>">
   <div class="center" style="width:100%">
     <div class="panel">
       <div class="big"><small>Designed &amp; Built by</small><span class="lg"><?= $mark ?><span>Digital</span></span></div>
       <div class="clock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9 2.5h6"/></svg></div>
-      <h1>Your Demo Session Has Expired</h1>
-      <p class="lead">Your access to the SMR Digital demos has ended. To continue exploring, please request a new PIN.</p>
-      <a class="btn pri" style="margin-top:26px" href="<?= h($waRequest) ?>" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 19.1L4 20z"/></svg>Request New PIN</a>
+      <h1 id="exph"><?= $view === 'removed' ? 'This Demo Link Has Been Removed' : 'Your Demo Session Has Expired' ?></h1>
+      <p class="lead" id="expp"><?= $view === 'removed' ? 'This demo is no longer available on this link. Message SMR Digital and we will send you the latest one.' : 'Your access to the SMR Digital demos has ended. To continue exploring, please request a new PIN.' ?></p>
+      <a class="btn pri" id="expa" style="margin-top:26px" href="<?= h($view === 'removed' ? $waHelp : $waRequest) ?>" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 19.1L4 20z"/></svg><span id="expb"><?= $view === 'removed' ? 'Message SMR Digital' : 'Request New PIN' ?></span></a>
       <a class="btn sec" href="<?= h(MAIN_SITE) ?>">Return to SMR Digital Website</a>
     </div>
   </div>
@@ -413,7 +415,7 @@ body.appmode .glow{display:none}
 var B=<?= json_encode($boot, JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
 var $=function(id){return document.getElementById(id)};
 var esc=function(s){return String(s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})};
-var expiredOn=function(){var f=$('frame');if(f){f.src='about:blank';f.remove()}var t=$('ftour');if(t)t.classList.remove('show','open');$('expired').classList.add('on');document.body.classList.add('locked');stopped=true};
+var expiredOn=function(why){if(why==='none'){$('exph').textContent='This Demo Link Has Been Removed';$('expp').textContent='This demo is no longer available on this link. Message SMR Digital and we will send you the latest one.';$('expb').textContent='Message SMR Digital';$('expa').href=<?= json_encode($waHelp) ?>}var f=$('frame');if(f){f.src='about:blank';f.remove()}var t=$('ftour');if(t)t.classList.remove('show','open');$('expired').classList.add('on');document.body.classList.add('locked');stopped=true};
 var stopped=B.view==='expired';
 if(stopped)document.body.classList.add('locked');
 
@@ -537,6 +539,7 @@ if(B.preview){setInterval(pollVer,20000);document.addEventListener('visibilitych
 var offset=B.now-Date.now()/1000,expires=B.expires,warned=false,timer=$('timer'),clock=$('clock');
 var tick=function(){
   if(stopped)return;
+  if(B.nolimit){timer.style.display='none';return}
   var left=Math.max(0,Math.round(expires-(Date.now()/1000+offset)));
   var m=Math.floor(left/60),s=left%60;
   if(left>=86400){var dd=Math.floor(left/86400),hh=Math.floor(left%86400/3600);clock.textContent=dd+'d '+hh+'h'}else
@@ -551,7 +554,7 @@ var checking=false;
 var check=function(final){if(checking||stopped)return;checking=true;
   fetch('/demo/api.php?a=state',{credentials:'same-origin',cache:'no-store'}).then(function(r){return r.json()}).then(function(j){
     checking=false;
-    if(j.state!=='ok'){expiredOn();return}
+    if(j.state!=='ok'){expiredOn(j.state);return}
     offset=j.now-Date.now()/1000;expires=j.expires_at;applyVersions(j);
   }).catch(function(){checking=false;if(final&&expires-(Date.now()/1000+offset)<=-5)expiredOn()})};
 tick();setInterval(tick,1000);setInterval(check,20000);
