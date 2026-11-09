@@ -352,7 +352,7 @@ return json_decode(<<<'JSON'
    "The Pakistan & Kashmir Culture Festival with a video from 2026 and the date for 2027, so people can get involved early.",
    "The Luton Youth Awards with a Hall of Fame of winners and a step-by-step form to nominate a young person.",
    "A sponsorship section shows businesses what they get back, with an enquiry form that goes straight to the team.",
-   "Holiday camps that are open show live spaces left and a Book now form, plus volunteering, donations and the team behind NGS."
+   "Open holiday camps show how many places are left and a Book your place form, plus volunteering, donations and the team behind NGS."
   ]
  }
 ]
