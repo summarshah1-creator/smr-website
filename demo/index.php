@@ -16,6 +16,7 @@ $pinApps = [];
 $pinLen = 4;
 $noPin = false;
 $direct = false;
+$autoOpen = false;
 
 if ($preview) {
     $view = 'showroom';
@@ -49,6 +50,7 @@ if ($preview) {
             if ($view === 'pin') {
                 $pinLen = max(4, strlen((string) $link['pin']));
                 $noPin = (string) $link['pin'] === '';
+                $autoOpen = $noPin && (int) ($link['direct'] ?? 0) === 1; // direct + no PIN: straight in
                 $all = [];
                 foreach (db()->query('SELECT * FROM demos WHERE enabled = 1') as $d) $all[$d['slug']] = $d;
                 foreach (link_apps($link) as $slug) if (isset($all[$slug])) {
@@ -87,7 +89,7 @@ $mark = preg_replace('/<svg /', '<svg aria-hidden="true" focusable="false" ', $m
 $waRequest = 'https://wa.me/' . WHATSAPP . '?text=' . rawurlencode("Hi Summar, my SMR Digital demo session has ended. Could I have a new PIN please?");
 $waAsk = 'https://wa.me/' . WHATSAPP . '?text=' . rawurlencode("Hi Summar, I'd like a demo of the SMR Digital apps please.");
 $waHelp = 'https://wa.me/' . WHATSAPP . '?text=' . rawurlencode("Hi Summar, I'm looking at the SMR Digital demos and have a question.");
-$boot = ['nolimit' => $expires > now() + 50 * 365 * 86400, 'direct' => $direct, 'view' => $view, 'token' => $token, 'preview' => $preview, 'now' => now(), 'expires' => $expires, 'tips' => $tips, 'demos' => $demos];
+$boot = ['auto' => $autoOpen, 'nolimit' => $expires > now() + 50 * 365 * 86400, 'direct' => $direct, 'view' => $view, 'token' => $token, 'preview' => $preview, 'now' => now(), 'expires' => $expires, 'tips' => $tips, 'demos' => $demos];
 ?><!doctype html>
 <html lang="en-GB">
 <head>
@@ -206,6 +208,7 @@ body.appmode .glow{display:none}
  .stage.phone iframe{border-radius:33px}
 }
 .viewsw{display:none}
+.autoopen #pinform{visibility:hidden}.autold{position:fixed;inset:0;z-index:90;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;background:#07070c}.autold .lg{display:flex;align-items:center;gap:8px}.autold .lg svg{height:24px;width:auto;display:block}.autold .lg>span{display:inline;font-size:25px}.autold i{width:26px;height:26px;border-radius:50%;border:3px solid rgba(255,255,255,.15);border-top-color:#c86bff;animation:aspin .8s linear infinite}@keyframes aspin{to{transform:rotate(360deg)}}
 .dhd .brand{margin-right:auto}.dtag{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 10px;border-radius:999px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);font:600 11.5px/1 Manrope,sans-serif;color:#cfc4ff;white-space:nowrap}.dtag i{width:6px;height:6px;border-radius:50%;background:#3ddc84;box-shadow:0 0 6px #3ddc84}.dtag b{color:#fff;font-weight:700}
 .dhd{gap:8px}.dhd .hbtn.wa{background:#25d366;color:#fff;box-shadow:0 6px 18px -8px rgba(37,211,102,.8)}.dhd .hbtn.wa svg{width:18px;height:18px}@media(max-width:560px){.dhd .hbtn.wa{width:38px;padding:0;justify-content:center}.dhd .hbtn.wa span{display:none}.dhd .timer{min-width:0;padding:5px 8px}.dhd .timer small{display:none}.dhd .timer b{margin-top:0;font-size:14px;white-space:nowrap}.dhd .dtag{padding:0 8px;gap:5px}}@media(max-width:370px){.dhd .lg>span{display:none}}
 @media(min-width:900px){.viewsw{display:inline-flex}}
@@ -265,7 +268,8 @@ body.appmode .glow{display:none}
 @media print{body *{display:none!important}body::after{content:"SMR Digital demos are not available to print.";display:block;padding:40px;font:16px sans-serif}}
 </style>
 </head>
-<body<?= $preview ? ' class="owner"' : '' ?>>
+<body<?= $preview ? ' class="owner"' : ($autoOpen ? ' class="autoopen"' : '') ?>>
+<?php if ($autoOpen): ?><div class="autold" id="autold"><span class="lg"><?= $mark ?><span>Digital</span></span><i></i></div><?php endif; ?>
 <div class="glow"></div>
 
 <?php if ($view === 'showroom' && $direct): $dd = $demos[0] ?? null; ?>
@@ -431,8 +435,10 @@ if(B.view==='pin'&&!$('pin')){
     .then(function(r){return r.json()})
     .then(function(j){if(j.ok){location.replace(location.pathname+location.search);return}
       if(j.error==='expired'||j.error==='used'){expiredOn();return}
+      document.body.classList.remove('autoopen');var al=$('autold');if(al)al.remove();
       err0.textContent=j.error||'Something went wrong.';busy0=false;go0.disabled=false;go0.textContent='Open'})
-    .catch(function(){err0.textContent='No connection. Please try again.';busy0=false;go0.disabled=false;go0.textContent='Open'})});
+    .catch(function(){document.body.classList.remove('autoopen');var al=$('autold');if(al)al.remove();err0.textContent='No connection. Please try again.';busy0=false;go0.disabled=false;go0.textContent='Open'})});
+  if(B.auto){var f0=$('pinform');if(f0.requestSubmit)f0.requestSubmit();else f0.dispatchEvent(new Event('submit',{cancelable:true}))}
 }
 else if(B.view==='pin'){
   var pin=$('pin'),boxes=$('pinbox').querySelectorAll('span'),go=$('go'),err=$('err');

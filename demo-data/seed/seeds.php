@@ -335,6 +335,24 @@ return json_decode(<<<'JSON'
    "A sale section and a lookbook of your campaign shots keep people browsing.",
    "\"Secret drops\" sign-up builds your mailing list, with early access to drops and sales."
   ]
+ },
+ {
+  "slug": "ngs",
+  "version": "2026-11-09a",
+  "ver": "1.0",
+  "name": "NGS Youth & Community",
+  "accent": "#12324f",
+  "tagline": "Youth & community charity website · Luton",
+  "description": "Website for Next Generation Scheme (NGS) in Luton: programmes, the Luton Boot Bank, the Pakistan & Kashmir Culture Festival, the Luton Youth Awards, holiday camps, partners and ways to get involved.",
+  "tips": [
+   "A warm, modern homepage that tells NGS's 20-year story and puts the newest project, the Luton Boot Bank, right at the top.",
+   "Every programme on one page: youth hub, study support, healthy living, outdoor activities, sport, mentoring and culture.",
+   "The Luton Boot Bank has its own section: donate boots, ask for a pair, or sign up as a drop-off hub.",
+   "Big events get their own sections: the Pakistan & Kashmir Culture Festival, the Luton Youth Awards and holiday camps.",
+   "A partners wall shows the businesses, clubs and funders backing NGS, which builds trust with new sponsors.",
+   "Past events and impact numbers show funders what NGS has delivered for Luton.",
+   "Clear ways to help: volunteer, sponsor, donate boots or partner, plus a contact form that goes straight to the team."
+  ]
  }
 ]
 JSON
