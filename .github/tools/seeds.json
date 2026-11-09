@@ -334,14 +334,15 @@
  },
  {
   "slug": "ngs",
-  "version": "2026-11-09d",
-  "ver": "2.1",
+  "version": "2026-11-09f",
+  "ver": "2.2",
   "name": "NGS Youth & Community",
   "accent": "#12324f",
   "tagline": "Youth & community charity website · Luton",
   "description": "Website for Next Generation Scheme (NGS) in Luton: programmes, the Luton Boot Bank, the Pakistan & Kashmir Culture Festival, the Luton Youth Awards with Hall of Fame and nominations, holiday camps, sponsorship, volunteering, donations and the team.",
   "tips": [
    "A warm, modern homepage that tells NGS's 20-year story and puts the newest project, the Luton Boot Bank, right at the top.",
+   "A language button at the top translates the whole site into 30 languages, from Urdu, Bengali and Punjabi to Polish and Romanian, so every Luton family can read it.",
    "Seven areas NGS champions, from youth spaces and study support to sport, mentoring and culture, each with its own card.",
    "The Luton Boot Bank has its own section: donate boots, ask for a pair, or sign up as a drop-off hub.",
    "The Pakistan & Kashmir Culture Festival with a video from 2026 and the date for 2027, so people can get involved early.",
