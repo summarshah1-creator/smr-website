@@ -312,7 +312,7 @@ body.appmode .glow{display:none}
 </header>
 <nav class="menu" id="menu" aria-label="Demo menu">
   <button type="button" data-home><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3.5" y="3.5" width="7" height="7" rx="2"/><rect x="13.5" y="3.5" width="7" height="7" rx="2"/><rect x="3.5" y="13.5" width="7" height="7" rx="2"/><rect x="13.5" y="13.5" width="7" height="7" rx="2"/></svg>All Demos</button>
-  <button type="button" id="tipsbtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.3 2.4c-.5.2-.8.7-.8 1.2v.4M12 17h.01"/></svg>Show this app's features</button>
+  <button type="button" id="tipsbtn"<?= $tips ? '' : ' style="display:none"' ?>><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.3 2.4c-.5.2-.8.7-.8 1.2v.4M12 17h.01"/></svg>Show this app's features</button>
   <hr>
   <a href="<?= $preview ? '/demo-admin/' : h(MAIN_SITE) ?>"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 4h4a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-4M10 16l4-4-4-4M14 12H4"/></svg><?= $preview ? 'Back to SMR Admin' : 'Exit demo' ?></a>
 </nav>
@@ -515,7 +515,8 @@ var openTips=function(){paintTip();ft.classList.add('open');mini.setAttribute('a
 var foldTips=function(){clearInterval(autoT);ft.classList.remove('open');mini.setAttribute('aria-expanded','false');if(current)markSeen(current)};
 var hideTips=function(){clearTimeout(tipT);clearInterval(autoT);ft.classList.remove('show','open')};
 var startTips=function(slug,force){var d=bySlug[slug];tipList=(d&&d.tips)||[];hideTips();tipI=0;
-  if(!tipList.length)return;
+  if(!tipList.length||!B.tips)return;
+  var web=d&&/website/i.test((d.tagline||'')+' '+(d.name||''))&&!/\bapp\b/i.test(d.tagline||''),lbl=web?'Website features':'App features';mini.childNodes.forEach(function(n){if(n.nodeType===3&&n.textContent.trim())n.textContent=lbl});$('tip').setAttribute('aria-label',lbl);
   tipT=setTimeout(function(){if(current!==slug)return;ft.classList.add('show');if(force||(B.tips&&!seen(slug)))openTips()},force?0:4500)};
 var endTips=function(){foldTips();tipI=0};
 mini.addEventListener('click',function(){if(ft.classList.contains('open'))foldTips();else openTips()});
