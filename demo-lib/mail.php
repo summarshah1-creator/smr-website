@@ -69,31 +69,13 @@ function mail_sig_text(array $g): string {
     $l[] = implode(' · ', $c);
     return implode("\r\n", $l);
 }
-/* $img = src for the brand picture (cid:… in emails, a URL in the preview). */
+/* The signature is one picture (assets/email/sig-brand.gif: dark card, animated logo, name, title, phone, email, web)
+   so it looks the same in every email app, light or dark mode, phone or laptop. $img = cid:… in emails, a URL in previews. */
 function mail_sig_html(array $g, string $img): string {
     $e = function ($s) { return htmlspecialchars((string) $s, ENT_QUOTES, 'UTF-8'); };
-    $font = "font-family:Helvetica,Arial,sans-serif;";
-    $row = function ($label, $value, $href) use ($e, $font) {
-        return '<tr><td style="' . $font . 'font-size:10px;line-height:18px;font-weight:bold;letter-spacing:1px;color:#8b7bff;padding:0 10px 0 0;white-space:nowrap;vertical-align:top">' . $label . '</td>'
-            . '<td style="' . $font . 'font-size:13px;line-height:18px;white-space:nowrap"><a href="' . $e($href) . '" style="color:#ece9ff;text-decoration:none">' . $e($value) . '</a></td></tr>';
-    };
-    $rows = '';
-    if ($g['phone'] !== '') $rows .= $row('CALL', $g['phone'], 'tel:+44' . ltrim(preg_replace('/\D/', '', $g['phone']), '0'));
-    if ($g['email'] !== '') $rows .= $row('EMAIL', $g['email'], 'mailto:' . $g['email']);
-    $rows .= $row('WEB', 'smrgraphics.co.uk', 'https://smrgraphics.co.uk');
-    // Side by side on wide screens, stacked on phones (two inline blocks; Outlook gets a table).
-    return '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#0c0c18" style="width:100%;max-width:524px;background:#0c0c18;border-radius:16px;border-collapse:separate;margin-top:22px">'
-        . '<tr><td style="padding:14px 18px 16px 20px;font-size:0;line-height:0">'
-        . '<!--[if mso]><table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td width="226" valign="middle"><![endif]-->'
-        . '<div style="display:inline-block;vertical-align:middle;width:226px;max-width:100%;padding:4px 0">'
-        . '<a href="https://smrgraphics.co.uk" style="text-decoration:none"><img src="' . $e($img) . '" width="200" height="104" alt="SMR · Digital · Graphics · Marketing" style="display:block;width:200px;height:104px;border:0"></a></div>'
-        . '<!--[if mso]></td><td width="258" valign="middle"><![endif]-->'
-        . '<div style="display:inline-block;vertical-align:middle;width:258px;max-width:100%;padding:6px 0 4px 18px;border-left:1px solid #2c2a4a;box-sizing:border-box">'
-        . '<div style="' . $font . 'font-size:18px;line-height:22px;font-weight:bold;color:#ffffff;white-space:nowrap">' . $e($g['name']) . '</div>'
-        . ($g['title'] !== '' ? '<div style="' . $font . 'font-size:12px;line-height:18px;font-weight:bold;letter-spacing:1.5px;text-transform:uppercase;color:#d07bff;padding:2px 0 10px">' . $e($g['title']) . '</div>' : '<div style="height:10px;font-size:0;line-height:0">&nbsp;</div>')
-        . '<table role="presentation" cellpadding="0" cellspacing="0" border="0">' . $rows . '</table></div>'
-        . '<!--[if mso]></td></tr></table><![endif]-->'
-        . '</td></tr></table>';
+    $alt = $g['name'] . ', ' . $g['title'] . ' · SMR Digital · Graphics · Marketing · ' . $g['phone'] . ' · ' . $g['email'];
+    return '<div style="margin-top:22px;line-height:0;font-size:0"><a href="https://smrgraphics.co.uk" style="text-decoration:none;display:inline-block;max-width:100%">'
+        . '<img src="' . $e($img) . '" width="380" alt="' . $e($alt) . '" style="display:block;width:380px;max-width:100%;height:auto;border:0;outline:none"></a></div>';
 }
 function mail_sig_png(): string { return (string) @file_get_contents(SITE_ROOT . '/assets/email/sig-brand.gif'); }
 

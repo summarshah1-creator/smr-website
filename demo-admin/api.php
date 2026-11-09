@@ -165,8 +165,7 @@ if (strpos($a, 'mail_') === 0) {
             $test = ['email' => $email, 'host' => $host, 'name' => $name, 'password' => $pass !== '' ? $pass : $old['password']];
             new SmrImap($test);
             mail_cfg_save($email, $name, $host, $pass);
-            $cut = function ($k, $n) use ($in) { return mb_substr(trim((string) ($in[$k] ?? '')), 0, $n); };
-            if (isset($in['sig_name'])) mail_sig_save(!empty($in['sig_on']), $cut('sig_name', 60), $cut('sig_title', 60), $cut('sig_phone', 30));
+            if (isset($in['sig_on'])) { $g = mail_sig(); mail_sig_save(!empty($in['sig_on']), $g['name'], $g['title'], $g['phone']); }
             json_out(['ok' => true] + mail_cfg_public());
         case 'mail_forget':
             mail_cfg_clear();
