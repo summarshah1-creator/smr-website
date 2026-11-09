@@ -338,8 +338,8 @@ return json_decode(<<<'JSON'
  },
  {
   "slug": "ngs",
-  "version": "2026-11-09f",
-  "ver": "2.2",
+  "version": "2026-11-09g",
+  "ver": "2.4",
   "name": "NGS Youth & Community",
   "accent": "#12324f",
   "tagline": "Youth & community charity website · Luton",
@@ -352,7 +352,7 @@ return json_decode(<<<'JSON'
    "The Pakistan & Kashmir Culture Festival with a video from 2026 and the date for 2027, so people can get involved early.",
    "The Luton Youth Awards with a Hall of Fame of winners and a step-by-step form to nominate a young person.",
    "A sponsorship section shows businesses what they get back, with an enquiry form that goes straight to the team.",
-   "Volunteer, donate and get notified about the next holiday camp, plus the team behind NGS and a wall of partners."
+   "Holiday camps that are open show live spaces left and a Book now form, plus volunteering, donations and the team behind NGS."
   ]
  }
 ]
