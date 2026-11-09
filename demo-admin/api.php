@@ -132,6 +132,108 @@ function extract_build(string $zipPath, string $dest): array {
     return ['files' => $count, 'skipped' => count($skipped)];
 }
 
+/* ---------- email ---------- */
+if (strpos($a, 'mail_') === 0) {
+    require_once dirname(__DIR__) . '/demo-lib/mail.php';
+    $box = function (SmrImap $m, string $f): string {
+        if ($f !== 'sent') return 'INBOX';
+        $s = $m->special('sent');
+        if (!$s) throw new RuntimeException('No Sent folder found in this mailbox.');
+        return $s;
+    };
+    $need = function (): array { $c = mail_cfg(); if (!$c) json_out(['error' => 'Set up your email first.', 'setup' => true], 400); return $c; };
+    $addrs = function ($v): array {
+        $out = [];
+        foreach (preg_split('/[,;\s]+/', (string) $v) as $e) { $e = trim($e, ' <>'); if ($e === '') continue;
+            if (!filter_var($e, FILTER_VALIDATE_EMAIL)) json_out(['error' => '"' . $e . '" is not an email address.'], 400);
+            $out[] = $e; }
+        return array_values(array_unique($out));
+    };
+    try {
+        switch ($a) {
+        case 'mail_cfg':
+            json_out(mail_cfg_public());
+        case 'mail_setup':
+            $email = trim((string) ($in['email'] ?? ''));
+            $host = strtolower(trim((string) ($in['host'] ?? '')));
+            $name = mb_substr(trim((string) ($in['name'] ?? '')), 0, 80);
+            $pass = (string) ($in['password'] ?? '');
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) json_out(['error' => 'Enter your email address.'], 400);
+            if (!preg_match('/^[a-z0-9.-]+\.[a-z]{2,}$/', $host)) json_out(['error' => 'Enter the mail server name.'], 400);
+            $old = mail_cfg();
+            if ($pass === '' && !$old) json_out(['error' => 'Enter your email password.'], 400);
+            $test = ['email' => $email, 'host' => $host, 'name' => $name, 'password' => $pass !== '' ? $pass : $old['password']];
+            new SmrImap($test);
+            mail_cfg_save($email, $name, $host, $pass);
+            json_out(['ok' => true] + mail_cfg_public());
+        case 'mail_forget':
+            mail_cfg_clear();
+            json_out(['ok' => true]);
+        case 'mail_unread':
+            $m = new SmrImap($need());
+            json_out(['unread' => $m->unseen()]);
+        case 'mail_list':
+            $m = new SmrImap($need());
+            $f = ($in['folder'] ?? '') === 'sent' ? 'sent' : 'inbox';
+            $m->select($box($m, $f));
+            $uids = $m->uids();
+            $before = (int) ($in['before'] ?? 0);
+            if ($before) $uids = array_values(array_filter($uids, function ($u) use ($before) { return $u < $before; }));
+            $page = array_slice($uids, -30);
+            json_out(['folder' => $f, 'rows' => $m->headers($page), 'more' => count($uids) > count($page), 'unread' => $m->unseen()]);
+        case 'mail_get':
+            $m = new SmrImap($need());
+            $f = ($in['folder'] ?? '') === 'sent' ? 'sent' : 'inbox';
+            $uid = (int) ($in['uid'] ?? 0);
+            $m->select($box($m, $f), false);
+            $raw = $m->raw($uid);
+            if ($raw === '') json_out(['error' => 'That email was not found. It may have been moved or deleted.'], 404);
+            $m->flag($uid, '\\Seen');
+            $p = mail_parse($raw);
+            [$hh] = mail_split(preg_replace("/\r\n?/", "\n", $raw));
+            $text = $p['text'] !== '' ? $p['text'] : trim(html_entity_decode(strip_tags(preg_replace('#<(br|/p|/div|/tr|/h\d)[^>]*>#i', "\n", preg_replace('#<(style|script|head)[^>]*>.*?</\1>#is', '', $p['html']))), ENT_QUOTES, 'UTF-8'));
+            json_out(['uid' => $uid, 'folder' => $f,
+                'from' => mail_addr_list($hh['from'] ?? '')[0] ?? ['name' => '', 'email' => ''],
+                'reply_to' => mail_addr_list($hh['reply-to'] ?? '')[0]['email'] ?? '',
+                'to' => mail_addr_list($hh['to'] ?? ''), 'cc' => mail_addr_list($hh['cc'] ?? ''),
+                'subject' => mail_hdr_decode($hh['subject'] ?? ''), 'date' => strtotime($hh['date'] ?? '') ?: 0,
+                'message_id' => trim($hh['message-id'] ?? ''), 'references' => trim($hh['references'] ?? ''),
+                'text' => mb_substr(preg_replace("/\n{3,}/", "\n\n", $text), 0, 20000),
+                'atts' => array_values(array_filter($p['atts'], function ($x) { return !$x['inline']; }))]);
+        case 'mail_send':
+            $cfg = $need();
+            $to = $addrs($in['to'] ?? ''); $cc = $addrs($in['cc'] ?? '');
+            if (!$to) json_out(['error' => 'Who is it to? Add an email address.'], 400);
+            $subject = trim(str_replace(["\r", "\n"], ' ', (string) ($in['subject'] ?? '')));
+            $body = (string) ($in['body'] ?? '');
+            if (trim($body) === '' && $subject === '') json_out(['error' => 'Write something first.'], 400);
+            $irt = preg_match('/^<[^<>\s]+>$/', (string) ($in['in_reply_to'] ?? '')) ? $in['in_reply_to'] : '';
+            $refs = preg_replace('/[^\x21-\x7e ]/', '', (string) ($in['references'] ?? ''));
+            [$msg] = mail_build($cfg, $to, $cc, $subject, $body, $irt, $irt ? $refs : '');
+            smtp_send($cfg, array_merge($to, $cc), $msg);
+            $saved = true;
+            try { $m = new SmrImap($cfg); $s = $m->special('sent'); if ($s) $m->append($s, $msg); else $saved = false; } catch (Throwable $e) { $saved = false; }
+            if ($irt && !empty($in['uid'])) { try { $m = $m ?? new SmrImap($cfg); $m->select('INBOX', false); $m->flag((int) $in['uid'], '\\Answered'); } catch (Throwable $e) {} }
+            json_out(['ok' => true, 'saved' => $saved]);
+        case 'mail_delete':
+            $m = new SmrImap($need());
+            $f = ($in['folder'] ?? '') === 'sent' ? 'sent' : 'inbox';
+            $m->select($box($m, $f), false);
+            $trash = $m->special('trash');
+            $m->remove((int) ($in['uid'] ?? 0), $trash);
+            json_out(['ok' => true]);
+        case 'mail_unseen':
+            $m = new SmrImap($need());
+            $f = ($in['folder'] ?? '') === 'sent' ? 'sent' : 'inbox';
+            $m->select($box($m, $f), false);
+            $m->flag((int) ($in['uid'] ?? 0), '\\Seen', false);
+            json_out(['ok' => true]);
+        }
+    } catch (RuntimeException $e) {
+        json_out(['error' => $e->getMessage()], 400);
+    }
+}
+
 /* ---------- actions ---------- */
 switch ($a) {
 case 'logout':

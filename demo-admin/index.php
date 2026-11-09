@@ -138,6 +138,36 @@ input:focus,textarea:focus,select:focus{border-color:rgba(214,59,255,.6);box-sha
 .prog{height:6px;border-radius:9px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:10px}
 .prog i{display:block;height:100%;width:0;background:var(--grad);transition:width .2s}
 .filt{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+/* email */
+.mrow{display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;padding:12px 14px;border-top:1px solid var(--line);color:var(--ink)}
+.mrow:first-child{border-top:0}.mrow:active{background:rgba(255,255,255,.04)}
+.mrow .ud{width:8px;height:8px;border-radius:50%;margin-top:7px;flex:none;background:transparent}
+.mrow.un .ud{background:var(--a2);box-shadow:0 0 0 3px rgba(214,59,255,.18)}
+.mrow .mt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.mrow .l1{display:flex;gap:8px;align-items:baseline}
+.mrow .l1 b{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:15px;font-weight:600}
+.mrow.un .l1 b,.mrow.un .sj{font-weight:800}
+.mrow .l1 em{font-style:normal;font-size:12px;color:var(--muted);flex:none}
+.mrow .sj{font-size:13.5px;color:#d9d9ea;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mrow .sj svg{width:13px;height:13px;vertical-align:-2px;margin-right:4px;color:var(--muted)}
+.ov{position:fixed;inset:0;z-index:70;background:var(--bg);display:flex;flex-direction:column;transform:translateX(102%);transition:transform .25s ease;visibility:hidden}
+.ov.on{transform:none;visibility:visible}
+.ovh{display:flex;align-items:center;gap:8px;padding:calc(10px + env(safe-area-inset-top)) 12px 10px;border-bottom:1px solid var(--line);background:rgba(8,8,15,.96)}
+.ovh .t{flex:1;min-width:0;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ovb{flex:1;min-height:0;overflow:auto;padding:14px 16px calc(16px + env(safe-area-inset-bottom))}
+.rd{flex:1;min-height:0;display:flex;flex-direction:column}
+.rdm{padding:14px 16px 12px;border-bottom:1px solid var(--line)}
+.rdm h2{margin:0 0 8px;font-size:19px;line-height:1.3;word-break:break-word}
+.rdm p{font-size:13px;color:var(--muted);word-break:break-word}.rdm p b{color:var(--ink)}
+.atts{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.atts a{display:inline-flex;align-items:center;gap:6px;max-width:100%;padding:7px 10px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.04);font-size:12.5px;font-weight:700;color:var(--ink);text-decoration:none}
+.atts a svg{width:14px;height:14px;flex:none}
+.atts a span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.atts a small{color:var(--muted);font-weight:600}
+.rd iframe{flex:1;width:100%;border:0;background:#fff;min-height:200px}
+.cmp label.f:first-child{margin-top:0}
+.cmp textarea{min-height:240px}
+.mailfrom{font-size:12.5px;color:var(--muted);margin-bottom:4px}
+.top .tabs button{padding:8px 4px;white-space:nowrap;font-size:13px}
 .filt button{height:32px;padding:0 12px;border-radius:999px;border:1px solid var(--line);font-size:12.5px;font-weight:700;color:var(--muted)}
 .filt button.on{color:#fff;border-color:rgba(214,59,255,.6);background:rgba(214,59,255,.12)}
 .btn.icon{width:38px;padding:0}
@@ -228,6 +258,7 @@ document.addEventListener('keydown',function(e){if(/^\d$/.test(e.key))press(e.ke
       <button data-tab="demos" role="tab">My demos</button>
       <button data-tab="send" role="tab">Send</button>
       <button data-tab="live" role="tab">Live<span class="cnt" id="livecnt"></span></button>
+      <button data-tab="mail" role="tab">Email<span class="cnt" id="mailcnt"></span></button>
     </nav>
   </div>
 
@@ -278,6 +309,46 @@ document.addEventListener('keydown',function(e){if(/^\d$/.test(e.key))press(e.ke
     <h2 style="margin-top:26px">Recent activity</h2>
     <div class="feed" id="feed"></div>
   </section>
+
+  <!-- EMAIL -->
+  <section id="tab-mail" class="tab hidden">
+    <div class="bar">
+      <div><h1>Email</h1><p class="sub" id="mailaddr">Your inbox, right here.</p></div>
+      <div class="row" id="mailbtns">
+        <button class="btn sm icon" id="mailre" aria-label="Check for new email" title="Check for new email"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg></button>
+        <button class="btn sm icon" id="mailcfg" aria-label="Email settings" title="Email settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
+        <button class="btn sm pri" id="mailnew"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Write</button>
+      </div>
+    </div>
+    <div class="filt" id="mailf"><button class="on" data-f="inbox">Inbox</button><button data-f="sent">Sent</button></div>
+    <div id="mailbody"><p class="empty">Loading…</p></div>
+  </section>
+</div>
+
+<!-- email: reader + compose -->
+<div class="ov" id="reader" role="dialog" aria-modal="true">
+  <div class="ovh">
+    <button class="btn sm icon" data-rd="back" aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+    <span class="t">Email</span>
+    <button class="btn sm" data-rd="reply"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>Reply</button>
+    <button class="btn sm icon" data-rd="more" aria-label="More"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg></button>
+  </div>
+  <div class="rd"><div class="rdm" id="rdmeta"></div><iframe id="rdframe" title="Email" sandbox="allow-popups allow-popups-to-escape-sandbox" referrerpolicy="no-referrer"></iframe></div>
+</div>
+<div class="ov" id="compose" role="dialog" aria-modal="true">
+  <div class="ovh">
+    <button class="btn sm icon" data-cp="close" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <span class="t" id="cptitle">New email</span>
+    <button class="btn sm pri" data-cp="send"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/></svg>Send</button>
+  </div>
+  <form class="ovb cmp" id="cpform" autocomplete="off">
+    <p class="mailfrom" id="cpfrom"></p>
+    <label class="f" for="cpto">To</label><input type="text" id="cpto" inputmode="email" autocapitalize="off" placeholder="name@example.com">
+    <label class="f" for="cpcc">Cc (optional)</label><input type="text" id="cpcc" inputmode="email" autocapitalize="off">
+    <label class="f" for="cpsub">Subject</label><input type="text" id="cpsub" maxlength="200">
+    <label class="f" for="cpbody">Message</label><textarea id="cpbody"></textarea>
+    <div class="err" id="cperr"></div>
+  </form>
 </div>
 
 <!-- bottom sheet -->
@@ -318,9 +389,9 @@ var copy=function(t,msg){(navigator.clipboard&&navigator.clipboard.writeText?nav
 var ICON={dots:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>'};
 
 /* ---------- tabs (hash) ---------- */
-var showTab=function(t){if(['demos','send','live'].indexOf(t)<0)t='demos';
+var showTab=function(t){if(['demos','send','live','mail'].indexOf(t)<0)t='demos';
   document.querySelectorAll('[data-tab]').forEach(function(b){b.classList.toggle('on',b.dataset.tab===t)});
-  document.querySelectorAll('.tab').forEach(function(s){s.classList.toggle('hidden',s.id!=='tab-'+t)});window.scrollTo(0,0);if(t==='live'&&typeof load==='function'&&D.length)load();if(t!=='send'&&$('created').dataset.used&&typeof resetSend==='function')resetSend()};
+  document.querySelectorAll('.tab').forEach(function(s){s.classList.toggle('hidden',s.id!=='tab-'+t)});window.scrollTo(0,0);if(t==='live'&&typeof load==='function'&&D.length)load();if(t!=='send'&&$('created').dataset.used&&typeof resetSend==='function')resetSend();if(t==='mail'&&typeof mailOpen==='function')mailOpen()};
 document.querySelectorAll('[data-tab]').forEach(function(b){b.addEventListener('click',function(){if(location.hash!=='#'+b.dataset.tab)history.replaceState(null,'','#'+b.dataset.tab);showTab(b.dataset.tab)})});
 window.addEventListener('hashchange',function(){showTab(location.hash.slice(1))});
 showTab(location.hash.slice(1));
@@ -393,7 +464,7 @@ var showMessage=function(l,phone){var c=$('created');clearTimeout(resetT);delete
     +'<div class="filt" style="margin:12px 0 8px"><button class="on" data-kind="short">'+esc(lpName(l))+'</button><button data-kind="full">Full message</button></div>'
     +'<textarea class="msg" id="msgtxt"></textarea>'
     +'<a class="btn big wa" id="wasend" target="_blank" rel="noopener" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 19.1L4 20z"/></svg>Send on WhatsApp</a>'
-    +'<div class="acts" style="margin-top:10px"><button class="btn sm" data-lp>Copy '+esc(lpName(l).toLowerCase())+'</button><button class="btn sm" data-c>Copy full message</button><button class="btn sm" data-x>Done</button></div>';
+    +'<div class="acts" style="margin-top:10px"><button class="btn sm" data-lp>Copy '+esc(lpName(l).toLowerCase())+'</button><button class="btn sm" data-c>Copy full message</button><button class="btn sm" data-em>Email it</button><button class="btn sm" data-x>Done</button></div>';
   var ta=c.querySelector('#msgtxt'),wa=c.querySelector('#wasend');ta.value=linkPin(l);
   c.querySelectorAll('[data-kind]').forEach(function(k){k.onclick=function(){c.querySelectorAll('[data-kind]').forEach(function(x){x.classList.toggle('on',x===k)});ta.value=k.dataset.kind==='full'?shareText(l):linkPin(l);upd()}});
   var upd=function(){wa.href=waUrl(ta.value,phone)};upd();ta.addEventListener('input',upd);
@@ -404,6 +475,7 @@ var showMessage=function(l,phone){var c=$('created');clearTimeout(resetT);delete
     clearTimeout(resetT);resetT=setTimeout(resetSend,120000)};
   wa.addEventListener('click',function(){used('Sent on WhatsApp');setTimeout(function(){toast('Sent links are in the Live tab')},800)});
   c.querySelector('[data-c]').onclick=function(){copy(shareText(l),'Full message copied');used('Copied')};c.querySelector('[data-lp]').onclick=function(){copy(linkPin(l),l.pin?'Link and PIN copied':'Link copied');used('Copied')};c.querySelector('[data-x]').onclick=resetSend;
+  c.querySelector('[data-em]').onclick=function(){var names=l.apps.map(function(x){var d=demoBy(x);return d?d.name:x});compose({subject:(names.length===1?names[0]+' demo':'Your app demos')+' - SMR Digital',body:ta.value,onSent:function(){used('Emailed')}})};
   c.scrollIntoView({behavior:'smooth',block:'start'})};
 $('linkform').addEventListener('submit',function(e){e.preventDefault();$('lerr').textContent='';
   var apps=[].map.call(document.querySelectorAll('#pick input:checked'),function(i){return i.value});
@@ -478,6 +550,95 @@ $('acct').addEventListener('click',function(){openSheet('<h2>Settings</h2>'
     if(a==='pushtest')api('push_test').then(function(){toast(pushN?'Test sent':'Turn notifications on first')}).catch(function(e){toast(e.message,true)});
     if(a==='pin')api('password',{current:el.querySelector('#curpw').value,'new':el.querySelector('#newpw').value}).then(function(){toast('PIN changed');closeSheet()}).catch(function(e){toast(e.message,true)});
     if(a==='logout')api('logout').then(function(){location.reload()})})})});
+
+/* ---------- email ---------- */
+var M={cfg:null,folder:'inbox',rows:[],more:false,at:0,busy:false,cur:null};
+var CLIP='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11l-8.6 8.6a5 5 0 0 1-7-7L14 4a3.3 3.3 0 0 1 4.7 4.7l-8.6 8.6a1.7 1.7 0 0 1-2.4-2.4L15.6 7"/></svg>';
+var mDate=function(t){if(!t)return'';var d=new Date(t*1000),td=new Date();if(d.toDateString()===td.toDateString())return d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});return d.toLocaleDateString('en-GB',d.getFullYear()===td.getFullYear()?{day:'numeric',month:'short'}:{day:'numeric',month:'short',year:'2-digit'})};
+var mWho=function(a){return a?(a.name||a.email):''};
+var mBadge=function(n){$('mailcnt').textContent=n>0?(n>99?'99+':n):''};
+var mailSetup=function(edit){var c=M.cfg||{};$('mailf').classList.add('hidden');$('mailbtns').classList.add('hidden');
+  $('mailaddr').textContent=edit?'Email settings':'Read and send your emails from SMR Admin.';
+  $('mailbody').innerHTML='<form class="panel" id="msetup" autocomplete="off"><h2>'+(edit?'Email settings':'Connect your email')+'</h2>'
+   +'<p class="sub">Uses your SiteGround mailbox. Your password is stored encrypted on your own server and is never shown again.</p>'
+   +'<label class="f" for="ms-email">Email address</label><input type="text" id="ms-email" inputmode="email" autocapitalize="off" value="'+esc(c.email||'')+'">'
+   +'<label class="f" for="ms-pass">Email password</label><input type="password" id="ms-pass" autocomplete="new-password" placeholder="'+(c.set?'Leave blank to keep the current one':'The password for this mailbox')+'">'
+   +'<label class="f" for="ms-host">Mail server</label><input type="text" id="ms-host" autocapitalize="off" value="'+esc(c.host||'')+'">'
+   +'<p class="sub" style="font-size:12.5px">If it won\'t connect, use the server name from SiteGround: Site Tools → Email → Accounts → ⋮ → Mail Configuration (it looks like gxxx.siteground.biz).</p>'
+   +'<label class="f" for="ms-name">Name people see</label><input type="text" id="ms-name" maxlength="80" value="'+esc(c.name||'')+'">'
+   +'<div class="err" id="ms-err"></div>'
+   +'<div class="row" style="margin-top:6px"><button class="btn pri" type="submit">'+(c.set?'Save':'Connect')+'</button>'+(edit?'<button class="btn" type="button" data-ms="cancel">Cancel</button><button class="btn bad" type="button" data-ms="forget">Disconnect</button>':'')+'</div></form>';
+  var f=$('msetup');
+  f.addEventListener('click',function(e){var b=e.target.closest('[data-ms]');if(!b)return;
+    if(b.dataset.ms==='cancel')mailOpen(true);
+    if(b.dataset.ms==='forget'&&confirm('Disconnect your email from SMR Admin? Your emails stay in your mailbox.'))api('mail_forget').then(function(){M.cfg=null;M.rows=[];mBadge(0);toast('Email disconnected');mailInit(true)}).catch(function(er){toast(er.message,true)})});
+  f.addEventListener('submit',function(e){e.preventDefault();var btn=f.querySelector('[type=submit]');btn.disabled=true;btn.textContent='Connecting…';$('ms-err').textContent='';
+    api('mail_setup',{email:$('ms-email').value,password:$('ms-pass').value,host:$('ms-host').value,name:$('ms-name').value})
+    .then(function(j){M.cfg=j;M.rows=[];toast('Email connected');mailOpen(true)})
+    .catch(function(er){$('ms-err').textContent=er.message;btn.disabled=false;btn.textContent=c.set?'Save':'Connect'})})};
+var renderMail=function(){$('mailf').classList.remove('hidden');$('mailbtns').classList.remove('hidden');
+  $('mailaddr').textContent=M.cfg.email;
+  $('mailf').querySelectorAll('button').forEach(function(b){b.classList.toggle('on',b.dataset.f===M.folder)});
+  if(!M.rows.length){$('mailbody').innerHTML='<p class="empty">'+(M.busy?'Loading…':(M.folder==='sent'?'No sent emails.':'No emails.'))+'</p>';return}
+  var sent=M.folder==='sent';
+  $('mailbody').innerHTML='<div class="rows">'+M.rows.map(function(r){
+    var who=sent?('To: '+(r.to.map(mWho).join(', ')||'')):mWho(r.from);
+    return '<button class="mrow'+(!r.seen&&!sent?' un':'')+'" data-uid="'+r.uid+'"><i class="ud"></i><span class="mt"><span class="l1"><b>'+esc(who||'(unknown)')+'</b><em>'+esc(mDate(r.date))+'</em></span><span class="sj">'+(r.att?CLIP:'')+esc(r.subject||'(no subject)')+'</span></span></button>'}).join('')+'</div>'
+    +(M.more?'<div style="text-align:center;margin-top:12px"><button class="btn sm" id="mailmore">Load older emails</button></div>':'');
+  var mm=$('mailmore');if(mm)mm.onclick=function(){mailLoad(true)}};
+var mailLoad=function(older){if(M.busy)return Promise.resolve();M.busy=true;if(!older&&!M.rows.length)renderMail();
+  var before=older&&M.rows.length?M.rows[M.rows.length-1].uid:0;
+  return api('mail_list',{folder:M.folder,before:before}).then(function(j){M.busy=false;M.at=Date.now();M.rows=older?M.rows.concat(j.rows):j.rows;M.more=j.more;mBadge(j.unread);renderMail()})
+  .catch(function(e){M.busy=false;if(/Set up/.test(e.message)){M.cfg=null;mailSetup();return}$('mailbody').innerHTML='<div class="panel"><p class="err" style="margin:0">'+esc(e.message)+'</p><div class="row" style="margin-top:10px"><button class="btn sm" id="mretry">Try again</button><button class="btn sm" id="mfix">Email settings</button></div></div>';$('mretry').onclick=function(){mailLoad()};$('mfix').onclick=function(){mailSetup(true)}})};
+var mailOpen=function(force){if(!M.cfg){mailInit(true);return}if(!M.cfg.set){mailSetup();return}
+  if(force||!M.rows.length||Date.now()-M.at>60000)mailLoad();else renderMail()};
+var mailInit=function(open){return api('mail_cfg').then(function(c){M.cfg=c;if(c.set)mailUnread();if(open||location.hash==='#mail')mailOpen(true)}).catch(function(){})};
+var mailUnread=function(){if(!M.cfg||!M.cfg.set)return;api('mail_unread').then(function(j){mBadge(j.unread)}).catch(function(){})};
+$('mailf').addEventListener('click',function(e){var b=e.target.closest('[data-f]');if(!b||b.dataset.f===M.folder)return;M.folder=b.dataset.f;M.rows=[];M.more=false;mailLoad()});
+$('mailre').addEventListener('click',function(){mailLoad().then(function(){toast('Up to date')})});
+$('mailcfg').addEventListener('click',function(){mailSetup(true)});
+$('mailnew').addEventListener('click',function(){compose({})});
+$('mailbody').addEventListener('click',function(e){var b=e.target.closest('.mrow');if(b)openMail(+b.dataset.uid)});
+/* reader */
+var ovOpen=function(id){$(id).classList.add('on');document.body.style.overflow='hidden'};
+var ovClose=function(id){$(id).classList.remove('on');if(!document.querySelector('.ov.on'))document.body.style.overflow=''};
+var openMail=function(uid){var row=M.rows.filter(function(r){return r.uid===uid})[0];M.cur=null;
+  $('rdmeta').innerHTML='<h2>'+esc(row?row.subject||'(no subject)':'')+'</h2><p>Loading…</p>';$('rdframe').src='about:blank';ovOpen('reader');
+  api('mail_get',{folder:M.folder,uid:uid}).then(function(m){M.cur=m;
+    if(row&&!row.seen&&M.folder==='inbox'){row.seen=true;renderMail();var n=+($('mailcnt').textContent)||0;mBadge(n-1)}
+    var q='f='+M.folder+'&uid='+uid;
+    $('rdmeta').innerHTML='<h2>'+esc(m.subject||'(no subject)')+'</h2>'
+      +'<p><b>'+esc(m.from.name||m.from.email)+'</b>'+(m.from.name?' &lt;'+esc(m.from.email)+'&gt;':'')+'</p>'
+      +'<p>To: '+esc(m.to.map(function(a){return a.name||a.email}).join(', '))+(m.cc.length?' · Cc: '+esc(m.cc.map(function(a){return a.name||a.email}).join(', ')):'')+' · '+esc(fmtT(m.date))+'</p>'
+      +(m.atts.length?'<div class="atts">'+m.atts.map(function(a){return '<a href="mail.php?a=part&'+q+'&p='+encodeURIComponent(a.path)+'" download>'+CLIP+'<span>'+esc(a.name)+'</span><small>'+(a.size>1048576?(a.size/1048576).toFixed(1)+' MB':Math.max(1,Math.round(a.size/1024))+' KB')+'</small></a>'}).join('')+'</div>':'');
+    $('rdframe').src='mail.php?a=view&'+q})
+  .catch(function(e){$('rdmeta').innerHTML='<p class="err">'+esc(e.message)+'</p>'})};
+$('reader').addEventListener('click',function(e){var b=e.target.closest('[data-rd]');if(!b)return;var a=b.dataset.rd,m=M.cur;
+  if(a==='back'){ovClose('reader');$('rdframe').src='about:blank'}
+  if(!m)return;
+  if(a==='reply'){var sent=M.folder==='sent',to=sent?m.to.map(function(x){return x.email}).join(', '):(m.reply_to||m.from.email);
+    var quote=m.text.split('\n').slice(0,200).map(function(l){return'> '+l}).join('\n');
+    compose({to:to,subject:/^re:/i.test(m.subject)?m.subject:'Re: '+m.subject,body:'\n\n\nOn '+fmtT(m.date)+', '+(m.from.name||m.from.email)+' wrote:\n'+quote,in_reply_to:m.message_id,references:m.references,uid:sent?0:m.uid,reply:true})}
+  if(a==='more')openSheet('<h2>Email</h2>'+(M.folder==='inbox'?item('unread','Mark as unread'):'')+item('fwd','Forward')+item('del','Delete','','bad')+item('close','Cancel','','muted'),function(el){el.addEventListener('click',function(ev){var x=ev.target.closest('[data-act]');if(!x)return;x=x.dataset.act;closeSheet();
+    if(x==='unread')api('mail_unseen',{folder:M.folder,uid:m.uid}).then(function(){M.rows.forEach(function(r){if(r.uid===m.uid)r.seen=false});renderMail();mailUnread();ovClose('reader');toast('Marked as unread')}).catch(function(er){toast(er.message,true)});
+    if(x==='fwd')compose({subject:/^fwd?:/i.test(m.subject)?m.subject:'Fwd: '+m.subject,body:'\n\n\n---------- Forwarded email ----------\nFrom: '+(m.from.name?m.from.name+' <'+m.from.email+'>':m.from.email)+'\nDate: '+fmtT(m.date)+'\nSubject: '+m.subject+'\n\n'+m.text});
+    if(x==='del'&&confirm('Delete this email?'))api('mail_delete',{folder:M.folder,uid:m.uid}).then(function(){M.rows=M.rows.filter(function(r){return r.uid!==m.uid});renderMail();ovClose('reader');toast('Deleted')}).catch(function(er){toast(er.message,true)})})})});
+/* compose */
+var CP={};
+var compose=function(o){if(!M.cfg){toast('Loading email…');mailInit().then(function(){compose(o)});return}
+  if(!M.cfg.set){toast('Connect your email first');location.hash='mail';return}
+  CP=o||{};$('cptitle').textContent=CP.reply?'Reply':'New email';$('cpfrom').textContent='From: '+(M.cfg.name?M.cfg.name+' <'+M.cfg.email+'>':M.cfg.email);
+  $('cpto').value=CP.to||'';$('cpcc').value='';$('cpsub').value=CP.subject||'';$('cpbody').value=CP.body||'';$('cperr').textContent='';
+  ovOpen('compose');setTimeout(function(){var el=CP.to?$('cpbody'):$('cpto');el.focus();if(el===$('cpbody'))el.setSelectionRange(0,0)},260)};
+var cpBusy=false;
+$('compose').addEventListener('click',function(e){var b=e.target.closest('[data-cp]');if(!b)return;
+  if(b.dataset.cp==='close'){if(($('cpbody').value.trim()&&$('cpbody').value!==(CP.body||''))&&!confirm('Discard this email?'))return;ovClose('compose')}
+  if(b.dataset.cp==='send'&&!cpBusy){cpBusy=true;b.disabled=true;$('cperr').textContent='';
+    api('mail_send',{to:$('cpto').value,cc:$('cpcc').value,subject:$('cpsub').value,body:$('cpbody').value,in_reply_to:CP.in_reply_to||'',references:CP.references||'',uid:CP.uid||0})
+    .then(function(j){ovClose('compose');ovClose('reader');toast(j.saved?'Sent':'Sent (could not save a copy in Sent)');if(CP.onSent)CP.onSent();if(M.folder==='sent')mailLoad()})
+    .catch(function(er){$('cperr').textContent=er.message})
+    .then(function(){cpBusy=false;b.disabled=false})}});
+mailInit();setInterval(mailUnread,120000);
 
 load();setInterval(load,30000);
 /* Refresh: clear anything the browser kept and load the newest version of SMR Admin. */

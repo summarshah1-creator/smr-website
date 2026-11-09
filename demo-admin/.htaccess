@@ -6,6 +6,9 @@ DirectoryIndex index.php
   Header always set Referrer-Policy "same-origin"
   Header always set X-Robots-Tag "noindex, nofollow"
   Header always set X-Frame-Options "DENY"
+  <Files "mail.php">
+    Header always set X-Frame-Options "SAMEORIGIN"
+  </Files>
 </IfModule>
 <IfModule mod_php.c>
   php_value upload_max_filesize 256M
