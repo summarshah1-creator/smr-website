@@ -338,20 +338,20 @@ return json_decode(<<<'JSON'
  },
  {
   "slug": "ngs",
-  "version": "2026-11-09a",
-  "ver": "1.0",
+  "version": "2026-11-09c",
+  "ver": "2.0",
   "name": "NGS Youth & Community",
   "accent": "#12324f",
   "tagline": "Youth & community charity website · Luton",
-  "description": "Website for Next Generation Scheme (NGS) in Luton: programmes, the Luton Boot Bank, the Pakistan & Kashmir Culture Festival, the Luton Youth Awards, holiday camps, partners and ways to get involved.",
+  "description": "Website for Next Generation Scheme (NGS) in Luton: programmes, the Luton Boot Bank, the Pakistan & Kashmir Culture Festival, the Luton Youth Awards with Hall of Fame and nominations, holiday camps, sponsorship, volunteering, donations and the team.",
   "tips": [
    "A warm, modern homepage that tells NGS's 20-year story and puts the newest project, the Luton Boot Bank, right at the top.",
-   "Every programme on one page: youth hub, study support, healthy living, outdoor activities, sport, mentoring and culture.",
+   "Seven areas NGS champions, from youth spaces and study support to sport, mentoring and culture, each with its own card.",
    "The Luton Boot Bank has its own section: donate boots, ask for a pair, or sign up as a drop-off hub.",
-   "Big events get their own sections: the Pakistan & Kashmir Culture Festival, the Luton Youth Awards and holiday camps.",
-   "A partners wall shows the businesses, clubs and funders backing NGS, which builds trust with new sponsors.",
-   "Past events and impact numbers show funders what NGS has delivered for Luton.",
-   "Clear ways to help: volunteer, sponsor, donate boots or partner, plus a contact form that goes straight to the team."
+   "The Pakistan & Kashmir Culture Festival with a video from 2026 and the date for 2027, so people can get involved early.",
+   "The Luton Youth Awards with a Hall of Fame of winners and a step-by-step form to nominate a young person.",
+   "A sponsorship section shows businesses what they get back, with an enquiry form that goes straight to the team.",
+   "Volunteer, donate and get notified about the next holiday camp, plus the team behind NGS and a wall of partners."
   ]
  }
 ]
