@@ -77,9 +77,17 @@ function migrate(PDO $pdo): void {
     add_col($pdo, 'sessions', 'last_app', "TEXT DEFAULT ''");
     add_col($pdo, 'links', 'views', 'INTEGER DEFAULT 0');
     add_col($pdo, 'links', 'last_view', 'INTEGER DEFAULT 0');
+    add_col($pdo, 'links', 'direct', 'INTEGER DEFAULT 0');
+    add_col($pdo, 'demos', 'ver', "TEXT DEFAULT '1.0'");
+    add_col($pdo, 'demos', 'seed_ver', "TEXT DEFAULT ''");
     $pdo->exec("CREATE TABLE IF NOT EXISTS admin_tokens (id TEXT PRIMARY KEY, csrf TEXT NOT NULL, created_at INTEGER, expires_at INTEGER)");
 }
 
+/* Display version (1.0, 1.1 … 2.0): each update adds .1; a big change sets the next whole number. */
+function ver_bump(string $v): string {
+    if (!preg_match('/^(\d+)(?:\.(\d+))?$/', trim($v), $m)) return '1.1';
+    return $m[1] . '.' . ((int) ($m[2] ?? 0) + 1);
+}
 function add_col(PDO $pdo, string $table, string $col, string $type): void {
     foreach ($pdo->query('PRAGMA table_info(' . $table . ')') as $c) if ($c['name'] === $col) return;
     $pdo->exec("ALTER TABLE $table ADD COLUMN $col $type");
@@ -128,6 +136,13 @@ function sync_seeds(PDO $pdo): void {
                 ->execute(['seed:' . $s['slug'], $s['version'] ?? '1', $now, 'seed:' . $s['slug'],
                     $s['name'], $s['tagline'] ?? '', $s['description'] ?? '', implode("\n", $s['tips'] ?? []), $s['accent'] ?? '#5b5bff', ($i + 1) * 10, $d['id']]);
         } else { continue; }
+        // Shown version: "ver" in seeds.json sets it (e.g. 2.0 for a big change); otherwise each new seed version adds .1.
+        $cur = $pdo->prepare('SELECT ver, seed_ver FROM demos WHERE slug = ?'); $cur->execute([$s['slug']]); $cv = $cur->fetch() ?: [];
+        $sv = (string) ($s['ver'] ?? '');
+        if (!$d) $nv = $sv !== '' ? $sv : '1.0';
+        elseif ($sv !== '' && $sv !== (string) ($cv['seed_ver'] ?? '')) $nv = $sv;
+        else $nv = ver_bump((string) ($cv['ver'] ?? '1.0'));
+        $pdo->prepare('UPDATE demos SET ver = ?, seed_ver = ? WHERE slug = ?')->execute([$nv, $sv, $s['slug']]);
         // A seed can ship hidden ("hidden": true): kept in storage, not shown or sendable until shown again in SMR Admin.
         if (array_key_exists('hidden', $s)) $pdo->prepare('UPDATE demos SET enabled = ? WHERE slug = ?')->execute([$s['hidden'] ? 0 : 1, $s['slug']]);
     }
@@ -269,7 +284,7 @@ function demo_icon_path(array $d): ?string {
 function demo_public(array $d): array {
     return ['slug' => $d['slug'], 'name' => $d['name'], 'tagline' => $d['tagline'], 'description' => $d['description'],
         'tips' => array_values(array_filter(array_map('trim', explode("\n", (string) $d['tips'])))), 'accent' => $d['accent'],
-        'icon' => '/demo/icon.php?s=' . rawurlencode($d['slug']) . '&v=' . (int) $d['updated_at']];
+        'icon' => '/demo/icon.php?s=' . rawurlencode($d['slug']) . '&v=' . (int) $d['updated_at'], 'ver' => (string) ($d['ver'] ?? '1.0')];
 }
 
 /* ---------- links & visitor sessions ---------- */

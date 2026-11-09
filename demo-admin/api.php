@@ -44,7 +44,7 @@ function link_row(array $l): array {
     $st2->execute([$l['id'], $l['id']]);
     $ss = $st2->fetch() ?: [];
     return ['id' => (int) $l['id'], 'label' => $l['label'], 'views' => (int) $l['views'], 'last_view' => (int) $l['last_view'], 'devices' => (int) ($ss['n'] ?? 0), 'last_seen' => (int) ($ss['seen'] ?? 0), 'last_app' => (string) ($ss['app'] ?? ''), 'url' => link_url($l), 'pin' => $l['pin'], 'apps' => link_apps($l),
-        'mode' => $l['mode'], 'max_uses' => $max, 'uses' => (int) $l['uses'], 'duration' => (int) $l['duration'], 'tips' => (int) $l['tips'],
+        'mode' => $l['mode'], 'max_uses' => $max, 'uses' => (int) $l['uses'], 'duration' => (int) $l['duration'], 'tips' => (int) $l['tips'], 'direct' => (int) ($l['direct'] ?? 0),
         'created_at' => (int) $l['created_at'], 'activated_at' => (int) $l['activated_at'], 'expires_at' => $expiry,
         'status' => $status, 'left' => $left];
 }
@@ -288,10 +288,12 @@ case 'link_create':
     if (!$apps) json_out(['error' => 'Choose at least one demo.'], 400);
     $mode = in_array($in['mode'] ?? '', ['single', 'shared', 'limited'], true) ? $in['mode'] : 'single';
     $max = $mode === 'limited' ? max(2, min(500, (int) ($in['max_uses'] ?? 3))) : ($mode === 'single' ? 1 : 0);
-    $dur = max(5, min(7 * 24 * 60, (int) ($in['duration'] ?? DEFAULT_MINUTES)));
+    $dur = max(5, min(30 * 24 * 60, (int) ($in['duration'] ?? DEFAULT_MINUTES)));
+    $direct = !empty($in['direct']) ? 1 : 0;
+    if ($direct && count($apps) !== 1) json_out(['error' => 'A direct link opens one app or website. Choose just one.'], 400);
     $token = rand_token(18);
-    db()->prepare('INSERT INTO links (token, pin, label, apps, mode, max_uses, uses, duration, tips, created_at) VALUES (?,?,?,?,?,?,0,?,?,?)')
-        ->execute([$token, !empty($in['nopin']) ? '' : new_pin(), mb_substr(trim((string) ($in['label'] ?? '')), 0, 80), json_encode($apps), $mode, $max, $dur, !empty($in['tips']) ? 1 : 0, now()]);
+    db()->prepare('INSERT INTO links (token, pin, label, apps, mode, max_uses, uses, duration, tips, created_at, direct) VALUES (?,?,?,?,?,?,0,?,?,?,?)')
+        ->execute([$token, !empty($in['nopin']) ? '' : new_pin(), mb_substr(trim((string) ($in['label'] ?? '')), 0, 80), json_encode($apps), $mode, $max, $dur, !empty($in['tips']) ? 1 : 0, now(), $direct]);
     json_out(['ok' => true, 'link' => link_row(get_link(['id' => db()->lastInsertId()]))]);
 
 case 'link_revoke':
@@ -330,6 +332,7 @@ case 'demo_save':
     $d = demo_by_slug((string) ($in['slug'] ?? ''));
     if (!$d) json_out(['error' => 'Demo not found.'], 404);
     $accent = preg_match('/^#[0-9a-fA-F]{6}$/', (string) ($in['accent'] ?? '')) ? $in['accent'] : $d['accent'];
+    if (isset($in['ver']) && preg_match('/^\d{1,3}(\.\d{1,3})?$/', trim((string) $in['ver']))) db()->prepare('UPDATE demos SET ver = ? WHERE id = ?')->execute([trim((string) $in['ver']), $d['id']]);
     db()->prepare('UPDATE demos SET name = ?, tagline = ?, description = ?, tips = ?, accent = ?, enabled = ?, sort = ?, updated_at = ? WHERE id = ?')->execute([
         mb_substr(trim((string) ($in['name'] ?? $d['name'])), 0, 60) ?: $d['name'],
         mb_substr(trim((string) ($in['tagline'] ?? $d['tagline'])), 0, 90),
@@ -364,7 +367,7 @@ case 'demo_upload':
     try { $res = extract_build($f['tmp_name'], $dest); }
     catch (Throwable $e) { rrmdir($dest); json_out(['error' => $e->getMessage()], 400); }
     if ($existing) {
-        db()->prepare("UPDATE demos SET dir = ?, source = 'upload', updated_at = ? WHERE id = ?")->execute(['up:' . $folder, now(), $existing['id']]);
+        db()->prepare("UPDATE demos SET dir = ?, source = 'upload', updated_at = ?, ver = ? WHERE id = ?")->execute(['up:' . $folder, now(), ver_bump((string) ($existing['ver'] ?? '1.0')), $existing['id']]);
         if (strpos($existing['dir'], 'up:') === 0) rrmdir(private_dir() . '/uploads/' . substr($existing['dir'], 3));
     } else {
         $sort = (int) db()->query('SELECT COALESCE(MAX(sort), 0) + 10 FROM demos')->fetchColumn();

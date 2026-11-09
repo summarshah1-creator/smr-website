@@ -15,6 +15,7 @@ $link = null;
 $pinApps = [];
 $pinLen = 4;
 $noPin = false;
+$direct = false;
 
 if ($preview) {
     $view = 'showroom';
@@ -32,6 +33,7 @@ if ($preview) {
                 $view = 'showroom';
                 $expires = session_expiry($l, $s);
                 $tips = (bool) $l['tips'];
+                $direct = (int) ($l['direct'] ?? 0) === 1;
                 $allowed = link_apps($l);
                 $all = [];
                 foreach (db()->query('SELECT * FROM demos WHERE enabled = 1 ORDER BY sort, name') as $d) $all[$d['slug']] = $d;
@@ -83,7 +85,7 @@ $mark = preg_replace('/<svg /', '<svg aria-hidden="true" focusable="false" ', $m
 $waRequest = 'https://wa.me/' . WHATSAPP . '?text=' . rawurlencode("Hi Summar, my SMR Digital demo session has ended. Could I have a new PIN please?");
 $waAsk = 'https://wa.me/' . WHATSAPP . '?text=' . rawurlencode("Hi Summar, I'd like a demo of the SMR Digital apps please.");
 $waHelp = 'https://wa.me/' . WHATSAPP . '?text=' . rawurlencode("Hi Summar, I'm looking at the SMR Digital demos and have a question.");
-$boot = ['view' => $view, 'token' => $token, 'preview' => $preview, 'now' => now(), 'expires' => $expires, 'tips' => $tips, 'demos' => $demos];
+$boot = ['direct' => $direct, 'view' => $view, 'token' => $token, 'preview' => $preview, 'now' => now(), 'expires' => $expires, 'tips' => $tips, 'demos' => $demos];
 ?><!doctype html>
 <html lang="en-GB">
 <head>
@@ -202,6 +204,8 @@ body.appmode .glow{display:none}
  .stage.phone iframe{border-radius:33px}
 }
 .viewsw{display:none}
+.dhd .brand{margin-right:auto}.dtag{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 10px;border-radius:999px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);font:600 11.5px/1 Manrope,sans-serif;color:#cfc4ff;white-space:nowrap}.dtag i{width:6px;height:6px;border-radius:50%;background:#3ddc84;box-shadow:0 0 6px #3ddc84}.dtag b{color:#fff;font-weight:700}
+.dhd{gap:8px}.dhd .hbtn.wa{background:#25d366;color:#fff;box-shadow:0 6px 18px -8px rgba(37,211,102,.8)}.dhd .hbtn.wa svg{width:18px;height:18px}@media(max-width:560px){.dhd .hbtn.wa{width:38px;padding:0;justify-content:center}.dhd .hbtn.wa span{display:none}.dhd .timer{min-width:0;padding:5px 8px}.dhd .timer small{display:none}.dhd .timer b{margin-top:0;font-size:14px;white-space:nowrap}.dhd .dtag{padding:0 8px;gap:5px}}@media(max-width:370px){.dhd .lg>span{display:none}}
 @media(min-width:900px){.viewsw{display:inline-flex}}
 /* tips */
 .pinapps{display:flex;flex-wrap:wrap;justify-content:center;gap:12px 10px;margin:16px auto 0;max-width:360px}
@@ -262,7 +266,19 @@ body.appmode .glow{display:none}
 <body<?= $preview ? ' class="owner"' : '' ?>>
 <div class="glow"></div>
 
-<?php if ($view === 'showroom'): ?>
+<?php if ($view === 'showroom' && $direct): $dd = $demos[0] ?? null; ?>
+<header class="hd dhd" id="hd">
+  <a class="brand" href="<?= h(MAIN_SITE) ?>" target="_blank" rel="noopener" aria-label="SMR Digital website">
+    <span class="lg"><?= $mark ?><span>Digital</span></span>
+  </a>
+  <span class="dtag"><i></i>Demo<?php if ($dd): ?><b id="dver">v<?= h($dd['ver']) ?></b><?php endif; ?></span>
+  <div class="timer" id="timer" role="timer" aria-live="off"><small>Ends in</small><b id="clock">--:--</b></div>
+  <button class="hbtn icon viewsw" id="viewsw" type="button" title="Switch phone / full width" aria-label="Switch phone or full width view"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg></button>
+  <a class="hbtn icon" href="<?= h(MAIN_SITE) ?>" target="_blank" rel="noopener" title="SMR Digital website" aria-label="SMR Digital website"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9.5"/><path d="M2.5 12h19M12 2.5a14.5 14.5 0 0 1 0 19M12 2.5a14.5 14.5 0 0 0 0 19"/></svg></a>
+  <a class="hbtn wa" href="<?= h($waHelp) ?>" target="_blank" rel="noopener" aria-label="WhatsApp SMR Digital"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.5 1 2.7c.1.2 1.8 2.8 4.4 3.9 1.6.7 2.3.8 3.1.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3z"/></svg><span>WhatsApp</span></a>
+</header>
+<main id="home" style="display:none"><div id="grid"></div></main>
+<?php elseif ($view === 'showroom'): ?>
 <header class="hd" id="hd">
   <a class="brand" href="#" data-home aria-label="All demos">
     <small>Designed &amp; Built by</small>
@@ -319,6 +335,8 @@ body.appmode .glow{display:none}
   <?php endif; ?>
 </main>
 
+<?php endif; ?>
+<?php if ($view === 'showroom'): ?>
 <div class="stage" id="stage"><div class="dev"><iframe id="frame" title="Demo app" allow="geolocation; camera; clipboard-write; fullscreen" referrerpolicy="same-origin"></iframe></div></div>
 
 <div class="ftour" id="ftour">
@@ -466,13 +484,13 @@ var show=function(slug){
   }
 };
 var ar=$('apprefresh');if(ar)ar.addEventListener('click',function(){if(!current)return;var sl=current;fresh();frame.src='/demo/run/'+encodeURIComponent(sl)+'/?r='+Date.now();toast('Reloaded with the latest version',false)});
-var route=function(){var m=/app=([a-z0-9-]+)/.exec(location.hash);if(B.preview&&!m){location.replace('/demo-admin/#demos');return}show(m?m[1]:null)};
+var route=function(){if(B.direct){var d0=B.demos&&B.demos[0];if(d0&&current!==d0.slug)show(d0.slug);return}var m=/app=([a-z0-9-]+)/.exec(location.hash);if(B.preview&&!m){location.replace('/demo-admin/#demos');return}show(m?m[1]:null)};
 grid.addEventListener('click',function(e){var c=e.target.closest('[data-open]');if(c)location.hash='app='+c.getAttribute('data-open')});
 document.querySelectorAll('[data-home]').forEach(function(b){b.addEventListener('click',function(e){e.preventDefault();if(B.preview){location.href='/demo-admin/#demos';return}if(location.hash)history.pushState(null,'',location.pathname+location.search);show(null)})});
 window.addEventListener('hashchange',route);window.addEventListener('popstate',route);
 
 /* menu */
-var menu=$('menu'),mb=$('menubtn');
+var menu=$('menu')||document.createElement('nav'),mb=$('menubtn')||document.createElement('button');
 var closeMenu=function(){menu.classList.remove('on');mb.setAttribute('aria-expanded','false')};
 mb.addEventListener('click',function(e){e.stopPropagation();var on=menu.classList.toggle('on');mb.setAttribute('aria-expanded',on?'true':'false')});
 document.addEventListener('click',function(e){if(!menu.contains(e.target)&&e.target!==mb)closeMenu()});
@@ -495,7 +513,7 @@ var endTips=function(){foldTips();tipI=0};
 mini.addEventListener('click',function(){if(ft.classList.contains('open'))foldTips();else openTips()});
 $('tipnext').addEventListener('click',function(){if(tipI<tipList.length-1){tipI++;paintTip();auto()}else endTips()});
 $('tipskip').addEventListener('click',foldTips);$('tipx').addEventListener('click',foldTips);
-$('tipsbtn').addEventListener('click',function(){closeMenu();if(current)startTips(current,true);else{toast('Open an app first, then tap this again.',false)}});
+($('tipsbtn')||document.createElement('button')).addEventListener('click',function(){closeMenu();if(current)startTips(current,true);else{toast('Open an app first, then tap this again.',false)}});
 
 var toastT;var toast=function(msg,bad){var t=$('toast');t.textContent=msg;t.style.borderColor=bad===false?'rgba(207,196,255,.5)':'';t.style.background=bad===false?'#1b1830':'';t.style.color=bad===false?'#eee':'';t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(function(){t.classList.remove('on')},5000)};
 
@@ -510,6 +528,7 @@ var applyVersions=function(j){if(!j||!j.apps)return;
   if(j.build!==old.build||Object.keys(j.apps).join()!==Object.keys(old.apps).join()){location.reload();return}
   var changed=Object.keys(j.apps).filter(function(k){return j.apps[k]!==old.apps[k]});
   if(!changed.length)return;
+  if(B.direct){location.reload();return}
   if(current&&changed.indexOf(current)>=0){var sl=current;fresh();frame.src='/demo/run/'+encodeURIComponent(sl)+'/?u='+Date.now();toast('This app has just been updated',false)}
   if(!current)location.reload()};
 var pollVer=function(){fetch('/demo/api.php?a=state'+(B.preview?'&preview=1':''),{credentials:'same-origin',cache:'no-store'}).then(function(r){return r.json()}).then(applyVersions).catch(function(){})};
@@ -520,6 +539,7 @@ var tick=function(){
   if(stopped)return;
   var left=Math.max(0,Math.round(expires-(Date.now()/1000+offset)));
   var m=Math.floor(left/60),s=left%60;
+  if(left>=86400){var dd=Math.floor(left/86400),hh=Math.floor(left%86400/3600);clock.textContent=dd+'d '+hh+'h'}else
   clock.textContent=(m>=60?Math.floor(m/60)+':'+String(m%60).padStart(2,'0'):m)+':'+String(s).padStart(2,'0');
   timer.classList.toggle('low',left<=300&&left>60);
   timer.classList.toggle('crit',left<=60);

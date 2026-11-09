@@ -54,7 +54,7 @@ h2{font-family:Sora,sans-serif;font-size:18px;letter-spacing:-.01em;margin-botto
 .bar{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}
 .panel{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:20px;padding:18px;margin-bottom:16px}
 label.f{display:block;font-size:12.5px;font-weight:700;color:var(--muted);margin:14px 0 6px;letter-spacing:.02em}
-input[type=text],input[type=password],input[type=number],textarea,select{width:100%;height:46px;padding:0 14px;border-radius:13px;border:1px solid var(--line);background:#0c0c16;outline:0;font-size:15px}
+input[type=text],input[type=password],input[type=number],input[type=tel],input[type=email],textarea,select{width:100%;height:46px;padding:0 14px;border-radius:13px;border:1px solid var(--line);background:#0c0c16;outline:0;font-size:15px}
 textarea{height:auto;min-height:90px;padding:12px 14px;resize:vertical;line-height:1.45}
 input:focus,textarea:focus,select:focus{border-color:rgba(214,59,255,.6);box-shadow:0 0 0 3px rgba(214,59,255,.15)}
 .pick{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
@@ -283,7 +283,7 @@ document.addEventListener('keydown',function(e){if(/^\d$/.test(e.key))press(e.ke
         <div><label class="f" for="lb">2. Their name (optional)</label><input type="text" id="lb" placeholder="e.g. Ahmed, Kebab House" maxlength="80"></div>
         <div><label class="f" for="ph">Their WhatsApp number (optional)</label><input type="tel" id="ph" placeholder="07..." inputmode="tel" maxlength="20"></div>
       </div>
-      <details class="more"><summary>More options (45 minutes, one shared timer)</summary>
+      <details class="more"><summary id="moresum">More options (45 minutes, one shared timer)</summary>
         <label class="f">Access type</label>
         <div class="seg">
           <label><input type="radio" name="mode" value="shared" checked>Shared, one timer<small>Works on any of their devices. One clock from the first time the PIN is used.</small></label>
@@ -291,9 +291,10 @@ document.addEventListener('keydown',function(e){if(/^\d$/.test(e.key))press(e.ke
           <label><input type="radio" name="mode" value="limited">Limited uses<small>PIN works <input type="number" id="maxu" value="3" min="2" max="500" style="width:64px;height:30px;padding:0 6px;display:inline-block"> times, each with its own timer.</small></label>
         </div>
         <label class="f">Session length</label>
-        <div class="chips" id="dur"><button type="button" data-m="15">15 min</button><button type="button" data-m="30">30 min</button><button type="button" data-m="45" class="on">45 min</button><button type="button" data-m="60">1 hour</button><button type="button" data-m="120">2 hours</button><input type="number" id="durc" min="5" max="10080" placeholder="mins" aria-label="Custom minutes"></div>
+        <div class="chips" id="dur"><button type="button" data-m="15">15 min</button><button type="button" data-m="30">30 min</button><button type="button" data-m="45" class="on">45 min</button><button type="button" data-m="60">1 hour</button><button type="button" data-m="120">2 hours</button><button type="button" data-m="1440">1 day</button><button type="button" data-m="10080">1 week</button><button type="button" data-m="43200">30 days</button><input type="number" id="durc" min="5" max="43200" placeholder="mins" aria-label="Custom minutes"></div>
         <label class="toggle"><input type="checkbox" id="tips" checked>Show the feature tour in each app</label>
       </details>
+      <label class="toggle" style="margin-top:16px;align-items:flex-start"><input type="checkbox" id="direct" style="flex:none;margin-top:1px"><span>Open straight into it<small style="display:block;color:var(--muted);font-weight:500;font-size:12.5px;margin-top:2px">For one app or website. No demo list or menus, just an SMR Digital Demo bar with the version number, your website and WhatsApp. Always shows the latest version.</small></span></label>
       <label class="toggle" style="margin-top:16px;align-items:flex-start"><input type="checkbox" id="usepin" checked style="flex:none;margin-top:1px"><span>Ask for a PIN<small style="display:block;color:var(--muted);font-weight:500;font-size:12.5px;margin-top:2px">Turn off to send just the link. They tap Open and they're in.</small></span></label>
       <div class="err" id="lerr"></div>
       <button class="btn pri big" type="submit">Create link</button>
@@ -376,8 +377,11 @@ var ago=function(t){var s=nowS()-t;if(s<60)return'just now';if(s<3600)return Mat
 var fmtLeft=function(s){if(s<=0)return'0:00';var h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return(h?h+':'+String(m).padStart(2,'0'):m)+':'+String(x).padStart(2,'0')};
 var demoBy=function(s){for(var i=0;i<D.length;i++)if(D[i].slug===s)return D[i]};
 var andList=function(a){return a.length<2?a.join(''):a.slice(0,-1).join(', ')+' and '+a[a.length-1]};
-var durTxt=function(m){return m>=60&&m%60===0?(m===60?'1 hour':(m/60)+' hours'):m+' minutes'};
+var durTxt=function(m){if(m>=1440&&m%1440===0){var d=m/1440;return d===7?'1 week':d===1?'1 day':d+' days'}return m>=60&&m%60===0?(m===60?'1 hour':(m/60)+' hours'):m+' minutes'};
 var shareText=function(l){var names=l.apps.map(function(s){var d=demoBy(s);return d?d.name:s}),one=names.length===1;
+  if(l.direct)return "Here's the latest version of "+names[0]+" for you to look over. Let me know what you think."
+    +'\n\n'+linkPin(l)
+    +'\n\nThe same link always shows the newest version, so you can check back after each update. It stays open for '+durTxt(l.duration)+(l.pin?' from when you enter the PIN.':' from when you first open it.')+' Any questions, just message me.\n\nSummar, SMR Digital';
   return (one?"Here's the demo we spoke about ("+names[0]+"). Have a little look around the app."
          :"Here are the demos we spoke about ("+andList(names)+"). Have a look through the apps.")
     +' Let me know what you think.'
@@ -412,7 +416,7 @@ var load=function(){return api('list').then(function(j){if(build0&&j.build&&j.bu
 
 /* ---------- my demos ---------- */
 var renderDemos=function(){$('demos').innerHTML=D.length?D.map(function(d){
-  return '<div class="rw'+(d.enabled?'':' off')+'" data-slug="'+esc(d.slug)+'"><a class="open" href="/demo/?preview=1#app='+esc(d.slug)+'"><img src="'+esc(d.icon)+'" alt=""><span><b>'+esc(d.name)+(d.enabled?'':' <i class="tag">Hidden</i>')+(d.files_ok?'':' <i class="tag bad">Files missing</i>')+'</b><small>Updated '+fmtD(d.updated_at)+'</small></span></a>'
+  return '<div class="rw'+(d.enabled?'':' off')+'" data-slug="'+esc(d.slug)+'"><a class="open" href="/demo/?preview=1#app='+esc(d.slug)+'"><img src="'+esc(d.icon)+'" alt=""><span><b>'+esc(d.name)+(d.enabled?'':' <i class="tag">Hidden</i>')+(d.files_ok?'':' <i class="tag bad">Files missing</i>')+'</b><small>v'+esc(d.ver||'1.0')+' · Updated '+fmtD(d.updated_at)+'</small></span></a>'
    +'<button class="dots" data-opts aria-label="Options for '+esc(d.name)+'">'+ICON.dots+'</button></div>'}).join(''):'<div class="empty">No demos yet.</div>'};
 var curSlug=null;
 $('demos').addEventListener('click',function(e){var b=e.target.closest('[data-opts]');if(!b)return;var slug=b.closest('[data-slug]').dataset.slug,d=demoBy(slug);curSlug=slug;
@@ -433,9 +437,10 @@ var editDemo=function(d){openSheet('<h2>Edit '+esc(d.name)+'</h2><form id="ef"><
    +'<label class="f">Description</label><textarea name="description" maxlength="400">'+esc(d.description)+'</textarea>'
    +'<label class="f">Feature tour (one point per line)</label><textarea name="tips" maxlength="1500" style="min-height:150px">'+esc(d.tips_text)+'</textarea>'
    +'<div class="row" style="margin-top:12px"><label class="f" style="margin:0">Card colour</label><input type="color" name="accent" value="'+esc(d.accent)+'" style="width:48px;height:36px;border:0;background:none"><label class="f" style="margin:0 0 0 10px">Order</label><input type="number" name="sort" value="'+d.sort+'" style="width:90px;height:38px"></div>'
+   +'<label class="f">Version (shown on direct links)</label><input type="text" name="ver" value="'+esc(d.ver||'1.0')+'" maxlength="7" inputmode="decimal" style="width:120px"><small class="hint" style="display:block;color:var(--muted);font-size:12px;margin-top:4px">Each update adds .1 by itself (1.1, 1.2…). Set 2.0 for a big change.</small>'
    +'<div class="row" style="margin-top:14px"><button class="btn pri" type="submit">Save</button><button class="btn" type="button" data-x>Cancel</button></div></form>',
   function(el){el.querySelector('[data-x]').onclick=closeSheet;el.querySelector('#ef').addEventListener('submit',function(e){e.preventDefault();var f=e.target,o={slug:d.slug};
-    ['name','tagline','description','tips','accent','sort'].forEach(function(k){o[k]=f.elements[k].value});
+    ['name','tagline','description','tips','accent','sort','ver'].forEach(function(k){o[k]=f.elements[k].value});
     api('demo_save',o).then(function(){closeSheet();toast('Saved');load()}).catch(function(er){toast(er.message,true)})})})};
 var upload=function(a,fd,done){var x=new XMLHttpRequest();x.open('POST','api.php?a='+a);x.setRequestHeader('X-CSRF',CSRF);
   toast('Uploading…');
@@ -456,6 +461,9 @@ var renderPick=function(){var keep={};document.querySelectorAll('#pick input:che
 $('selall').addEventListener('click',function(){var all=document.querySelectorAll('#pick input'),any=[].some.call(all,function(i){return!i.checked});all.forEach(function(i){i.checked=any});this.textContent=any?'Clear all':'Select all'});
 var dur=45;
 $('dur').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;dur=+b.dataset.m;$('durc').value='';this.querySelectorAll('button').forEach(function(x){x.classList.toggle('on',x===b)})});
+var moreSum=function(){var m=$('moresum');if(m)m.textContent=m.textContent.replace(/\(([^,]*)/,'('+durTxt(dur))};
+$('dur').addEventListener('click',moreSum);$('durc').addEventListener('input',moreSum);
+$('direct').addEventListener('change',function(){if(this.checked&&dur<1440){var b=$('dur').querySelector('[data-m="43200"]');if(b)b.click()}});
 $('durc').addEventListener('input',function(){var v=+this.value;if(v>=5){dur=v;$('dur').querySelectorAll('button').forEach(function(x){x.classList.remove('on')})}});
 var resetT;
 var resetSend=function(){clearTimeout(resetT);var c=$('created');c.classList.add('hidden');c.innerHTML='';delete c.dataset.used;
@@ -483,7 +491,7 @@ $('linkform').addEventListener('submit',function(e){e.preventDefault();$('lerr')
   var apps=[].map.call(document.querySelectorAll('#pick input:checked'),function(i){return i.value});
   if(!apps.length){$('lerr').textContent='Choose at least one app.';return}
   var mode=document.querySelector('[name=mode]:checked').value,phone=$('ph').value;
-  api('link_create',{label:$('lb').value,apps:apps,mode:mode,max_uses:+$('maxu').value,duration:dur,tips:$('tips').checked,nopin:!$('usepin').checked}).then(function(j){
+  api('link_create',{label:$('lb').value,apps:apps,mode:mode,max_uses:+$('maxu').value,duration:dur,tips:$('tips').checked,nopin:!$('usepin').checked,direct:$('direct').checked}).then(function(j){
     $('lb').value='';$('ph').value='';document.querySelectorAll('#pick input').forEach(function(i){i.checked=false});
     load().then(function(){showMessage(j.link,phone)})}).catch(function(er){$('lerr').textContent=er.message})});
 
