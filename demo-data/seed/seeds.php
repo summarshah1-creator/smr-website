@@ -338,8 +338,8 @@ return json_decode(<<<'JSON'
  },
  {
   "slug": "ngs",
-  "version": "2026-11-09c",
-  "ver": "2.0",
+  "version": "2026-11-09d",
+  "ver": "2.1",
   "name": "NGS Youth & Community",
   "accent": "#12324f",
   "tagline": "Youth & community charity website · Luton",
