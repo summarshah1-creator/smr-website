@@ -201,9 +201,20 @@ function compose(o,night,opts){opts=opts||{};
   {const bq=[hp(Hm,offX,offY),hp(Hm,offX+Wn,offY),hp(Hm,offX+Wn,offY+Hn),hp(Hm,offX,offY+Hn)];l.globalCompositeOperation='destination-in';l.beginPath();bq.forEach((p,i)=>i?l.lineTo(p[0],p[1]):l.moveTo(p[0],p[1]));l.closePath();l.fillStyle='#000';l.fill();l.globalCompositeOperation='source-over'}
   const det=S.det||{light:1};let lightK=det.light;
   if(night)lightK=S.side==='rear'?.82:.38;
+  // match the photo's colour tone (white balance) and brightness, per channel
+  const ref=S.side==='rear'?[255,212,0]:[245,245,245],bgc=det.bg||ref;
+  let tone=[0,1].map(k=>bgc[k]/ref[k]);tone.push(S.side==='rear'?(tone[0]+tone[1])/2*(bgc[2]>40?Math.min(1.2,.8+bgc[2]/255):1):bgc[2]/ref[2]);
+  const tl=(tone[0]+tone[1]+tone[2])/3||1;tone=tone.map(t=>Math.max(.35,Math.min(1.25,(lightK/tl)*(tl+(t-tl)*.7))));
+  if(night)tone=S.side==='rear'?[.86,.82,.74]:[.36,.38,.46];
+  const msk=document.createElement('canvas');msk.width=S.pw;msk.height=S.ph;msk.getContext('2d').drawImage(lay,0,0);
+  l.globalCompositeOperation='multiply';l.fillStyle=`rgb(${tone.map(t=>Math.round(Math.min(1,t)*255)).join(',')})`;l.fillRect(0,0,S.pw,S.ph);
   l.globalCompositeOperation='source-atop';
-  if(lightK<1){l.fillStyle=`rgba(0,0,0,${(1-lightK)*.9})`;l.fillRect(0,0,S.pw,S.ph)}
-  else if(lightK>1){l.fillStyle=`rgba(255,255,255,${(lightK-1)*.6})`;l.fillRect(0,0,S.pw,S.ph)}
+  const over=tone.map(t=>Math.max(0,t-1));if(over.some(v=>v>0)){l.fillStyle=`rgba(${over.map(v=>Math.round(v*4*255)).join(',')},.25)`;l.globalCompositeOperation='screen';l.fillRect(0,0,S.pw,S.ph);l.globalCompositeOperation='source-atop'}
+  // film grain to match the photo
+  if(!S.grain){const g=document.createElement('canvas');g.width=g.height=128;const gx=g.getContext('2d'),id=gx.createImageData(128,128);let sd=3;for(let i=0;i<id.data.length;i+=4){sd=Math.imul(sd^sd>>>15,1|sd)+0x6D2B79F5|0;const v=((sd>>>0)%255);id.data[i]=id.data[i+1]=id.data[i+2]=v;id.data[i+3]=255}gx.putImageData(id,0,0);S.grain=g}
+  l.globalAlpha=Math.min(.09,.03+(S.noise||0)*.006);l.globalCompositeOperation='overlay';l.fillStyle=l.createPattern(S.grain,'repeat');l.fillRect(0,0,S.pw,S.ph);l.globalAlpha=1;
+  l.globalCompositeOperation='destination-in';l.drawImage(msk,0,0);// keep only the plate (blend modes paint the empty area too)
+  l.globalCompositeOperation='source-atop';
   // subtle top-light gradient across the plate
   const t0=hp(Hm,ow/2,-10),t1=hp(Hm,ow/2,oh+10),gg=l.createLinearGradient(t0[0],t0[1],t1[0],t1[1]);
   if(night&&S.side==='rear'){gg.addColorStop(0,'rgba(255,244,214,.30)');gg.addColorStop(.55,'rgba(255,244,214,0)');gg.addColorStop(1,'rgba(0,0,0,.18)')}
@@ -441,7 +452,7 @@ function showLoupe(e){const sr=stage.getBoundingClientRect(),p=toImg(e),lc=loupe
 function busy(on){root.classList.toggle('busy',!!on)}
 function load(f){busy(1);const url=URL.createObjectURL(f),im=new Image();
   im.onload=()=>{const m=2000,k=Math.min(1,m/Math.max(im.naturalWidth,im.naturalHeight)),c=document.createElement('canvas');c.width=Math.round(im.naturalWidth*k);c.height=Math.round(im.naturalHeight*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(url);
-    S.photo=c;S.pw=c.width;S.ph=c.height;S.inpaintKey='';S.keep=false;S.before=false;S.cmp=null;S.shareUrl='';$('#cpShareBox').classList.remove('on');$('#cpCmp').classList.remove('on');$('#cpZoom').classList.remove('on');
+    S.photo=c;S.pw=c.width;S.ph=c.height;S.noise=(()=>{try{const d=c.getContext('2d').getImageData(0,0,Math.min(400,c.width),Math.min(300,c.height)).data;let t=0,n=0;for(let i=4;i<d.length;i+=16){t+=Math.abs(d[i]-d[i-4]);n++}return Math.min(10,t/n)}catch(e){return 2}})();S.inpaintKey='';S.keep=false;S.before=false;S.cmp=null;S.shareUrl='';$('#cpShareBox').classList.remove('on');$('#cpCmp').classList.remove('on');$('#cpZoom').classList.remove('on');
     $('#cpEmpty').hidden=true;cv.hidden=false;
     setTimeout(()=>{let d=null;try{d=detect()}catch(err){d=null}
       if(d){S.quad=d.quad;S.side=d.side;S.found=true;S.edit=false;S.hexHint=!!d.hex}
