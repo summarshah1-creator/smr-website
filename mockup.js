@@ -249,6 +249,10 @@ const CSS=`
 .mk-btn svg{width:19px;height:19px}
 .mk-dl{background:linear-gradient(110deg,#2f6bff,#a43bff)}
 .mk-wa{background:#25d366;color:#06351a}
+.mk-sh{background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.16)}
+.mk-share{display:none;padding:12px;border-radius:14px;background:rgba(255,255,255,.05);font-size:13px}.mk-share.on{display:block}
+.mk-share input{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:#14141e;color:#fff;font:600 13px Manrope,system-ui;margin:8px 0}
+.mk-share .r{display:flex;gap:7px;flex-wrap:wrap}
 .mk-qty{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:700;color:#c9c9dc}
 .mk-qty button{width:36px;height:36px;border-radius:50%;border:1.5px solid rgba(255,255,255,.16);background:rgba(255,255,255,.04);color:#fff;font-size:18px;cursor:pointer}
 .mk-qty input{width:70px;text-align:center;padding:8px;border-radius:12px;border:1.5px solid rgba(255,255,255,.14);background:#14141e;color:#fff;font:700 15px Manrope,system-ui,sans-serif}
@@ -264,6 +268,7 @@ const CSS=`
 `;
 const UP='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V4M7.5 8.5 12 4l4.5 4.5"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>';
 const DL='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7.5 10.5 12 15l4.5-4.5"/><path d="M5 20h14"/></svg>';
+const SH='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="m8.3 10.8 7.4-4.4M8.3 13.2l7.4 4.4"/></svg>';
 const WAI='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm4.5 12.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.5 1 2.7c.1.2 1.8 2.8 4.4 3.9 1.6.7 2.3.8 3.1.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3z"/></svg>';
 
 function build(){
@@ -282,10 +287,11 @@ function build(){
     <div class="mk-cust" id="mkCust">W <input type="number" id="mkCw" min="20" max="1000" inputmode="numeric"> × H <input type="number" id="mkCh" min="20" max="500" inputmode="numeric"> cm</div></div>
    <div class="mk-step"><h4><i>4</i>Fine-tune</h4><div id="mkOpts"></div><div class="mk-note" id="mkNote"></div></div>
    <div class="mk-step"><h4><i>5</i>Love it?</h4><div class="mk-act">
-    <button class="mk-btn mk-dl" type="button" id="mkDl">${DL}Download mock-up</button>
+    <div style="display:flex;gap:9px"><button class="mk-btn mk-dl" type="button" id="mkDl">${DL}Download</button><button class="mk-btn mk-sh" type="button" id="mkSh">${SH}Share link</button></div>
+    <div class="mk-share" id="mkShareBox"></div>
     <div class="mk-qty">Quantity <button type="button" data-q="-1" aria-label="Less">−</button><input id="mkQty" type="number" min="1" value="1" inputmode="numeric"><button type="button" data-q="1" aria-label="More">+</button></div>
     <a class="mk-btn mk-wa" href="#" id="mkWa">${WAI}Get a quote on WhatsApp</a>
-    <p class="mk-priv">Your design stays on your device. Nothing is uploaded until you send it to us.</p></div></div>
+    <p class="mk-priv">Your design stays on your device. It's only uploaded if you tap Share link (then it's deleted after 30 days).</p></div></div>
   </div></div>`;
   document.body.appendChild(root);
   cv=root.querySelector('canvas');ctx=cv.getContext('2d');buildTex();
@@ -296,7 +302,7 @@ function build(){
   $('#mkFile').onchange=e=>{const f=e.target.files[0];if(f)load(f);e.target.value=''};
   $('#mkCw').oninput=$('#mkCh').oninput=()=>{st.cw=+$('#mkCw').value||0;st.ch=+$('#mkCh').value||0;if(st.cw>=20&&st.ch>=20)refresh(true)};
   $('#mkQty').oninput=()=>{st.qty=Math.max(1,+$('#mkQty').value||1)};
-  $('#mkDl').onclick=download;$('#mkWa').onclick=e=>{e.preventDefault();quote()};
+  $('#mkDl').onclick=download;$('#mkSh').onclick=shareLink;$('#mkWa').onclick=e=>{e.preventDefault();quote()};
   ['dragenter','dragover'].forEach(t=>root.addEventListener(t,e=>{e.preventDefault();root.classList.add('drag')}));
   ['dragleave','drop'].forEach(t=>root.addEventListener(t,e=>{e.preventDefault();if(t==='dragleave'&&e.relatedTarget&&root.contains(e.relatedTarget))return;root.classList.remove('drag')}));
   root.addEventListener('drop',e=>{const f=e.dataTransfer.files[0];if(f)load(f)});
@@ -379,13 +385,22 @@ function download(){
   const c=document.createElement('canvas');c.width=2400;c.height=2000;const x=c.getContext('2d');x.scale(2,2);draw(1200,1000,x);
   const name='smr-mockup-'+P[st.p].n.toLowerCase().replace(/[^a-z]+/g,'-').replace(/-$/,'')+'.png';
   c.toBlob(b=>{const u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000)},'image/png')}
+let shared={key:'',url:''};
+function shareLink(){const box=$('#mkShareBox'),key=JSON.stringify([st.p,st.si,st.orient,st.fit,st.bg,st.corners,st.frame,st.surface,st.person,st.cw,st.ch,st.name,st.imgW]);
+  const show=url=>{box.classList.add('on');box.innerHTML=`<b>Your view-only link</b> (lasts 30 days)<input readonly value="${url}" onclick="this.select()"><div class="r"><button class="mk-c on" type="button" id="mkCopy">Copy link</button><a class="mk-c" href="https://wa.me/?text=${encodeURIComponent('Have a look at this 👀 '+url)}" target="_blank" rel="noopener">Send on WhatsApp</a>${navigator.share?'<button class="mk-c" type="button" id="mkNat">More…</button>':''}</div>`;
+    $('#mkCopy').onclick=()=>{navigator.clipboard&&navigator.clipboard.writeText(url);$('#mkCopy').textContent='Copied ✓'};const n=$('#mkNat');if(n)n.onclick=()=>navigator.share({title:'My mock-up',url}).catch(()=>{})};
+  if(shared.key===key&&shared.url)return show(shared.url);
+  box.classList.add('on');box.textContent='Making your link…';
+  const c=document.createElement('canvas');c.width=2400;c.height=2000;const x=c.getContext('2d');x.scale(2,2);draw(1200,1000,x);
+  if(!window.SMRShare){box.textContent='Sharing isn’t available here.';return}
+  SMRShare.upload(c,'mockup',P[st.p].n+' mock-up').then(url=>{shared={key,url};show(url)}).catch(m=>{box.textContent=m||'Sorry, the link couldn’t be made. Please try again.'})}
 function quote(){
   const pr=P[st.p],z=size(),ex=[];
   if(orient())ex.push(orient()==='p'?'portrait':'landscape');
   if(pr.corners)ex.push(st.corners==='round'?'rounded corners':'square corners');
   if(pr.frame)ex.push(st.frame==='none'?'no frame':st.frame+' frame');
   const sz=pr.custom&&st.si===pr.sizes.length?st.cw+' × '+st.ch+' cm':z.l;
-  const msg=`Hi SMR Graphics! I'd like a quote please.\n\nProduct: ${pr.n}\nSize: ${sz}${ex.length?'\nOptions: '+ex.join(', '):''}\nQuantity: ${st.qty}\n\n${st.img?'I made a mock-up on your website and I’ll send my design over.':'I need a design too, please.'}`;
+  const msg=`Hi SMR Graphics! I'd like a quote please.\n\nProduct: ${pr.n}\nSize: ${sz}${ex.length?'\nOptions: '+ex.join(', '):''}\nQuantity: ${st.qty}${shared.url?'\nMy mock-up: '+shared.url:''}\n\n${st.img?'I made a mock-up on your website and I’ll send my design over.':'I need a design too, please.'}`;
   const url='https://wa.me/'+WA+'?text='+encodeURIComponent(msg);window.open(url,'_blank','noopener')||(location.href=url)}
 
 /* ---------- open / close ---------- */

@@ -15,6 +15,8 @@ DirectoryIndex index.html
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteRule ^app-demo/[a-z0-9-]+/([A-Za-z0-9_-]{16,64})/?$ demo/index.php?k=$1 [L,QSA]
+  # Shared mock-ups (view only): /m/<id>
+  RewriteRule ^m/([A-Za-z0-9]{10})/?$ share/index.php?id=$1 [L,QSA]
 </IfModule>
 
 # smrgraphics.co.uk/plates opens the Plates page

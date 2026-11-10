@@ -231,6 +231,12 @@ body[data-brand="plates"] .btn.primary{color:#170f00}
 .reg-input input{flex:1 1 100%!important}
 .reg-input .btn.wa-btn{flex:1 1 100%;background:#25d366;color:#fff;box-shadow:0 10px 30px rgba(37,211,102,.28)}
 .reg-input .btn.wa-btn svg{width:22px;height:22px}
+.use-badge{display:flex;align-items:center;gap:8px;margin:10px 0 0;padding:9px 12px;border-radius:12px;font-size:12.5px;font-weight:700;line-height:1.35}
+.use-badge i{flex:none;width:9px;height:9px;border-radius:50%;background:currentColor}
+.use-badge.road{background:rgba(52,199,89,.12);color:#6be38c;border:1px solid rgba(52,199,89,.32)}
+.use-badge.show{background:rgba(255,170,30,.13);color:#ffc56b;border:1px solid rgba(255,170,30,.38)}
+.car-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;margin-top:14px;padding:14px 16px;border-radius:16px;border:0;cursor:pointer;font:700 15px Sora,system-ui,sans-serif;color:#1a0f00;background:linear-gradient(110deg,#ffd23f,#ff7a2f);box-shadow:0 12px 30px -12px rgba(255,150,40,.8)}
+.car-btn svg{width:20px;height:20px}.car-btn small{font:700 11px Manrope,system-ui,sans-serif;padding:3px 7px;border-radius:999px;background:rgba(0,0,0,.14)}
 .rule-note{font-size:12.5px;font-weight:600;color:var(--a1);min-height:0;margin:2px 0 0}
 .rule-note:empty{display:none}
 .styles button:disabled{opacity:.3;cursor:not-allowed}
@@ -1452,7 +1458,10 @@ setTimeout(done,3700);})();
         <div class="opt"><span class="opt-l"><b>2</b>Plate</span><div class="styles" data-opt="shape"></div></div>
         <div class="opt"><span class="opt-l"><b>3</b>Extras</span><div class="styles" data-opt="extras"></div></div>
         <div class="opt"><span class="opt-l"><b>4</b>What do you need?</span><div class="styles" data-opt="need"></div></div>
+        <div class="opt"><span class="opt-l"><b>5</b>Road legal or show plate?</span><div class="styles" data-opt="use"></div></div>
         <p class="rule-note" id="ruleNote" aria-live="polite"></p>
+        <div class="use-badge road" id="useBadge" aria-live="polite"></div>
+        <button class="car-btn" type="button" data-carplate><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.6"/></svg>See it on your car<small>New</small></button>
         <div class="reg-input"><input id="regIn" maxlength="8" value="SMR 1" aria-label="Your registration" autocomplete="off" spellcheck="false"><a class="btn wa-btn" href="#" id="orderPlate"><svg data-i="wa"></svg>Order on WhatsApp</a></div>
         <p class="legal-note">Preview only. Road-legal plates need photo ID and proof you're entitled to the registration (e.g. your V5C). Show plates are for display and off-road use.</p>
       </div>
@@ -1535,6 +1544,7 @@ setTimeout(done,3700);})();
 
 <script src="plate.js"></script>
 <script src="mockup.js" defer></script>
+<script src="carplate.js" defer></script>
 <script>
 /* ====== EDIT THESE ====== */
 const CONTACT = {
@@ -1638,10 +1648,21 @@ const OPTS={
   letters:[['standard','Standard','Flat printed letters, the classic finish.'],['gel3d','3D Gel','Slightly raised, rounded letters with a glossy gel finish.'],['4d','4D','Laser-cut acrylic letters, raised with a flat face and crisp edges.'],['4dgel','4D Gel','Raised even higher, with rounded edges and a deep gloss.'],['bevel','Bevelled','Raised letters with a diamond-cut, faceted face.']],
   shape:[['standard','Standard','Regular full-size plate.'],['short','Short','Cut down to fit your reg.'],['hex','Hex','Six-sided plate with pointed ends.'],['oversize','Oversized','Same width, taller plate.'],['moto','Motorcycle','Two-line rear plate for bikes.']],
   extras:[['tint','Tint','Smoked tint on the base plate.'],['border','Border','Thin black border inside the edge.']],
-  need:[['set','Full set'],['front','Front only'],['rear','Rear only']]
+  need:[['set','Full set'],['front','Front only'],['rear','Rear only']],
+  use:[['road','Road legal'],['show','Show plate']]
 };
+/* Road legal vs show plates. Anything in SHOW_ONLY can only be sold as a show plate
+   (tinted plates are illegal on the road; hex and bevelled-face letters are sold as show plates).
+   3D gel, 4D and 4D gel are made road legal to BS AU 145e. Change these lists if the rules change. */
+const SHOW_ONLY={extras:['tint'],shape:['hex'],letters:['bevel']};
+function forcedShow(o){o=o||P;
+  if(SHOW_ONLY.extras.some(x=>o[x]))return 'Tint';
+  if(SHOW_ONLY.shape.includes(o.shape))return 'A hex plate';
+  if(SHOW_ONLY.letters.includes(o.letters))return 'Bevelled lettering';
+  return ''}
+function isShow(o){return (P.use==='show')||!!forcedShow(o)}
 const MOTO_LETTERS=['standard','gel3d'];
-const P={text:'SMR 1',letters:'4d',shape:'standard',side:'rear',tint:false,border:false,need:'set'};
+const P={text:'SMR 1',letters:'4d',shape:'standard',side:'rear',tint:false,border:false,need:'set',use:'road'};
 const regIn=document.getElementById('regIn'),wrapEl=document.getElementById('plateWrap'),sideSeg=document.getElementById('sideSeg'),ruleNote=document.getElementById('ruleNote');
 const lbl=(k,v)=>OPTS[k].find(o=>o[0]===v)[1];
 /* What we can make: hex = no border; motorcycle = Standard or 3D Gel letters only, no tint, rear only */
@@ -1650,6 +1671,7 @@ function allowed(k,v){
   if(k==='extras'&&v==='tint'&&P.shape==='moto') return false;
   if(k==='extras'&&v==='border'&&P.shape==='hex') return false;
   if(k==='need'&&P.shape==='moto') return v==='rear';
+  if(k==='use'&&v==='road') return !forcedShow();
   return true;
 }
 function choose(k,v){
@@ -1674,6 +1696,10 @@ function drawPlate(){
   sideSeg.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x.dataset.side===P.side));
   document.querySelectorAll('[data-opt] button').forEach(b=>{const k=b.parentNode.dataset.opt,v=b.dataset.v;b.classList.toggle('on',k==='extras'?!!P[v]:P[k]===v);b.disabled=!allowed(k,v)});
   document.querySelectorAll('.type[data-k]').forEach(t=>{const k=t.dataset.k;t.classList.toggle('sel',k==='extras'?!!P[t.dataset.v]:P[k]===t.dataset.v)});
+  const fs=forcedShow(),sh=isShow(),ub=document.getElementById('useBadge');
+  ub.className='use-badge '+(sh?'show':'road');
+  ub.innerHTML='<i></i><span>'+(sh?'<b>Show plates</b>: for display and off-road use only, not for UK roads.'+(fs?' '+fs+' is only available as a show plate.':''):'<b>Road-legal plates</b> (BS AU 145e). We\'ll need photo ID and your V5C.')+'</span>';
+  document.querySelectorAll('[data-opt="use"] button').forEach(b=>b.classList.toggle('on',b.dataset.v===(sh?'show':'road')));
   ruleNote.textContent=P.shape==='moto'?'Motorcycle plates come in Standard or 3D Gel letters, rear only, with no tint.':P.shape==='hex'?'Hex plates come without a border.':'';
 }
 document.querySelectorAll('[data-opt]').forEach(row=>{const k=row.dataset.opt;row.innerHTML=OPTS[k].map(([v,t])=>`<button data-v="${v}">${k==='extras'?'<span class="tick"></span>':''}${t}</button>`).join('');
@@ -1692,7 +1718,12 @@ let regT;regIn.addEventListener('input',()=>{regIn.value=regIn.value.toUpperCase
 document.getElementById('orderPlate').addEventListener('click',e=>{e.preventDefault();
   const ex=['tint','border'].filter(x=>P[x]).map(x=>lbl('extras',x));
   const need=P.shape==='moto'?'Rear plate (motorcycle)':P.need==='set'?'Full set (front + rear)':P.need==='front'?'Front plate only':'Rear plate only';
-  openWA(`Hi SMR Plates! I'm interested in getting these plates made:\n\nReg: ${(regIn.value||'').toUpperCase()}\nLetters: ${lbl('letters',P.letters)}\nPlate: ${lbl('shape',P.shape)}\nExtras: ${ex.join(', ')||'None'}\nI need: ${need}`)});
+  openWA(`Hi SMR Plates! I'm interested in getting these plates made:\n\nReg: ${(regIn.value||'').toUpperCase()}\nType: ${isShow()?'SHOW PLATES (not road legal)':'Road-legal plates'}\nLetters: ${lbl('letters',P.letters)}\nPlate: ${lbl('shape',P.shape)}\nExtras: ${ex.join(', ')||'None'}\nI need: ${need}`)});
+/* Share a mock-up: uploads a JPEG, returns a view-only link (kept 30 days). Used by Mock-up Studio and "See it on your car". */
+window.SMRShare={upload(canvas,kind,title){return new Promise((res,rej)=>{const m=1800,k=Math.min(1,m/Math.max(canvas.width,canvas.height));let c=canvas;
+  if(k<1){c=document.createElement('canvas');c.width=Math.round(canvas.width*k);c.height=Math.round(canvas.height*k);c.getContext('2d').drawImage(canvas,0,0,c.width,c.height)}
+  c.toBlob(b=>{if(!b)return rej();fetch('/share/api.php',{method:'POST',body:b,headers:{'Content-Type':'image/jpeg','X-Kind':kind,'X-Title':encodeURIComponent(title||'')}}).then(r=>r.json()).then(j=>j.ok?res(j.url):rej(j.error)).catch(()=>rej())},'image/jpeg',.87)})}};
+window.PB={P,OPTS,regIn,drawPlate,choose,allowed,lbl,isShow,forcedShow,setUse:v=>{if(v==='road'&&forcedShow())return;P.use=v;drawPlate()}};
 document.getElementById('regSearch').addEventListener('submit',e=>{e.preventDefault();openWA(`Hi SMR Plates! I'm looking for a private registration like: ${document.getElementById('rs').value.toUpperCase()||'(not sure yet)'}. Budget: ${document.getElementById('rb').value}`)});
 
 /* ---- Marquee ---- */
