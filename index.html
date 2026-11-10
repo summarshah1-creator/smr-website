@@ -435,6 +435,15 @@ body[data-brand="plates"] .usp .ic svg{color:#170f00}
 .new-tile-sec{padding-bottom:6px}
 .new-tile{position:relative;display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:20px;background:linear-gradient(#0e0e18,#0e0e18) padding-box,linear-gradient(110deg,#ffd23f,#ff7a2f) border-box;border:1.5px solid transparent;color:inherit;text-decoration:none;cursor:pointer;transition:transform .3s var(--ease)}
 .new-tile:hover{transform:translateY(-3px)}
+.mk-tile{background:linear-gradient(#0e0e18,#0e0e18) padding-box,linear-gradient(110deg,#2f6bff,#a43bff) border-box !important}
+.mk-tile .nt-badge{background:linear-gradient(110deg,#2f6bff,#a43bff);color:#fff}
+.mk-tile .nt-tx em{background:linear-gradient(110deg,#5b8bff,#c07bff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.mk-ico{flex:none;width:86px;height:56px;position:relative}
+.mk-ico i{position:absolute;border-radius:4px;box-shadow:0 6px 14px -6px rgba(0,0,0,.7)}
+.mk-ico i:nth-child(1){left:6px;top:4px;width:30px;height:48px;background:linear-gradient(160deg,#2f6bff,#a43bff)}
+.mk-ico i:nth-child(2){left:40px;top:14px;width:40px;height:26px;background:#fff;transform:rotate(-8deg)}
+.mk-ico i:nth-child(2)::after{content:"";position:absolute;inset:6px 8px;border-radius:2px;background:linear-gradient(110deg,#2f6bff,#a43bff);opacity:.85}
+.mk-ico i:nth-child(3){left:58px;top:36px;width:22px;height:16px;background:#ffd23f;transform:rotate(10deg)}
 .nt-badge{position:absolute;top:-9px;left:16px;padding:3px 9px;border-radius:999px;background:linear-gradient(110deg,#ffd23f,#ff7a2f);color:#170f00;font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
 .nt-plate{flex:none;width:86px;height:26px;border-radius:5px;background:#ffd400;border:1.5px solid #111;display:grid;place-items:center;box-shadow:0 6px 16px -6px rgba(255,190,40,.6)}
 .nt-plate span{font:800 15px/1 Arial,Helvetica,sans-serif;color:#111;letter-spacing:.06em}
@@ -995,6 +1004,12 @@ setTimeout(done,3700);})();
         <span class="nt-tx"><small>Introducing a new service</small><b>Number plates</b><em>Try our new plate builder</em></span>
         <span class="nt-go"><svg data-i="arrow"></svg></span>
       </a>
+      <a class="new-tile mk-tile rv" href="#" data-mockup="roller" style="margin-top:22px;margin-bottom:14px">
+        <span class="nt-badge">New</span>
+        <span class="mk-ico" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span class="nt-tx"><small>See it before you print</small><b>Mock-up Studio</b><em>Upload your design, try it on banners, cards &amp; more</em></span>
+        <span class="nt-go"><svg data-i="arrow"></svg></span>
+      </a>
     </div>
   </section>
 
@@ -1519,6 +1534,7 @@ setTimeout(done,3700);})();
 </div>
 
 <script src="plate.js"></script>
+<script src="mockup.js" defer></script>
 <script>
 /* ====== EDIT THESE ====== */
 const CONTACT = {
