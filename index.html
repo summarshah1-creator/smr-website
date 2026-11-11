@@ -1698,7 +1698,7 @@ function drawPlate(){
   document.querySelectorAll('.type[data-k]').forEach(t=>{const k=t.dataset.k;t.classList.toggle('sel',k==='extras'?!!P[t.dataset.v]:P[k]===t.dataset.v)});
   const fs=forcedShow(),sh=isShow(),ub=document.getElementById('useBadge');
   ub.className='use-badge '+(sh?'show':'road');
-  ub.innerHTML='<i></i><span>'+(sh?'<b>Show plates</b>: for display and off-road use only, not for UK roads.'+(fs?' '+fs+' is only available as a show plate.':''):'<b>Road-legal plates</b> (BS AU 145e). We\'ll need photo ID and your V5C.')+'</span>';
+  ub.innerHTML='<i></i><span>'+(sh?'<b>Show plates</b>: for display and off-road use only, not for UK roads.'+(fs?' '+fs+' is only available as a show plate.':''):'<b>Road-legal plates</b> (BS AU 145e).')+'</span>';
   document.querySelectorAll('[data-opt="use"] button').forEach(b=>b.classList.toggle('on',b.dataset.v===(sh?'show':'road')));
   ruleNote.textContent=P.shape==='moto'?'Motorcycle plates come in Standard or 3D Gel letters, rear only, with no tint.':P.shape==='hex'?'Hex plates come without a border.':'';
 }
