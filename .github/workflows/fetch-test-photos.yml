@@ -3,8 +3,8 @@ on:
   workflow_dispatch:
     inputs:
       cats:
-        description: Wikimedia Commons categories (| separated)
-        default: "Vehicle registration plates of the United Kingdom|Rear views of automobiles in the United Kingdom|Front views of automobiles in the United Kingdom"
+        description: Wikimedia Commons searches (| separated)
+        default: "rear view car England registration plate|rear car London number plate|car front number plate England|hatchback rear view UK|Range Rover rear England|parked car rear UK street"
 permissions:
   contents: write
 jobs:
@@ -23,7 +23,7 @@ jobs:
               return urllib.request.urlopen(urllib.request.Request(u,headers=UA),timeout=60).read()
           n=0
           for cat in os.environ['CATS'].split('|'):
-              q={'action':'query','format':'json','generator':'categorymembers','gcmtitle':'Category:'+cat,'gcmtype':'file','gcmlimit':'60','prop':'imageinfo','iiprop':'url|mime','iiurlwidth':'1600'}
+              q={'action':'query','format':'json','generator':'search','gsrsearch':cat+' filetype:bitmap','gsrnamespace':'6','gsrlimit':'25','prop':'imageinfo','iiprop':'url|mime','iiurlwidth':'1600'}
               try: j=json.loads(get('https://commons.wikimedia.org/w/api.php?'+urllib.parse.urlencode(q)))
               except Exception as e: print('fail',cat,e); continue
               for p in (j.get('query') or {}).get('pages',{}).values():
