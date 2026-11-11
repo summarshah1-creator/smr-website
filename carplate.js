@@ -22,6 +22,16 @@ function homog(src,dst){const A=[],b=[];for(let i=0;i<4;i++){const [x,y]=src[i],
   const h=solve(A,b);return [h[0],h[1],h[2],h[3],h[4],h[5],h[6],h[7],1]}
 function hp(H,x,y){const w=H[6]*x+H[7]*y+H[8];return [(H[0]*x+H[1]*y+H[2])/w,(H[3]*x+H[4]*y+H[5])/w]}
 const dist=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1]);
+/* real width/height of the plate from its 4 corners in perspective (Zhang & He), assuming a phone-camera lens */
+function trueAspect(q){const c=S.cam||{f:Math.max(S.pw,S.ph)*.85,cx:S.pw/2,cy:S.ph/2},f=c.f,u0=c.cx,v0=c.cy;
+  const m=[q[0],q[1],q[3],q[2]].map(p=>[p[0],p[1],1]),cr=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]],dt=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2];
+  const k2=dt(cr(m[0],m[3]),m[2])/dt(cr(m[1],m[3]),m[2]),k3=dt(cr(m[0],m[3]),m[1])/dt(cr(m[2],m[3]),m[1]);
+  const n2=[k2*m[1][0]-m[0][0],k2*m[1][1]-m[0][1],k2-1],n3=[k3*m[2][0]-m[0][0],k3*m[2][1]-m[0][1],k3-1];
+  const A=n=>{const x=n[0]-u0*n[2],y=n[1]-v0*n[2];return (x*x+y*y)/(f*f)+n[2]*n[2]};
+  const r=Math.sqrt(A(n2)/A(n3));return isFinite(r)&&r>.5&&r<12?r:quadAspect(q)}
+function yawed(q){const l=dist(q[0],q[3]),r=dist(q[1],q[2]),ratio=l/(r||1),w=dist(q[0],q[1]);
+  let dev=0;for(let i=0;i<4;i++){const a=q[(i+3)%4],b=q[i],c=q[(i+1)%4],u=[a[0]-b[0],a[1]-b[1]],v=[c[0]-b[0],c[1]-b[1]],ang=Math.acos(Math.max(-1,Math.min(1,(u[0]*v[0]+u[1]*v[1])/(Math.hypot(...u)*Math.hypot(...v)||1))))*180/Math.PI;dev=Math.max(dev,Math.abs(ang-90))}
+  return ratio<.88||ratio>1.14||w<90||dev>9}
 function quadAspect(q){return ((dist(q[0],q[1])+dist(q[3],q[2]))/2)/((dist(q[0],q[3])+dist(q[1],q[2]))/2||1)}
 
 /* draw an image region mapped by a homography (mesh of affine triangles) */
@@ -134,15 +144,18 @@ function classify(){
   const textH=bands.length?(bands[bands.length-1][1]-bands[0][0])/RH:.7;
   // hex: are the corner patches a different colour from the plate?
   let cut=0;[[3,8],[RW-4,8],[3,RH-9],[RW-4,RH-9]].forEach(([u,v])=>{const p=at(u,v),dl=Math.hypot(p[0]-bg[0],p[1]-bg[1],p[2]-bg[2]);if(dl>70)cut++});
-  const a=quadAspect(q);let shape='standard';
+  const a=trueAspect(q);let shape='standard';
   if(bands.length>=2&&a<2.4)shape='moto';
   else if(S.hexHint)shape='hex';
-  else if(textH<.62&&a<4.3)shape='oversize';
-  else if(a<4.15)shape='short';
+  else if(S.boxOnly||yawed(q)){}   // only a rough box, or seen at a strong angle: don't guess the size
+  else if(textH<.58&&a<4.2)shape='oversize';
+  else if(a<3.0)shape='short';
   // light level of the plate in the photo vs a clean plate
   const ref=S.side==='rear'?[255,212,0]:[245,245,245],lum=v=>.3*v[0]+.59*v[1]+.11*v[2];
-  const light=Math.max(.45,Math.min(1.12,lum(bg)/lum(ref)*1.04));
-  return {shape,aspect:a,textH,light,bg};
+  let light=Math.max(.45,Math.min(1.12,lum(bg)/lum(ref)*1.04)),bgo=bg;
+  // old black & silver plate (classics): it tells us nothing about the light, so use a neutral level
+  if(lum(bg)<75&&Math.max(...bg)-Math.min(...bg)<40){light=.9;bgo=ref.map(v=>v*.9)}
+  return {shape,aspect:a,textH,light,bg:bgo};
 }
 function bbox(q,m){const xs=q.map(p=>p[0]),ys=q.map(p=>p[1]);return [Math.max(0,Math.floor(Math.min(...xs)-m)),Math.max(0,Math.floor(Math.min(...ys)-m)),Math.min(S.pw,Math.ceil(Math.max(...xs)+m)),Math.min(S.ph,Math.ceil(Math.max(...ys)+m))]}
 
@@ -296,7 +309,7 @@ function tapFind(p){S.tapAt=p;placeHandles();let d=null;
   if(PB().P.shape==='moto'&&S.side==='front')PB().choose('shape','standard');PB().P.side=S.side;PB().drawPlate();S.det=classify();hl.innerHTML='';render();updInfo()}
 function startCrop(){const m=Math.min(S.pw,S.ph)*.12;S.crop=[m,m,S.pw-m,S.ph-m];S.wasEdit=S.edit;render();updInfo();requestAnimationFrame(placeHandles)}
 function applyCrop(){const c=S.crop.map(Math.round),w=c[2]-c[0],h=c[3]-c[1];S.crop=null;
-  if(w>40&&h>40){const n=document.createElement('canvas');n.width=w;n.height=h;n.getContext('2d').drawImage(S.photo,c[0],c[1],w,h,0,0,w,h);setPhoto(n);findPlate()}else{render();updInfo()}}
+  if(w>40&&h>40){const n=document.createElement('canvas');n.width=w;n.height=h;n.getContext('2d').drawImage(S.photo,c[0],c[1],w,h,0,0,w,h);const cm=S.cam;setPhoto(n,{f:cm.f,cx:cm.cx-c[0],cy:cm.cy-c[1]});findPlate()}else{render();updInfo()}}
 
 /* ---------------- UI ---------------- */
 const CSS=`
@@ -516,14 +529,59 @@ function aiDetect(){const n=AI.size,s=AI.sess,o=window.ort;if(!s)return Promise.
   return s.run({[s.inputNames[0]]:new o.Tensor('float32',t,[1,3,n,n])}).then(out=>{const v=out[s.outputNames[0]],a=v.data,k=v.dims[1]||7,res=[];
     for(let i=0;i+k<=a.length;i+=k){const sc=a[i+6];if(sc<.1)continue;res.push({score:sc,box:[(a[i+1]-dw)/r,(a[i+2]-dh)/r,(a[i+3]-dw)/r,(a[i+4]-dh)/r]})}
     return res.sort((p,q)=>q.score-p.score)})}
+/* AI box -> the plate's exact edges: mask the plate colour inside the box, fit straight lines to its top,
+   bottom, left and right edges and intersect them (follows the plate's perspective) */
+function fitPlate(b){const [bx0,by0,bx1,by1]=b.box,bw=bx1-bx0,bh=by1-by0;if(bw<12||bh<5)return null;
+  const X0=Math.max(0,bx0-bw*.1),Y0=Math.max(0,by0-bh*.3),X1=Math.min(S.pw,bx1+bw*.1),Y1=Math.min(S.ph,by1+bh*.3);
+  const k=Math.min(4,Math.max(.5,420/bw)),W=Math.round((X1-X0)*k),H=Math.round((Y1-Y0)*k);if(W<20||H<8)return null;
+  const c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d',{willReadFrequently:true});x.drawImage(S.photo,X0,Y0,X1-X0,Y1-Y0,0,0,W,H);
+  const d=x.getImageData(0,0,W,H).data,N=W*H,hu=new Float32Array(N),sa=new Float32Array(N),va=new Float32Array(N);
+  for(let i=0;i<N;i++){const r=d[i*4]/255,g=d[i*4+1]/255,bl=d[i*4+2]/255,mx=Math.max(r,g,bl),mn=Math.min(r,g,bl),df=mx-mn;let h=0;if(df>1e-6){h=mx===r?((g-bl)/df)%6:mx===g?(bl-r)/df+2:(r-g)/df+4;h*=60;if(h<0)h+=360}hu[i]=h;sa[i]=mx?df/mx:0;va[i]=mx}
+  // the middle of the box tells us the plate colour
+  const cx0=Math.round((bx0-X0+bw*.15)*k),cx1=Math.round((bx1-X0-bw*.15)*k),cy0=Math.round((by0-Y0+bh*.2)*k),cy1=Math.round((by1-Y0-bh*.2)*k);
+  let ny=0,nt=0;const vs=[];for(let y=cy0;y<cy1;y+=2)for(let xx=cx0;xx<cx1;xx+=2){const i=y*W+xx;nt++;if(hu[i]>28&&hu[i]<72&&sa[i]>.3&&va[i]>.25)ny++;vs.push(va[i])}
+  vs.sort((p,q)=>p-q);const yellow=ny/(nt||1)>.25,vHi=vs[Math.floor(vs.length*.85)]||1;
+  const T=Math.max(.3,vHi*.62);
+  const ok=yellow?i=>hu[i]>24&&hu[i]<76&&sa[i]>.25&&va[i]>T*.75:i=>sa[i]<.3&&va[i]>T;
+  // largest blob of plate colour that sits in the middle of the box
+  const lab=new Int32Array(N).fill(-1),q=new Int32Array(N);let best=-1,bestN=0,id=0;
+  for(let y=cy0;y<cy1;y+=3)for(let xx=cx0;xx<cx1;xx+=3){const s0=y*W+xx;if(lab[s0]>=0||!ok(s0))continue;let qh=0,qt=0;q[qt++]=s0;lab[s0]=id;
+    while(qh<qt){const p=q[qh++],px=p%W,py=(p/W)|0;if(px>0&&lab[p-1]<0&&ok(p-1)){lab[p-1]=id;q[qt++]=p-1}if(px<W-1&&lab[p+1]<0&&ok(p+1)){lab[p+1]=id;q[qt++]=p+1}if(py>0&&lab[p-W]<0&&ok(p-W)){lab[p-W]=id;q[qt++]=p-W}if(py<H-1&&lab[p+W]<0&&ok(p+W)){lab[p+W]=id;q[qt++]=p+W}}
+    if(qt>bestN){bestN=qt;best=id}id++}
+  if(best<0||bestN<N*.04)return null;
+  // edge points: per column top/bottom, per row left/right (skip ones that run into the crop edge)
+  const top=[],bot=[],lef=[],rig=[];
+  for(let xx=0;xx<W;xx++){let t=-1,bo=-1,n=0;for(let y=0;y<H;y++)if(lab[y*W+xx]===best){if(t<0)t=y;bo=y;n++}if(n<3)continue;if(t>0)top.push([xx,t]);if(bo<H-1)bot.push([xx,bo+1])}
+  const fitL=(pts,swap)=>{if(pts.length<6)return null;let P=pts.map(p=>swap?[p[1],p[0]]:p);let a=0,s1=0;
+    for(let it=0;it<5;it++){const n=P.length;let mx=0,my=0;P.forEach(p=>{mx+=p[0];my+=p[1]});mx/=n;my/=n;let sxx=0,sxy=0;P.forEach(p=>{sxx+=(p[0]-mx)**2;sxy+=(p[0]-mx)*(p[1]-my)});s1=sxx?sxy/sxx:0;a=my-s1*mx;
+      const r=P.map(p=>Math.abs(p[1]-(a+s1*p[0]))),md=[...r].sort((u,v)=>u-v)[Math.floor(r.length*.5)];const keep=P.filter((p,i)=>r[i]<=Math.max(1.5,md*2.5));if(keep.length<6||keep.length===P.length)break;P=keep}
+    return {a,b:s1,swap}};
+  const Lt=fitL(top),Lb=fitL(bot);if(!Lt||!Lb)return null;
+  const yAt=(L,xx)=>L.a+L.b*xx;
+  for(let y=0;y<H;y++){let l=-1,r=-1;for(let xx=0;xx<W;xx++)if(lab[y*W+xx]===best){if(l<0)l=xx;r=xx}if(l<0)continue;
+    const mid=(l+r)/2,t=yAt(Lt,mid),bo=yAt(Lb,mid),hh=bo-t;if(y<t+hh*.15||y>bo-hh*.15)continue;if(l>0)lef.push([l,y]);if(r<W-1)rig.push([r+1,y])}
+  let Ll=fitL(lef,true),Lr=fitL(rig,true);
+  const cut=(L1,L2)=>{// L1: y=a+bx ; L2: x=a+by
+    const yy=(L1.a+L1.b*L2.a)/(1-L1.b*L2.b),xx=L2.a+L2.b*yy;return [xx,yy]};
+  if(!Ll||!Lr){let mn=W,mx=0;for(let i=0;i<N;i++)if(lab[i]===best){const xx=i%W;if(xx<mn)mn=xx;if(xx>mx)mx=xx}Ll=Ll||{a:mn,b:0};Lr=Lr||{a:mx+1,b:0}}
+  let quad=[cut(Lt,Ll),cut(Lt,Lr),cut(Lb,Lr),cut(Lb,Ll)].map(([px,py])=>[X0+px/k,Y0+py/k]);
+  // sanity: inside the (grown) box, sensible size and shape
+  const bb=bbox(quad,0),ar=(bb[2]-bb[0])*(bb[3]-bb[1]);
+  if(quad.some(p=>!isFinite(p[0])||!isFinite(p[1])||p[0]<X0-2||p[0]>X1+2||p[1]<Y0-2||p[1]>Y1+2))return null;
+  if(ar<bw*bh*.3||ar>bw*bh*1.5||quadAspect(quad)<.8)return null;
+  // hex: corners of the box cut off (rows near top/bottom much shorter than the middle)
+  const rowW=fy=>{const y=Math.round(yAt(Lt,W/2)+(yAt(Lb,W/2)-yAt(Lt,W/2))*fy);let l=-1,r=-1;if(y<0||y>=H)return 0;for(let xx=0;xx<W;xx++)if(lab[y*W+xx]===best){if(l<0)l=xx;r=xx}return r-l};
+  const hr=[rowW(.1)/(rowW(.5)||1),rowW(.9)/(rowW(.5)||1)];const hex=hr[0]>.8&&hr[1]>.8&&hr[0]<.96&&hr[1]<.96&&Math.abs(hr[0]-hr[1])<.035;
+  return {quad,side:yellow?'rear':'front',hex}}
 /* AI box -> exact corners: grow the plate colour from the middle of the box, keep it if it fits the box */
-function aiRefine(b){const [x0,y0,x1,y1]=b.box,w=x1-x0,h=y1-y0,cx=(x0+x1)/2,cy=(y0+y1)/2;let best=null;
+function aiRefine(b){const [x0,y0,x1,y1]=b.box,w=x1-x0,h=y1-y0,cx=(x0+x1)/2,cy=(y0+y1)/2;let best=null;S.boxOnly=false;
+  try{const f=fitPlate(b);if(f)return f}catch(e){}
   for(const [fx,fy] of [[0,0],[-.28,0],[.28,0],[0,-.22],[0,.22]]){let d=null;try{d=detectAt(cx+fx*w,cy+fy*h)}catch(e){}if(!d)continue;
     const bb=bbox(d.quad,0),ix=Math.max(0,Math.min(bb[2],x1+w*.08)-Math.max(bb[0],x0-w*.08)),iy=Math.max(0,Math.min(bb[3],y1+h*.15)-Math.max(bb[1],y0-h*.15)),ia=ix*iy,ba=(bb[2]-bb[0])*(bb[3]-bb[1]);
     if(ba>0&&ia/ba>.85&&ba>w*h*.35){best=d;break}}
   if(best)return best;
   // no clean colour edge: use the AI box itself, trimmed a little (boxes include a small margin)
-  const mx=w*.012,my=h*.08,q=[[x0+mx,y0+my],[x1-mx,y0+my],[x1-mx,y1-my],[x0+mx,y1-my]];
+  const mx=w*.012,my=h*.08,q=[[x0+mx,y0+my],[x1-mx,y0+my],[x1-mx,y1-my],[x0+mx,y1-my]];S.boxOnly=true;
   const P=prep(),i=Math.round(cy*P.k)*P.w+Math.round(cx*P.k);let yel=0,n=0;for(let yy=-3;yy<=3;yy++)for(let xx=-Math.round(w*P.k*.4);xx<=Math.round(w*P.k*.4);xx+=2){const j=i+yy*P.w+xx;if(j<0||j>=P.N||P.Vv[j]<.4)continue;n++;if(P.Hh[j]>30&&P.Hh[j]<70&&P.Ss[j]>.3)yel++}
   return {quad:q,side:n&&yel/n>.3?'rear':'front',hex:false}}
 
@@ -545,9 +603,9 @@ function pasteBtn(){
   navigator.clipboard.read().then(items=>{for(const it of items){const t=it.types.find(x=>/^image\//.test(x));if(t)return it.getType(t).then(b=>take(new File([b],'pasted.'+(t.split('/')[1]||'png'),{type:t})))}
     tip('There’s no photo copied. Copy a photo first (long-press it → Copy), then tap Paste.')}).catch(()=>tip('Paste was blocked. Allow paste when asked, or use Choose photo.'))}
 function busy(on){root.classList.toggle('busy',!!on)}
-function setPhoto(c){S.photo=c;S.pw=c.width;S.ph=c.height;PREP=null;S.noise=(()=>{try{const d=c.getContext('2d').getImageData(0,0,Math.min(400,c.width),Math.min(300,c.height)).data;let t=0,n=0;for(let i=4;i<d.length;i+=16){t+=Math.abs(d[i]-d[i-4]);n++}return Math.min(10,t/n)}catch(e){return 2}})();
+function setPhoto(c,cam){S.photo=c;S.pw=c.width;S.ph=c.height;S.cam=cam||{f:Math.max(c.width,c.height)*.85,cx:c.width/2,cy:c.height/2};PREP=null;S.noise=(()=>{try{const d=c.getContext('2d').getImageData(0,0,Math.min(400,c.width),Math.min(300,c.height)).data;let t=0,n=0;for(let i=4;i<d.length;i+=16){t+=Math.abs(d[i]-d[i-4]);n++}return Math.min(10,t/n)}catch(e){return 2}})();
   S.inpaintKey='';S.keep=false;S.before=false;S.cmp=null;S.crop=null;S.tapAt=null;S.shareUrl='';$('#cpShareBox').classList.remove('on');$('#cpCmp').classList.remove('on');$('#cpZoom').classList.remove('on')}
-function findPlate(){busy(1);S.ai=null;$('.cp-spin').textContent=AI.sess||AI.fail?'Finding your plate…':'Loading the plate finder…';
+function findPlate(){busy(1);S.ai=null;S.boxOnly=false;$('.cp-spin').textContent=AI.sess||AI.fail?'Finding your plate…':'Loading the plate finder…';
   const wait=AI.sess||AI.fail?Promise.resolve():Promise.race([aiLoad().catch(()=>{}),new Promise(r=>setTimeout(r,15000))]);
   wait.then(()=>{$('.cp-spin').textContent='Finding your plate…';return new Promise(r=>setTimeout(r,30))}).then(()=>aiDetect().catch(()=>null)).then(list=>{let d=null;
     if(list&&list.length&&list[0].score>=.1){try{d=aiRefine(list[0])}catch(e){}S.ai=list}
