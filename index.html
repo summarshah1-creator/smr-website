@@ -207,6 +207,10 @@ body[data-brand="plates"] .btn.primary{color:#170f00}
 .plate-stage{padding:22px 10px;display:grid;place-items:center;perspective:900px;border-radius:18px;background:radial-gradient(ellipse at 50% 120%,rgba(255,200,60,.18),transparent 60%),#0b0b13;margin-bottom:16px;min-height:170px}
 .plate-wrap{width:100%;display:grid;place-items:center;transform:rotateX(12deg) rotateY(-9deg);transition:transform .6s var(--ease)}
 .plate-wrap:hover{transform:rotateX(3deg) rotateY(3deg)}
+.plate-stage.tilt .plate-wrap{transition:transform .12s linear;transform:rotateX(var(--tx,12deg)) rotateY(var(--ty,-9deg))}
+.plate-stage{position:relative;overflow:hidden}
+.plate-stage.tilt::after{content:"";position:absolute;inset:-40%;pointer-events:none;background:linear-gradient(105deg,transparent 42%,rgba(255,255,255,.10) 50%,transparent 58%);transform:translateX(var(--sx,0%));mix-blend-mode:screen}
+.tilt-ask{position:absolute;right:10px;bottom:9px;z-index:2;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.07);color:#ddd;font:700 11.5px Manrope,system-ui,sans-serif;padding:6px 11px;border-radius:99px;cursor:pointer}
 .plate-svg{display:block;width:100%;height:auto;overflow:visible}
 .plate-wrap.moto .plate-svg{width:50%}
 .plate-wrap.over .plate-svg{width:94%}
@@ -1723,6 +1727,27 @@ document.getElementById('orderPlate').addEventListener('click',e=>{e.preventDefa
 window.SMRShare={upload(canvas,kind,title){return new Promise((res,rej)=>{const m=1800,k=Math.min(1,m/Math.max(canvas.width,canvas.height));let c=canvas;
   if(k<1){c=document.createElement('canvas');c.width=Math.round(canvas.width*k);c.height=Math.round(canvas.height*k);c.getContext('2d').drawImage(canvas,0,0,c.width,c.height)}
   c.toBlob(b=>{if(!b)return rej();fetch('/share/api.php',{method:'POST',body:b,headers:{'Content-Type':'image/jpeg','X-Kind':kind,'X-Title':encodeURIComponent(title||'')}}).then(r=>r.json()).then(j=>j.ok?res(j.url):rej(j.error)).catch(()=>rej())},'image/jpeg',.87)})}};
+/* move your phone and the plate tilts with it (and the letters' shine moves) */
+;(function(){const st=document.querySelector('.plate-stage');if(!st||!window.DeviceOrientationEvent||matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+  if(!matchMedia('(pointer:coarse)').matches)return;
+  let base=null,cur=[0,0],tgt=[0,0],raf=0,vis=true,lastAz=null,on=false;
+  const io=new IntersectionObserver(e=>{vis=e[0].isIntersecting});io.observe(st);
+  const frame=()=>{raf=0;cur[0]+=(tgt[0]-cur[0])*.25;cur[1]+=(tgt[1]-cur[1])*.25;
+    st.style.setProperty('--tx',(12+cur[0]).toFixed(2)+'deg');st.style.setProperty('--ty',(-9+cur[1]).toFixed(2)+'deg');st.style.setProperty('--sx',(cur[1]*3.2).toFixed(1)+'%');
+    const az=Math.round(235+cur[1]*2.6);if(lastAz===null||Math.abs(az-lastAz)>=3){lastAz=az;document.querySelectorAll('filter[id^=pf-] feDistantLight').forEach(l=>l.setAttribute('azimuth',az))}
+    if(Math.abs(tgt[0]-cur[0])>.05||Math.abs(tgt[1]-cur[1])>.05)raf=requestAnimationFrame(frame)};
+  const onOri=e=>{if(e.beta==null||!vis)return;if(!on){on=true;st.classList.add('tilt')}
+    const o=(screen.orientation&&screen.orientation.angle)||window.orientation||0;let b=e.beta,g=e.gamma;if(o===90){[b,g]=[-g,b]}else if(o===-90||o===270){[b,g]=[g,-b]}
+    if(!base)base=[b,g];base[0]+=(b-base[0])*.02;base[1]+=(g-base[1])*.02; // slowly re-centres to how you hold the phone
+    const cl=(v,m)=>Math.max(-m,Math.min(m,v));tgt=[cl(-(b-base[0])*.55,14),cl((g-base[1])*.7,20)];if(!raf)raf=requestAnimationFrame(frame)};
+  const start=()=>window.addEventListener('deviceorientation',onOri);
+  start();
+  if(typeof DeviceOrientationEvent.requestPermission==='function'){ // iPhone: needs a tap to allow motion (button goes once motion arrives)
+    const btn=document.createElement('button');btn.type='button';btn.className='tilt-ask';btn.textContent='📱 Tilt to look';st.appendChild(btn);
+    btn.onclick=()=>DeviceOrientationEvent.requestPermission().then(()=>btn.remove()).catch(()=>btn.remove());
+    window.addEventListener('deviceorientation',function f(e){if(e.beta!=null){btn.remove();window.removeEventListener('deviceorientation',f)}})}
+  const _d=drawPlate;drawPlate=function(){_d.apply(this,arguments);lastAz=null;if(on&&!raf)raf=requestAnimationFrame(frame)};
+})();
 window.PB={P,OPTS,regIn,drawPlate,choose,allowed,lbl,isShow,forcedShow,setUse:v=>{if(v==='road'&&forcedShow())return;P.use=v;drawPlate()}};
 document.getElementById('regSearch').addEventListener('submit',e=>{e.preventDefault();openWA(`Hi SMR Plates! I'm looking for a private registration like: ${document.getElementById('rs').value.toUpperCase()||'(not sure yet)'}. Budget: ${document.getElementById('rb').value}`)});
 

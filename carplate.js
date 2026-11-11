@@ -52,53 +52,72 @@ function simplify(H,eps){ // closed polygon Douglas-Peucker, then merge near-col
 function orderQuad(p){const c=[p.reduce((s,q)=>s+q[0],0)/4,p.reduce((s,q)=>s+q[1],0)/4];const s=p.slice().sort((a,b)=>Math.atan2(a[1]-c[1],a[0]-c[0])-Math.atan2(b[1]-c[1],b[0]-c[0]));
   // start at top-left (smallest x+y)
   let i0=0;s.forEach((q,i)=>{if(q[0]+q[1]<s[i0][0]+s[i0][1])i0=i});return [0,1,2,3].map(k=>s[(i0+k)%4])}
-function detect(){
-  const im=S.photo,k=Math.min(1,640/Math.max(S.pw,S.ph)),w=Math.round(S.pw*k),h=Math.round(S.ph*k);
-  const c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d',{willReadFrequently:true});x.drawImage(im,0,0,w,h);
+let PREP=null;
+function prep(){if(PREP&&PREP.src===S.photo)return PREP;
+  const k=Math.min(1,640/Math.max(S.pw,S.ph)),w=Math.round(S.pw*k),h=Math.round(S.ph*k);
+  const c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d',{willReadFrequently:true});x.drawImage(S.photo,0,0,w,h);
   const d=x.getImageData(0,0,w,h).data,N=w*h,Hh=new Float32Array(N),Ss=new Float32Array(N),Vv=new Float32Array(N);
   for(let i=0;i<N;i++){const r=d[i*4]/255,g=d[i*4+1]/255,b=d[i*4+2]/255,mx=Math.max(r,g,b),mn=Math.min(r,g,b),df=mx-mn;let hh=0;
     if(df>1e-6){hh=mx===r?((g-b)/df)%6:mx===g?(b-r)/df+2:(r-g)/df+4;hh*=60;if(hh<0)hh+=360}Hh[i]=hh;Ss[i]=mx?df/mx:0;Vv[i]=mx}
-  const best=[];
+  return PREP={src:S.photo,k,w,h,N,d,Hh,Ss,Vv}}
+/* flood a blob from seed s where ok(i) is true; returns its stats */
+function grow(P,lab,id,s,ok,maxArea){const {w,h}=P,q=new Int32Array(P.N);let qh=0,qt=0;q[qt++]=s;lab[s]=id;let area=0,x0=w,x1=0,y0=h,y1=0;
+  const ext=[[-1e9,0],[-1e9,0],[-1e9,0],[-1e9,0]];
+  while(qh<qt){const p=q[qh++],px=p%w,py=(p/w)|0;area++;if(maxArea&&area>maxArea)return null;if(px<x0)x0=px;if(px>x1)x1=px;if(py<y0)y0=py;if(py>y1)y1=py;
+    const sc=[-px-py,px-py,px+py,-px+py];for(let e=0;e<4;e++)if(sc[e]>ext[e][0])ext[e]=[sc[e],p];
+    const nb=[px>0?p-1:-1,px<w-1?p+1:-1,py>0?p-w:-1,py<h-1?p+w:-1];for(const n of nb)if(n>=0&&lab[n]<0&&ok(n)){lab[n]=id;q[qt++]=n}}
+  return {area,x0,x1,y0,y1,ext}}
+/* the plate's four corners from its blob (handles hex plates' pointed ends) */
+function blobQuad(P,lab,id,b){const {w,k}=P,{x0,x1,y0,y1,ext}=b,bw=x1-x0+1,bh=y1-y0+1;
+  const pts=[];for(let yy=y0;yy<=y1;yy++){let a=-1,bb=-1;for(let xx=x0;xx<=x1;xx++)if(lab[yy*w+xx]===id){if(a<0)a=xx;bb=xx}if(a>=0){pts.push([a,yy],[bb+1,yy])}}
+  const poly=simplify(convexHull(pts),Math.max(1.5,bh*.09));
+  let q=ext.map(e=>[(e[1]%w+.5)/k,(((e[1]/w)|0)+.5)/k]),hex=false;
+  const ext2=yy=>{let a=-1,bb=-1;for(let xx=x0;xx<=x1;xx++)if(lab[yy*w+xx]===id){if(a<0)a=xx;bb=xx}return [a,bb]};
+  const rT=ext2(Math.round(y0+bh*.12)),rM=ext2(Math.round(y0+bh*.5)),rB=ext2(Math.round(y0+bh*.88)),wM=rM[1]-rM[0]||1;
+  if(bw>40&&(rT[1]-rT[0])/wM<.955&&(rB[1]-rB[0])/wM<.955&&rT[0]>rM[0]&&rB[0]>rM[0]&&rT[1]<rM[1]&&rB[1]<rM[1]){hex=true;
+    const tb=xx=>{let t=-1,bo=-1;for(let yy=y0;yy<=y1;yy++)if(lab[yy*w+xx]===id){if(t<0)t=yy;bo=yy}return [t,bo]};
+    const xa=Math.round(x0+bw*.3),xb=Math.round(x0+bw*.7),A=tb(xa),B=tb(xb),line=(i,xx)=>A[i]+(B[i]-A[i])*(xx-xa)/(xb-xa||1);
+    const L=rM[0]-bw*.012,R=rM[1]+1+bw*.012;q=[[L,line(0,L)],[R,line(0,R)],[R,line(1,R)+1],[L,line(1,L)+1]].map(([px,py])=>[px/k,py/k])}
+  else if(poly.length===4)q=orderQuad(poly).map(([px,py])=>[px/k,py/k]);
+  if(!(quadAspect(q)>1&&dist(q[0],q[1])>8)&&!hex)q=[[x0/k,y0/k],[(x1+1)/k,y0/k],[(x1+1)/k,(y1+1)/k],[x0/k,(y1+1)/k]];
+  return {q,hex}}
+function detect(){
+  const P=prep(),{w,h,N,Hh,Ss,Vv}=P,best=[];
   const masks={rear:i=>Hh[i]>=36&&Hh[i]<=64&&Ss[i]>.38&&Vv[i]>.42, front:i=>Ss[i]<.17&&Vv[i]>.66};
-  for(const side of ['rear','front']){const m=new Uint8Array(N),f=masks[side];for(let i=0;i<N;i++)m[i]=f(i)?1:0;
-    const lab=new Int32Array(N).fill(-1),q=new Int32Array(N);let id=0;
-    for(let s=0;s<N;s++){if(!m[s]||lab[s]>=0)continue;let qh=0,qt=0;q[qt++]=s;lab[s]=id;let area=0,x0=w,x1=0,y0=h,y1=0;
-      const ext=[[-1e9,0],[-1e9,0],[-1e9,0],[-1e9,0]];// TL(-x-y) TR(x-y) BR(x+y) BL(-x+y)
-      while(qh<qt){const p=q[qh++],px=p%w,py=(p/w)|0;area++;if(px<x0)x0=px;if(px>x1)x1=px;if(py<y0)y0=py;if(py>y1)y1=py;
-        const sc=[-px-py,px-py,px+py,-px+py];for(let e=0;e<4;e++)if(sc[e]>ext[e][0])ext[e]=[sc[e],p];
-        const nb=[px>0?p-1:-1,px<w-1?p+1:-1,py>0?p-w:-1,py<h-1?p+w:-1];for(const n of nb)if(n>=0&&m[n]&&lab[n]<0){lab[n]=id;q[qt++]=n}}
-      const bw=x1-x0+1,bh=y1-y0+1,asp=bw/bh,fill=area/(bw*bh);
-      if(area>N*.0012&&bw<w*.92&&bh<h*.6&&asp>1.15&&asp<7&&fill>.38){
-        // text inside: dark pixels in the box
-        let dark=0,tot=0;for(let yy=y0;yy<=y1;yy+=1)for(let xx=x0;xx<=x1;xx+=1){const i=yy*w+xx;tot++;if(Vv[i]<.36)dark++}
-        const dr=dark/tot;if(dr<.025||dr>.5){id++;continue}
-        const cxn=(x0+x1)/2/w,cyn=(y0+y1)/2/h;
-        const pos=1-Math.min(1,Math.abs(cxn-.5)*1.4)*.6-(cyn<.25?.5:0);
-        const shapeScore=1-Math.min(1,Math.abs(Math.log(asp/4.2))*.35);
-        const score=Math.sqrt(area)*fill*pos*shapeScore*(side==='rear'?1.25:1)*(dr>.06&&dr<.35?1.2:.8);
-        // outline: convex hull of the blob, simplified; 6 corners = hex
-        const pts=[];for(let yy=y0;yy<=y1;yy++){let a=-1,bb=-1;for(let xx=x0;xx<=x1;xx++)if(lab[yy*w+xx]===id){if(a<0)a=xx;bb=xx}if(a>=0){pts.push([a,yy],[bb+1,yy])}}
-        let hull=convexHull(pts);const poly=simplify(hull,Math.max(1.5,bh*.09));
-        let q=ext.map(e=>[(e[1]%w+.5)/k,(((e[1]/w)|0)+.5)/k]),hex=false;
-        // hex: rows near the top and bottom are clearly shorter than the middle row (pointed ends)
-        const ext2=yy=>{let a=-1,bb=-1;for(let xx=x0;xx<=x1;xx++)if(lab[yy*w+xx]===id){if(a<0)a=xx;bb=xx}return [a,bb]};
-        const rT=ext2(Math.round(y0+bh*.12)),rM=ext2(Math.round(y0+bh*.5)),rB=ext2(Math.round(y0+bh*.88)),wM=rM[1]-rM[0]||1;
-        if(bw>40&&(rT[1]-rT[0])/wM<.955&&(rB[1]-rB[0])/wM<.955&&rT[0]>rM[0]&&rB[0]>rM[0]&&rT[1]<rM[1]&&rB[1]<rM[1]){hex=true;
-          const tb=xx=>{let t=-1,bo=-1;for(let yy=y0;yy<=y1;yy++)if(lab[yy*w+xx]===id){if(t<0)t=yy;bo=yy}return [t,bo]};
-          const xa=Math.round(x0+bw*.3),xb=Math.round(x0+bw*.7),A=tb(xa),B=tb(xb),line=(i,xx)=>A[i]+(B[i]-A[i])*(xx-xa)/(xb-xa||1);
-          const L=rM[0]-bw*.012,R=rM[1]+1+bw*.012;
-          q=[[L,line(0,L)],[R,line(0,R)],[R,line(1,R)+1],[L,line(1,L)+1]].map(([px,py])=>[px/k,py/k])}
-        else if(poly.length===4){q=orderQuad(poly).map(([px,py])=>[px/k,py/k])}
-        best.push({side,score,hex,q,bbox:[x0/k,y0/k,(x1+1)/k,(y1+1)/k]});
-      }id++}}
+  for(const side of ['rear','front']){const f=masks[side],lab=new Int32Array(N).fill(-1);let id=0;
+    for(let s=0;s<N;s++){if(lab[s]>=0||!f(s))continue;const b=grow(P,lab,id,s,f);
+      const bw=b.x1-b.x0+1,bh=b.y1-b.y0+1,asp=bw/bh,fill=b.area/(bw*bh);
+      if(b.area>N*.0012&&bw<w*.92&&bh<h*.6&&asp>1.15&&asp<7&&fill>.38){
+        let dark=0,tot=0;for(let yy=b.y0;yy<=b.y1;yy++)for(let xx=b.x0;xx<=b.x1;xx++){tot++;if(Vv[yy*w+xx]<.36)dark++}
+        const dr=dark/tot;if(dr>=.025&&dr<=.5){
+          const cxn=(b.x0+b.x1)/2/w,cyn=(b.y0+b.y1)/2/h,pos=1-Math.min(1,Math.abs(cxn-.5)*1.4)*.6-(cyn<.25?.5:0),shapeScore=1-Math.min(1,Math.abs(Math.log(asp/4.2))*.35);
+          const score=Math.sqrt(b.area)*fill*pos*shapeScore*(side==='rear'?1.25:1)*(dr>.06&&dr<.35?1.2:.8);
+          const r=blobQuad(P,lab,id,b);best.push({side,score,hex:r.hex,q:r.q})}}
+      id++}}
   best.sort((a,b)=>b.score-a.score);
-  if(!best.length)return null;
-  const b=best[0];let q=b.q;
-  // corners of a hex plate are cut off: square them up from the bounding box when the quad is very skewed
-  const ok=quadAspect(q)>1&&dist(q[0],q[1])>8;
-  if(!ok&&!b.hex){const [x0,y0,x1,y1]=b.bbox;q=[[x0,y0],[x1,y0],[x1,y1],[x0,y1]]}
-  return {side:b.side,quad:q,hex:b.hex};
+  return best.length?{side:best[0].side,quad:best[0].q,hex:best[0].hex}:null;
 }
+/* the customer tapped the plate: grow the plate from that spot */
+function detectAt(ix,iy){
+  const P=prep(),{w,h,N,d,Hh,Ss,Vv,k}=P,cx=Math.round(ix*k),cy=Math.round(iy*k);
+  // the plate colour = the brighter half of the pixels around the tap (they may have tapped a letter)
+  const rad=Math.max(6,Math.round(w*.025)),cand=[];
+  for(let dy=-rad;dy<=rad;dy++)for(let dx=-rad;dx<=rad;dx++){const x=cx+dx,y=cy+dy;if(x<0||y<0||x>=w||y>=h)continue;const i=y*w+x;if(Vv[i]>.3)cand.push(i)}
+  if(cand.length<6)return null;cand.sort((a,b)=>Vv[b]-Vv[a]);const top=cand.slice(0,Math.max(4,cand.length>>1));
+  const med=c=>{const v=top.map(i=>d[i*4+c]).sort((a,b)=>a-b);return v[v.length>>1]};let R=med(0),G=med(1),B=med(2);
+  let s=-1,sb=1e9;for(const i of top){const o=i*4,e=(d[o]-R)**2+(d[o+1]-G)**2+(d[o+2]-B)**2+((i%w-cx)**2+(((i/w)|0)-cy)**2)*4;if(e<sb){sb=e;s=i}}
+  const yellow=Hh[s]>30&&Hh[s]<70&&Ss[s]>.3;
+  // try a few seeds: one may sit inside a letter's hole (an island too small to be the plate)
+  const seeds=[s];for(let t=0;t<top.length&&seeds.length<8;t+=Math.max(1,(top.length/8)|0))seeds.push(top[t]);
+  for(const tol of [78,60,44,32]){let lab=null,b=null;
+    const ok=i=>{const o=i*4,dr=d[o]-R,dg=d[o+1]-G,db=d[o+2]-B;return dr*dr+dg*dg+db*db<tol*tol};
+    for(const sd of seeds){if(lab&&lab[sd]>=0)continue;if(!ok(sd))continue;lab=new Int32Array(N).fill(-1);b=grow(P,lab,0,sd,ok,N*.3);if(!b||b.area>=N*.0008)break}
+    if(!b)continue;
+    const bw=b.x1-b.x0+1,bh=b.y1-b.y0+1,asp=bw/bh;
+    if(bw>=w*.95||bh>=h*.7||b.area<30)continue;
+    if(asp<1.1||asp>8)continue;
+    const r=blobQuad(P,lab,0,b);return {side:yellow?'rear':'front',quad:r.q,hex:r.hex}}
+  return null}
 
 /* rectify the found plate and work out what kind it is */
 function classify(){
@@ -252,7 +271,7 @@ function rrect(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,
 /* ---------------- render to screen ---------------- */
 let rq=0;
 function render(){if(!S.photo)return;const my=++rq;
-  if(S.edit||!S.quad){paintEdit();return}
+  if(S.edit||S.crop||!S.quad){paintEdit();return}
   const o=plateOpts();plateImg(o).then(()=>{if(my!==rq)return;const out=compose(o,S.night);S.lastOut=out;S.lastKey=JSON.stringify([o,S.night,S.hide,S.quad,PB().isShow(o)]);
     cv.width=S.pw;cv.height=S.ph;ctx.drawImage(out,0,0);
     if(S.before){const x=S.pw*S.split;ctx.save();ctx.beginPath();ctx.rect(0,0,x,S.ph);ctx.clip();ctx.drawImage(S.photo,0,0);ctx.restore();
@@ -263,9 +282,18 @@ function render(){if(!S.photo)return;const my=++rq;
     updInfo()})}
 function paintEdit(){cv.width=S.pw;cv.height=S.ph;ctx.drawImage(S.photo,0,0);placeHandles()}
 function placeHandles(){
-  hl.innerHTML='';if(!S.edit||!S.quad)return;const r=cv.getBoundingClientRect(),sr=stage.getBoundingClientRect(),k=r.width/S.pw;
-  const pts=S.quad.map(p=>[r.left-sr.left+p[0]*k,r.top-sr.top+p[1]*k]);
-  hl.innerHTML=`<svg class="cp-poly" width="${sr.width}" height="${sr.height}"><polygon points="${pts.map(p=>p.join(',')).join(' ')}"/></svg>`+pts.map((p,i)=>`<b class="cp-h" data-i="${i}" style="left:${p[0]}px;top:${p[1]}px"></b>`).join('')}
+  hl.innerHTML='';if(!S.photo)return;const r=cv.getBoundingClientRect(),sr=stage.getBoundingClientRect(),k=r.width/S.pw,ox=r.left-sr.left,oy=r.top-sr.top;
+  if(S.crop){const c=S.crop,L=ox+c[0]*k,T=oy+c[1]*k,W=(c[2]-c[0])*k,H=(c[3]-c[1])*k;
+    hl.innerHTML=`<div class="cp-crop" data-cm="1" style="left:${L}px;top:${T}px;width:${W}px;height:${H}px"><i></i><i></i></div>`+[[L,T],[L+W,T],[L+W,T+H],[L,T+H]].map((p,i)=>`<b class="cp-k" data-c="${i}" style="left:${p[0]}px;top:${p[1]}px"></b>`).join('');return}
+  if(S.edit&&S.tapAt){const p=S.tapAt;hl.innerHTML=`<b class="cp-ping" style="left:${ox+p[0]*k}px;top:${oy+p[1]*k}px"></b>`}}
+/* tap on the plate: find it from that spot */
+function tapFind(p){S.tapAt=p;placeHandles();let d=null;try{d=detectAt(p[0],p[1])}catch(e){}
+  if(!d){tip('Couldn’t find a plate there. Tap the middle of the plate, or tap Crop to zoom in closer.');return}
+  tip('');S.tapAt=null;S.quad=d.quad;S.side=d.side;S.hexHint=!!d.hex;S.found=true;S.edit=false;S.inpaintKey='';
+  if(PB().P.shape==='moto'&&S.side==='front')PB().choose('shape','standard');PB().P.side=S.side;PB().drawPlate();S.det=classify();hl.innerHTML='';render();updInfo()}
+function startCrop(){const m=Math.min(S.pw,S.ph)*.12;S.crop=[m,m,S.pw-m,S.ph-m];S.wasEdit=S.edit;render();updInfo();requestAnimationFrame(placeHandles)}
+function applyCrop(){const c=S.crop.map(Math.round),w=c[2]-c[0],h=c[3]-c[1];S.crop=null;
+  if(w>40&&h>40){const n=document.createElement('canvas');n.width=w;n.height=h;n.getContext('2d').drawImage(S.photo,c[0],c[1],w,h,0,0,w,h);setPhoto(n);findPlate()}else{render();updInfo()}}
 
 /* ---------------- UI ---------------- */
 const CSS=`
@@ -285,6 +313,13 @@ const CSS=`
 .cp-empty p{margin:0;color:#a8a8c0;font-size:13.5px;max-width:300px;line-height:1.45}
 .cp-hl{position:absolute;inset:0;pointer-events:none}
 .cp-poly{position:absolute;left:0;top:0;pointer-events:none}.cp-poly polygon{fill:rgba(255,210,63,.12);stroke:#ffd23f;stroke-width:2;stroke-dasharray:6 4}
+.cp-crop{position:absolute;border:2px solid #fff;box-shadow:0 0 0 9999px rgba(0,0,0,.55);pointer-events:auto;touch-action:none;cursor:move}
+.cp-crop i{position:absolute;inset:33.3% 0;border-top:1px solid rgba(255,255,255,.35);border-bottom:1px solid rgba(255,255,255,.35)}.cp-crop i+i{inset:0 33.3%;border:0;border-left:1px solid rgba(255,255,255,.35);border-right:1px solid rgba(255,255,255,.35)}
+.cp-hl{overflow:hidden}
+.cp-k{position:absolute;width:30px;height:30px;margin:-15px 0 0 -15px;border-radius:50%;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.5);pointer-events:auto;touch-action:none;cursor:nwse-resize}
+.cp-ping{position:absolute;width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:50%;border:3px solid #ffd23f;animation:cpPing .9s ease-out infinite}
+@keyframes cpPing{from{transform:scale(.4);opacity:1}to{transform:scale(1.4);opacity:0}}
+.cp-tapme{cursor:crosshair}
 .cp-h{position:absolute;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;background:rgba(255,210,63,.25);border:2.5px solid #ffd23f;box-shadow:0 0 0 2px rgba(0,0,0,.45);pointer-events:auto;touch-action:none;cursor:grab}
 .cp-h::after{content:"";position:absolute;left:50%;top:50%;width:6px;height:6px;margin:-3px;border-radius:50%;background:#fff}
 .cp-loupe{position:absolute;width:118px;height:118px;border-radius:50%;border:3px solid #ffd23f;box-shadow:0 10px 30px rgba(0,0,0,.6);display:none;pointer-events:none;overflow:hidden;background:#000}
@@ -346,7 +381,7 @@ function build(){if(built)return;built=true;
   root.innerHTML=`<div class="cp-top"><div><b>See it on <span class="g">your car</span></b><small>Your new plate on a photo of your car</small></div><button class="cp-x" type="button" aria-label="Close">×</button></div>
   <div class="cp-body"><div class="cp-stage" id="cpStage">
     <div class="cp-empty" id="cpEmpty"><div class="pic"><i></i></div><p><b style="color:#fff">Take a photo of the front or back of your car</b>, straight on, with the whole plate in shot. We'll put your new plate on it.<br><span style="font-size:12.5px">You can also drag a photo in, or paste one (JPEG or PNG).</span></p></div>
-    <canvas id="cpCv" hidden></canvas><div class="cp-hl" id="cpHl"></div><div class="cp-loupe" id="cpLoupe"><canvas width="236" height="236"></canvas></div><div class="cp-msg" id="cpMsg"></div><div class="cp-spin">Working on it…</div><div class="cp-drop">Drop your photo here</div></div>
+    <canvas id="cpCv" hidden></canvas><div class="cp-hl" id="cpHl"></div><div class="cp-msg" id="cpMsg"></div><div class="cp-spin">Working on it…</div><div class="cp-drop">Drop your photo here</div></div>
   <div class="cp-panel">
    <div class="cp-st"><h4><i>1</i>Your car</h4><div class="cp-row">
      <label class="cp-b pri">${IC.cam}Take a photo<input type="file" accept="image/*" capture="environment" hidden id="cpCam"></label>
@@ -373,7 +408,7 @@ function build(){if(built)return;built=true;
      <p class="cp-priv">Your photo stays on your phone. It's only uploaded if you tap Share link (then it's deleted after 30 days).</p></div>
   </div></div>`;
   document.body.appendChild(root);
-  stage=$('#cpStage');cv=$('#cpCv');ctx=cv.getContext('2d');hl=$('#cpHl');loupe=$('#cpLoupe');
+  stage=$('#cpStage');cv=$('#cpCv');ctx=cv.getContext('2d');hl=$('#cpHl');
   $('.cp-x').onclick=close;document.addEventListener('keydown',e=>{if(e.key==='Escape'&&root.classList.contains('on'))close()});
   ['#cpCam','#cpPick'].forEach(s=>$(s).onchange=e=>{const f=e.target.files[0];if(f)load(f);e.target.value=''});
   $('#cpReg').oninput=e=>{const v=e.target.value.toUpperCase().replace(/[^A-Z0-9 ]/g,'');e.target.value=v;PB().regIn.value=v;PB().drawPlate();clearTimeout(S.rt);S.rt=setTimeout(render,160)};
@@ -396,7 +431,7 @@ function chips(){const pb=PB(),P=pb.P,o=pb.OPTS;
   row('extras',o.extras,v=>!!P[v],v=>!pb.allowed('extras',v));
   const forced=pb.forcedShow();row('use',[['road','Road legal'],['show','Show plate']],v=>pb.isShow()?v==='show':v==='road',v=>v==='road'&&!!forced);
   const show=pb.isShow(),u=$('#cpUse');u.className='cp-use '+(show?'show':'road');
-  u.innerHTML=`<i></i><span>${show?`You're buying <b>show plates</b>: for display and off-road use only, not for driving on UK roads.${forced?' ('+forced+' is show-only.)':''}`:`You're buying <b>road-legal plates</b> (BS AU 145e). We'll need photo ID and your V5C or proof of entitlement.`}</span>`;
+  u.innerHTML=`<i></i><span>${show?`You're buying <b>show plates</b>: for display and off-road use only, not for driving on UK roads.${forced?' ('+forced+' is show-only.)':''}`:`You're buying <b>road-legal plates</b> (BS AU 145e).`}</span>`;
   const hide=[['auto','Smart'],['fill','Paint out'],['black','Black backing'],['body','Car-colour backing'],['none','Leave']];
   $('[data-k="hide"]').innerHTML=hide.map(([v,t])=>`<button type="button" class="cp-c${S.hide===v?' on':''}" data-k2="hide" data-v2="${v}">${t}</button>`).join('');
   $('#cpHideNote').textContent=S.hide==='auto'?'Smart: if your new plate is smaller than the one on the car, we paint the old one out so you can’t see it behind.':S.hide==='fill'?'We fill the old plate area with the colour and texture around it.':S.hide==='black'||S.hide==='body'?'A backing plate the size of your old plate, behind the new one. This is what most people fit.':'';
@@ -405,23 +440,26 @@ function chips(){const pb=PB(),P=pb.P,o=pb.OPTS;
 }
 function updInfo(){
   const d=S.det,P=PB().P;let h='';
-  if(S.photo&&!S.found&&S.edit)h=`<div class="cp-card"><span>We couldn’t spot the plate in this photo. <b>Drag the four yellow dots onto the corners of your plate</b>, then tap Done.</span></div>`;
-  else if(S.edit)h=`<div class="cp-card ok"><span><b>Check the corners.</b> Drag the yellow dots onto the four corners of your plate if they're not quite right.<div class="cp-row"><button class="cp-c on" type="button" data-act="done">Done ✓</button></div></span></div>`;
-  else if(d){const want=P.shape;h=`<div class="cp-card ok"><span>Found your <b>${S.side==='rear'?'rear':'front'}</b> plate. Your car has <b>${SHAPE_TXT[d.shape]}</b>.<div class="cp-row"><button class="cp-c" type="button" data-act="edit">Adjust corners</button><button class="cp-c" type="button" data-act="flip">It's the ${S.side==='rear'?'front':'rear'}</button></div></span></div>`;
+  if(S.crop)h=`<div class="cp-card ok"><span><b>Crop your photo.</b> Drag the white corners (or the box) to frame your car, then tap Crop.<div class="cp-row"><button class="cp-c on" type="button" data-act="crop-ok">Crop ✓</button><button class="cp-c" type="button" data-act="crop-no">Cancel</button></div></span></div>`;
+  else if(S.edit)h=`<div class="cp-card"><span>${S.found?'<b>Tap your number plate</b> on the photo and we’ll frame it for you.':'We couldn’t spot the plate by itself. <b>Tap your number plate</b> on the photo and we’ll find it.'}<div class="cp-row"><button class="cp-c" type="button" data-act="crop">Crop photo</button>${S.found?'<button class="cp-c" type="button" data-act="tap-no">Cancel</button>':''}</div></span></div>`;
+  else if(d){const want=P.shape;h=`<div class="cp-card ok"><span>Found your <b>${S.side==='rear'?'rear':'front'}</b> plate. Your car has <b>${SHAPE_TXT[d.shape]}</b>.<div class="cp-row"><button class="cp-c" type="button" data-act="edit">Wrong spot? Tap your plate</button><button class="cp-c" type="button" data-act="crop">Crop photo</button><button class="cp-c" type="button" data-act="flip">It's the ${S.side==='rear'?'front':'rear'}</button></div></span></div>`;
     if(d.shape==='oversize'&&want!=='oversize')h+=`<div class="cp-card"><span>This car comes with an <b>oversized plate</b> (common on Range Rovers and other 4x4s). A standard plate will look small and leave a gap. We recommend <b>Oversized</b>.<div class="cp-row"><button class="cp-c on" type="button" data-act="use-over">Switch to Oversized</button><button class="cp-c" type="button" data-act="keep">Keep ${PB().lbl('shape',want)}</button></div></span></div>`;
     else if(d.shape==='hex'&&want!=='hex')h+=`<div class="cp-card"><span>This car has a <b>hex plate</b> now. Want to keep that look?<div class="cp-row"><button class="cp-c on" type="button" data-act="use-hex">Switch to Hex</button><button class="cp-c" type="button" data-act="keep">Keep ${PB().lbl('shape',want)}</button></div></span></div>`;
     else if(d.shape==='moto'&&want!=='moto')h+=`<div class="cp-card"><span>This car has a <b>square, two-line plate</b> recess.<div class="cp-row"><button class="cp-c on" type="button" data-act="use-moto">Use two-line plate</button><button class="cp-c" type="button" data-act="keep">Keep ${PB().lbl('shape',want)}</button></div></span></div>`;
     else if(d.shape==='standard'&&want==='oversize')h+=`<div class="cp-card"><span>This car takes a <b>standard-size plate</b>. An oversized one will stick out above and below the plate area.</span></div>`}
   if(S.keep)h=h.replace(/<div class="cp-card"><span>This car (comes|has)[\s\S]*?<\/span><\/div>$/,'');
   $('#cpFound').innerHTML=h;
-  $('#cpMsg').textContent=S.edit?'Drag the yellow dots onto your plate’s corners':'';
-  ['#cpS2','#cpS3','#cpS4','#cpS5'].forEach(s=>$(s).hidden=!S.photo||S.edit);
+  $('#cpMsg').textContent=S.crop?'':S.edit?'👆 Tap your number plate':'';stage.classList.toggle('cp-tapme',!!S.edit&&!S.crop);
+  ['#cpS2','#cpS3','#cpS4','#cpS5'].forEach(s=>$(s).hidden=!S.photo||S.edit||!!S.crop);
   chips()}
 
 function onClick(e){const b=e.target.closest('button');if(!b||!root.contains(b))return;const pb=PB();
   if(b.dataset.act){const a=b.dataset.act;
-    if(a==='done'){S.hexHint=false;S.edit=false;S.found=true;S.det=classify();S.inpaintKey='';hl.innerHTML='';render()}
-    if(a==='edit'){S.edit=true;S.inpaintKey='';render();updInfo()}
+    if(a==='edit'){S.edit=true;S.tapAt=null;render();updInfo()}
+    if(a==='tap-no'){S.edit=false;S.tapAt=null;hl.innerHTML='';render();updInfo()}
+    if(a==='crop'){startCrop()}
+    if(a==='crop-ok'){applyCrop()}
+    if(a==='crop-no'){S.crop=null;hl.innerHTML='';render();updInfo()}
     if(a==='flip'){S.side=S.side==='rear'?'front':'rear';pb.P.side=S.side;pb.drawPlate();S.det=classify();render()}
     if(a==='use-over'){pb.choose('shape','oversize');render()}
     if(a==='use-hex'){pb.choose('shape','hex');render()}
@@ -448,19 +486,17 @@ function renderZoom(){if(!S.lastOut||!S.quad)return;const c=$('#cpZoom canvas'),
 /* ---------------- dragging (corners + before/after) ---------------- */
 let drag=null;
 function toImg(e){const r=cv.getBoundingClientRect(),k=S.pw/r.width;return [(e.clientX-r.left)*k,(e.clientY-r.top)*k]}
-function down(e){if(!S.photo)return;const h=e.target.closest('.cp-h');
-  if(h&&S.edit){drag={i:+h.dataset.i};h.setPointerCapture&&h.setPointerCapture(e.pointerId);e.preventDefault();showLoupe(e);return}
-  if(S.before&&!S.edit){drag={split:true};move(e)}}
+function down(e){if(!S.photo)return;
+  if(S.crop){const k=e.target.closest('.cp-k'),m=e.target.closest('.cp-crop');if(!k&&!m)return;drag=k?{c:+k.dataset.c}:{mv:toImg(e),c0:S.crop.slice()};e.target.setPointerCapture&&e.target.setPointerCapture(e.pointerId);e.preventDefault();return}
+  if(S.edit){if(e.target===cv||e.target.closest('.cp-hl')){e.preventDefault();tapFind(toImg(e))}return}
+  if(S.before){drag={split:true};move(e)}}
 function move(e){if(!drag)return;e.preventDefault&&e.preventDefault();
   if(drag.split){const r=cv.getBoundingClientRect();S.split=Math.max(.02,Math.min(.98,(e.clientX-r.left)/r.width));render();return}
-  const p=toImg(e);S.quad[drag.i]=[Math.max(0,Math.min(S.pw,p[0])),Math.max(0,Math.min(S.ph,p[1]))];paintEdit();showLoupe(e)}
-function up(){if(!drag)return;drag=null;loupe.classList.remove('on')}
-function showLoupe(e){const sr=stage.getBoundingClientRect(),p=toImg(e),lc=loupe.querySelector('canvas'),x=lc.getContext('2d'),zs=S.pw/cv.getBoundingClientRect().width*40;
-  x.fillStyle='#000';x.fillRect(0,0,236,236);x.drawImage(S.photo,p[0]-zs,p[1]-zs,zs*2,zs*2,0,0,236,236);
-  // poly lines in loupe
-  x.strokeStyle='#ffd23f';x.lineWidth=2;x.beginPath();S.quad.forEach((q,i)=>{const lx=(q[0]-p[0]+zs)/(zs*2)*236,ly=(q[1]-p[1]+zs)/(zs*2)*236;i?x.lineTo(lx,ly):x.moveTo(lx,ly)});x.closePath();x.stroke();
-  let lx=e.clientX-sr.left-59,ly=e.clientY-sr.top-150;if(ly<4)ly=e.clientY-sr.top+40;loupe.style.left=Math.max(4,Math.min(sr.width-122,lx))+'px';loupe.style.top=ly+'px';loupe.classList.add('on')}
-
+  const p=toImg(e),c=S.crop,mn=Math.min(S.pw,S.ph)*.12,cl=(v,a,b)=>Math.max(a,Math.min(b,v));
+  if(drag.mv){const w=drag.c0[2]-drag.c0[0],h=drag.c0[3]-drag.c0[1],x=cl(drag.c0[0]+p[0]-drag.mv[0],0,S.pw-w),y=cl(drag.c0[1]+p[1]-drag.mv[1],0,S.ph-h);S.crop=[x,y,x+w,y+h]}
+  else{const i=drag.c;if(i===0||i===3)c[0]=cl(p[0],0,c[2]-mn);else c[2]=cl(p[0],c[0]+mn,S.pw);if(i<2)c[1]=cl(p[1],0,c[3]-mn);else c[3]=cl(p[1],c[1]+mn,S.ph)}
+  placeHandles()}
+function up(){if(!drag)return;drag=null}
 /* ---------------- loading ---------------- */
 /* fast photo opening: decode + shrink in one step where the browser can, so big phone photos open quickly */
 function openPhoto(f,max){
@@ -479,17 +515,17 @@ function pasteBtn(){
   navigator.clipboard.read().then(items=>{for(const it of items){const t=it.types.find(x=>/^image\//.test(x));if(t)return it.getType(t).then(b=>take(new File([b],'pasted.'+(t.split('/')[1]||'png'),{type:t})))}
     tip('There’s no photo copied. Copy a photo first (long-press it → Copy), then tap Paste.')}).catch(()=>tip('Paste was blocked. Allow paste when asked, or use Choose photo.'))}
 function busy(on){root.classList.toggle('busy',!!on)}
+function setPhoto(c){S.photo=c;S.pw=c.width;S.ph=c.height;PREP=null;S.noise=(()=>{try{const d=c.getContext('2d').getImageData(0,0,Math.min(400,c.width),Math.min(300,c.height)).data;let t=0,n=0;for(let i=4;i<d.length;i+=16){t+=Math.abs(d[i]-d[i-4]);n++}return Math.min(10,t/n)}catch(e){return 2}})();
+  S.inpaintKey='';S.keep=false;S.before=false;S.cmp=null;S.crop=null;S.tapAt=null;S.shareUrl='';$('#cpShareBox').classList.remove('on');$('#cpCmp').classList.remove('on');$('#cpZoom').classList.remove('on')}
+function findPlate(){busy(1);$('.cp-spin').textContent='Finding your plate…';
+  setTimeout(()=>{let d=null;try{d=detect()}catch(err){d=null}
+    if(d){S.quad=d.quad;S.side=d.side;S.found=true;S.edit=false;S.hexHint=!!d.hex}
+    else{S.found=false;S.edit=true;S.quad=null;S.side=PB().P.side||'rear'}
+    if(PB().P.shape==='moto'&&S.side==='front')PB().choose('shape','standard');
+    PB().P.side=S.side;PB().drawPlate();
+    S.det=S.found?classify():null;busy(0);hl.innerHTML='';render();updInfo()},20)}
 function load(f){busy(1);$('.cp-spin').textContent='Opening your photo…';
-  openPhoto(f,1800).then(({c})=>{
-    S.photo=c;S.pw=c.width;S.ph=c.height;S.noise=(()=>{try{const d=c.getContext('2d').getImageData(0,0,Math.min(400,c.width),Math.min(300,c.height)).data;let t=0,n=0;for(let i=4;i<d.length;i+=16){t+=Math.abs(d[i]-d[i-4]);n++}return Math.min(10,t/n)}catch(e){return 2}})();
-    S.inpaintKey='';S.keep=false;S.before=false;S.cmp=null;S.shareUrl='';$('#cpShareBox').classList.remove('on');$('#cpCmp').classList.remove('on');$('#cpZoom').classList.remove('on');
-    $('#cpEmpty').hidden=true;cv.hidden=false;$('.cp-spin').textContent='Finding your plate…';
-    setTimeout(()=>{let d=null;try{d=detect()}catch(err){d=null}
-      if(d){S.quad=d.quad;S.side=d.side;S.found=true;S.edit=false;S.hexHint=!!d.hex}
-      else{S.found=false;S.edit=true;S.side=PB().P.side||'rear';const w=S.pw*.42,h=w/4.68,cx=S.pw/2,cy=S.ph*.62;S.quad=[[cx-w/2,cy-h/2],[cx+w/2,cy-h/2],[cx+w/2,cy+h/2],[cx-w/2,cy+h/2]]}
-      if(PB().P.shape==='moto'&&S.side==='front')PB().choose('shape','standard');
-      PB().P.side=S.side;PB().drawPlate();
-      S.det=S.found?classify():null;busy(0);render();updInfo();requestAnimationFrame(placeHandles)},20)})
+  openPhoto(f,1800).then(({c})=>{setPhoto(c);$('#cpEmpty').hidden=true;cv.hidden=false;findPlate()})
   .catch(()=>{busy(0);tip('Sorry, that photo couldn’t be opened. Please try a JPEG or PNG.')})}
 
 /* ---------------- output ---------------- */
@@ -509,5 +545,5 @@ function order(){const pb=PB(),P=pb.P,ex=['tint','border'].filter(x=>P[x]).map(x
 function open(){build();root.classList.add('on');document.documentElement.style.overflow='hidden';if(S.photo){render();updInfo()}else chips()}
 function close(){root.classList.remove('on');document.documentElement.style.overflow='';PB().drawPlate()}
 document.addEventListener('click',e=>{const t=e.target.closest('[data-carplate]');if(!t)return;e.preventDefault();e.stopPropagation();open()},true);
-window.SMRCarPlate={open,close,_S:S,_detect:()=>detect(),_classify:()=>classify()};
+window.SMRCarPlate={open,close,_S:S,_detect:()=>detect(),_detectAt:(x,y)=>detectAt(x,y),_classify:()=>classify()};
 })();
