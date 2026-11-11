@@ -235,6 +235,22 @@ return json_decode(<<<'JSON'
   ]
  },
  {
+  "slug": "frpack-app",
+  "version": "2026-11-11a",
+  "ver": "1.0",
+  "name": "FR Packaging App",
+  "accent": "#0d0d0f",
+  "tagline": "Trade ordering app for takeaways · Milton Keynes",
+  "description": "Ordering app for FR Packaging customers: takeaways, restaurants and cafés reorder packaging, catering and hygiene supplies at trade prices, with repeat orders and van days.",
+  "tips": [
+   "Shop owners log in and see their last order, weekly list and next van day straight away.",
+   "Reorder the usual in one tap, or set it to go out every week or month, with skip and pause.",
+   "The packaging finder picks the right box, lid, pot and bag from a few quick questions.",
+   "Starter kits for chicken, burger, pizza and dessert shops get new businesses set up in minutes.",
+   "Trade accounts, pay on account and a WhatsApp line to a real person keep bigger customers ordering direct."
+  ]
+ },
+ {
   "slug": "kahwa",
   "version": "2026-11-08b",
   "name": "Kahwa Café",
