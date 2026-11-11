@@ -215,6 +215,22 @@
   ]
  },
  {
+  "slug": "frpack",
+  "version": "2026-11-11a",
+  "ver": "1.0",
+  "name": "FR Packaging",
+  "accent": "#0d0d0f",
+  "tagline": "Wholesale food packaging website · Milton Keynes",
+  "description": "Trade shop for FR Packaging in Milton Keynes: food packaging, catering and hygiene supplies for takeaways, restaurants and cafés, with trade accounts and van delivery days.",
+  "tips": [
+   "Shops browse the full range by product or by type of business, with trade prices on every item.",
+   "The packaging finder and cost-per-meal calculator help a takeaway pick the right boxes and see what each meal costs to pack.",
+   "Repeat orders and a saved weekly order mean regular customers can reorder in a couple of taps.",
+   "Trade accounts, pallet deals and FRP Family rewards keep bigger customers coming back.",
+   "A postcode checker shows the next van day, and live help and the WhatsApp channel answer questions fast."
+  ]
+ },
+ {
   "slug": "kahwa",
   "version": "2026-11-08b",
   "name": "Kahwa Café",
