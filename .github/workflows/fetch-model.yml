@@ -11,8 +11,8 @@ jobs:
         run: |
           mkdir -p out && cd out
           B=https://github.com/ankandrew/open-image-models/releases/download/assets
-          for m in yolo-v9-t-384-license-plate-end2end yolo-v9-t-512-license-plate-end2end yolo-v9-t-640-license-plate-end2end; do curl -sfL -o $m.onnx $B/$m.onnx; ls -la $m.onnx; done
-          curl -sfL -o LICENSE https://raw.githubusercontent.com/ankandrew/open-image-models/main/LICENSE
+          for m in yolo-v9-t-384-license-plates-end2end yolo-v9-t-512-license-plates-end2end yolo-v9-t-640-license-plates-end2end; do curl -sfL -o $m.onnx $B/$m.onnx; ls -la $m.onnx; done
+          curl -sL -o LICENSE https://raw.githubusercontent.com/ankandrew/open-image-models/main/LICENSE || true
       - name: Push to a scratch branch (not deployed)
         env:
           GH_TOKEN: ${{ github.token }}
