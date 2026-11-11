@@ -1,0 +1,45 @@
+name: Fetch test car photos
+on:
+  workflow_dispatch:
+    inputs:
+      cats:
+        description: Wikimedia Commons categories (| separated)
+        default: "Vehicle registration plates of the United Kingdom|Rear views of automobiles in the United Kingdom|Front views of automobiles in the United Kingdom"
+permissions:
+  contents: write
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download photos (scaled to 1600px) from Wikimedia Commons
+        env:
+          CATS: ${{ inputs.cats }}
+        run: |
+          mkdir -p out && cd out
+          python3 - <<'P'
+          import json,os,urllib.request,urllib.parse
+          UA={'User-Agent':'SMR-plate-test/1.0 (summar@smrgraphics.co.uk)'}
+          def get(u):
+              return urllib.request.urlopen(urllib.request.Request(u,headers=UA),timeout=60).read()
+          n=0
+          for cat in os.environ['CATS'].split('|'):
+              q={'action':'query','format':'json','generator':'categorymembers','gcmtitle':'Category:'+cat,'gcmtype':'file','gcmlimit':'60','prop':'imageinfo','iiprop':'url|mime','iiurlwidth':'1600'}
+              try: j=json.loads(get('https://commons.wikimedia.org/w/api.php?'+urllib.parse.urlencode(q)))
+              except Exception as e: print('fail',cat,e); continue
+              for p in (j.get('query') or {}).get('pages',{}).values():
+                  ii=(p.get('imageinfo') or [{}])[0]
+                  if ii.get('mime')!='image/jpeg': continue
+                  try:
+                      open(f'{n:03d}.jpg','wb').write(get(ii.get('thumburl') or ii['url'])); n+=1
+                  except Exception as e: print('skip',e)
+          print('got',n)
+          P
+          ls | head
+      - name: Push to a scratch branch (not deployed)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cd out && git init -q && git checkout -q -b fetched/test-photos
+          git -c user.name=bot -c user.email=bot@users.noreply.github.com add -A
+          git -c user.name=bot -c user.email=bot@users.noreply.github.com commit -qm "Test photos"
+          git push -qf "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" fetched/test-photos
