@@ -204,7 +204,8 @@ return json_decode(<<<'JSON'
  },
  {
   "slug": "frp",
-  "version": "2026-11-08a",
+  "version": "2026-11-11a",
+  "ver": "1.2",
   "name": "FRP — Fast Reliable Printing",
   "accent": "#c9ccd1",
   "tagline": "Embroidery, print & uniforms website · Luton",
