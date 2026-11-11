@@ -1,0 +1,23 @@
+name: Fetch plate AI model
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download the plate finder models (open-image-models, MIT)
+        run: |
+          mkdir -p out && cd out
+          B=https://github.com/ankandrew/open-image-models/releases/download/assets
+          for m in yolo-v9-t-384-license-plate-end2end yolo-v9-t-512-license-plate-end2end yolo-v9-t-640-license-plate-end2end; do curl -sfL -o $m.onnx $B/$m.onnx; ls -la $m.onnx; done
+          curl -sfL -o LICENSE https://raw.githubusercontent.com/ankandrew/open-image-models/main/LICENSE
+      - name: Push to a scratch branch (not deployed)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cd out && git init -q && git checkout -q -b fetched/plate-model
+          git -c user.name=bot -c user.email=bot@users.noreply.github.com add -A
+          git -c user.name=bot -c user.email=bot@users.noreply.github.com commit -qm "Plate model"
+          git push -qf "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" fetched/plate-model
