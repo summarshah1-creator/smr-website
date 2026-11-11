@@ -287,7 +287,10 @@ function placeHandles(){
     hl.innerHTML=`<div class="cp-crop" data-cm="1" style="left:${L}px;top:${T}px;width:${W}px;height:${H}px"><i></i><i></i></div>`+[[L,T],[L+W,T],[L+W,T+H],[L,T+H]].map((p,i)=>`<b class="cp-k" data-c="${i}" style="left:${p[0]}px;top:${p[1]}px"></b>`).join('');return}
   if(S.edit&&S.tapAt){const p=S.tapAt;hl.innerHTML=`<b class="cp-ping" style="left:${ox+p[0]*k}px;top:${oy+p[1]*k}px"></b>`}}
 /* tap on the plate: find it from that spot */
-function tapFind(p){S.tapAt=p;placeHandles();let d=null;try{d=detectAt(p[0],p[1])}catch(e){}
+function tapFind(p){S.tapAt=p;placeHandles();let d=null;
+  const hit=(S.ai||[]).find(b=>{const [x0,y0,x1,y1]=b.box,mw=(x1-x0)*.1,mh=(y1-y0)*.3;return p[0]>x0-mw&&p[0]<x1+mw&&p[1]>y0-mh&&p[1]<y1+mh});
+  if(hit){try{d=aiRefine(hit)}catch(e){}}
+  if(!d)try{d=detectAt(p[0],p[1])}catch(e){}
   if(!d){tip('Couldn’t find a plate there. Tap the middle of the plate, or tap Crop to zoom in closer.');return}
   tip('');S.tapAt=null;S.quad=d.quad;S.side=d.side;S.hexHint=!!d.hex;S.found=true;S.edit=false;S.inpaintKey='';
   if(PB().P.shape==='moto'&&S.side==='front')PB().choose('shape','standard');PB().P.side=S.side;PB().drawPlate();S.det=classify();hl.innerHTML='';render();updInfo()}
@@ -497,6 +500,33 @@ function move(e){if(!drag)return;e.preventDefault&&e.preventDefault();
   else{const i=drag.c;if(i===0||i===3)c[0]=cl(p[0],0,c[2]-mn);else c[2]=cl(p[0],c[0]+mn,S.pw);if(i<2)c[1]=cl(p[1],0,c[3]-mn);else c[3]=cl(p[1],c[1]+mn,S.ph)}
   placeHandles()}
 function up(){if(!drag)return;drag=null}
+/* ---------------- AI plate finder ----------------
+   open-image-models YOLOv9-tiny plate detector (MIT, assets/ai/), run on the phone with ONNX Runtime Web.
+   Nothing is uploaded. Falls back to the colour detector if it can't load. */
+const AI={base:'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.31.1/dist/',model:'/assets/ai/plate-finder-512.onnx',size:512,p:null,sess:null};
+function aiLoad(){if(AI.p)return AI.p;
+  AI.p=new Promise((res,rej)=>{if(window.ort)return res();const sc=document.createElement('script');sc.src=AI.base+'ort.wasm.min.js';sc.async=true;sc.onload=res;sc.onerror=rej;document.head.appendChild(sc)})
+    .then(()=>{const o=window.ort;o.env.wasm.wasmPaths=AI.base;o.env.wasm.numThreads=1;return o.InferenceSession.create(AI.model,{executionProviders:['wasm'],graphOptimizationLevel:'all'})})
+    .then(s=>{AI.sess=s;return s}).catch(e=>{AI.fail=true;throw e});
+  return AI.p}
+function aiDetect(){const n=AI.size,s=AI.sess,o=window.ort;if(!s)return Promise.resolve(null);
+  const r=n/Math.max(S.pw,S.ph),nw=Math.round(S.pw*r),nh=Math.round(S.ph*r),dw=(n-nw)/2,dh=(n-nh)/2;
+  const c=document.createElement('canvas');c.width=c.height=n;const x=c.getContext('2d',{willReadFrequently:true});x.fillStyle='rgb(114,114,114)';x.fillRect(0,0,n,n);x.imageSmoothingQuality='high';x.drawImage(S.photo,Math.round(dw),Math.round(dh),nw,nh);
+  const d=x.getImageData(0,0,n,n).data,N=n*n,t=new Float32Array(3*N);for(let i=0;i<N;i++){t[i]=d[i*4]/255;t[N+i]=d[i*4+1]/255;t[2*N+i]=d[i*4+2]/255}
+  return s.run({[s.inputNames[0]]:new o.Tensor('float32',t,[1,3,n,n])}).then(out=>{const v=out[s.outputNames[0]],a=v.data,k=v.dims[1]||7,res=[];
+    for(let i=0;i+k<=a.length;i+=k){const sc=a[i+6];if(sc<.1)continue;res.push({score:sc,box:[(a[i+1]-dw)/r,(a[i+2]-dh)/r,(a[i+3]-dw)/r,(a[i+4]-dh)/r]})}
+    return res.sort((p,q)=>q.score-p.score)})}
+/* AI box -> exact corners: grow the plate colour from the middle of the box, keep it if it fits the box */
+function aiRefine(b){const [x0,y0,x1,y1]=b.box,w=x1-x0,h=y1-y0,cx=(x0+x1)/2,cy=(y0+y1)/2;let best=null;
+  for(const [fx,fy] of [[0,0],[-.28,0],[.28,0],[0,-.22],[0,.22]]){let d=null;try{d=detectAt(cx+fx*w,cy+fy*h)}catch(e){}if(!d)continue;
+    const bb=bbox(d.quad,0),ix=Math.max(0,Math.min(bb[2],x1+w*.08)-Math.max(bb[0],x0-w*.08)),iy=Math.max(0,Math.min(bb[3],y1+h*.15)-Math.max(bb[1],y0-h*.15)),ia=ix*iy,ba=(bb[2]-bb[0])*(bb[3]-bb[1]);
+    if(ba>0&&ia/ba>.85&&ba>w*h*.35){best=d;break}}
+  if(best)return best;
+  // no clean colour edge: use the AI box itself, trimmed a little (boxes include a small margin)
+  const mx=w*.012,my=h*.08,q=[[x0+mx,y0+my],[x1-mx,y0+my],[x1-mx,y1-my],[x0+mx,y1-my]];
+  const P=prep(),i=Math.round(cy*P.k)*P.w+Math.round(cx*P.k);let yel=0,n=0;for(let yy=-3;yy<=3;yy++)for(let xx=-Math.round(w*P.k*.4);xx<=Math.round(w*P.k*.4);xx+=2){const j=i+yy*P.w+xx;if(j<0||j>=P.N||P.Vv[j]<.4)continue;n++;if(P.Hh[j]>30&&P.Hh[j]<70&&P.Ss[j]>.3)yel++}
+  return {quad:q,side:n&&yel/n>.3?'rear':'front',hex:false}}
+
 /* ---------------- loading ---------------- */
 /* fast photo opening: decode + shrink in one step where the browser can, so big phone photos open quickly */
 function openPhoto(f,max){
@@ -517,13 +547,16 @@ function pasteBtn(){
 function busy(on){root.classList.toggle('busy',!!on)}
 function setPhoto(c){S.photo=c;S.pw=c.width;S.ph=c.height;PREP=null;S.noise=(()=>{try{const d=c.getContext('2d').getImageData(0,0,Math.min(400,c.width),Math.min(300,c.height)).data;let t=0,n=0;for(let i=4;i<d.length;i+=16){t+=Math.abs(d[i]-d[i-4]);n++}return Math.min(10,t/n)}catch(e){return 2}})();
   S.inpaintKey='';S.keep=false;S.before=false;S.cmp=null;S.crop=null;S.tapAt=null;S.shareUrl='';$('#cpShareBox').classList.remove('on');$('#cpCmp').classList.remove('on');$('#cpZoom').classList.remove('on')}
-function findPlate(){busy(1);$('.cp-spin').textContent='Finding your plate…';
-  setTimeout(()=>{let d=null;try{d=detect()}catch(err){d=null}
+function findPlate(){busy(1);S.ai=null;$('.cp-spin').textContent=AI.sess||AI.fail?'Finding your plate…':'Loading the plate finder…';
+  const wait=AI.sess||AI.fail?Promise.resolve():Promise.race([aiLoad().catch(()=>{}),new Promise(r=>setTimeout(r,15000))]);
+  wait.then(()=>{$('.cp-spin').textContent='Finding your plate…';return new Promise(r=>setTimeout(r,30))}).then(()=>aiDetect().catch(()=>null)).then(list=>{let d=null;
+    if(list&&list.length&&list[0].score>=.1){try{d=aiRefine(list[0])}catch(e){}S.ai=list}
+    if(!d){try{d=detect()}catch(err){d=null}}
     if(d){S.quad=d.quad;S.side=d.side;S.found=true;S.edit=false;S.hexHint=!!d.hex}
     else{S.found=false;S.edit=true;S.quad=null;S.side=PB().P.side||'rear'}
     if(PB().P.shape==='moto'&&S.side==='front')PB().choose('shape','standard');
     PB().P.side=S.side;PB().drawPlate();
-    S.det=S.found?classify():null;busy(0);hl.innerHTML='';render();updInfo()},20)}
+    S.det=S.found?classify():null;busy(0);hl.innerHTML='';render();updInfo()})}
 function load(f){busy(1);$('.cp-spin').textContent='Opening your photo…';
   openPhoto(f,1800).then(({c})=>{setPhoto(c);$('#cpEmpty').hidden=true;cv.hidden=false;findPlate()})
   .catch(()=>{busy(0);tip('Sorry, that photo couldn’t be opened. Please try a JPEG or PNG.')})}
@@ -542,7 +575,7 @@ function order(){const pb=PB(),P=pb.P,ex=['tint','border'].filter(x=>P[x]).map(x
   const msg=`Hi SMR Plates! I tried my plate on my car on your website and I'd like to order:\n\nReg: ${(pb.regIn.value||'').toUpperCase()}\nType: ${pb.isShow()?'SHOW PLATES (not road legal)':'Road-legal plates'}\nLetters: ${pb.lbl('letters',P.letters)}\nPlate: ${pb.lbl('shape',P.shape)}\nExtras: ${ex.join(', ')||'None'}\nI need: ${need}${S.det?'\nMy car currently has: '+SHAPE_TXT[S.det.shape]:''}${S.shareUrl?'\n\nMy mock-up: '+S.shareUrl:''}`;
   const u='https://wa.me/'+WA+'?text='+encodeURIComponent(msg);window.open(u,'_blank','noopener')||(location.href=u)}
 
-function open(){build();root.classList.add('on');document.documentElement.style.overflow='hidden';if(S.photo){render();updInfo()}else chips()}
+function open(){build();aiLoad().catch(()=>{});root.classList.add('on');document.documentElement.style.overflow='hidden';if(S.photo){render();updInfo()}else chips()}
 function close(){root.classList.remove('on');document.documentElement.style.overflow='';PB().drawPlate()}
 document.addEventListener('click',e=>{const t=e.target.closest('[data-carplate]');if(!t)return;e.preventDefault();e.stopPropagation();open()},true);
 window.SMRCarPlate={open,close,_S:S,_detect:()=>detect(),_detectAt:(x,y)=>detectAt(x,y),_classify:()=>classify()};
