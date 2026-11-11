@@ -221,12 +221,15 @@ const CSS=`
 .mk-tag{position:absolute;left:18px;top:18px;padding:5px 10px;border-radius:999px;background:rgba(10,10,18,.7);font-size:12px;font-weight:800;backdrop-filter:blur(6px)}
 .mk-drop{position:absolute;inset:10px;border-radius:14px;border:2px dashed #8f7bff;background:rgba(20,16,40,.82);display:none;align-items:center;justify-content:center;font:700 18px Sora,system-ui,sans-serif}
 .mk.drag .mk-drop{display:flex}
+.mk-busy{position:absolute;inset:10px;border-radius:14px;background:rgba(11,11,18,.6);display:none;align-items:center;justify-content:center;font:700 15px Sora,system-ui,sans-serif}.mk.busy .mk-busy{display:flex}
 .mk-panel{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 14px 28px}
 .mk-step{margin-bottom:18px}.mk-step>h4{margin:0 0 9px;font:700 13px/1 Sora,system-ui,sans-serif;letter-spacing:.02em;color:#c9c9dc;display:flex;align-items:center;gap:8px}
 .mk-step>h4 i{font-style:normal;width:21px;height:21px;border-radius:50%;display:grid;place-items:center;font-size:11px;background:linear-gradient(110deg,#2f6bff,#a43bff);color:#fff}
 .mk-up{display:flex;align-items:center;gap:12px;width:100%;padding:14px;border-radius:16px;border:1.5px dashed rgba(160,140,255,.55);background:rgba(120,100,255,.08);color:#fff;cursor:pointer;text-align:left}
 .mk-up svg{flex:none;width:30px;height:30px}
 .mk-up b{display:block;font:700 15px Sora,system-ui,sans-serif}.mk-up span{display:block;font-size:12.5px;color:#a8a8c0;margin-top:2px}
+.mk-paste{width:100%;margin-top:8px;padding:11px;border-radius:12px;border:1.5px dashed rgba(255,255,255,.18);background:transparent;color:#d8d8e6;font:700 13.5px Manrope,system-ui,sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}.mk-paste svg{width:17px;height:17px}
+.mk-tip{font-size:12px;color:#c9b8ff;margin:6px 0 0;text-align:center}.mk-tip:empty{display:none}
 .mk-file{display:none;align-items:center;gap:10px;margin-top:9px;font-size:13px}.mk-file.on{display:flex}
 .mk-file em{font-style:normal;min-width:0;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#c9c9dc}
 .mk-q{flex:none;padding:4px 9px;border-radius:999px;font-size:11.5px;font-weight:800}
@@ -269,6 +272,7 @@ const CSS=`
 const UP='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V4M7.5 8.5 12 4l4.5 4.5"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>';
 const DL='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7.5 10.5 12 15l4.5-4.5"/><path d="M5 20h14"/></svg>';
 const SH='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="m8.3 10.8 7.4-4.4M8.3 13.2l7.4 4.4"/></svg>';
+const PASTE='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4V3h6v1M9.5 10h5M9.5 14h5"/></svg>';
 const WAI='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm4.5 12.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.5 1 2.7c.1.2 1.8 2.8 4.4 3.9 1.6.7 2.3.8 3.1.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3z"/></svg>';
 
 function build(){
@@ -276,11 +280,12 @@ function build(){
   const s=document.createElement('style');s.textContent=CSS;document.head.appendChild(s);
   root=document.createElement('div');root.className='mk';root.setAttribute('role','dialog');root.setAttribute('aria-label','Mock-up Studio');
   root.innerHTML=`<div class="mk-top"><div><b>Mock-up <span class="mk-g">Studio</span></b><small>See your design printed, before you order</small></div><button class="mk-x" type="button" aria-label="Close">×</button></div>
-  <div class="mk-body"><div class="mk-stage"><canvas width="1200" height="1000"></canvas><span class="mk-tag" id="mkTag"></span><div class="mk-drop">Drop your design here</div></div>
+  <div class="mk-body"><div class="mk-stage"><canvas width="1200" height="1000"></canvas><span class="mk-tag" id="mkTag"></span><div class="mk-drop">Drop your design here</div><div class="mk-busy">Opening your design…</div></div>
   <div class="mk-panel">
    <div class="mk-step"><h4><i>1</i>Your design</h4>
-    <button class="mk-up" type="button" id="mkUp">${UP}<div><b>Upload your design</b><span>JPG, PNG or PDF · or drag it in</span></div></button>
+    <button class="mk-up" type="button" id="mkUp">${UP}<div><b>Upload your design</b><span>JPG, PNG or PDF · drag it in or paste it</span></div></button>
     <input type="file" id="mkFile" accept="image/*,application/pdf" hidden>
+    <button class="mk-paste" type="button" id="mkPaste">${PASTE}<span>Paste an image</span></button><p class="mk-tip" id="mkTip"></p>
     <div class="mk-file" id="mkFileRow"><em id="mkName"></em><span class="mk-q" id="mkQ"></span></div></div>
    <div class="mk-step"><h4><i>2</i>Pick a product</h4><div class="mk-prods" id="mkProds"></div></div>
    <div class="mk-step"><h4><i>3</i>Choose a size</h4><div class="mk-chips" id="mkSizes"></div>
@@ -302,6 +307,7 @@ function build(){
   $('#mkFile').onchange=e=>{const f=e.target.files[0];if(f)load(f);e.target.value=''};
   $('#mkCw').oninput=$('#mkCh').oninput=()=>{st.cw=+$('#mkCw').value||0;st.ch=+$('#mkCh').value||0;if(st.cw>=20&&st.ch>=20)refresh(true)};
   $('#mkQty').oninput=()=>{st.qty=Math.max(1,+$('#mkQty').value||1)};
+  $('#mkPaste').onclick=pasteBtn;
   $('#mkDl').onclick=download;$('#mkSh').onclick=shareLink;$('#mkWa').onclick=e=>{e.preventDefault();quote()};
   ['dragenter','dragover'].forEach(t=>root.addEventListener(t,e=>{e.preventDefault();root.classList.add('drag')}));
   ['dragleave','drop'].forEach(t=>root.addEventListener(t,e=>{e.preventDefault();if(t==='dragleave'&&e.relatedTarget&&root.contains(e.relatedTarget))return;root.classList.remove('drag')}));
@@ -361,24 +367,36 @@ function onClick(e){
 }
 
 /* ---------- loading files ---------- */
+/* fast photo opening: decode + shrink in one step where the browser can, so big phone photos open quickly */
+function openPhoto(f,max){
+  const viaImg=()=>new Promise((res,rej)=>{const u=URL.createObjectURL(f),im=new Image();im.decoding='async';im.onload=()=>{const k=Math.min(1,max/Math.max(im.naturalWidth,im.naturalHeight)),c=document.createElement('canvas');c.width=Math.max(1,Math.round(im.naturalWidth*k));c.height=Math.max(1,Math.round(im.naturalHeight*k));const x=c.getContext('2d');x.imageSmoothingQuality='high';x.drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);res({c,w:im.naturalWidth,h:im.naturalHeight})};im.onerror=()=>{URL.revokeObjectURL(u);rej()};im.src=u});
+  if(!window.createImageBitmap)return viaImg();
+  return createImageBitmap(f,{imageOrientation:'from-image'}).then(bm=>{const W=bm.width,H=bm.height,k=Math.min(1,max/Math.max(W,H));
+      const go=src=>{const c=document.createElement('canvas');c.width=Math.max(1,Math.round(W*k));c.height=Math.max(1,Math.round(H*k));const x=c.getContext('2d');x.imageSmoothingQuality='high';x.drawImage(src,0,0,c.width,c.height);return {c,w:W,h:H}};
+      if(k>=1){const r=go(bm);bm.close&&bm.close();return r}
+      return createImageBitmap(f,{imageOrientation:'from-image',resizeWidth:Math.round(W*k),resizeHeight:Math.round(H*k),resizeQuality:'high'}).then(b2=>{const ok=b2.width===Math.round(W*k);const r=go(ok?b2:bm);b2.close&&b2.close();bm.close&&bm.close();return r}).catch(()=>{const r=go(bm);bm.close&&bm.close();return r})})
+    .catch(viaImg)}
+
+function mtip(t){const el=$('#mkTip');el.textContent=t||'';clearTimeout(mtip.t);if(t)mtip.t=setTimeout(()=>el.textContent='',6000)}
+function pasteBtn(){
+  if(!navigator.clipboard||!navigator.clipboard.read){mtip(!/Mobi/.test(navigator.userAgent)?'Press Ctrl+V (or ⌘+V) to paste your image.':'Your browser can’t paste images here. Save it, then tap Upload.');return}
+  navigator.clipboard.read().then(items=>{for(const it of items){const t=it.types.find(x=>/^image\//.test(x));if(t)return it.getType(t).then(b=>{mtip('');load(new File([b],'pasted image.'+(t.split('/')[1]||'png'),{type:t}))})}
+    mtip('There’s no image copied. Copy one first (long-press it → Copy), then tap Paste.')}).catch(()=>mtip('Paste was blocked. Allow paste when asked, or use Upload.'))}
 function setImg(src,w,h,vector,name){st.img=src;st.imgW=w;st.imgH=h;st.vector=vector;st.name=name;st.bg='#ffffff';
   $('#mkName').textContent=name;$('#mkFileRow').classList.add('on');$('#mkUp').querySelector('b').textContent='Change design';
   // auto-pick a matching orientation for the chosen product
   const pr=P[st.p];if(orient()&&!st.orient)st.orient=w>h*1.05?'l':h>w*1.05?'p':pr.orient;refresh()}
 function load(f){
-  if(f.type==='application/pdf'||/\.pdf$/i.test(f.name))return loadPdf(f);
-  const url=URL.createObjectURL(f),im=new Image();
-  im.onload=()=>{let src=im,w=im.naturalWidth,h=im.naturalHeight;const m=4200;if(Math.max(w,h)>m){const k=m/Math.max(w,h),c=document.createElement('canvas');c.width=Math.round(w*k);c.height=Math.round(h*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);src=c}
-    setImg(src,w,h,false,f.name||'Your design')};
-  im.onerror=()=>alert('Sorry, that file couldn’t be opened. Please save it as a JPG, PNG or PDF and try again.');
-  im.src=url}
+  if(f.type==='application/pdf'||/\.pdf$/i.test(f.name||''))return loadPdf(f);
+  busyM(1);openPhoto(f,3200).then(({c,w,h})=>{busyM(0);setImg(c,w,h,false,f.name||'Your design')}).catch(()=>{busyM(0);alert('Sorry, that file couldn’t be opened. Please save it as a JPG, PNG or PDF and try again.')})}
+function busyM(on){root.classList.toggle('busy',!!on)}
 function loadPdf(f){
-  const go=()=>{f.arrayBuffer().then(b=>pdfjsLib.getDocument({data:b}).promise).then(doc=>doc.getPage(1)).then(pg=>{const v0=pg.getViewport({scale:1}),k=Math.min(4,3600/Math.max(v0.width,v0.height)),v=pg.getViewport({scale:k}),c=document.createElement('canvas');c.width=Math.round(v.width);c.height=Math.round(v.height);
-    return pg.render({canvasContext:c.getContext('2d'),viewport:v}).promise.then(()=>setImg(c,c.width,c.height,true,f.name))}).catch(()=>alert('Sorry, that PDF couldn’t be opened here. Please save the first page as a JPG or PNG and try again.'))};
+  busyM(1);const go=()=>{f.arrayBuffer().then(b=>pdfjsLib.getDocument({data:b}).promise).then(doc=>doc.getPage(1)).then(pg=>{const v0=pg.getViewport({scale:1}),k=Math.min(4,3600/Math.max(v0.width,v0.height)),v=pg.getViewport({scale:k}),c=document.createElement('canvas');c.width=Math.round(v.width);c.height=Math.round(v.height);
+    return pg.render({canvasContext:c.getContext('2d'),viewport:v}).promise.then(()=>{busyM(0);setImg(c,c.width,c.height,true,f.name)})}).catch(()=>{busyM(0);alert('Sorry, that PDF couldn’t be opened here. Please save the first page as a JPG or PNG and try again.')})};
   if(window.pdfjsLib)return go();
   const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
   s.onload=()=>{pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';go()};
-  s.onerror=()=>alert('PDF preview needs an internet connection. Please try again, or upload a JPG or PNG.');document.head.appendChild(s)}
+  s.onerror=()=>{busyM(0);alert('PDF preview needs an internet connection. Please try again, or upload a JPG or PNG.')};document.head.appendChild(s)}
 
 /* ---------- output ---------- */
 function download(){

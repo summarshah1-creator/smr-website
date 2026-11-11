@@ -325,6 +325,11 @@ const CSS=`
 .cp-share{display:none;margin-top:10px;padding:12px;border-radius:14px;background:rgba(255,255,255,.05);font-size:13px}.cp-share.on{display:block}
 .cp-share input{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:#14141e;color:#fff;font:600 13px Manrope,system-ui;margin:8px 0}
 .cp-priv{font-size:11.5px;color:#7d7d95;text-align:center;margin-top:8px}
+.cp-drop{position:absolute;inset:10px;border-radius:14px;border:2px dashed #ffd23f;background:rgba(30,22,0,.85);display:none;align-items:center;justify-content:center;font:700 18px Sora,system-ui,sans-serif;color:#ffd23f;z-index:5;pointer-events:none}
+.cp.drag .cp-drop{display:flex}
+.cp-paste{width:100%;margin-top:8px;padding:11px;border-radius:12px;border:1.5px dashed rgba(255,255,255,.18);background:transparent;color:#d8d8e6;font:700 13.5px Manrope,system-ui,sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
+.cp-paste svg{width:17px;height:17px}
+.cp-tip{font-size:12px;color:#ffc56b;margin-top:6px;text-align:center}.cp-tip:empty{display:none}
 .cp-spin{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:rgba(11,11,18,.55);font-weight:800;font-size:14px}.cp.busy .cp-spin{display:flex}
 @media(min-width:900px){.cp-body{flex-direction:row}.cp-stage{flex:1.5;padding:24px}.cp-stage canvas{max-height:calc(100vh - 130px)}.cp-panel{flex:1;max-width:450px;border-left:1px solid rgba(255,255,255,.08);padding:20px 22px 32px}}
 `;
@@ -332,6 +337,7 @@ const IC={cam:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
  img:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="m3 16 5-5 4 4 3-3 6 6"/><circle cx="15.5" cy="8.5" r="1.5"/></svg>',
  dl:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7.5 10.5 12 15l4.5-4.5M5 20h14"/></svg>',
  share:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="m8.3 10.8 7.4-4.4M8.3 13.2l7.4 4.4"/></svg>',
+ paste:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4V3h6v1M9.5 10h5M9.5 14h5"/></svg>',
  wa:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm4.5 12.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.5 1 2.7c.1.2 1.8 2.8 4.4 3.9 1.6.7 2.3.8 3.1.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3z"/></svg>'};
 const SHAPE_TXT={standard:'a standard plate',short:'a short plate',oversize:'an oversized plate',hex:'a hex plate',moto:'a square / two-line plate'};
 function build(){if(built)return;built=true;
@@ -339,12 +345,13 @@ function build(){if(built)return;built=true;
   root=document.createElement('div');root.className='cp';root.setAttribute('role','dialog');root.setAttribute('aria-label','See your plate on your car');
   root.innerHTML=`<div class="cp-top"><div><b>See it on <span class="g">your car</span></b><small>Your new plate on a photo of your car</small></div><button class="cp-x" type="button" aria-label="Close">×</button></div>
   <div class="cp-body"><div class="cp-stage" id="cpStage">
-    <div class="cp-empty" id="cpEmpty"><div class="pic"><i></i></div><p><b style="color:#fff">Take a photo of the front or back of your car</b>, straight on, with the whole plate in shot. We'll put your new plate on it.</p></div>
-    <canvas id="cpCv" hidden></canvas><div class="cp-hl" id="cpHl"></div><div class="cp-loupe" id="cpLoupe"><canvas width="236" height="236"></canvas></div><div class="cp-msg" id="cpMsg"></div><div class="cp-spin">Working on it…</div></div>
+    <div class="cp-empty" id="cpEmpty"><div class="pic"><i></i></div><p><b style="color:#fff">Take a photo of the front or back of your car</b>, straight on, with the whole plate in shot. We'll put your new plate on it.<br><span style="font-size:12.5px">You can also drag a photo in, or paste one (JPEG or PNG).</span></p></div>
+    <canvas id="cpCv" hidden></canvas><div class="cp-hl" id="cpHl"></div><div class="cp-loupe" id="cpLoupe"><canvas width="236" height="236"></canvas></div><div class="cp-msg" id="cpMsg"></div><div class="cp-spin">Working on it…</div><div class="cp-drop">Drop your photo here</div></div>
   <div class="cp-panel">
    <div class="cp-st"><h4><i>1</i>Your car</h4><div class="cp-row">
      <label class="cp-b pri">${IC.cam}Take a photo<input type="file" accept="image/*" capture="environment" hidden id="cpCam"></label>
      <label class="cp-b">${IC.img}Choose photo<input type="file" accept="image/*" hidden id="cpPick"></label></div>
+     <button class="cp-paste" type="button" id="cpPaste">${IC.paste}<span>Paste a photo</span></button><p class="cp-tip" id="cpTip"></p>
      <div id="cpFound"></div></div>
    <div class="cp-st" id="cpS2" hidden><h4><i>2</i>Your plate</h4>
      <input class="cp-reg" id="cpReg" maxlength="8" autocomplete="off" spellcheck="false" aria-label="Registration">
@@ -373,6 +380,12 @@ function build(){if(built)return;built=true;
   root.addEventListener('click',onClick);
   stage.addEventListener('pointerdown',down);window.addEventListener('pointermove',move);window.addEventListener('pointerup',up);window.addEventListener('pointercancel',up);
   window.addEventListener('resize',()=>{if(root.classList.contains('on'))placeHandles()});
+  // drag & drop, paste (keyboard) and a Paste button for phones
+  ['dragenter','dragover'].forEach(t=>root.addEventListener(t,e=>{if(![...(e.dataTransfer||{}).types||[]].includes('Files'))return;e.preventDefault();root.classList.add('drag')}));
+  root.addEventListener('dragleave',e=>{if(e.relatedTarget&&root.contains(e.relatedTarget))return;root.classList.remove('drag')});
+  root.addEventListener('drop',e=>{e.preventDefault();root.classList.remove('drag');const f=[...(e.dataTransfer||{}).files||[]].find(f=>/^image\//.test(f.type));f?take(f):tip('That isn’t a photo. Please use a JPEG or PNG.')});
+  document.addEventListener('paste',e=>{if(!root.classList.contains('on'))return;const it=[...((e.clipboardData||{}).items||[])].find(i=>/^image\//.test(i.type));if(it){e.preventDefault();take(it.getAsFile())}});
+  $('#cpPaste').onclick=pasteBtn;
   $('#cpDl').onclick=download;$('#cpShare').onclick=share;$('#cpOrder').onclick=e=>{e.preventDefault();order()};
 }
 
@@ -449,18 +462,35 @@ function showLoupe(e){const sr=stage.getBoundingClientRect(),p=toImg(e),lc=loupe
   let lx=e.clientX-sr.left-59,ly=e.clientY-sr.top-150;if(ly<4)ly=e.clientY-sr.top+40;loupe.style.left=Math.max(4,Math.min(sr.width-122,lx))+'px';loupe.style.top=ly+'px';loupe.classList.add('on')}
 
 /* ---------------- loading ---------------- */
+/* fast photo opening: decode + shrink in one step where the browser can, so big phone photos open quickly */
+function openPhoto(f,max){
+  const viaImg=()=>new Promise((res,rej)=>{const u=URL.createObjectURL(f),im=new Image();im.decoding='async';im.onload=()=>{const k=Math.min(1,max/Math.max(im.naturalWidth,im.naturalHeight)),c=document.createElement('canvas');c.width=Math.max(1,Math.round(im.naturalWidth*k));c.height=Math.max(1,Math.round(im.naturalHeight*k));const x=c.getContext('2d');x.imageSmoothingQuality='high';x.drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);res({c,w:im.naturalWidth,h:im.naturalHeight})};im.onerror=()=>{URL.revokeObjectURL(u);rej()};im.src=u});
+  if(!window.createImageBitmap)return viaImg();
+  return createImageBitmap(f,{imageOrientation:'from-image'}).then(bm=>{const W=bm.width,H=bm.height,k=Math.min(1,max/Math.max(W,H));
+      const go=src=>{const c=document.createElement('canvas');c.width=Math.max(1,Math.round(W*k));c.height=Math.max(1,Math.round(H*k));const x=c.getContext('2d');x.imageSmoothingQuality='high';x.drawImage(src,0,0,c.width,c.height);return {c,w:W,h:H}};
+      if(k>=1){const r=go(bm);bm.close&&bm.close();return r}
+      return createImageBitmap(f,{imageOrientation:'from-image',resizeWidth:Math.round(W*k),resizeHeight:Math.round(H*k),resizeQuality:'high'}).then(b2=>{const ok=b2.width===Math.round(W*k);const r=go(ok?b2:bm);b2.close&&b2.close();bm.close&&bm.close();return r}).catch(()=>{const r=go(bm);bm.close&&bm.close();return r})})
+    .catch(viaImg)}
+
+function tip(t){const el=$('#cpTip');el.textContent=t||'';clearTimeout(tip.t);if(t)tip.t=setTimeout(()=>el.textContent='',6000)}
+function take(f){if(!f)return;if(!/^image\/(jpe?g|png|webp|heic|heif|gif|bmp)$/i.test(f.type||'image/jpeg')){tip('Please use a JPEG or PNG photo.');return}tip('');load(f)}
+function pasteBtn(){
+  if(!navigator.clipboard||!navigator.clipboard.read){tip(/Mac|Win|Linux/.test(navigator.platform)&&!/Mobi/.test(navigator.userAgent)?'Press Ctrl+V (or ⌘+V) to paste your photo.':'Your browser can’t paste photos here. Save the photo, then tap Choose photo.');return}
+  navigator.clipboard.read().then(items=>{for(const it of items){const t=it.types.find(x=>/^image\//.test(x));if(t)return it.getType(t).then(b=>take(new File([b],'pasted.'+(t.split('/')[1]||'png'),{type:t})))}
+    tip('There’s no photo copied. Copy a photo first (long-press it → Copy), then tap Paste.')}).catch(()=>tip('Paste was blocked. Allow paste when asked, or use Choose photo.'))}
 function busy(on){root.classList.toggle('busy',!!on)}
-function load(f){busy(1);const url=URL.createObjectURL(f),im=new Image();
-  im.onload=()=>{const m=2000,k=Math.min(1,m/Math.max(im.naturalWidth,im.naturalHeight)),c=document.createElement('canvas');c.width=Math.round(im.naturalWidth*k);c.height=Math.round(im.naturalHeight*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(url);
-    S.photo=c;S.pw=c.width;S.ph=c.height;S.noise=(()=>{try{const d=c.getContext('2d').getImageData(0,0,Math.min(400,c.width),Math.min(300,c.height)).data;let t=0,n=0;for(let i=4;i<d.length;i+=16){t+=Math.abs(d[i]-d[i-4]);n++}return Math.min(10,t/n)}catch(e){return 2}})();S.inpaintKey='';S.keep=false;S.before=false;S.cmp=null;S.shareUrl='';$('#cpShareBox').classList.remove('on');$('#cpCmp').classList.remove('on');$('#cpZoom').classList.remove('on');
-    $('#cpEmpty').hidden=true;cv.hidden=false;
+function load(f){busy(1);$('.cp-spin').textContent='Opening your photo…';
+  openPhoto(f,1800).then(({c})=>{
+    S.photo=c;S.pw=c.width;S.ph=c.height;S.noise=(()=>{try{const d=c.getContext('2d').getImageData(0,0,Math.min(400,c.width),Math.min(300,c.height)).data;let t=0,n=0;for(let i=4;i<d.length;i+=16){t+=Math.abs(d[i]-d[i-4]);n++}return Math.min(10,t/n)}catch(e){return 2}})();
+    S.inpaintKey='';S.keep=false;S.before=false;S.cmp=null;S.shareUrl='';$('#cpShareBox').classList.remove('on');$('#cpCmp').classList.remove('on');$('#cpZoom').classList.remove('on');
+    $('#cpEmpty').hidden=true;cv.hidden=false;$('.cp-spin').textContent='Finding your plate…';
     setTimeout(()=>{let d=null;try{d=detect()}catch(err){d=null}
       if(d){S.quad=d.quad;S.side=d.side;S.found=true;S.edit=false;S.hexHint=!!d.hex}
       else{S.found=false;S.edit=true;S.side=PB().P.side||'rear';const w=S.pw*.42,h=w/4.68,cx=S.pw/2,cy=S.ph*.62;S.quad=[[cx-w/2,cy-h/2],[cx+w/2,cy-h/2],[cx+w/2,cy+h/2],[cx-w/2,cy+h/2]]}
       if(PB().P.shape==='moto'&&S.side==='front')PB().choose('shape','standard');
       PB().P.side=S.side;PB().drawPlate();
-      S.det=S.found?classify():null;busy(0);render();updInfo();requestAnimationFrame(placeHandles)},30)};
-  im.onerror=()=>{busy(0);alert('Sorry, that photo couldn’t be opened. Please try a JPG or PNG.')};im.src=url}
+      S.det=S.found?classify():null;busy(0);render();updInfo();requestAnimationFrame(placeHandles)},20)})
+  .catch(()=>{busy(0);tip('Sorry, that photo couldn’t be opened. Please try a JPEG or PNG.')})}
 
 /* ---------------- output ---------------- */
 function finalCanvas(){return S.lastOut}
