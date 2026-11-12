@@ -247,6 +247,22 @@
   ]
  },
  {
+  "slug": "lets-eat-together",
+  "version": "2026-11-12a",
+  "ver": "1.0",
+  "name": "Let's Eat Together",
+  "accent": "#6e2546",
+  "tagline": "Ramadan campaign website · Luton Foodbank × Inspire FM",
+  "description": "Campaign website for Let's Eat Together, Luton Foodbank's Ramadan iftar campaign with Inspire FM: schools and groups taking part, live donation totals, the Fasting Challenge, a partner hub and an admin back end.",
+  "tips": [
+   "The live total, progress bar and latest donations update the page so supporters can see the campaign moving.",
+   "Every school and organisation taking part gets its own page with its logo, target and what it has raised.",
+   "The Fasting Challenge and Get involved forms turn visitors into fundraisers in a few taps.",
+   "Each partner has a PIN-protected hub with their starter pack, posters, QR codes and downloads.",
+   "The admin side adds schools from a saved list of past years, with logos and details filled in automatically."
+  ]
+ },
+ {
   "slug": "nurify",
   "version": "2026-11-12a",
   "ver": "1.0",
