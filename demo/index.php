@@ -6,6 +6,7 @@ security_headers(true);
 header('Cache-Control: no-store');
 
 $token = (string) ($_GET['k'] ?? '');
+try { deck_inbox_import(); } catch (Throwable $e) {}
 $preview = isset($_GET['preview']) && admin_token();
 $view = 'landing';
 $demos = [];

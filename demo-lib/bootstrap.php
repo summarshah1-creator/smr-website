@@ -297,6 +297,38 @@ function deck_public(string $slug): ?array {
     $r = deck_row($slug);
     return $r ? ['pages' => (int) $r['pages'], 'title' => (string) $r['title'], 'pdf' => (int) $r['pdf'] === 1, 'ratio' => (float) $r['ratio'], 'v' => (int) $r['updated_at']] : null;
 }
+/* Put a finished deck in place: $stage holds 1..n slide images (+ deck.pdf). */
+function deck_install(string $slug, string $stage, int $pages, string $title, float $ratio): void {
+    $dir = deck_dir($slug);
+    if (!is_dir(dirname($dir))) @mkdir(dirname($dir), 0750, true);
+    rrmdir_any($dir);
+    if (!@rename($stage, $dir)) throw new RuntimeException('Could not save the presentation.');
+    db()->prepare('INSERT INTO decks (slug, pages, title, pdf, ratio, ready, updated_at) VALUES (?,?,?,?,?,1,?) ON CONFLICT(slug) DO UPDATE SET pages = excluded.pages, title = excluded.title, pdf = excluded.pdf, ratio = excluded.ratio, ready = 1, updated_at = excluded.updated_at')
+        ->execute([$slug, $pages, mb_substr(trim($title), 0, 100), is_file("$dir/deck.pdf") ? 1 : 0, max(0.3, min(4, $ratio)), now()]);
+}
+/* Decks dropped by the "Assign demo deck" workflow: demo-data/deck-inbox/<job>/ with meta.json {slug,title,pages,ratio}
+   and 1.webp … n.webp (+ deck.pdf). Imported on the next SMR Admin or showroom load. */
+function deck_inbox_import(): void {
+    $base = SITE_ROOT . '/demo-data/deck-inbox';
+    if (!is_dir($base)) return;
+    foreach (glob($base . '/*', GLOB_ONLYDIR) ?: [] as $job) {
+        if (!preg_match('/^[A-Za-z0-9_-]{8,40}$/', basename($job)) || filemtime($job) > time() - 30) continue;
+        $meta = json_decode((string) @file_get_contents("$job/meta.json"), true) ?: [];
+        $slug = (string) ($meta['slug'] ?? '');
+        $d = $slug !== '' ? demo_by_slug($slug) : null;
+        $pages = (int) ($meta['pages'] ?? 0);
+        $ok = $d && $pages > 0 && $pages <= 200;
+        for ($i = 1; $ok && $i <= $pages; $i++) if (!glob("$job/$i.{webp,jpg,png}", GLOB_BRACE)) $ok = false;
+        if (!$ok) { if (filemtime($job) < time() - 86400) rrmdir_any($job); continue; }
+        $stage = deck_dir($slug) . '.in';
+        rrmdir_any($stage);
+        if (!is_dir(dirname($stage))) @mkdir(dirname($stage), 0750, true);
+        if (!@mkdir($stage, 0750)) continue;
+        foreach (scandir($job) ?: [] as $f) if (preg_match('/^(\d+\.(webp|jpg|png)|deck\.pdf)$/', $f)) @rename("$job/$f", "$stage/$f");
+        rrmdir_any($job);
+        try { deck_install($slug, $stage, $pages, (string) ($meta['title'] ?? ''), (float) ($meta['ratio'] ?? 1.7778)); } catch (Throwable $e) { rrmdir_any($stage); }
+    }
+}
 function demo_public(array $d): array {
     return ['deck' => deck_public((string) $d['slug']), 'slug' => $d['slug'], 'name' => $d['name'], 'tagline' => $d['tagline'], 'description' => $d['description'],
         'tips' => array_values(array_filter(array_map('trim', explode("\n", (string) $d['tips'])))), 'accent' => $d['accent'],

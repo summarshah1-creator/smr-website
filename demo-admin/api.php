@@ -251,6 +251,7 @@ case 'password':
     json_out(['ok' => true]);
 
 case 'list':
+    deck_inbox_import();
     $demos = [];
     foreach (db()->query('SELECT * FROM demos ORDER BY sort, name') as $d) {
         $demos[] = demo_public($d) + ['enabled' => (int) $d['enabled'], 'sort' => (int) $d['sort'], 'source' => $d['source'],
@@ -439,11 +440,8 @@ case 'deck_remove':
     $pages = (int) ($in['pages'] ?? 0);
     if ($pages < 1 || $pages > 200) json_out(['error' => 'No slides.'], 400);
     for ($i = 1; $i <= $pages; $i++) if (!glob("$stage/$i.*")) json_out(['error' => 'Slide ' . $i . ' did not upload. Try again.'], 400);
-    rrmdir_any($dir);
-    if (!@rename($stage, $dir)) json_out(['error' => 'Could not save the presentation.'], 500);
-    $ratio = max(0.3, min(4, (float) ($in['ratio'] ?? 1.7778)));
-    db()->prepare('INSERT INTO decks (slug, pages, title, pdf, ratio, ready, updated_at) VALUES (?,?,?,?,?,1,?) ON CONFLICT(slug) DO UPDATE SET pages = excluded.pages, title = excluded.title, pdf = excluded.pdf, ratio = excluded.ratio, ready = 1, updated_at = excluded.updated_at')
-        ->execute([$d['slug'], $pages, mb_substr(trim((string) ($in['title'] ?? '')), 0, 100), is_file("$dir/deck.pdf") ? 1 : 0, $ratio, now()]);
+    try { deck_install($d['slug'], $stage, $pages, (string) ($in['title'] ?? ''), (float) ($in['ratio'] ?? 1.7778)); }
+    catch (Throwable $e) { json_out(['error' => $e->getMessage()], 500); }
     json_out(['ok' => true, 'deck' => deck_public($d['slug'])]);
 
 case 'demo_delete':

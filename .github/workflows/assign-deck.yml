@@ -1,0 +1,88 @@
+name: Assign demo deck
+
+# Other Claude chats attach a features presentation (deck) to a demo app:
+# push a branch (e.g. deck/<slug>) with a folder deck-inbox/ holding meta.json {"slug": "<demo slug>", "title": "..."}
+# and either deck.pdf or slide pictures (1.png, 2.png … or any names in order), then run this workflow with that branch.
+# The slides are made here (PDF pages → 1920px WebP), uploaded to the server's deck inbox, and installed on the next
+# SMR Admin or demo page load. It replaces any deck the app already had. The owner can delete it in SMR Admin.
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch with the deck-inbox folder'
+        required: true
+      slug:
+        description: 'Demo slug (optional if meta.json has it)'
+        required: false
+
+permissions:
+  contents: write
+
+jobs:
+  assign:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch }}
+      - name: Make the slides
+        id: job
+        env:
+          SLUG_IN: ${{ inputs.slug }}
+        run: |
+          test -d deck-inbox || { echo "No deck-inbox folder on this branch"; exit 1; }
+          sudo apt-get -qq update >/dev/null && sudo apt-get -qq install -y poppler-utils >/dev/null
+          pip install -q pillow
+          mkdir -p out
+          python3 - <<'PY'
+          import json, os, glob, subprocess, re
+          from PIL import Image
+          src = 'deck-inbox'
+          meta = {}
+          if os.path.exists(f'{src}/meta.json'):
+              meta = json.load(open(f'{src}/meta.json'))
+          slug = (os.environ.get('SLUG_IN') or meta.get('slug') or '').strip()
+          assert re.fullmatch(r'[a-z0-9][a-z0-9-]{0,40}', slug), 'Give the demo slug (input or meta.json)'
+          pdfs = sorted(glob.glob(f'{src}/*.pdf'))
+          if pdfs:
+              os.makedirs('tmp', exist_ok=True)
+              subprocess.run(['pdftoppm', '-png', '-scale-to-x', '1920', '-scale-to-y', '-1', pdfs[0], 'tmp/p'], check=True)
+              pics = sorted(glob.glob('tmp/p-*.png'), key=lambda p: int(re.findall(r'(\d+)\.png$', p)[0]))
+              if os.path.getsize(pdfs[0]) < 60 * 1024 * 1024:
+                  os.replace(pdfs[0], 'out/deck.pdf')
+              title = meta.get('title') or os.path.splitext(os.path.basename(pdfs[0]))[0]
+          else:
+              key = lambda p: [int(t) if t.isdigit() else t.lower() for t in re.split(r'(\d+)', os.path.basename(p))]
+              pics = sorted([p for p in glob.glob(f'{src}/*') if p.lower().endswith(('.png', '.jpg', '.jpeg', '.webp'))], key=key)
+              title = meta.get('title') or ''
+          assert pics, 'No slides found'
+          assert len(pics) <= 200, 'Over 200 slides'
+          ratio = 1.7778
+          for i, p in enumerate(pics, 1):
+              im = Image.open(p).convert('RGB')
+              if i == 1: ratio = im.width / im.height
+              if im.width > 1920:
+                  im = im.resize((1920, round(im.height * 1920 / im.width)), Image.LANCZOS)
+              im.save(f'out/{i}.webp', quality=86, method=5)
+          json.dump({'slug': slug, 'title': title, 'pages': len(pics), 'ratio': round(ratio, 4)}, open('out/meta.json', 'w'))
+          print('slides:', len(pics), 'slug:', slug, 'title:', title)
+          PY
+          echo "id=$(python3 -c 'import secrets;print(secrets.token_urlsafe(12))')" >> "$GITHUB_OUTPUT"
+          echo "slug=$(python3 -c "import json;print(json.load(open('out/meta.json'))['slug'])")" >> "$GITHUB_OUTPUT"
+      - name: Upload to the server
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./out/
+          server-dir: ${{ secrets.FTP_SERVER_DIR || './public_html/' }}demo-data/deck-inbox/${{ steps.job.outputs.id }}/
+      - name: Write the result
+        run: |
+          printf '{"ok":true,"slug":"%s","note":"Installed on the next SMR Admin or demo page load. Delete it in SMR Admin (My demos or Send).","uploaded":"%s"}\n' "${{ steps.job.outputs.slug }}" "$(date -u +%FT%TZ)" > deck-inbox/RESULT.json
+          echo "### Deck uploaded for ${{ steps.job.outputs.slug }}" >> "$GITHUB_STEP_SUMMARY"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898341+github-actions[bot]@users.noreply.github.com"
+          git add deck-inbox/RESULT.json
+          git commit -m "Deck uploaded for ${{ steps.job.outputs.slug }}"
+          git push origin HEAD:${{ inputs.branch }}

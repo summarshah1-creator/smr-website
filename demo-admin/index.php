@@ -122,6 +122,10 @@ input:focus,textarea:focus,select:focus{border-color:rgba(214,59,255,.6);box-sha
 .dcard .th{display:flex;gap:5px;margin:10px 0}.dcard .th img{width:46px;height:46px;object-fit:cover;border-radius:9px;box-shadow:0 0 0 1px rgba(255,255,255,.08);background:#0c0c16}
 .dpg{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:14px;border-radius:16px;border:1px solid rgba(255,181,71,.4);background:rgba(255,181,71,.07);margin-bottom:14px}
 .dpg b{display:block}.dpg span{color:var(--muted);font-size:13px}
+.deckbox{margin-top:16px;padding:12px;border-radius:16px;border:1px solid rgba(255,200,87,.45);background:rgba(255,200,87,.07)}
+.dkrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.dkbtns{display:flex;gap:8px;width:100%}.dkbtns .btn{flex:1}.dkrow+.dkrow{margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
+.dkrow img{width:64px;height:36px;object-fit:cover;border-radius:6px;box-shadow:0 0 0 1px rgba(255,255,255,.12);flex:none;background:#111}
+.dkrow .tx{flex:1;min-width:0}.dkrow b{display:block;font-size:13.5px;color:#ffd88a}.dkrow small{display:block;color:var(--muted);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hidden{display:none!important}
 .empty{color:var(--muted);text-align:center;padding:30px}
 .toast{position:fixed;z-index:99;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translate(-50%,20px);opacity:0;transition:.25s;padding:12px 18px;border-radius:14px;background:#1b1830;border:1px solid rgba(207,196,255,.4);font-weight:700;pointer-events:none;max-width:calc(100vw - 30px);text-align:center}
@@ -312,7 +316,10 @@ document.addEventListener('keydown',function(e){if(/^\d$/.test(e.key))press(e.ke
         <div class="chips" id="dur"><button type="button" data-m="15">15 min</button><button type="button" data-m="30">30 min</button><button type="button" data-m="45" class="on">45 min</button><button type="button" data-m="60">1 hour</button><button type="button" data-m="120">2 hours</button><button type="button" data-m="1440">1 day</button><button type="button" data-m="10080">1 week</button><button type="button" data-m="43200">30 days</button><button type="button" data-m="0">No limit</button><input type="number" id="durc" min="5" max="43200" placeholder="mins" aria-label="Custom minutes"></div>
       </details>
       <label class="toggle" style="margin-top:16px;align-items:flex-start"><input type="checkbox" id="tips" style="flex:none;margin-top:1px"><span>Show app / website features<small style="display:block;color:var(--muted);font-weight:500;font-size:12.5px;margin-top:2px">Off: no features tab at all. On: a features tab under the bar explains what it does.</small></span></label>
-      <label class="toggle hidden" id="deckrow" style="margin-top:16px;align-items:flex-start"><input type="checkbox" id="deckopt" checked style="flex:none;margin-top:1px"><span>Include the features presentation<small style="display:block;color:var(--muted);font-weight:500;font-size:12.5px;margin-top:2px" id="decknote">They'll see a clear "Open presentation" button with the app.</small></span></label>
+      <div class="deckbox hidden" id="deckrow">
+        <div id="decklist"></div>
+        <label class="toggle" style="margin-top:12px;align-items:flex-start"><input type="checkbox" id="deckopt" style="flex:none;margin-top:1px"><span>Include the features deck in the link<small style="display:block;color:var(--muted);font-weight:500;font-size:12.5px;margin-top:2px" id="decknote">They'll see a clear "Open presentation" button with the app.</small></span></label>
+      </div>
       <label class="toggle" style="margin-top:16px;align-items:flex-start"><input type="checkbox" id="direct" style="flex:none;margin-top:1px"><span>Open straight into it<small style="display:block;color:var(--muted);font-weight:500;font-size:12.5px;margin-top:2px">For one app or website. No demo list or menus, just an SMR Digital Demo bar with the version number, your website and WhatsApp. Always shows the latest version.</small></span></label>
       <label class="toggle" style="margin-top:16px;align-items:flex-start"><input type="checkbox" id="usepin" checked style="flex:none;margin-top:1px"><span>Ask for a PIN<small style="display:block;color:var(--muted);font-weight:500;font-size:12.5px;margin-top:2px">Turn off to send just the link. They tap Open and they're in (with "Open straight into it" there's no tap at all).</small></span></label>
       <div class="err" id="lerr"></div>
@@ -524,7 +531,7 @@ $('dur').addEventListener('click',moreSum);$('durc').addEventListener('input',mo
 $('direct').addEventListener('change',function(){if(this.checked&&dur>0&&dur<1440){var b=$('dur').querySelector('[data-m="43200"]');if(b)b.click()}});
 $('durc').addEventListener('input',function(){var v=+this.value;if(v>=5){dur=v;$('dur').querySelectorAll('button').forEach(function(x){x.classList.remove('on')})}});
 var resetT;
-var resetSend=function(){clearTimeout(resetT);var c=$('created');c.classList.add('hidden');c.innerHTML='';delete c.dataset.used;
+var resetSend=function(){clearTimeout(resetT);$('deckopt').checked=false;var c=$('created');c.classList.add('hidden');c.innerHTML='';delete c.dataset.used;
   document.querySelectorAll('#pick input').forEach(function(i){i.checked=false});$('lb').value='';$('ph').value='';$('lerr').textContent='';
   if(!$('tab-send').classList.contains('hidden')){window.scrollTo({top:0,behavior:'smooth'});toast('Ready for a new link')}};
 var showMessage=function(l,phone){var c=$('created');clearTimeout(resetT);delete c.dataset.used;c.classList.remove('hidden');
@@ -722,8 +729,16 @@ $('compose').addEventListener('click',function(e){var b=e.target.closest('[data-
     .catch(function(er){$('cperr').textContent=er.message})
     .then(function(){cpBusy=false;b.disabled=false})}});
 /* ---------- features presentation (deck) per demo ---------- */
-var deckRowUpd=function(){var any=false,n=0;document.querySelectorAll('#pick input:checked').forEach(function(i){var d=demoBy(i.value);if(d&&d.deck){any=true;n++}});
-  $('deckrow').classList.toggle('hidden',!any);$('decknote').textContent=n>1?'Their apps come with presentations. They\'ll see clear "Open presentation" buttons.':'They\'ll see a clear "Open presentation" button with the app.'};
+var deckKey='';
+var deckRowUpd=function(){var ds=[];document.querySelectorAll('#pick input:checked').forEach(function(i){var d=demoBy(i.value);if(d&&d.deck)ds.push(d)});
+  $('deckrow').classList.toggle('hidden',!ds.length);if(!ds.length){$('deckopt').checked=false;deckKey='';return}
+  var key=ds.map(function(d){return d.slug+':'+d.deck.v}).join(',');if(key===deckKey)return;deckKey=key;
+  $('decklist').innerHTML=ds.map(function(d){return '<div class="dkrow" data-dk="'+esc(d.slug)+'"><img src="/demo/deck.php?s='+encodeURIComponent(d.slug)+'&p=1&v='+d.deck.v+'" alt=""><span class="tx"><b>Features deck assigned</b><small>'+esc(d.name)+(d.deck.title?' · '+esc(d.deck.title):'')+' · '+d.deck.pages+' slide'+(d.deck.pages>1?'s':'')+'</small></span>'
+    +'<span class="dkbtns"><a class="btn sm" href="/demo/?preview=1#deck='+esc(d.slug)+'">See it</a><button type="button" class="btn sm bad" data-dkdel>Delete deck</button></span></div>'}).join('');
+  $('decknote').textContent=ds.length>1?'They\'ll see clear "Open presentation" buttons with the apps.':'They\'ll see a clear "Open presentation" button with the app.'};
+$('decklist').addEventListener('click',function(e){var b=e.target.closest('[data-dkdel]');if(!b)return;e.preventDefault();var slug=b.closest('[data-dk]').dataset.dk,d=demoBy(slug);
+  if(!confirm('Delete the features deck from '+(d?d.name:slug)+'? You can add it again later.'))return;
+  api('deck_remove',{slug:slug}).then(function(){toast('Deck deleted');deckKey='';return load()}).then(deckRowUpd).catch(function(er){toast(er.message,true)})});
 $('pick').addEventListener('change',deckRowUpd);document.addEventListener('click',function(){setTimeout(deckRowUpd,0)});
 var deckSlug=null;
 var deckSheet=function(d){deckSlug=d.slug;var k=d.deck;

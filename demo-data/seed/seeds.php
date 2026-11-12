@@ -283,6 +283,22 @@ return json_decode(<<<'JSON'
   ]
  },
  {
+  "slug": "sunna",
+  "version": "2026-11-12a",
+  "ver": "1.0",
+  "name": "Sunna Supplements",
+  "accent": "#1f5ee8",
+  "tagline": "Website remake · halal supplements shop",
+  "description": "A full remake of the Sunna Supplements website: bestsellers, a routine finder quiz, build-your-own bundles, Sunna Rewards, gift cards, real results and a smooth basket and checkout.",
+  "tips": [
+   "The routine finder asks a few quick questions and recommends the right products, so new visitors know exactly where to start.",
+   "Build your bundle lets customers mix their own set at a better price, which lifts the average order.",
+   "Sunna Rewards shows points, tiers and ways to earn and spend, so customers keep coming back.",
+   "Real results and customer reviews sit right next to the products to build trust before they buy.",
+   "A clean basket and checkout with order tracking and gift cards, designed to turn more visits into sales."
+  ]
+ },
+ {
   "slug": "kahwa",
   "version": "2026-11-08b",
   "name": "Kahwa Café",
