@@ -252,8 +252,8 @@ return json_decode(<<<'JSON'
  },
  {
   "slug": "lets-eat-together",
-  "version": "2026-11-12a",
-  "ver": "1.0",
+  "version": "2026-11-12b",
+  "ver": "1.1",
   "name": "Let's Eat Together",
   "accent": "#6e2546",
   "tagline": "Ramadan campaign website · Luton Foodbank × Inspire FM",
