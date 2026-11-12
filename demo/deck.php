@@ -12,10 +12,17 @@ if (!$deck) { http_response_code(404); exit; }
 $admin = admin_token() !== null;
 $link = null;
 if (!$admin) {
+    $tok = (string) ($_GET['k'] ?? '');
     $vs = visitor_session();
-    if (!$vs) { http_response_code(403); exit; }
-    [$link, $sess] = $vs;
-    if (session_state($link, $sess) !== 'ok' || !in_array($slug, link_apps($link), true) || !(int) ($link['deck'] ?? 1)) { http_response_code(403); exit; }
+    if ($vs && ($tok === '' || $vs[0]['token'] === $tok)) {
+        [$link, $sess] = $vs;
+        if (session_state($link, $sess) !== 'ok') $link = null;
+    } elseif ($tok !== '') {
+        // Landing page of a no-PIN link: the slides can be seen before Enter (the timer has not started).
+        $link = link_by_token($tok);
+        if ($link && ((string) $link['pin'] !== '' || in_array(link_status($link)[0], ['revoked', 'expired'], true))) $link = null;
+    }
+    if (!$link || !in_array($slug, link_apps($link), true) || !(int) ($link['deck'] ?? 1)) { http_response_code(403); exit; }
 }
 $dir = deck_dir($slug);
 if (!empty($_GET['pdf'])) {

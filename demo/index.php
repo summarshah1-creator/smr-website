@@ -20,6 +20,7 @@ $direct = false;
 $autoOpen = false;
 $deckOn = true;
 $pinDeck = false;
+$pinDecks = [];
 
 if ($preview) {
     $view = 'showroom';
@@ -54,12 +55,12 @@ if ($preview) {
             if ($view === 'pin') {
                 $pinLen = max(4, strlen((string) $link['pin']));
                 $noPin = (string) $link['pin'] === '';
-                $autoOpen = $noPin && (int) ($link['direct'] ?? 0) === 1; // direct + no PIN: straight in
+                $autoOpen = false; // owner rule: no-PIN links always show the landing page with an Enter button first
                 $all = [];
                 foreach (db()->query('SELECT * FROM demos WHERE enabled = 1') as $d) $all[$d['slug']] = $d;
                 foreach (link_apps($link) as $slug) if (isset($all[$slug])) {
                     $pd = demo_public($all[$slug]);
-                    if ($pd['deck'] && (int) ($link['deck'] ?? 1) === 1) $pinDeck = true;
+                    if ($pd['deck'] && (int) ($link['deck'] ?? 1) === 1) { $pinDeck = true; $pinDecks[] = ['slug' => $pd['slug'], 'name' => $pd['name'], 'tagline' => $pd['tagline']] + $pd['deck']; }
                     $pinApps[] = ['name' => $pd['name'], 'icon' => $pd['icon'] . '&k=' . rawurlencode($token)];
                 }
             }
@@ -204,6 +205,9 @@ h1 em{font-style:normal;background:var(--grad);-webkit-background-clip:text;back
    pinned with position:fixed), which is how the apps behave on their own in iPhone Safari. */
 .pindeck{display:inline-flex;align-items:center;gap:7px;margin:14px auto 0;padding:7px 13px;border-radius:999px;background:rgba(255,200,87,.1);border:1px solid rgba(255,200,87,.4);color:#ffd88a;font-size:13px;font-weight:800}
 .pindeck svg{width:16px;height:16px}
+.deckc.lp .dk-btns .dk-open{flex:1}
+@media(min-width:700px){.deckc.lp{display:block}.deckc.lp .dk-thumb{margin:12px 0 0}}
+#pinform .wa-direct{margin-top:16px}
 #decks{display:grid;gap:12px;margin:0 0 16px}
 .deckc{position:relative;border-radius:22px;padding:16px;background:linear-gradient(#15121f,#15121f) padding-box,linear-gradient(120deg,#ffc857,#d63bff 55%,#5b5bff) border-box;border:1.5px solid transparent;box-shadow:0 18px 40px -22px rgba(214,59,255,.7);overflow:hidden}
 .dk-tag{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;background:linear-gradient(90deg,#ffc857,#ff8a3d);color:#1a1206;font-size:11px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
@@ -437,14 +441,26 @@ body.appmode .glow{display:none}
     <?php if ($pinApps): ?>
     <p class="lead"><?= count($pinApps) === 1 ? 'Shared with you by SMR Digital:' : 'The ' . count($pinApps) . ' apps shared with you by SMR Digital:' ?></p>
     <div class="pinapps"><?php foreach ($pinApps as $pa): ?><span><img src="<?= h($pa['icon']) ?>" alt="" width="52" height="52" draggable="false"><small><?= h($pa['name']) ?></small></span><?php endforeach; ?></div>
-    <?php if ($pinDeck): ?><p class="pindeck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M12 16v4M8 20h8"/></svg>Includes a features presentation</p><?php endif; ?>
+    <?php if ($pinDeck && !$noPin): ?><p class="pindeck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M12 16v4M8 20h8"/></svg>Includes a features presentation</p><?php endif; ?>
     <?php endif; ?>
     <?php if ($noPin): ?>
-    <p class="lead" style="margin-top:14px">Tap <b>Open</b> to start. This link was made just for you.</p>
-    <p class="small" style="margin-top:6px">Some apps open signed in to a demo account, so you can see all the features.</p>
+    <p class="lead" style="margin-top:14px">Tap <b>Enter</b> to start. This link was made just for you.</p>
     <div class="err" id="err" role="alert"></div>
-    <button class="btn pri" id="go" type="submit" style="margin-top:22px">Open</button>
-    <p class="small">Your session starts when you tap Open.</p>
+    <button class="btn pri" id="go" type="submit" style="margin-top:18px">Enter</button>
+    <?php foreach ($pinDecks as $pdk): $web = preg_match('/website/i', $pdk['tagline'] . ' ' . $pdk['name']) && !preg_match('/\bapp\b/i', $pdk['tagline']); ?>
+    <div class="deckc lp" style="margin-top:18px;text-align:left">
+      <span class="dk-tag"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M12 16v4M8 20h8"/></svg>Slides for you</span>
+      <h3><?= h($pdk['title'] !== '' ? $pdk['title'] : $pdk['name'] . ' presentation') ?></h3>
+      <p>There are some slides for you: a breakdown of all the new <?= $web ? 'website' : 'app' ?> features and the benefits for your business. Have a look through them, then tap Enter.</p>
+      <a class="dk-thumb" data-lpdeck="<?= h($pdk['slug']) ?>"><img src="/demo/deck.php?s=<?= h(rawurlencode($pdk['slug'])) ?>&p=1&k=<?= h(rawurlencode($token)) ?>&v=<?= (int) $pdk['v'] ?>" alt="First slide" draggable="false"><b><?= (int) $pdk['pages'] ?> slides</b></a>
+      <div class="dk-btns"><button class="dk-open" type="button" data-lpdeck="<?= h($pdk['slug']) ?>"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M12 16v4M8 20h8"/></svg>Open the slides</button></div>
+    </div>
+    <?php endforeach; ?>
+    <a class="wa-direct" style="text-align:left" href="https://wa.me/<?= WHATSAPP ?>" target="_blank" rel="noopener">
+      <span class="ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.3 0 .5l-.3.5-.4.4c-.1.1-.3.3-.1.6.2.3.7 1.2 1.6 2 1.1 1 2 1.3 2.3 1.4.3.1.4.1.6-.1l.8-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.1.1.6-.1 1.2z"/></svg></span>
+      <span class="tx"><b>Message me on WhatsApp</b><small>Questions or want to go ahead? Chat to Summar at SMR Digital directly.</small></span>
+    </a>
+    <p class="small">Some apps open signed in to a demo account, so you can see all the features.</p>
     <?php else: ?>
     <p class="lead" style="margin-top:14px">Enter the <?= $pinLen ?>-digit PIN that came with your link to open <?= count($pinApps) === 1 ? 'it' : 'them' ?>. This link was made just for you.</p>
     <p class="small" style="margin-top:6px">Some apps open signed in to a demo account, so you can see all the features.</p>
@@ -458,6 +474,34 @@ body.appmode .glow{display:none}
     <?php endif; ?>
   </form>
 </div>
+<?php if ($pinDecks): ?>
+<div class="deckv" id="deckv" role="dialog" aria-modal="true" aria-label="Slides" hidden>
+  <div class="dv-h">
+    <button class="dv-x" id="dvx" type="button" aria-label="Close the slides"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <div class="dv-t"><b id="dvt">Slides</b><small id="dvn"></small></div>
+    <a class="dv-dl" id="dvdl" href="#" hidden aria-label="Download the PDF"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg><span>PDF</span></a>
+  </div>
+  <div class="dv-b" id="dvb"></div>
+  <div class="dv-rot" id="dvrot">Turn your phone sideways for bigger slides</div>
+  <div class="dv-f"><button class="dv-go" id="dvgo" type="button">Enter</button></div>
+</div>
+<script>
+(function(){var D=<?= json_encode(array_column($pinDecks, null, 'slug'), JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,K=<?= json_encode($token) ?>;
+var $=function(i){return document.getElementById(i)},dv=$('deckv'),dvb=$('dvb'),rt;
+var src=function(d,n,q){return '/demo/deck.php?s='+encodeURIComponent(d.slug)+'&k='+encodeURIComponent(K)+(q||'&p='+n)+'&v='+d.v};
+var open=function(slug){var d=D[slug];if(!d)return;var n=d.pages,h='';for(var i=1;i<=n;i++)h+='<img src="'+src(d,i)+'" alt="Slide '+i+'" data-n="'+i+'"'+(i>2?' loading="lazy"':'')+' style="aspect-ratio:'+d.ratio+'" draggable="false">';
+  dvb.innerHTML=h;dvb.scrollTop=0;$('dvt').textContent=d.title||(d.name+' slides');$('dvn').textContent='Slide 1 of '+n;
+  var dl=$('dvdl');dl.hidden=!d.pdf;dl.href=src(d,0,'&pdf=1&dl=1');dv.hidden=false;document.body.style.overflow='hidden';
+  dvb.onscroll=function(){var ims=dvb.querySelectorAll('img'),top=dvb.getBoundingClientRect().top+dvb.clientHeight*.35,k=1;for(var i=0;i<ims.length;i++)if(ims[i].getBoundingClientRect().top<=top)k=i+1;if(dvb.scrollTop+dvb.clientHeight>=dvb.scrollHeight-4)k=ims.length;$('dvn').textContent='Slide '+k+' of '+n};
+  var r=$('dvrot');clearTimeout(rt);r.classList.toggle('on',d.ratio>1.2&&innerHeight>innerWidth&&innerWidth<700);rt=setTimeout(function(){r.classList.remove('on')},4500)};
+var close=function(){dv.hidden=true;dvb.innerHTML='';document.body.style.overflow=''};
+document.addEventListener('click',function(e){var b=e.target.closest('[data-lpdeck]');if(b){e.preventDefault();open(b.getAttribute('data-lpdeck'))}});
+$('dvx').addEventListener('click',close);document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!dv.hidden)close()});
+$('dvgo').addEventListener('click',function(){close();var g=$('go');if(g)g.click()});
+var pf=$('pinform');if(pf)pf.addEventListener('submit',function(){try{Object.keys(D).forEach(function(k){sessionStorage.setItem('smrDemoDeck:'+k,'1')})}catch(e){}},true);
+})();
+</script>
+<?php endif; ?>
 <?php endif; ?>
 
 <?php if ($view === 'landing' || $view === 'invalid'): ?>
