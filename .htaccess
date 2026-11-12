@@ -17,6 +17,8 @@ DirectoryIndex index.html
   RewriteRule ^app-demo/[a-z0-9-]+/([A-Za-z0-9_-]{16,64})/?$ demo/index.php?k=$1 [L,QSA]
   # Shared mock-ups (view only): /m/<id>
   RewriteRule ^m/([A-Za-z0-9]{10})/?$ share/index.php?id=$1 [L,QSA]
+  # Finished designs for a client: /d/<token> (works 14 days)
+  RewriteRule ^d/([A-Za-z0-9_-]{12,40})/?$ designs/index.php?k=$1 [L,QSA]
 </IfModule>
 
 # smrgraphics.co.uk/plates opens the Plates page

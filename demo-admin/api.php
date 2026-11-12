@@ -416,4 +416,66 @@ case 'demo_delete':
     json_out(['ok' => true]);
 }
 
+/* ---------- designs (finished designs sent to clients) ---------- */
+if (strpos($a, 'd_') === 0) {
+    require_once dirname(__DIR__) . '/demo-lib/designs.php';
+    designs_sweep();
+    $dset = function () use ($in): array { $s = set_by_id((int) ($in['id'] ?? 0)); if (!$s) json_out(['error' => 'Not found.'], 404); return $s; };
+    $drow = function (array $s): array {
+        $files = set_files($s);
+        $designs = []; $thumbs = [];
+        foreach ($files as $f) { $designs[(int) $f['design']] = 1; if (count($thumbs) < 4 && $f['page'] == 1) $thumbs[] = '/designs/f.php?k=' . $s['token'] . '&f=' . $f['id'] . ($f['prev'] !== '' ? '&p=1' : ''); }
+        return ['id' => (int) $s['id'], 'client' => $s['client'], 'title' => $s['title'], 'phone' => $s['phone'], 'url' => set_url($s),
+            'created_at' => (int) $s['created_at'], 'expires_at' => (int) $s['expires_at'], 'archived_at' => (int) $s['archived_at'],
+            'views' => (int) $s['views'], 'last_view' => (int) $s['last_view'], 'source' => $s['source'],
+            'designs' => count($designs), 'files' => count($files), 'bytes' => array_sum(array_column($files, 'size')), 'thumbs' => $thumbs];
+    };
+    if ($a === 'd_list') {
+        $rows = db()->query('SELECT * FROM design_sets WHERE ready = 1 ORDER BY archived_at > 0, created_at DESC')->fetchAll();
+        $old = designs_old_archive();
+        $snooze = (int) kv_get('design_purge_snooze', '0');
+        json_out(['sets' => array_map($drow, $rows), 'now' => now(), 'days' => DESIGN_DAYS,
+            'purge' => ['count' => count($old), 'bytes' => array_sum(array_map('set_bytes', $old)), 'ask' => count($old) > 0 && $snooze < now()]]);
+    }
+    if ($a === 'd_create') {
+        $s = set_create((string) ($in['client'] ?? ''), (string) ($in['title'] ?? ''), (string) ($in['phone'] ?? ''), 'admin');
+        json_out(['id' => (int) $s['id']]);
+    }
+    if ($a === 'd_upload') {
+        $s = $dset();
+        if ((int) $s['ready']) json_out(['error' => 'This delivery is already finished.'], 400);
+        $f = $_FILES['file'] ?? [];
+        if ($err = upload_error($f)) json_out(['error' => $err], 400);
+        $pv = $_FILES['prev'] ?? null;
+        try {
+            $r = set_add_file($s, $f['tmp_name'], (string) ($f['name'] ?? ''), max(0, min(50, (int) ($in['design'] ?? 0))), (string) ($in['dname'] ?? ''),
+                $pv && ($pv['error'] ?? 1) === UPLOAD_ERR_OK ? $pv['tmp_name'] : null, true);
+        } catch (Throwable $e) { json_out(['error' => $e->getMessage()], 400); }
+        json_out(['ok' => true] + $r);
+    }
+    if ($a === 'd_finish') {
+        $s = $dset();
+        $n = db()->prepare('SELECT COUNT(*) FROM design_files WHERE set_id = ?'); $n->execute([$s['id']]);
+        if (!(int) $n->fetchColumn()) { set_delete($s); json_out(['error' => 'No files were uploaded.'], 400); }
+        db()->prepare('UPDATE design_sets SET ready = 1 WHERE id = ?')->execute([$s['id']]);
+        json_out(['ok' => true, 'set' => $drow(set_by_id((int) $s['id']))]);
+    }
+    if ($a === 'd_cancel') { $s = $dset(); if (!(int) $s['ready']) set_delete($s); json_out(['ok' => true]); }
+    if ($a === 'd_edit') {
+        $s = $dset();
+        db()->prepare('UPDATE design_sets SET client = ?, title = ?, phone = ? WHERE id = ?')->execute([mb_substr(trim((string) ($in['client'] ?? '')), 0, 80), mb_substr(trim((string) ($in['title'] ?? '')), 0, 100), preg_replace('/[^0-9+ ]/', '', (string) ($in['phone'] ?? '')), $s['id']]);
+        json_out(['ok' => true]);
+    }
+    if ($a === 'd_extend') { $s = $dset(); set_reopen($s, max(1, min(90, (int) ($in['days'] ?? DESIGN_DAYS)))); json_out(['ok' => true, 'set' => $drow(set_by_id((int) $s['id']))]); }
+    if ($a === 'd_archive') { $s = $dset(); set_archive($s); json_out(['ok' => true]); }
+    if ($a === 'd_delete') { $s = $dset(); set_delete($s); json_out(['ok' => true]); }
+    if ($a === 'd_purge') {
+        $list = !empty($in['all']) ? db()->query('SELECT * FROM design_sets WHERE archived_at > 0')->fetchAll() : designs_old_archive();
+        foreach ($list as $s) set_delete($s);
+        kv_set('design_purge_snooze', (string) (now() + DESIGN_PURGE_DAYS * 86400));
+        json_out(['ok' => true, 'deleted' => count($list)]);
+    }
+    if ($a === 'd_snooze') { kv_set('design_purge_snooze', (string) (now() + DESIGN_PURGE_DAYS * 86400)); json_out(['ok' => true]); }
+}
+
 json_out(['error' => 'Unknown action'], 404);

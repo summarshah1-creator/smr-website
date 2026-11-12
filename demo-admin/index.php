@@ -105,6 +105,23 @@ input:focus,textarea:focus,select:focus{border-color:rgba(214,59,255,.6);box-sha
 .dm .tx b{font-size:16px}
 .dm .tx p{color:var(--muted);font-size:13px;margin:4px 0 10px}
 .dm form{margin-top:10px}
+.dg{border:1px solid var(--line);border-radius:18px;padding:12px;margin-top:14px;background:rgba(255,255,255,.025)}
+.dg .dh{display:flex;gap:8px;align-items:center}.dg .dh input{height:40px;font-weight:700}
+.dthumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px;margin-top:10px}
+.dth{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--line);background:#0c0c16}
+.dth .im{height:110px;display:grid;place-items:center;padding:6px}.dth img{max-width:100%;max-height:98px;border-radius:4px}
+.dth .lb{font-size:11.5px;font-weight:800;padding:4px 7px 5px;border-top:1px solid var(--line);line-height:1.25}
+.dth .lb small{display:block;color:var(--muted);font-weight:700;font-size:10.5px}
+.dth .ctl{position:absolute;top:4px;left:4px;right:4px;display:flex;gap:3px}
+.dth .ctl button{width:24px;height:24px;border-radius:7px;background:rgba(8,8,15,.8);display:grid;place-items:center;font-size:13px;font-weight:800}
+.dth .ctl button:last-child{margin-left:auto;color:#ff9db0}
+.dadd{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:132px;border-radius:12px;border:1.5px dashed rgba(207,196,255,.35);color:#cfc4ff;font-weight:800;font-size:12.5px;text-align:center;padding:8px}
+.dadd svg{width:22px;height:22px}
+.dadd.drag{background:rgba(214,59,255,.1);border-color:#d63bff}
+.dprog{height:8px;border-radius:5px;background:rgba(255,255,255,.08);overflow:hidden;margin:14px 0 8px}.dprog i{display:block;height:100%;width:0;background:var(--grad);transition:width .2s}
+.dcard .th{display:flex;gap:5px;margin:10px 0}.dcard .th img{width:46px;height:46px;object-fit:cover;border-radius:9px;box-shadow:0 0 0 1px rgba(255,255,255,.08);background:#0c0c16}
+.dpg{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:14px;border-radius:16px;border:1px solid rgba(255,181,71,.4);background:rgba(255,181,71,.07);margin-bottom:14px}
+.dpg b{display:block}.dpg span{color:var(--muted);font-size:13px}
 .hidden{display:none!important}
 .empty{color:var(--muted);text-align:center;padding:30px}
 .toast{position:fixed;z-index:99;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translate(-50%,20px);opacity:0;transition:.25s;padding:12px 18px;border-radius:14px;background:#1b1830;border:1px solid rgba(207,196,255,.4);font-weight:700;pointer-events:none;max-width:calc(100vw - 30px);text-align:center}
@@ -259,6 +276,7 @@ document.addEventListener('keydown',function(e){if(/^\d$/.test(e.key))press(e.ke
       <button data-tab="demos" role="tab">My demos</button>
       <button data-tab="send" role="tab">Send</button>
       <button data-tab="live" role="tab">Live<span class="cnt" id="livecnt"></span></button>
+      <button data-tab="designs" role="tab">Designs</button>
       <button data-tab="mail" role="tab">Email<span class="cnt" id="mailcnt"></span></button>
     </nav>
   </div>
@@ -312,6 +330,17 @@ document.addEventListener('keydown',function(e){if(/^\d$/.test(e.key))press(e.ke
     <div class="feed" id="feed"></div>
   </section>
 
+  <!-- DESIGNS -->
+  <section id="tab-designs" class="tab hidden">
+    <div class="bar">
+      <div><h1>Designs</h1><p class="sub">Send finished designs to a client. The link works for 14 days, then the files go to the archive.</p></div>
+      <button class="btn sm pri" id="dnewb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>New</button>
+    </div>
+    <div id="dpurge"></div>
+    <div class="filt" id="dfilt"><button class="on" data-f="live">Active</button><button data-f="arch">Archive</button></div>
+    <div class="list" id="dlist"><p class="empty">Loading…</p></div>
+  </section>
+
   <!-- EMAIL -->
   <section id="tab-mail" class="tab hidden">
     <div class="bar">
@@ -354,10 +383,34 @@ document.addEventListener('keydown',function(e){if(/^\d$/.test(e.key))press(e.ke
   </form>
 </div>
 
+<!-- designs: new delivery -->
+<div class="ov" id="dnew" role="dialog" aria-modal="true">
+  <div class="ovh">
+    <button class="btn sm icon" id="dclose" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <span class="t">New designs link</span>
+    <button class="btn sm pri" id="dgo">Create link</button>
+  </div>
+  <div class="ovb">
+    <form id="dform" autocomplete="off">
+      <div class="two">
+        <div><label class="f" for="dcl">Client name</label><input type="text" id="dcl" maxlength="80" placeholder="e.g. Ahmed, Kebab House"></div>
+        <div><label class="f" for="dph">Their WhatsApp (optional)</label><input type="tel" id="dph" maxlength="20" inputmode="tel" placeholder="07..."></div>
+      </div>
+      <label class="f" for="dti">What are they? (optional)</label><input type="text" id="dti" maxlength="100" placeholder="e.g. Ramadan posts">
+      <div id="dgroups"></div>
+      <button type="button" class="btn" id="dadd" style="width:100%;margin-top:12px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Add another design</button>
+      <p class="sub" style="font-size:12.5px;margin-top:10px">Add the Post and Story sizes of a design together. They're sorted by shape (Post, Story, Landscape) and numbered as pages in the order shown. Use the arrows to change the order.</p>
+      <div class="err" id="derr"></div>
+    </form>
+    <div id="ddone" class="hidden"></div>
+  </div>
+</div>
+
 <!-- bottom sheet -->
 <div class="scrim" id="scrim"></div>
 <div class="sheet" id="sheet" role="dialog" aria-modal="true"><div class="grab"></div><div id="sheetin"></div></div>
 <input type="file" id="fzip" accept=".zip,application/zip,.html,.htm,text/html" hidden>
+<input type="file" id="dfile" accept="image/png,image/jpeg,image/webp,image/gif" multiple hidden>
 <input type="file" id="ficon" accept="image/png,image/jpeg,image/webp" hidden>
 <div class="toast" id="toast"></div>
 <script>
@@ -395,9 +448,9 @@ var copy=function(t,msg){(navigator.clipboard&&navigator.clipboard.writeText?nav
 var ICON={dots:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>'};
 
 /* ---------- tabs (hash) ---------- */
-var showTab=function(t){if(['demos','send','live','mail'].indexOf(t)<0)t='demos';
+var showTab=function(t){if(['demos','send','live','designs','mail'].indexOf(t)<0)t='demos';
   document.querySelectorAll('[data-tab]').forEach(function(b){b.classList.toggle('on',b.dataset.tab===t)});
-  document.querySelectorAll('.tab').forEach(function(s){s.classList.toggle('hidden',s.id!=='tab-'+t)});window.scrollTo(0,0);if(t==='live'&&typeof load==='function'&&D.length)load();if(t!=='send'&&$('created').dataset.used&&typeof resetSend==='function')resetSend();if(t==='mail'&&typeof mailOpen==='function')mailOpen()};
+  document.querySelectorAll('.tab').forEach(function(s){s.classList.toggle('hidden',s.id!=='tab-'+t)});window.scrollTo(0,0);if(t==='live'&&typeof load==='function'&&D.length)load();if(t!=='send'&&$('created').dataset.used&&typeof resetSend==='function')resetSend();if(t==='mail'&&typeof mailOpen==='function')mailOpen();if(t==='designs'&&typeof dLoad==='function')dLoad()};
 document.querySelectorAll('[data-tab]').forEach(function(b){b.addEventListener('click',function(){if(location.hash!=='#'+b.dataset.tab)history.replaceState(null,'','#'+b.dataset.tab);showTab(b.dataset.tab)})});
 window.addEventListener('hashchange',function(){showTab(location.hash.slice(1))});
 showTab(location.hash.slice(1));
@@ -663,6 +716,108 @@ $('compose').addEventListener('click',function(e){var b=e.target.closest('[data-
     .then(function(j){ovClose('compose');ovClose('reader');toast(j.saved?'Sent':'Sent (could not save a copy in Sent)');if(CP.onSent)CP.onSent();if(M.folder==='sent')mailLoad()})
     .catch(function(er){$('cperr').textContent=er.message})
     .then(function(){cpBusy=false;b.disabled=false})}});
+/* ---------- designs ---------- */
+var DS={sets:[],f:'live',purge:null,groups:[],busy:false},DAYS=14;
+var fmtMB=function(b){return b>=1048576?(b/1048576).toFixed(b>=10485760?0:1)+' MB':Math.max(1,Math.round(b/1024))+' KB'};
+var dKind=function(w,h){var r=w/h;if(r>=.5&&r<=.62)return'story';if(r>=.74&&r<=1.02)return'post';if(r>=1.7&&r<=2)return'wide';return'other'};
+var dKL={post:'Post',story:'Story',wide:'Landscape'};
+var dLabel=function(f){return dKL[f.kind]||(f.w+'×'+f.h)};
+var dMsg=function(x){var first=String(x.client||'').trim().split(/[\s,]+/)[0];
+  return 'Hi'+(first?' '+first:'')+', your designs are ready'+(x.title?' ('+x.title+')':'')+'.\n\n'+x.url+'\n\nYou can share them straight to Instagram, WhatsApp, TikTok, Facebook and LinkedIn, or save them to your phone. The link works until '+new Date(x.expires_at*1000).toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'})+'.\n\nSummar, SMR Digital'};
+var dLoad=function(){return api('d_list').then(function(j){DS.sets=j.sets;DS.purge=j.purge;DAYS=j.days||14;skew=j.now-Date.now()/1000;dRender()}).catch(function(e){$('dlist').innerHTML='<p class="empty">'+esc(e.message)+'</p>'})};
+var dRender=function(){var p=DS.purge;
+  $('dpurge').innerHTML=p&&p.ask?'<div class="dpg"><div><b>Clear out the archive?</b><span>'+p.count+' old design link'+(p.count>1?'s were':' was')+' archived over 30 days ago ('+fmtMB(p.bytes)+'). Delete '+(p.count>1?'them':'it')+' for good?</span></div><div class="row"><button class="btn sm bad" data-dp="purge">Delete</button><button class="btn sm" data-dp="snooze">Not now</button></div></div>':'';
+  var arch=DS.sets.filter(function(x){return x.archived_at}),live=DS.sets.filter(function(x){return!x.archived_at});
+  document.querySelector('#dfilt [data-f=arch]').textContent='Archive'+(arch.length?' ('+arch.length+')':'');
+  var list=DS.f==='arch'?arch:live,h='';
+  if(DS.f==='arch'&&arch.length)h+='<div class="row" style="justify-content:space-between;margin-bottom:4px"><span class="sub" style="margin:0">Links ended, files kept privately. '+fmtMB(arch.reduce(function(a,x){return a+x.bytes},0))+' in total.</span><button class="btn sm bad" data-dp="all">Empty archive</button></div>';
+  h+=list.length?list.map(function(x){var left=x.expires_at-nowS(),days=Math.ceil(left/86400);
+    var badge=x.archived_at?'<span class="badge expired">Archived</span>':days<=3?'<span class="badge expired">'+(left<86400?'Ends today':days+' days left')+'</span>':'<span class="badge active">'+days+' days left</span>';
+    return '<div class="lk dcard" data-id="'+x.id+'"><div class="hd"><b>'+esc(x.client||x.title||'Designs')+'</b>'+badge+'</div>'
+      +(x.client&&x.title?'<div class="sub" style="margin-top:2px">'+esc(x.title)+'</div>':'')
+      +'<div class="th">'+x.thumbs.map(function(t){return '<img src="'+esc(t)+'" alt="" loading="lazy">'}).join('')+'</div>'
+      +'<div class="meta"><span>Files<b>'+(x.designs>1?x.designs+' designs · ':'')+x.files+' · '+fmtMB(x.bytes)+'</b></span><span>Opened<b>'+(x.views?x.views+'× · '+ago(x.last_view):'Not yet')+'</b></span><span>'+(x.archived_at?'Archived':'Ends')+'<b>'+fmtD(x.archived_at||x.expires_at)+'</b></span></div>'
+      +'<div class="acts">'+(x.archived_at?'<button class="btn sm" data-d="reopen">Reopen for '+DAYS+' days</button>':'<button class="btn sm" data-d="copy">Copy message</button><button class="btn sm" data-d="wa">WhatsApp</button>')
+      +'<a class="btn sm" href="'+esc(x.url)+'" target="_blank" rel="noopener">Open</a><button class="btn sm icon" data-d="more" aria-label="More">'+ICON.dots+'</button></div></div>'}).join('')
+    :'<div class="empty">'+(DS.f==='arch'?'Nothing in the archive.':'No design links yet. Tap <b>New</b> to send some.')+'</div>';
+  $('dlist').innerHTML=h};
+$('dfilt').addEventListener('click',function(e){var b=e.target.closest('[data-f]');if(!b)return;DS.f=b.dataset.f;$('dfilt').querySelectorAll('button').forEach(function(x){x.classList.toggle('on',x===b)});dRender()});
+var dPurge=function(all){var n=all?DS.sets.filter(function(x){return x.archived_at}).length:DS.purge.count;
+  openSheet('<h2>Delete '+n+' archived link'+(n>1?'s':'')+'?</h2><p class="sub">The designs are deleted from the server for good. Your own copies are not touched.</p><div class="row" style="margin-top:14px"><button class="btn bad" data-go>Delete for good</button><button class="btn" data-x>Cancel</button></div>',
+    function(el){el.querySelector('[data-x]').onclick=closeSheet;el.querySelector('[data-go]').onclick=function(){api('d_purge',{all:all?1:0}).then(function(j){closeSheet();toast('Deleted '+j.deleted);dLoad()}).catch(function(e){toast(e.message,true)})}})};
+$('dpurge').addEventListener('click',function(e){var b=e.target.closest('[data-dp]');if(!b)return;if(b.dataset.dp==='purge')dPurge(false);else api('d_snooze').then(function(){toast('I’ll ask again in 30 days');dLoad()})});
+$('dlist').addEventListener('click',function(e){var b=e.target.closest('[data-d],[data-dp]');if(!b)return;if(b.dataset.dp==='all'){dPurge(true);return}
+  var x=DS.sets.filter(function(s){return s.id===+b.closest('[data-id]').dataset.id})[0],a=b.dataset.d;if(!x)return;
+  if(a==='copy')copy(dMsg(x),'Message copied');
+  if(a==='wa')window.open(waUrl(dMsg(x),x.phone),'_blank');
+  if(a==='reopen')api('d_extend',{id:x.id,days:DAYS}).then(function(){toast('Link works again for '+DAYS+' days');DS.f='live';$('dfilt').querySelectorAll('button').forEach(function(y){y.classList.toggle('on',y.dataset.f==='live')});dLoad()}).catch(function(e){toast(e.message,true)});
+  if(a==='more')openSheet('<h2>'+esc(x.client||x.title||'Designs')+'</h2><div class="cred"><code>'+esc(x.url)+'</code></div>'
+      +item('link','Copy link only')+(x.archived_at?'':item('ext','Add '+DAYS+' more days'))+item('edit','Edit name')+(x.archived_at?'':item('end','End the link now'))+item('del','Delete for good','','bad'),
+    function(el){el.addEventListener('click',function(ev){var t=ev.target.closest('[data-act]');if(!t)return;var k=t.dataset.act;
+      if(k==='link'){copy(x.url,'Link copied');closeSheet()}
+      if(k==='ext')api('d_extend',{id:x.id,days:DAYS}).then(function(){closeSheet();toast('Added '+DAYS+' days');dLoad()});
+      if(k==='end')api('d_archive',{id:x.id}).then(function(){closeSheet();toast('Link ended, moved to the archive');dLoad()});
+      if(k==='del'&&confirm('Delete these designs from the server for good?'))api('d_delete',{id:x.id}).then(function(){closeSheet();toast('Deleted');dLoad()});
+      if(k==='edit')openSheet('<h2>Edit</h2><label class="f">Client name</label><input type="text" id="e1" maxlength="80" value="'+esc(x.client)+'"><label class="f">What are they?</label><input type="text" id="e2" maxlength="100" value="'+esc(x.title)+'"><label class="f">Their WhatsApp</label><input type="tel" id="e3" maxlength="20" value="'+esc(x.phone)+'"><button class="btn pri big" id="e4" style="width:100%;margin-top:14px">Save</button>',
+        function(e2){e2.querySelector('#e4').onclick=function(){api('d_edit',{id:x.id,client:$('e1').value,title:$('e2').value,phone:$('e3').value}).then(function(){closeSheet();toast('Saved');dLoad()}).catch(function(er){toast(er.message,true)})}})})})});
+
+/* new delivery */
+var dGroupHtml=function(g,gi){var cnt={};
+  return '<div class="dg" data-g="'+gi+'"><div class="dh"><input type="text" value="'+esc(g.name)+'" maxlength="60" data-gn aria-label="Design name">'+(DS.groups.length>1?'<button type="button" class="btn sm icon bad" data-gx aria-label="Remove design"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg></button>':'')+'</div>'
+    +'<div class="dthumbs">'+g.files.map(function(f,i){var k=f.kind+f.w+'x'+f.h;cnt[k]=(cnt[k]||0)+1;
+      return '<div class="dth"><div class="im"><img src="'+f.url+'" alt=""></div><div class="lb"><span>'+esc(dLabel(f))+' '+cnt[k]+'</span><small>'+f.w+'×'+f.h+'</small></div>'
+        +'<div class="ctl">'+(i>0?'<button type="button" data-mv="-1" data-i="'+i+'" aria-label="Move earlier">‹</button>':'')+(i<g.files.length-1?'<button type="button" data-mv="1" data-i="'+i+'" aria-label="Move later">›</button>':'')+'<button type="button" data-rm="'+i+'" aria-label="Remove">×</button></div></div>'}).join('')
+    +'<button type="button" class="dadd" data-pick><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>'+(g.files.length?'Add more':'Add pictures<br><span style="font-weight:600;color:var(--muted)">or drop them here</span>')+'</button></div></div>'};
+var dDraw=function(){$('dgroups').innerHTML=DS.groups.map(dGroupHtml).join('')};
+var dReset=function(){DS.groups.forEach(function(g){g.files.forEach(function(f){URL.revokeObjectURL(f.url)})});DS.groups=[{name:'Design 1',files:[]}];$('dcl').value='';$('dph').value='';$('dti').value='';$('derr').textContent='';$('dform').classList.remove('hidden');$('ddone').classList.add('hidden');$('dgo').classList.remove('hidden');$('dgo').disabled=false;dDraw()};
+var dPickG=0;
+var dRead=function(file){return new Promise(function(res,rej){var url=URL.createObjectURL(file),im=new Image();im.onload=function(){res({file:file,url:url,w:im.naturalWidth,h:im.naturalHeight,kind:dKind(im.naturalWidth,im.naturalHeight),img:im})};im.onerror=function(){URL.revokeObjectURL(url);rej(new Error(file.name+' could not be opened'))};im.src=url})};
+var dPrev=function(f){if(f.file.size<600000&&f.w<=1100&&f.h<=1100)return Promise.resolve(null);
+  var sc=Math.min(1,1080/Math.max(f.w,f.h)),c=document.createElement('canvas');c.width=Math.round(f.w*sc);c.height=Math.round(f.h*sc);c.getContext('2d').drawImage(f.img,0,0,c.width,c.height);
+  return new Promise(function(res){c.toBlob(function(b){if(b&&b.type==='image/webp')return res(b);c.toBlob(function(b2){res(b2)},f.file.type==='image/jpeg'?'image/jpeg':'image/png',.86)},'image/webp',.84)})};
+var dAdd=function(gi,files){var list=[].slice.call(files).filter(function(f){return/^image\/(png|jpeg|webp|gif)$/.test(f.type)});
+  if(!list.length){toast('Use PNG, JPG, WebP or GIF pictures',true);return}
+  list.sort(function(a,b){return a.name.localeCompare(b.name,undefined,{numeric:true})});
+  Promise.all(list.map(function(f){return dRead(f).catch(function(e){toast(e.message,true);return null})})).then(function(r){
+    var g=DS.groups[gi];r.filter(Boolean).forEach(function(f){g.files.push(f)});
+    var ord={post:0,story:1,wide:2,other:3};g.files=g.files.map(function(f,i){return[f,i]}).sort(function(a,b){return(ord[a[0].kind]-ord[b[0].kind])||(a[1]-b[1])}).map(function(x){return x[0]});dDraw()})};
+$('dnewb').addEventListener('click',function(){if(!DS.busy)dReset();ovOpen('dnew')});
+$('dclose').addEventListener('click',function(){if(DS.busy&&!confirm('Stop uploading?'))return;DS.stop=DS.busy;ovClose('dnew')});
+$('dadd').addEventListener('click',function(){DS.groups.push({name:'Design '+(DS.groups.length+1),files:[]});dDraw()});
+$('dfile').addEventListener('change',function(){dAdd(dPickG,this.files);this.value=''});
+$('dgroups').addEventListener('input',function(e){if(e.target.matches('[data-gn]'))DS.groups[+e.target.closest('[data-g]').dataset.g].name=e.target.value});
+$('dgroups').addEventListener('click',function(e){var gEl=e.target.closest('[data-g]');if(!gEl)return;var gi=+gEl.dataset.g,g=DS.groups[gi],b;
+  if(e.target.closest('[data-pick]')){dPickG=gi;$('dfile').click();return}
+  if((b=e.target.closest('[data-gx]'))){g.files.forEach(function(f){URL.revokeObjectURL(f.url)});DS.groups.splice(gi,1);DS.groups.forEach(function(x,i){if(/^Design \d+$/.test(x.name))x.name='Design '+(i+1)});dDraw();return}
+  if((b=e.target.closest('[data-rm]'))){URL.revokeObjectURL(g.files[+b.dataset.rm].url);g.files.splice(+b.dataset.rm,1);dDraw();return}
+  if((b=e.target.closest('[data-mv]'))){var i=+b.dataset.i,j=i+ +b.dataset.mv,t=g.files[i];g.files[i]=g.files[j];g.files[j]=t;dDraw()}});
+['dragover','dragenter'].forEach(function(ev){$('dgroups').addEventListener(ev,function(e){var d=e.target.closest('.dg');if(!d)return;e.preventDefault();var a=d.querySelector('.dadd');if(a)a.classList.add('drag')})});
+$('dgroups').addEventListener('dragleave',function(e){var a=e.target.closest('.dadd');if(a)a.classList.remove('drag')});
+$('dgroups').addEventListener('drop',function(e){var d=e.target.closest('.dg');if(!d)return;e.preventDefault();dAdd(+d.dataset.g,e.dataTransfer.files)});
+$('dgo').addEventListener('click',function(){if(DS.busy)return;var err=$('derr');err.textContent='';
+  var jobs=[];DS.groups.forEach(function(g,gi){g.files.forEach(function(f){jobs.push({g:gi,name:g.name.trim()||('Design '+(gi+1)),f:f})})});
+  if(!jobs.length){err.textContent='Add at least one picture.';return}
+  if(!$('dcl').value.trim()&&!$('dti').value.trim()){err.textContent='Add the client name (or what the designs are).';$('dcl').focus();return}
+  DS.busy=true;DS.stop=false;$('dgo').disabled=true;var id=0,done=0,total=jobs.reduce(function(a,j){return a+j.f.file.size},0),sent=0;
+  $('dform').classList.add('hidden');$('ddone').classList.remove('hidden');
+  $('ddone').innerHTML='<h2>Uploading…</h2><div class="dprog"><i id="dbar"></i></div><p class="sub" id="dst">Getting ready</p><p class="sub" style="font-size:12.5px">Keep this screen open until it’s done.</p>';
+  var fail=function(m){DS.busy=false;$('dgo').disabled=false;if(id)api('d_cancel',{id:id}).catch(function(){});$('dform').classList.remove('hidden');$('ddone').classList.add('hidden');err.textContent=m};
+  api('d_create',{client:$('dcl').value,title:$('dti').value,phone:$('dph').value}).then(function(j){id=j.id;
+    return jobs.reduce(function(pr,job,k){return pr.then(function(){if(DS.stop)throw new Error('Upload stopped.');
+      $('dst').textContent='Uploading '+(k+1)+' of '+jobs.length+' ('+fmtMB(job.f.file.size)+')';
+      return dPrev(job.f).then(function(pv){var fd=new FormData();fd.append('id',id);fd.append('design',job.g);fd.append('dname',job.name);fd.append('file',job.f.file,job.f.file.name);if(pv)fd.append('prev',pv,'prev');return api('d_upload',null,fd)})
+        .then(function(){sent+=job.f.file.size;$('dbar').style.width=Math.round(sent/total*100)+'%'})})},Promise.resolve())})
+  .then(function(){return api('d_finish',{id:id})}).then(function(j){DS.busy=false;var x=j.set;$('dgo').classList.add('hidden');
+    $('ddone').innerHTML='<div class="okbox" style="text-align:center;padding:6px 0 4px"><h2 style="margin:0">✓ Link ready'+(x.client?' for '+esc(x.client):'')+'</h2><p class="sub">Works until '+fmtD(x.expires_at)+' ('+DAYS+' days).</p></div>'
+      +'<label class="f">Message</label><textarea id="dmsg" style="min-height:190px">'+esc(dMsg(x))+'</textarea>'
+      +'<div class="row" style="margin-top:12px"><a class="btn pri" style="flex:1" id="dwa" target="_blank" rel="noopener">Send on WhatsApp</a><button class="btn" id="dcp">Copy</button></div>'
+      +'<div class="row" style="margin-top:8px"><a class="btn" style="flex:1" href="'+esc(x.url)+'" target="_blank" rel="noopener">See what they see</a><button class="btn" id="dok">Done</button></div>';
+    var upd=function(){$('dwa').href=waUrl($('dmsg').value,x.phone)};upd();$('dmsg').addEventListener('input',upd);
+    $('dcp').onclick=function(){copy($('dmsg').value,'Message copied')};$('dok').onclick=function(){ovClose('dnew');dReset()};
+    DS.f='live';dLoad()})
+  .catch(function(e){fail(e.message||'Upload failed.')})});
+if(location.hash==='#designs')dLoad();
+
 mailInit();setInterval(mailUnread,120000);
 
 load();setInterval(load,30000);
