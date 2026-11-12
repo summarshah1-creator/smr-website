@@ -193,19 +193,25 @@ function designs_old_archive(): array {
 
 /* Folders dropped by the "Publish designs" workflow: demo-data/inbox/<token>/. The workflow picks the token,
    so the link is known straight away; the folder is imported on the first request that needs it. */
-function inbox_dir(): string { return SITE_ROOT . '/demo-data/inbox'; }
+/* The FTP upload lands in public_html/inbox/ on SiteGround; demo-data/inbox/ is checked too. */
+function inbox_dirs(): array { return [SITE_ROOT . '/inbox', SITE_ROOT . '/demo-data/inbox']; }
+function inbox_dir(?string $token = null): string {
+    foreach (inbox_dirs() as $b) if ($token !== null && is_dir("$b/$token")) return $b;
+    return inbox_dirs()[0];
+}
 function designs_pending(): void {
-    $base = inbox_dir();
-    if (!is_dir($base)) return;
+    foreach (inbox_dirs() as $base) {
+    if (!is_dir($base)) continue;
     foreach (scandir($base) ?: [] as $t) {
         if (!preg_match('/^[A-Za-z0-9_-]{16,40}$/', $t) || !is_dir("$base/$t")) continue;
         if (filemtime("$base/$t") > time() - 30) continue; // may still be uploading
         try { designs_import($t); } catch (Throwable $e) {}
     }
+    }
 }
 function designs_import(string $job): array {
     if (!preg_match('/^[A-Za-z0-9_-]{16,40}$/', $job)) throw new RuntimeException('Bad job.');
-    $src = inbox_dir() . '/' . $job;
+    $src = inbox_dir($job) . '/' . $job;
     if (!is_dir($src)) throw new RuntimeException('Nothing to import.');
     if (set_by_token($job)) throw new RuntimeException('Already imported.');
     $dir = $src . '.importing';

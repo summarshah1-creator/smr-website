@@ -309,16 +309,16 @@ function deck_install(string $slug, string $stage, int $pages, string $title, fl
 /* Decks dropped by the "Assign demo deck" workflow: demo-data/deck-inbox/<job>/ with meta.json {slug,title,pages,ratio}
    and 1.webp … n.webp (+ deck.pdf). Imported on the next SMR Admin or showroom load. */
 function deck_inbox_import(): void {
-    $base = SITE_ROOT . '/demo-data/deck-inbox';
-    if (!is_dir($base)) return;
-    foreach (glob($base . '/*', GLOB_ONLYDIR) ?: [] as $job) {
+    // The FTP upload lands in public_html/deck-inbox/ on SiteGround (older path demo-data/deck-inbox/ kept too).
+    $jobs = array_merge(glob(SITE_ROOT . '/deck-inbox/*', GLOB_ONLYDIR) ?: [], glob(SITE_ROOT . '/demo-data/deck-inbox/*', GLOB_ONLYDIR) ?: []);
+    foreach ($jobs as $job) {
         if (!preg_match('/^[A-Za-z0-9_-]{8,40}$/', basename($job)) || filemtime($job) > time() - 30) continue;
         $meta = json_decode((string) @file_get_contents("$job/meta.json"), true) ?: [];
         $slug = (string) ($meta['slug'] ?? '');
         $d = $slug !== '' ? demo_by_slug($slug) : null;
         $pages = (int) ($meta['pages'] ?? 0);
         $ok = $d && $pages > 0 && $pages <= 200;
-        for ($i = 1; $ok && $i <= $pages; $i++) if (!glob("$job/$i.{webp,jpg,png}", GLOB_BRACE)) $ok = false;
+        for ($i = 1; $ok && $i <= $pages; $i++) if (!is_file("$job/$i.webp") && !is_file("$job/$i.jpg") && !is_file("$job/$i.png")) $ok = false;
         if (!$ok) { if (filemtime($job) < time() - 86400) rrmdir_any($job); continue; }
         $stage = deck_dir($slug) . '.in';
         rrmdir_any($stage);
