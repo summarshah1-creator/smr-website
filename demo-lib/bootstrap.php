@@ -82,6 +82,8 @@ function migrate(PDO $pdo): void {
     $pdo->exec("CREATE TABLE IF NOT EXISTS gone_links (token TEXT PRIMARY KEY, deleted_at INTEGER)");
     add_col($pdo, 'demos', 'ver', "TEXT DEFAULT '1.0'");
     add_col($pdo, 'demos', 'seed_ver', "TEXT DEFAULT ''");
+    add_col($pdo, 'links', 'deck', 'INTEGER DEFAULT 1');
+    $pdo->exec("CREATE TABLE IF NOT EXISTS decks (slug TEXT PRIMARY KEY, pages INTEGER DEFAULT 0, title TEXT DEFAULT '', pdf INTEGER DEFAULT 0, ratio REAL DEFAULT 1.7778, ready INTEGER DEFAULT 0, updated_at INTEGER)");
     $pdo->exec("CREATE TABLE IF NOT EXISTS admin_tokens (id TEXT PRIMARY KEY, csrf TEXT NOT NULL, created_at INTEGER, expires_at INTEGER)");
 }
 
@@ -284,8 +286,19 @@ function demo_icon_path(array $d): ?string {
     }
     return $p && is_file($p) ? $p : null;
 }
+/* Features presentation (deck) for a demo: slide images in private_dir()/decks/<slug>/, optional deck.pdf. */
+function deck_dir(string $slug): string { return private_dir() . '/decks/' . $slug; }
+function deck_row(string $slug): ?array {
+    $st = db()->prepare('SELECT * FROM decks WHERE slug = ? AND ready = 1 AND pages > 0');
+    $st->execute([$slug]);
+    return $st->fetch() ?: null;
+}
+function deck_public(string $slug): ?array {
+    $r = deck_row($slug);
+    return $r ? ['pages' => (int) $r['pages'], 'title' => (string) $r['title'], 'pdf' => (int) $r['pdf'] === 1, 'ratio' => (float) $r['ratio'], 'v' => (int) $r['updated_at']] : null;
+}
 function demo_public(array $d): array {
-    return ['slug' => $d['slug'], 'name' => $d['name'], 'tagline' => $d['tagline'], 'description' => $d['description'],
+    return ['deck' => deck_public((string) $d['slug']), 'slug' => $d['slug'], 'name' => $d['name'], 'tagline' => $d['tagline'], 'description' => $d['description'],
         'tips' => array_values(array_filter(array_map('trim', explode("\n", (string) $d['tips'])))), 'accent' => $d['accent'],
         'icon' => '/demo/icon.php?s=' . rawurlencode($d['slug']) . '&v=' . (int) $d['updated_at'], 'ver' => (string) ($d['ver'] ?? '1.0')];
 }

@@ -44,7 +44,7 @@ function link_row(array $l): array {
     $st2->execute([$l['id'], $l['id']]);
     $ss = $st2->fetch() ?: [];
     return ['id' => (int) $l['id'], 'label' => $l['label'], 'views' => (int) $l['views'], 'last_view' => (int) $l['last_view'], 'devices' => (int) ($ss['n'] ?? 0), 'last_seen' => (int) ($ss['seen'] ?? 0), 'last_app' => (string) ($ss['app'] ?? ''), 'url' => link_url($l), 'pin' => $l['pin'], 'apps' => link_apps($l),
-        'mode' => $l['mode'], 'max_uses' => $max, 'uses' => (int) $l['uses'], 'duration' => (int) $l['duration'], 'tips' => (int) $l['tips'], 'direct' => (int) ($l['direct'] ?? 0), 'open' => (int) $l['duration'] === 0 ? 1 : 0,
+        'mode' => $l['mode'], 'max_uses' => $max, 'uses' => (int) $l['uses'], 'duration' => (int) $l['duration'], 'tips' => (int) $l['tips'], 'direct' => (int) ($l['direct'] ?? 0), 'deck' => (int) ($l['deck'] ?? 1), 'open' => (int) $l['duration'] === 0 ? 1 : 0,
         'created_at' => (int) $l['created_at'], 'activated_at' => (int) $l['activated_at'], 'expires_at' => $expiry,
         'status' => $status, 'left' => $left];
 }
@@ -293,8 +293,8 @@ case 'link_create':
     if ($dur === 0) { $mode = 'shared'; $max = 0; } // open link: anyone with it, any time
     if ($direct && count($apps) !== 1) json_out(['error' => 'A direct link opens one app or website. Choose just one.'], 400);
     $token = rand_token(18);
-    db()->prepare('INSERT INTO links (token, pin, label, apps, mode, max_uses, uses, duration, tips, created_at, direct) VALUES (?,?,?,?,?,?,0,?,?,?,?)')
-        ->execute([$token, !empty($in['nopin']) ? '' : new_pin(), mb_substr(trim((string) ($in['label'] ?? '')), 0, 80), json_encode($apps), $mode, $max, $dur, !empty($in['tips']) ? 1 : 0, now(), $direct]);
+    db()->prepare('INSERT INTO links (token, pin, label, apps, mode, max_uses, uses, duration, tips, created_at, direct, deck) VALUES (?,?,?,?,?,?,0,?,?,?,?,?)')
+        ->execute([$token, !empty($in['nopin']) ? '' : new_pin(), mb_substr(trim((string) ($in['label'] ?? '')), 0, 80), json_encode($apps), $mode, $max, $dur, !empty($in['tips']) ? 1 : 0, now(), $direct, array_key_exists('deck', $in) && empty($in['deck']) ? 0 : 1]);
     json_out(['ok' => true, 'link' => link_row(get_link(['id' => db()->lastInsertId()]))]);
 
 case 'link_revoke':
@@ -397,9 +397,59 @@ case 'demo_icon':
     db()->prepare('UPDATE demos SET icon = ?, updated_at = ? WHERE id = ?')->execute(['up:' . $name, now(), $d['id']]);
     json_out(['ok' => true]);
 
+/* Features presentation (deck) for a demo. The browser turns a PDF into slide images; they go to a staging
+   folder first and replace the old deck only when every page has arrived. */
+case 'deck_start':
+case 'deck_page':
+case 'deck_pdf':
+case 'deck_finish':
+case 'deck_remove':
+    $d = demo_by_slug((string) ($in['slug'] ?? ''));
+    if (!$d) json_out(['error' => 'Demo not found.'], 404);
+    $dir = deck_dir($d['slug']); $stage = $dir . '.new';
+    if ($a === 'deck_remove') {
+        rrmdir_any($dir); rrmdir_any($stage);
+        db()->prepare('DELETE FROM decks WHERE slug = ?')->execute([$d['slug']]);
+        json_out(['ok' => true]);
+    }
+    if ($a === 'deck_start') { rrmdir_any($stage); @mkdir($stage, 0750, true); json_out(['ok' => true]); }
+    if (!is_dir($stage)) json_out(['error' => 'Start the upload again.'], 400);
+    if ($a === 'deck_page') {
+        $n = (int) ($in['n'] ?? 0);
+        if ($n < 1 || $n > 200) json_out(['error' => 'Bad page.'], 400);
+        $f = $_FILES['file'] ?? [];
+        if ($err = upload_error($f)) json_out(['error' => $err], 400);
+        if ($f['size'] > 10 * 1024 * 1024) json_out(['error' => 'A slide is over 10 MB.'], 400);
+        $info = @getimagesize($f['tmp_name']);
+        $ext = ['image/png' => 'png', 'image/jpeg' => 'jpg', 'image/webp' => 'webp'][$info['mime'] ?? ''] ?? null;
+        if (!$ext) json_out(['error' => 'Slides must be PNG, JPG or WebP.'], 400);
+        foreach (['webp', 'jpg', 'png'] as $e) @unlink("$stage/$n.$e");
+        if (!move_uploaded_file($f['tmp_name'], "$stage/$n.$ext")) json_out(['error' => 'Could not save the slide.'], 500);
+        json_out(['ok' => true]);
+    }
+    if ($a === 'deck_pdf') {
+        $f = $_FILES['file'] ?? [];
+        if ($err = upload_error($f)) json_out(['error' => $err], 400);
+        if ($f['size'] > 60 * 1024 * 1024) json_out(['error' => 'The PDF is over 60 MB, so only the slides were kept.'], 400);
+        if ((string) @file_get_contents($f['tmp_name'], false, null, 0, 5) !== '%PDF-') json_out(['error' => 'That is not a PDF.'], 400);
+        if (!move_uploaded_file($f['tmp_name'], "$stage/deck.pdf")) json_out(['error' => 'Could not save the PDF.'], 500);
+        json_out(['ok' => true]);
+    }
+    // deck_finish
+    $pages = (int) ($in['pages'] ?? 0);
+    if ($pages < 1 || $pages > 200) json_out(['error' => 'No slides.'], 400);
+    for ($i = 1; $i <= $pages; $i++) if (!glob("$stage/$i.*")) json_out(['error' => 'Slide ' . $i . ' did not upload. Try again.'], 400);
+    rrmdir_any($dir);
+    if (!@rename($stage, $dir)) json_out(['error' => 'Could not save the presentation.'], 500);
+    $ratio = max(0.3, min(4, (float) ($in['ratio'] ?? 1.7778)));
+    db()->prepare('INSERT INTO decks (slug, pages, title, pdf, ratio, ready, updated_at) VALUES (?,?,?,?,?,1,?) ON CONFLICT(slug) DO UPDATE SET pages = excluded.pages, title = excluded.title, pdf = excluded.pdf, ratio = excluded.ratio, ready = 1, updated_at = excluded.updated_at')
+        ->execute([$d['slug'], $pages, mb_substr(trim((string) ($in['title'] ?? '')), 0, 100), is_file("$dir/deck.pdf") ? 1 : 0, $ratio, now()]);
+    json_out(['ok' => true, 'deck' => deck_public($d['slug'])]);
+
 case 'demo_delete':
     $d = demo_by_slug((string) ($in['slug'] ?? ''));
     if (!$d) json_out(['error' => 'Demo not found.'], 404);
+    rrmdir_any(deck_dir($d['slug'])); db()->prepare('DELETE FROM decks WHERE slug = ?')->execute([$d['slug']]);
     $seed = is_file(SEED_DIR . '/' . $d['slug'] . '.pack.php');
     if ($seed) {
         // Demos that ship with the website can only be hidden (they would come back on the next update).

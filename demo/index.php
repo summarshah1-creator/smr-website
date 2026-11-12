@@ -17,6 +17,8 @@ $pinLen = 4;
 $noPin = false;
 $direct = false;
 $autoOpen = false;
+$deckOn = true;
+$pinDeck = false;
 
 if ($preview) {
     $view = 'showroom';
@@ -37,6 +39,7 @@ if ($preview) {
                 $expires = session_expiry($l, $s);
                 $tips = (bool) $l['tips'];
                 $direct = (int) ($l['direct'] ?? 0) === 1;
+                $deckOn = (int) ($l['deck'] ?? 1) === 1;
                 $allowed = link_apps($l);
                 $all = [];
                 foreach (db()->query('SELECT * FROM demos WHERE enabled = 1 ORDER BY sort, name') as $d) $all[$d['slug']] = $d;
@@ -55,6 +58,7 @@ if ($preview) {
                 foreach (db()->query('SELECT * FROM demos WHERE enabled = 1') as $d) $all[$d['slug']] = $d;
                 foreach (link_apps($link) as $slug) if (isset($all[$slug])) {
                     $pd = demo_public($all[$slug]);
+                    if ($pd['deck'] && (int) ($link['deck'] ?? 1) === 1) $pinDeck = true;
                     $pinApps[] = ['name' => $pd['name'], 'icon' => $pd['icon'] . '&k=' . rawurlencode($token)];
                 }
             }
@@ -89,6 +93,8 @@ $mark = preg_replace('/<svg /', '<svg aria-hidden="true" focusable="false" ', $m
 $waRequest = 'https://wa.me/' . WHATSAPP . '?text=' . rawurlencode("Hi Summar, my SMR Digital demo session has ended. Could I have a new PIN please?");
 $waAsk = 'https://wa.me/' . WHATSAPP . '?text=' . rawurlencode("Hi Summar, I'd like a demo of the SMR Digital apps please.");
 $waHelp = 'https://wa.me/' . WHATSAPP . '?text=' . rawurlencode("Hi Summar, I'm looking at the SMR Digital demos and have a question.");
+if (!$deckOn) foreach ($demos as &$dm) $dm['deck'] = null;
+unset($dm);
 $boot = ['auto' => $autoOpen, 'nolimit' => $expires > now() + 50 * 365 * 86400, 'direct' => $direct, 'view' => $view, 'token' => $token, 'preview' => $preview, 'now' => now(), 'expires' => $expires, 'tips' => $tips, 'demos' => $demos];
 ?><!doctype html>
 <html lang="en-GB">
@@ -195,6 +201,50 @@ h1 em{font-style:normal;background:var(--grad);-webkit-background-clip:text;back
 .stage.on{display:block}
 /* App open: lay the page out like a normal full-height web app (header + app in the page flow, nothing
    pinned with position:fixed), which is how the apps behave on their own in iPhone Safari. */
+.pindeck{display:inline-flex;align-items:center;gap:7px;margin:14px auto 0;padding:7px 13px;border-radius:999px;background:rgba(255,200,87,.1);border:1px solid rgba(255,200,87,.4);color:#ffd88a;font-size:13px;font-weight:800}
+.pindeck svg{width:16px;height:16px}
+#decks{display:grid;gap:12px;margin:0 0 16px}
+.deckc{position:relative;border-radius:22px;padding:16px;background:linear-gradient(#15121f,#15121f) padding-box,linear-gradient(120deg,#ffc857,#d63bff 55%,#5b5bff) border-box;border:1.5px solid transparent;box-shadow:0 18px 40px -22px rgba(214,59,255,.7);overflow:hidden}
+.dk-tag{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;background:linear-gradient(90deg,#ffc857,#ff8a3d);color:#1a1206;font-size:11px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+.deckc h3{font-family:Sora,sans-serif;font-size:19px;letter-spacing:-.01em;margin:10px 0 4px;line-height:1.2}
+.deckc p{color:var(--muted);font-size:14px;line-height:1.45;margin:0}
+.dk-thumb{display:block;margin:12px 0 0;border-radius:12px;overflow:hidden;box-shadow:0 0 0 1px rgba(255,255,255,.1);background:#fff1;cursor:pointer;position:relative}
+.dk-thumb img{display:block;width:100%;height:auto}
+.dk-thumb b{position:absolute;right:8px;bottom:8px;padding:4px 9px;border-radius:999px;background:rgba(8,8,15,.8);font-size:11.5px;font-weight:800;color:#fff}
+.dk-btns{display:flex;gap:8px;margin-top:12px}
+.dk-open,.dk-app{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:7px;height:48px;padding:0 10px;border-radius:14px;font:800 14.5px Manrope,system-ui,sans-serif;cursor:pointer;border:0;white-space:nowrap}
+.dk-btns .dk-open{flex:1.5}
+.dk-open{background:linear-gradient(110deg,#ffc857,#ff8a3d);color:#1a1206;box-shadow:0 12px 26px -14px rgba(255,170,60,.9)}
+.dk-open svg,.dk-app svg{width:18px;height:18px}
+.dk-app{background:rgba(255,255,255,.07);color:#fff;border:1px solid var(--line)}
+.deckbtn{gap:6px;background:linear-gradient(110deg,#ffc857,#ff8a3d)!important;color:#1a1206!important;border:0!important;font-weight:800}
+.deckbtn svg{width:16px;height:16px}
+@media(max-width:420px){.dhd.hasdeck a.hbtn.icon{display:none}}
+.deckv{position:fixed;inset:0;z-index:120;background:#08080f;display:flex;flex-direction:column}
+.deckv[hidden]{display:none}
+.dv-h{flex:none;display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line);background:rgba(8,8,15,.95)}
+.dv-x{width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.07);border:1px solid var(--line);color:#fff;display:grid;place-items:center;cursor:pointer;flex:none}
+.dv-x svg{width:18px;height:18px}
+.dv-t{flex:1;min-width:0}.dv-t b{display:block;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.dv-t small{color:var(--muted);font-size:12.5px;font-weight:700}
+.dv-dl{display:inline-flex;align-items:center;gap:6px;height:38px;padding:0 12px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.05);color:#fff;text-decoration:none;font-weight:800;font-size:13px}
+.dv-dl svg{width:16px;height:16px}
+.dv-b{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 12px 90px;display:flex;flex-direction:column;align-items:center;gap:12px;overscroll-behavior:contain}
+.dv-b img{width:100%;max-width:1100px;height:auto;border-radius:10px;background:#16161f;box-shadow:0 10px 30px -16px rgba(0,0,0,.9);display:block}
+.dv-rot{position:absolute;left:50%;top:70px;transform:translateX(-50%);padding:8px 14px;border-radius:999px;background:rgba(27,24,48,.95);border:1px solid rgba(207,196,255,.4);font-size:12.5px;font-weight:700;white-space:nowrap;opacity:0;transition:opacity .3s;pointer-events:none}
+.dv-rot.on{opacity:1}
+.dv-f{position:absolute;left:0;right:0;bottom:0;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:linear-gradient(transparent,rgba(8,8,15,.95) 40%);display:flex;justify-content:center}
+.dv-go{height:48px;padding:0 22px;border-radius:14px;border:0;background:linear-gradient(110deg,#5b5bff,#d63bff);color:#fff;font:800 15px Manrope,system-ui,sans-serif;cursor:pointer;box-shadow:0 12px 26px -14px rgba(214,59,255,.9);min-width:min(320px,100%)}
+.dwel{position:fixed;inset:0;z-index:110;background:rgba(0,0,0,.6);display:flex;align-items:flex-end;justify-content:center;padding:12px}
+.dwel[hidden]{display:none}
+.dw-c{width:100%;max-width:440px;border-radius:24px;padding:18px;background:linear-gradient(#15121f,#15121f) padding-box,linear-gradient(120deg,#ffc857,#d63bff 55%,#5b5bff) border-box;border:1.5px solid transparent;display:flex;flex-direction:column;gap:10px;margin-bottom:env(safe-area-inset-bottom)}
+.dw-c .dk-tag{align-self:flex-start}
+.dw-c h2{font-family:Sora,sans-serif;font-size:20px;margin:2px 0 0;line-height:1.2}
+.dw-c p{color:var(--muted);font-size:14px;margin:0;line-height:1.45}
+.dw-c img{width:100%;border-radius:12px;box-shadow:0 0 0 1px rgba(255,255,255,.1)}
+.dw-c img:not([src]){display:none}
+.dw-c .dk-app,.dw-c .dk-open{flex:none;width:100%}
+@media(min-width:700px){.dwel{align-items:center}}
+@media(min-width:700px){.deckc{display:grid;grid-template-columns:1fr 300px;column-gap:20px;align-items:start}.deckc>*{grid-column:1}.deckc .dk-tag{justify-self:start}.deckc .dk-thumb{grid-column:2;grid-row:1/span 4;margin:0;align-self:center}}
 body.appmode{height:100%;overflow:hidden;display:flex;flex-direction:column}
 body.appmode .hd{position:relative;flex:none}
 body.appmode .stage{position:relative;top:auto;left:auto;right:auto;bottom:auto;flex:1 1 auto;min-height:0}
@@ -279,6 +329,7 @@ body.appmode .glow{display:none}
   </a>
   <span class="dtag"><i></i>Demo<?php if ($dd): ?><b id="dver">v<?= h($dd['ver']) ?></b><?php endif; ?></span>
   <div class="timer" id="timer" role="timer" aria-live="off"<?= $expires > now() + 50 * 365 * 86400 ? ' style="display:none"' : '' ?>><small>Ends in</small><b id="clock">--:--</b></div>
+  <button class="hbtn deckbtn" id="deckbtn" type="button" hidden aria-label="Open the features presentation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M12 16v4M8 20h8"/></svg><span>Slides</span></button>
   <button class="hbtn icon viewsw" id="viewsw" type="button" title="Switch phone / full width" aria-label="Switch phone or full width view"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg></button>
   <a class="hbtn icon" href="<?= h(MAIN_SITE) ?>" target="_blank" rel="noopener" title="SMR Digital website" aria-label="SMR Digital website"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9.5"/><path d="M2.5 12h19M12 2.5a14.5 14.5 0 0 1 0 19M12 2.5a14.5 14.5 0 0 0 0 19"/></svg></a>
   <a class="hbtn wa" href="<?= h($waHelp) ?>" target="_blank" rel="noopener" aria-label="WhatsApp SMR Digital"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.5 1 2.7c.1.2 1.8 2.8 4.4 3.9 1.6.7 2.3.8 3.1.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3z"/></svg><span>WhatsApp</span></a>
@@ -312,6 +363,7 @@ body.appmode .glow{display:none}
 </header>
 <nav class="menu" id="menu" aria-label="Demo menu">
   <button type="button" data-home><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3.5" y="3.5" width="7" height="7" rx="2"/><rect x="13.5" y="3.5" width="7" height="7" rx="2"/><rect x="3.5" y="13.5" width="7" height="7" rx="2"/><rect x="13.5" y="13.5" width="7" height="7" rx="2"/></svg>All Demos</button>
+  <button type="button" id="deckmenu" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M12 16v4M8 20h8"/></svg>Features presentation</button>
   <button type="button" id="tipsbtn"<?= $tips ? '' : ' style="display:none"' ?>><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.3 2.4c-.5.2-.8.7-.8 1.2v.4M12 17h.01"/></svg>Show this app's features</button>
   <hr>
   <a href="<?= $preview ? '/demo-admin/' : h(MAIN_SITE) ?>"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 4h4a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-4M10 16l4-4-4-4M14 12H4"/></svg><?= $preview ? 'Back to SMR Admin' : 'Exit demo' ?></a>
@@ -327,6 +379,7 @@ body.appmode .glow{display:none}
   <h1><?= $one ? 'Your app <em>preview</em>' : 'Apps shared <em>with you</em>' ?></h1>
   <p class="lead"><?= $one ? 'Tap the app below to explore it.' : 'Tap any app below to explore it.' ?> Whether it's being built for you or it's an example of our work, it's a feel for what's possible. Use <b>All Demos</b> at the top to come back here.
   <?php endif; ?></p>
+  <div id="decks"></div>
   <div class="grid" id="grid"></div>
   <div class="note">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v5h1"/></svg>
@@ -343,6 +396,24 @@ body.appmode .glow{display:none}
 
 <?php endif; ?>
 <?php if ($view === 'showroom'): ?>
+<div class="deckv" id="deckv" role="dialog" aria-modal="true" aria-label="Features presentation" hidden>
+  <div class="dv-h">
+    <button class="dv-x" id="dvx" type="button" aria-label="Close the presentation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <div class="dv-t"><b id="dvt">Features presentation</b><small id="dvn"></small></div>
+    <a class="dv-dl" id="dvdl" href="#" hidden aria-label="Download the PDF"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg><span>PDF</span></a>
+  </div>
+  <div class="dv-b" id="dvb"></div>
+  <div class="dv-rot" id="dvrot">Turn your phone sideways for bigger slides</div>
+  <div class="dv-f"><button class="dv-go" id="dvgo" type="button"></button></div>
+</div>
+<div class="dwel" id="dwel" hidden><div class="dw-c">
+  <span class="dk-tag">Start here</span>
+  <h2 id="dwh">Features presentation</h2>
+  <p id="dwp"></p>
+  <img id="dwimg" alt="">
+  <button class="dk-open" id="dwopen" type="button">Open presentation</button>
+  <button class="dk-app" id="dwapp" type="button"></button>
+</div></div>
 <div class="stage" id="stage"><div class="dev"><iframe id="frame" title="Demo app" allow="geolocation; camera; clipboard-write; fullscreen" referrerpolicy="same-origin"></iframe></div></div>
 
 <div class="ftour" id="ftour">
@@ -365,6 +436,7 @@ body.appmode .glow{display:none}
     <?php if ($pinApps): ?>
     <p class="lead"><?= count($pinApps) === 1 ? 'Shared with you by SMR Digital:' : 'The ' . count($pinApps) . ' apps shared with you by SMR Digital:' ?></p>
     <div class="pinapps"><?php foreach ($pinApps as $pa): ?><span><img src="<?= h($pa['icon']) ?>" alt="" width="52" height="52" draggable="false"><small><?= h($pa['name']) ?></small></span><?php endforeach; ?></div>
+    <?php if ($pinDeck): ?><p class="pindeck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M12 16v4M8 20h8"/></svg>Includes a features presentation</p><?php endif; ?>
     <?php endif; ?>
     <?php if ($noPin): ?>
     <p class="lead" style="margin-top:14px">Tap <b>Open</b> to start. This link was made just for you.</p>
@@ -469,6 +541,49 @@ grid.innerHTML=demos.length?demos.map(function(d){return '<button class="card" t
   +'<span class="go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>'
   +(d.enabled===0?'<span class="off">Hidden</span>':'')+'</button>'}).join(''):'<p class="lead">No demos have been added to this link yet.</p>';
 
+
+/* ---------- features presentation (deck) ---------- */
+var SLIDES='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M12 16v4M8 20h8"/></svg>';
+var isWeb=function(d){return d&&/website/i.test((d.tagline||'')+' '+(d.name||''))&&!/\bapp\b/i.test(d.tagline||'')};
+var what=function(d){return isWeb(d)?'website':'app'};
+var deckSrc=function(d,n){return '/demo/deck.php?s='+encodeURIComponent(d.slug)+'&p='+n+'&v='+d.deck.v};
+var withDeck=demos.filter(function(d){return d.deck});
+var dkHome=$('decks');
+if(dkHome&&withDeck.length){var many=withDeck.length>1;
+  dkHome.innerHTML=withDeck.map(function(d){return '<div class="deckc"><span class="dk-tag">'+SLIDES.replace('<svg','<svg width="13" height="13"')+'Start here</span>'
+    +'<h3>'+(many?esc(d.name)+' presentation':'Features presentation')+'</h3>'
+    +'<p>Look here for a breakdown of all the new '+what(d)+' features and the benefits for your business.</p>'
+    +'<a class="dk-thumb" data-deck="'+esc(d.slug)+'"><img src="'+esc(deckSrc(d,1))+'" alt="First slide of the presentation" loading="lazy" draggable="false"><b>'+d.deck.pages+' slides</b></a>'
+    +'<div class="dk-btns"><button class="dk-open" type="button" data-deck="'+esc(d.slug)+'">'+SLIDES+'Open presentation</button><button class="dk-app" type="button" data-open="'+esc(d.slug)+'">Open '+what(d)+'</button></div></div>'}).join('');
+  dkHome.addEventListener('click',function(e){var b=e.target.closest('[data-deck]');if(b){openDeck(b.getAttribute('data-deck'));return}var o=e.target.closest('[data-open]');if(o)location.hash='app='+o.getAttribute('data-open')});
+}
+var dv=$('deckv'),dvb=$('dvb'),dvOpen=null,dvObs=null,rotT;
+var openDeck=function(slug){var d=bySlug[slug];if(!d||!d.deck)return;closeMenu();dvOpen=slug;
+  $('dvt').textContent=d.name+' · Features presentation';
+  var n=d.deck.pages,html='';for(var i=1;i<=n;i++)html+='<img src="'+esc(deckSrc(d,i))+'" alt="Slide '+i+'" data-n="'+i+'"'+(i>2?' loading="lazy"':'')+' style="aspect-ratio:'+d.deck.ratio+'" draggable="false">';
+  dvb.innerHTML=html;dvb.scrollTop=0;$('dvn').textContent='Slide 1 of '+n;
+  var dl=$('dvdl');dl.hidden=!d.deck.pdf;dl.href='/demo/deck.php?s='+encodeURIComponent(slug)+'&pdf=1&dl=1';
+  $('dvgo').textContent=current===slug?'Back to the '+what(d):'Open the '+what(d);
+  dv.hidden=false;document.body.classList.add('locked');
+  dvb.onscroll=function(){var ims=dvb.querySelectorAll('img'),top=dvb.getBoundingClientRect().top+dvb.clientHeight*.35,k=1;for(var i=0;i<ims.length;i++){if(ims[i].getBoundingClientRect().top<=top)k=i+1}if(dvb.scrollTop+dvb.clientHeight>=dvb.scrollHeight-4)k=ims.length;$('dvn').textContent='Slide '+k+' of '+n};
+  var rot=$('dvrot');clearTimeout(rotT);rot.classList.toggle('on',d.deck.ratio>1.2&&window.innerHeight>window.innerWidth&&window.innerWidth<700);rotT=setTimeout(function(){rot.classList.remove('on')},4500);
+  try{sessionStorage.setItem('smrDemoDeck:'+slug,'1')}catch(e){}
+  if(!/deck=/.test(location.hash)&&!B.direct)history.pushState({deck:slug},'',location.pathname+location.search+'#deck='+slug)};
+var closeDeck=function(goApp){if(!dvOpen)return;var sl=dvOpen;dvOpen=null;dv.hidden=true;dvb.innerHTML='';if(!current||!stage.classList.contains('on'))document.body.classList.remove('locked');
+  if(/deck=/.test(location.hash)){if(goApp){location.replace(location.pathname+location.search+'#app='+sl)}else if(B.preview){location.href='/demo-admin/#demos'}else history.replaceState(null,'',location.pathname+location.search)}
+  else if(goApp&&current!==sl)location.hash='app='+sl};
+$('dvx').addEventListener('click',function(){closeDeck(false)});
+$('dvgo').addEventListener('click',function(){closeDeck(true)});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&dvOpen)closeDeck(false)});
+var dm=$('deckmenu');if(dm)dm.addEventListener('click',function(){var d=current?bySlug[current]:withDeck[0];if(d&&d.deck)openDeck(d.slug)});
+var deckUi=function(){if(dm)dm.hidden=!((current&&bySlug[current]&&bySlug[current].deck)||(!current&&withDeck.length))};
+var db0=$('deckbtn');
+if(B.direct&&withDeck.length){var d0=withDeck[0];db0.hidden=false;$('hd').classList.add('hasdeck');db0.addEventListener('click',function(){openDeck(d0.slug)});
+  var seenDeck=false;try{seenDeck=sessionStorage.getItem('smrDemoDeck:'+d0.slug)==='1'}catch(e){}
+  if(!seenDeck){$('dwh').textContent='There’s a presentation for you';$('dwp').textContent='Look here for a breakdown of all the new '+what(d0)+' features and the benefits for your business. Have a look through it, then explore the '+what(d0)+'.';
+    $('dwimg').src=deckSrc(d0,1);$('dwopen').innerHTML=SLIDES+'Open presentation';$('dwapp').textContent='Go to the '+what(d0);$('dwel').hidden=false;
+    var dw=function(){$('dwel').hidden=true;try{sessionStorage.setItem('smrDemoDeck:'+d0.slug,'1')}catch(e){}};
+    $('dwopen').addEventListener('click',function(){dw();openDeck(d0.slug)});$('dwapp').addEventListener('click',dw)}}
 var stage=$('stage'),frame=$('frame'),home=$('home'),current=null;
 var phone=true;try{phone=localStorage.getItem('smrDemoView')!=='full'}catch(e){}
 var setPhone=function(){stage.classList.toggle('phone',phone)};setPhone();
@@ -484,15 +599,15 @@ var show=function(slug){
     if(current!==slug){fresh();frame.src='/demo/run/'+encodeURIComponent(slug)+'/';current=slug}
     stage.classList.add('on');home.style.display='none';document.body.classList.add('locked','appmode');window.scrollTo(0,0);
     document.title=bySlug[slug].name+' Demo - SMR Digital';
-    startTips(slug,false);
+    startTips(slug,false);deckUi();
   }else{
     if(current){frame.src='about:blank';current=null}
     stage.classList.remove('on');home.style.display='';document.body.classList.remove('locked','appmode');
-    document.title=<?= json_encode($pageTitle) ?>;hideTips();
+    document.title=<?= json_encode($pageTitle) ?>;hideTips();deckUi();
   }
 };
 var ar=$('apprefresh');if(ar)ar.addEventListener('click',function(){if(!current)return;var sl=current;fresh();frame.src='/demo/run/'+encodeURIComponent(sl)+'/?r='+Date.now();toast('Reloaded with the latest version',false)});
-var route=function(){if(B.direct){var d0=B.demos&&B.demos[0];if(d0&&current!==d0.slug)show(d0.slug);return}var m=/app=([a-z0-9-]+)/.exec(location.hash);if(B.preview&&!m){location.replace('/demo-admin/#demos');return}show(m?m[1]:null)};
+var route=function(){var dk=/deck=([a-z0-9-]+)/.exec(location.hash);if(dk&&!B.direct){if(dvOpen!==dk[1])openDeck(dk[1]);if(B.preview)return;show(null);return}if(dvOpen&&!B.direct){dvOpen=null;dv.hidden=true;dvb.innerHTML=''}if(B.direct){var d0=B.demos&&B.demos[0];if(d0&&current!==d0.slug)show(d0.slug);return}var m=/app=([a-z0-9-]+)/.exec(location.hash);if(B.preview&&!m){location.replace('/demo-admin/#demos');return}show(m?m[1]:null)};
 grid.addEventListener('click',function(e){var c=e.target.closest('[data-open]');if(c)location.hash='app='+c.getAttribute('data-open')});
 document.querySelectorAll('[data-home]').forEach(function(b){b.addEventListener('click',function(e){e.preventDefault();if(B.preview){location.href='/demo-admin/#demos';return}if(location.hash)history.pushState(null,'',location.pathname+location.search);show(null)})});
 window.addEventListener('hashchange',route);window.addEventListener('popstate',route);

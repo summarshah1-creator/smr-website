@@ -103,6 +103,6 @@ function link_event(array $l, string $type, string $text): void {
         db()->prepare('DELETE FROM events WHERE at < ?')->execute([now() - 60 * 86400]);
     } catch (Throwable $e) {}
     $who = trim((string) $l['label']) !== '' ? $l['label'] : 'Someone';
-    $titles = ['opened' => 'Demo opened', 'low' => 'Demo time running out', 'ended' => 'Demo ended'];
+    $titles = ['opened' => 'Demo opened', 'low' => 'Demo time running out', 'ended' => 'Demo ended', 'deck' => 'Presentation opened'];
     push_all($titles[$type] ?? 'SMR Admin', $who . ($text !== '' && $text[0] === "'" ? '' : ' ') . $text, '/demo-admin/#live', 'link-' . $l['id'] . '-' . $type);
 }

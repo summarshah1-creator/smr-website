@@ -312,6 +312,7 @@ document.addEventListener('keydown',function(e){if(/^\d$/.test(e.key))press(e.ke
         <div class="chips" id="dur"><button type="button" data-m="15">15 min</button><button type="button" data-m="30">30 min</button><button type="button" data-m="45" class="on">45 min</button><button type="button" data-m="60">1 hour</button><button type="button" data-m="120">2 hours</button><button type="button" data-m="1440">1 day</button><button type="button" data-m="10080">1 week</button><button type="button" data-m="43200">30 days</button><button type="button" data-m="0">No limit</button><input type="number" id="durc" min="5" max="43200" placeholder="mins" aria-label="Custom minutes"></div>
       </details>
       <label class="toggle" style="margin-top:16px;align-items:flex-start"><input type="checkbox" id="tips" style="flex:none;margin-top:1px"><span>Show app / website features<small style="display:block;color:var(--muted);font-weight:500;font-size:12.5px;margin-top:2px">Off: no features tab at all. On: a features tab under the bar explains what it does.</small></span></label>
+      <label class="toggle hidden" id="deckrow" style="margin-top:16px;align-items:flex-start"><input type="checkbox" id="deckopt" checked style="flex:none;margin-top:1px"><span>Include the features presentation<small style="display:block;color:var(--muted);font-weight:500;font-size:12.5px;margin-top:2px" id="decknote">They'll see a clear "Open presentation" button with the app.</small></span></label>
       <label class="toggle" style="margin-top:16px;align-items:flex-start"><input type="checkbox" id="direct" style="flex:none;margin-top:1px"><span>Open straight into it<small style="display:block;color:var(--muted);font-weight:500;font-size:12.5px;margin-top:2px">For one app or website. No demo list or menus, just an SMR Digital Demo bar with the version number, your website and WhatsApp. Always shows the latest version.</small></span></label>
       <label class="toggle" style="margin-top:16px;align-items:flex-start"><input type="checkbox" id="usepin" checked style="flex:none;margin-top:1px"><span>Ask for a PIN<small style="display:block;color:var(--muted);font-weight:500;font-size:12.5px;margin-top:2px">Turn off to send just the link. They tap Open and they're in (with "Open straight into it" there's no tap at all).</small></span></label>
       <div class="err" id="lerr"></div>
@@ -410,6 +411,7 @@ document.addEventListener('keydown',function(e){if(/^\d$/.test(e.key))press(e.ke
 <div class="scrim" id="scrim"></div>
 <div class="sheet" id="sheet" role="dialog" aria-modal="true"><div class="grab"></div><div id="sheetin"></div></div>
 <input type="file" id="fzip" accept=".zip,application/zip,.html,.htm,text/html" hidden>
+<input type="file" id="fdeck" accept="application/pdf,image/png,image/jpeg,image/webp" multiple hidden>
 <input type="file" id="dfile" accept="image/png,image/jpeg,image/webp,image/gif" multiple hidden>
 <input type="file" id="ficon" accept="image/png,image/jpeg,image/webp" hidden>
 <div class="toast" id="toast"></div>
@@ -434,12 +436,14 @@ var durTxt=function(m){if(!m)return'no time limit';if(m>=1440&&m%1440===0){var d
 var shareText=function(l){var names=l.apps.map(function(s){var d=demoBy(s);return d?d.name:s}),one=names.length===1;
   if(l.direct)return "Here's the latest version of "+names[0]+" for you to look over. Let me know what you think."
     +'\n\n'+linkPin(l)
-    +'\n\nThe same link always shows the newest version, so you can check back after each update.'+(l.duration?' It stays open for '+durTxt(l.duration)+(l.pin?' from when you enter the PIN.':' from when you first open it.'):'')+' Any questions, just message me.\n\nSummar, SMR Digital';
+    +deckLine(l)+'\n\nThe same link always shows the newest version, so you can check back after each update.'+(l.duration?' It stays open for '+durTxt(l.duration)+(l.pin?' from when you enter the PIN.':' from when you first open it.'):'')+' Any questions, just message me.\n\nSummar, SMR Digital';
   return (one?"Here's the demo we spoke about ("+names[0]+"). Have a little look around the app."
          :"Here are the demos we spoke about ("+andList(names)+"). Have a look through the apps.")
     +' Let me know what you think.'
+    +deckLine(l)
     +'\n\n'+linkPin(l)
     +'\n\n'+(l.duration?'You have '+durTxt(l.duration)+(l.pin?' from when you enter the PIN.':' from when you first open it.')+' ':'There is no time limit, so take a look whenever suits you. ')+'Any questions, just message me.\n\nSummar, SMR Digital'};
+var deckLine=function(l){if(!l.deck)return'';var w=l.apps.filter(function(s){var d=demoBy(s);return d&&d.deck});if(!w.length)return'';return l.direct?'\n\nThere\'s also a features presentation in the link. Have a look through it for a breakdown of all the new features and how they help your business.':'\n\nThere\'s also a features presentation in the link. Open it first for a breakdown of all the new features and how they help your business.'};
 var linkPin=function(l){return 'Link to demo:\n'+l.url+(l.pin?'\n\nPIN to access demo:\n'+l.pin:'')};
 var lpName=function(l){return l.pin?'Link & PIN':'Link'};
 var waUrl=function(text,phone){var n=String(phone||'').replace(/\D/g,'');if(n.indexOf('00')===0)n=n.slice(2);else if(n.charAt(0)==='0')n='44'+n.slice(1);
@@ -474,7 +478,7 @@ var renderDemos=function(){$('demos').innerHTML=D.length?D.map(function(d){
 var curSlug=null;
 $('demos').addEventListener('click',function(e){var b=e.target.closest('[data-opts]');if(!b)return;var slug=b.closest('[data-slug]').dataset.slug,d=demoBy(slug);curSlug=slug;
   openSheet('<div class="sh-h"><img src="'+esc(d.icon)+'" alt=""><div><b>'+esc(d.name)+'</b><small>'+esc(d.tagline)+'</small></div></div>'
-    +item('open','Open demo')+item('send','Send this demo')+item('edit','Edit name, text and feature tour')+item('icon','Change icon')+item('zip','Replace with a new file (HTML or ZIP)')
+    +item('open','Open demo')+item('send','Send this demo')+item('edit','Edit name, text and feature tour')+item('deck',d.deck?'Features presentation ('+d.deck.pages+' slides)':'Add a features presentation')+item('icon','Change icon')+item('zip','Replace with a new file (HTML or ZIP)')
     +item('toggle',d.enabled?'Hide from customers':'Show to customers')+(d.source==='seed'?'':item('del','Delete','', 'bad'))+item('close','Cancel','','muted'),
   function(el){el.addEventListener('click',function(ev){var it=ev.target.closest('[data-act]');if(!it)return;var a=it.dataset.act;
     if(a==='close')closeSheet();
@@ -484,6 +488,7 @@ $('demos').addEventListener('click',function(e){var b=e.target.closest('[data-op
     if(a==='zip'){closeSheet();$('fzip').click()}
     if(a==='toggle')api('demo_save',{slug:slug,enabled:d.enabled?0:1}).then(function(){closeSheet();toast(d.enabled?'Hidden':'Visible again');load()}).catch(function(e){toast(e.message,true)});
     if(a==='del'){if(confirm('Delete '+d.name+' and its files?'))api('demo_delete',{slug:slug}).then(function(){closeSheet();toast('Deleted');load()}).catch(function(e){toast(e.message,true)})}
+    if(a==='deck')deckSheet(d);
     if(a==='edit')editDemo(d)})})});
 var editDemo=function(d){openSheet('<h2>Edit '+esc(d.name)+'</h2><form id="ef"><label class="f">Name</label><input type="text" name="name" value="'+esc(d.name)+'" maxlength="60">'
    +'<label class="f">Short line</label><input type="text" name="tagline" value="'+esc(d.tagline)+'" maxlength="90">'
@@ -544,7 +549,7 @@ $('linkform').addEventListener('submit',function(e){e.preventDefault();$('lerr')
   var apps=[].map.call(document.querySelectorAll('#pick input:checked'),function(i){return i.value});
   if(!apps.length){$('lerr').textContent='Choose at least one app.';return}
   var mode=document.querySelector('[name=mode]:checked').value,phone=$('ph').value;
-  api('link_create',{label:$('lb').value,apps:apps,mode:mode,max_uses:+$('maxu').value,duration:dur,tips:$('tips').checked,nopin:!$('usepin').checked,direct:$('direct').checked}).then(function(j){
+  api('link_create',{label:$('lb').value,apps:apps,mode:mode,max_uses:+$('maxu').value,duration:dur,tips:$('tips').checked,nopin:!$('usepin').checked,direct:$('direct').checked,deck:$('deckopt').checked&&!$('deckrow').classList.contains('hidden')?1:0}).then(function(j){
     $('lb').value='';$('ph').value='';document.querySelectorAll('#pick input').forEach(function(i){i.checked=false});
     load().then(function(){showMessage(j.link,phone)})}).catch(function(er){$('lerr').textContent=er.message})});
 
@@ -596,7 +601,7 @@ $('links').addEventListener('click',function(e){var b=e.target.closest('[data-a]
       if(x==='pin'&&confirm(l.pin?'Make a new PIN? The old PIN stops working and the timer resets.':'Restart this link? Their timer resets.'))run('link_newpin',{id:id},l.pin?'New PIN made':'Link restarted');
       if(x==='del'&&confirm('Delete this link for good?'+(l.open?' Anyone who opens it will see that it has been removed.':'')))run('link_delete',{id:id},'Link deleted')})})});
 setInterval(function(){var reload=false;document.querySelectorAll('#links [data-left]').forEach(function(el){var l=L.filter(function(x){return x.id===+el.closest('[data-id]').dataset.id})[0];if(!l)return;var s=leftOf(l);el.textContent=fmtLeft(s);el.closest('.lk').classList.toggle('low',s<=300);if(s<=0)reload=true});if(reload)load()},1000);
-var EV={opened:'opened',low:'low',ended:'ended'};
+var EV={opened:'opened',deck:'opened',low:'low',ended:'ended'};
 var renderFeed=function(){$('feed').innerHTML=E.length?E.map(function(e){var who=e.label||'Someone';return '<div class="ev '+esc(EV[e.type]||'')+'"><i></i><span><b>'+esc(who)+'</b>'+(e.text.charAt(0)==="'"?'':' ')+esc(e.text.replace(' Tap to extend.',''))+'</span><small>'+ago(e.at)+'</small></div>'}).join(''):'<div class="empty">No activity yet.</div>'};
 
 /* ---------- notifications ---------- */
@@ -716,6 +721,50 @@ $('compose').addEventListener('click',function(e){var b=e.target.closest('[data-
     .then(function(j){ovClose('compose');ovClose('reader');toast(j.saved?'Sent':'Sent (could not save a copy in Sent)');if(CP.onSent)CP.onSent();if(M.folder==='sent')mailLoad()})
     .catch(function(er){$('cperr').textContent=er.message})
     .then(function(){cpBusy=false;b.disabled=false})}});
+/* ---------- features presentation (deck) per demo ---------- */
+var deckRowUpd=function(){var any=false,n=0;document.querySelectorAll('#pick input:checked').forEach(function(i){var d=demoBy(i.value);if(d&&d.deck){any=true;n++}});
+  $('deckrow').classList.toggle('hidden',!any);$('decknote').textContent=n>1?'Their apps come with presentations. They\'ll see clear "Open presentation" buttons.':'They\'ll see a clear "Open presentation" button with the app.'};
+$('pick').addEventListener('change',deckRowUpd);document.addEventListener('click',function(){setTimeout(deckRowUpd,0)});
+var deckSlug=null;
+var deckSheet=function(d){deckSlug=d.slug;var k=d.deck;
+  openSheet('<div class="sh-h"><img src="'+esc(d.icon)+'" alt=""><div><b>Features presentation</b><small>'+esc(d.name)+'</small></div></div>'
+    +(k?'<p class="sub" style="margin:0 0 10px">'+esc(k.title||'Presentation')+' · '+k.pages+' slide'+(k.pages>1?'s':'')+(k.pdf?' · PDF kept for download':'')+'</p>'
+        +'<div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:6px">'+[1,2,3,4].filter(function(n){return n<=k.pages}).map(function(n){return '<img src="/demo/deck.php?s='+encodeURIComponent(d.slug)+'&p='+n+'&v='+k.v+'" alt="" style="height:78px;border-radius:8px;box-shadow:0 0 0 1px rgba(255,255,255,.1)">'}).join('')+'</div>'
+      :'<p class="sub" style="margin:0 0 12px">Add a slide deck (PDF, or slide pictures) that walks them through the features and benefits. When you send this demo, they get a clear <b>Open presentation</b> button next to the app.</p>')
+    +'<div id="dkprog" class="hidden"><div class="dprog"><i id="dkbar"></i></div><p class="sub" id="dkst" style="margin:0"></p></div>'
+    +'<div class="err" id="dkerr"></div>'
+    +'<button class="btn pri big" id="dkup" style="width:100%;margin-top:10px">'+(k?'Replace with a new PDF':'Choose a PDF')+'</button>'
+    +'<p class="sub" style="font-size:12px;margin:8px 0 0">Slides made in Claude or Canva: download them as a PDF first. You can also pick slide pictures (PNG/JPG) in order.</p>'
+    +(k?'<div class="row" style="margin-top:12px"><a class="btn" style="flex:1" href="/demo/?preview=1#deck='+esc(d.slug)+'">See it</a><button class="btn bad" id="dkrm">Remove</button></div>':''),
+  function(el){el.querySelector('#dkup').onclick=function(){$('fdeck').click()};var rm=el.querySelector('#dkrm');
+    if(rm)rm.onclick=function(){if(!confirm('Remove the presentation from '+d.name+'?'))return;api('deck_remove',{slug:d.slug}).then(function(){closeSheet();toast('Presentation removed');load()}).catch(function(e){toast(e.message,true)})}})};
+var pdfLib=null;
+var loadPdf=function(){if(pdfLib)return pdfLib;pdfLib=new Promise(function(res,rej){var sc=document.createElement('script');sc.src='vendor/pdf.min.js';sc.onload=function(){var L=window.pdfjsLib;if(!L)return rej(new Error('PDF reader did not load'));L.GlobalWorkerOptions.workerSrc='vendor/pdf.worker.min.js';res(L)};sc.onerror=function(){pdfLib=null;rej(new Error('PDF reader did not load'))};document.head.appendChild(sc)});return pdfLib};
+var toSlide=function(canvas){return new Promise(function(res){canvas.toBlob(function(b){if(b&&b.type==='image/webp')return res(b);canvas.toBlob(res,'image/jpeg',.88)},'image/webp',.86)})};
+var deckBusy=false;
+$('fdeck').addEventListener('change',function(){var files=[].slice.call(this.files);this.value='';if(!files.length||deckBusy||!deckSlug)return;var slug=deckSlug,d=demoBy(slug);
+  var st=function(t,pc){var p=$('dkprog');if(!p)return;p.classList.remove('hidden');$('dkst').textContent=t;if(pc!=null)$('dkbar').style.width=pc+'%'};
+  var errEl=function(m){var e=$('dkerr');if(e)e.textContent=m;else toast(m,true)};
+  var pdf=files.filter(function(f){return f.type==='application/pdf'||/\.pdf$/i.test(f.name)})[0];
+  var imgs=files.filter(function(f){return/^image\//.test(f.type)}).sort(function(a,b){return a.name.localeCompare(b.name,undefined,{numeric:true})});
+  if(!pdf&&!imgs.length){errEl('Choose a PDF or slide pictures.');return}
+  deckBusy=true;var up=$('dkup');if(up)up.disabled=true;errEl('');var ratio=16/9,title='',n=0;
+  var send=function(i,blob){var fd=new FormData();fd.append('slug',slug);fd.append('n',i);fd.append('file',blob,'slide-'+i);return api('deck_page',null,fd)};
+  var job=api('deck_start',{slug:slug}).then(function(){
+    if(pdf){st('Opening the PDF…',2);return loadPdf().then(function(L){return pdf.arrayBuffer().then(function(ab){return L.getDocument({data:ab,isEvalSupported:false}).promise})}).then(function(doc){n=doc.numPages;if(n>200)throw new Error('That PDF has over 200 pages.');
+        return doc.getMetadata().catch(function(){return{}}).then(function(m){title=(m&&m.info&&m.info.Title)||pdf.name.replace(/\.pdf$/i,'')}).then(function(){
+          var chain=Promise.resolve();for(var i=1;i<=n;i++)(function(i){chain=chain.then(function(){st('Making slide '+i+' of '+n+'…',Math.round((i-1)/n*90)+2);
+            return doc.getPage(i).then(function(pg){var v0=pg.getViewport({scale:1});if(i===1)ratio=v0.width/v0.height;var sc=Math.min(1920/v0.width,2400/v0.height,4),v=pg.getViewport({scale:sc});
+              var c=document.createElement('canvas');c.width=Math.round(v.width);c.height=Math.round(v.height);var cx=c.getContext('2d');cx.fillStyle='#fff';cx.fillRect(0,0,c.width,c.height);
+              return pg.render({canvasContext:cx,viewport:v}).promise.then(function(){return toSlide(c)}).then(function(b){return send(i,b)})})})})(i);
+          return chain.then(function(){st('Saving the PDF for download…',94);if(pdf.size>60*1024*1024)return;var fd=new FormData();fd.append('slug',slug);fd.append('file',pdf,'deck.pdf');return api('deck_pdf',null,fd).catch(function(){})})})})}
+    n=imgs.length;title=d?d.name+' features':'';
+    var chain=Promise.resolve();imgs.forEach(function(f,k){chain=chain.then(function(){st('Uploading slide '+(k+1)+' of '+n+'…',Math.round(k/n*95));
+      if(k===0)return createImageBitmap(f).then(function(b){ratio=b.width/b.height}).catch(function(){}).then(function(){return send(1,f)});return send(k+1,f)})});return chain})
+  .then(function(){st('Finishing…',98);return api('deck_finish',{slug:slug,pages:n,title:title,ratio:ratio})})
+  .then(function(){deckBusy=false;closeSheet();toast('Presentation saved ('+n+' slide'+(n>1?'s':'')+')');load()})
+  .catch(function(e){deckBusy=false;if(up)up.disabled=false;errEl(e.message||'Upload failed.')})});
+
 /* ---------- designs ---------- */
 var DS={sets:[],f:'live',purge:null,groups:[],busy:false},DAYS=14;
 var fmtMB=function(b){return b>=1048576?(b/1048576).toFixed(b>=10485760?0:1)+' MB':Math.max(1,Math.round(b/1024))+' KB'};
