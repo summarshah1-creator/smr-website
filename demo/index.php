@@ -234,6 +234,8 @@ h1 em{font-style:normal;background:var(--grad);-webkit-background-clip:text;back
 .dv-dl{display:inline-flex;align-items:center;gap:6px;height:38px;padding:0 12px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.05);color:#fff;text-decoration:none;font-weight:800;font-size:13px}
 .dv-dl svg{width:16px;height:16px}
 .dv-b{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 12px 90px;display:flex;flex-direction:column;align-items:center;gap:12px;overscroll-behavior:contain}
+.dv-b img,.dk-thumb img,.dw-c img{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;pointer-events:none}
+.dk-thumb{-webkit-touch-callout:none}
 .dv-b img{width:100%;max-width:1100px;height:auto;border-radius:10px;background:#16161f;box-shadow:0 10px 30px -16px rgba(0,0,0,.9);display:block}
 .dv-rot{position:absolute;left:50%;top:70px;transform:translateX(-50%);padding:8px 14px;border-radius:999px;background:rgba(27,24,48,.95);border:1px solid rgba(207,196,255,.4);font-size:12.5px;font-weight:700;white-space:nowrap;opacity:0;transition:opacity .3s;pointer-events:none}
 .dv-rot.on{opacity:1}
@@ -405,7 +407,6 @@ body.appmode .glow{display:none}
   <div class="dv-h">
     <button class="dv-x" id="dvx" type="button" aria-label="Close the presentation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     <div class="dv-t"><b id="dvt">Features presentation</b><small id="dvn"></small></div>
-    <a class="dv-dl" id="dvdl" href="#" hidden aria-label="Download the PDF"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg><span>PDF</span></a>
   </div>
   <div class="dv-b" id="dvb"></div>
   <div class="dv-rot" id="dvrot">Turn your phone sideways for bigger slides</div>
@@ -479,7 +480,6 @@ body.appmode .glow{display:none}
   <div class="dv-h">
     <button class="dv-x" id="dvx" type="button" aria-label="Close the slides"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     <div class="dv-t"><b id="dvt">Slides</b><small id="dvn"></small></div>
-    <a class="dv-dl" id="dvdl" href="#" hidden aria-label="Download the PDF"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg><span>PDF</span></a>
   </div>
   <div class="dv-b" id="dvb"></div>
   <div class="dv-rot" id="dvrot">Turn your phone sideways for bigger slides</div>
@@ -491,7 +491,7 @@ var $=function(i){return document.getElementById(i)},dv=$('deckv'),dvb=$('dvb'),
 var src=function(d,n,q){return '/demo/deck.php?s='+encodeURIComponent(d.slug)+'&k='+encodeURIComponent(K)+(q||'&p='+n)+'&v='+d.v};
 var open=function(slug){var d=D[slug];if(!d)return;var n=d.pages,h='';for(var i=1;i<=n;i++)h+='<img src="'+src(d,i)+'" alt="Slide '+i+'" data-n="'+i+'"'+(i>2?' loading="lazy"':'')+' style="aspect-ratio:'+d.ratio+'" draggable="false">';
   dvb.innerHTML=h;dvb.scrollTop=0;$('dvt').textContent=d.title||(d.name+' slides');$('dvn').textContent='Slide 1 of '+n;
-  var dl=$('dvdl');dl.hidden=!d.pdf;dl.href=src(d,0,'&pdf=1&dl=1');dv.hidden=false;document.body.style.overflow='hidden';
+  dv.hidden=false;document.body.style.overflow='hidden';
   dvb.onscroll=function(){var ims=dvb.querySelectorAll('img'),top=dvb.getBoundingClientRect().top+dvb.clientHeight*.35,k=1;for(var i=0;i<ims.length;i++)if(ims[i].getBoundingClientRect().top<=top)k=i+1;if(dvb.scrollTop+dvb.clientHeight>=dvb.scrollHeight-4)k=ims.length;$('dvn').textContent='Slide '+k+' of '+n};
   var r=$('dvrot');clearTimeout(rt);r.classList.toggle('on',d.ratio>1.2&&innerHeight>innerWidth&&innerWidth<700);rt=setTimeout(function(){r.classList.remove('on')},4500)};
 var close=function(){dv.hidden=true;dvb.innerHTML='';document.body.style.overflow=''};
@@ -607,7 +607,6 @@ var openDeck=function(slug){var d=bySlug[slug];if(!d||!d.deck)return;closeMenu()
   $('dvt').textContent=d.name+' · Features presentation';
   var n=d.deck.pages,html='';for(var i=1;i<=n;i++)html+='<img src="'+esc(deckSrc(d,i))+'" alt="Slide '+i+'" data-n="'+i+'"'+(i>2?' loading="lazy"':'')+' style="aspect-ratio:'+d.deck.ratio+'" draggable="false">';
   dvb.innerHTML=html;dvb.scrollTop=0;$('dvn').textContent='Slide 1 of '+n;
-  var dl=$('dvdl');dl.hidden=!d.deck.pdf;dl.href='/demo/deck.php?s='+encodeURIComponent(slug)+'&pdf=1&dl=1';
   $('dvgo').textContent=current===slug?'Back to the '+what(d):'Open the '+what(d);
   dv.hidden=false;document.body.classList.add('locked');
   dvb.onscroll=function(){var ims=dvb.querySelectorAll('img'),top=dvb.getBoundingClientRect().top+dvb.clientHeight*.35,k=1;for(var i=0;i<ims.length;i++){if(ims[i].getBoundingClientRect().top<=top)k=i+1}if(dvb.scrollTop+dvb.clientHeight>=dvb.scrollHeight-4)k=ims.length;$('dvn').textContent='Slide '+k+' of '+n};

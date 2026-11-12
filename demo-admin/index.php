@@ -743,7 +743,7 @@ $('pick').addEventListener('change',deckRowUpd);document.addEventListener('click
 var deckSlug=null;
 var deckSheet=function(d){deckSlug=d.slug;var k=d.deck;
   openSheet('<div class="sh-h"><img src="'+esc(d.icon)+'" alt=""><div><b>Features presentation</b><small>'+esc(d.name)+'</small></div></div>'
-    +(k?'<p class="sub" style="margin:0 0 10px">'+esc(k.title||'Presentation')+' · '+k.pages+' slide'+(k.pages>1?'s':'')+(k.pdf?' · PDF kept for download':'')+'</p>'
+    +(k?'<p class="sub" style="margin:0 0 10px">'+esc(k.title||'Presentation')+' · '+k.pages+' slide'+(k.pages>1?'s':'')+'</p>'
         +'<div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:6px">'+[1,2,3,4].filter(function(n){return n<=k.pages}).map(function(n){return '<img src="/demo/deck.php?s='+encodeURIComponent(d.slug)+'&p='+n+'&v='+k.v+'" alt="" style="height:78px;border-radius:8px;box-shadow:0 0 0 1px rgba(255,255,255,.1)">'}).join('')+'</div>'
       :'<p class="sub" style="margin:0 0 12px">Add a slide deck (PDF, or slide pictures) that walks them through the features and benefits. When you send this demo, they get a clear <b>Open presentation</b> button next to the app.</p>')
     +'<div id="dkprog" class="hidden"><div class="dprog"><i id="dkbar"></i></div><p class="sub" id="dkst" style="margin:0"></p></div>'

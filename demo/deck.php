@@ -25,6 +25,7 @@ if (!$admin) {
     if (!$link || !in_array($slug, link_apps($link), true) || !(int) ($link['deck'] ?? 1)) { http_response_code(403); exit; }
 }
 $dir = deck_dir($slug);
+if (!empty($_GET['pdf']) && !$admin) { http_response_code(403); exit; } // owner rule: clients can't download the deck
 if (!empty($_GET['pdf'])) {
     $path = "$dir/deck.pdf";
     if (!(int) $deck['pdf'] || !is_file($path)) { http_response_code(404); exit; }
