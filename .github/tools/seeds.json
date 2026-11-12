@@ -247,6 +247,22 @@
   ]
  },
  {
+  "slug": "nurify",
+  "version": "2026-11-12a",
+  "ver": "1.0",
+  "name": "Nurify Skin",
+  "accent": "#123a28",
+  "tagline": "Handmade skincare shop website · London",
+  "description": "Website redesign preview for Nurify Skin, a London brand of handmade, natural skincare, oils, body butters and alcohol-free perfumes, with a full online shop.",
+  "tips": [
+   "Shoppers browse the whole range with clean product photos and pick sizes and scents on each product.",
+   "A quick skin quiz recommends the right face wash, moisturiser and oils for their skin type.",
+   "Customers can build their own gift box, which helps sell more at Eid, Christmas and birthdays.",
+   "The bag, shipping-country picker and checkout flow keep orders simple on a phone.",
+   "Newsletter sign-up and repeat-buy prompts keep customers coming back."
+  ]
+ },
+ {
   "slug": "kahwa",
   "version": "2026-11-08b",
   "name": "Kahwa Café",
