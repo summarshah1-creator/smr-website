@@ -1,0 +1,24 @@
+name: Server check (decks)
+
+# Read-only look at the live server over FTP: is a deck still waiting in the inbox, was it installed, any PHP errors.
+on:
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: List folders and recent PHP errors
+        env:
+          H: ${{ secrets.FTP_SERVER }}
+          U: ${{ secrets.FTP_USERNAME }}
+          P: ${{ secrets.FTP_PASSWORD }}
+          ROOT: ${{ secrets.FTP_SERVER_DIR || './public_html/' }}
+        run: |
+          sudo apt-get -qq update >/dev/null && sudo apt-get -qq install -y lftp >/dev/null
+          lftp -u "$U","$P" "$H" -e "set ssl:verify-certificate no; set net:max-retries 2; set net:timeout 20;
+            echo '== inbox =='; cls -l ${ROOT}demo-data/deck-inbox/; cls -l ${ROOT}demo-data/deck-inbox/*/;
+            echo '== private decks =='; cls -l smr-demo-private/decks/; cls -l smr-demo-private/decks/*/;
+            echo '== root =='; cls -1 ./; cls -1 ${ROOT};
+            get -O /tmp ${ROOT}error_log; get -O /tmp/dm ${ROOT}demo-admin/error_log; get -O /tmp/dd ${ROOT}demo/error_log; bye" 2>&1 | head -120
+          for f in /tmp/error_log /tmp/dm/error_log /tmp/dd/error_log; do [ -f "$f" ] && { echo "== $f =="; grep -iE "deck|fatal|warning" "$f" | tail -15; }; done; true
