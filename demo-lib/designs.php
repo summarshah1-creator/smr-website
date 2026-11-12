@@ -80,9 +80,9 @@ function set_url(array $s): string {
 }
 
 /* New delivery. */
-function set_create(string $client, string $title, string $phone, string $source): array {
+function set_create(string $client, string $title, string $phone, string $source, string $token = ''): array {
     designs_migrate();
-    $t = rand_token(12);
+    $t = $token !== '' ? $token : rand_token(12);
     db()->prepare('INSERT INTO design_sets (token, client, title, phone, created_at, expires_at, source) VALUES (?,?,?,?,?,?,?)')
         ->execute([$t, mb_substr(trim($client), 0, 80), mb_substr(trim($title), 0, 100), preg_replace('/[^0-9+ ]/', '', $phone), now(), now() + DESIGN_DAYS * 86400, $source]);
     $s = set_by_token($t);
@@ -150,6 +150,7 @@ function design_make_preview(string $path, string $dir, string $name): string {
 /* Move ended links to the archive (their files stay private, the link stops working). */
 function designs_sweep(): void {
     designs_migrate();
+    designs_pending();
     $st = db()->prepare('SELECT * FROM design_sets WHERE archived_at = 0 AND expires_at < ?'); $st->execute([now()]);
     foreach ($st->fetchAll() as $s) set_archive($s);
     // Unfinished uploads older than a day
@@ -190,11 +191,25 @@ function designs_old_archive(): array {
     return $st->fetchAll();
 }
 
-/* Import a folder dropped by the "Publish designs" workflow (demo-data/inbox/<job>/). */
+/* Folders dropped by the "Publish designs" workflow: demo-data/inbox/<token>/. The workflow picks the token,
+   so the link is known straight away; the folder is imported on the first request that needs it. */
+function inbox_dir(): string { return SITE_ROOT . '/demo-data/inbox'; }
+function designs_pending(): void {
+    $base = inbox_dir();
+    if (!is_dir($base)) return;
+    foreach (scandir($base) ?: [] as $t) {
+        if (!preg_match('/^[A-Za-z0-9_-]{16,40}$/', $t) || !is_dir("$base/$t")) continue;
+        if (filemtime("$base/$t") > time() - 30) continue; // may still be uploading
+        try { designs_import($t); } catch (Throwable $e) {}
+    }
+}
 function designs_import(string $job): array {
-    if (!preg_match('/^[a-f0-9]{32}$/', $job)) throw new RuntimeException('Bad job.');
-    $dir = SITE_ROOT . '/demo-data/inbox/' . $job;
-    if (!is_dir($dir)) throw new RuntimeException('Nothing to import.');
+    if (!preg_match('/^[A-Za-z0-9_-]{16,40}$/', $job)) throw new RuntimeException('Bad job.');
+    $src = inbox_dir() . '/' . $job;
+    if (!is_dir($src)) throw new RuntimeException('Nothing to import.');
+    if (set_by_token($job)) throw new RuntimeException('Already imported.');
+    $dir = $src . '.importing';
+    if (!@rename($src, $dir)) throw new RuntimeException('Busy, try again.');
     $man = is_file("$dir/manifest.json") ? (json_decode((string) file_get_contents("$dir/manifest.json"), true) ?: []) : [];
     $designs = [];
     if (!empty($man['designs']) && is_array($man['designs'])) {
@@ -216,7 +231,8 @@ function designs_import(string $job): array {
         if ($top) $designs[] = ['name' => 'Design ' . (count($designs) + 1), 'files' => array_values($top)];
     }
     if (!$designs) throw new RuntimeException('No pictures found.');
-    $s = set_create((string) ($man['client'] ?? ''), (string) ($man['title'] ?? ''), (string) ($man['phone'] ?? ''), 'claude');
+    try { $s = set_create((string) ($man['client'] ?? ''), (string) ($man['title'] ?? ''), (string) ($man['phone'] ?? ''), 'claude', $job); }
+    catch (Throwable $e) { rrmdir_any($dir); throw $e; }
     $n = 0;
     foreach ($designs as $i => $d) {
         foreach ($d['files'] as $f) {
@@ -229,7 +245,9 @@ function designs_import(string $job): array {
     rrmdir_any($dir);
     if (!$n) { set_delete($s); throw new RuntimeException('No pictures found.'); }
     db()->prepare('UPDATE design_sets SET ready = 1 WHERE id = ?')->execute([$s['id']]);
-    return set_by_id((int) $s['id']);
+    $s = set_by_id((int) $s['id']);
+    $GLOBALS['DESIGNS_IMPORTED'][] = $s;
+    return $s;
 }
 
 /* Shape of a delivery for the client page and admin. */
@@ -255,4 +273,13 @@ function set_public(array $s, string $base): array {
         $out[] = ['name' => $d['name'], 'sizes' => $sizes];
     }
     return $out;
+}
+
+/* Push "new designs ready" for anything imported during this request (call after the response). */
+function designs_notify_imported(): void {
+    if (empty($GLOBALS['DESIGNS_IMPORTED'])) return;
+    require_once __DIR__ . '/push.php';
+    foreach ($GLOBALS['DESIGNS_IMPORTED'] as $s)
+        push_all('New designs ready', 'Designs for ' . ($s['client'] !== '' ? $s['client'] : ($s['title'] ?: 'a client')) . ' are ready to send.', '/demo-admin/#designs', 'design-' . $s['id']);
+    $GLOBALS['DESIGNS_IMPORTED'] = [];
 }

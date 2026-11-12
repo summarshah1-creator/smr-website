@@ -8,6 +8,7 @@ header('Cache-Control: no-store');
 
 $token = (string) ($_GET['k'] ?? '');
 $s = set_by_token($token);
+if (!$s && preg_match('/^[A-Za-z0-9_-]{16,40}$/', $token) && is_dir(inbox_dir() . '/' . $token)) { try { $s = designs_import($token); } catch (Throwable $e) { $s = set_by_token($token); } }
 $owner = admin_token() !== null;
 $state = 'ok';
 if (!$s || !(int) $s['ready']) $state = 'gone';
@@ -394,3 +395,4 @@ renderPicker();renderSizes();renderPages();saveLabel();
 <?php endif; ?>
 </body>
 </html>
+<?php if (!empty($GLOBALS['DESIGNS_IMPORTED'])) { if (function_exists('fastcgi_finish_request')) fastcgi_finish_request(); designs_notify_imported(); } ?>

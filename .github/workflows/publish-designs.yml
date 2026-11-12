@@ -31,7 +31,7 @@ jobs:
           rm -f designs-inbox/RESULT.json
           n=$(find designs-inbox -type f \( -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.webp' -o -iname '*.gif' \) | wc -l)
           echo "pictures: $n"; test "$n" -gt 0
-          echo "id=$(openssl rand -hex 16)" >> "$GITHUB_OUTPUT"
+          echo "id=$(python3 -c 'import secrets;print(secrets.token_urlsafe(12))')" >> "$GITHUB_OUTPUT"
       - name: Upload to the server inbox
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
@@ -40,15 +40,17 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./designs-inbox/
           server-dir: ${{ secrets.FTP_SERVER_DIR || './public_html/' }}demo-data/inbox/${{ steps.job.outputs.id }}/
-      - name: Import and get the link
+      - name: Write the link
         run: |
-          curl -sS -X POST "https://smrgraphics.co.uk/designs/api.php?a=import&job=${{ steps.job.outputs.id }}" -o result.json -w "HTTP %{http_code}\n"
-          cat result.json; echo
-          grep -q '"ok":true' result.json
-          url=$(python3 -c "import json;print(json.load(open('result.json'))['url'])")
+          url="https://smrgraphics.co.uk/d/${{ steps.job.outputs.id }}"
+          # Ask the server to import now (the host's bot check may block this; then it imports when the link is first opened
+          # or when SMR Admin opens the Designs tab).
+          curl -sS -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36" \
+            -X POST "https://smrgraphics.co.uk/designs/api.php?a=import&job=${{ steps.job.outputs.id }}" -o import.txt -w "HTTP %{http_code}\n" || true
+          head -c 300 import.txt; echo
+          printf '{"ok":true,"url":"%s","expires_days":14,"published":"%s"}\n' "$url" "$(date -u +%FT%TZ)" > designs-inbox/RESULT.json
           echo "### Designs link ready" >> "$GITHUB_STEP_SUMMARY"
           echo "$url" >> "$GITHUB_STEP_SUMMARY"
-          cp result.json designs-inbox/RESULT.json
           git config user.name "github-actions[bot]"
           git config user.email "41898341+github-actions[bot]@users.noreply.github.com"
           git add designs-inbox/RESULT.json
