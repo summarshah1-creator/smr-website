@@ -567,6 +567,28 @@ function mail_att_dir(string $draft): string {
     if (!preg_match('/^[a-f0-9]{16,40}$/', $draft)) throw new RuntimeException('Bad upload.');
     $base = private_dir() . '/mail-att';
     if (!is_dir($base)) @mkdir($base, 0750, true);
-    foreach ((array) @glob($base . '/*', GLOB_ONLYDIR) as $d) if (@filemtime($d) < now() - 86400) rrmdir_any($d);
+    $keep = []; try { mail_drafts_table(); foreach (db()->query('SELECT id FROM mail_drafts') as $r) $keep[$r['id']] = 1; } catch (Throwable $e) {}
+    foreach ((array) @glob($base . '/*', GLOB_ONLYDIR) as $d) if (!isset($keep[basename($d)]) && @filemtime($d) < now() - 86400) rrmdir_any($d); // saved drafts keep their files
     return $base . '/' . $draft;
+}
+
+/* ---------- drafts (saved by the Save draft button and automatically while writing) ---------- */
+function mail_drafts_table(): void {
+    static $done = false; if ($done) return; $done = true;
+    db()->exec('CREATE TABLE IF NOT EXISTS mail_drafts (id TEXT PRIMARY KEY, d TEXT NOT NULL, updated INTEGER NOT NULL)');
+}
+function mail_draft_atts(string $id): array {
+    $out = [];
+    try { $dir = mail_att_dir($id); } catch (Throwable $e) { return []; }
+    foreach ((array) glob($dir . '/*.json') as $j) {
+        $i = (int) basename($j, '.json'); $m = json_decode((string) file_get_contents($j), true);
+        if ($m && is_file("$dir/$i.bin")) $out[] = ['i' => $i, 'name' => $m['name'], 'size' => (int) $m['size']];
+    }
+    usort($out, function ($a, $b) { return $a['i'] - $b['i']; });
+    return $out;
+}
+function mail_draft_del(string $id): void {
+    mail_drafts_table();
+    db()->prepare('DELETE FROM mail_drafts WHERE id = ?')->execute([$id]);
+    try { rrmdir_any(mail_att_dir($id)); } catch (Throwable $e) {}
 }

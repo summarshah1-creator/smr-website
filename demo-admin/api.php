@@ -253,6 +253,39 @@ if (strpos($a, 'mail_') === 0) {
             $i = (int) ($in['i'] ?? -1);
             foreach (['part', 'bin', 'json'] as $e) @unlink("$dir/$i.$e");
             json_out(['ok' => true]);
+        case 'mail_draft_save':
+            mail_drafts_table();
+            $id = (string) ($in['draft'] ?? '');
+            mail_att_dir($id); // checks the id
+            $keepStr = function ($v, $n) { return mb_substr((string) $v, 0, $n); };
+            $d = ['to' => $keepStr($in['to'] ?? '', 2000), 'cc' => $keepStr($in['cc'] ?? '', 2000), 'subject' => $keepStr($in['subject'] ?? '', 300),
+                'html' => mail_clean_html((string) ($in['html'] ?? '')), 'text' => $keepStr($in['text'] ?? '', 100000), 'quote' => $keepStr($in['quote'] ?? '', 100000),
+                'in_reply_to' => $keepStr($in['in_reply_to'] ?? '', 500), 'references' => $keepStr($in['references'] ?? '', 4000), 'uid' => (int) ($in['uid'] ?? 0),
+                'reply' => !empty($in['reply']), 'fwd' => array_slice(array_values(array_filter((array) ($in['fwd'] ?? []), 'is_array')), 0, 40)];
+            $ts = (int) ($in['ts'] ?? 0) ?: now();
+            $old = db()->prepare('SELECT updated FROM mail_drafts WHERE id = ?'); $old->execute([$id]); $ou = (int) $old->fetchColumn();
+            if ($ou && $ou > $ts) json_out(['ok' => true, 'updated' => $ou, 'stale' => true]); // a newer copy is already saved
+            db()->prepare('INSERT INTO mail_drafts (id, d, updated) VALUES (?, ?, ?) ON CONFLICT(id) DO UPDATE SET d = excluded.d, updated = excluded.updated')->execute([$id, json_encode($d), $ts]);
+            json_out(['ok' => true, 'updated' => $ts]);
+        case 'mail_drafts':
+            mail_drafts_table();
+            $rows = [];
+            foreach (db()->query('SELECT id, d, updated FROM mail_drafts ORDER BY updated DESC LIMIT 200') as $r) {
+                $d = json_decode($r['d'], true) ?: [];
+                $rows[] = ['id' => $r['id'], 'to' => $d['to'] ?? '', 'subject' => $d['subject'] ?? '', 'snippet' => mb_substr(trim(preg_replace('/\s+/', ' ', $d['text'] ?? '')), 0, 120),
+                    'updated' => (int) $r['updated'], 'atts' => count(mail_draft_atts($r['id'])) + count($d['fwd'] ?? [])];
+            }
+            json_out(['rows' => $rows]);
+        case 'mail_draft_get':
+            mail_drafts_table();
+            $st = db()->prepare('SELECT d, updated FROM mail_drafts WHERE id = ?'); $st->execute([(string) ($in['draft'] ?? '')]);
+            $r = $st->fetch();
+            if (!$r) json_out(['error' => 'That draft was deleted or already sent.'], 404);
+            json_out(['draft' => (string) $in['draft'], 'updated' => (int) $r['updated'], 'atts' => mail_draft_atts((string) $in['draft'])] + (json_decode($r['d'], true) ?: []));
+        case 'mail_draft_del':
+            mail_att_dir((string) ($in['draft'] ?? ''));
+            mail_draft_del((string) $in['draft']);
+            json_out(['ok' => true]);
         case 'mail_att_del_all':
             rrmdir_any(mail_att_dir((string) ($in['draft'] ?? '')));
             json_out(['ok' => true]);
@@ -300,6 +333,7 @@ if (strpos($a, 'mail_') === 0) {
             try { mail_contacts_add(array_map(function ($e) { return ['email' => $e, 'name' => '']; }, array_merge($to, $cc)), 3); } catch (Throwable $e) {}
             $saved = true;
             try { $m = new SmrImap($cfg); $s = $m->special('sent'); if ($s) $m->append($s, $msg); else $saved = false; } catch (Throwable $e) { $saved = false; }
+            if (!empty($in['draft'])) { try { mail_draft_del((string) $in['draft']); } catch (Throwable $e) {} }
             if ($draftDir) rrmdir_any($draftDir);
             if ($irt && !empty($in['uid'])) { try { $m = $m ?? new SmrImap($cfg); $m->select('INBOX', false); $m->flag((int) $in['uid'], '\\Answered'); } catch (Throwable $e) {} }
             json_out(['ok' => true, 'saved' => $saved]);

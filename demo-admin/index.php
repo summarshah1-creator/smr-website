@@ -214,7 +214,12 @@ html.cpopen,body.cpopen{overscroll-behavior:none}
 .atc .nm{flex:1;min-width:0}.atc .nm b{display:block;font-size:13.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.atc .nm small{font-size:12px;color:var(--muted)}.atc.err .nm small{color:var(--bad)}
 .atc .x{flex:none;width:32px;height:32px;border-radius:9px;border:0;background:rgba(255,255,255,.07);color:#fff;font-size:18px;line-height:1;cursor:pointer}
 .atc .pb{position:absolute;left:0;bottom:0;height:3px;background:var(--grad);transition:width .2s}
-#compose.drop .ovb{outline:2px dashed #9b6cff;outline-offset:-8px}#compose .ovb{overscroll-behavior:contain}
+#compose.drop .ovb{outline:2px dashed #9b6cff;outline-offset:-8px}
+.cpt{display:flex;flex-direction:column;min-width:0;line-height:1.15}.cpt b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.cpt small{font-size:11px;font-weight:600;color:var(--muted);white-space:nowrap;min-height:12px}
+#compose .ovh .btn[data-cp=save]{padding:0 11px;white-space:nowrap}@media(max-width:400px){#compose .ovh{gap:6px}#compose .ovh .btn[data-cp=save]{padding:0 9px;font-size:12.5px}}
+.dcnt{margin-left:5px;font-size:11px;font-weight:800;opacity:.75}.dcnt:empty{display:none}
+.drow{position:relative}.drow .mrow{padding-right:52px}.drow .dx{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:34px;height:34px;border-radius:10px;border:0;background:rgba(255,255,255,.06);color:var(--muted);font-size:18px;cursor:pointer}
+.mrow .dr{color:var(--warn);font-weight:800;margin-right:4px}.mrow .sn{display:block;font-size:12.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}#compose .ovb{overscroll-behavior:contain}
 .mailfrom{font-size:12.5px;color:var(--muted);margin-bottom:4px}
 .sigprev{margin-top:10px;padding:0 0 4px}.sigprev:empty{display:none}
 .top .tabs button{padding:8px 4px;white-space:nowrap;font-size:13px}
@@ -387,7 +392,7 @@ document.addEventListener('keydown',function(e){if(/^\d$/.test(e.key))press(e.ke
         <button class="btn sm pri" id="mailnew"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Write</button>
       </div>
     </div>
-    <div class="filt" id="mailf"><button class="on" data-f="inbox">Inbox</button><button data-f="sent">Sent</button></div>
+    <div class="filt" id="mailf"><button class="on" data-f="inbox">Inbox</button><button data-f="sent">Sent</button><button data-f="drafts">Drafts<span class="dcnt" id="draftcnt"></span></button></div>
     <div id="mailbody"><p class="empty">Loading…</p></div>
   </section>
 </div>
@@ -405,7 +410,8 @@ document.addEventListener('keydown',function(e){if(/^\d$/.test(e.key))press(e.ke
 <div class="ov" id="compose" role="dialog" aria-modal="true">
   <div class="ovh">
     <button class="btn sm icon" data-cp="close" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
-    <span class="t" id="cptitle">New email</span>
+    <span class="t cpt"><b id="cptitle">New email</b><small id="cpstat"></small></span>
+    <button class="btn sm" data-cp="save" title="Save to drafts">Save draft</button>
     <button class="btn sm icon" data-cp="attach" aria-label="Attach files" title="Attach files"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.4 11.1l-9.2 9.2a6 6 0 0 1-8.5-8.5l9.2-9.2a4 4 0 0 1 5.7 5.7l-9.2 9.2a2 2 0 0 1-2.8-2.8l8.5-8.5"/></svg></button>
     <button class="btn sm pri" data-cp="send"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/></svg>Send</button>
   </div>
@@ -702,6 +708,8 @@ var mailSetup=function(edit){var c=M.cfg||{};$('mailf').classList.add('hidden');
 var renderMail=function(){$('mailf').classList.remove('hidden');$('mailbtns').classList.remove('hidden');
   $('mailaddr').textContent=M.cfg.email;
   $('mailf').querySelectorAll('button').forEach(function(b){b.classList.toggle('on',b.dataset.f===M.folder)});
+  if(M.folder==='drafts'){if(!M.rows.length){$('mailbody').innerHTML='<p class="empty">'+(M.busy?'Loading…':'No drafts. Emails you save, or leave unfinished, show up here.')+'</p>';return}
+    $('mailbody').innerHTML='<div class="rows">'+M.rows.map(function(r){return '<div class="drow"><button class="mrow" data-draft="'+esc(r.id)+'"><i class="ud"></i><span class="mt"><span class="l1"><b><span class="dr">Draft</span>'+esc(r.to?'To: '+r.to.replace(/,\s*$/,''):'(no recipient)')+'</b><em>'+esc(mDate(r.updated))+'</em></span><span class="sj">'+(r.atts?CLIP:'')+esc(r.subject||'(no subject)')+'</span>'+(r.snippet?'<span class="sn">'+esc(r.snippet)+'</span>':'')+'</span></button><button class="dx" data-dx="'+esc(r.id)+'" aria-label="Delete draft" title="Delete draft">×</button></div>'}).join('')+'</div>';return}
   if(!M.rows.length){$('mailbody').innerHTML='<p class="empty">'+(M.busy?'Loading…':(M.folder==='sent'?'No sent emails.':'No emails.'))+'</p>';return}
   var sent=M.folder==='sent';
   $('mailbody').innerHTML='<div class="rows">'+M.rows.map(function(r){
@@ -709,19 +717,24 @@ var renderMail=function(){$('mailf').classList.remove('hidden');$('mailbtns').cl
     return '<button class="mrow'+(!r.seen&&!sent?' un':'')+'" data-uid="'+r.uid+'"><i class="ud"></i><span class="mt"><span class="l1"><b>'+esc(who||'(unknown)')+'</b><em>'+esc(mDate(r.date))+'</em></span><span class="sj">'+(r.att?CLIP:'')+esc(r.subject||'(no subject)')+'</span></span></button>'}).join('')+'</div>'
     +(M.more?'<div style="text-align:center;margin-top:12px"><button class="btn sm" id="mailmore">Load older emails</button></div>':'');
   var mm=$('mailmore');if(mm)mm.onclick=function(){mailLoad(true)}};
+var draftCount=function(n){$('draftcnt').textContent=n?n:''};
 var mailLoad=function(older){if(M.busy)return Promise.resolve();M.busy=true;if(!older&&!M.rows.length)renderMail();
+  if(M.folder==='drafts'){return api('mail_drafts',{}).then(function(j){M.busy=false;M.at=Date.now();M.rows=j.rows;M.more=false;draftCount(j.rows.length);renderMail()}).catch(function(e){M.busy=false;$('mailbody').innerHTML='<div class="panel"><p class="err" style="margin:0">'+esc(e.message)+'</p></div>'})}
   var before=older&&M.rows.length?M.rows[M.rows.length-1].uid:0;
   return api('mail_list',{folder:M.folder,before:before}).then(function(j){M.busy=false;M.at=Date.now();M.rows=older?M.rows.concat(j.rows):j.rows;M.more=j.more;mBadge(j.unread);renderMail()})
   .catch(function(e){M.busy=false;if(/Set up/.test(e.message)){M.cfg=null;mailSetup();return}$('mailbody').innerHTML='<div class="panel"><p class="err" style="margin:0">'+esc(e.message)+'</p><div class="row" style="margin-top:10px"><button class="btn sm" id="mretry">Try again</button><button class="btn sm" id="mfix">Email settings</button></div></div>';$('mretry').onclick=function(){mailLoad()};$('mfix').onclick=function(){mailSetup(true)}})};
 var mailOpen=function(force){if(!M.cfg){mailInit(true);return}if(!M.cfg.set){mailSetup();return}
   if(force||!M.rows.length||Date.now()-M.at>60000)mailLoad();else renderMail()};
-var mailInit=function(open){return api('mail_cfg').then(function(c){M.cfg=c;if(c.set)mailUnread();if(open||location.hash==='#mail')mailOpen(true)}).catch(function(){})};
+var mailInit=function(open){return api('mail_cfg').then(function(c){M.cfg=c;if(c.set){mailUnread();cpRecover()}if(open||location.hash==='#mail')mailOpen(true)}).catch(function(){})};
 var mailUnread=function(){if(!M.cfg||!M.cfg.set)return;api('mail_unread').then(function(j){mBadge(j.unread)}).catch(function(){})};
 $('mailf').addEventListener('click',function(e){var b=e.target.closest('[data-f]');if(!b||b.dataset.f===M.folder)return;M.folder=b.dataset.f;M.rows=[];M.more=false;mailLoad()});
 $('mailre').addEventListener('click',function(){mailLoad().then(function(){toast('Up to date')})});
 $('mailcfg').addEventListener('click',function(){mailSetup(true)});
 $('mailnew').addEventListener('click',function(){compose({})});
-$('mailbody').addEventListener('click',function(e){var b=e.target.closest('.mrow');if(b)openMail(+b.dataset.uid)});
+$('mailbody').addEventListener('click',function(e){var x=e.target.closest('[data-dx]');
+  if(x){if(!confirm('Delete this draft?'))return;api('mail_draft_del',{draft:x.dataset.dx}).then(function(){M.rows=M.rows.filter(function(r){return r.id!==x.dataset.dx});draftCount(M.rows.length);renderMail();toast('Draft deleted')}).catch(function(er){toast(er.message,true)});return}
+  var b=e.target.closest('.mrow');if(!b)return;if(b.dataset.draft){openDraft(b.dataset.draft);return}openMail(+b.dataset.uid)});
+var openDraft=function(id){toast('Opening draft…');api('mail_draft_get',{draft:id}).then(function(j){compose({resume:j})}).catch(function(er){toast(er.message,true);if(M.folder==='drafts')mailLoad()})};
 /* reader */
 var ovOpen=function(id){$(id).classList.add('on');document.body.style.overflow='hidden'};
 var ovClose=function(id){$(id).classList.remove('on');if(!document.querySelector('.ov.on'))document.body.style.overflow=''};
@@ -758,7 +771,14 @@ var compose=function(o){if(!M.cfg){toast('Loading email…');mailInit().then(fun
   own=own.replace(/\s+$/,'');
   $('cpsig').innerHTML=M.cfg.sig_html||'';$('cpto').value=CP.to||'';$('cpcc').value='';$('cpsub').value=CP.subject||'';
   $('cpbody').innerHTML=own?own.split('\n').map(function(l){return '<div>'+(l?escH(l):'<br>')+'</div>'}).join(''):'';
-  CP.draft=Array.from(crypto.getRandomValues(new Uint8Array(12)),function(x){return('0'+x.toString(16)).slice(-2)}).join('');CP.files=[];CP.nextI=0;CP.fwd=(CP.fwd||[]).slice();attQueue=[];attBusy=false;attDraw();
+  CP.draft=Array.from(crypto.getRandomValues(new Uint8Array(12)),function(x){return('0'+x.toString(16)).slice(-2)}).join('');CP.files=[];CP.nextI=0;CP.fwd=(CP.fwd||[]).slice();attQueue=[];attBusy=false;
+  CP.saved=false;CP.dirty=false;CP.firstDirty=0;$('cpstat').textContent='';
+  if(CP.resume){var R=CP.resume;CP.draft=R.draft;CP.saved=true;CP.reply=R.reply;CP.in_reply_to=R.in_reply_to;CP.references=R.references;CP.uid=R.uid;CP.quote=R.quote||'';CP.fwd=R.fwd||[];
+    $('cptitle').textContent=R.reply?'Reply':'New email';$('cpto').value=R.to||'';$('cpcc').value=R.cc||'';$('cpsub').value=R.subject||'';
+    $('cpbody').innerHTML=R.html||(R.text?R.text.split('\n').map(function(l){return '<div>'+(l?escH(l):'<br>')+'</div>'}).join(''):'');
+    CP.files=(R.atts||[]).map(function(a){return{i:a.i,name:a.name,size:a.size,done:true,sent:a.size}});CP.nextI=CP.files.reduce(function(m,f){return Math.max(m,f.i+1)},0);
+    $('cpstat').textContent='Draft · saved '+fmtT(R.updated)}
+  attDraw();try{localStorage.setItem('smr_cp_open',CP.draft)}catch(e){}
   CP.start=cpText();$('cpquote').hidden=!CP.quote;$('cpquote').textContent=CP.quote;$('cperr').textContent='';rtPop();
   ovOpen('compose');cpGuard(true);acLoad();
   setTimeout(function(){if(CP.to){var b=$('cpbody');b.focus();var r=document.createRange();r.setStart(b,0);r.collapse(true);var sl=getSelection();sl.removeAllRanges();sl.addRange(r)}else $('cpto').focus();rtState()},260)};
@@ -772,7 +792,28 @@ window.addEventListener('popstate',function(){if(cpSkip){cpSkip=false;return}
   if(cpOpen){history.pushState({cp:1},'',location.href);cpHist=true;toast('Tap × to close the email')}});
 window.addEventListener('beforeunload',function(e){if(cpOpen&&(cpText()||$('cpto').value.trim()||$('cpsub').value.trim())){e.preventDefault();e.returnValue='';return ''}});
 document.addEventListener('keydown',function(e){if(cpOpen&&(e.key==='F5'||((e.metaKey||e.ctrlKey)&&(e.key==='r'||e.key==='R'||e.key==='w'||e.key==='W')))){e.preventDefault();toast('Tap × to close the email')}},true);
-var cpClose=function(){(CP.files||[]).forEach(function(f){if(f.xhr)try{f.xhr.abort()}catch(e){}});if(CP.draft&&(CP.files||[]).length&&!CP.sent)api('mail_att_del_all',{draft:CP.draft}).catch(function(){});ovClose('compose');cpGuard(false);rtPop();acHide()};
+var cpClose=function(){clearTimeout(CP.tm);(CP.files||[]).forEach(function(f){if(f.xhr)try{f.xhr.abort()}catch(e){}});ovClose('compose');cpGuard(false);rtPop();acHide();try{localStorage.removeItem('smr_cp_open');localStorage.removeItem('smr_cp_backup')}catch(e){}};
+/* ---- drafts: Save draft button, auto-save a few seconds after you stop typing (and at least every 20 s), local backup, saved when the app closes ---- */
+var cpHas=function(){return !!(cpText()||$('cpto').value.trim()||$('cpcc').value.trim()||$('cpsub').value.trim()||(CP.files||[]).length||(CP.fwd||[]).length)};
+var cpSnap=function(){return{draft:CP.draft,to:$('cpto').value,cc:$('cpcc').value,subject:$('cpsub').value,html:cpText()?$('cpbody').innerHTML:'',text:cpText(),quote:CP.quote||'',
+  in_reply_to:CP.in_reply_to||'',references:CP.references||'',uid:CP.uid||0,reply:!!CP.reply,fwd:CP.fwd||[],ts:Math.floor(Date.now()/1000)}};
+var cpSave=function(){clearTimeout(CP.tm);if(!cpOpen||!cpHas())return Promise.resolve(false);var snap=cpSnap();CP.saving=true;
+  return api('mail_draft_save',snap).then(function(){CP.saving=false;CP.saved=true;if(CP.lastSnapTs<=snap.ts||!CP.lastSnapTs)CP.dirty=false;$('cpstat').textContent='Draft saved '+new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});try{localStorage.removeItem('smr_cp_backup')}catch(e){}if(M.folder==='drafts'&&!cpOpen)mailLoad();return true})
+  .catch(function(){CP.saving=false;$('cpstat').textContent='Not saved yet (offline?) · kept on this device';return false})};
+var cpDirty=function(){if(!cpOpen)return;CP.dirty=true;CP.lastSnapTs=Math.floor(Date.now()/1000);var now=Date.now();if(!CP.firstDirty)CP.firstDirty=now;
+  clearTimeout(CP.bk);CP.bk=setTimeout(function(){if(cpOpen&&cpHas())try{localStorage.setItem('smr_cp_backup',JSON.stringify(cpSnap()))}catch(e){}},700);
+  clearTimeout(CP.tm);var wait=now-CP.firstDirty>20000?0:4000;CP.tm=setTimeout(function(){CP.firstDirty=0;cpSave()},wait)};
+['cpto','cpcc','cpsub','cpbody'].forEach(function(id){$(id).addEventListener('input',cpDirty)});
+var cpBeacon=function(){if(!cpOpen||!CP.dirty||!cpHas())return;var snap=cpSnap();try{localStorage.setItem('smr_cp_backup',JSON.stringify(snap))}catch(e){}
+  try{fetch('api.php?a=mail_draft_save',{method:'POST',keepalive:true,credentials:'same-origin',headers:{'X-CSRF':CSRF,'Content-Type':'application/json'},body:JSON.stringify(snap)})}catch(e){}};
+document.addEventListener('visibilitychange',function(){if(document.hidden)cpBeacon()});
+window.addEventListener('pagehide',cpBeacon);
+/* after a crash / refresh / closed app: put any unsaved copy into Drafts and say so */
+var cpRecover=function(){var bk=null,open=null;try{bk=JSON.parse(localStorage.getItem('smr_cp_backup')||'null');open=localStorage.getItem('smr_cp_open')}catch(e){}
+  if(cpOpen)return;var done=function(){try{localStorage.removeItem('smr_cp_backup');localStorage.removeItem('smr_cp_open')}catch(e){}
+    api('mail_drafts',{}).then(function(j){draftCount(j.rows.length)}).catch(function(){})};
+  if(bk&&bk.draft){api('mail_draft_save',bk).then(function(){done();toast('Your unfinished email was saved in Drafts')}).catch(function(){})}
+  else if(open){done();toast('Your unfinished email was saved in Drafts')}else done()};
 /* ---- attachments: uploaded in 1.5 MB pieces with progress; same limits Gmail / Outlook use ---- */
 var ATT_MAX=25*1048576,ATT_WARN=14*1048576,ATT_CHUNK=1.5*1048576;
 var ATT_BLOCK='ade adp apk app appx appxbundle bat cab chm cmd com cpl dex diagcab diagcfg diagpack dll dmg ex ex_ exe hta img ins iso isp jar jnlp js jse lib lnk mde msc msi msix msixbundle msp mst nsh pif ps1 psm1 py pyc pyo scr sct shb sys vb vbe vbs vhd vhdx vxd wsc wsf wsh xll'.split(' ');
@@ -796,7 +837,7 @@ var attNext=function(){if(attBusy)return;var f=attQueue.shift();if(!f)return;if(
     x.upload.onprogress=function(ev){f.sent=off+ev.loaded;attDraw()};
     var fail=function(msg){f.err=msg;f.xhr=null;attBusy=false;attDraw();attNext()};
     x.onload=function(){var j={};try{j=JSON.parse(x.responseText)}catch(e){}if(x.status!==200||j.error){fail(j.error||'Upload failed. Remove it and try again.');return}
-      var nx=Math.min(f.size,off+ATT_CHUNK);f.sent=nx;if(j.done||nx>=f.size){f.done=true;f.xhr=null;attBusy=false;attDraw();attNext()}else piece(nx)};
+      var nx=Math.min(f.size,off+ATT_CHUNK);f.sent=nx;if(j.done||nx>=f.size){f.done=true;f.xhr=null;attBusy=false;attDraw();attNext();cpDirty()}else piece(nx)};
     x.onerror=function(){fail('No connection. Remove it and try again.')};x.send(fd)};
   piece(0)};
 var attAdd=function(list){list=[].slice.call(list||[]);if(!list.length)return;
@@ -807,11 +848,11 @@ var attAdd=function(list){list=[].slice.call(list||[]);if(!list.length)return;
     var f={i:CP.nextI++,name:name,size:file.size,file:file,sent:0,done:false};
     if(/^image\/(png|jpe?g|gif|webp)$/.test(file.type))try{f.url=URL.createObjectURL(file)}catch(e){}
     CP.files.push(f);attQueue.push(f)});
-  attDraw();attNext()};
+  attDraw();attNext();cpDirty()};
 $('cpfile').addEventListener('change',function(){attAdd(this.files);this.value=''});
 $('cpattl').addEventListener('click',function(e){var b=e.target.closest('[data-attx]');if(!b)return;var k=b.closest('.atc').dataset.k;
   if(k[0]==='f'){CP.fwd.splice(+k.slice(1),1)}else{var i=+k.slice(1),f=CP.files.filter(function(x){return x.i===i})[0];if(f){f.gone=true;if(f.xhr)try{f.xhr.abort()}catch(er){}if(attBusy&&f.xhr){attBusy=false}CP.files=CP.files.filter(function(x){return x!==f});if(f.url)URL.revokeObjectURL(f.url);api('mail_att_del',{draft:CP.draft,i:i}).catch(function(){});attNext()}}
-  attDraw()});
+  attDraw();cpDirty()});
 (function(){var c=$('compose'),n=0;
   c.addEventListener('dragenter',function(e){if(e.dataTransfer&&[].indexOf.call(e.dataTransfer.types||[],'Files')>=0){e.preventDefault();n++;c.classList.add('drop')}});
   c.addEventListener('dragover',function(e){if(e.dataTransfer&&[].indexOf.call(e.dataTransfer.types||[],'Files')>=0)e.preventDefault()});
@@ -871,7 +912,15 @@ document.querySelectorAll('[data-ac]').forEach(function(inp){var l=inp.parentNod
   l.addEventListener('click',function(e){var b=e.target.closest('button');if(b)acPick(inp,b.dataset.em)})});
 var cpBusy=false;
 $('compose').addEventListener('click',function(e){if(!e.target.closest('.rtb,.rpop'))rtPop();var b=e.target.closest('[data-cp]');if(!b)return;
-  if(b.dataset.cp==='close'){if(((cpText()&&cpText()!==CP.start)||CP.files.length)&&!confirm('Discard this email?'))return;cpClose()}
+  if(b.dataset.cp==='close'){
+    if(!cpHas()){if(CP.saved)api('mail_draft_del',{draft:CP.draft}).catch(function(){});else if(CP.files.length)api('mail_att_del_all',{draft:CP.draft}).catch(function(){});cpClose();return}
+    openSheet('<h2>Delete this email?</h2><p class="sub">'+(CP.saved?'It\'s saved in your Drafts. Delete removes it from Drafts too.':'It hasn\'t been sent.')+'</p><div class="row" style="margin-top:14px;flex-wrap:wrap"><button class="btn bad" data-cx="del">Delete</button><button class="btn" data-cx="save">Save to drafts</button><button class="btn" data-cx="keep">Keep writing</button></div>',function(el){
+      el.addEventListener('click',function(ev){var q=ev.target.closest('[data-cx]');if(!q)return;closeSheet();
+        if(q.dataset.cx==='del'){api('mail_draft_del',{draft:CP.draft}).catch(function(){});cpClose();toast('Email deleted');if(M.folder==='drafts')mailLoad()}
+        if(q.dataset.cx==='save'){CP.dirty=true;cpSave().then(function(ok){if(ok){cpClose();toast('Saved to Drafts');api('mail_drafts',{}).then(function(j){draftCount(j.rows.length)}).catch(function(){});if(M.folder==='drafts')mailLoad()}else toast('Couldn\'t save the draft. Check your connection.',true)})}})});
+    return}
+  if(b.dataset.cp==='save'){if(!cpHas()){toast('Nothing to save yet');return}if(CP.files.some(function(f){return !f.done&&!f.err})){toast('Wait for the attachments to finish uploading',true);return}
+    CP.dirty=true;b.disabled=true;cpSave().then(function(ok){b.disabled=false;if(ok){cpClose();toast('Saved to Drafts');api('mail_drafts',{}).then(function(j){draftCount(j.rows.length)}).catch(function(){});if(M.folder==='drafts')mailLoad()}else toast('Couldn\'t save the draft. Check your connection.',true)});return}
   if(b.dataset.cp==='attach'){$('cpfile').click();return}
   if(b.dataset.cp==='send'&&!cpBusy){if(CP.files.some(function(f){return !f.done&&!f.err})){$('cperr').textContent='Wait for the attachments to finish uploading.';return}
     if(CP.files.some(function(f){return f.err})){$('cperr').textContent='Remove the attachment that didn\'t upload (in red) first.';return}
@@ -879,7 +928,7 @@ $('compose').addEventListener('click',function(e){if(!e.target.closest('.rtb,.rp
     cpBusy=true;b.disabled=true;$('cperr').textContent='';
     var own=cpText(),html=$('cpbody').innerHTML,body=own+(CP.quote?'\n\n\n'+CP.quote:'');
     api('mail_send',{to:$('cpto').value,cc:$('cpcc').value,subject:$('cpsub').value,body:body,html:own?html:'',draft:CP.draft,atts:CP.files.map(function(f){return f.i}),fwd:(CP.fwd||[]).map(function(f){return{folder:f.folder,uid:f.uid,path:f.path}}),in_reply_to:CP.in_reply_to||'',references:CP.references||'',uid:CP.uid||0})
-    .then(function(j){CP.sent=true;cpClose();ovClose('reader');toast(j.saved?'Sent':'Sent (could not save a copy in Sent)');AC=null;if(CP.onSent)CP.onSent();if(M.folder==='sent')mailLoad()})
+    .then(function(j){CP.sent=true;clearTimeout(CP.tm);cpClose();ovClose('reader');if(M.folder==='drafts')mailLoad();api('mail_drafts',{}).then(function(x){draftCount(x.rows.length)}).catch(function(){});toast(j.saved?'Sent':'Sent (could not save a copy in Sent)');AC=null;if(CP.onSent)CP.onSent();if(M.folder==='sent')mailLoad()})
     .catch(function(er){$('cperr').textContent=er.message})
     .then(function(){cpBusy=false;b.disabled=false})}});
 /* ---------- features presentation (deck) per demo ---------- */
