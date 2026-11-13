@@ -470,5 +470,23 @@
    "A Halal business directory where local businesses can pay to be featured, and an advertising section that brings in income for the station.",
    "Community features: What's on in Luton, janazah notices, a noticeboard, Find help in Luton, giving appeals and Inspire Eid bookings."
   ]
+ },
+ {
+  "slug": "phillyz",
+  "version": "2026-11-13a",
+  "ver": "1.0",
+  "name": "Phillyz",
+  "accent": "#FFC21A",
+  "tagline": "Smash burger & Philly cheesesteak ordering app · Leicester & Milton Keynes",
+  "description": "Ordering app for Phillyz: smash burgers, Philly cheesesteaks, tenders, loaded fries and desserts from Leicester and Milton Keynes, for collection or delivery, with stamps and spin-to-win rewards.",
+  "tips": [
+   "Customers pick their branch first, Leicester or Milton Keynes, so each shop gets its own orders, hours and menu.",
+   "Burgers and cheesesteaks are built step by step, with toppings and sauces shown with real photos.",
+   "Meals, sides, dips, shakes and desserts are one tap away, so every order grows naturally.",
+   "Every order earns a stamp towards free rewards like a milkshake.",
+   "A spin-to-win wheel gives customers a reason to come back and order again.",
+   "Collection or delivery, with live order tracking so customers can see where their food is.",
+   "Orders come straight to the shop with no commission to delivery apps."
+  ]
  }
 ]
