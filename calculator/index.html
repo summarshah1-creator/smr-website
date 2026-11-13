@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Platform Commission Calculator | SMR Digital</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0B0920; --bg2:#120F2E; --card:#16133A; --line:rgba(255,255,255,.12); --line2:rgba(255,255,255,.2);
+  --ink:#fff; --ink2:#D6D8F0; --ink3:#A9ACCF;
+  --blue:#2563EB; --purple:#7C3AED; --grad:linear-gradient(90deg,#2563EB,#7C3AED);
+  --gtext:linear-gradient(90deg,#5B93FF,#B57BFF);
+  --red:#FF6B7A;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;overflow-x:hidden}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Plus Jakarta Sans',system-ui,sans-serif;line-height:1.45;overflow-x:hidden}
+.glow{position:fixed;border-radius:50%;pointer-events:none;z-index:0;filter:blur(10px)}
+.g1{width:700px;height:700px;left:-320px;top:-260px;background:radial-gradient(circle,rgba(37,99,235,.42),transparent 65%)}
+.g2{width:800px;height:800px;right:-380px;top:260px;background:radial-gradient(circle,rgba(124,58,237,.38),transparent 65%)}
+.wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:0 20px}
+header{display:flex;align-items:center;justify-content:space-between;padding:22px 0}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:#fff}
+.logo img{height:24px;width:auto;display:block}
+.logo span{font-size:28px;font-weight:300;line-height:1.15;padding-bottom:4px;background:linear-gradient(90deg,#7AA7FF,#C084FC);-webkit-background-clip:text;background-clip:text;color:transparent}
+.handle{color:var(--ink3);font-weight:600;font-size:14px;text-decoration:none}
+.handle:hover{color:#fff}
+
+/* Hero */
+.hero{padding:26px 0 30px;text-align:left}
+.hero h1{margin:0;font-size:clamp(40px,8.5vw,76px);line-height:1.02;letter-spacing:-.035em;font-weight:800;max-width:900px}
+.hero h1 .g{background:var(--gtext);-webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:.08em}
+.hero p{margin:18px 0 0;font-size:clamp(17px,2.4vw,21px);color:var(--ink2);max-width:680px;font-weight:500}
+.hero p b{color:#fff}
+.kicker{display:inline-block;margin-bottom:14px;font-size:15px;font-weight:800;background:var(--gtext);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero .note{display:block;margin-top:8px;font-size:14px;color:var(--ink3);font-weight:600}
+.bleed{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.bleed div{background:rgba(255,107,122,.1);border:1px solid rgba(255,107,122,.3);color:#FFC2C9;font-weight:600;font-size:14px;border-radius:999px;padding:8px 14px}
+
+/* Calculator */
+.calc{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:20px;align-items:start;padding-bottom:40px}
+@media (max-width:860px){.calc{grid-template-columns:1fr}}
+.panel{min-width:0;background:rgba(22,19,58,.82);border:1px solid var(--line);border-radius:24px;padding:22px;backdrop-filter:blur(6px)}
+.step{display:flex;align-items:center;gap:10px;margin:0 0 12px;font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#9DB8FF}
+.step i{font-style:normal;width:24px;height:24px;border-radius:50%;background:var(--grad);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:12px;letter-spacing:0}
+.block+.block{margin-top:26px}
+.apps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.app{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.04);border:1.5px solid var(--line);border-radius:16px;padding:10px 12px;color:#fff;font:inherit;font-weight:700;font-size:15px;cursor:pointer;text-align:left;min-height:56px;transition:border-color .15s,background .15s,transform .1s}
+.app:hover{border-color:var(--line2)}
+.app:active{transform:scale(.98)}
+.app img,.app .ico{width:34px;height:34px;border-radius:9px;flex:0 0 auto;display:block}
+.app .ico{background:#3A3D5C;display:flex;align-items:center;justify-content:center}
+.app .tick{margin-left:auto;width:22px;height:22px;border-radius:50%;border:1.5px solid var(--line2);flex:0 0 auto;display:flex;align-items:center;justify-content:center}
+.app{transition:transform .18s cubic-bezier(.2,.9,.3,1.4),box-shadow .18s,border-color .15s,background .15s}
+.app[aria-pressed="true"]{border-color:#7C8BFF;background:linear-gradient(160deg,rgba(37,99,235,.28),rgba(124,58,237,.3));transform:translateY(-3px);box-shadow:0 12px 26px rgba(70,60,220,.45)}
+.app[aria-pressed="true"] .tick{background:var(--grad);border-color:transparent}
+.app[aria-pressed="true"] .tick::after{content:"";width:9px;height:5px;border-left:2.5px solid #fff;border-bottom:2.5px solid #fff;transform:rotate(-45deg) translate(1px,-1px)}
+
+.seg{display:inline-flex;background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:999px;padding:4px;gap:4px;flex-wrap:wrap}
+.seg button{border:0;background:transparent;color:var(--ink2);font:inherit;font-weight:700;font-size:14px;padding:9px 16px;border-radius:999px;cursor:pointer;min-height:40px;display:inline-flex;align-items:center;gap:8px}
+.seg button{transition:transform .18s cubic-bezier(.2,.9,.3,1.4),box-shadow .18s,background .18s}
+.seg button[aria-pressed="true"]{background:var(--grad);color:#fff;transform:translateY(-3px) scale(1.06);box-shadow:0 10px 24px rgba(91,70,230,.55),0 0 0 2px rgba(255,255,255,.18);position:relative;z-index:1}
+.seg{overflow:visible}
+.seg button:disabled{opacity:.5;cursor:not-allowed}
+.soon{font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;background:rgba(255,255,255,.12);color:#fff;border-radius:999px;padding:3px 7px}
+.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.hint{font-size:13px;color:var(--ink3);margin-top:8px}
+
+.inputs{display:flex;flex-direction:column;gap:12px}
+.ain{border:1px solid var(--line);border-radius:18px;padding:14px;background:rgba(255,255,255,.03)}
+.ain-h{display:flex;align-items:center;gap:10px;font-weight:800;font-size:16px}
+.ain-h img,.ain-h .ico{width:28px;height:28px;border-radius:8px}
+.ain-h .ico{background:#3A3D5C;display:flex;align-items:center;justify-content:center}
+.ain-h .rate{margin-left:auto;font-size:12px;font-weight:700;color:var(--ink3);text-align:right}
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}
+label.f{min-width:0}
+label.f{display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:700;color:var(--ink3);letter-spacing:.02em}
+.inp{display:flex;align-items:center;background:#0E0C26;border:1.5px solid var(--line);border-radius:12px;padding:0 12px;min-height:48px;transition:border-color .15s}
+.inp:focus-within{border-color:#7C8BFF}
+.inp span{color:var(--ink3);font-weight:700;font-size:16px}
+.inp input{flex:1 1 0;width:0;min-width:0;background:transparent;border:0;outline:0;color:#fff;font:inherit;font-size:18px;font-weight:700;padding:10px 6px}
+.edit{margin-top:10px;background:none;border:0;color:#9DB8FF;font:inherit;font-weight:700;font-size:13px;cursor:pointer;padding:6px 0;display:inline-flex;align-items:center;gap:6px}
+.edit:hover{color:#fff}
+.rates{display:none;margin-top:10px;padding-top:12px;border-top:1px dashed var(--line2)}
+.rates.open{display:block}
+.rates .fields{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:520px){.rates .fields{grid-template-columns:1fr 1fr}}
+.chk{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--ink2);margin-top:10px;cursor:pointer}
+.chk input{width:18px;height:18px;accent-color:#6E5BFF}
+.reset{background:none;border:0;color:var(--ink3);font:inherit;font-size:12px;font-weight:700;text-decoration:underline;cursor:pointer;margin-top:8px;padding:4px 0}
+.empty{border:1.5px dashed var(--line2);border-radius:18px;padding:20px;text-align:center;color:var(--ink3);font-weight:600}
+
+/* Results */
+.res{position:sticky;top:16px}
+@media (max-width:860px){.res{position:static}}
+.res .label{font-size:14px;font-weight:700;color:var(--ink2)}
+.display{margin-top:16px;background:#0A0820;border:1px solid var(--line);border-radius:20px;padding:16px 18px;box-shadow:inset 0 2px 12px rgba(0,0,0,.5)}
+.big{font-size:clamp(46px,9vw,68px);font-variant-numeric:tabular-nums;font-weight:800;letter-spacing:-.04em;line-height:1.05;margin:6px 0 4px;background:linear-gradient(90deg,#FF7A88,#FF4D8D);-webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:.06em}
+.sub{font-size:15px;color:var(--ink2);font-weight:500}
+.sub b{color:#fff}
+.bars{display:flex;flex-direction:column;gap:12px;margin:20px 0 6px}
+.bar-h{min-width:0;display:flex;align-items:center;justify-content:space-between;font-size:14px;font-weight:700;gap:10px}
+.bar-h span:last-child{white-space:nowrap}
+.track{height:10px;border-radius:99px;background:rgba(255,255,255,.07);margin-top:6px;overflow:hidden}
+.fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#FF7A88,#FF4D8D);width:0;transition:width .5s cubic-bezier(.2,.8,.2,1)}
+.bar-d{font-size:12px;color:var(--ink3);margin-top:5px}
+.brow{padding:12px;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.03)}
+.bn{display:flex;align-items:center;gap:8px}.bn img{width:22px;height:22px;border-radius:6px}
+.ours{display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding:8px 12px;border-radius:12px;background:var(--grad);font-size:13px;font-weight:700}
+.ours b{font-size:14px}
+.vs{margin-top:20px;border-radius:20px;padding:18px;background:var(--grad);box-shadow:0 18px 40px rgba(91,70,230,.35)}
+.vs .k{font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#E3E0FF}
+.vs .v{font-size:40px;font-weight:800;letter-spacing:-.03em;line-height:1.1;margin:4px 0}
+.vs p{margin:4px 0 0;font-size:14px;color:#F1EFFF;font-weight:500}
+.vs .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.vs .zero{display:inline-block;background:rgba(255,255,255,.18);border-radius:999px;padding:4px 10px;font-weight:800;font-size:13px}
+.per{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:14px}
+.per div{background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:14px;padding:10px;text-align:center}
+.per b{display:block;font-size:17px}
+.per small{font-size:11px;color:var(--ink3);font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.cta{display:flex;flex-direction:column;gap:10px;margin-top:18px}
+.btn{display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.25;gap:10px;min-height:54px;border-radius:999px;font:inherit;font-weight:800;font-size:16px;text-decoration:none;cursor:pointer;border:0;padding:0 22px}
+.btn.primary{background:#fff;color:#1A1640}
+.btn.primary:hover{background:#ECEBFF}
+.btn.ghost{background:rgba(255,255,255,.07);color:#fff;border:1px solid var(--line2)}
+.btn.ghost:hover{background:rgba(255,255,255,.12)}
+.small{font-size:12px;color:var(--ink3);text-align:center}
+.toast{font-size:13px;color:#B9F5C9;text-align:center;min-height:18px;font-weight:600}
+
+/* Instead */
+.instead{padding:30px 0 10px}
+.instead h2,.how h2{font-size:clamp(30px,5.5vw,48px);line-height:1.05;letter-spacing:-.03em;margin:0 0 8px;font-weight:800}
+.instead h2 .g,.how h2 .g{background:var(--gtext);-webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:.06em}
+.lead{color:var(--ink2);font-size:17px;margin:0 0 22px;max-width:640px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.feat{display:flex;gap:12px;align-items:flex-start;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:18px;padding:16px}
+.feat .t{width:30px;height:30px;border-radius:50%;background:var(--grad);flex:0 0 auto;display:flex;align-items:center;justify-content:center}
+.feat b{display:block;font-size:16px}
+.feat span{font-size:14px;color:var(--ink3)}
+.compare{margin-top:26px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:640px){.compare{grid-template-columns:1fr}}
+.cbox{border-radius:20px;padding:18px;border:1px solid var(--line)}
+.cbox.bad{background:rgba(255,107,122,.06);border-color:rgba(255,107,122,.25)}
+.cbox.good{background:linear-gradient(160deg,rgba(37,99,235,.25),rgba(124,58,237,.3));border-color:rgba(160,140,255,.45)}
+.cbox h3{margin:0 0 10px;font-size:18px}
+.cbox ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+.cbox li{display:flex;gap:10px;font-size:15px;color:var(--ink2);font-weight:500}
+.cbox li::before{content:"";flex:0 0 auto;width:8px;height:8px;border-radius:50%;margin-top:8px}
+.cbox.bad li::before{background:#FF7A88}
+.cbox.good li::before{background:#B9A4FF}
+.delivery{margin-top:18px;display:flex;gap:14px;align-items:center;border:1px solid var(--line);background:rgba(255,255,255,.04);border-radius:18px;padding:14px 16px;font-size:15px;color:var(--ink2);font-weight:500}
+.delivery b{color:#fff}
+.delivery em{font-style:normal;color:#C9A7FF;font-weight:700}
+.final{margin:40px 0 20px;border-radius:28px;padding:30px 22px;text-align:center;background:linear-gradient(160deg,rgba(37,99,235,.35),rgba(124,58,237,.4));border:1px solid rgba(160,140,255,.4)}
+.final h2{margin:0;font-size:clamp(28px,5vw,42px);letter-spacing:-.03em;line-height:1.08}
+.final p{color:#EDEBFF;margin:12px auto 20px;max-width:560px;font-weight:500}
+.final .cta{max-width:420px;margin:0 auto}
+#dock{position:fixed;left:12px;right:12px;bottom:12px;z-index:20;display:none;align-items:center;justify-content:space-between;gap:12px;padding:12px 12px 12px 18px;border-radius:20px;background:rgba(18,15,46,.92);border:1px solid var(--line2);backdrop-filter:blur(12px);box-shadow:0 16px 40px rgba(0,0,0,.5);transform:translateY(140%);transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+#dock.show{transform:none}
+#dock .dl{font-size:12px;color:var(--ink3);font-weight:700}
+#dock .dv{font-size:22px;font-weight:800;color:#FF6F86;font-variant-numeric:tabular-nums;line-height:1.1}
+#dock button{border:0;background:var(--grad);color:#fff;font:inherit;font-weight:800;font-size:14px;border-radius:999px;padding:0 18px;min-height:46px;cursor:pointer}
+@media (max-width:860px){#dock{display:flex}body{padding-bottom:90px}}
+body.embed header,body.embed .hero,body.embed .instead,body.embed .final{display:none}
+body.embed .wrap{padding:0 2px}
+body.embed .calc{padding-bottom:10px}
+body.embed footer{padding:6px 0 4px}
+body.embed footer p:last-child{display:none}
+body.embed #dock{display:none!important}
+body.embed{padding-bottom:0;background:#08080f}
+body.embed .glow{display:none}
+
+@media (max-width:480px){
+  .app{flex-direction:column;align-items:flex-start;gap:8px;padding:12px;font-size:15px;position:relative}
+  .app img,.app .ico{width:36px;height:36px}
+  .app .tick{position:absolute;top:10px;right:10px;margin:0}
+  .seg{flex-wrap:nowrap}
+  .seg button{padding:9px 12px;font-size:13.5px;gap:6px}
+  .soon{font-size:9px;padding:3px 6px}
+  .ain-h .rate{font-size:11px}
+}
+footer{padding:24px 0 40px;font-size:12px;color:var(--ink3);line-height:1.6}
+footer p{margin:0 0 8px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</head>
+<body>
+<div class="glow g1"></div><div class="glow g2"></div>
+<div class="wrap">
+  <header>
+    <a class="logo" href="/#digital" aria-label="SMR Digital"><img src="assets/smr-mark.svg" alt="SMR"><span>Digital</span></a>
+    <a class="handle" href="https://www.instagram.com/smrdigitaluk/">@SMRDigitalUK</a>
+  </header>
+
+  <section class="hero" id="top">
+    <div class="kicker">Platform Commission Calculator</div>
+    <h1>Busy every night.<br><span class="g">So where's the money?</span></h1>
+    <p>The orders are flying in, but the apps take a cut of <b>every single one</b>, even collection orders where you do all the work. You're paying for a bog-standard app that just takes orders. Work out what it's really costing you.<span class="note">Not including setup costs.</span></p>
+    <div class="bleed" aria-hidden="true"><div>Commission on every order</div><div>+ VAT on top</div><div>+ admin &amp; card fees</div><div>+ weekly rental</div></div>
+  </section>
+
+  <section class="calc" aria-label="Commission calculator">
+    <div class="panel">
+      <div class="block">
+        <h2 class="step"><i>1</i>Which apps do you use?</h2>
+        <div class="apps" id="apps"></div>
+        <p class="hint">Pick every app you take orders through.</p>
+      </div>
+
+      <div class="block">
+        <h2 class="step"><i>2</i>Order type</h2>
+        <div class="seg" role="group" aria-label="Order type">
+          <button type="button" aria-pressed="true">Collection</button>
+          <button type="button" disabled aria-pressed="false">Delivery <span class="soon">Coming soon</span></button>
+        </div>
+      </div>
+
+      <div class="block">
+        <h2 class="step"><i>3</i>Your numbers</h2>
+        <div class="row">
+          <div class="seg" role="group" aria-label="Enter by" id="mode">
+            <button type="button" data-v="orders">Orders</button>
+            <button type="button" data-v="sales">Total sales</button>
+          </div>
+          <div class="seg" role="group" aria-label="Per" id="inPeriod">
+            <button type="button" data-v="day">Per day</button>
+            <button type="button" data-v="week">Per week</button>
+            <button type="button" data-v="month">Per month</button>
+          </div>
+        </div>
+        <p class="hint" id="modeHint"></p>
+        <div class="inputs" id="inputs" style="margin-top:14px"></div>
+      </div>
+    </div>
+
+    <aside class="panel res" aria-live="polite">
+      <div class="seg" role="group" aria-label="Show results per" id="outPeriod">
+        <button type="button" data-v="week">Week</button>
+        <button type="button" data-v="month">Month</button>
+        <button type="button" data-v="year">Year</button>
+      </div>
+      <div class="display">
+        <div class="label" id="bigLabel">You're paying the apps</div>
+        <div class="big" id="big">£0</div>
+        <div class="sub" id="sub">Pick your apps to see your numbers.</div>
+      </div>
+      <div class="bars" id="bars"></div>
+      <div class="vs">
+        <div class="k">With your own app</div>
+        <div class="v">0% commission</div>
+        <p id="keep">Keep the commission you're paying now.</p>
+        <div class="chips"><span class="zero">One flat monthly cost</span><span class="zero">No VAT on top</span><span class="zero">Paid straight to you</span></div>
+      </div>
+      <div class="cta">
+        <a class="btn primary" id="wa" href="https://wa.me/447931814538">Send me my savings breakdown &amp; app demo</a>
+        <button class="btn ghost" type="button" id="copy">Copy my numbers</button>
+        <div class="toast" id="toast" role="status"></div>
+        <div class="small">WhatsApp 07931 814538 · DM <a class="handle" href="https://www.instagram.com/smrdigitaluk/">@smrdigitaluk</a></div>
+      </div>
+    </aside>
+  </section>
+
+  <section class="instead" aria-labelledby="ih">
+    <h2 id="ih">Stop paying for <span class="g">a bog&#8209;standard app.</span></h2>
+    <p class="lead">The apps give you a basic listing that takes orders, next to every competitor. Your own app is built for your brand, and the customers are yours.</p>
+    <div class="compare">
+      <div class="cbox bad">
+        <h3>On the apps</h3>
+        <ul>
+          <li>A cut of every order, plus VAT and fees</li>
+          <li>You're listed next to your competitors</li>
+          <li>They own your customer list</li>
+          <li>Same basic page as everyone else</li>
+          <li>No back-end to run your shop</li>
+        </ul>
+      </div>
+      <div class="cbox good">
+        <h3>Your own app</h3>
+        <ul>
+          <li>0% commission, one flat monthly cost</li>
+          <li>Built around your brand, nobody else on it</li>
+          <li>You own your customer list and data</li>
+          <li>Loyalty, push offers and rewards</li>
+          <li>A back-end to run your shop: live sales, menu, offers, stock, staff &amp; hygiene checks</li>
+        </ul>
+      </div>
+    </div>
+    <div class="grid" style="margin-top:18px">
+      <div class="feat"><div class="t"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div><div><b>Bespoke app &amp; website</b><span>Designed for your brand</span></div></div>
+      <div class="feat"><div class="t"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div><div><b>Loyalty &amp; rewards</b><span>Bring customers back</span></div></div>
+      <div class="feat"><div class="t"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div><div><b>Push notifications</b><span>Fill quiet nights with offers</span></div></div>
+      <div class="feat"><div class="t"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div><div><b>Your prices</b><span>Customers pay what they'd pay in-store</span></div></div>
+      <div class="feat"><div class="t"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div><div><b>Customer data you own</b><span>Feedback and contacts are yours</span></div></div>
+      <div class="feat"><div class="t"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div><div><b>Back-end to run your shop</b><span>Live sales, menu, offers, stock, staff &amp; hygiene checks</span></div></div>
+    </div>
+    <div class="delivery">
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#9DB8FF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:0 0 auto"><circle cx="5.5" cy="17.5" r="2.5"/><circle cx="18.5" cy="17.5" r="2.5"/><path d="M8 17.5h7.5M3 15V9h7l3 4h5l3 3v1.5"/><path d="M13 13V7h3"/></svg>
+      <div><b>Delivery?</b> Use your own drivers with our driver app. <em>External delivery drivers coming soon.</em></div>
+    </div>
+  </section>
+
+  <section class="final">
+    <h2>Tell us what you pay now.</h2>
+    <p>We'll show you how much you'd save, and everything else you'd get with your own app.</p>
+    <div class="cta">
+      <a class="btn primary" id="wa2" href="https://wa.me/447931814538">Get my savings breakdown &amp; app demo</a>
+      <a class="btn ghost" href="https://www.instagram.com/smrdigitaluk/">DM @smrdigitaluk</a>
+    </div>
+  </section>
+
+  <footer>
+    <p><b>About these numbers.</b> Estimates for collection orders using published or commonly reported UK rates (Nov 2026). Setup and activation fees are not included. Uber Eats: 13% pickup fee + VAT. Just Eat: 14% + VAT commission + 50p admin per order. Deliveroo: rates are negotiated per restaurant and not published; 14% + VAT is an estimate. FoodHub: 0% commission, 3.4% + 20p card fee per order, plus weekly rental (about £23 a week, around £100 a month on average). Rates are taken from each platform's own published pricing where it exists. If you've been given your own rate, tap "Use my own rates" to change it.</p>
+    <p>A month is worked out as 365 ÷ 12 days, a week as 7 days. Card payments on your own app still carry normal card processing fees, which aren't commission.</p>
+    <p>© SMR Digital · <a class="handle" href="https://www.instagram.com/smrdigitaluk/">@smrdigitaluk</a></p>
+  </footer>
+</div>
+<div id="dock" aria-hidden="true"><div><div class="dl" id="dockL">The apps cost you a month</div><div class="dv" id="dockV">£0</div></div><button type="button" id="dockB">See breakdown</button></div>
+
+<script>
+(function(){
+  var APPS=[
+    {id:'ubereats',name:'Uber Eats',img:'assets/ubereats.webp',d:{pct:13,vat:true,fix:0,card:0,week:0},note:'13% + VAT'},
+    {id:'justeat',name:'Just Eat',img:'assets/justeat.webp',d:{pct:14,vat:true,fix:0.5,card:0,week:0},note:'14% + VAT + 50p'},
+    {id:'deliveroo',name:'Deliveroo',img:'assets/deliveroo.webp',d:{pct:14,vat:true,fix:0,card:0,week:0},note:'~14% + VAT (est.)'},
+    {id:'foodhub',name:'FoodHub',img:'assets/foodhub.webp',d:{pct:0,vat:false,fix:0.2,card:3.4,week:23},note:'3.4% + 20p + ~£23/week'}
+  ];
+  var DAYS={day:1,week:7,month:365/12,year:365};
+  var S={sel:['justeat','ubereats'],mode:'orders',inP:'day',outP:'month',v:{},r:{},open:{}};
+  try{var saved=JSON.parse(localStorage.getItem('smr-calc2')||'null'); if(saved&&saved.sel){S=Object.assign(S,saved);}}catch(e){}
+  APPS.forEach(function(a){ if(!S.v[a.id]) S.v[a.id]={orders:30,sales:450,aov:15}; if(!S.r[a.id]) S.r[a.id]=Object.assign({},a.d); });
+  function save(){try{localStorage.setItem('smr-calc2',JSON.stringify(S));}catch(e){}}
+  var $=function(id){return document.getElementById(id)};
+  var gbp=function(n,dp){return '£'+Number(n).toLocaleString('en-GB',{minimumFractionDigits:dp||0,maximumFractionDigits:dp||0})};
+  var ICO_OTHER='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D6D8F0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M9 10.5h6l-.6 6h-4.8z"/></svg>';
+  function icon(a,cls){return a.img?'<img src="'+a.img+'" alt="" class="'+(cls||'')+'">':'<div class="ico">'+ICO_OTHER+'</div>'}
+
+  function renderApps(){
+    $('apps').innerHTML=APPS.map(function(a){var on=S.sel.indexOf(a.id)>-1;
+      return '<button type="button" class="app" data-id="'+a.id+'" aria-pressed="'+on+'">'+icon(a)+'<span>'+a.name+'</span><span class="tick" aria-hidden="true"></span></button>'}).join('');
+  }
+  function segInit(id,key){
+    var el=$(id); el.querySelectorAll('button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.v===S[key]);
+      b.onclick=function(){S[key]=b.dataset.v; segInit(id,key); if(key!=='outP') renderInputs(); calc(); save();};});
+  }
+  function field(id,k,label,pre,suf,step,val){
+    return '<label class="f">'+label+'<div class="inp">'+(pre?'<span>'+pre+'</span>':'')+'<input inputmode="decimal" type="number" min="0" step="'+step+'" data-id="'+id+'" data-k="'+k+'" value="'+val+'">'+(suf?'<span>'+suf+'</span>':'')+'</div></label>';
+  }
+  function renderInputs(){
+    var per={day:'a day',week:'a week',month:'a month'}[S.inP];
+    var list=APPS.filter(function(a){return S.sel.indexOf(a.id)>-1});
+    $('modeHint').textContent=S.mode==='orders'?'Enter how many orders you take on each app and your average order.':'Use the total from your app sales report, before commission and fees.';
+    if(!list.length){$('inputs').innerHTML='<div class="empty">Pick at least one app above.</div>';return;}
+    $('inputs').innerHTML=list.map(function(a){
+      var v=S.v[a.id], r=S.r[a.id];
+      var first=S.mode==='orders'?field(a.id,'orders','Orders '+per,'','', '1',v.orders):field(a.id,'sales','Total sales '+per+' (before fees)','£','','1',v.sales);
+      var rateTxt=(r.pct?r.pct+'%':'0%')+(r.vat&&r.pct?' + VAT':'')+(r.fix?' + '+gbp(r.fix,2).replace('£0.','')+(r.fix<1?'p':''):'')+(r.card?' + '+r.card+'% card':'')+(r.week?' + '+gbp(r.week)+'/wk':'');
+      if(r.fix && r.fix<1) rateTxt=rateTxt.replace(/\+ (\d+)p/,function(m,p){return '+ '+(+p)+'p'});
+      return '<div class="ain"><div class="ain-h">'+icon(a)+'<span>'+a.name+'</span><span class="rate">'+rateTxt+'</span></div>'+
+        '<div class="fields">'+first+field(a.id,'aov','Average order','£','','0.5',v.aov)+'</div>'+
+        '<button type="button" class="edit" data-open="'+a.id+'" aria-expanded="'+!!S.open[a.id]+'">'+(S.open[a.id]?'Hide rates':'Use my own rates')+' <span aria-hidden="true">'+(S.open[a.id]?'▴':'▾')+'</span></button>'+
+        '<div class="rates'+(S.open[a.id]?' open':'')+'"><div class="fields">'+
+          field(a.id,'pct','Commission','','%','0.1',r.pct)+
+          field(a.id,'fix','Fee per order','£','','0.05',r.fix)+
+          field(a.id,'card','Card / processing','','%','0.1',r.card)+
+          field(a.id,'week','Weekly fees','£','','1',r.week)+
+        '</div><label class="chk"><input type="checkbox" data-id="'+a.id+'" data-k="vat" '+(r.vat?'checked':'')+'> Add VAT (20%) to commission</label>'+
+        '<button type="button" class="reset" data-reset="'+a.id+'">Reset to average rates</button></div></div>';
+    }).join('');
+  }
+  function costs(a){
+    var v=S.v[a.id], r=S.r[a.id]; var aov=Math.max(+v.aov||0,0);
+    var ordersIn = S.mode==='orders' ? (+v.orders||0) : (aov>0?(+v.sales||0)/aov:0);
+    var perDayOrders=ordersIn/DAYS[S.inP]; var d=DAYS[S.outP];
+    var orders=perDayOrders*d, sales=orders*aov;
+    var comm=sales*(+r.pct||0)/100, vat=r.vat?comm*0.2:0, fixed=orders*(+r.fix||0), card=sales*(+r.card||0)/100;
+    var weekly=(+r.week||0)*(d/7);
+    return {orders:orders,sales:sales,comm:comm,vat:vat,fixed:fixed,card:card,weekly:weekly,total:comm+vat+fixed+card+weekly};
+  }
+  var shown=0, raf;
+  function animate(to){cancelAnimationFrame(raf); var from=shown, t0=performance.now();
+    (function step(t){var p=Math.min((t-t0)/550,1), e=1-Math.pow(1-p,3); shown=from+(to-from)*e; $('big').textContent=gbp(shown); if(p<1) raf=requestAnimationFrame(step);})(t0);}
+  var last={};
+  function calc(){
+    var list=APPS.filter(function(a){return S.sel.indexOf(a.id)>-1});
+    var rows=list.map(function(a){return {a:a,c:costs(a)}});
+    var tot=rows.reduce(function(s,r){return s+r.c.total},0), sales=rows.reduce(function(s,r){return s+r.c.sales},0), orders=rows.reduce(function(s,r){return s+r.c.orders},0);
+    var perLbl={week:'a week',month:'a month',year:'a year'}[S.outP];
+    $('bigLabel').textContent="You're paying the apps "+perLbl;
+    animate(tot); $('dockV').textContent=gbp(tot); $('dockL').textContent='The apps cost you '+perLbl;
+    if(!rows.length){$('sub').textContent='Pick your apps to see your numbers.';$('bars').innerHTML='';$('keep').textContent="Keep the commission you're paying now.";return;}
+    var pct=sales>0?tot/sales*100:0, perOrder=orders>0?tot/orders:0;
+    $('sub').innerHTML="That's <b>"+pct.toFixed(1)+"% of your app sales</b>, about <b>"+gbp(perOrder,2)+"</b> on every order.";
+    var max=Math.max.apply(null,rows.map(function(r){return r.c.total}).concat([1]));
+    $('bars').innerHTML=rows.map(function(r){var c=r.c, parts=[];
+      if(c.comm) parts.push('Commission '+gbp(c.comm)); if(c.vat) parts.push('VAT '+gbp(c.vat)); if(c.fixed) parts.push('Per-order fees '+gbp(c.fixed)); if(c.card) parts.push('Card fees '+gbp(c.card)); if(c.weekly) parts.push('Rental / weekly fees '+gbp(c.weekly));
+      return '<div class="brow"><div class="bar-h"><span class="bn"><img src="'+r.a.img+'" alt="">'+r.a.name+'</span><span>'+gbp(c.total)+'</span></div><div class="track"><div class="fill" style="width:'+(c.total/max*100).toFixed(1)+'%"></div></div><div class="bar-d">'+(parts.join(' · ')||'No fees entered')+'</div><div class="ours"><span>Your own app</span><b>£0 · 0% commission</b></div></div>'}).join('');
+    var y=0; list.forEach(function(a){var keep=S.outP; S.outP='year'; y+=costs(a).total; S.outP=keep;});
+    $('keep').innerHTML="That's <b>"+gbp(y)+" a year</b> going to the apps. With your own app you pay 0% commission.";
+    last={rows:rows,tot:tot,perLbl:perLbl,year:y,pct:pct};
+    var msg=summary(); var href='https://wa.me/447931814538?text='+encodeURIComponent(msg); $('wa').href=href; $('wa2').href=href;
+  }
+  function summary(){
+    var ask="I'd like to see:\n• How much I'd save with my own app\n• A demo of what my own app would look like\n• The extra features I'd get";
+    if(!last.rows||!last.rows.length) return "Hi, SMR Digital! 👋\n"+ask;
+    var per={day:'a day',week:'a week',month:'a month'}[S.inP];
+    var lines=last.rows.map(function(r){var v=S.v[r.a.id]; return '*'+r.a.name+':* '+(S.mode==='orders'?(v.orders+' orders '+per):(gbp(v.sales)+' total sales '+per))+', avg order '+gbp(v.aov,2)+' → *'+gbp(r.c.total)+' '+last.perLbl+'*'});
+    return "Hi, SMR Digital! 👋\nI used your *Platform Commission Calculator* (collection orders):\n\n"+lines.join('\n')+"\n\n*Total: "+gbp(last.tot)+" "+last.perLbl+"* 😱\nThat's *"+gbp(last.year)+" a year* going to the apps.\n\n"+ask;
+  }
+  document.addEventListener('click',function(e){
+    var b=e.target.closest('.app'); if(b){var id=b.dataset.id,i=S.sel.indexOf(id); if(i>-1)S.sel.splice(i,1); else S.sel.push(id); S.sel.sort(function(x,y){return APPS.findIndex(function(a){return a.id===x})-APPS.findIndex(function(a){return a.id===y})}); renderApps(); renderInputs(); calc(); save(); return;}
+    var o=e.target.closest('[data-open]'); if(o){S.open[o.dataset.open]=!S.open[o.dataset.open]; renderInputs(); save(); return;}
+    var rs=e.target.closest('[data-reset]'); if(rs){var a=APPS.find(function(x){return x.id===rs.dataset.reset}); S.r[a.id]=Object.assign({},a.d); renderInputs(); calc(); save(); return;}
+  });
+  document.addEventListener('input',function(e){var t=e.target; if(!t.dataset||!t.dataset.id) return; var id=t.dataset.id,k=t.dataset.k;
+    if(k==='vat'){S.r[id].vat=t.checked;} else if(['orders','sales','aov'].indexOf(k)>-1){S.v[id][k]=t.value===''?0:+t.value;} else {S.r[id][k]=t.value===''?0:+t.value;}
+    calc(); save();
+    if(k!=='orders'&&k!=='sales'&&k!=='aov'){ var head=t.closest('.ain').querySelector('.rate'); var r=S.r[id];
+      head.textContent=(r.pct||0)+'%'+(r.vat&&r.pct?' + VAT':'')+(r.fix?' + £'+(+r.fix).toFixed(2):'')+(r.card?' + '+r.card+'% card':'')+(r.week?' + £'+r.week+'/wk':''); }
+  });
+  $('copy').onclick=function(){var txt=summary(); var done=function(){$('toast').textContent='Copied. Paste it into a message to us.';setTimeout(function(){$('toast').textContent=''},3000)};
+    try{navigator.clipboard.writeText(txt).then(done,function(){$('toast').textContent="Couldn't copy here. Use the WhatsApp button instead."});}catch(err){$('toast').textContent="Couldn't copy here. Use the WhatsApp button instead."}};
+  var resEl=document.querySelector('.res'), inEl=document.querySelector('.calc .panel');
+  $('dockB').onclick=function(){resEl.scrollIntoView({behavior:'smooth',block:'start'})};
+  if('IntersectionObserver' in window){var vis={res:false,inp:false};var io=new IntersectionObserver(function(es){es.forEach(function(e){vis[e.target===resEl?'res':'inp']=e.isIntersecting});$('dock').classList.toggle('show',vis.inp&&!vis.res)},{threshold:0});io.observe(resEl);io.observe(inEl);}
+  var embedded=false; try{embedded=window.self!==window.top}catch(e){embedded=true}
+  if(embedded||/[?&]embed=1/.test(location.search)){document.body.classList.add('embed');
+    var post=function(){try{var w=document.querySelector('.wrap');parent.postMessage({smrCalcHeight:Math.ceil(w.getBoundingClientRect().bottom+window.scrollY)},'*')}catch(e){}};
+    if('ResizeObserver' in window) new ResizeObserver(post).observe(document.body); window.addEventListener('load',post); setInterval(post,1500);}
+  renderApps(); segInit('mode','mode'); segInit('inPeriod','inP'); segInit('outPeriod','outP'); renderInputs(); calc();
+})();
+</script>
+</body>
+</html>

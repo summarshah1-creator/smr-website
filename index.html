@@ -48,6 +48,12 @@ h3{font-size:19px;font-weight:700}
 .eyebrow{display:inline-block;font-size:16px;font-weight:700;letter-spacing:-.005em;line-height:1.3;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:2px}
 body[data-brand="plates"] .lt .eyebrow{background:none;color:#c25e00}
 @media(min-width:900px){.eyebrow{font-size:17px}}
+#d-calc .calc-frame{margin-top:22px}
+#d-calc iframe{display:block;width:100%;height:1100px;border:0;background:transparent;color-scheme:dark}
+#d-calc .calc-open{margin-top:12px;font-size:15px;font-weight:700}
+#d-calc .calc-open a{color:var(--txt,#fff);text-decoration:none;display:inline-flex;align-items:center;gap:6px;opacity:.85}
+#d-calc .calc-open a:hover{opacity:1}
+#d-calc .calc-open svg{width:16px;height:16px}
 .lede{color:var(--mut);font-size:17px;max-width:620px}
 section{position:relative;padding:84px 0;scroll-margin-top:144px}
 .sec-head{display:grid;gap:14px;margin-bottom:38px}
@@ -1379,6 +1385,14 @@ setTimeout(done,3700);})();
   </section>
   </div><!-- /light-run -->
 
+  <section id="d-calc">
+    <div class="wrap">
+      <div class="sec-head rv"><span class="eyebrow">Platform commission calculator</span><h2>Busy every night.<br><span class="grad-text">So where's the money?</span></h2><p class="lede">The apps take a cut of every order, even collection orders where you do all the work, for a bog-standard app that just takes orders. Pick the apps you use and see what they really cost you. Not including setup costs.</p></div>
+      <div class="calc-frame rv"><iframe id="calcFrame" src="/calculator/?embed=1" title="Platform Commission Calculator" scrolling="no"></iframe></div>
+      <p class="calc-open rv"><a href="/calculator/">Open the Platform Commission Calculator full screen <svg data-i="arrow"></svg></a></p>
+    </div>
+  </section>
+
 
   <section id="d-features">
     <div class="wrap">
@@ -2115,6 +2129,10 @@ go(defaultBrand(),{scroll:false});
 drawPlate();
 window.updScroll=updScroll;updScroll();
 document.fonts&&document.fonts.ready.then(movePills);
+</script>
+<script>
+/* Platform commission calculator (#d-calc): size the iframe to its content */
+window.addEventListener('message',function(e){var f=document.getElementById('calcFrame');if(!f||e.source!==f.contentWindow||!e.data||!e.data.smrCalcHeight)return;var h=Math.ceil(e.data.smrCalcHeight)+4;if(Math.abs(f.offsetHeight-h)>2)f.style.height=h+'px';});
 </script>
 </body>
 </html>
