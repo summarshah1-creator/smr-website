@@ -219,6 +219,43 @@ if (strpos($a, 'mail_') === 0) {
                 'message_id' => trim($hh['message-id'] ?? ''), 'references' => trim($hh['references'] ?? ''),
                 'text' => mb_substr(preg_replace("/\n{3,}/", "\n\n", $text), 0, 20000),
                 'atts' => array_values(array_filter($p['atts'], function ($x) { return !$x['inline']; }))]);
+        case 'mail_att_up':
+            // One piece (up to 1.5 MB) of one file; pieces arrive in order and are joined on the server.
+            $dir = mail_att_dir((string) ($in['draft'] ?? ''));
+            $i = (int) ($in['i'] ?? -1); $off = (int) ($in['off'] ?? -1); $total = (int) ($in['total'] ?? -1);
+            $name = mail_att_name((string) ($in['name'] ?? ''));
+            if ($i < 0 || $i > 99 || $off < 0 || $total < 0) json_out(['error' => 'Bad upload.'], 400);
+            if (mail_att_blocked($name)) json_out(['error' => '"' . $name . '" can\'t be emailed: Gmail and Outlook block this type of file. Put it in a ZIP or send a link instead.'], 400);
+            if ($total > MAIL_ATT_MAX) json_out(['error' => '"' . $name . '" is over 25 MB, too big to email. Send it as a link instead.'], 400);
+            $f = $_FILES['file'] ?? null;
+            if (!$f || ($f['error'] ?? 1) !== UPLOAD_ERR_OK || !is_uploaded_file($f['tmp_name'])) json_out(['error' => 'The upload was interrupted. Try again.'], 400);
+            if (!is_dir($dir)) @mkdir($dir, 0750, true);
+            @touch($dir);
+            $part = "$dir/$i.part";
+            if ($off === 0) @unlink($part);
+            clearstatcache();
+            $have = is_file($part) ? filesize($part) : 0;
+            if ($have !== $off) json_out(['error' => 'The upload got out of step. Remove the file and add it again.', 'have' => $have], 409);
+            $used = 0; foreach ((array) glob("$dir/*.json") as $j) if (basename($j) !== "$i.json") $used += (int) (json_decode((string) file_get_contents($j), true)['size'] ?? 0);
+            if ($used + $total > MAIL_ATT_MAX) json_out(['error' => 'That would take this email over 25 MB, the most Gmail and Outlook accept. Send big files as a link instead.'], 400);
+            if (file_put_contents($part, file_get_contents($f['tmp_name']), FILE_APPEND) === false) json_out(['error' => 'Could not save the file.'], 500);
+            clearstatcache();
+            $now = filesize($part);
+            if ($now > $total) { @unlink($part); json_out(['error' => 'The upload went wrong. Add the file again.'], 400); }
+            if ($now === $total) {
+                rename($part, "$dir/$i.bin");
+                file_put_contents("$dir/$i.json", json_encode(['name' => $name, 'size' => $total, 'type' => mail_att_mime($name)]));
+                json_out(['ok' => true, 'done' => true, 'total' => $used + $total, 'warn' => ($used + $total) > MAIL_ATT_WARN]);
+            }
+            json_out(['ok' => true, 'done' => false]);
+        case 'mail_att_del':
+            $dir = mail_att_dir((string) ($in['draft'] ?? ''));
+            $i = (int) ($in['i'] ?? -1);
+            foreach (['part', 'bin', 'json'] as $e) @unlink("$dir/$i.$e");
+            json_out(['ok' => true]);
+        case 'mail_att_del_all':
+            rrmdir_any(mail_att_dir((string) ($in['draft'] ?? '')));
+            json_out(['ok' => true]);
         case 'mail_send':
             $cfg = $need();
             $to = $addrs($in['to'] ?? ''); $cc = $addrs($in['cc'] ?? '');
@@ -229,11 +266,41 @@ if (strpos($a, 'mail_') === 0) {
             $irt = preg_match('/^<[^<>\s]+>$/', (string) ($in['in_reply_to'] ?? '')) ? $in['in_reply_to'] : '';
             $refs = preg_replace('/[^\x21-\x7e ]/', '', (string) ($in['references'] ?? ''));
             $ownHtml = mail_clean_html((string) ($in['html'] ?? ''));
-            [$msg] = mail_build($cfg, $to, $cc, $subject, $body, $irt, $irt ? $refs : '', $ownHtml);
+            // Attachments: files you added (uploaded to this email's folder) + any kept from a forwarded email.
+            @set_time_limit(300);
+            if ((int) ini_get('memory_limit') > 0 && (int) ini_get('memory_limit') < 512) @ini_set('memory_limit', '512M');
+            $atts = []; $size = 0; $draftDir = null;
+            if (!empty($in['draft']) && !empty($in['atts']) && is_array($in['atts'])) {
+                $draftDir = mail_att_dir((string) $in['draft']);
+                foreach ($in['atts'] as $i) {
+                    $i = (int) $i; $meta = json_decode((string) @file_get_contents("$draftDir/$i.json"), true);
+                    if (!$meta || !is_file("$draftDir/$i.bin")) json_out(['error' => 'An attachment is still uploading or went missing. Remove it and add it again.'], 400);
+                    $atts[] = ['name' => $meta['name'], 'type' => $meta['type'], 'data' => (string) file_get_contents("$draftDir/$i.bin")];
+                    $size += (int) $meta['size'];
+                }
+            }
+            if (!empty($in['fwd']) && is_array($in['fwd'])) {
+                $fm = new SmrImap($cfg); $raws = [];
+                foreach (array_slice($in['fwd'], 0, 40) as $fw) {
+                    $ff = ($fw['folder'] ?? '') === 'sent' ? 'sent' : 'inbox'; $fu = (int) ($fw['uid'] ?? 0); $fp = (string) ($fw['path'] ?? '');
+                    if (!$fu || !preg_match('/^[0-9.]{1,40}$/', $fp)) continue;
+                    if (!isset($raws["$ff:$fu"])) { $fm->select($box($fm, $ff)); $raws["$ff:$fu"] = $fm->raw($fu); }
+                    $pt = mail_part($raws["$ff:$fu"], $fp);
+                    if (!$pt) json_out(['error' => 'An attachment from the original email could not be found.'], 400);
+                    $atts[] = ['name' => $pt['name'], 'type' => $pt['type'] ?: mail_att_mime($pt['name']), 'data' => $pt['data']];
+                    $size += strlen($pt['data']);
+                }
+                unset($raws);
+            }
+            foreach ($atts as $x) if (mail_att_blocked($x['name'])) json_out(['error' => '"' . $x['name'] . '" can\'t be emailed: Gmail and Outlook block this type of file.'], 400);
+            if ($size > MAIL_ATT_MAX) json_out(['error' => 'The attachments come to ' . round($size / 1048576, 1) . ' MB. The most Gmail and Outlook accept is 25 MB, so remove some or send them as a link.'], 400);
+            [$msg] = mail_build($cfg, $to, $cc, $subject, $body, $irt, $irt ? $refs : '', $ownHtml, $atts);
+            unset($atts);
             smtp_send($cfg, array_merge($to, $cc), $msg);
             try { mail_contacts_add(array_map(function ($e) { return ['email' => $e, 'name' => '']; }, array_merge($to, $cc)), 3); } catch (Throwable $e) {}
             $saved = true;
             try { $m = new SmrImap($cfg); $s = $m->special('sent'); if ($s) $m->append($s, $msg); else $saved = false; } catch (Throwable $e) { $saved = false; }
+            if ($draftDir) rrmdir_any($draftDir);
             if ($irt && !empty($in['uid'])) { try { $m = $m ?? new SmrImap($cfg); $m->select('INBOX', false); $m->flag((int) $in['uid'], '\\Answered'); } catch (Throwable $e) {} }
             json_out(['ok' => true, 'saved' => $saved]);
         case 'mail_delete':

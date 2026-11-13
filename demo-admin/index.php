@@ -206,7 +206,15 @@ input:focus,textarea:focus,select:focus{border-color:rgba(214,59,255,.6);box-sha
 .rpop .sw{width:30px;height:30px;border-radius:50%;border:2px solid rgba(255,255,255,.18);cursor:pointer}.rpop .sz{padding:6px 12px;border-radius:9px;border:1px solid var(--line);background:none;cursor:pointer}
 .rpop .lk{display:flex;gap:6px;width:260px}.rpop .lk input{flex:1;height:38px;font-size:14px}
 .cpq{margin-top:12px;padding:10px 12px;border-left:3px solid #6b5bd6;border-radius:4px;color:var(--muted);font-size:13.5px;white-space:pre-wrap;max-height:260px;overflow:auto}
-html.cpopen,body.cpopen{overscroll-behavior:none}#compose .ovb{overscroll-behavior:contain}
+html.cpopen,body.cpopen{overscroll-behavior:none}
+.cpatt{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px}.cpatt .btn svg{width:16px;height:16px}#cpattsum{font-size:12.5px;color:var(--muted)}#cpattsum.warn{color:var(--warn)}#cpattsum.bad{color:var(--bad)}
+.attl{display:grid;gap:8px;margin-top:10px}.attl:empty{display:none}
+.atc{position:relative;display:flex;align-items:center;gap:10px;padding:8px 8px 8px 8px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.035);overflow:hidden}
+.atc .th{flex:none;width:40px;height:40px;border-radius:9px;background:#24243a center/cover no-repeat;display:flex;align-items:center;justify-content:center;font:800 10px/1 Manrope,sans-serif;letter-spacing:.03em;color:#fff;text-transform:uppercase}
+.atc .nm{flex:1;min-width:0}.atc .nm b{display:block;font-size:13.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.atc .nm small{font-size:12px;color:var(--muted)}.atc.err .nm small{color:var(--bad)}
+.atc .x{flex:none;width:32px;height:32px;border-radius:9px;border:0;background:rgba(255,255,255,.07);color:#fff;font-size:18px;line-height:1;cursor:pointer}
+.atc .pb{position:absolute;left:0;bottom:0;height:3px;background:var(--grad);transition:width .2s}
+#compose.drop .ovb{outline:2px dashed #9b6cff;outline-offset:-8px}#compose .ovb{overscroll-behavior:contain}
 .mailfrom{font-size:12.5px;color:var(--muted);margin-bottom:4px}
 .sigprev{margin-top:10px;padding:0 0 4px}.sigprev:empty{display:none}
 .top .tabs button{padding:8px 4px;white-space:nowrap;font-size:13px}
@@ -398,6 +406,7 @@ document.addEventListener('keydown',function(e){if(/^\d$/.test(e.key))press(e.ke
   <div class="ovh">
     <button class="btn sm icon" data-cp="close" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     <span class="t" id="cptitle">New email</span>
+    <button class="btn sm icon" data-cp="attach" aria-label="Attach files" title="Attach files"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.4 11.1l-9.2 9.2a6 6 0 0 1-8.5-8.5l9.2-9.2a4 4 0 0 1 5.7 5.7l-9.2 9.2a2 2 0 0 1-2.8-2.8l8.5-8.5"/></svg></button>
     <button class="btn sm pri" data-cp="send"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/></svg>Send</button>
   </div>
   <form class="ovb cmp" id="cpform" autocomplete="off">
@@ -407,6 +416,8 @@ document.addEventListener('keydown',function(e){if(/^\d$/.test(e.key))press(e.ke
     <label class="f" for="cpsub">Subject</label><input type="text" id="cpsub" maxlength="200">
     <label class="f" for="cpbody">Message</label>
     <div class="rte"><div class="rtb" id="cptb" role="toolbar" aria-label="Formatting"><button type="button" class="rb" data-rt="bold" title="Bold" aria-label="Bold"><b>B</b></button><button type="button" class="rb" data-rt="italic" title="Italic" aria-label="Italic"><i>I</i></button><button type="button" class="rb" data-rt="underline" title="Underline" aria-label="Underline"><u>U</u></button><button type="button" class="rb" data-rt="strikeThrough" title="Strikethrough" aria-label="Strikethrough"><s>S</s></button><i class="rsep"></i><button type="button" class="rb" data-rt="size" title="Text size" aria-label="Text size"><span class="tsz">Aa</span><svg class="cv" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 10l5 5 5-5"/></svg></button><button type="button" class="rb" data-rt="color" title="Text colour" aria-label="Text colour"><span class="tcol">A<i id="tcolbar"></i></span></button><button type="button" class="rb" data-rt="hilite" title="Highlight" aria-label="Highlight"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l-4 4v3h3l4-4"/><path d="M14 6l4 4"/><path d="M9 11l5-5 4 4-5 5z"/></svg></button><i class="rsep"></i><button type="button" class="rb" data-rt="insertUnorderedList" title="Bullet list" aria-label="Bullet list"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1" fill="currentColor"/><circle cx="4.5" cy="12" r="1" fill="currentColor"/><circle cx="4.5" cy="18" r="1" fill="currentColor"/></svg></button><button type="button" class="rb" data-rt="insertOrderedList" title="Numbered list" aria-label="Numbered list"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 6h10M10 12h10M10 18h10"/><path d="M4 5h1v4M4 9h2M4 14h2l-2 3h2" stroke-width="1.6"/></svg></button><button type="button" class="rb" data-rt="justifyLeft" title="Align left" aria-label="Align left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 10h10M4 14h16M4 18h10"/></svg></button><button type="button" class="rb" data-rt="justifyCenter" title="Centre" aria-label="Centre"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M7 10h10M4 14h16M7 18h10"/></svg></button><button type="button" class="rb" data-rt="justifyRight" title="Align right" aria-label="Align right"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M10 10h10M4 14h16M10 18h10"/></svg></button><button type="button" class="rb" data-rt="outdent" title="Decrease indent" aria-label="Decrease indent"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M11 10h9M11 14h9M4 18h16"/><path d="M8 9l-3 3 3 3"/></svg></button><button type="button" class="rb" data-rt="indent" title="Increase indent" aria-label="Increase indent"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M11 10h9M11 14h9M4 18h16"/><path d="M5 9l3 3-3 3"/></svg></button><i class="rsep"></i><button type="button" class="rb" data-rt="link" title="Add link" aria-label="Add link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg></button><button type="button" class="rb" data-rt="quote" title="Quote" aria-label="Quote"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7H4v5h3l-1 4M17 7h-3v5h3l-1 4"/></svg></button><button type="button" class="rb" data-rt="removeFormat" title="Clear formatting" aria-label="Clear formatting"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h12M12 4l-4 16M15 15l5 5M20 15l-5 5"/></svg></button><i class="rsep"></i><button type="button" class="rb" data-rt="undo" title="Undo" aria-label="Undo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></button><button type="button" class="rb" data-rt="redo" title="Redo" aria-label="Redo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14l5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/></svg></button></div><div class="rpop" id="cppop" hidden></div><div class="rbody" id="cpbody" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Message"></div></div>
+    <div class="cpatt"><button type="button" class="btn sm" data-cp="attach"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.4 11.1l-9.2 9.2a6 6 0 0 1-8.5-8.5l9.2-9.2a4 4 0 0 1 5.7 5.7l-9.2 9.2a2 2 0 0 1-2.8-2.8l8.5-8.5"/></svg>Attach files</button><span id="cpattsum"></span></div>
+    <div class="attl" id="cpattl"></div><input type="file" id="cpfile" multiple hidden>
     <div class="cpq" id="cpquote" hidden></div>
     <div class="sigprev" id="cpsig"></div>
     <div class="err" id="cperr"></div>
@@ -733,7 +744,7 @@ $('reader').addEventListener('click',function(e){var b=e.target.closest('[data-r
     compose({to:to,subject:/^re:/i.test(m.subject)?m.subject:'Re: '+m.subject,body:'\n\n\nOn '+fmtT(m.date)+', '+(m.from.name||m.from.email)+' wrote:\n'+quote,in_reply_to:m.message_id,references:m.references,uid:sent?0:m.uid,reply:true})}
   if(a==='more')openSheet('<h2>Email</h2>'+(M.folder==='inbox'?item('unread','Mark as unread'):'')+item('fwd','Forward')+item('del','Delete','','bad')+item('close','Cancel','','muted'),function(el){el.addEventListener('click',function(ev){var x=ev.target.closest('[data-act]');if(!x)return;x=x.dataset.act;closeSheet();
     if(x==='unread')api('mail_unseen',{folder:M.folder,uid:m.uid}).then(function(){M.rows.forEach(function(r){if(r.uid===m.uid)r.seen=false});renderMail();mailUnread();ovClose('reader');toast('Marked as unread')}).catch(function(er){toast(er.message,true)});
-    if(x==='fwd')compose({subject:/^fwd?:/i.test(m.subject)?m.subject:'Fwd: '+m.subject,body:'\n\n\n---------- Forwarded email ----------\nFrom: '+(m.from.name?m.from.name+' <'+m.from.email+'>':m.from.email)+'\nDate: '+fmtT(m.date)+'\nSubject: '+m.subject+'\n\n'+m.text});
+    if(x==='fwd')compose({fwd:(m.atts||[]).map(function(a){return{folder:m.folder==='sent'?'sent':'inbox',uid:m.uid,path:a.path,name:a.name,size:a.size}}),subject:/^fwd?:/i.test(m.subject)?m.subject:'Fwd: '+m.subject,body:'\n\n\n---------- Forwarded email ----------\nFrom: '+(m.from.name?m.from.name+' <'+m.from.email+'>':m.from.email)+'\nDate: '+fmtT(m.date)+'\nSubject: '+m.subject+'\n\n'+m.text});
     if(x==='del'&&confirm('Delete this email?'))api('mail_delete',{folder:M.folder,uid:m.uid}).then(function(){M.rows=M.rows.filter(function(r){return r.uid!==m.uid});renderMail();ovClose('reader');toast('Deleted')}).catch(function(er){toast(er.message,true)})})})});
 /* compose */
 var CP={},cpOpen=false;
@@ -747,6 +758,7 @@ var compose=function(o){if(!M.cfg){toast('Loading email…');mailInit().then(fun
   own=own.replace(/\s+$/,'');
   $('cpsig').innerHTML=M.cfg.sig_html||'';$('cpto').value=CP.to||'';$('cpcc').value='';$('cpsub').value=CP.subject||'';
   $('cpbody').innerHTML=own?own.split('\n').map(function(l){return '<div>'+(l?escH(l):'<br>')+'</div>'}).join(''):'';
+  CP.draft=Array.from(crypto.getRandomValues(new Uint8Array(12)),function(x){return('0'+x.toString(16)).slice(-2)}).join('');CP.files=[];CP.nextI=0;CP.fwd=(CP.fwd||[]).slice();attQueue=[];attBusy=false;attDraw();
   CP.start=cpText();$('cpquote').hidden=!CP.quote;$('cpquote').textContent=CP.quote;$('cperr').textContent='';rtPop();
   ovOpen('compose');cpGuard(true);acLoad();
   setTimeout(function(){if(CP.to){var b=$('cpbody');b.focus();var r=document.createRange();r.setStart(b,0);r.collapse(true);var sl=getSelection();sl.removeAllRanges();sl.addRange(r)}else $('cpto').focus();rtState()},260)};
@@ -760,7 +772,51 @@ window.addEventListener('popstate',function(){if(cpSkip){cpSkip=false;return}
   if(cpOpen){history.pushState({cp:1},'',location.href);cpHist=true;toast('Tap × to close the email')}});
 window.addEventListener('beforeunload',function(e){if(cpOpen&&(cpText()||$('cpto').value.trim()||$('cpsub').value.trim())){e.preventDefault();e.returnValue='';return ''}});
 document.addEventListener('keydown',function(e){if(cpOpen&&(e.key==='F5'||((e.metaKey||e.ctrlKey)&&(e.key==='r'||e.key==='R'||e.key==='w'||e.key==='W')))){e.preventDefault();toast('Tap × to close the email')}},true);
-var cpClose=function(){ovClose('compose');cpGuard(false);rtPop();acHide()};
+var cpClose=function(){(CP.files||[]).forEach(function(f){if(f.xhr)try{f.xhr.abort()}catch(e){}});if(CP.draft&&(CP.files||[]).length&&!CP.sent)api('mail_att_del_all',{draft:CP.draft}).catch(function(){});ovClose('compose');cpGuard(false);rtPop();acHide()};
+/* ---- attachments: uploaded in 1.5 MB pieces with progress; same limits Gmail / Outlook use ---- */
+var ATT_MAX=25*1048576,ATT_WARN=14*1048576,ATT_CHUNK=1.5*1048576;
+var ATT_BLOCK='ade adp apk app appx appxbundle bat cab chm cmd com cpl dex diagcab diagcfg diagpack dll dmg ex ex_ exe hta img ins iso isp jar jnlp js jse lib lnk mde msc msi msix msixbundle msp mst nsh pif ps1 psm1 py pyc pyo scr sct shb sys vb vbe vbs vhd vhdx vxd wsc wsf wsh xll'.split(' ');
+var fsz=function(n){return n>=1048576?(n/1048576).toFixed(1)+' MB':Math.max(1,Math.round(n/1024))+' KB'};
+var fext=function(n){var m=/\.([a-z0-9_]{1,6})$/i.exec(n||'');return m?m[1].toLowerCase():''};
+var ATT_COL={pdf:'#e5484d',doc:'#2b6cdf',docx:'#2b6cdf',xls:'#1f9d55',xlsx:'#1f9d55',xlsm:'#1f9d55',csv:'#1f9d55',numbers:'#1f9d55',ppt:'#e8702a',pptx:'#e8702a',key:'#2b8fe0',zip:'#8a6d3b',rar:'#8a6d3b','7z':'#8a6d3b',mp4:'#7c4dff',mov:'#7c4dff',mp3:'#d63bff',ai:'#ff9a00',psd:'#31a8ff'};
+var attTotal=function(){var t=0;(CP.files||[]).forEach(function(f){if(!f.err)t+=f.size});(CP.fwd||[]).forEach(function(f){t+=f.size||0});return t};
+var attDraw=function(){var L=$('cpattl'),all=(CP.fwd||[]).map(function(f,k){return{fw:k,name:f.name,size:f.size,done:true}}).concat(CP.files||[]);
+  L.innerHTML=all.map(function(f){var e=fext(f.name),img=f.url?'background-image:url('+f.url+')':'background-color:'+(ATT_COL[e]||'#3a3a58');
+    var st=f.err?f.err:f.done?fsz(f.size)+(f.fw!=null?' · from the original email':''):'Uploading… '+Math.floor(100*(f.sent||0)/Math.max(1,f.size))+'%';
+    return '<div class="atc'+(f.err?' err':'')+'" data-k="'+(f.fw!=null?'f'+f.fw:'u'+f.i)+'"><span class="th" style="'+img+'">'+(f.url?'':escH(e||'file'))+'</span><span class="nm"><b>'+escH(f.name)+'</b><small>'+escH(st)+'</small></span><button type="button" class="x" data-attx aria-label="Remove">×</button>'+(!f.done&&!f.err?'<i class="pb" style="width:'+Math.floor(100*(f.sent||0)/Math.max(1,f.size))+'%"></i>':'')+'</div>'}).join('');
+  var t=attTotal(),n=all.filter(function(f){return !f.err}).length,S=$('cpattsum');
+  S.className=t>ATT_MAX?'bad':t>ATT_WARN?'warn':'';
+  S.textContent=n?n+' file'+(n>1?'s':'')+' · '+fsz(t)+' of 25 MB'+(t>ATT_WARN&&t<=ATT_MAX?' · over 14 MB may not reach Outlook/Hotmail or iCloud addresses':''):''};
+var attQueue=[],attBusy=false;
+var attNext=function(){if(attBusy)return;var f=attQueue.shift();if(!f)return;if(f.gone){attNext();return}attBusy=true;
+  var draft=CP.draft;
+  var piece=function(off){if(f.gone||CP.draft!==draft){attBusy=false;attNext();return}
+    var fd=new FormData();fd.append('draft',draft);fd.append('i',f.i);fd.append('off',off);fd.append('total',f.size);fd.append('name',f.name);fd.append('file',f.file.slice(off,Math.min(f.size,off+ATT_CHUNK)),'piece');
+    var x=new XMLHttpRequest();f.xhr=x;x.open('POST','api.php?a=mail_att_up');x.setRequestHeader('X-CSRF',CSRF);
+    x.upload.onprogress=function(ev){f.sent=off+ev.loaded;attDraw()};
+    var fail=function(msg){f.err=msg;f.xhr=null;attBusy=false;attDraw();attNext()};
+    x.onload=function(){var j={};try{j=JSON.parse(x.responseText)}catch(e){}if(x.status!==200||j.error){fail(j.error||'Upload failed. Remove it and try again.');return}
+      var nx=Math.min(f.size,off+ATT_CHUNK);f.sent=nx;if(j.done||nx>=f.size){f.done=true;f.xhr=null;attBusy=false;attDraw();attNext()}else piece(nx)};
+    x.onerror=function(){fail('No connection. Remove it and try again.')};x.send(fd)};
+  piece(0)};
+var attAdd=function(list){list=[].slice.call(list||[]);if(!list.length)return;
+  list.forEach(function(file){var name=file.name||('pasted-'+Date.now()+'.'+((file.type.split('/')[1]||'bin').replace('jpeg','jpg')));
+    if(ATT_BLOCK.indexOf(fext(name))>=0){toast('"'+name+'" can\'t be emailed: Gmail and Outlook block this type of file. Put it in a ZIP or send a link.',true);return}
+    if(file.size===0){toast('"'+name+'" is empty',true);return}
+    if(attTotal()+file.size>ATT_MAX){toast('"'+name+'" would take this email over 25 MB, the most Gmail and Outlook accept. Send it as a link instead.',true);return}
+    var f={i:CP.nextI++,name:name,size:file.size,file:file,sent:0,done:false};
+    if(/^image\/(png|jpe?g|gif|webp)$/.test(file.type))try{f.url=URL.createObjectURL(file)}catch(e){}
+    CP.files.push(f);attQueue.push(f)});
+  attDraw();attNext()};
+$('cpfile').addEventListener('change',function(){attAdd(this.files);this.value=''});
+$('cpattl').addEventListener('click',function(e){var b=e.target.closest('[data-attx]');if(!b)return;var k=b.closest('.atc').dataset.k;
+  if(k[0]==='f'){CP.fwd.splice(+k.slice(1),1)}else{var i=+k.slice(1),f=CP.files.filter(function(x){return x.i===i})[0];if(f){f.gone=true;if(f.xhr)try{f.xhr.abort()}catch(er){}if(attBusy&&f.xhr){attBusy=false}CP.files=CP.files.filter(function(x){return x!==f});if(f.url)URL.revokeObjectURL(f.url);api('mail_att_del',{draft:CP.draft,i:i}).catch(function(){});attNext()}}
+  attDraw()});
+(function(){var c=$('compose'),n=0;
+  c.addEventListener('dragenter',function(e){if(e.dataTransfer&&[].indexOf.call(e.dataTransfer.types||[],'Files')>=0){e.preventDefault();n++;c.classList.add('drop')}});
+  c.addEventListener('dragover',function(e){if(e.dataTransfer&&[].indexOf.call(e.dataTransfer.types||[],'Files')>=0)e.preventDefault()});
+  c.addEventListener('dragleave',function(){if(--n<=0){n=0;c.classList.remove('drop')}});
+  c.addEventListener('drop',function(e){n=0;c.classList.remove('drop');if(e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files.length){e.preventDefault();attAdd(e.dataTransfer.files)}})})();
 /* ---- formatting bar ---- */
 var rtSaved=null;
 var rtKeep=function(){var sl=getSelection();if(sl.rangeCount&&$('cpbody').contains(sl.anchorNode))rtSaved=sl.getRangeAt(0).cloneRange()};
@@ -792,7 +848,7 @@ $('cppop').addEventListener('click',function(e){var t=e.target.closest('button')
 $('cppop').addEventListener('keydown',function(e){if(e.key==='Enter'&&e.target.id==='rtlink'){e.preventDefault();$('cppop').querySelector('[data-lk]').click()}});
 document.addEventListener('selectionchange',function(){if(cpOpen&&$('cpbody').contains(getSelection().anchorNode)){rtKeep();rtState()}});
 $('cpbody').addEventListener('keydown',function(e){if((e.metaKey||e.ctrlKey)&&!e.shiftKey){var k=e.key.toLowerCase();if(k==='b'||k==='i'||k==='u'){e.preventDefault();rtDo({b:'bold',i:'italic',u:'underline'}[k])}if(k==='k'){e.preventDefault();rtKeep();rtPop('link')}}});
-$('cpbody').addEventListener('paste',function(e){var d=e.clipboardData;if(!d)return;var h=d.getData('text/html');if(h)return;var t=d.getData('text/plain');if(t){e.preventDefault();document.execCommand('insertText',false,t)}});
+$('cpbody').addEventListener('paste',function(e){var d=e.clipboardData;if(!d)return;if(d.files&&d.files.length){e.preventDefault();attAdd(d.files);return}var h=d.getData('text/html');if(h)return;var t=d.getData('text/plain');if(t){e.preventDefault();document.execCommand('insertText',false,t)}});
 $('cpbody').addEventListener('focus',function(){rtPop()});
 /* ---- To / Cc suggestions from people you've emailed or had email from ---- */
 var AC=null,acBusy=null;
@@ -815,11 +871,15 @@ document.querySelectorAll('[data-ac]').forEach(function(inp){var l=inp.parentNod
   l.addEventListener('click',function(e){var b=e.target.closest('button');if(b)acPick(inp,b.dataset.em)})});
 var cpBusy=false;
 $('compose').addEventListener('click',function(e){if(!e.target.closest('.rtb,.rpop'))rtPop();var b=e.target.closest('[data-cp]');if(!b)return;
-  if(b.dataset.cp==='close'){if(cpText()&&cpText()!==CP.start&&!confirm('Discard this email?'))return;cpClose()}
-  if(b.dataset.cp==='send'&&!cpBusy){cpBusy=true;b.disabled=true;$('cperr').textContent='';
+  if(b.dataset.cp==='close'){if(((cpText()&&cpText()!==CP.start)||CP.files.length)&&!confirm('Discard this email?'))return;cpClose()}
+  if(b.dataset.cp==='attach'){$('cpfile').click();return}
+  if(b.dataset.cp==='send'&&!cpBusy){if(CP.files.some(function(f){return !f.done&&!f.err})){$('cperr').textContent='Wait for the attachments to finish uploading.';return}
+    if(CP.files.some(function(f){return f.err})){$('cperr').textContent='Remove the attachment that didn\'t upload (in red) first.';return}
+    if(attTotal()>ATT_MAX){$('cperr').textContent='The attachments are over 25 MB. Remove some first.';return}
+    cpBusy=true;b.disabled=true;$('cperr').textContent='';
     var own=cpText(),html=$('cpbody').innerHTML,body=own+(CP.quote?'\n\n\n'+CP.quote:'');
-    api('mail_send',{to:$('cpto').value,cc:$('cpcc').value,subject:$('cpsub').value,body:body,html:own?html:'',in_reply_to:CP.in_reply_to||'',references:CP.references||'',uid:CP.uid||0})
-    .then(function(j){cpClose();ovClose('reader');toast(j.saved?'Sent':'Sent (could not save a copy in Sent)');AC=null;if(CP.onSent)CP.onSent();if(M.folder==='sent')mailLoad()})
+    api('mail_send',{to:$('cpto').value,cc:$('cpcc').value,subject:$('cpsub').value,body:body,html:own?html:'',draft:CP.draft,atts:CP.files.map(function(f){return f.i}),fwd:(CP.fwd||[]).map(function(f){return{folder:f.folder,uid:f.uid,path:f.path}}),in_reply_to:CP.in_reply_to||'',references:CP.references||'',uid:CP.uid||0})
+    .then(function(j){CP.sent=true;cpClose();ovClose('reader');toast(j.saved?'Sent':'Sent (could not save a copy in Sent)');AC=null;if(CP.onSent)CP.onSent();if(M.folder==='sent')mailLoad()})
     .catch(function(er){$('cperr').textContent=er.message})
     .then(function(){cpBusy=false;b.disabled=false})}});
 /* ---------- features presentation (deck) per demo ---------- */

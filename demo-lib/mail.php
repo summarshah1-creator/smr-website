@@ -210,7 +210,8 @@ class SmrImap {
         fwrite($this->s, $tag . ' APPEND ' . $this->q($box) . ' (\\Seen) {' . strlen($msg) . "}\r\n");
         $l = $this->line();
         if ($l[0] !== '+') return;
-        fwrite($this->s, $msg . "\r\n");
+        mail_write_all($this->s, $msg . "\r\n");
+        stream_set_timeout($this->s, 180);
         while (strpos($l = $this->line(), $tag . ' ') !== 0) {}
     }
     function unseen(string $box = 'INBOX'): int {
@@ -345,7 +346,7 @@ function mail_fmt_addr(string $name, string $email): string {
     $n = preg_match('/[^\x20-\x7e]/', $name) ? mb_encode_mimeheader($name, 'UTF-8', 'B', "\r\n") : '"' . addcslashes($name, "\"\\") . '"';
     return $n . ' <' . $email . '>';
 }
-function mail_build(array $cfg, array $to, array $cc, string $subject, string $text, string $inReplyTo = '', string $refs = '', string $ownHtml = ''): array {
+function mail_build(array $cfg, array $to, array $cc, string $subject, string $text, string $inReplyTo = '', string $refs = '', string $ownHtml = '', array $atts = []): array {
     $domain = substr(strrchr($cfg['email'], '@'), 1) ?: 'smrgraphics.co.uk';
     $mid = '<' . bin2hex(random_bytes(12)) . '@' . $domain . '>';
     $h = ['Date: ' . date('r'), 'From: ' . mail_fmt_addr($cfg['name'] ?? '', $cfg['email']),
@@ -361,7 +362,7 @@ function mail_build(array $cfg, array $to, array $cc, string $subject, string $t
     if ($png === '' && $ownHtml === '') {
         $h[] = 'Content-Type: text/plain; charset=UTF-8';
         $h[] = 'Content-Transfer-Encoding: quoted-printable';
-        return [implode("\r\n", $h) . "\r\n\r\n" . quoted_printable_encode(str_replace("\n", "\r\n", $text)) . "\r\n", $mid];
+        return [mail_wrap_atts($h, quoted_printable_encode(str_replace("\n", "\r\n", $text)) . "\r\n", $atts), $mid];
     }
     // Your words, then the signature, then any quoted email (reply / forward).
     $own = $text; $quote = '';
@@ -388,7 +389,7 @@ function mail_build(array $cfg, array $to, array $cc, string $subject, string $t
         $body = '--' . $b2 . "\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n" . quoted_printable_encode($crlf($plain)) . "\r\n"
             . '--' . $b2 . "\r\nContent-Type: text/html; charset=UTF-8\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n" . quoted_printable_encode($crlf($html)) . "\r\n"
             . '--' . $b2 . "--\r\n";
-        return [implode("\r\n", $h) . "\r\n\r\n" . $body, $mid];
+        return [mail_wrap_atts($h, $body, $atts), $mid];
     }
     $b1 = 'r' . bin2hex(random_bytes(10)); $b2 = 'a' . bin2hex(random_bytes(10));
     $h[] = 'Content-Type: multipart/related; boundary="' . $b1 . '"; type="multipart/alternative"';
@@ -400,7 +401,17 @@ function mail_build(array $cfg, array $to, array $cc, string $subject, string $t
         . '--' . $b1 . "\r\nContent-Type: image/gif; name=\"smr.gif\"\r\nContent-Transfer-Encoding: base64\r\nContent-ID: <" . $cid . ">\r\nContent-Disposition: inline; filename=\"smr.gif\"\r\n\r\n"
         . chunk_split(base64_encode($png), 76, "\r\n")
         . '--' . $b1 . "--\r\n";
-    return [implode("\r\n", $h) . "\r\n\r\n" . $body, $mid];
+    return [mail_wrap_atts($h, $body, $atts), $mid];
+}
+/* Write everything (big attachments): SSL streams can take only part of a large write at a time. */
+function mail_write_all($s, string $data): void {
+    $len = strlen($data); $done = 0; $stall = 0;
+    while ($done < $len) {
+        $n = @fwrite($s, substr($data, $done, 65536));
+        if ($n === false) throw new RuntimeException('The connection to the mail server dropped while sending. Try again.');
+        if ($n === 0) { if (++$stall > 200) throw new RuntimeException('The mail server stopped taking data. Try again.'); usleep(50000); continue; }
+        $stall = 0; $done += $n;
+    }
 }
 function smtp_send(array $cfg, array $rcpts, string $msg): void {
     $s = mail_stream($cfg['host'], 465);
@@ -425,7 +436,11 @@ function smtp_send(array $cfg, array $rcpts, string $msg): void {
     foreach ($rcpts as $r) $say('RCPT TO:<' . $r . '>', [250, 251]);
     $say('DATA', [354]);
     $body = preg_replace('/^\./m', '..', $msg);
-    $say(rtrim($body, "\r\n") . "\r\n.", [250]);
+    mail_write_all($s, rtrim($body, "\r\n") . "\r\n.\r\n");
+    unset($body);
+    stream_set_timeout($s, 180); // big emails: give the server time to check and accept it
+    [$code, $txt] = $read();
+    if ($code !== 250) throw new RuntimeException($code === 552 ? 'The mail server says this email is too big. Remove some attachments.' : 'Sending failed: ' . $txt);
     @fwrite($s, "QUIT\r\n");
     @fclose($s);
 }
@@ -497,4 +512,61 @@ function mail_contacts_add(array $list, int $weight = 1, int $when = 0): void {
         if ($e === '' || $e === $me || !filter_var($e, FILTER_VALIDATE_EMAIL) || preg_match('/^(no-?reply|do-?not-?reply|mailer-daemon|postmaster|bounce)/', $e)) continue;
         $st->execute([$e, mb_substr(trim((string) ($a['name'] ?? '')), 0, 80), $weight, $when ?: now()]);
     }
+}
+
+/* ---------- attachments ---------- */
+const MAIL_ATT_MAX = 25 * 1024 * 1024; // total per email: Gmail / Yahoo / Outlook.com limit (SiteGround allows 50 MB)
+const MAIL_ATT_WARN = 14 * 1024 * 1024; // above this, Outlook.com / iCloud (20 MB after encoding) may bounce it
+// The file types Gmail and Outlook block (programs and scripts), refused before sending.
+const MAIL_ATT_BLOCKED = ['ade','adp','apk','app','appx','appxbundle','bat','cab','chm','cmd','com','cpl','dex','diagcab','diagcfg','diagpack','dll','dmg','ex','ex_','exe','hta','img','ins','iso','isp','jar','jnlp','js','jse','lib','lnk','mde','msc','msi','msix','msixbundle','msp','mst','nsh','pif','ps1','psm1','py','pyc','pyo','scr','sct','shb','sys','vb','vbe','vbs','vhd','vhdx','vxd','wsc','wsf','wsh','xll'];
+function mail_att_mime(string $name): string {
+    $map = ['pdf'=>'application/pdf','doc'=>'application/msword','docx'=>'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'xls'=>'application/vnd.ms-excel','xlsx'=>'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','xlsm'=>'application/vnd.ms-excel.sheet.macroEnabled.12',
+        'csv'=>'text/csv','ppt'=>'application/vnd.ms-powerpoint','pptx'=>'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+        'odt'=>'application/vnd.oasis.opendocument.text','ods'=>'application/vnd.oasis.opendocument.spreadsheet','odp'=>'application/vnd.oasis.opendocument.presentation',
+        'pages'=>'application/x-iwork-pages-sffpages','numbers'=>'application/x-iwork-numbers-sffnumbers','key'=>'application/x-iwork-keynote-sffkey',
+        'rtf'=>'application/rtf','txt'=>'text/plain','md'=>'text/markdown','html'=>'text/html','htm'=>'text/html','json'=>'application/json','xml'=>'application/xml',
+        'jpg'=>'image/jpeg','jpeg'=>'image/jpeg','png'=>'image/png','gif'=>'image/gif','webp'=>'image/webp','heic'=>'image/heic','heif'=>'image/heif','svg'=>'image/svg+xml','tif'=>'image/tiff','tiff'=>'image/tiff','bmp'=>'image/bmp',
+        'ai'=>'application/postscript','eps'=>'application/postscript','psd'=>'image/vnd.adobe.photoshop','indd'=>'application/x-indesign',
+        'mp4'=>'video/mp4','mov'=>'video/quicktime','m4v'=>'video/x-m4v','webm'=>'video/webm','mp3'=>'audio/mpeg','m4a'=>'audio/mp4','wav'=>'audio/wav','aac'=>'audio/aac',
+        'zip'=>'application/zip','rar'=>'application/vnd.rar','7z'=>'application/x-7z-compressed','gz'=>'application/gzip',
+        'ics'=>'text/calendar','vcf'=>'text/vcard','eml'=>'message/rfc822','ttf'=>'font/ttf','otf'=>'font/otf','woff'=>'font/woff','woff2'=>'font/woff2'];
+    return $map[strtolower(pathinfo($name, PATHINFO_EXTENSION))] ?? 'application/octet-stream';
+}
+function mail_att_blocked(string $name): bool {
+    return in_array(strtolower(pathinfo($name, PATHINFO_EXTENSION)), MAIL_ATT_BLOCKED, true);
+}
+function mail_att_name(string $name): string {
+    $name = trim(preg_replace('/[\x00-\x1f\x7f\/\\\\:*?"<>|]+/u', '_', $name), " ._");
+    if ($name === '') $name = 'attachment';
+    if (mb_strlen($name) > 120) { $ext = pathinfo($name, PATHINFO_EXTENSION); $name = mb_substr(pathinfo($name, PATHINFO_FILENAME), 0, 110) . ($ext !== '' ? '.' . $ext : ''); }
+    return $name;
+}
+/* Wrap the body in multipart/mixed with the files after it (filename both RFC 2231 and RFC 2047 so every mail app shows it right). */
+function mail_wrap_atts(array $h, string $body, array $atts): string {
+    if (!$atts) return implode("\r\n", $h) . "\r\n\r\n" . $body;
+    $i = array_search('MIME-Version: 1.0', $h, true);
+    $top = array_slice($h, 0, $i + 1); $inner = array_slice($h, $i + 1);
+    $b = 'm' . bin2hex(random_bytes(10));
+    $top[] = 'Content-Type: multipart/mixed; boundary="' . $b . '"';
+    $out = '--' . $b . "\r\n" . implode("\r\n", $inner) . "\r\n\r\n" . $body . (substr($body, -2) === "\r\n" ? '' : "\r\n");
+    foreach ($atts as $a) {
+        $name = mail_att_name((string) $a['name']);
+        $ascii = !preg_match('/[^\x20-\x7e]/', $name);
+        $q = addcslashes($name, "\"\\");
+        $nameParam = $ascii ? 'name="' . $q . '"' : 'name="' . mb_encode_mimeheader($name, 'UTF-8', 'B', '') . '"';
+        $fileParam = $ascii ? 'filename="' . $q . '"' : 'filename="' . mb_encode_mimeheader($name, 'UTF-8', 'B', '') . '"; filename*=UTF-8\'\'' . rawurlencode($name);
+        $out .= '--' . $b . "\r\nContent-Type: " . ($a['type'] ?: mail_att_mime($name)) . '; ' . $nameParam
+            . "\r\nContent-Transfer-Encoding: base64\r\nContent-Disposition: attachment; " . $fileParam . "\r\n\r\n"
+            . chunk_split(base64_encode($a['data']), 76, "\r\n");
+    }
+    return implode("\r\n", $top) . "\r\n\r\n" . $out . '--' . $b . "--\r\n";
+}
+/* Files waiting to be sent live in private storage, one folder per email being written; cleared after sending or after a day. */
+function mail_att_dir(string $draft): string {
+    if (!preg_match('/^[a-f0-9]{16,40}$/', $draft)) throw new RuntimeException('Bad upload.');
+    $base = private_dir() . '/mail-att';
+    if (!is_dir($base)) @mkdir($base, 0750, true);
+    foreach ((array) @glob($base . '/*', GLOB_ONLYDIR) as $d) if (@filemtime($d) < now() - 86400) rrmdir_any($d);
+    return $base . '/' . $draft;
 }
