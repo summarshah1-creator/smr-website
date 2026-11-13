@@ -345,7 +345,7 @@ function mail_fmt_addr(string $name, string $email): string {
     $n = preg_match('/[^\x20-\x7e]/', $name) ? mb_encode_mimeheader($name, 'UTF-8', 'B', "\r\n") : '"' . addcslashes($name, "\"\\") . '"';
     return $n . ' <' . $email . '>';
 }
-function mail_build(array $cfg, array $to, array $cc, string $subject, string $text, string $inReplyTo = '', string $refs = ''): array {
+function mail_build(array $cfg, array $to, array $cc, string $subject, string $text, string $inReplyTo = '', string $refs = '', string $ownHtml = ''): array {
     $domain = substr(strrchr($cfg['email'], '@'), 1) ?: 'smrgraphics.co.uk';
     $mid = '<' . bin2hex(random_bytes(12)) . '@' . $domain . '>';
     $h = ['Date: ' . date('r'), 'From: ' . mail_fmt_addr($cfg['name'] ?? '', $cfg['email']),
@@ -358,7 +358,7 @@ function mail_build(array $cfg, array $to, array $cc, string $subject, string $t
     $text = preg_replace("/\r\n?|\n/", "\n", $text);
     $g = mail_sig();
     $png = $g['on'] ? mail_sig_png() : '';
-    if ($png === '') {
+    if ($png === '' && $ownHtml === '') {
         $h[] = 'Content-Type: text/plain; charset=UTF-8';
         $h[] = 'Content-Transfer-Encoding: quoted-printable';
         return [implode("\r\n", $h) . "\r\n\r\n" . quoted_printable_encode(str_replace("\n", "\r\n", $text)) . "\r\n", $mid];
@@ -377,8 +377,19 @@ function mail_build(array $cfg, array $to, array $cc, string $subject, string $t
         $qhtml = '<div style="' . $font . ';margin-top:24px;color:#555">' . $esc($first) . '</div><blockquote style="margin:6px 0 0;padding:0 0 0 12px;border-left:3px solid #d9d4f2;' . $font . ';color:#555">' . $esc(implode("\n", $ql)) . '</blockquote>';
     }
     $cid = 'sig-' . bin2hex(random_bytes(6)) . '@smrgraphics.co.uk';
+    $ownPart = $ownHtml !== '' ? $ownHtml : $esc($own);
     $html = '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="margin:0;padding:0">'
-        . '<div style="' . $font . '">' . $esc($own) . '</div>' . mail_sig_html($g, 'cid:' . $cid) . $qhtml . '</body></html>';
+        . '<div style="' . $font . '">' . $ownPart . '</div>' . ($png !== '' ? mail_sig_html($g, 'cid:' . $cid) : '') . $qhtml . '</body></html>';
+    if ($png === '') { // formatted email, signature off: plain + HTML only
+        $plain = $own . ($quote !== '' ? "\n\n" . $quote : '');
+        $b2 = 'a' . bin2hex(random_bytes(10));
+        $h[] = 'Content-Type: multipart/alternative; boundary="' . $b2 . '"';
+        $crlf = function ($s) { return preg_replace("/\r?\n/", "\r\n", $s); };
+        $body = '--' . $b2 . "\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n" . quoted_printable_encode($crlf($plain)) . "\r\n"
+            . '--' . $b2 . "\r\nContent-Type: text/html; charset=UTF-8\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n" . quoted_printable_encode($crlf($html)) . "\r\n"
+            . '--' . $b2 . "--\r\n";
+        return [implode("\r\n", $h) . "\r\n\r\n" . $body, $mid];
+    }
     $b1 = 'r' . bin2hex(random_bytes(10)); $b2 = 'a' . bin2hex(random_bytes(10));
     $h[] = 'Content-Type: multipart/related; boundary="' . $b1 . '"; type="multipart/alternative"';
     $crlf = function ($s) { return preg_replace("/\r?\n/", "\r\n", $s); };
@@ -417,4 +428,73 @@ function smtp_send(array $cfg, array $rcpts, string $msg): void {
     $say(rtrim($body, "\r\n") . "\r\n.", [250]);
     @fwrite($s, "QUIT\r\n");
     @fclose($s);
+}
+
+/* Formatted email from the compose box: keep simple formatting only (bold, italic, lists, colours, sizes, links). */
+function mail_clean_html(string $html): string {
+    $html = trim($html);
+    if ($html === '' || !class_exists('DOMDocument')) return '';
+    $tags = ['b','strong','i','em','u','s','strike','br','p','div','span','ul','ol','li','a','blockquote','h1','h2','h3','font','sub','sup'];
+    $props = ['color','background-color','font-size','font-weight','font-style','text-decoration','text-decoration-line','text-align','font-family','margin-left','padding-left'];
+    $sizes = ['1'=>'11px','2'=>'13px','3'=>'15px','4'=>'18px','5'=>'22px','6'=>'28px','7'=>'34px'];
+    $doc = new DOMDocument();
+    libxml_use_internal_errors(true);
+    $doc->loadHTML('<?xml encoding="utf-8"?><div id="x">' . $html . '</div>', LIBXML_NONET);
+    libxml_clear_errors();
+    $root = $doc->getElementById('x');
+    if (!$root) return '';
+    $walk = function (DOMNode $n) use (&$walk, $tags, $props, $sizes, $doc) {
+        for ($c = $n->firstChild; $c; $c = $next) {
+            $next = $c->nextSibling;
+            if ($c instanceof DOMText) continue;
+            if (!($c instanceof DOMElement)) { $n->removeChild($c); continue; }
+            $t = strtolower($c->tagName);
+            if (in_array($t, ['script','style','iframe','object','embed','img','svg','form','input','button','textarea','select','link','meta'], true)) { $n->removeChild($c); continue; }
+            $walk($c);
+            if (!in_array($t, $tags, true)) { while ($c->firstChild) $n->insertBefore($c->firstChild, $c); $n->removeChild($c); continue; }
+            $style = [];
+            foreach (explode(';', (string) $c->getAttribute('style')) as $d) {
+                if (strpos($d, ':') === false) continue;
+                [$k, $v] = array_map('trim', explode(':', $d, 2)); $k = strtolower($k);
+                if (in_array($k, $props, true) && preg_match('/^[#a-zA-Z0-9 ,.%()\'"-]{1,80}$/', $v) && stripos($v, 'expression') === false && stripos($v, 'url') === false) $style[] = $k . ':' . $v;
+            }
+            if ($t === 'font') { // old execCommand output: turn into a span
+                if (preg_match('/^#?[0-9a-fA-F]{3,6}$|^[a-z]+$/', (string) $c->getAttribute('color'))) $style[] = 'color:' . $c->getAttribute('color');
+                if (isset($sizes[$c->getAttribute('size')])) $style[] = 'font-size:' . $sizes[$c->getAttribute('size')];
+                if (preg_match('/^[a-zA-Z0-9 ,\'"-]{1,80}$/', (string) $c->getAttribute('face'))) $style[] = 'font-family:' . $c->getAttribute('face');
+                $sp = $doc->createElement('span'); while ($c->firstChild) $sp->appendChild($c->firstChild); $n->replaceChild($sp, $c); $c = $sp; $t = 'span';
+            }
+            $href = $t === 'a' ? (string) $c->getAttribute('href') : '';
+            $align = (string) $c->getAttribute('align');
+            while ($c->attributes->length) $c->removeAttribute($c->attributes->item(0)->name);
+            if ($t === 'blockquote') $style[] = 'margin:0 0 0 10px;padding-left:12px;border-left:3px solid #d9d4f2';
+            if (preg_match('/^(left|right|center|justify)$/i', $align)) $style[] = 'text-align:' . strtolower($align);
+            if ($t === 'p') $style[] = 'margin:0 0 12px';
+            if ($style) $c->setAttribute('style', implode(';', $style));
+            if ($t === 'a') {
+                if (preg_match('#^(https?://|mailto:)#i', $href)) { $c->setAttribute('href', $href); $c->setAttribute('style', 'color:#5b4bff;' . ($style ? implode(';', $style) : '')); }
+                else { while ($c->firstChild) $n->insertBefore($c->firstChild, $c); $n->removeChild($c); }
+            }
+        }
+    };
+    $walk($root);
+    $out = '';
+    foreach ($root->childNodes as $c) $out .= $doc->saveHTML($c);
+    return mb_substr($out, 0, 200000);
+}
+
+/* Address book for the To / Cc suggestions: everyone you've emailed or had email from. */
+function mail_contacts_table(): void {
+    static $done = false; if ($done) return; $done = true;
+    db()->exec('CREATE TABLE IF NOT EXISTS mail_contacts (email TEXT PRIMARY KEY, name TEXT, n INTEGER DEFAULT 0, last INTEGER DEFAULT 0)');
+}
+function mail_contacts_add(array $list, int $weight = 1, int $when = 0): void {
+    mail_contacts_table();
+    $me = strtolower((string) (mail_cfg()['email'] ?? ''));
+    $st = db()->prepare('INSERT INTO mail_contacts (email, name, n, last) VALUES (?, ?, ?, ?) ON CONFLICT(email) DO UPDATE SET n = n + excluded.n, last = MAX(last, excluded.last), name = CASE WHEN excluded.name <> \'\' THEN excluded.name ELSE name END');
+    foreach ($list as $a) {
+        $e = strtolower(trim((string) ($a['email'] ?? '')));
+        if ($e === '' || $e === $me || !filter_var($e, FILTER_VALIDATE_EMAIL) || preg_match('/^(no-?reply|do-?not-?reply|mailer-daemon|postmaster|bounce)/', $e)) continue;
+        $st->execute([$e, mb_substr(trim((string) ($a['name'] ?? '')), 0, 80), $weight, $when ?: now()]);
+    }
 }

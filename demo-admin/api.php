@@ -181,7 +181,25 @@ if (strpos($a, 'mail_') === 0) {
             $before = (int) ($in['before'] ?? 0);
             if ($before) $uids = array_values(array_filter($uids, function ($u) use ($before) { return $u < $before; }));
             $page = array_slice($uids, -30);
-            json_out(['folder' => $f, 'rows' => $m->headers($page), 'more' => count($uids) > count($page), 'unread' => $m->unseen()]);
+            $rows = $m->headers($page);
+            try { foreach ($rows as $r) mail_contacts_add($f === 'sent' ? $r['to'] : [$r['from']], 1, (int) $r['date']); } catch (Throwable $e) {}
+            json_out(['folder' => $f, 'rows' => $rows, 'more' => count($uids) > count($page), 'unread' => $m->unseen()]);
+        case 'mail_contacts':
+            // First time: read the senders/recipients of your recent email (300 in the inbox, 300 sent) to fill the address book.
+            mail_contacts_table();
+            $flag = db()->query("SELECT 1 FROM mail_contacts WHERE email = '~filled'")->fetchColumn();
+            if (!$flag) {
+                $m = new SmrImap($need());
+                foreach (['inbox', 'sent'] as $f) {
+                    try { $m->select($box($m, $f)); $u = array_slice($m->uids(), -300);
+                        foreach (array_chunk($u, 100) as $ch) foreach ($m->headers($ch) as $r) mail_contacts_add($f === 'sent' ? $r['to'] : [$r['from']], $f === 'sent' ? 3 : 1, (int) $r['date']);
+                    } catch (Throwable $e) {}
+                }
+                db()->exec("INSERT OR IGNORE INTO mail_contacts (email, name, n, last) VALUES ('~filled', '', 0, 0)");
+            }
+            $list = [];
+            foreach (db()->query("SELECT email, name FROM mail_contacts WHERE email <> '~filled' ORDER BY n DESC, last DESC LIMIT 1500") as $r) $list[] = [$r['email'], $r['name']];
+            json_out(['contacts' => $list]);
         case 'mail_get':
             $m = new SmrImap($need());
             $f = ($in['folder'] ?? '') === 'sent' ? 'sent' : 'inbox';
@@ -210,8 +228,10 @@ if (strpos($a, 'mail_') === 0) {
             if (trim($body) === '' && $subject === '') json_out(['error' => 'Write something first.'], 400);
             $irt = preg_match('/^<[^<>\s]+>$/', (string) ($in['in_reply_to'] ?? '')) ? $in['in_reply_to'] : '';
             $refs = preg_replace('/[^\x21-\x7e ]/', '', (string) ($in['references'] ?? ''));
-            [$msg] = mail_build($cfg, $to, $cc, $subject, $body, $irt, $irt ? $refs : '');
+            $ownHtml = mail_clean_html((string) ($in['html'] ?? ''));
+            [$msg] = mail_build($cfg, $to, $cc, $subject, $body, $irt, $irt ? $refs : '', $ownHtml);
             smtp_send($cfg, array_merge($to, $cc), $msg);
+            try { mail_contacts_add(array_map(function ($e) { return ['email' => $e, 'name' => '']; }, array_merge($to, $cc)), 3); } catch (Throwable $e) {}
             $saved = true;
             try { $m = new SmrImap($cfg); $s = $m->special('sent'); if ($s) $m->append($s, $msg); else $saved = false; } catch (Throwable $e) { $saved = false; }
             if ($irt && !empty($in['uid'])) { try { $m = $m ?? new SmrImap($cfg); $m->select('INBOX', false); $m->flag((int) $in['uid'], '\\Answered'); } catch (Throwable $e) {} }

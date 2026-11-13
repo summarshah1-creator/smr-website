@@ -187,6 +187,26 @@ input:focus,textarea:focus,select:focus{border-color:rgba(214,59,255,.6);box-sha
 .rd iframe{flex:1;width:100%;border:0;background:#fff;min-height:200px}
 .cmp label.f:first-child{margin-top:0}
 .cmp textarea{min-height:240px}
+.acw{position:relative}.acl{position:absolute;z-index:5;left:0;right:0;top:calc(100% + 4px);background:#171726;border:1px solid var(--line);border-radius:12px;box-shadow:0 16px 36px -12px rgba(0,0,0,.8);overflow:hidden;max-height:264px;overflow-y:auto}
+.acl button{display:flex;flex-direction:column;align-items:flex-start;gap:1px;width:100%;padding:9px 13px;background:none;border:0;border-bottom:1px solid var(--line);text-align:left;cursor:pointer}.acl button:last-child{border-bottom:0}
+.acl button b{font-size:14px;font-weight:700}.acl button span{font-size:12.5px;color:var(--muted)}.acl button.on,.acl button:hover{background:rgba(155,108,255,.16)}.acl mark{background:none;color:#c9a8ff;font-weight:800}
+.rte{border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.035);position:relative}
+.rtb{position:sticky;top:0;z-index:3;display:flex;flex-wrap:wrap;gap:2px;padding:6px;background:#12121e;border-bottom:1px solid var(--line);border-radius:14px 14px 0 0}
+.rb{height:34px;min-width:34px;padding:0 7px;border:0;border-radius:9px;background:none;color:#d9d9ea;display:inline-flex;align-items:center;justify-content:center;gap:2px;font-size:15px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.rb svg{width:18px;height:18px}.rb .cv{width:12px;height:12px}.rb:hover{background:rgba(255,255,255,.07)}.rb.on{background:rgba(155,108,255,.25);color:#fff}
+.rb b,.rb i,.rb u,.rb s{font-family:Georgia,serif;font-size:17px}.tsz{font-weight:800;font-size:14px}
+.tcol{position:relative;font-weight:800;font-size:16px;padding-bottom:3px}.tcol i{position:absolute;left:-2px;right:-2px;bottom:0;height:3px;border-radius:2px;background:#ff5470}
+.rsep{width:1px;align-self:stretch;margin:5px 3px;background:var(--line)}
+.rpop[hidden],.acl[hidden]{display:none}
+@media(max-width:760px){.rtb{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}.rtb::-webkit-scrollbar{display:none}.rb{flex:none}.rsep{flex:none}}
+.rbody{min-height:240px;padding:13px 14px;outline:none;line-height:1.55;font-size:15.5px;word-wrap:break-word;overflow-wrap:anywhere;-webkit-user-select:text;user-select:text}
+.rbody:empty:before{content:"Write your email…";color:var(--muted)}
+.rbody ul,.rbody ol{margin:4px 0;padding-left:24px}.rbody blockquote{margin:4px 0 4px 6px;padding-left:12px;border-left:3px solid #6b5bd6;color:#cfcfe4}.rbody a{color:#b79bff}
+.rpop{position:absolute;z-index:6;left:6px;top:50px;background:#1b1b2c;border:1px solid var(--line);border-radius:12px;padding:8px;box-shadow:0 16px 36px -12px rgba(0,0,0,.8);display:flex;flex-wrap:wrap;gap:6px;max-width:292px}
+.rpop .sw{width:30px;height:30px;border-radius:50%;border:2px solid rgba(255,255,255,.18);cursor:pointer}.rpop .sz{padding:6px 12px;border-radius:9px;border:1px solid var(--line);background:none;cursor:pointer}
+.rpop .lk{display:flex;gap:6px;width:260px}.rpop .lk input{flex:1;height:38px;font-size:14px}
+.cpq{margin-top:12px;padding:10px 12px;border-left:3px solid #6b5bd6;border-radius:4px;color:var(--muted);font-size:13.5px;white-space:pre-wrap;max-height:260px;overflow:auto}
+html.cpopen,body.cpopen{overscroll-behavior:none}#compose .ovb{overscroll-behavior:contain}
 .mailfrom{font-size:12.5px;color:var(--muted);margin-bottom:4px}
 .sigprev{margin-top:10px;padding:0 0 4px}.sigprev:empty{display:none}
 .top .tabs button{padding:8px 4px;white-space:nowrap;font-size:13px}
@@ -382,10 +402,12 @@ document.addEventListener('keydown',function(e){if(/^\d$/.test(e.key))press(e.ke
   </div>
   <form class="ovb cmp" id="cpform" autocomplete="off">
     <p class="mailfrom" id="cpfrom"></p>
-    <label class="f" for="cpto">To</label><input type="text" id="cpto" inputmode="email" autocapitalize="off" placeholder="name@example.com">
-    <label class="f" for="cpcc">Cc (optional)</label><input type="text" id="cpcc" inputmode="email" autocapitalize="off">
+    <label class="f" for="cpto">To</label><div class="acw"><input type="text" id="cpto" inputmode="email" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="name@example.com" data-ac><div class="acl" hidden></div></div>
+    <label class="f" for="cpcc">Cc (optional)</label><div class="acw"><input type="text" id="cpcc" inputmode="email" autocapitalize="off" autocorrect="off" spellcheck="false" data-ac><div class="acl" hidden></div></div>
     <label class="f" for="cpsub">Subject</label><input type="text" id="cpsub" maxlength="200">
-    <label class="f" for="cpbody">Message</label><textarea id="cpbody"></textarea>
+    <label class="f" for="cpbody">Message</label>
+    <div class="rte"><div class="rtb" id="cptb" role="toolbar" aria-label="Formatting"><button type="button" class="rb" data-rt="bold" title="Bold" aria-label="Bold"><b>B</b></button><button type="button" class="rb" data-rt="italic" title="Italic" aria-label="Italic"><i>I</i></button><button type="button" class="rb" data-rt="underline" title="Underline" aria-label="Underline"><u>U</u></button><button type="button" class="rb" data-rt="strikeThrough" title="Strikethrough" aria-label="Strikethrough"><s>S</s></button><i class="rsep"></i><button type="button" class="rb" data-rt="size" title="Text size" aria-label="Text size"><span class="tsz">Aa</span><svg class="cv" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 10l5 5 5-5"/></svg></button><button type="button" class="rb" data-rt="color" title="Text colour" aria-label="Text colour"><span class="tcol">A<i id="tcolbar"></i></span></button><button type="button" class="rb" data-rt="hilite" title="Highlight" aria-label="Highlight"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l-4 4v3h3l4-4"/><path d="M14 6l4 4"/><path d="M9 11l5-5 4 4-5 5z"/></svg></button><i class="rsep"></i><button type="button" class="rb" data-rt="insertUnorderedList" title="Bullet list" aria-label="Bullet list"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1" fill="currentColor"/><circle cx="4.5" cy="12" r="1" fill="currentColor"/><circle cx="4.5" cy="18" r="1" fill="currentColor"/></svg></button><button type="button" class="rb" data-rt="insertOrderedList" title="Numbered list" aria-label="Numbered list"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 6h10M10 12h10M10 18h10"/><path d="M4 5h1v4M4 9h2M4 14h2l-2 3h2" stroke-width="1.6"/></svg></button><button type="button" class="rb" data-rt="justifyLeft" title="Align left" aria-label="Align left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 10h10M4 14h16M4 18h10"/></svg></button><button type="button" class="rb" data-rt="justifyCenter" title="Centre" aria-label="Centre"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M7 10h10M4 14h16M7 18h10"/></svg></button><button type="button" class="rb" data-rt="justifyRight" title="Align right" aria-label="Align right"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M10 10h10M4 14h16M10 18h10"/></svg></button><button type="button" class="rb" data-rt="outdent" title="Decrease indent" aria-label="Decrease indent"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M11 10h9M11 14h9M4 18h16"/><path d="M8 9l-3 3 3 3"/></svg></button><button type="button" class="rb" data-rt="indent" title="Increase indent" aria-label="Increase indent"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M11 10h9M11 14h9M4 18h16"/><path d="M5 9l3 3-3 3"/></svg></button><i class="rsep"></i><button type="button" class="rb" data-rt="link" title="Add link" aria-label="Add link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg></button><button type="button" class="rb" data-rt="quote" title="Quote" aria-label="Quote"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7H4v5h3l-1 4M17 7h-3v5h3l-1 4"/></svg></button><button type="button" class="rb" data-rt="removeFormat" title="Clear formatting" aria-label="Clear formatting"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h12M12 4l-4 16M15 15l5 5M20 15l-5 5"/></svg></button><i class="rsep"></i><button type="button" class="rb" data-rt="undo" title="Undo" aria-label="Undo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></button><button type="button" class="rb" data-rt="redo" title="Redo" aria-label="Redo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14l5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/></svg></button></div><div class="rpop" id="cppop" hidden></div><div class="rbody" id="cpbody" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Message"></div></div>
+    <div class="cpq" id="cpquote" hidden></div>
     <div class="sigprev" id="cpsig"></div>
     <div class="err" id="cperr"></div>
   </form>
@@ -476,7 +498,7 @@ var item=function(act,label,icon,cls){return '<button class="it'+(cls?' '+cls:''
 
 /* ---------- load ---------- */
 var build0=0;
-var load=function(){return api('list').then(function(j){if(build0&&j.build&&j.build!==build0){location.reload();return}build0=j.build;D=j.demos;L=j.links;E=j.events||[];pushN=j.push_devices||0;skew=j.now-Date.now()/1000;renderDemos();renderPick();renderLinks();renderFeed();renderNotif()}).catch(function(e){toast(e.message,true)})};
+var load=function(){return api('list').then(function(j){if(build0&&j.build&&j.build!==build0&&!cpOpen){location.reload();return}build0=j.build;D=j.demos;L=j.links;E=j.events||[];pushN=j.push_devices||0;skew=j.now-Date.now()/1000;renderDemos();renderPick();renderLinks();renderFeed();renderNotif()}).catch(function(e){toast(e.message,true)})};
 
 /* ---------- my demos ---------- */
 var renderDemos=function(){$('demos').innerHTML=D.length?D.map(function(d){
@@ -714,18 +736,90 @@ $('reader').addEventListener('click',function(e){var b=e.target.closest('[data-r
     if(x==='fwd')compose({subject:/^fwd?:/i.test(m.subject)?m.subject:'Fwd: '+m.subject,body:'\n\n\n---------- Forwarded email ----------\nFrom: '+(m.from.name?m.from.name+' <'+m.from.email+'>':m.from.email)+'\nDate: '+fmtT(m.date)+'\nSubject: '+m.subject+'\n\n'+m.text});
     if(x==='del'&&confirm('Delete this email?'))api('mail_delete',{folder:M.folder,uid:m.uid}).then(function(){M.rows=M.rows.filter(function(r){return r.uid!==m.uid});renderMail();ovClose('reader');toast('Deleted')}).catch(function(er){toast(er.message,true)})})})});
 /* compose */
-var CP={};
+var CP={},cpOpen=false;
+var escH=function(t){return String(t).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})};
+var cpText=function(){return $('cpbody').innerText.replace(/ /g,' ').replace(/\n{3,}/g,'\n\n').trim()};
 var compose=function(o){if(!M.cfg){toast('Loading email…');mailInit().then(function(){compose(o)});return}
   if(!M.cfg.set){toast('Connect your email first');location.hash='mail';return}
   CP=o||{};$('cptitle').textContent=CP.reply?'Reply':'New email';$('cpfrom').textContent='From: '+(M.cfg.name?M.cfg.name+' <'+M.cfg.email+'>':M.cfg.email);
-  $('cpsig').innerHTML=M.cfg.sig_html||'';$('cpto').value=CP.to||'';$('cpcc').value='';$('cpsub').value=CP.subject||'';$('cpbody').value=CP.body||'';$('cperr').textContent='';
-  ovOpen('compose');setTimeout(function(){var el=CP.to?$('cpbody'):$('cpto');el.focus();if(el===$('cpbody'))el.setSelectionRange(0,0)},260)};
+  // the quoted email (reply / forward) sits under the message box; only your own words are editable
+  var body=CP.body||'',qi=body.search(/^(On .{3,200} wrote:|-{5,} Forwarded email -{5,})$/m),own=qi>=0?body.slice(0,qi):body;CP.quote=qi>=0?body.slice(qi):'';
+  own=own.replace(/\s+$/,'');
+  $('cpsig').innerHTML=M.cfg.sig_html||'';$('cpto').value=CP.to||'';$('cpcc').value='';$('cpsub').value=CP.subject||'';
+  $('cpbody').innerHTML=own?own.split('\n').map(function(l){return '<div>'+(l?escH(l):'<br>')+'</div>'}).join(''):'';
+  CP.start=cpText();$('cpquote').hidden=!CP.quote;$('cpquote').textContent=CP.quote;$('cperr').textContent='';rtPop();
+  ovOpen('compose');cpGuard(true);acLoad();
+  setTimeout(function(){if(CP.to){var b=$('cpbody');b.focus();var r=document.createRange();r.setStart(b,0);r.collapse(true);var sl=getSelection();sl.removeAllRanges();sl.addRange(r)}else $('cpto').focus();rtState()},260)};
+/* the email only closes with the × : back swipe / back button / pull-to-refresh are blocked, and refresh or closing the tab asks first */
+var cpHist=false;
+var cpGuard=function(on){cpOpen=on;document.documentElement.classList.toggle('cpopen',on);document.body.classList.toggle('cpopen',on);
+  if(on&&!cpHist){history.pushState({cp:1},'',location.href);cpHist=true}
+  if(!on&&cpHist){cpHist=false;if(history.state&&history.state.cp){cpSkip=true;history.back()}}};
+var cpSkip=false;
+window.addEventListener('popstate',function(){if(cpSkip){cpSkip=false;return}
+  if(cpOpen){history.pushState({cp:1},'',location.href);cpHist=true;toast('Tap × to close the email')}});
+window.addEventListener('beforeunload',function(e){if(cpOpen&&(cpText()||$('cpto').value.trim()||$('cpsub').value.trim())){e.preventDefault();e.returnValue='';return ''}});
+document.addEventListener('keydown',function(e){if(cpOpen&&(e.key==='F5'||((e.metaKey||e.ctrlKey)&&(e.key==='r'||e.key==='R'||e.key==='w'||e.key==='W')))){e.preventDefault();toast('Tap × to close the email')}},true);
+var cpClose=function(){ovClose('compose');cpGuard(false);rtPop();acHide()};
+/* ---- formatting bar ---- */
+var rtSaved=null;
+var rtKeep=function(){var sl=getSelection();if(sl.rangeCount&&$('cpbody').contains(sl.anchorNode))rtSaved=sl.getRangeAt(0).cloneRange()};
+var rtBack=function(){var b=$('cpbody');b.focus();if(rtSaved){var sl=getSelection();sl.removeAllRanges();sl.addRange(rtSaved)}};
+var rtDo=function(c,v){rtBack();try{document.execCommand('styleWithCSS',false,c==='hiliteColor'||c==='foreColor')}catch(e){}document.execCommand(c,false,v==null?null:v);rtKeep();rtState()};
+var rtState=function(){['bold','italic','underline','strikeThrough','insertUnorderedList','insertOrderedList','justifyLeft','justifyCenter','justifyRight'].forEach(function(c){var b=document.querySelector('.rb[data-rt="'+c+'"]');var on=false;try{on=document.queryCommandState(c)}catch(e){}if(b)b.classList.toggle('on',!!on)})};
+var COLS=['#16161d','#ffffff','#6b6b80','#ff5470','#ff8a3d','#f5c518','#2fbf71','#25a6ff','#5b5bff','#a259ff','#d63bff','#8b5a2b'];
+var HIL=['transparent','#fff3a3','#c8f7d4','#cfe8ff','#ffd6e2','#e6d9ff'];
+var rtPop=function(kind){var p=$('cppop');if(!kind){p.hidden=true;p.dataset.k='';return}
+  if(p.dataset.k===kind&&!p.hidden){p.hidden=true;p.dataset.k='';return}p.dataset.k=kind;
+  if(kind==='size')p.innerHTML=[['Small',2],['Normal',3],['Large',5],['Huge',6]].map(function(x){return '<button type="button" class="sz" data-sz="'+x[1]+'" style="font-size:'+[0,0,12,15,0,20,25][x[1]]+'px">'+x[0]+'</button>'}).join('');
+  if(kind==='color')p.innerHTML=COLS.map(function(c){return '<button type="button" class="sw" data-col="'+c+'" style="background:'+c+'" aria-label="'+c+'"></button>'}).join('');
+  if(kind==='hilite')p.innerHTML=HIL.map(function(c){return '<button type="button" class="sw" data-hil="'+c+'" style="background:'+(c==='transparent'?'repeating-linear-gradient(45deg,#333 0 4px,#555 4px 8px)':c)+'" aria-label="'+(c==='transparent'?'No highlight':c)+'"></button>'}).join('');
+  if(kind==='link'){var sel=getSelection().toString();p.innerHTML='<div class="lk"><input type="url" id="rtlink" placeholder="https://…" autocapitalize="off" autocorrect="off" inputmode="url"><button type="button" class="btn sm pri" data-lk="1">Add</button></div>';setTimeout(function(){$('rtlink').focus()},30)}
+  var b=document.querySelector('.rb[data-rt="'+kind+'"]');p.style.left=Math.max(6,Math.min(b.offsetLeft-$('cptb').scrollLeft,$('cptb').offsetWidth-300))+'px';p.style.top=(b.offsetTop+b.offsetHeight+6)+'px';p.hidden=false};
+$('cptb').addEventListener('mousedown',function(e){if(e.target.closest('.rb'))e.preventDefault()});
+$('cppop').addEventListener('mousedown',function(e){if(!e.target.closest('input'))e.preventDefault()});
+$('cptb').addEventListener('click',function(e){var b=e.target.closest('.rb');if(!b)return;var c=b.dataset.rt;
+  if(c==='size'||c==='color'||c==='hilite'||c==='link'){rtPop(c);return}rtPop();
+  if(c==='quote'){rtDo('formatBlock',document.queryCommandValue('formatBlock')==='blockquote'?'div':'blockquote');return}
+  if(c==='removeFormat'){rtDo('removeFormat');rtDo('unlink');return}
+  rtDo(c)});
+$('cppop').addEventListener('click',function(e){var t=e.target.closest('button');if(!t)return;
+  if(t.dataset.sz){rtDo('fontSize',t.dataset.sz);rtPop()}
+  else if(t.dataset.col){rtDo('foreColor',t.dataset.col);$('tcolbar').style.background=t.dataset.col;rtPop()}
+  else if(t.dataset.hil){rtDo('hiliteColor',t.dataset.hil);rtPop()}
+  else if(t.dataset.lk){var u=$('rtlink').value.trim();if(!u){rtPop();return}if(!/^(https?:\/\/|mailto:)/i.test(u))u=(/@/.test(u)&&!/\//.test(u)?'mailto:':'https://')+u;
+    rtBack();var sl=getSelection();if(sl.isCollapsed){document.execCommand('insertHTML',false,'<a href="'+escH(u)+'">'+escH(u.replace(/^mailto:/,''))+'</a>&nbsp;')}else document.execCommand('createLink',false,u);rtKeep();rtPop()}});
+$('cppop').addEventListener('keydown',function(e){if(e.key==='Enter'&&e.target.id==='rtlink'){e.preventDefault();$('cppop').querySelector('[data-lk]').click()}});
+document.addEventListener('selectionchange',function(){if(cpOpen&&$('cpbody').contains(getSelection().anchorNode)){rtKeep();rtState()}});
+$('cpbody').addEventListener('keydown',function(e){if((e.metaKey||e.ctrlKey)&&!e.shiftKey){var k=e.key.toLowerCase();if(k==='b'||k==='i'||k==='u'){e.preventDefault();rtDo({b:'bold',i:'italic',u:'underline'}[k])}if(k==='k'){e.preventDefault();rtKeep();rtPop('link')}}});
+$('cpbody').addEventListener('paste',function(e){var d=e.clipboardData;if(!d)return;var h=d.getData('text/html');if(h)return;var t=d.getData('text/plain');if(t){e.preventDefault();document.execCommand('insertText',false,t)}});
+$('cpbody').addEventListener('focus',function(){rtPop()});
+/* ---- To / Cc suggestions from people you've emailed or had email from ---- */
+var AC=null,acBusy=null;
+var acLoad=function(){if(AC||acBusy)return;acBusy=api('mail_contacts',{}).then(function(j){AC=j.contacts||[]}).catch(function(){}).then(function(){acBusy=null})};
+var acHide=function(){document.querySelectorAll('.acl').forEach(function(l){l.hidden=true;l.innerHTML=''})};
+var acTok=function(inp){var v=inp.value,cur=inp.selectionStart==null?v.length:inp.selectionStart,st=v.lastIndexOf(',',cur-1)+1;var st2=v.lastIndexOf(';',cur-1)+1;st=Math.max(st,st2);var en=v.indexOf(',',cur);if(en<0)en=v.length;return{st:st,en:en,q:v.slice(st,en).trim().toLowerCase()}};
+var acShow=function(inp){var l=inp.parentNode.querySelector('.acl');var t=acTok(inp);if(!AC||t.q.length<1){l.hidden=true;return}
+  var have=inp.value.toLowerCase();var hl=function(s){var i=s.toLowerCase().indexOf(t.q);return i<0?escH(s):escH(s.slice(0,i))+'<mark>'+escH(s.slice(i,i+t.q.length))+'</mark>'+escH(s.slice(i+t.q.length))};
+  var m=AC.filter(function(c){return (c[0].indexOf(t.q)>=0||(c[1]||'').toLowerCase().indexOf(t.q)>=0)&&have.indexOf(c[0]+',')<0}).sort(function(a,b){var sa=(a[0].indexOf(t.q)===0||(a[1]||'').toLowerCase().indexOf(t.q)===0)?0:1,sb=(b[0].indexOf(t.q)===0||(b[1]||'').toLowerCase().indexOf(t.q)===0)?0:1;return sa-sb}).slice(0,7);
+  if(!m.length||(m.length===1&&m[0][0]===t.q)){l.hidden=true;return}
+  l.innerHTML=m.map(function(c,i){return '<button type="button" data-em="'+escH(c[0])+'"'+(i===0?' class="on"':'')+'>'+(c[1]?'<b>'+hl(c[1])+'</b><span>'+hl(c[0])+'</span>':'<b>'+hl(c[0])+'</b>')+'</button>'}).join('');l.hidden=false};
+var acPick=function(inp,em){var t=acTok(inp),v=inp.value;var before=v.slice(0,t.st).replace(/\s*$/,'');inp.value=(before?before+' ':'')+em+', '+v.slice(t.en).replace(/^[,\s]+/,'');inp.focus();var p=inp.value.length-v.slice(t.en).replace(/^[,\s]+/,'').length;inp.setSelectionRange(p,p);acHide()};
+document.querySelectorAll('[data-ac]').forEach(function(inp){var l=inp.parentNode.querySelector('.acl');
+  inp.addEventListener('input',function(){acShow(inp)});inp.addEventListener('focus',function(){acLoad()});
+  inp.addEventListener('blur',function(){setTimeout(function(){l.hidden=true},180)});
+  inp.addEventListener('keydown',function(e){if(l.hidden)return;var bs=[].slice.call(l.querySelectorAll('button')),i=bs.findIndex(function(b){return b.classList.contains('on')});
+    if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();if(i>=0)bs[i].classList.remove('on');i=(i+(e.key==='ArrowDown'?1:-1)+bs.length)%bs.length;bs[i].classList.add('on');bs[i].scrollIntoView({block:'nearest'})}
+    else if((e.key==='Enter'||e.key==='Tab')&&i>=0){e.preventDefault();acPick(inp,bs[i].dataset.em)}else if(e.key==='Escape'){l.hidden=true}});
+  l.addEventListener('mousedown',function(e){e.preventDefault()});
+  l.addEventListener('click',function(e){var b=e.target.closest('button');if(b)acPick(inp,b.dataset.em)})});
 var cpBusy=false;
-$('compose').addEventListener('click',function(e){var b=e.target.closest('[data-cp]');if(!b)return;
-  if(b.dataset.cp==='close'){if(($('cpbody').value.trim()&&$('cpbody').value!==(CP.body||''))&&!confirm('Discard this email?'))return;ovClose('compose')}
+$('compose').addEventListener('click',function(e){if(!e.target.closest('.rtb,.rpop'))rtPop();var b=e.target.closest('[data-cp]');if(!b)return;
+  if(b.dataset.cp==='close'){if(cpText()&&cpText()!==CP.start&&!confirm('Discard this email?'))return;cpClose()}
   if(b.dataset.cp==='send'&&!cpBusy){cpBusy=true;b.disabled=true;$('cperr').textContent='';
-    api('mail_send',{to:$('cpto').value,cc:$('cpcc').value,subject:$('cpsub').value,body:$('cpbody').value,in_reply_to:CP.in_reply_to||'',references:CP.references||'',uid:CP.uid||0})
-    .then(function(j){ovClose('compose');ovClose('reader');toast(j.saved?'Sent':'Sent (could not save a copy in Sent)');if(CP.onSent)CP.onSent();if(M.folder==='sent')mailLoad()})
+    var own=cpText(),html=$('cpbody').innerHTML,body=own+(CP.quote?'\n\n\n'+CP.quote:'');
+    api('mail_send',{to:$('cpto').value,cc:$('cpcc').value,subject:$('cpsub').value,body:body,html:own?html:'',in_reply_to:CP.in_reply_to||'',references:CP.references||'',uid:CP.uid||0})
+    .then(function(j){cpClose();ovClose('reader');toast(j.saved?'Sent':'Sent (could not save a copy in Sent)');AC=null;if(CP.onSent)CP.onSent();if(M.folder==='sent')mailLoad()})
     .catch(function(er){$('cperr').textContent=er.message})
     .then(function(){cpBusy=false;b.disabled=false})}});
 /* ---------- features presentation (deck) per demo ---------- */
@@ -894,7 +988,7 @@ $('refresh').addEventListener('click',hardRefresh);
 if(/[?&]r=\d/.test(location.search))history.replaceState(null,'',location.pathname+location.hash);
 var hiddenAt=0;
 document.addEventListener('visibilitychange',function(){if(document.hidden){hiddenAt=Date.now();return}
-  if(hiddenAt&&Date.now()-hiddenAt>10*60*1000){location.reload();return}load()});
+  if(hiddenAt&&Date.now()-hiddenAt>10*60*1000&&!cpOpen){location.reload();return}load()});
 })();
 </script>
 <?php endif; ?>
