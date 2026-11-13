@@ -1,0 +1,25 @@
+name: Fetch YouTube thumbnails (scratch)
+on:
+  push:
+    branches: [fetch/yt-thumbs]
+    paths: [fetch-thumbs/ids.txt]
+permissions:
+  contents: write
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download thumbnails
+        run: |
+          mkdir -p fetch-thumbs/out
+          while read id; do
+            [ -z "$id" ] && continue
+            curl -sfL "https://i.ytimg.com/vi/$id/hqdefault.jpg" -o "fetch-thumbs/out/$id.jpg" || echo "miss $id"
+            curl -sfL "https://i.ytimg.com/vi/$id/maxresdefault.jpg" -o "fetch-thumbs/out/$id.max.jpg" || rm -f "fetch-thumbs/out/$id.max.jpg"
+          done < fetch-thumbs/ids.txt
+          ls fetch-thumbs/out | wc -l
+      - name: Commit
+        run: |
+          git config user.name "github-actions"; git config user.email "actions@github.com"
+          git add fetch-thumbs/out && git commit -m "Fetched thumbnails" && git push || echo nothing
