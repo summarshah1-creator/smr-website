@@ -247,7 +247,7 @@ footer p{margin:0 0 8px}
         <button type="button" data-v="year">Year</button>
       </div>
       <div class="display">
-        <div class="label" id="bigLabel">The apps take, on top of card fees</div>
+        <div class="label" id="bigLabel">The apps take (excluding card fees)</div>
         <div class="big" id="big">£0</div>
         <div class="sub" id="sub">Pick your apps to see your numbers.</div>
       </div>
@@ -316,8 +316,8 @@ footer p{margin:0 0 8px}
   </section>
 
   <footer>
-    <p><b>About these numbers.</b> Estimates for collection orders using published or commonly reported UK rates (Nov 2026). Setup and activation fees are not included. Uber Eats: 13% pickup fee + VAT. Just Eat: 14% + VAT commission + a 50p admin fee per order (as reported). Deliveroo: rates are negotiated per restaurant and not published; 14% + VAT is an estimate. FoodHub: 0% commission, 3.4% + 20p card fee per order, plus weekly rental (about £23 a week, around £100 a month on average). Rates are taken from each platform's own published pricing where it exists. If you've been given your own rate, tap "Use my own rates" to change it.</p>
-    <p>A month is worked out as 365 ÷ 12 days, a week as 7 days. Card fees apply wherever you take card payments, in-store too. So that the comparison is fair, a normal card fee (1.5% + 20p, Stripe's standard UK rate) is taken off every app's cost: Uber Eats and Deliveroo build card processing into their fee, Just Eat's 50p admin charge is reported to cover it, and FoodHub's card fee is 3.4% + 20p. The figures show what each app takes on top of normal card fees.</p>
+    <p><b>About these numbers.</b> Estimates for collection orders using published or commonly reported UK rates (Nov 2026). Setup and activation fees are not included. Uber Eats: 13% pickup fee + VAT. Just Eat: 14% + VAT commission + a 50p admin fee per order (as reported). Deliveroo: rates are negotiated per restaurant and not published; 14% + VAT is an estimate. FoodHub: 0% commission and a 3.4% + 20p card fee per order (not included, as it's a card fee), plus weekly rental (about £23 a week, around £100 a month on average). Rates are taken from each platform's own published pricing where it exists. If you've been given your own rate, tap "Use my own rates" to change it.</p>
+    <p>A month is worked out as 365 ÷ 12 days, a week as 7 days. Card fees apply wherever you take card payments, in-store too, so none of these figures include card or online processing fees. Each app's own reported card charge is taken off (Just Eat's 50p admin charge, FoodHub's card fee). Uber Eats and Deliveroo build card processing into their fee and don't publish it, so an estimate is taken off for them.</p>
     <p>© SMR Digital · <a class="handle" href="https://www.instagram.com/smrdigitaluk/">@smrdigitaluk</a></p>
   </footer>
 </div>
@@ -326,19 +326,22 @@ footer p{margin:0 0 8px}
 <script>
 (function(){
   var APPS=[
-    {id:'ubereats',name:'Uber Eats',img:'assets/ubereats.webp',d:{pct:13,vat:true,fix:0,card:0,week:0},note:'13% + VAT'},
-    {id:'justeat',name:'Just Eat',img:'assets/justeat.webp',d:{pct:14,vat:true,fix:0.5,card:0,week:0},note:'14% + VAT + 50p'},
-    {id:'deliveroo',name:'Deliveroo',img:'assets/deliveroo.webp',d:{pct:14,vat:true,fix:0,card:0,week:0},note:'~14% + VAT (est.)'},
-    {id:'foodhub',name:'FoodHub',img:'assets/foodhub.webp',d:{pct:0,vat:false,fix:0.2,card:3.4,week:23},note:'3.4% + 20p + ~£23/week'}
+    {id:'ubereats',strip:'est',name:'Uber Eats',img:'assets/ubereats.webp',d:{pct:13,vat:true,fix:0,card:0,week:0},note:'13% + VAT'},
+    {id:'justeat',strip:'fix',name:'Just Eat',img:'assets/justeat.webp',d:{pct:14,vat:true,fix:0.5,card:0,week:0},note:'14% + VAT + 50p'},
+    {id:'deliveroo',strip:'est',name:'Deliveroo',img:'assets/deliveroo.webp',d:{pct:14,vat:true,fix:0,card:0,week:0},note:'~14% + VAT (est.)'},
+    {id:'foodhub',strip:'card',name:'FoodHub',img:'assets/foodhub.webp',d:{pct:0,vat:false,fix:0.2,card:3.4,week:23},note:'3.4% + 20p + ~£23/week'}
   ];
   var DAYS={day:1,week:7,month:365/12,year:365};
-  var NORMAL={pct:1.5,fix:0.20}; // normal card fee (Stripe standard UK cards) taken off every app so the comparison is like-for-like
+  // Card processing is left out of every app's figure (owner rule). Just Eat: its 50p per-order admin charge (reported to cover payment processing).
+  // FoodHub: its own card fee (3.4% + 20p via Datman). Uber Eats & Deliveroo build card processing into their % and don't publish it,
+  // so a standard estimate (Stripe's standard UK rate) is taken off.
+  var EST={pct:1.5,fix:0.20};
   var S={sel:['justeat','ubereats'],mode:'orders',inP:'day',outP:'month',v:{},r:{},open:{}};
   try{var saved=JSON.parse(localStorage.getItem('smr-calc3')||'null'); if(saved&&saved.sel){S=Object.assign(S,saved);}}catch(e){}
   APPS.forEach(function(a){ if(!S.v[a.id]) S.v[a.id]={orders:10,sales:150,aov:15}; if(!S.r[a.id]) S.r[a.id]=Object.assign({},a.d); });
   function save(){try{localStorage.setItem('smr-calc3',JSON.stringify(S));}catch(e){}}
   var $=function(id){return document.getElementById(id)};
-  var gbp=function(n,dp){return '£'+Number(n).toLocaleString('en-GB',{minimumFractionDigits:dp||0,maximumFractionDigits:dp||0})};
+  var _=0;var gbp=function(n,dp){return '£'+Number(n).toLocaleString('en-GB',{minimumFractionDigits:dp||0,maximumFractionDigits:dp||0})};
   var ICO_OTHER='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D6D8F0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M9 10.5h6l-.6 6h-4.8z"/></svg>';
   function icon(a,cls){return a.img?'<img src="'+a.img+'" alt="" class="'+(cls||'')+'">':'<div class="ico">'+ICO_OTHER+'</div>'}
 
@@ -382,8 +385,10 @@ footer p{margin:0 0 8px}
     var orders=perDayOrders*d, sales=orders*aov;
     var comm=sales*(+r.pct||0)/100, vat=r.vat?comm*0.2:0, fixed=orders*(+r.fix||0), card=sales*(+r.card||0)/100;
     var weekly=(+r.week||0)*(d/7);
-    var gross=comm+vat+fixed+card, norm=Math.min(gross, sales*NORMAL.pct/100+orders*NORMAL.fix);
-    return {orders:orders,sales:sales,comm:comm,vat:vat,fixed:fixed,card:card,weekly:weekly,norm:norm,total:gross-norm+weekly};
+    var base=comm+fixed+card, off;
+    if(a.strip==='fix') off=fixed; else if(a.strip==='card') off=fixed+card; else off=Math.min(comm, sales*EST.pct/100+orders*EST.fix);
+    var fees=Math.max(base-off,0);
+    return {orders:orders,sales:sales,fees:fees,vat:vat,weekly:weekly,total:fees+vat+weekly};
   }
   var shown=0, raf;
   function animate(to){cancelAnimationFrame(raf); var from=shown, t0=performance.now();
@@ -394,16 +399,15 @@ footer p{margin:0 0 8px}
     var rows=list.map(function(a){return {a:a,c:costs(a)}});
     var tot=rows.reduce(function(s,r){return s+r.c.total},0), sales=rows.reduce(function(s,r){return s+r.c.sales},0), orders=rows.reduce(function(s,r){return s+r.c.orders},0);
     var perLbl={week:'a week',month:'a month',year:'a year'}[S.outP];
-    $('bigLabel').textContent='The apps take '+perLbl+', on top of card fees';
+    $('bigLabel').textContent='The apps take '+perLbl+' (excluding card fees)';
     animate(tot); $('dockV').textContent=gbp(tot); $('dockL').textContent='The apps take '+perLbl;
     if(!rows.length){$('sub').textContent='Pick your apps to see your numbers.';$('bars').innerHTML='';$('keep').textContent="Keep the commission you're paying now.";return;}
     var pct=sales>0?tot/sales*100:0, perOrder=orders>0?tot/orders:0;
     var anyVat=rows.some(function(r){return r.c.vat>0});
-    $('sub').innerHTML="That's <b>"+pct.toFixed(1)+"% of your app sales</b>, about <b>"+gbp(perOrder,2)+"</b> on every order."+'<span class="vatnote">Card processing isn\'t included: a normal card fee (1.5% + 20p) is taken off every app, the same as you\'d pay on your own app.</span>'+(anyVat?'<span class="vatnote">Includes VAT on commission. VAT-registered? You can usually reclaim it.</span>':'');
+    $('sub').innerHTML="That's <b>"+pct.toFixed(1)+"% of your app sales</b>, about <b>"+gbp(perOrder,2)+"</b> on every order."+'<span class="vatnote">These figures don\'t include card processing fees.</span>'+(anyVat?'<span class="vatnote">Includes VAT on commission. VAT-registered? You can usually reclaim it.</span>':'');
     var max=Math.max.apply(null,rows.map(function(r){return r.c.total}).concat([1]));
     $('bars').innerHTML=rows.map(function(r){var c=r.c, parts=[];
-      if(c.comm) parts.push('Commission '+gbp(c.comm)); if(c.vat) parts.push('VAT '+gbp(c.vat)); if(c.fixed) parts.push('Per-order fees '+gbp(c.fixed)); if(c.card) parts.push('Card fees '+gbp(c.card)); if(c.weekly) parts.push('Rental / weekly fees '+gbp(c.weekly));
-      if(c.norm) parts.push('Normal card fees taken off\u00a0−'+gbp(c.norm));
+      if(c.fees) parts.push('Commission & fees '+gbp(c.fees)); if(c.vat) parts.push('VAT '+gbp(c.vat)); if(c.weekly) parts.push('Rental '+gbp(c.weekly));
       return '<div class="brow"><div class="bar-h"><span class="bn"><img src="'+r.a.img+'" alt="">'+r.a.name+'</span><span>'+gbp(c.total)+'</span></div><div class="track"><div class="fill" style="width:'+(c.total/max*100).toFixed(1)+'%"></div></div><div class="bar-d">'+(parts.join(' · ')||'No fees entered')+'</div><div class="ours"><span>Your own app</span><b>0% commission</b></div></div>'}).join('');
     var y=0; list.forEach(function(a){var keep=S.outP; S.outP='year'; y+=costs(a).total; S.outP=keep;});
     $('keep').innerHTML="That's <b>"+gbp(y)+" a year</b> going to the apps. With your own app you pay 0% commission.";
@@ -415,7 +419,7 @@ footer p{margin:0 0 8px}
     if(!last.rows||!last.rows.length) return "Hi, SMR Digital! 👋\n"+ask;
     var per={day:'a day',week:'a week',month:'a month'}[S.inP];
     var lines=last.rows.map(function(r){var v=S.v[r.a.id]; return '*'+r.a.name+':* '+(S.mode==='orders'?(v.orders+' orders '+per):(gbp(v.sales)+' total sales '+per))+', avg order '+gbp(v.aov,2)+' → *'+gbp(r.c.total)+' '+last.perLbl+'*'});
-    return "Hi, SMR Digital! 👋\nI used your *Platform Commission Calculator* (collection orders):\n\n"+lines.join('\n')+"\n\n*Total: "+gbp(last.tot)+" "+last.perLbl+"* 😱 (on top of normal card fees)\nThat's *"+gbp(last.year)+" a year* going to the apps.\n\n"+ask;
+    return "Hi, SMR Digital! 👋\nI used your *Platform Commission Calculator* (collection orders):\n\n"+lines.join('\n')+"\n\n*Total: "+gbp(last.tot)+" "+last.perLbl+"* 😱 (not including card fees)\nThat's *"+gbp(last.year)+" a year* going to the apps.\n\n"+ask;
   }
   document.addEventListener('click',function(e){
     var b=e.target.closest('.app'); if(b){var id=b.dataset.id,i=S.sel.indexOf(id); if(i>-1)S.sel.splice(i,1); else S.sel.push(id); S.sel.sort(function(x,y){return APPS.findIndex(function(a){return a.id===x})-APPS.findIndex(function(a){return a.id===y})}); renderApps(); renderInputs(); calc(); save(); return;}
