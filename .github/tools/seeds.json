@@ -450,5 +450,25 @@
    "The Everybody Knows campaign shares the monthly Islamophobia report, findings and where to get help in Luton.",
    "Clear ways to volunteer, ask for support, donate or partner, plus a wall of the funders and partners behind it."
   ]
+ },
+ {
+  "slug": "inspire-fm",
+  "version": "2026-11-13a",
+  "ver": "1.0",
+  "name": "Inspire FM 105.1",
+  "accent": "#5e9b1f",
+  "tagline": "Radio, faith & community app · Luton",
+  "description": "Web app for Inspire FM 105.1, Luton's community radio: live radio and podcasts with a full-screen player, prayer times with adhan alerts and qibla, a Jummah finder for 39 venues, a Sunnah toolbox (Ayah a day, Hajj & Umrah guide, live jamaat, Ramadan timetable, zakat and inheritance calculators, kids' corner), free Islamic videos, What's on in Luton, giving, Inspire Eid and advertising.",
+  "tips": [
+   "Opens like a real app: a home screen with the next prayer, what's on air, today's dua and the Toolbox, plus a bottom bar with Listen in the middle.",
+   "Listen live in a full-screen player that keeps playing while people browse, with a small pill at the top to get back to it.",
+   "Prayer times for Luton to the second, adhan alerts, a qibla compass, lock-screen widgets and a prayer wallpaper maker.",
+   "The Jummah finder: type a postcode or tap Use my location to see every Jummah in Luton nearest first, with late jamaat filters and each masjid's own timetable.",
+   "A Sunnah Toolbox with 20 apps, each with its own icon: tasbih, tracker, Ayah a day streaks, Hijri calendar, Ramadan timetable, zakat and inheritance calculators.",
+   "A full Hajj & Umrah guide with illustrations, a packing checklist and where to buy ihram in Luton.",
+   "Watch free: kids' cartoons, prophet stories and talks from trusted channels, plus Inspire FM's own shows, all playing inside the app.",
+   "A Halal business directory where local businesses can pay to be featured, and an advertising section that brings in income for the station.",
+   "Community features: What's on in Luton, janazah notices, a noticeboard, Find help in Luton, giving appeals and Inspire Eid bookings."
+  ]
  }
 ]
