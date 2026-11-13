@@ -153,6 +153,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .hbtn{height:38px;padding:0 12px;border-radius:12px;display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:13px;white-space:nowrap}
 .hbtn.homebtn{background:rgba(255,255,255,.06);border:1px solid var(--line);font-size:14px}.hbtn.homebtn svg{width:17px;height:17px}
 body.owner .hbtn.all,body.owner .viewsw+.hbtn,body.owner .hbtn.exit{display:none}
+/* owner view: slim, minimal top bar */
+body.owner{--hh:42px}body.owner .hd{gap:6px}body.owner .brand small{display:none}body.owner .brand .lg svg{height:11px}body.owner .brand .lg span{font-size:12px}body.owner .hbtn{height:28px;border-radius:9px;font-size:12px;padding:0 9px;gap:4px}body.owner .hbtn.icon{width:28px;padding:0}body.owner .hbtn.icon svg{width:14px;height:14px}body.owner .hbtn.homebtn{font-size:12px}body.owner .hbtn.homebtn svg{width:13px;height:13px}
 .hbtn.all{background:var(--grad);color:#fff;box-shadow:0 6px 18px -8px rgba(214,59,255,.7)}
 .hbtn.all svg{width:15px;height:15px}
 .hbtn.icon{width:38px;padding:0;justify-content:center;border:1px solid var(--line);background:rgba(255,255,255,.04)}
@@ -674,7 +676,7 @@ var openTips=function(){paintTip();ft.classList.add('open');mini.setAttribute('a
 var foldTips=function(){clearInterval(autoT);ft.classList.remove('open');mini.setAttribute('aria-expanded','false');if(current)markSeen(current)};
 var hideTips=function(){clearTimeout(tipT);clearInterval(autoT);ft.classList.remove('show','open')};
 var startTips=function(slug,force){var d=bySlug[slug];tipList=(d&&d.tips)||[];hideTips();tipI=0;
-  if(!tipList.length||!B.tips)return;
+  if(!tipList.length||!B.tips||(B.preview&&!force))return;
   var web=d&&/website/i.test((d.tagline||'')+' '+(d.name||''))&&!/\bapp\b/i.test(d.tagline||''),lbl=web?'Website features':'App features';mini.childNodes.forEach(function(n){if(n.nodeType===3&&n.textContent.trim())n.textContent=lbl});$('tip').setAttribute('aria-label',lbl);
   tipT=setTimeout(function(){if(current!==slug)return;ft.classList.add('show');if(force||(B.tips&&!seen(slug)))openTips()},force?0:4500)};
 var endTips=function(){foldTips();tipI=0};
