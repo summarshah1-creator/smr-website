@@ -45,8 +45,9 @@ img{display:block;max-width:100%}
 h1,h2,h3{font-family:Sora,sans-serif;letter-spacing:-.02em;line-height:1.08}
 h2{font-size:clamp(30px,7vw,52px);font-weight:800}
 h3{font-size:19px;font-weight:700}
-.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--mut)}
-.eyebrow::before{content:"";width:22px;height:2px;border-radius:2px;background:var(--grad)}
+.eyebrow{display:inline-block;font-size:16px;font-weight:700;letter-spacing:-.005em;line-height:1.3;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:2px}
+body[data-brand="plates"] .lt .eyebrow{background:none;color:#c25e00}
+@media(min-width:900px){.eyebrow{font-size:17px}}
 .lede{color:var(--mut);font-size:17px;max-width:620px}
 section{position:relative;padding:84px 0;scroll-margin-top:144px}
 .sec-head{display:grid;gap:14px;margin-bottom:38px}
@@ -932,7 +933,34 @@ body.splashing{overflow:hidden}
 .rf-tk .vv{position:absolute;left:6.5%;top:22%;font-family:Sora,sans-serif;font-weight:800;font-size:25cqw;letter-spacing:-1.2cqw;line-height:1}
 .rf-tk .cc{position:absolute;left:8%;bottom:12%;font-weight:800;font-size:3.5cqw}
 .rf-tk .seal{position:absolute;right:7%;top:15%;width:21cqw;height:21cqw;border-radius:50%;background:#1b1035;color:#ffd166;display:grid;place-items:center;text-align:center;font-family:Sora,sans-serif;font-weight:800;font-size:3.2cqw;line-height:1.1;transform:rotate(12deg)}
-/* SMR Digital for schools & charities */
+/* SMR Digital for schools & charities: warm, light "community" look (green for schools, coral/amber for charities) */
+#d-sectors{--ink:#1f1a14;--mut:#6a6157;--dim:#9a9086;--line:rgba(60,40,10,.10);--sxa:#0f9d76;--sxb:#2bb3a3;--sxg:linear-gradient(120deg,#0f9d76,#2bb3a3);
+  position:relative;color:var(--ink);background:radial-gradient(700px 380px at 100% 0%,rgba(43,179,163,.16),transparent 70%),radial-gradient(600px 380px at 0% 100%,rgba(255,170,90,.18),transparent 70%),#fbf6ee;overflow:hidden}
+#d-sectors.ch{--sxa:#ef5a5a;--sxb:#f59e2b;--sxg:linear-gradient(120deg,#ef5a5a,#f59e2b)}
+#d-sectors::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(60,40,10,.07) 1.2px,transparent 1.3px);background-size:22px 22px;pointer-events:none;mask-image:linear-gradient(180deg,#000,transparent 70%)}
+#d-sectors .wrap{position:relative}
+#d-sectors .eyebrow{background:var(--sxg);-webkit-background-clip:text;background-clip:text;color:transparent}
+#d-sectors h2{color:var(--ink)}#d-sectors .grad-text{background:var(--sxg);-webkit-background-clip:text;background-clip:text;color:transparent}
+#d-sectors .lede{color:var(--mut)}
+#d-sectors .sx-tabs{background:#fff;border-color:var(--line);box-shadow:0 6px 20px rgba(60,40,10,.06)}
+#d-sectors .sx-tabs button{color:var(--mut)}#d-sectors .sx-tabs button.on{background:var(--sxg);color:#fff;box-shadow:0 8px 20px rgba(15,157,118,.25)}
+#d-sectors.ch .sx-tabs button.on{box-shadow:0 8px 20px rgba(239,90,90,.25)}
+#d-sectors .sx-main{background:#fff;border:1px solid var(--line);box-shadow:0 18px 40px -18px rgba(60,40,10,.18)}
+#d-sectors .sx-badge{background:rgba(15,157,118,.1);border-color:rgba(15,157,118,.25);color:#0b7a5c}
+#d-sectors .sx-badge.ch{background:rgba(239,90,90,.1);border-color:rgba(239,90,90,.25);color:#c23f3f}
+#d-sectors .sx-main>p{color:var(--mut)}
+#d-sectors .sx-pts>div{background:#fbf8f3;border-color:var(--line)}
+#d-sectors .sx-pts .ic{background:var(--sxg);box-shadow:0 6px 14px -4px rgba(15,157,118,.45)}#d-sectors.ch .sx-pts .ic{box-shadow:0 6px 14px -4px rgba(239,90,90,.45)}
+#d-sectors .sx-pts small{color:var(--mut)}
+#d-sectors .btn.primary{background:var(--sxg);box-shadow:0 12px 26px -10px rgba(15,157,118,.6)}#d-sectors.ch .btn.primary{box-shadow:0 12px 26px -10px rgba(239,90,90,.6)}
+#d-sectors .sx-local{background:radial-gradient(380px 240px at 100% 0%,rgba(43,179,163,.45),transparent 70%),#0f4c45;border:0;color:#fff;box-shadow:0 18px 40px -18px rgba(15,76,69,.55)}
+#d-sectors .sx-local>p,#d-sectors .sx-else{color:rgba(255,255,255,.75)}#d-sectors .sx-else b{color:#fff}#d-sectors .sx-else{border-top-color:rgba(255,255,255,.14)}
+#d-sectors .sx-chips li{background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.12);color:#fff}#d-sectors .sx-chips svg{color:#7fe0c7}
+#d-sectors .sx-pilot svg,#d-sectors .sx-else svg{color:#ef5a5a}
+#d-sectors .sx-rate{background:radial-gradient(420px 260px at 90% 0%,rgba(255,255,255,.35),transparent 70%),linear-gradient(150deg,#ffb35c,#ef5a5a 70%,#d9445f);border:0;color:#fff;box-shadow:0 18px 40px -18px rgba(217,68,95,.55)}
+#d-sectors .sx-rate .k{color:#fff3e0}#d-sectors .sx-rate>b{background:none;color:#fff}#d-sectors .sx-rate>p{color:rgba(255,255,255,.88)}
+#d-sectors .sx-proj{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.3)}#d-sectors .sx-proj small{color:rgba(255,255,255,.8)}#d-sectors .sx-proj span:not(.ic){color:rgba(255,255,255,.9)}
+#d-sectors .sx-proj .ic{background:#fff;border:0}#d-sectors .sx-proj .ic svg{color:#ef5a5a}
 .sx-tabs{display:inline-flex;gap:4px;padding:5px;border-radius:999px;background:rgba(255,255,255,.05);border:1px solid var(--line);margin:4px 0 18px}
 .sx-tabs button{display:inline-flex;align-items:center;gap:8px;height:42px;padding:0 18px;border-radius:999px;border:0;background:none;color:var(--mut);font:700 14.5px/1 inherit;font-family:inherit;cursor:pointer;transition:background .25s,color .25s}
 .sx-tabs button svg{width:17px;height:17px}.sx-tabs button.on{background:var(--grad);color:#fff;box-shadow:0 8px 22px var(--glow)}
@@ -1969,7 +1997,7 @@ document.addEventListener('click',e=>{
   const g=e.target.closest('[data-go]');if(g){e.preventDefault();document.body.classList.remove('menu-open');go(g.dataset.go);return}
   if(e.target.closest('[data-go-top]')){e.preventDefault();if(current!=='digital'){go('digital');window.scrollTo(0,0)}else window.scrollTo({top:0,behavior:'smooth'});return}
   const q=e.target.closest('[data-quote]');if(q){e.preventDefault();document.body.classList.remove('menu-open');const sec=document.getElementById(current[0]+'-contact');if(q.dataset.svc){const sel=sec.querySelector('select');[...sel.options].forEach(o=>{if(o.text===q.dataset.svc)sel.value=o.text})}sec.scrollIntoView({behavior:'smooth'});return}
-  const sxb=e.target.closest('[data-sx]');if(sxb){const k=sxb.dataset.sx;document.querySelectorAll('[data-sx]').forEach(b=>{b.classList.toggle('on',b===sxb);b.setAttribute('aria-selected',b===sxb)});document.querySelectorAll('[data-sxp]').forEach(p=>{const on=p.dataset.sxp===k;p.hidden=!on;p.classList.toggle('on',on);if(on)p.querySelectorAll('.rv').forEach(r=>r.classList.add('in'))});return}
+  const sxb=e.target.closest('[data-sx]');if(sxb){const k=sxb.dataset.sx;document.getElementById('d-sectors').classList.toggle('ch',k==='charity');document.querySelectorAll('[data-sx]').forEach(b=>{b.classList.toggle('on',b===sxb);b.setAttribute('aria-selected',b===sxb)});document.querySelectorAll('[data-sxp]').forEach(p=>{const on=p.dataset.sxp===k;p.hidden=!on;p.classList.toggle('on',on);if(on)p.querySelectorAll('.rv').forEach(r=>r.classList.add('in'))});return}
   const sxw=e.target.closest('[data-sxwa]');if(sxw){e.preventDefault();openWA(sxw.dataset.sxwa==='school'?`Hi SMR Digital! I'd like to talk about a website for our school.\n\nSchool name:\nTown:\nMy name & role:`:`Hi SMR Digital! I'd like to talk about a website/app for our charity.\n\nCharity name:\nWhat we do:\nMy name & role:`);return}
   const rf=e.target.closest('[data-refer]');if(rf){e.preventDefault();openWA(`Hi SMR Digital! I'd like to refer a business for an app/website.\n\nBusiness name:\nContact name & number:\nMy name:`);return}
   const w=e.target.closest('[data-wa]');if(w){e.preventDefault();openWA(`Hi ${XS[current][1]}! I'd like a quote please.`);return}
