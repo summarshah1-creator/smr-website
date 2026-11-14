@@ -1,0 +1,44 @@
+name: Fetch Hisn al-Muslim audio and Quran text (scratch)
+on:
+  push:
+    branches: [fetch/hisn-audio]
+    paths: [fetch-hisn/keys.txt]
+permissions:
+  contents: write
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download dua audio (1-267) and squeeze to small mono mp3
+        run: |
+          sudo apt-get -qq update && sudo apt-get -qq install -y ffmpeg >/dev/null
+          mkdir -p fetch-hisn/raw fetch-hisn/a
+          for s in https http; do curl -sfI -m 20 "$s://www.hisnmuslim.com/audio/ar/1.mp3" -o /dev/null && echo "$s ok" >> fetch-hisn/proto.txt || echo "$s fail" >> fetch-hisn/proto.txt; done
+          for i in $(seq 1 267); do
+            curl -sfL -m 60 "http://www.hisnmuslim.com/audio/ar/$i.mp3" -o fetch-hisn/raw/$i.mp3 || { echo "miss $i" >> fetch-hisn/miss.txt; continue; }
+            ffmpeg -loglevel error -y -i fetch-hisn/raw/$i.mp3 -ac 1 -ar 32000 -b:a 48k fetch-hisn/a/$i.mp3 || cp fetch-hisn/raw/$i.mp3 fetch-hisn/a/$i.mp3
+          done
+          du -sh fetch-hisn/raw fetch-hisn/a > fetch-hisn/size.txt; cat fetch-hisn/size.txt
+          rm -rf fetch-hisn/raw
+      - name: Quran text for the listed ayat
+        run: |
+          python3 - <<'P'
+          import json,urllib.request
+          keys=open('fetch-hisn/keys.txt').read().split(); out={}
+          for k in keys:
+              t=None
+              for u in [f'https://api.quran.com/api/v4/verses/by_key/{k}?fields=text_uthmani', f'https://api.alquran.cloud/v1/ayah/{k}/quran-uthmani']:
+                  try:
+                      j=json.loads(urllib.request.urlopen(urllib.request.Request(u,headers={'User-Agent':'InspireFM-app/1.0'}),timeout=30).read())
+                      t=j['verse']['text_uthmani'] if 'verse' in j else j['data']['text']
+                      break
+                  except Exception as e: print('fail',u,e)
+              if t: out[k]=t
+          json.dump(out,open('fetch-hisn/quran.json','w'),ensure_ascii=False)
+          print(len(out),'of',len(keys))
+          P
+      - name: Commit
+        run: |
+          git config user.name "github-actions"; git config user.email "actions@github.com"
+          git add fetch-hisn && git commit -m "Fetched Hisn audio and Quran text" && git push || echo nothing
