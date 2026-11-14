@@ -488,5 +488,22 @@
    "Collection or delivery, with live order tracking so customers can see where their food is.",
    "Orders come straight to the shop with no commission to delivery apps."
   ]
+ },
+ {
+  "slug": "timeds",
+  "version": "2026-11-14a",
+  "ver": "1.0",
+  "name": "Tim & Ed’s Coffee Club",
+  "accent": "#C9A24A",
+  "tagline": "Membership app + staff terminal + admin dashboard · Wigmore Lane, Luton",
+  "description": "Tim & Ed’s Coffee Club for Tim & Ed’s Italian Cafe in Luton: the customer membership app, the staff scanning terminal and the owner’s admin dashboard, all in one demo. Use the switch at the top to move between them (test PINs: staff 3333, manager 2222, owner 1111).",
+  "tips": [
+   "Use the switch at the top to see all three parts: the customer app, the staff terminal and the admin dashboard.",
+   "Customers join the Coffee Club in the app and collect stamps every time they visit.",
+   "Staff scan the customer's app on the terminal, so every stamp and voucher is logged against their name.",
+   "The admin dashboard shows members, visits and rewards, and lets the owner manage staff and their PINs.",
+   "New dishes, festive menus and offers can be pushed to members first, straight from the app.",
+   "Test PINs on the terminal: staff 3333, manager 2222, owner 1111."
+  ]
  }
 ]
