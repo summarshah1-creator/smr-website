@@ -509,6 +509,22 @@ return json_decode(<<<'JSON'
    "New dishes, festive menus and offers can be pushed to members first, straight from the app.",
    "Test PINs on the terminal: staff 3333, manager 2222, owner 1111."
   ]
+ },
+ {
+  "slug": "bombay",
+  "version": "2026-11-14a",
+  "ver": "1.0",
+  "name": "Bombay Pizza",
+  "accent": "#ED9770",
+  "tagline": "Indian Italian fusion ordering app · Luton & Hemel Hempstead",
+  "description": "Bombay Pizza's own ordering app: customers pick their nearest branch on the map, browse the Indian Italian fusion menu and order for collection or delivery, with 0% commission to the platforms.",
+  "tips": [
+   "The app opens with a short intro, then a map so customers pick their nearest branch (Luton or Hemel Hempstead).",
+   "Each branch has its own hours, delivery fee, minimum order and collection or delivery options.",
+   "Customers browse the full Indian Italian fusion menu with photos and add to their basket in a couple of taps.",
+   "Delivery addresses are checked by postcode, so customers only see what their branch can deliver.",
+   "Every order comes straight to the shop with 0% commission, instead of paying Just Eat, Uber Eats or Deliveroo."
+  ]
  }
 ]
 JSON
