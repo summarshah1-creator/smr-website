@@ -122,6 +122,7 @@ body.menu-open .menu-btn i::after{top:0;transform:rotate(-45deg)}
 body.menu-open .drawer{opacity:1;pointer-events:auto}
 .drawer a{font-family:Sora,system-ui,sans-serif;font-size:30px;font-weight:700;padding:8px 0;border-bottom:1px solid var(--line);transform:translateY(16px);opacity:0;transition:.45s var(--ease)}
 body.menu-open .drawer a{transform:none;opacity:1}
+.drawer a.adm{margin-top:auto;font-family:Manrope,system-ui,sans-serif;font-size:15px;font-weight:600;color:var(--mut);border-bottom:0;padding-top:18px}
 .drawer a:nth-child(2){transition-delay:.04s}.drawer a:nth-child(3){transition-delay:.08s}.drawer a:nth-child(4){transition-delay:.12s}.drawer a:nth-child(5){transition-delay:.16s}
 
 /* ---------- buttons ---------- */
@@ -2033,7 +2034,7 @@ function go(brand,{scroll=true,push=true}={}){
 function buildDrawer(){
   const L={graphics:[['g-services','Services'],['g-contact','Get a quote']],digital:[['d-portfolio','Our apps'],['d-features','What you get'],['d-contact','Get a quote']],marketing:[['m-social','Social media'],['m-content','Content'],['m-contact','Get a quote']],plates:[['p-insta','Instagram'],['p-types','Plate styles'],['p-contact','Get a quote']]}[current];
   const others=BRANDS.filter(b=>b!==current).map(b=>`<a data-go="${b}" style="color:var(--mut)">SMR ${b[0].toUpperCase()+b.slice(1)} →</a>`).join('');
-  document.getElementById('drawer').innerHTML=L.map(([id,t])=>`<a href="#${id}" data-scroll>${t}</a>`).join('')+`<a href="https://www.instagram.com/${CONTACT.instagram[current]}/" target="_blank" rel="noopener">Instagram</a>`+others;
+  document.getElementById('drawer').innerHTML=L.map(([id,t])=>`<a href="#${id}" data-scroll>${t}</a>`).join('')+`<a href="https://www.instagram.com/${CONTACT.instagram[current]}/" target="_blank" rel="noopener">Instagram</a>`+others+`<a class="adm" href="/demo-admin/">🔒 SMR Admin</a>`;
 }
 function defaultBrand(){
   const h=location.hash.slice(1);
