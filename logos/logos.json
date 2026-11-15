@@ -20973,6 +20973,7 @@
    "category_name": "Council, public & youth",
    "path": "community/ngyt/",
    "styles": [
+    "logo",
     "logo-white",
     "icon"
    ],
@@ -20980,10 +20981,19 @@
    "quality": "redrawn",
    "details": {
     "address": "The Hat Factory Arts Centre, 65\u201367 Bute Street, Luton",
-    "postcode": "LU1 2EY"
+    "postcode": "LU1 2EY",
+    "website": "https://ngyt.co.uk"
    },
    "signed_off": false,
    "files": [
+    {
+     "file": "ngyt-logo.png",
+     "variant": "logo"
+    },
+    {
+     "file": "ngyt-logo.svg",
+     "variant": "logo"
+    },
     {
      "file": "ngyt-logo-white.svg",
      "variant": "logo-white",
@@ -22976,6 +22986,347 @@
      "file": "sunshine-riding-school-icon-white.svg",
      "variant": "icon-white",
      "style": "icon",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "baylands-equestrian-centre",
+   "name": "Baylands Equestrian Centre",
+   "aliases": [
+    "Baylands",
+    "Baylands Riding"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/baylands-equestrian-centre/",
+   "styles": [
+    "logo",
+    "logo-on-dark",
+    "icon",
+    "logo-white",
+    "logo-black",
+    "icon-white",
+    "icon-black"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "address": "Stockwood Park, off London Road",
+    "postcode": "LU1 4BH",
+    "note": "Logo refreshed by SMR Digital (Nov 2026), same two-horse concept."
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "baylands-equestrian-centre-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "baylands-equestrian-centre-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1553,
+     "h": 430
+    },
+    {
+     "file": "baylands-equestrian-centre-logo-on-dark.svg",
+     "variant": "logo-on-dark",
+     "style": "logo-on-dark",
+     "vector": true
+    },
+    {
+     "file": "baylands-equestrian-centre-logo-on-dark.png",
+     "variant": "logo-on-dark",
+     "style": "logo-on-dark",
+     "w": 1553,
+     "h": 430
+    },
+    {
+     "file": "baylands-equestrian-centre-icon.svg",
+     "variant": "icon",
+     "style": "icon",
+     "vector": true
+    },
+    {
+     "file": "baylands-equestrian-centre-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 1501,
+     "h": 1335
+    },
+    {
+     "file": "baylands-equestrian-centre-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "vector": true
+    },
+    {
+     "file": "baylands-equestrian-centre-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "w": 1553,
+     "h": 427
+    },
+    {
+     "file": "baylands-equestrian-centre-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo-black",
+     "vector": true
+    },
+    {
+     "file": "baylands-equestrian-centre-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo-black",
+     "w": 1553,
+     "h": 427
+    },
+    {
+     "file": "baylands-equestrian-centre-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon-white",
+     "vector": true
+    },
+    {
+     "file": "baylands-equestrian-centre-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon-white",
+     "w": 1501,
+     "h": 1329
+    },
+    {
+     "file": "baylands-equestrian-centre-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon-black",
+     "vector": true
+    },
+    {
+     "file": "baylands-equestrian-centre-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon-black",
+     "w": 1501,
+     "h": 1329
+    }
+   ]
+  },
+  {
+   "slug": "anne-gale-school-of-dance",
+   "name": "Anne Gale School of Dance",
+   "aliases": [
+    "Anne Gale",
+    "Anne Gale Dance"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/anne-gale-school-of-dance/",
+   "styles": [
+    "logo",
+    "logo-on-dark",
+    "logo-white",
+    "logo-black",
+    "icon"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "address": "2a Downs Road",
+    "postcode": "LU1 1QR",
+    "website": "https://www.annegale.co.uk",
+    "note": "Logo refreshed by SMR Digital (Nov 2026), same dancers concept with new type."
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "anne-gale-school-of-dance-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "anne-gale-school-of-dance-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1561,
+     "h": 548
+    },
+    {
+     "file": "anne-gale-school-of-dance-logo-on-dark.svg",
+     "variant": "logo-on-dark",
+     "style": "logo-on-dark",
+     "vector": true
+    },
+    {
+     "file": "anne-gale-school-of-dance-logo-on-dark.png",
+     "variant": "logo-on-dark",
+     "style": "logo-on-dark",
+     "w": 1561,
+     "h": 548
+    },
+    {
+     "file": "anne-gale-school-of-dance-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "vector": true
+    },
+    {
+     "file": "anne-gale-school-of-dance-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "w": 1561,
+     "h": 548
+    },
+    {
+     "file": "anne-gale-school-of-dance-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo-black",
+     "vector": true
+    },
+    {
+     "file": "anne-gale-school-of-dance-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo-black",
+     "w": 1561,
+     "h": 548
+    },
+    {
+     "file": "anne-gale-school-of-dance-icon.svg",
+     "variant": "icon",
+     "style": "icon",
+     "vector": true
+    },
+    {
+     "file": "anne-gale-school-of-dance-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 1544,
+     "h": 653
+    },
+    {
+     "file": "anne-gale-school-of-dance-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon",
+     "w": 1544,
+     "h": 653,
+     "made": true
+    },
+    {
+     "file": "anne-gale-school-of-dance-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 1544,
+     "h": 653,
+     "made": true
+    },
+    {
+     "file": "anne-gale-school-of-dance-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "anne-gale-school-of-dance-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "pqa",
+   "name": "Pauline Quirke Academy (PQA Luton)",
+   "aliases": [
+    "PQA",
+    "PQA Luton",
+    "Pauline Quirke Academy of Performing Arts"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/pqa/",
+   "styles": [
+    "logo",
+    "logo-on-dark",
+    "logo-tile-full"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "address": "Beech Hill Community Primary School, Dunstable Road",
+    "postcode": "LU4 8BW",
+    "website": "https://pqacademy.com/academies/luton"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "pqa-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "pqa-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1520,
+     "h": 842
+    },
+    {
+     "file": "pqa-logo-on-dark.svg",
+     "variant": "logo-on-dark",
+     "style": "logo-on-dark",
+     "vector": true
+    },
+    {
+     "file": "pqa-logo-on-dark.png",
+     "variant": "logo-on-dark",
+     "style": "logo-on-dark",
+     "w": 1520,
+     "h": 842
+    },
+    {
+     "file": "pqa-logo-tile-full.svg",
+     "variant": "logo-tile-full",
+     "style": "logo-tile-full",
+     "vector": true
+    },
+    {
+     "file": "pqa-logo-tile-full.png",
+     "variant": "logo-tile-full",
+     "style": "logo-tile-full",
+     "w": 1600,
+     "h": 1600
+    },
+    {
+     "file": "pqa-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1520,
+     "h": 842,
+     "made": true
+    },
+    {
+     "file": "pqa-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1520,
+     "h": 842,
+     "made": true
+    },
+    {
+     "file": "pqa-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "pqa-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
      "vector": true,
      "made": true
     }

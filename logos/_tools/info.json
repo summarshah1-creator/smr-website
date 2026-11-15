@@ -888,7 +888,8 @@
  },
  "ngyt": {
   "address": "The Hat Factory Arts Centre, 65\u201367 Bute Street, Luton",
-  "postcode": "LU1 2EY"
+  "postcode": "LU1 2EY",
+  "website": "https://ngyt.co.uk"
  },
  "al-madani": {
   "address": "12\u201316 Portland Road, Luton",
@@ -1057,5 +1058,21 @@
   "address": "Warden Hill Road, next to South Beds Golf Club",
   "postcode": "LU2 7AE",
   "note": "New logo designed by SMR Digital (Nov 2026) from the old sunshine and horse concept."
+ },
+ "baylands-equestrian-centre": {
+  "address": "Stockwood Park, off London Road",
+  "postcode": "LU1 4BH",
+  "note": "Logo refreshed by SMR Digital (Nov 2026), same two-horse concept."
+ },
+ "anne-gale-school-of-dance": {
+  "address": "2a Downs Road",
+  "postcode": "LU1 1QR",
+  "website": "https://www.annegale.co.uk",
+  "note": "Logo refreshed by SMR Digital (Nov 2026), same dancers concept with new type."
+ },
+ "pqa": {
+  "address": "Beech Hill Community Primary School, Dunstable Road",
+  "postcode": "LU4 8BW",
+  "website": "https://pqacademy.com/academies/luton"
  }
 }

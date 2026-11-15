@@ -1,6 +1,6 @@
 # SMR logo list
 
-303 organisations. Full details in logos.json and LIST.csv.
+306 organisations. Full details in logos.json and LIST.csv.
 
 ## businesses (30)
 - AA Carpets and Furniture
@@ -132,9 +132,11 @@
 - Wildlife Trust BCN
 - Woodland Trust
 
-## community (65)
+## community (68)
 - ABCD Luton
 - Active Luton
+- Anne Gale School of Dance
+- Baylands Equestrian Centre
 - Bedfordshire Chamber of Commerce
 - Bedfordshire Fire & Rescue Service
 - Bedfordshire Hospitals NHS Foundation Trust
@@ -181,6 +183,7 @@
 - Near Neighbours
 - Next Generation Youth Theatre
 - NXT GEN Pathways
+- Pauline Quirke Academy (PQA Luton)
 - Rosebuds Luton Sisters
 - Sea Cadets (Luton Unit 226, TS Keyes)
 - St Joseph's RC Scouts, Icknield (Luton)
