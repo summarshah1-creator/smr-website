@@ -41,7 +41,7 @@ CAT = {'mosques': 'Mosques & Islamic centres', 'schools': 'Schools & colleges', 
        'community': 'Council, public & youth', 'campaigns': 'Campaigns & events', 'media': 'Media',
        'venues': 'Venues & days out', 'businesses': 'Businesses & sponsors', 'smr': 'SMR'}
 # styles that are already a recolour for dark/one colour: kept, but no new variants made from them
-NOVAR = ('white', 'mono', 'dark', 'light', 'inverse', 'green', 'gold')
+NOVAR = ('white', 'mono', 'dark', 'light', 'inverse', 'green', 'gold', 'black', 'full')
 
 # ---------- helpers ----------
 def render_svg(paths, outdir):
@@ -209,10 +209,12 @@ for s, (cat, name, al, src) in sorted(M.items(), key=lambda x: (list(CAT).index(
         st = styles.setdefault(var, {})
         if p.endswith('.svg'):
             st['svg'] = p
+            if path.startswith('hand/'): st['hand'] = True
             if 'png' not in st:
                 st['png_from_svg'] = Image.open('svgr/' + os.path.basename(p)[:-4] + '.png').convert('RGBA')
         else:
             im = Image.open(p).convert('RGBA')
+            if path.startswith('hand/'): st['hand'] = True
             if 'png' not in st or max(im.size) > max(st['png'].size): st['png'] = im
     seen = []
     for var in list(styles):
@@ -236,7 +238,7 @@ for s, (cat, name, al, src) in sorted(M.items(), key=lambda x: (list(CAT).index(
             fn = f'{s}-{var}.svg'; shutil.copy(st['svg'], f'{d}/{fn}'); files.append({'file': fn, 'variant': var, 'style': var, 'vector': True})
         if im is None: continue
         im = cap(trim(im))
-        if is_opaque(im):
+        if is_opaque(im) and not st.get('hand'):
             cut, frac = remove_bg(im)
             if var.endswith('-tile'):
                 save(im, f'{s}-{var}.png', var, style=var)
@@ -273,6 +275,7 @@ for s, (cat, name, al, src) in sorted(M.items(), key=lambda x: (list(CAT).index(
         if im is None: continue
         keep_light = any(w in var for w in NOVAR)
         if keep_light and any(not any(w in k for w in NOVAR) for k in styles): continue
+        if (var + '-black') in styles or (var + '-white') in styles: continue   # hand-made one-colour versions win
         m = knock(ink_mask(im, keep_light), im)
         if keep_light and any(w in var for w in ('white','mono')):
             pass
@@ -293,9 +296,9 @@ for s, (cat, name, al, src) in sorted(M.items(), key=lambda x: (list(CAT).index(
             except Exception as e:
                 print('trace failed', s, var, e)
         has_dark_version = any(k.startswith(var) and any(w in k for w in ('white', 'dark', 'light', 'inverse')) for k in styles if k != var)
-        od = None if (has_dark_version or keep_light) else ondark(im)
+        od = None if (has_dark_version or keep_light or st.get('hand')) else ondark(im)
         if od is not None: save(od, f'{s}-{var}-on-dark.png', var + '-on-dark', True, var)
-        bc = None if keep_light else brand_colour(im)
+        bc = None if (keep_light or st.get('hand')) else brand_colour(im)
         if bc is not None:
             alt = solid(knock(ink_mask(im, False), im), bc)
             # only keep the one-colour version if it differs from the original enough to be useful

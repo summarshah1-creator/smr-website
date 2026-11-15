@@ -52,4 +52,31 @@ def putteridge():
         for c in ('white','black'):
             if os.path.exists(f'{d}putteridge-{v}-{c}.svg'):
                 ns['trace_svg'](np.asarray(Image.open(f'{d}putteridge-{v}-{c}.png').getchannel('A'))>110,'#ffffff' if c=='white' else '#111111',f'{d}putteridge-{v}-{c}.svg')
-putteridge(); print('post fixes applied')
+putteridge()
+def cf_reg():
+    import os
+    d=glob.glob('out/logos/*/community-fund/')[0]
+    for f in glob.glob(d+'*-black.png')+glob.glob(d+'*-white.png'):
+        im=Image.open(f).convert('RGBA'); a=np.asarray(im).copy(); m=a[...,3]>60
+        lab,n=ndimage.label(m); H,W=m.shape; tot=m.sum()
+        for i in range(1,n+1):
+            ys,xs=np.where(lab==i)
+            if len(ys)<.008*tot and ys.mean()>.88*H and .18*W<xs.mean()<.3*W: a[lab==i,3]=0
+        Image.fromarray(a).save(f)
+        sv=f[:-4]+'.svg'
+        if os.path.exists(sv): ns['trace_svg'](a[...,3]>110,'#ffffff' if f.endswith('white.png') else '#111111',sv)
+cf_reg()
+def mono_lockups(slug):
+    import json, lockup, os
+    d=glob.glob(f'out/logos/*/{slug}/')[0]; sp=json.load(open('lockups.json'))[slug]; jobs=[]
+    for name,col in [('white','#ffffff'),('black','#111111')]:
+        f=f'{d}{slug}-icon-{name}.png'
+        if not os.path.exists(f): return
+        s=dict(sp,c1=col,c2=col); ic=Image.open(f)
+        jobs+=[(ic,s,'h',f'{d}{slug}-lockup-{name}.png'),(ic,s,'v',f'{d}{slug}-lockup-stacked-{name}.png')]
+    lockup.make(jobs)
+    for v in ('lockup','lockup-stacked'):
+        for c in ('white','black'):
+            sv=f'{d}{slug}-{v}-{c}.svg'
+            if os.path.exists(sv): ns['trace_svg'](np.asarray(Image.open(f'{d}{slug}-{v}-{c}.png').getchannel('A'))>110,'#ffffff' if c=='white' else '#111111',sv)
+mono_lockups('denbigh'); print('post fixes applied')

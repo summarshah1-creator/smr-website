@@ -290,6 +290,14 @@ M['tops-pizza'][3][:]=[('fixed/tops-pizza.png','logo')]
 M['kashmir-catering'][3][:]=[('fixed/kashmir-catering.png','logo')]
 M['beds-pcc'][3][:]=[('fixed/beds-pcc.png','logo')]
 M['girlguiding']=('community','Girlguiding (Bedfordshire · Luton South)',['Girlguiding Luton'],[('new/girlguiding-beds.png','logo-white'),('fixed/girlguiding-luton-south.png','luton-south'),('fixed/girlguiding-luton-south-tile.png','luton-south-tile')])
+# ---------- hand-made versions (15 Nov review) ----------
+M['denbigh'][3][:]=[('hand/denbigh-crest.svg','icon'),('hand/denbigh-crest-white.svg','icon-white'),('hand/denbigh-crest-black.svg','icon-black')]
+M['global-helping-hands']=('charities','Global Helping Hands',['GHH'],[('hand/ghh-logo.png','logo'),('hand/ghh-logo-white.png','logo-white'),('hand/ghh-logo-black.png','logo-black'),('hand/ghh-logo-tile.png','logo-tile-full')])
+M['matw']=('charities','MATW Project (Muslims Around The World)',['MATW'],[('hand/matw-logo.svg','logo'),('hand/matw-logo-white.svg','logo-white'),('hand/matw-logo-black.svg','logo-black'),('hand/matw-logo-tile.svg','logo-tile-full')])
+M['aegis'][3][:]=[('hand/aegis-logo.svg','logo'),('hand/aegis-logo-white.svg','logo-white'),('hand/aegis-logo-black.svg','logo-black'),('new/aegis-training.png','training')]
+M['amanah']=('charities','Amanah Project',[],[('hand/amanah-logo.png','logo'),('hand/amanah-logo-white.png','logo-white'),('hand/amanah-logo-black.png','logo-black'),('hand/amanah-mark.svg','icon')])
+M['luton-mela']=('campaigns','Luton Mela',[],[('hand/mela.png','logo')])
+M['british-red-cross']=('charities','British Red Cross',['Red Cross'],[('hand/british-red-cross.svg','logo'),('hand/british-red-cross-white.svg','logo-white'),('hand/british-red-cross-black.svg','logo-black')])
 # ---------- name lockups (icon + full name), made by make_lockups.py ----------
 for _s in json.load(open('lockups.json')):
     if _s in M: M[_s][3].extend([('lockups/'+_s+'-h.png','lockup'),('lockups/'+_s+'-v.png','lockup-stacked')])

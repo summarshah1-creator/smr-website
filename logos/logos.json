@@ -6119,11 +6119,13 @@
    "path": "schools/denbigh/",
    "styles": [
     "icon",
+    "icon-white",
+    "icon-black",
     "lockup",
     "lockup-stacked"
    ],
-   "original_vector": false,
-   "quality": "hd",
+   "original_vector": true,
+   "quality": "vector",
    "details": {
     "address": "Alexandra Avenue, Luton",
     "postcode": "LU3 1HE",
@@ -6132,70 +6134,64 @@
    "signed_off": false,
    "files": [
     {
+     "file": "denbigh-icon.svg",
+     "variant": "icon",
+     "style": "icon",
+     "vector": true
+    },
+    {
      "file": "denbigh-icon.png",
      "variant": "icon",
      "style": "icon",
-     "w": 1024,
-     "h": 1012
+     "w": 1600,
+     "h": 1599
+    },
+    {
+     "file": "denbigh-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon-white",
+     "vector": true
+    },
+    {
+     "file": "denbigh-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon-white",
+     "w": 1600,
+     "h": 1599
+    },
+    {
+     "file": "denbigh-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon-black",
+     "vector": true
+    },
+    {
+     "file": "denbigh-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon-black",
+     "w": 1600,
+     "h": 1599
     },
     {
      "file": "denbigh-lockup.png",
      "variant": "lockup",
      "style": "lockup",
      "w": 1800,
-     "h": 701
+     "h": 704
     },
     {
      "file": "denbigh-lockup-stacked.png",
      "variant": "lockup-stacked",
      "style": "lockup-stacked",
-     "w": 1409,
+     "w": 1410,
      "h": 1800
-    },
-    {
-     "file": "denbigh-icon-black.png",
-     "variant": "icon-black",
-     "style": "icon",
-     "w": 1024,
-     "h": 1012,
-     "made": true
-    },
-    {
-     "file": "denbigh-icon-white.png",
-     "variant": "icon-white",
-     "style": "icon",
-     "w": 1024,
-     "h": 1012,
-     "made": true
-    },
-    {
-     "file": "denbigh-icon-black.svg",
-     "variant": "icon-black",
-     "style": "icon",
-     "vector": true,
-     "made": true
-    },
-    {
-     "file": "denbigh-icon-white.svg",
-     "variant": "icon-white",
-     "style": "icon",
-     "vector": true,
-     "made": true
-    },
-    {
-     "file": "denbigh-icon-brand-colour.png",
-     "variant": "icon-brand-colour",
-     "style": "icon",
-     "w": 1024,
-     "h": 1012,
-     "made": true
     },
     {
      "file": "denbigh-lockup-black.png",
      "variant": "lockup-black",
      "style": "lockup",
      "w": 1800,
-     "h": 701,
+     "h": 704,
      "made": true
     },
     {
@@ -6203,7 +6199,7 @@
      "variant": "lockup-white",
      "style": "lockup",
      "w": 1800,
-     "h": 701,
+     "h": 704,
      "made": true
     },
     {
@@ -6225,14 +6221,14 @@
      "variant": "lockup-brand-colour",
      "style": "lockup",
      "w": 1800,
-     "h": 701,
+     "h": 704,
      "made": true
     },
     {
      "file": "denbigh-lockup-stacked-black.png",
      "variant": "lockup-stacked-black",
      "style": "lockup-stacked",
-     "w": 1409,
+     "w": 1410,
      "h": 1800,
      "made": true
     },
@@ -6240,7 +6236,7 @@
      "file": "denbigh-lockup-stacked-white.png",
      "variant": "lockup-stacked-white",
      "style": "lockup-stacked",
-     "w": 1409,
+     "w": 1410,
      "h": 1800,
      "made": true
     },
@@ -6262,7 +6258,7 @@
      "file": "denbigh-lockup-stacked-brand-colour.png",
      "variant": "lockup-stacked-brand-colour",
      "style": "lockup-stacked",
-     "w": 1409,
+     "w": 1410,
      "h": 1800,
      "made": true
     }
@@ -9366,63 +9362,78 @@
    "category_name": "Charities",
    "path": "charities/amanah/",
    "styles": [
-    "logo"
+    "logo",
+    "logo-white",
+    "logo-black",
+    "icon"
    ],
    "original_vector": true,
-   "quality": "redrawn",
+   "quality": "vector",
    "details": {},
    "signed_off": false,
    "files": [
     {
-     "file": "amanah-logo.svg",
-     "variant": "logo",
-     "style": "logo",
-     "vector": true,
-     "redrawn": true
-    },
-    {
      "file": "amanah-logo.png",
      "variant": "logo",
      "style": "logo",
-     "w": 1496,
-     "h": 1598
-    },
-    {
-     "file": "amanah-logo-black.png",
-     "variant": "logo-black",
-     "style": "logo",
-     "w": 1496,
-     "h": 1598,
-     "made": true
+     "w": 1257,
+     "h": 900
     },
     {
      "file": "amanah-logo-white.png",
      "variant": "logo-white",
-     "style": "logo",
-     "w": 1496,
-     "h": 1598,
-     "made": true
+     "style": "logo-white",
+     "w": 1258,
+     "h": 900
     },
     {
-     "file": "amanah-logo-black.svg",
+     "file": "amanah-logo-black.png",
      "variant": "logo-black",
-     "style": "logo",
+     "style": "logo-black",
+     "w": 1257,
+     "h": 900
+    },
+    {
+     "file": "amanah-icon.svg",
+     "variant": "icon",
+     "style": "icon",
+     "vector": true
+    },
+    {
+     "file": "amanah-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 1164,
+     "h": 1597
+    },
+    {
+     "file": "amanah-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon",
+     "w": 1164,
+     "h": 1597,
+     "made": true
+    },
+    {
+     "file": "amanah-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 1164,
+     "h": 1597,
+     "made": true
+    },
+    {
+     "file": "amanah-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
      "vector": true,
      "made": true
     },
     {
-     "file": "amanah-logo-white.svg",
-     "variant": "logo-white",
-     "style": "logo",
+     "file": "amanah-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
      "vector": true,
-     "made": true
-    },
-    {
-     "file": "amanah-logo-brand-colour.png",
-     "variant": "logo-brand-colour",
-     "style": "logo",
-     "w": 1496,
-     "h": 1598,
      "made": true
     }
    ]
@@ -9646,6 +9657,66 @@
      "w": 1592,
      "h": 678,
      "made": true
+    }
+   ]
+  },
+  {
+   "slug": "british-red-cross",
+   "name": "British Red Cross",
+   "aliases": [
+    "Red Cross"
+   ],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/british-red-cross/",
+   "styles": [
+    "logo",
+    "logo-white",
+    "logo-black"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {},
+   "signed_off": false,
+   "files": [
+    {
+     "file": "british-red-cross-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "british-red-cross-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1548,
+     "h": 1548
+    },
+    {
+     "file": "british-red-cross-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "vector": true
+    },
+    {
+     "file": "british-red-cross-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "w": 1548,
+     "h": 1548
+    },
+    {
+     "file": "british-red-cross-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo-black",
+     "vector": true
+    },
+    {
+     "file": "british-red-cross-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo-black",
+     "w": 1548,
+     "h": 1548
     }
    ]
   },
@@ -10584,8 +10655,11 @@
    "category_name": "Charities",
    "path": "charities/global-helping-hands/",
    "styles": [
-    "logo-tile",
-    "logo"
+    "logo",
+    "logo-white",
+    "logo-black",
+    "logo-tile-full",
+    "icon"
    ],
    "original_vector": false,
    "quality": "hd",
@@ -10593,56 +10667,77 @@
    "signed_off": false,
    "files": [
     {
-     "file": "global-helping-hands-logo-tile.png",
-     "variant": "logo-tile",
-     "style": "logo-tile",
-     "w": 1000,
-     "h": 1000
-    },
-    {
      "file": "global-helping-hands-logo.png",
      "variant": "logo",
      "style": "logo",
-     "w": 855,
-     "h": 686,
-     "made": true
-    },
-    {
-     "file": "global-helping-hands-logo-black.png",
-     "variant": "logo-black",
-     "style": "logo",
-     "w": 855,
-     "h": 686,
-     "made": true
+     "w": 1476,
+     "h": 799
     },
     {
      "file": "global-helping-hands-logo-white.png",
      "variant": "logo-white",
-     "style": "logo",
-     "w": 855,
-     "h": 686,
-     "made": true
+     "style": "logo-white",
+     "w": 1476,
+     "h": 799
     },
     {
-     "file": "global-helping-hands-logo-black.svg",
+     "file": "global-helping-hands-logo-black.png",
      "variant": "logo-black",
-     "style": "logo",
+     "style": "logo-black",
+     "w": 1476,
+     "h": 799
+    },
+    {
+     "file": "global-helping-hands-logo-tile-full.png",
+     "variant": "logo-tile-full",
+     "style": "logo-tile-full",
+     "w": 1729,
+     "h": 1128
+    },
+    {
+     "file": "global-helping-hands-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 493,
+     "h": 491,
+     "made": true
+    },
+    {
+     "file": "global-helping-hands-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon",
+     "w": 493,
+     "h": 491,
+     "made": true
+    },
+    {
+     "file": "global-helping-hands-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 493,
+     "h": 491,
+     "made": true
+    },
+    {
+     "file": "global-helping-hands-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
      "vector": true,
      "made": true
     },
     {
-     "file": "global-helping-hands-logo-white.svg",
-     "variant": "logo-white",
-     "style": "logo",
+     "file": "global-helping-hands-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
      "vector": true,
      "made": true
     },
     {
-     "file": "global-helping-hands-logo-brand-colour.png",
-     "variant": "logo-brand-colour",
-     "style": "logo",
-     "w": 855,
-     "h": 686,
+     "file": "global-helping-hands-icon-brand-colour.png",
+     "variant": "icon-brand-colour",
+     "style": "icon",
+     "w": 493,
+     "h": 491,
      "made": true
     }
    ]
@@ -12754,72 +12849,66 @@
    "path": "charities/matw/",
    "styles": [
     "logo",
-    "logo-tile"
+    "logo-white",
+    "logo-black",
+    "logo-tile-full"
    ],
-   "original_vector": false,
-   "quality": "hd",
+   "original_vector": true,
+   "quality": "vector",
    "details": {},
    "signed_off": false,
    "files": [
     {
-     "file": "matw-logo.png",
+     "file": "matw-logo.svg",
      "variant": "logo",
      "style": "logo",
-     "w": 1161,
-     "h": 1151
-    },
-    {
-     "file": "matw-logo-tile.png",
-     "variant": "logo-tile",
-     "style": "logo-tile",
-     "w": 676,
-     "h": 430
+     "vector": true
     },
     {
      "file": "matw-logo.png",
      "variant": "logo",
      "style": "logo",
-     "w": 290,
-     "h": 284,
-     "made": true
-    },
-    {
-     "file": "matw-logo-black.png",
-     "variant": "logo-black",
-     "style": "logo",
-     "w": 290,
-     "h": 284,
-     "made": true
-    },
-    {
-     "file": "matw-logo-white.png",
-     "variant": "logo-white",
-     "style": "logo",
-     "w": 290,
-     "h": 284,
-     "made": true
-    },
-    {
-     "file": "matw-logo-black.svg",
-     "variant": "logo-black",
-     "style": "logo",
-     "vector": true,
-     "made": true
+     "w": 1434,
+     "h": 1403
     },
     {
      "file": "matw-logo-white.svg",
      "variant": "logo-white",
-     "style": "logo",
-     "vector": true,
-     "made": true
+     "style": "logo-white",
+     "vector": true
     },
     {
-     "file": "matw-logo-brand-colour.png",
-     "variant": "logo-brand-colour",
-     "style": "logo",
-     "w": 290,
-     "h": 284,
-     "made": true
+     "file": "matw-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "w": 1434,
+     "h": 1403
+    },
+    {
+     "file": "matw-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo-black",
+     "vector": true
+    },
+    {
+     "file": "matw-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo-black",
+     "w": 1434,
+     "h": 1403
+    },
+    {
+     "file": "matw-logo-tile-full.svg",
+     "variant": "logo-tile-full",
+     "style": "logo-tile-full",
+     "vector": true
+    },
+    {
+     "file": "matw-logo-tile-full.png",
+     "variant": "logo-tile-full",
+     "style": "logo-tile-full",
+     "w": 1505,
+     "h": 1600
     }
    ]
   },
@@ -19538,43 +19627,34 @@
    "category_name": "Campaigns & events",
    "path": "campaigns/luton-mela/",
    "styles": [
-    "logo-tile",
     "logo"
    ],
    "original_vector": false,
-   "quality": "ok",
+   "quality": "hd",
    "details": {},
    "signed_off": false,
    "files": [
     {
-     "file": "luton-mela-logo-tile.png",
-     "variant": "logo-tile",
-     "style": "logo-tile",
-     "w": 596,
-     "h": 335
-    },
-    {
      "file": "luton-mela-logo.png",
      "variant": "logo",
      "style": "logo",
-     "w": 374,
-     "h": 300,
-     "made": true
+     "w": 1486,
+     "h": 1193
     },
     {
      "file": "luton-mela-logo-black.png",
      "variant": "logo-black",
      "style": "logo",
-     "w": 374,
-     "h": 300,
+     "w": 1486,
+     "h": 1193,
      "made": true
     },
     {
      "file": "luton-mela-logo-white.png",
      "variant": "logo-white",
      "style": "logo",
-     "w": 374,
-     "h": 300,
+     "w": 1486,
+     "h": 1193,
      "made": true
     },
     {
@@ -19589,14 +19669,6 @@
      "variant": "logo-white",
      "style": "logo",
      "vector": true,
-     "made": true
-    },
-    {
-     "file": "luton-mela-logo-brand-colour.png",
-     "variant": "logo-brand-colour",
-     "style": "logo",
-     "w": 374,
-     "h": 300,
      "made": true
     }
    ]
@@ -22960,10 +23032,12 @@
    "path": "businesses/aegis/",
    "styles": [
     "logo",
+    "logo-white",
+    "logo-black",
     "training"
    ],
    "original_vector": true,
-   "quality": "redrawn",
+   "quality": "vector",
    "details": {
     "website": "https://aegissupportservices.com/"
    },
@@ -22973,15 +23047,40 @@
      "file": "aegis-logo.svg",
      "variant": "logo",
      "style": "logo",
-     "vector": true,
-     "redrawn": true
+     "vector": true
     },
     {
      "file": "aegis-logo.png",
      "variant": "logo",
      "style": "logo",
-     "w": 1600,
-     "h": 869
+     "w": 1598,
+     "h": 867
+    },
+    {
+     "file": "aegis-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "vector": true
+    },
+    {
+     "file": "aegis-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "w": 1305,
+     "h": 572
+    },
+    {
+     "file": "aegis-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo-black",
+     "vector": true
+    },
+    {
+     "file": "aegis-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo-black",
+     "w": 1305,
+     "h": 572
     },
     {
      "file": "aegis-training.png",
@@ -22989,44 +23088,6 @@
      "style": "training",
      "w": 560,
      "h": 246
-    },
-    {
-     "file": "aegis-logo-black.png",
-     "variant": "logo-black",
-     "style": "logo",
-     "w": 1600,
-     "h": 869,
-     "made": true
-    },
-    {
-     "file": "aegis-logo-white.png",
-     "variant": "logo-white",
-     "style": "logo",
-     "w": 1600,
-     "h": 869,
-     "made": true
-    },
-    {
-     "file": "aegis-logo-black.svg",
-     "variant": "logo-black",
-     "style": "logo",
-     "vector": true,
-     "made": true
-    },
-    {
-     "file": "aegis-logo-white.svg",
-     "variant": "logo-white",
-     "style": "logo",
-     "vector": true,
-     "made": true
-    },
-    {
-     "file": "aegis-logo-on-dark.png",
-     "variant": "logo-on-dark",
-     "style": "logo",
-     "w": 1600,
-     "h": 869,
-     "made": true
     },
     {
      "file": "aegis-training-black.png",
