@@ -1,6 +1,6 @@
 # SMR logo list
 
-300 organisations. Full details in logos.json and LIST.csv.
+303 organisations. Full details in logos.json and LIST.csv.
 
 ## businesses (30)
 - AA Carpets and Furniture
@@ -132,7 +132,7 @@
 - Wildlife Trust BCN
 - Woodland Trust
 
-## community (62)
+## community (65)
 - ABCD Luton
 - Active Luton
 - Bedfordshire Chamber of Commerce
@@ -149,6 +149,7 @@
 - Flying Start
 - Girlguiding (Bedfordshire · Luton South)
 - Golden Arrow Archery
+- Gymfinity Kids Clubs
 - Hangout Luton
 - Higher Ground
 - Hockwell Ring Amateur Boxing Club
@@ -163,6 +164,7 @@
 - Luton Energise Holiday Camps (HAF)
 - Luton Friends of Parks and Green Spaces
 - Luton Grappling Club
+- Luton Gymnastics Club
 - Luton Higashi Karate Kai
 - Luton Irish Forum
 - Luton Karate Academy
@@ -188,6 +190,7 @@
 - Storm Gym
 - SUEZ
 - Sunnah Archery Club
+- Sunshine Riding School
 - The Culture Trust Luton
 - Tokko Youth Hub
 - UK Centre for Carnival Arts

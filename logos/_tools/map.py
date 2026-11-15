@@ -354,3 +354,6 @@ M['im-puzzled']=('venues',"I'm Puzzled",['Im Puzzled','I am Puzzled'],[('new/ngs
 M['luton-karate-academy']=('community','Luton Karate Academy',['LKA','Luton Karate'],[('hand/luton-karate-academy-logo.svg','logo')])
 M['higashi-karate-luton']=('community','Luton Higashi Karate Kai',['Higashi Karate','Luton Higashi','Higashi Karate Luton'],[('hand/higashi-karate-badge.svg','logo'),('hand/higashi-karate-logo.svg','icon')])
 M['hockwell-ring-abc']=('community','Hockwell Ring Amateur Boxing Club',['HRABC','Hockwell Ring ABC','Hockwell Ring Boxing'],[('new/ngs-hockwell-abc.png','logo')])
+M['luton-gymnastics-club']=('community','Luton Gymnastics Club',['LGC','Luton Gym Club'],[('hand/luton-gymnastics-club-logo.svg','logo')])
+M['gymfinity-kids']=('community','Gymfinity Kids Clubs',['Gymfinity','Gymfinity Kids'],[('new/ngs-gymfinity.png','logo'),('hand/gymfinity-kids-tile.svg','logo-tile-full')])
+M['sunshine-riding-school']=('community','Sunshine Riding School',['Sunshine Riding','Sunshine Riding School Luton'],[('hand/sunshine-riding-school-logo.svg','logo'),('hand/sunshine-riding-school-logo-white.svg','logo-white'),('hand/sunshine-riding-school-logo-black.svg','logo-black'),('hand/sunshine-riding-school-logo-on-dark.svg','logo-on-dark'),('hand/sunshine-riding-school-icon.svg','icon')])

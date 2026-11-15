@@ -191,7 +191,7 @@ lcc,Luton Creative Community CIC,community,LCC; Luton Creative Community; Luton 
 luton-energise,Luton Energise Holiday Camps (HAF),community,Energise,logo,,,https://www.activeluton.co.uk/activities/energise-luton-holiday-camps,logos/community/luton-energise/
 lfpgs,Luton Friends of Parks and Green Spaces,community,LFPGS; Friends of Parks,"logo, logo-white, logo-black, lockup, lockup-white, lockup-black, name, name-white, name-black, icon, icon-white, icon-black",,,,logos/community/lfpgs/
 luton-grappling-club,Luton Grappling Club,community,Luton Grappling Academy; Luton BJJ,logo,"Stuart Place Studios, 76 Stuart Place",LU1 5DL,https://luton-grappling-academy.classforkids.io,logos/community/luton-grappling-club/
-higashi-karate-luton,Luton Higashi Karate Kai,community,Higashi Karate; Luton Higashi; Higashi Karate Luton,logo,"Lealands High School Sports Hall, Sundon Park Road",LU3 3AL,https://luton-karate.co.uk,logos/community/higashi-karate-luton/
+higashi-karate-luton,Luton Higashi Karate Kai,community,Higashi Karate; Luton Higashi; Higashi Karate Luton,"logo, icon","Lealands High School Sports Hall, Sundon Park Road",LU3 3AL,https://luton-karate.co.uk,logos/community/higashi-karate-luton/
 luton-irish-forum,Luton Irish Forum,community,,"logo, icon",,,,logos/community/luton-irish-forum/
 luton-karate-academy,Luton Karate Academy,community,LKA; Luton Karate,logo,"Inspire: Luton Sports Village, Butterfield Green Road",LU2 8DD,https://www.lutonkarateacademy.co.uk,logos/community/luton-karate-academy/
 luton-libraries,Luton Libraries,community,,logo,,,https://www.lutonlibraries.co.uk,logos/community/luton-libraries/
@@ -213,7 +213,7 @@ scouts-st-josephs,"St Joseph's RC Scouts, Icknield (Luton)",community,Scouts; St
 st-marys,St Mary's Church Luton,community,,"logo, lockup, lockup-stacked",,,https://www.stmarysluton.org,logos/community/st-marys/
 st-marys-youth,St Marys Youth,community,St Mary's Youth; St Mary's Church youth; Impact Youth Group,logo,,,https://www.stmarysluton.org,logos/community/st-marys-youth/
 stockwood-park-rfc,Stockwood Park RFC,community,SPRFC; Stockwood Park Rugby Club,logo,London Road,LU1 3RN,https://stockwoodparkrfc.co.uk,logos/community/stockwood-park-rfc/
-storm-gym,Storm Gym,community,Storm Gym Luton; Storm Gym Fitness & Martial Arts,logo; icon,"Unit 16, 141 New Bedford Road",LU3 1LF,https://www.stormgym.co.uk,logos/community/storm-gym/
+storm-gym,Storm Gym,community,Storm Gym Luton; Storm Gym Fitness & Martial Arts,"logo, icon","Unit 16, 141 New Bedford Road",LU3 1LF,https://www.stormgym.co.uk,logos/community/storm-gym/
 suez,SUEZ,community,,logo,,,https://www.suez.co.uk/en-gb,logos/community/suez/
 sunnah-archery-club,Sunnah Archery Club,community,Sunnah Archery,logo,"Shire House Community Centre, 400b Dallow Road",LU1 1UR,https://sunnaharcheryclub.com,logos/community/sunnah-archery-club/
 culture-trust,The Culture Trust Luton,community,Culture Trust,"logo, icon",,,https://www.culturetrust.com,logos/community/culture-trust/
@@ -223,6 +223,9 @@ ultimate-athlete,Ultimate Athlete MMA,community,Ultimate Athlete; UA MMA,logo,88
 luton-wicketz,Wicketz (Lord's Taverners),community,Luton Wicketz; Wicketz cricket,logo,,,https://www.cricketeast.co.uk/page/diverse-communities/luton-wicketz/lords-taverners-wicketz-programme-14024/,logos/community/luton-wicketz/
 your-wellbeing-beds,Your Wellbeing Bedfordshire,community,Your Wellbeing; YWB,"logo, logo-white, logo-black, icon, icon-white, icon-black",,,,logos/community/your-wellbeing-beds/
 youthscape,Youthscape,community,,logo,"74 Bute Street, Luton",LU1 2EY,https://www.youthscape.co.uk,logos/community/youthscape/
+luton-gymnastics-club,Luton Gymnastics Club,community,LGC; Luton Gym Club,logo,,,,logos/community/luton-gymnastics-club/
+gymfinity-kids,Gymfinity Kids Clubs,community,Gymfinity; Gymfinity Kids,"logo, logo-tile-full",,,,logos/community/gymfinity-kids/
+sunshine-riding-school,Sunshine Riding School,community,Sunshine Riding; Sunshine Riding School Luton,"logo, logo-white, logo-black, logo-on-dark, icon",,,,logos/community/sunshine-riding-school/
 one-eid,1 Eid,campaigns,One Eid,"logo, icon",,,,logos/campaigns/one-eid/
 jummah-winter-campaign,Jummah Winter Campaign,campaigns,JWA; Jummah Winter Appeal,"logo, logo-white, logo-compact, icon",,,,logos/campaigns/jummah-winter-campaign/
 lets-eat-together,Let's Eat Together,campaigns,,wordmark,,,https://lutonfoodbank.org.uk/letseattogether,logos/campaigns/lets-eat-together/
@@ -245,7 +248,7 @@ grove-theatre,"Grove Theatre, Dunstable",venues,,logo,"Grove Theatre, Dunstable"
 happy-shark,Happy Shark Comedy Club,venues,,logo,,,,logos/venues/happy-shark/
 hat-factory,Hat Factory Arts Centre,venues,,"logo, icon",65 to 67 Bute Street,LU1 2EY,https://www.culturetrust.com,logos/venues/hat-factory/
 houghton-hall,Houghton Hall Park,venues,,logo,"Park Road North, Houghton Regis",LU5 5AB,https://www.houghtonhallpark.org,logos/venues/houghton-hall/
-im-puzzled,I'm Puzzled,venues,Im Puzzled; I am Puzzled,logo; icon,,,https://www.im-puzzled.com,logos/venues/im-puzzled/
+im-puzzled,I'm Puzzled,venues,Im Puzzled; I am Puzzled,"logo, icon",,,https://www.im-puzzled.com,logos/venues/im-puzzled/
 laser-swat,Laser SWAT,venues,Laser SWAT Luton,logo,,,,logos/venues/laser-swat/
 luton-hoo,Luton Hoo Estate,venues,,logo,,,,logos/venues/luton-hoo/
 luventertainment,LUV Entertainment,venues,,logo,,,,logos/venues/luventertainment/
@@ -262,7 +265,7 @@ tenpin,Tenpin Luton,venues,,"logo, icon","The Galaxy, Bridge Street",LU1 2NB,htt
 the-giggles,The Giggles (Active Luton),venues,,logo,"Futures House, The Moakes, Marsh Farm",LU3 3QB,https://thegiggles.co.uk,logos/venues/the-giggles/
 upfront-comedy,Upfront Comedy,venues,,logo,,,,logos/venues/upfront-comedy/
 venue-360,Venue 360,venues,,"logo, icon",Gipsy Lane,LU1 3JH,https://www.venue360.co.uk,logos/venues/venue-360/
-voyager-flight-sim,Voyager Flight Simulation,venues,Voyager; Voyager Flight Sim,logo; icon,"Voyager House, 142 Prospect Way",LU2 9QH,,logos/venues/voyager-flight-sim/
+voyager-flight-sim,Voyager Flight Simulation,venues,Voyager; Voyager Flight Sim,"logo, icon","Voyager House, 142 Prospect Way",LU2 9QH,,logos/venues/voyager-flight-sim/
 wardown-golf,Wardown Adventure Golf,venues,,logo,Wardown Park,LU2 7HA,https://www.wardownadventuregolf.co.uk,logos/venues/wardown-golf/
 wigmore-valley-park,Wigmore Valley Park,venues,,logo,"Wigmore Valley Park, Wigmore",LU2 9TN,,logos/venues/wigmore-valley-park/
 woburn,Woburn Safari Park,venues,,logo,"Woburn, near Milton Keynes (Ridgmont gate)",MK43 0TU,https://woburnsafari.co.uk,logos/venues/woburn/

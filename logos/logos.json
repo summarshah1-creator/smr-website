@@ -22704,6 +22704,274 @@
    ]
   },
   {
+   "slug": "luton-gymnastics-club",
+   "name": "Luton Gymnastics Club",
+   "aliases": [
+    "LGC",
+    "Luton Gym Club"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/luton-gymnastics-club/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {},
+   "signed_off": false,
+   "files": [
+    {
+     "file": "luton-gymnastics-club-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "luton-gymnastics-club-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1424,
+     "h": 1430
+    },
+    {
+     "file": "luton-gymnastics-club-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1424,
+     "h": 1430,
+     "made": true
+    },
+    {
+     "file": "luton-gymnastics-club-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1424,
+     "h": 1430,
+     "made": true
+    },
+    {
+     "file": "luton-gymnastics-club-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "luton-gymnastics-club-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "gymfinity-kids",
+   "name": "Gymfinity Kids Clubs",
+   "aliases": [
+    "Gymfinity",
+    "Gymfinity Kids"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/gymfinity-kids/",
+   "styles": [
+    "logo",
+    "logo-tile-full"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {},
+   "signed_off": false,
+   "files": [
+    {
+     "file": "gymfinity-kids-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true
+    },
+    {
+     "file": "gymfinity-kids-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1600,
+     "h": 322
+    },
+    {
+     "file": "gymfinity-kids-logo-tile-full.svg",
+     "variant": "logo-tile-full",
+     "style": "logo-tile-full",
+     "vector": true
+    },
+    {
+     "file": "gymfinity-kids-logo-tile-full.png",
+     "variant": "logo-tile-full",
+     "style": "logo-tile-full",
+     "w": 1600,
+     "h": 1600
+    },
+    {
+     "file": "gymfinity-kids-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1600,
+     "h": 322,
+     "made": true
+    },
+    {
+     "file": "gymfinity-kids-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1600,
+     "h": 322,
+     "made": true
+    },
+    {
+     "file": "gymfinity-kids-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "gymfinity-kids-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "gymfinity-kids-logo-brand-colour.png",
+     "variant": "logo-brand-colour",
+     "style": "logo",
+     "w": 1600,
+     "h": 322,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "sunshine-riding-school",
+   "name": "Sunshine Riding School",
+   "aliases": [
+    "Sunshine Riding",
+    "Sunshine Riding School Luton"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/sunshine-riding-school/",
+   "styles": [
+    "logo",
+    "logo-white",
+    "logo-black",
+    "logo-on-dark",
+    "icon"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {},
+   "signed_off": false,
+   "files": [
+    {
+     "file": "sunshine-riding-school-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "sunshine-riding-school-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1429,
+     "h": 1800
+    },
+    {
+     "file": "sunshine-riding-school-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "vector": true
+    },
+    {
+     "file": "sunshine-riding-school-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "w": 1429,
+     "h": 1800
+    },
+    {
+     "file": "sunshine-riding-school-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo-black",
+     "vector": true
+    },
+    {
+     "file": "sunshine-riding-school-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo-black",
+     "w": 1429,
+     "h": 1800
+    },
+    {
+     "file": "sunshine-riding-school-logo-on-dark.svg",
+     "variant": "logo-on-dark",
+     "style": "logo-on-dark",
+     "vector": true
+    },
+    {
+     "file": "sunshine-riding-school-logo-on-dark.png",
+     "variant": "logo-on-dark",
+     "style": "logo-on-dark",
+     "w": 1429,
+     "h": 1800
+    },
+    {
+     "file": "sunshine-riding-school-icon.svg",
+     "variant": "icon",
+     "style": "icon",
+     "vector": true
+    },
+    {
+     "file": "sunshine-riding-school-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 1496,
+     "h": 1496
+    },
+    {
+     "file": "sunshine-riding-school-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon",
+     "w": 1496,
+     "h": 1496,
+     "made": true
+    },
+    {
+     "file": "sunshine-riding-school-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 1496,
+     "h": 1496,
+     "made": true
+    },
+    {
+     "file": "sunshine-riding-school-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "sunshine-riding-school-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
    "slug": "one-eid",
    "name": "1 Eid",
    "aliases": [
