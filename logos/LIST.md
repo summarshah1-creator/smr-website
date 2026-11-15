@@ -1,6 +1,6 @@
 # SMR logo list
 
-297 organisations. Full details in logos.json and LIST.csv.
+300 organisations. Full details in logos.json and LIST.csv.
 
 ## businesses (30)
 - AA Carpets and Furniture
@@ -132,7 +132,7 @@
 - Wildlife Trust BCN
 - Woodland Trust
 
-## community (59)
+## community (62)
 - ABCD Luton
 - Active Luton
 - Bedfordshire Chamber of Commerce
@@ -151,6 +151,7 @@
 - Golden Arrow Archery
 - Hangout Luton
 - Higher Ground
+- Hockwell Ring Amateur Boxing Club
 - Jobcentre Plus
 - Legends MMA & Fitness Centre
 - Luton & Dunstable University Hospital
@@ -162,7 +163,9 @@
 - Luton Energise Holiday Camps (HAF)
 - Luton Friends of Parks and Green Spaces
 - Luton Grappling Club
+- Luton Higashi Karate Kai
 - Luton Irish Forum
+- Luton Karate Academy
 - Luton Libraries
 - Luton Literature
 - Luton RFC

@@ -131,3 +131,26 @@ I['care-homes']={'note':'General care homes logo drawn by SMR Digital (not an or
 json.dump(I,open('info.json','w'),indent=1)
 I['st-marys-youth']={'website':'https://www.stmarysluton.org'}
 json.dump(I,open('info.json','w'),indent=1)
+
+# NGS activities & sports clubs (15 Nov 2026)
+I['luton-school-of-judo']={'address': 'Raynham Way Community Centre, 66 Eaton Green Road', 'postcode': 'LU2 9JE', 'website': 'https://www.lutonjudo.co.uk'}
+I['luton-grappling-club']={'address': 'Stuart Place Studios, 76 Stuart Place', 'postcode': 'LU1 5DL', 'website': 'https://luton-grappling-academy.classforkids.io'}
+I['ultimate-athlete']={'address': '88 to 90 Inkerman Street', 'postcode': 'LU1 1JD', 'website': 'https://cademy.io/ultimate-athlete-mma-combat-facility'}
+I['legends-mma']={'website': 'https://www.legendsmma.uk'}
+I['storm-gym']={'address': 'Unit 16, 141 New Bedford Road', 'postcode': 'LU3 1LF', 'website': 'https://www.stormgym.co.uk'}
+I['stockwood-park-rfc']={'address': 'London Road', 'postcode': 'LU1 3RN', 'website': 'https://stockwoodparkrfc.co.uk'}
+I['luton-rfc']={'address': 'Newlands Road', 'postcode': 'LU1 4BQ', 'website': 'https://lutonrfc.rfu.club'}
+I['luton-town-hc']={'address': 'Challney High School for Girls, Addington Way', 'postcode': 'LU4 9FJ', 'website': 'https://www.lutontownhc.com'}
+I['luton-wicketz']={'website': 'https://www.cricketeast.co.uk/page/diverse-communities/luton-wicketz/lords-taverners-wicketz-programme-14024/'}
+I['sunnah-archery-club']={'address': 'Shire House Community Centre, 400b Dallow Road', 'postcode': 'LU1 1UR', 'website': 'https://sunnaharcheryclub.com'}
+I['golden-arrow-archery']={'website': 'https://g-arrow.co.uk'}
+I['laser-swat']={}
+I['delta-force-paintball']={'address': 'Half Moon Lane, Pepperstock', 'postcode': 'LU1 4LL', 'website': 'https://www.paintballgames.co.uk/centre/north-london-paintball/'}
+I['voyager-flight-sim']={'address': 'Voyager House, 142 Prospect Way', 'postcode': 'LU2 9QH'}
+I['im-puzzled']={'website': 'https://www.im-puzzled.com', 'note': 'Runs the Luton Murder Mystery phone trail (starts at Luton Town Hall).'}
+json.dump(I,open('info.json','w'),indent=1)
+I['luton-karate-academy']={'address': 'Inspire: Luton Sports Village, Butterfield Green Road', 'postcode': 'LU2 8DD', 'website': 'https://www.lutonkarateacademy.co.uk', 'note': 'Logo remade in HD by SMR Digital from a small original.'}
+I['higashi-karate-luton']={'address': 'Lealands High School Sports Hall, Sundon Park Road', 'postcode': 'LU3 3AL', 'website': 'https://luton-karate.co.uk'}
+json.dump(I,open('info.json','w'),indent=1)
+I['hockwell-ring-abc']={'address': 'Hockwell Ring Community Centre, Leagrave', 'postcode': 'LU4 9NG', 'website': 'https://hrabc.co.uk', 'note': 'The boxing club, not Hockwell Ring Masjid.'}
+json.dump(I,open('info.json','w'),indent=1)

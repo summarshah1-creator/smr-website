@@ -189,7 +189,8 @@ def icon_crop(im):
 
 # ---------- render every SVG source once ----------
 os.makedirs('svgr', exist_ok=True)
-svgs = sorted({('raw/' + p) for v in M.values() for p, _ in v[3] if p.endswith('.svg') and not p.startswith('/')})
+_only = set(filter(None, os.environ.get('ONLY', '').split(',')))
+svgs = sorted({('raw/' + p) for k, v in M.items() if not _only or k in _only for p, _ in v[3] if p.endswith('.svg') and not p.startswith('/')})
 todo = [p for p in svgs if not os.path.exists('svgr/' + os.path.basename(p)[:-4] + '.png')]
 if todo: render_svg(todo, 'svgr')
 

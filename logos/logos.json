@@ -18383,7 +18383,7 @@
     "logo"
    ],
    "original_vector": false,
-   "quality": "ok",
+   "quality": "hd",
    "details": {
     "website": "https://g-arrow.co.uk"
    },
@@ -18393,23 +18393,53 @@
      "file": "golden-arrow-archery-logo.png",
      "variant": "logo",
      "style": "logo",
-     "w": 796,
-     "h": 800
+     "w": 1592,
+     "h": 1600
     },
     {
      "file": "golden-arrow-archery-logo-black.png",
      "variant": "logo-black",
      "style": "logo",
-     "w": 796,
-     "h": 800,
+     "w": 1592,
+     "h": 1600,
      "made": true
     },
     {
      "file": "golden-arrow-archery-logo-white.png",
      "variant": "logo-white",
      "style": "logo",
-     "w": 796,
-     "h": 800,
+     "w": 1592,
+     "h": 1600,
+     "made": true
+    },
+    {
+     "file": "golden-arrow-archery-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "golden-arrow-archery-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "golden-arrow-archery-logo-on-dark.png",
+     "variant": "logo-on-dark",
+     "style": "logo",
+     "w": 1592,
+     "h": 1600,
+     "made": true
+    },
+    {
+     "file": "golden-arrow-archery-logo-brand-colour.png",
+     "variant": "logo-brand-colour",
+     "style": "logo",
+     "w": 1592,
+     "h": 1600,
      "made": true
     }
    ]
@@ -18659,6 +18689,84 @@
    ]
   },
   {
+   "slug": "hockwell-ring-abc",
+   "name": "Hockwell Ring Amateur Boxing Club",
+   "aliases": [
+    "HRABC",
+    "Hockwell Ring ABC",
+    "Hockwell Ring Boxing"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/hockwell-ring-abc/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": true,
+   "quality": "redrawn",
+   "details": {
+    "address": "Hockwell Ring Community Centre, Leagrave",
+    "postcode": "LU4 9NG",
+    "website": "https://hrabc.co.uk",
+    "note": "The boxing club, not Hockwell Ring Masjid."
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "hockwell-ring-abc-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true
+    },
+    {
+     "file": "hockwell-ring-abc-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1583,
+     "h": 1582
+    },
+    {
+     "file": "hockwell-ring-abc-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1583,
+     "h": 1582,
+     "made": true
+    },
+    {
+     "file": "hockwell-ring-abc-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1583,
+     "h": 1582,
+     "made": true
+    },
+    {
+     "file": "hockwell-ring-abc-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "hockwell-ring-abc-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "hockwell-ring-abc-logo-brand-colour.png",
+     "variant": "logo-brand-colour",
+     "style": "logo",
+     "w": 1583,
+     "h": 1582,
+     "made": true
+    }
+   ]
+  },
+  {
    "slug": "jobcentre-plus",
    "name": "Jobcentre Plus",
    "aliases": [
@@ -18755,23 +18863,45 @@
      "file": "legends-mma-logo.png",
      "variant": "logo",
      "style": "logo",
-     "w": 900,
-     "h": 702
+     "w": 1800,
+     "h": 1390
     },
     {
      "file": "legends-mma-logo-black.png",
      "variant": "logo-black",
      "style": "logo",
-     "w": 900,
-     "h": 702,
+     "w": 1800,
+     "h": 1390,
      "made": true
     },
     {
      "file": "legends-mma-logo-white.png",
      "variant": "logo-white",
      "style": "logo",
-     "w": 900,
-     "h": 702,
+     "w": 1800,
+     "h": 1390,
+     "made": true
+    },
+    {
+     "file": "legends-mma-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "legends-mma-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "legends-mma-logo-brand-colour.png",
+     "variant": "logo-brand-colour",
+     "style": "logo",
+     "w": 1800,
+     "h": 1390,
      "made": true
     }
    ]
@@ -19638,8 +19768,8 @@
    "styles": [
     "logo"
    ],
-   "original_vector": false,
-   "quality": "ok",
+   "original_vector": true,
+   "quality": "redrawn",
    "details": {
     "address": "Stuart Place Studios, 76 Stuart Place",
     "postcode": "LU1 5DL",
@@ -19648,26 +19778,167 @@
    "signed_off": false,
    "files": [
     {
+     "file": "luton-grappling-club-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true
+    },
+    {
      "file": "luton-grappling-club-logo.png",
      "variant": "logo",
      "style": "logo",
-     "w": 625,
-     "h": 625
+     "w": 1600,
+     "h": 1600
     },
     {
      "file": "luton-grappling-club-logo-black.png",
      "variant": "logo-black",
      "style": "logo",
-     "w": 625,
-     "h": 625,
+     "w": 1600,
+     "h": 1600,
      "made": true
     },
     {
      "file": "luton-grappling-club-logo-white.png",
      "variant": "logo-white",
      "style": "logo",
-     "w": 625,
-     "h": 625,
+     "w": 1600,
+     "h": 1600,
+     "made": true
+    },
+    {
+     "file": "luton-grappling-club-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "luton-grappling-club-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "luton-grappling-club-logo-brand-colour.png",
+     "variant": "logo-brand-colour",
+     "style": "logo",
+     "w": 1600,
+     "h": 1600,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "higashi-karate-luton",
+   "name": "Luton Higashi Karate Kai",
+   "aliases": [
+    "Higashi Karate",
+    "Luton Higashi",
+    "Higashi Karate Luton"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/higashi-karate-luton/",
+   "styles": [
+    "logo",
+    "icon"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "address": "Lealands High School Sports Hall, Sundon Park Road",
+    "postcode": "LU3 3AL",
+    "website": "https://luton-karate.co.uk"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "higashi-karate-luton-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "higashi-karate-luton-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1470,
+     "h": 1470
+    },
+    {
+     "file": "higashi-karate-luton-icon.svg",
+     "variant": "icon",
+     "style": "icon",
+     "vector": true
+    },
+    {
+     "file": "higashi-karate-luton-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 900,
+     "h": 1770
+    },
+    {
+     "file": "higashi-karate-luton-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1470,
+     "h": 1470,
+     "made": true
+    },
+    {
+     "file": "higashi-karate-luton-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1470,
+     "h": 1470,
+     "made": true
+    },
+    {
+     "file": "higashi-karate-luton-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "higashi-karate-luton-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "higashi-karate-luton-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon",
+     "w": 900,
+     "h": 1770,
+     "made": true
+    },
+    {
+     "file": "higashi-karate-luton-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 900,
+     "h": 1770,
+     "made": true
+    },
+    {
+     "file": "higashi-karate-luton-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "higashi-karate-luton-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
+     "vector": true,
      "made": true
     }
    ]
@@ -19805,6 +20076,74 @@
    ]
   },
   {
+   "slug": "luton-karate-academy",
+   "name": "Luton Karate Academy",
+   "aliases": [
+    "LKA",
+    "Luton Karate"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/luton-karate-academy/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "address": "Inspire: Luton Sports Village, Butterfield Green Road",
+    "postcode": "LU2 8DD",
+    "website": "https://www.lutonkarateacademy.co.uk",
+    "note": "Logo remade in HD by SMR Digital from a small original."
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "luton-karate-academy-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "luton-karate-academy-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1217,
+     "h": 1191
+    },
+    {
+     "file": "luton-karate-academy-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1217,
+     "h": 1191,
+     "made": true
+    },
+    {
+     "file": "luton-karate-academy-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1217,
+     "h": 1191,
+     "made": true
+    },
+    {
+     "file": "luton-karate-academy-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "luton-karate-academy-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
    "slug": "luton-libraries",
    "name": "Luton Libraries",
    "aliases": [],
@@ -19924,7 +20263,7 @@
     "logo"
    ],
    "original_vector": false,
-   "quality": "ok",
+   "quality": "hd",
    "details": {
     "address": "Newlands Road",
     "postcode": "LU1 4BQ",
@@ -19936,23 +20275,45 @@
      "file": "luton-rfc-logo.png",
      "variant": "logo",
      "style": "logo",
-     "w": 800,
-     "h": 605
+     "w": 1600,
+     "h": 1210
     },
     {
      "file": "luton-rfc-logo-black.png",
      "variant": "logo-black",
      "style": "logo",
-     "w": 800,
-     "h": 605,
+     "w": 1600,
+     "h": 1210,
      "made": true
     },
     {
      "file": "luton-rfc-logo-white.png",
      "variant": "logo-white",
      "style": "logo",
-     "w": 800,
-     "h": 605,
+     "w": 1600,
+     "h": 1210,
+     "made": true
+    },
+    {
+     "file": "luton-rfc-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "luton-rfc-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "luton-rfc-logo-brand-colour.png",
+     "variant": "logo-brand-colour",
+     "style": "logo",
+     "w": 1600,
+     "h": 1210,
      "made": true
     }
    ]
@@ -20048,8 +20409,8 @@
    "styles": [
     "logo"
    ],
-   "original_vector": false,
-   "quality": "ok",
+   "original_vector": true,
+   "quality": "redrawn",
    "details": {
     "address": "Raynham Way Community Centre, 66 Eaton Green Road",
     "postcode": "LU2 9JE",
@@ -20058,26 +20419,55 @@
    "signed_off": false,
    "files": [
     {
+     "file": "luton-school-of-judo-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true
+    },
+    {
      "file": "luton-school-of-judo-logo.png",
      "variant": "logo",
      "style": "logo",
-     "w": 616,
-     "h": 610
+     "w": 1600,
+     "h": 1584
     },
     {
      "file": "luton-school-of-judo-logo-black.png",
      "variant": "logo-black",
      "style": "logo",
-     "w": 616,
-     "h": 610,
+     "w": 1600,
+     "h": 1584,
      "made": true
     },
     {
      "file": "luton-school-of-judo-logo-white.png",
      "variant": "logo-white",
      "style": "logo",
-     "w": 616,
-     "h": 610,
+     "w": 1600,
+     "h": 1584,
+     "made": true
+    },
+    {
+     "file": "luton-school-of-judo-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "luton-school-of-judo-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "luton-school-of-judo-logo-brand-colour.png",
+     "variant": "logo-brand-colour",
+     "style": "logo",
+     "w": 1600,
+     "h": 1584,
      "made": true
     }
    ]
@@ -20173,7 +20563,7 @@
     "logo"
    ],
    "original_vector": false,
-   "quality": "ok",
+   "quality": "hd",
    "details": {
     "address": "Challney High School for Girls, Addington Way",
     "postcode": "LU4 9FJ",
@@ -20185,23 +20575,45 @@
      "file": "luton-town-hc-logo.png",
      "variant": "logo",
      "style": "logo",
-     "w": 528,
-     "h": 630
+     "w": 1056,
+     "h": 1260
     },
     {
      "file": "luton-town-hc-logo-black.png",
      "variant": "logo-black",
      "style": "logo",
-     "w": 528,
-     "h": 630,
+     "w": 1056,
+     "h": 1260,
      "made": true
     },
     {
      "file": "luton-town-hc-logo-white.png",
      "variant": "logo-white",
      "style": "logo",
-     "w": 528,
-     "h": 630,
+     "w": 1056,
+     "h": 1260,
+     "made": true
+    },
+    {
+     "file": "luton-town-hc-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "luton-town-hc-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "luton-town-hc-logo-brand-colour.png",
+     "variant": "logo-brand-colour",
+     "style": "logo",
+     "w": 1056,
+     "h": 1260,
      "made": true
     }
    ]
@@ -21257,8 +21669,8 @@
    "styles": [
     "logo"
    ],
-   "original_vector": false,
-   "quality": "hd",
+   "original_vector": true,
+   "quality": "redrawn",
    "details": {
     "address": "London Road",
     "postcode": "LU1 3RN",
@@ -21267,26 +21679,63 @@
    "signed_off": false,
    "files": [
     {
+     "file": "stockwood-park-rfc-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true
+    },
+    {
      "file": "stockwood-park-rfc-logo.png",
      "variant": "logo",
      "style": "logo",
-     "w": 787,
-     "h": 900
+     "w": 1399,
+     "h": 1600
     },
     {
      "file": "stockwood-park-rfc-logo-black.png",
      "variant": "logo-black",
      "style": "logo",
-     "w": 787,
-     "h": 900,
+     "w": 1399,
+     "h": 1600,
      "made": true
     },
     {
      "file": "stockwood-park-rfc-logo-white.png",
      "variant": "logo-white",
      "style": "logo",
-     "w": 787,
-     "h": 900,
+     "w": 1399,
+     "h": 1600,
+     "made": true
+    },
+    {
+     "file": "stockwood-park-rfc-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "stockwood-park-rfc-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "stockwood-park-rfc-logo-on-dark.png",
+     "variant": "logo-on-dark",
+     "style": "logo",
+     "w": 1399,
+     "h": 1600,
+     "made": true
+    },
+    {
+     "file": "stockwood-park-rfc-logo-brand-colour.png",
+     "variant": "logo-brand-colour",
+     "style": "logo",
+     "w": 1399,
+     "h": 1600,
      "made": true
     }
    ]
@@ -21305,8 +21754,8 @@
     "logo",
     "icon"
    ],
-   "original_vector": false,
-   "quality": "hd",
+   "original_vector": true,
+   "quality": "redrawn",
    "details": {
     "address": "Unit 16, 141 New Bedford Road",
     "postcode": "LU3 1LF",
@@ -21315,34 +21764,108 @@
    "signed_off": false,
    "files": [
     {
+     "file": "storm-gym-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true
+    },
+    {
      "file": "storm-gym-logo.png",
      "variant": "logo",
      "style": "logo",
-     "w": 900,
-     "h": 422
+     "w": 1594,
+     "h": 717
+    },
+    {
+     "file": "storm-gym-icon.svg",
+     "variant": "icon",
+     "style": "icon",
+     "vector": true,
+     "redrawn": true
+    },
+    {
+     "file": "storm-gym-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 1544,
+     "h": 1592
     },
     {
      "file": "storm-gym-logo-black.png",
      "variant": "logo-black",
      "style": "logo",
-     "w": 900,
-     "h": 422,
+     "w": 1594,
+     "h": 717,
      "made": true
     },
     {
      "file": "storm-gym-logo-white.png",
      "variant": "logo-white",
      "style": "logo",
-     "w": 900,
-     "h": 422,
+     "w": 1594,
+     "h": 717,
      "made": true
     },
     {
-     "file": "storm-gym-icon.png",
-     "variant": "icon",
+     "file": "storm-gym-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "storm-gym-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "storm-gym-logo-brand-colour.png",
+     "variant": "logo-brand-colour",
+     "style": "logo",
+     "w": 1594,
+     "h": 717,
+     "made": true
+    },
+    {
+     "file": "storm-gym-icon-black.png",
+     "variant": "icon-black",
      "style": "icon",
-     "w": 447,
-     "h": 447
+     "w": 1544,
+     "h": 1592,
+     "made": true
+    },
+    {
+     "file": "storm-gym-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 1544,
+     "h": 1592,
+     "made": true
+    },
+    {
+     "file": "storm-gym-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "storm-gym-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "storm-gym-icon-brand-colour.png",
+     "variant": "icon-brand-colour",
+     "style": "icon",
+     "w": 1544,
+     "h": 1592,
+     "made": true
     }
    ]
   },
@@ -21429,8 +21952,8 @@
    "styles": [
     "logo"
    ],
-   "original_vector": false,
-   "quality": "ok",
+   "original_vector": true,
+   "quality": "redrawn",
    "details": {
     "address": "Shire House Community Centre, 400b Dallow Road",
     "postcode": "LU1 1UR",
@@ -21439,26 +21962,55 @@
    "signed_off": false,
    "files": [
     {
+     "file": "sunnah-archery-club-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true
+    },
+    {
      "file": "sunnah-archery-club-logo.png",
      "variant": "logo",
      "style": "logo",
-     "w": 780,
-     "h": 800
+     "w": 1559,
+     "h": 1600
     },
     {
      "file": "sunnah-archery-club-logo-black.png",
      "variant": "logo-black",
      "style": "logo",
-     "w": 780,
-     "h": 800,
+     "w": 1559,
+     "h": 1600,
      "made": true
     },
     {
      "file": "sunnah-archery-club-logo-white.png",
      "variant": "logo-white",
      "style": "logo",
-     "w": 780,
-     "h": 800,
+     "w": 1559,
+     "h": 1600,
+     "made": true
+    },
+    {
+     "file": "sunnah-archery-club-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "sunnah-archery-club-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "sunnah-archery-club-logo-brand-colour.png",
+     "variant": "logo-brand-colour",
+     "style": "logo",
+     "w": 1559,
+     "h": 1600,
      "made": true
     }
    ]
@@ -21884,23 +22436,37 @@
      "file": "ultimate-athlete-logo.png",
      "variant": "logo",
      "style": "logo",
-     "w": 900,
-     "h": 900
+     "w": 1660,
+     "h": 1660
     },
     {
      "file": "ultimate-athlete-logo-black.png",
      "variant": "logo-black",
      "style": "logo",
-     "w": 900,
-     "h": 900,
+     "w": 1660,
+     "h": 1660,
      "made": true
     },
     {
      "file": "ultimate-athlete-logo-white.png",
      "variant": "logo-white",
      "style": "logo",
-     "w": 900,
-     "h": 900,
+     "w": 1660,
+     "h": 1660,
+     "made": true
+    },
+    {
+     "file": "ultimate-athlete-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "ultimate-athlete-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
      "made": true
     }
    ]
@@ -21920,30 +22486,62 @@
    ],
    "original_vector": false,
    "quality": "hd",
-   "details": {},
+   "details": {
+    "website": "https://www.cricketeast.co.uk/page/diverse-communities/luton-wicketz/lords-taverners-wicketz-programme-14024/"
+   },
    "signed_off": false,
    "files": [
     {
      "file": "luton-wicketz-logo.png",
      "variant": "logo",
      "style": "logo",
-     "w": 900,
-     "h": 254
+     "w": 1600,
+     "h": 452
     },
     {
      "file": "luton-wicketz-logo-black.png",
      "variant": "logo-black",
      "style": "logo",
-     "w": 900,
-     "h": 254,
+     "w": 1600,
+     "h": 452,
      "made": true
     },
     {
      "file": "luton-wicketz-logo-white.png",
      "variant": "logo-white",
      "style": "logo",
-     "w": 900,
-     "h": 254,
+     "w": 1600,
+     "h": 452,
+     "made": true
+    },
+    {
+     "file": "luton-wicketz-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "luton-wicketz-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "luton-wicketz-logo-on-dark.png",
+     "variant": "logo-on-dark",
+     "style": "logo",
+     "w": 1600,
+     "h": 452,
+     "made": true
+    },
+    {
+     "file": "luton-wicketz-logo-brand-colour.png",
+     "variant": "logo-brand-colour",
+     "style": "logo",
+     "w": 1600,
+     "h": 452,
      "made": true
     }
    ]
@@ -23340,7 +23938,7 @@
     "logo"
    ],
    "original_vector": false,
-   "quality": "ok",
+   "quality": "hd",
    "details": {
     "address": "Half Moon Lane, Pepperstock",
     "postcode": "LU1 4LL",
@@ -23352,23 +23950,53 @@
      "file": "delta-force-paintball-logo.png",
      "variant": "logo",
      "style": "logo",
-     "w": 783,
-     "h": 534
+     "w": 1100,
+     "h": 736
     },
     {
      "file": "delta-force-paintball-logo-black.png",
      "variant": "logo-black",
      "style": "logo",
-     "w": 783,
-     "h": 534,
+     "w": 1100,
+     "h": 736,
      "made": true
     },
     {
      "file": "delta-force-paintball-logo-white.png",
      "variant": "logo-white",
      "style": "logo",
-     "w": 783,
-     "h": 534,
+     "w": 1100,
+     "h": 736,
+     "made": true
+    },
+    {
+     "file": "delta-force-paintball-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "delta-force-paintball-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "delta-force-paintball-logo-on-dark.png",
+     "variant": "logo-on-dark",
+     "style": "logo",
+     "w": 1100,
+     "h": 736,
+     "made": true
+    },
+    {
+     "file": "delta-force-paintball-logo-brand-colour.png",
+     "variant": "logo-brand-colour",
+     "style": "logo",
+     "w": 1100,
+     "h": 736,
      "made": true
     }
    ]
@@ -24127,12 +24755,14 @@
    "category_name": "Venues & days out",
    "path": "venues/im-puzzled/",
    "styles": [
-    "logo"
+    "logo",
+    "icon"
    ],
    "original_vector": false,
    "quality": "hd",
    "details": {
-    "website": "https://www.im-puzzled.com"
+    "website": "https://www.im-puzzled.com",
+    "note": "Runs the Luton Murder Mystery phone trail (starts at Luton Town Hall)."
    },
    "signed_off": false,
    "files": [
@@ -24140,23 +24770,91 @@
      "file": "im-puzzled-logo.png",
      "variant": "logo",
      "style": "logo",
-     "w": 900,
-     "h": 421
+     "w": 1800,
+     "h": 841
+    },
+    {
+     "file": "im-puzzled-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 520,
+     "h": 841,
+     "made": true
     },
     {
      "file": "im-puzzled-logo-black.png",
      "variant": "logo-black",
      "style": "logo",
-     "w": 900,
-     "h": 421,
+     "w": 1800,
+     "h": 841,
      "made": true
     },
     {
      "file": "im-puzzled-logo-white.png",
      "variant": "logo-white",
      "style": "logo",
-     "w": 900,
-     "h": 421,
+     "w": 1800,
+     "h": 841,
+     "made": true
+    },
+    {
+     "file": "im-puzzled-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "im-puzzled-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "im-puzzled-logo-brand-colour.png",
+     "variant": "logo-brand-colour",
+     "style": "logo",
+     "w": 1800,
+     "h": 841,
+     "made": true
+    },
+    {
+     "file": "im-puzzled-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon",
+     "w": 520,
+     "h": 841,
+     "made": true
+    },
+    {
+     "file": "im-puzzled-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 520,
+     "h": 841,
+     "made": true
+    },
+    {
+     "file": "im-puzzled-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "im-puzzled-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "im-puzzled-icon-brand-colour.png",
+     "variant": "icon-brand-colour",
+     "style": "icon",
+     "w": 520,
+     "h": 841,
      "made": true
     }
    ]
@@ -24173,32 +24871,61 @@
    "styles": [
     "logo"
    ],
-   "original_vector": false,
-   "quality": "ok",
+   "original_vector": true,
+   "quality": "redrawn",
    "details": {},
    "signed_off": false,
    "files": [
     {
+     "file": "laser-swat-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true
+    },
+    {
      "file": "laser-swat-logo.png",
      "variant": "logo",
      "style": "logo",
-     "w": 735,
-     "h": 834
+     "w": 1398,
+     "h": 1399
     },
     {
      "file": "laser-swat-logo-black.png",
      "variant": "logo-black",
      "style": "logo",
-     "w": 735,
-     "h": 834,
+     "w": 1398,
+     "h": 1399,
      "made": true
     },
     {
      "file": "laser-swat-logo-white.png",
      "variant": "logo-white",
      "style": "logo",
-     "w": 735,
-     "h": 834,
+     "w": 1398,
+     "h": 1399,
+     "made": true
+    },
+    {
+     "file": "laser-swat-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "laser-swat-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "laser-swat-logo-on-dark.png",
+     "variant": "logo-on-dark",
+     "style": "logo",
+     "w": 1398,
+     "h": 1399,
      "made": true
     }
    ]
@@ -25530,10 +26257,11 @@
    "category_name": "Venues & days out",
    "path": "venues/voyager-flight-sim/",
    "styles": [
-    "logo"
+    "logo",
+    "icon"
    ],
-   "original_vector": false,
-   "quality": "hd",
+   "original_vector": true,
+   "quality": "redrawn",
    "details": {
     "address": "Voyager House, 142 Prospect Way",
     "postcode": "LU2 9QH"
@@ -25541,26 +26269,101 @@
    "signed_off": false,
    "files": [
     {
+     "file": "voyager-flight-sim-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true
+    },
+    {
      "file": "voyager-flight-sim-logo.png",
      "variant": "logo",
      "style": "logo",
-     "w": 900,
-     "h": 233
+     "w": 1593,
+     "h": 413
+    },
+    {
+     "file": "voyager-flight-sim-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 533,
+     "h": 413,
+     "made": true
     },
     {
      "file": "voyager-flight-sim-logo-black.png",
      "variant": "logo-black",
      "style": "logo",
-     "w": 900,
-     "h": 233,
+     "w": 1593,
+     "h": 413,
      "made": true
     },
     {
      "file": "voyager-flight-sim-logo-white.png",
      "variant": "logo-white",
      "style": "logo",
-     "w": 900,
-     "h": 233,
+     "w": 1593,
+     "h": 413,
+     "made": true
+    },
+    {
+     "file": "voyager-flight-sim-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "voyager-flight-sim-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "voyager-flight-sim-logo-brand-colour.png",
+     "variant": "logo-brand-colour",
+     "style": "logo",
+     "w": 1593,
+     "h": 413,
+     "made": true
+    },
+    {
+     "file": "voyager-flight-sim-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon",
+     "w": 533,
+     "h": 413,
+     "made": true
+    },
+    {
+     "file": "voyager-flight-sim-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 533,
+     "h": 413,
+     "made": true
+    },
+    {
+     "file": "voyager-flight-sim-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "voyager-flight-sim-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "voyager-flight-sim-icon-brand-colour.png",
+     "variant": "icon-brand-colour",
+     "style": "icon",
+     "w": 533,
+     "h": 413,
      "made": true
     }
    ]

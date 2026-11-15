@@ -335,3 +335,22 @@ M['the-feast']=('charities','The Feast',['Feast','The Feast youth charity'],[('h
 # ---------- name lockups (icon + full name), made by make_lockups.py ----------
 for _s in json.load(open('lockups.json')):
     if _s in M: M[_s][3].extend([('lockups/'+_s+'-h.png','lockup'),('lockups/'+_s+'-v.png','lockup-stacked')])
+# ---------- NGS activities & sports clubs (15 Nov 2026) ----------
+M['luton-school-of-judo']=('community','Luton School of Judo',['Luton Judo'],[('new/ngs-luton-judo.png','logo')])
+M['luton-grappling-club']=('community','Luton Grappling Club',['Luton Grappling Academy','Luton BJJ'],[('new/ngs-luton-grappling.png','logo')])
+M['ultimate-athlete']=('community','Ultimate Athlete MMA',['Ultimate Athlete','UA MMA'],[('new/ngs-ultimate-athlete.png','logo')])
+M['legends-mma']=('community','Legends MMA & Fitness Centre',['Legends MMA','Legends Gym Luton'],[('new/ngs-legends-mma.png','logo')])
+M['storm-gym']=('community','Storm Gym',['Storm Gym Luton','Storm Gym Fitness & Martial Arts'],[('new/ngs-storm-gym.png','logo'),('new/ngs-storm-gym-icon.jpg','icon')])
+M['stockwood-park-rfc']=('community','Stockwood Park RFC',['SPRFC','Stockwood Park Rugby Club'],[('new/ngs-stockwood-rfc.png','logo')])
+M['luton-rfc']=('community','Luton RFC',['Luton Rugby','Luton Rugby Club'],[('new/ngs-luton-rugby.png','logo')])
+M['luton-town-hc']=('community','Luton Town Hockey Club',['Luton Town HC','LTHC'],[('new/ngs-luton-town-hc.png','logo')])
+M['luton-wicketz']=('community',"Wicketz (Lord's Taverners)",['Luton Wicketz','Wicketz cricket'],[('new/ngs-wicketz.png','logo')])
+M['sunnah-archery-club']=('community','Sunnah Archery Club',['Sunnah Archery'],[('new/ngs-sunnah-archery.png','logo')])
+M['golden-arrow-archery']=('community','Golden Arrow Archery',['Golden Arrow Archery CIC','Golden Arrow'],[('new/ngs-golden-arrow.png','logo')])
+M['laser-swat']=('venues','Laser SWAT',['Laser SWAT Luton'],[('new/ngs-laser-swat.png','logo')])
+M['delta-force-paintball']=('venues','Delta Force Paintball',['Delta Force'],[('new/ngs-delta-force.png','logo')])
+M['voyager-flight-sim']=('venues','Voyager Flight Simulation',['Voyager','Voyager Flight Sim'],[('new/ngs-voyager.png','logo')])
+M['im-puzzled']=('venues',"I'm Puzzled",['Im Puzzled','I am Puzzled'],[('new/ngs-im-puzzled.png','logo')])
+M['luton-karate-academy']=('community','Luton Karate Academy',['LKA','Luton Karate'],[('hand/luton-karate-academy-logo.svg','logo')])
+M['higashi-karate-luton']=('community','Luton Higashi Karate Kai',['Higashi Karate','Luton Higashi','Higashi Karate Luton'],[('hand/higashi-karate-badge.svg','logo'),('hand/higashi-karate-logo.svg','icon')])
+M['hockwell-ring-abc']=('community','Hockwell Ring Amateur Boxing Club',['HRABC','Hockwell Ring ABC','Hockwell Ring Boxing'],[('new/ngs-hockwell-abc.png','logo')])
