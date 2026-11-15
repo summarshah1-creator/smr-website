@@ -1087,5 +1087,29 @@
   "address": "Marsh Road, Leagrave",
   "postcode": "LU3 2RX",
   "website": "https://armycadets.com/county/beds-herts-acf/"
+ },
+ "go-ape": {
+  "address": "Woburn Safari Park",
+  "postcode": "MK43 0XB",
+  "website": "https://goape.co.uk"
+ },
+ "gravity-active": {
+  "website": "https://www.gravity-active.co.uk"
+ },
+ "dont-get-locked-in": {
+  "address": "Allhallows, Bedford"
+ },
+ "mead-open-farm": {
+  "address": "Stanbridge Road, Billington",
+  "postcode": "LU7 9JH",
+  "website": "https://www.meadopenfarm.co.uk"
+ },
+ "ninja-warrior-uk": {
+  "address": "Bletcham Way, Milton Keynes",
+  "website": "https://ninjawarrioruk.co.uk"
+ },
+ "blackout-escape-rooms": {
+  "address": "1-9 Barton Road, Bletchley",
+  "postcode": "MK2 3HU"
  }
 }

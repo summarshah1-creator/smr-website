@@ -1,8 +1,8 @@
 # SMR logo list
 
-309 organisations. Full details in logos.json and LIST.csv.
+315 organisations. Full details in logos.json and LIST.csv.
 
-## businesses (31)
+## businesses (37)
 - AA Carpets and Furniture
 - Aegis Support Services
 - Aghaz by AN
@@ -12,17 +12,23 @@
 - Amee Jee
 - Asda
 - Bhaji's Kitchen
+- Blackout Escape Rooms
 - Bliss Boutique
+- Don't Get Locked In
 - Gao Express
 - Global Groceries Luton
+- Go Ape
 - Grand Royale
+- Gravity Active Entertainment
 - Hannah Solicitors
 - House of Elegance
 - Kashmir Catering Services
 - Lidl
 - Luton Halal Meat Centre
 - Maliks & Khan Solicitors
+- Mead Open Farm
 - Memsaab
+- Ninja Warrior UK Adventure Park
 - Niralla International Sweets
 - Noreen Make Up Studio
 - Nur Collection

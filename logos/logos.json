@@ -30017,6 +30017,507 @@
    ]
   },
   {
+   "slug": "go-ape",
+   "name": "Go Ape",
+   "aliases": [
+    "Go Ape Woburn",
+    "GoApe"
+   ],
+   "category": "businesses",
+   "category_name": "Businesses & sponsors",
+   "path": "businesses/go-ape/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "address": "Woburn Safari Park",
+    "postcode": "MK43 0XB",
+    "website": "https://goape.co.uk"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "go-ape-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "go-ape-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1589,
+     "h": 1736
+    },
+    {
+     "file": "go-ape-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1589,
+     "h": 1736,
+     "made": true
+    },
+    {
+     "file": "go-ape-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1589,
+     "h": 1736,
+     "made": true
+    },
+    {
+     "file": "go-ape-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "go-ape-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "gravity-active",
+   "name": "Gravity Active Entertainment",
+   "aliases": [
+    "Gravity",
+    "Gravity Stevenage",
+    "Gravity trampoline park"
+   ],
+   "category": "businesses",
+   "category_name": "Businesses & sponsors",
+   "path": "businesses/gravity-active/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "website": "https://www.gravity-active.co.uk"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "gravity-active-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "gravity-active-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1572,
+     "h": 473
+    },
+    {
+     "file": "gravity-active-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1572,
+     "h": 473,
+     "made": true
+    },
+    {
+     "file": "gravity-active-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1572,
+     "h": 473,
+     "made": true
+    },
+    {
+     "file": "gravity-active-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "gravity-active-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "dont-get-locked-in",
+   "name": "Don't Get Locked In",
+   "aliases": [
+    "DGLI",
+    "Don't Get Locked In Bedford"
+   ],
+   "category": "businesses",
+   "category_name": "Businesses & sponsors",
+   "path": "businesses/dont-get-locked-in/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "address": "Allhallows, Bedford"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "dont-get-locked-in-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "dont-get-locked-in-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1305,
+     "h": 1800
+    },
+    {
+     "file": "dont-get-locked-in-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1305,
+     "h": 1800,
+     "made": true
+    },
+    {
+     "file": "dont-get-locked-in-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1305,
+     "h": 1800,
+     "made": true
+    },
+    {
+     "file": "dont-get-locked-in-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "dont-get-locked-in-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "mead-open-farm",
+   "name": "Mead Open Farm",
+   "aliases": [
+    "Mead Farm"
+   ],
+   "category": "businesses",
+   "category_name": "Businesses & sponsors",
+   "path": "businesses/mead-open-farm/",
+   "styles": [
+    "logo",
+    "icon"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "address": "Stanbridge Road, Billington",
+    "postcode": "LU7 9JH",
+    "website": "https://www.meadopenfarm.co.uk"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "mead-open-farm-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "mead-open-farm-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1587,
+     "h": 555
+    },
+    {
+     "file": "mead-open-farm-icon.svg",
+     "variant": "icon",
+     "style": "icon",
+     "vector": true
+    },
+    {
+     "file": "mead-open-farm-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 1531,
+     "h": 1275
+    },
+    {
+     "file": "mead-open-farm-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1587,
+     "h": 555,
+     "made": true
+    },
+    {
+     "file": "mead-open-farm-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1587,
+     "h": 555,
+     "made": true
+    },
+    {
+     "file": "mead-open-farm-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "mead-open-farm-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "mead-open-farm-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon",
+     "w": 1531,
+     "h": 1275,
+     "made": true
+    },
+    {
+     "file": "mead-open-farm-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 1531,
+     "h": 1275,
+     "made": true
+    },
+    {
+     "file": "mead-open-farm-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "mead-open-farm-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "ninja-warrior-uk",
+   "name": "Ninja Warrior UK Adventure Park",
+   "aliases": [
+    "Ninja Warrior UK",
+    "Ninja Warrior Milton Keynes"
+   ],
+   "category": "businesses",
+   "category_name": "Businesses & sponsors",
+   "path": "businesses/ninja-warrior-uk/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "address": "Bletcham Way, Milton Keynes",
+    "website": "https://ninjawarrioruk.co.uk"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "ninja-warrior-uk-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "ninja-warrior-uk-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1574,
+     "h": 719
+    },
+    {
+     "file": "ninja-warrior-uk-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1574,
+     "h": 719,
+     "made": true
+    },
+    {
+     "file": "ninja-warrior-uk-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1574,
+     "h": 719,
+     "made": true
+    },
+    {
+     "file": "ninja-warrior-uk-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "ninja-warrior-uk-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "blackout-escape-rooms",
+   "name": "Blackout Escape Rooms",
+   "aliases": [
+    "Blackout Escape Room",
+    "Blackout Bletchley"
+   ],
+   "category": "businesses",
+   "category_name": "Businesses & sponsors",
+   "path": "businesses/blackout-escape-rooms/",
+   "styles": [
+    "logo",
+    "logo-tile-full",
+    "icon"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "address": "1-9 Barton Road, Bletchley",
+    "postcode": "MK2 3HU"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "blackout-escape-rooms-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "blackout-escape-rooms-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1554,
+     "h": 1194
+    },
+    {
+     "file": "blackout-escape-rooms-logo-tile-full.svg",
+     "variant": "logo-tile-full",
+     "style": "logo-tile-full",
+     "vector": true
+    },
+    {
+     "file": "blackout-escape-rooms-logo-tile-full.png",
+     "variant": "logo-tile-full",
+     "style": "logo-tile-full",
+     "w": 1600,
+     "h": 1195
+    },
+    {
+     "file": "blackout-escape-rooms-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 1554,
+     "h": 922,
+     "made": true
+    },
+    {
+     "file": "blackout-escape-rooms-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1554,
+     "h": 1194,
+     "made": true
+    },
+    {
+     "file": "blackout-escape-rooms-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1554,
+     "h": 1194,
+     "made": true
+    },
+    {
+     "file": "blackout-escape-rooms-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "blackout-escape-rooms-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "blackout-escape-rooms-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon",
+     "w": 1554,
+     "h": 922,
+     "made": true
+    },
+    {
+     "file": "blackout-escape-rooms-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 1554,
+     "h": 922,
+     "made": true
+    },
+    {
+     "file": "blackout-escape-rooms-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "blackout-escape-rooms-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "blackout-escape-rooms-icon-brand-colour.png",
+     "variant": "icon-brand-colour",
+     "style": "icon",
+     "w": 1554,
+     "h": 922,
+     "made": true
+    }
+   ]
+  },
+  {
    "slug": "smr-digital",
    "name": "SMR Digital",
    "aliases": [
