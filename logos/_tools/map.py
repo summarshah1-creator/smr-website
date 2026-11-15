@@ -383,3 +383,5 @@ M['spa-gymnastics']=('community','SPA Gymnastics Academy',['SPA Gymnastics','Spa
 M['willen-lake']=('venues','Willen Lake',['Willen Lake Milton Keynes','The Parks Trust Willen Lake'],[('hand/willen-lake-logo.svg','logo')])
 M['tinas-school-of-dance']=('community',"Tina's School of Dance",['TSD',"Tina's Dance"],[('hand/tinas-school-of-dance-logo.svg','logo'),('hand/tinas-school-of-dance-tile.svg','logo-tile-full')])
 M['the-xc']=('venues','The XC',['XC Hemel','The XC Hemel Hempstead'],[('hand/the-xc-logo.svg','logo')])
+M['teamsport']=('venues','TeamSport Dunstable',['TeamSport'],[('hand/teamsport-logo.svg','logo'),('hand/teamsport-icon.svg','icon')])
+M['gymfinity-kids']=('community','Gymfinity Kids Clubs',['Gymfinity','Gymfinity Kids'],[('hand/gymfinity-kids-logo.svg','logo'),('hand/gymfinity-kids-tile.svg','logo-tile-full')])

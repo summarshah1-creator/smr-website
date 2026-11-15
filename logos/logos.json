@@ -22805,15 +22805,14 @@
      "file": "gymfinity-kids-logo.svg",
      "variant": "logo",
      "style": "logo",
-     "vector": true,
-     "redrawn": true
+     "vector": true
     },
     {
      "file": "gymfinity-kids-logo.png",
      "variant": "logo",
      "style": "logo",
-     "w": 1600,
-     "h": 322
+     "w": 1562,
+     "h": 1270
     },
     {
      "file": "gymfinity-kids-logo-tile-full.svg",
@@ -22832,16 +22831,16 @@
      "file": "gymfinity-kids-logo-black.png",
      "variant": "logo-black",
      "style": "logo",
-     "w": 1600,
-     "h": 322,
+     "w": 1562,
+     "h": 1270,
      "made": true
     },
     {
      "file": "gymfinity-kids-logo-white.png",
      "variant": "logo-white",
      "style": "logo",
-     "w": 1600,
-     "h": 322,
+     "w": 1562,
+     "h": 1270,
      "made": true
     },
     {
@@ -22856,14 +22855,6 @@
      "variant": "logo-white",
      "style": "logo",
      "vector": true,
-     "made": true
-    },
-    {
-     "file": "gymfinity-kids-logo-brand-colour.png",
-     "variant": "logo-brand-colour",
-     "style": "logo",
-     "w": 1600,
-     "h": 322,
      "made": true
     }
    ]
@@ -26875,7 +26866,9 @@
   {
    "slug": "teamsport",
    "name": "TeamSport Dunstable",
-   "aliases": [],
+   "aliases": [
+    "TeamSport"
+   ],
    "category": "venues",
    "category_name": "Venues & days out",
    "path": "venues/teamsport/",
@@ -26902,31 +26895,36 @@
      "file": "teamsport-logo.png",
      "variant": "logo",
      "style": "logo",
-     "w": 1558,
-     "h": 1001
+     "w": 1597,
+     "h": 1321
+    },
+    {
+     "file": "teamsport-icon.svg",
+     "variant": "icon",
+     "style": "icon",
+     "vector": true
     },
     {
      "file": "teamsport-icon.png",
      "variant": "icon",
      "style": "icon",
-     "w": 943,
-     "h": 685,
-     "made": true
+     "w": 1590,
+     "h": 1574
     },
     {
      "file": "teamsport-logo-black.png",
      "variant": "logo-black",
      "style": "logo",
-     "w": 1558,
-     "h": 1001,
+     "w": 1597,
+     "h": 1321,
      "made": true
     },
     {
      "file": "teamsport-logo-white.png",
      "variant": "logo-white",
      "style": "logo",
-     "w": 1558,
-     "h": 1001,
+     "w": 1597,
+     "h": 1321,
      "made": true
     },
     {
@@ -26944,27 +26942,19 @@
      "made": true
     },
     {
-     "file": "teamsport-logo-brand-colour.png",
-     "variant": "logo-brand-colour",
-     "style": "logo",
-     "w": 1558,
-     "h": 1001,
-     "made": true
-    },
-    {
      "file": "teamsport-icon-black.png",
      "variant": "icon-black",
      "style": "icon",
-     "w": 943,
-     "h": 685,
+     "w": 1590,
+     "h": 1574,
      "made": true
     },
     {
      "file": "teamsport-icon-white.png",
      "variant": "icon-white",
      "style": "icon",
-     "w": 943,
-     "h": 685,
+     "w": 1590,
+     "h": 1574,
      "made": true
     },
     {
@@ -26979,14 +26969,6 @@
      "variant": "icon-white",
      "style": "icon",
      "vector": true,
-     "made": true
-    },
-    {
-     "file": "teamsport-icon-brand-colour.png",
-     "variant": "icon-brand-colour",
-     "style": "icon",
-     "w": 943,
-     "h": 685,
      "made": true
     }
    ]
@@ -28445,23 +28427,23 @@
      "file": "the-xc-logo.png",
      "variant": "logo",
      "style": "logo",
-     "w": 1550,
-     "h": 652
+     "w": 1518,
+     "h": 633
     },
     {
      "file": "the-xc-logo-black.png",
      "variant": "logo-black",
      "style": "logo",
-     "w": 1550,
-     "h": 652,
+     "w": 1518,
+     "h": 633,
      "made": true
     },
     {
      "file": "the-xc-logo-white.png",
      "variant": "logo-white",
      "style": "logo",
-     "w": 1550,
-     "h": 652,
+     "w": 1518,
+     "h": 633,
      "made": true
     },
     {
@@ -31302,8 +31284,7 @@
    "path": "businesses/blackout-escape-rooms/",
    "styles": [
     "logo",
-    "logo-tile-full",
-    "icon"
+    "logo-tile-full"
    ],
    "original_vector": true,
    "quality": "vector",
@@ -31323,8 +31304,8 @@
      "file": "blackout-escape-rooms-logo.png",
      "variant": "logo",
      "style": "logo",
-     "w": 1554,
-     "h": 1194
+     "w": 1589,
+     "h": 1288
     },
     {
      "file": "blackout-escape-rooms-logo-tile-full.svg",
@@ -31340,27 +31321,19 @@
      "h": 1195
     },
     {
-     "file": "blackout-escape-rooms-icon.png",
-     "variant": "icon",
-     "style": "icon",
-     "w": 1554,
-     "h": 922,
-     "made": true
-    },
-    {
      "file": "blackout-escape-rooms-logo-black.png",
      "variant": "logo-black",
      "style": "logo",
-     "w": 1554,
-     "h": 1194,
+     "w": 1589,
+     "h": 1288,
      "made": true
     },
     {
      "file": "blackout-escape-rooms-logo-white.png",
      "variant": "logo-white",
      "style": "logo",
-     "w": 1554,
-     "h": 1194,
+     "w": 1589,
+     "h": 1288,
      "made": true
     },
     {
@@ -31375,44 +31348,6 @@
      "variant": "logo-white",
      "style": "logo",
      "vector": true,
-     "made": true
-    },
-    {
-     "file": "blackout-escape-rooms-icon-black.png",
-     "variant": "icon-black",
-     "style": "icon",
-     "w": 1554,
-     "h": 922,
-     "made": true
-    },
-    {
-     "file": "blackout-escape-rooms-icon-white.png",
-     "variant": "icon-white",
-     "style": "icon",
-     "w": 1554,
-     "h": 922,
-     "made": true
-    },
-    {
-     "file": "blackout-escape-rooms-icon-black.svg",
-     "variant": "icon-black",
-     "style": "icon",
-     "vector": true,
-     "made": true
-    },
-    {
-     "file": "blackout-escape-rooms-icon-white.svg",
-     "variant": "icon-white",
-     "style": "icon",
-     "vector": true,
-     "made": true
-    },
-    {
-     "file": "blackout-escape-rooms-icon-brand-colour.png",
-     "variant": "icon-brand-colour",
-     "style": "icon",
-     "w": 1554,
-     "h": 922,
      "made": true
     }
    ]
