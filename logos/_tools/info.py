@@ -120,3 +120,7 @@ I['lfpgs']={'note':'Luton Friends of Parks and Green Spaces'}
 json.dump(I,open('info.json','w'),indent=1)
 I['goodgym']={'website':'https://www.goodgym.org/areas/luton'}
 json.dump(I,open('info.json','w'),indent=1)
+for k,w in {'aldi':'https://www.aldi.co.uk','lidl':'https://www.lidl.co.uk','asda':'https://www.asda.com','tesco':'https://www.tesco.com'}.items(): I[k]={'website':w}
+json.dump(I,open('info.json','w'),indent=1)
+I['foodcycle']={'website':'https://foodcycle.org.uk'}
+json.dump(I,open('info.json','w'),indent=1)

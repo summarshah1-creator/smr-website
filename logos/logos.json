@@ -10674,6 +10674,83 @@
    ]
   },
   {
+   "slug": "foodcycle",
+   "name": "FoodCycle",
+   "aliases": [
+    "FoodCycle Luton",
+    "Food Cycle"
+   ],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/foodcycle/",
+   "styles": [
+    "logo",
+    "logo-white",
+    "logo-black",
+    "logo-tile-full"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "website": "https://foodcycle.org.uk"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "foodcycle-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "foodcycle-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1593,
+     "h": 826
+    },
+    {
+     "file": "foodcycle-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "vector": true
+    },
+    {
+     "file": "foodcycle-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "w": 1593,
+     "h": 826
+    },
+    {
+     "file": "foodcycle-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo-black",
+     "vector": true
+    },
+    {
+     "file": "foodcycle-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo-black",
+     "w": 1593,
+     "h": 826
+    },
+    {
+     "file": "foodcycle-logo-tile-full.svg",
+     "variant": "logo-tile-full",
+     "style": "logo-tile-full",
+     "vector": true
+    },
+    {
+     "file": "foodcycle-logo-tile-full.png",
+     "variant": "logo-tile-full",
+     "style": "logo-tile-full",
+     "w": 1600,
+     "h": 916
+    }
+   ]
+  },
+  {
    "slug": "forgotten-women",
    "name": "Forgotten Women",
    "aliases": [],
@@ -16390,56 +16467,62 @@
   {
    "slug": "wildlife-trust",
    "name": "Wildlife Trust BCN",
-   "aliases": [],
+   "aliases": [
+    "The Wildlife Trust for Beds, Cambs & Northants",
+    "Wildlife Trust",
+    "BCN Wildlife Trust"
+   ],
    "category": "charities",
    "category_name": "Charities",
    "path": "charities/wildlife-trust/",
    "styles": [
     "logo",
+    "roundel",
     "icon"
    ],
-   "original_vector": true,
-   "quality": "vector",
+   "original_vector": false,
+   "quality": "hd",
    "details": {
     "website": "https://www.wildlifebcn.org"
    },
    "signed_off": false,
    "files": [
     {
-     "file": "wildlife-trust-logo.svg",
-     "variant": "logo",
-     "style": "logo",
-     "vector": true
-    },
-    {
      "file": "wildlife-trust-logo.png",
      "variant": "logo",
      "style": "logo",
-     "w": 1600,
-     "h": 542
+     "w": 1800,
+     "h": 608
+    },
+    {
+     "file": "wildlife-trust-roundel.png",
+     "variant": "roundel",
+     "style": "roundel",
+     "w": 896,
+     "h": 892
     },
     {
      "file": "wildlife-trust-icon.png",
      "variant": "icon",
      "style": "icon",
-     "w": 541,
-     "h": 542,
+     "w": 608,
+     "h": 608,
      "made": true
     },
     {
      "file": "wildlife-trust-logo-black.png",
      "variant": "logo-black",
      "style": "logo",
-     "w": 1600,
-     "h": 542,
+     "w": 1800,
+     "h": 608,
      "made": true
     },
     {
      "file": "wildlife-trust-logo-white.png",
      "variant": "logo-white",
      "style": "logo",
-     "w": 1600,
-     "h": 542,
+     "w": 1800,
+     "h": 608,
      "made": true
     },
     {
@@ -16460,32 +16543,78 @@
      "file": "wildlife-trust-logo-on-dark.png",
      "variant": "logo-on-dark",
      "style": "logo",
-     "w": 1600,
-     "h": 542,
+     "w": 1800,
+     "h": 608,
      "made": true
     },
     {
      "file": "wildlife-trust-logo-brand-colour.png",
      "variant": "logo-brand-colour",
      "style": "logo",
-     "w": 1600,
-     "h": 542,
+     "w": 1800,
+     "h": 608,
+     "made": true
+    },
+    {
+     "file": "wildlife-trust-roundel-black.png",
+     "variant": "roundel-black",
+     "style": "roundel",
+     "w": 896,
+     "h": 892,
+     "made": true
+    },
+    {
+     "file": "wildlife-trust-roundel-white.png",
+     "variant": "roundel-white",
+     "style": "roundel",
+     "w": 896,
+     "h": 892,
+     "made": true
+    },
+    {
+     "file": "wildlife-trust-roundel-black.svg",
+     "variant": "roundel-black",
+     "style": "roundel",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "wildlife-trust-roundel-white.svg",
+     "variant": "roundel-white",
+     "style": "roundel",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "wildlife-trust-roundel-on-dark.png",
+     "variant": "roundel-on-dark",
+     "style": "roundel",
+     "w": 896,
+     "h": 892,
+     "made": true
+    },
+    {
+     "file": "wildlife-trust-roundel-brand-colour.png",
+     "variant": "roundel-brand-colour",
+     "style": "roundel",
+     "w": 896,
+     "h": 892,
      "made": true
     },
     {
      "file": "wildlife-trust-icon-black.png",
      "variant": "icon-black",
      "style": "icon",
-     "w": 541,
-     "h": 542,
+     "w": 608,
+     "h": 608,
      "made": true
     },
     {
      "file": "wildlife-trust-icon-white.png",
      "variant": "icon-white",
      "style": "icon",
-     "w": 541,
-     "h": 542,
+     "w": 608,
+     "h": 608,
      "made": true
     },
     {
@@ -16506,8 +16635,8 @@
      "file": "wildlife-trust-icon-on-dark.png",
      "variant": "icon-on-dark",
      "style": "icon",
-     "w": 541,
-     "h": 542,
+     "w": 608,
+     "h": 608,
      "made": true
     }
    ]
@@ -16627,6 +16756,87 @@
      "style": "icon",
      "w": 660,
      "h": 499,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "abcd-luton",
+   "name": "ABCD Luton",
+   "aliases": [
+    "ABCD",
+    "Asset Based Community Development Luton"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/abcd-luton/",
+   "styles": [
+    "logo",
+    "logo-clear",
+    "logo-white",
+    "logo-black"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {},
+   "signed_off": false,
+   "files": [
+    {
+     "file": "abcd-luton-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1800,
+     "h": 1800
+    },
+    {
+     "file": "abcd-luton-logo-clear.png",
+     "variant": "logo-clear",
+     "style": "logo-clear",
+     "w": 1736,
+     "h": 1736
+    },
+    {
+     "file": "abcd-luton-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "w": 1736,
+     "h": 1736
+    },
+    {
+     "file": "abcd-luton-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo-black",
+     "w": 1736,
+     "h": 1736
+    },
+    {
+     "file": "abcd-luton-logo-clear-black.png",
+     "variant": "logo-clear-black",
+     "style": "logo-clear",
+     "w": 1736,
+     "h": 1736,
+     "made": true
+    },
+    {
+     "file": "abcd-luton-logo-clear-white.png",
+     "variant": "logo-clear-white",
+     "style": "logo-clear",
+     "w": 1736,
+     "h": 1736,
+     "made": true
+    },
+    {
+     "file": "abcd-luton-logo-clear-black.svg",
+     "variant": "logo-clear-black",
+     "style": "logo-clear",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "abcd-luton-logo-clear-white.svg",
+     "variant": "logo-clear-white",
+     "style": "logo-clear",
+     "vector": true,
      "made": true
     }
    ]
@@ -24777,6 +24987,48 @@
    ]
   },
   {
+   "slug": "aldi",
+   "name": "Aldi",
+   "aliases": [],
+   "category": "businesses",
+   "category_name": "Businesses & sponsors",
+   "path": "businesses/aldi/",
+   "styles": [
+    "logo",
+    "logo-white",
+    "logo-black"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {
+    "website": "https://www.aldi.co.uk"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "aldi-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1334,
+     "h": 1598
+    },
+    {
+     "file": "aldi-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "w": 1334,
+     "h": 1598
+    },
+    {
+     "file": "aldi-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo-black",
+     "w": 1334,
+     "h": 1598
+    }
+   ]
+  },
+  {
    "slug": "ambala",
    "name": "Ambala",
    "aliases": [],
@@ -24922,6 +25174,77 @@
      "style": "logo",
      "w": 1281,
      "h": 1588,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "asda",
+   "name": "Asda",
+   "aliases": [],
+   "category": "businesses",
+   "category_name": "Businesses & sponsors",
+   "path": "businesses/asda/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": true,
+   "quality": "redrawn",
+   "details": {
+    "website": "https://www.asda.com"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "asda-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true
+    },
+    {
+     "file": "asda-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1594,
+     "h": 476
+    },
+    {
+     "file": "asda-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1594,
+     "h": 476,
+     "made": true
+    },
+    {
+     "file": "asda-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1594,
+     "h": 476,
+     "made": true
+    },
+    {
+     "file": "asda-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "asda-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "asda-logo-brand-colour.png",
+     "variant": "logo-brand-colour",
+     "style": "logo",
+     "w": 1594,
+     "h": 476,
      "made": true
     }
    ]
@@ -25611,6 +25934,48 @@
      "w": 1596,
      "h": 741,
      "made": true
+    }
+   ]
+  },
+  {
+   "slug": "lidl",
+   "name": "Lidl",
+   "aliases": [],
+   "category": "businesses",
+   "category_name": "Businesses & sponsors",
+   "path": "businesses/lidl/",
+   "styles": [
+    "logo",
+    "logo-white",
+    "logo-black"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {
+    "website": "https://www.lidl.co.uk"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "lidl-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1600,
+     "h": 1600
+    },
+    {
+     "file": "lidl-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "w": 1600,
+     "h": 1600
+    },
+    {
+     "file": "lidl-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo-black",
+     "w": 1600,
+     "h": 1600
     }
    ]
   },
@@ -26338,6 +26703,77 @@
      "style": "logo",
      "w": 1308,
      "h": 1010,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "tesco",
+   "name": "Tesco",
+   "aliases": [],
+   "category": "businesses",
+   "category_name": "Businesses & sponsors",
+   "path": "businesses/tesco/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": true,
+   "quality": "redrawn",
+   "details": {
+    "website": "https://www.tesco.com"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "tesco-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true
+    },
+    {
+     "file": "tesco-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1594,
+     "h": 447
+    },
+    {
+     "file": "tesco-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1594,
+     "h": 447,
+     "made": true
+    },
+    {
+     "file": "tesco-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1594,
+     "h": 447,
+     "made": true
+    },
+    {
+     "file": "tesco-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "tesco-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "tesco-logo-brand-colour.png",
+     "variant": "logo-brand-colour",
+     "style": "logo",
+     "w": 1594,
+     "h": 447,
      "made": true
     }
    ]

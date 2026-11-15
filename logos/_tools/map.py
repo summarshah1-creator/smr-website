@@ -316,6 +316,14 @@ M['cvs']=('charities','Community Voluntary Service',['CVS','CVS Luton','Communit
 M['luton-literature']=('community','Luton Literature',['Luton Literature Festival'],[('hand/luton-literature.png','logo'),('hand/luton-literature-white.png','logo-white'),('hand/luton-literature-black.png','logo-black')])
 M['flying-start']=('community','Flying Start',[],[('hand/flying-start.png','logo'),('hand/flying-start-white.png','logo-white'),('hand/flying-start-black.png','logo-black')])
 M['scouts-st-josephs']=('community',"St Joseph's RC Scouts, Icknield (Luton)",['Scouts',"St Joseph's Scouts",'Icknield Scouts'],[('hand/scouts-st-josephs.png','logo'),('hand/scouts-st-josephs-white.png','logo-white'),('hand/scouts-st-josephs-black.png','logo-black'),('hand/scouts-fleur.svg','icon'),('hand/scouts-fleur-white.svg','icon-white'),('hand/scouts-fleur-black.svg','icon-black')])
+M['signposts']=('charities','SignPosts Luton',['Signposts'],[('new/signposts-2.webp','logo')])
+M['aldi']=('businesses','Aldi',[],[('hand/aldi.png','logo'),('hand/aldi-white.png','logo-white'),('hand/aldi-black.png','logo-black')])
+M['lidl']=('businesses','Lidl',[],[('hand/lidl.png','logo'),('hand/lidl-white.png','logo-white'),('hand/lidl-black.png','logo-black')])
+M['asda']=('businesses','Asda',[],[('new/asda.png','logo')])
+M['tesco']=('businesses','Tesco',[],[('new/tesco.jpg','logo')])
+M['abcd-luton']=('community','ABCD Luton',['ABCD','Asset Based Community Development Luton'],[('hand/abcd-luton-disc.png','logo'),('hand/abcd-luton.png','logo-clear'),('hand/abcd-luton-white.png','logo-white'),('hand/abcd-luton-black.png','logo-black')])
+M['foodcycle']=('charities','FoodCycle',['FoodCycle Luton','Food Cycle'],[('hand/foodcycle.svg','logo'),('hand/foodcycle-white.svg','logo-white'),('hand/foodcycle-black.svg','logo-black'),('hand/foodcycle-tile.svg','logo-tile-full')])
+M['wildlife-trust']=('charities','Wildlife Trust BCN',['The Wildlife Trust for Beds, Cambs & Northants','Wildlife Trust','BCN Wildlife Trust'],[('new/wildlife-trust-lockup.png','logo'),('new/wildlife-trust-roundel.jpg','roundel')])
 # ---------- name lockups (icon + full name), made by make_lockups.py ----------
 for _s in json.load(open('lockups.json')):
     if _s in M: M[_s][3].extend([('lockups/'+_s+'-h.png','lockup'),('lockups/'+_s+'-v.png','lockup-stacked')])

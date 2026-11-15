@@ -936,5 +936,20 @@
  },
  "goodgym": {
   "website": "https://www.goodgym.org/areas/luton"
+ },
+ "aldi": {
+  "website": "https://www.aldi.co.uk"
+ },
+ "lidl": {
+  "website": "https://www.lidl.co.uk"
+ },
+ "asda": {
+  "website": "https://www.asda.com"
+ },
+ "tesco": {
+  "website": "https://www.tesco.com"
+ },
+ "foodcycle": {
+  "website": "https://foodcycle.org.uk"
  }
 }

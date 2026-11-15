@@ -1,14 +1,16 @@
 # SMR logo list
 
-269 organisations. Full details in logos.json and LIST.csv.
+275 organisations. Full details in logos.json and LIST.csv.
 
-## businesses (26)
+## businesses (30)
 - AA Carpets and Furniture
 - Aegis Support Services
 - Aghaz by AN
 - Al Nikah Wedding Services
+- Aldi
 - Ambala
 - Amee Jee
+- Asda
 - Bhaji's Kitchen
 - Bliss Boutique
 - Gao Express
@@ -17,6 +19,7 @@
 - Hannah Solicitors
 - House of Elegance
 - Kashmir Catering Services
+- Lidl
 - Luton Halal Meat Centre
 - Maliks & Khan Solicitors
 - Memsaab
@@ -26,6 +29,7 @@
 - Pulse AV
 - Rainstone Money Group
 - Shamzy Hair & Makeup
+- Tesco
 - Tops Pizza
 - TutorBook
 - Two Side Studios
@@ -39,7 +43,7 @@
 - The Big Iftar Luton
 - Wellness Walk
 
-## charities (84)
+## charities (85)
 - Action For Humanity
 - African Relief Fund
 - Age Concern Luton
@@ -62,6 +66,7 @@
 - Ethar Relief
 - FACES (Faiths Against Child Sexual Exploitation)
 - Farley Community Group
+- FoodCycle
 - Forgotten Women
 - Friends of Bright Eyes
 - Global Helping Hands
@@ -125,7 +130,8 @@
 - Wildlife Trust BCN
 - Woodland Trust
 
-## community (42)
+## community (43)
+- ABCD Luton
 - Active Luton
 - Bedfordshire Chamber of Commerce
 - Bedfordshire Fire & Rescue Service
