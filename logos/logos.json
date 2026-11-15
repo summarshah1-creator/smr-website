@@ -1,0 +1,6561 @@
+{
+ "updated": "2026-11-15",
+ "categories": {
+  "mosques": "Mosques & Islamic centres",
+  "schools": "Schools & colleges",
+  "charities": "Charities",
+  "community": "Council, public & youth",
+  "campaigns": "Campaigns & events",
+  "media": "Media",
+  "venues": "Venues & days out",
+  "businesses": "Businesses & sponsors",
+  "smr": "SMR"
+ },
+ "logos": [
+  {
+   "slug": "akbaria",
+   "name": "Akbaria Mosque",
+   "aliases": [],
+   "category": "mosques",
+   "category_name": "Mosques & Islamic centres",
+   "path": "mosques/akbaria/",
+   "vector": true,
+   "details": {
+    "address": "241 Selbourne Rd, Luton",
+    "postcode": "LU4 8NP",
+    "lat": 51.8959,
+    "lng": -0.4454,
+    "jummah": "12:00, 13:00",
+    "source": "Inspire FM app"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "akbaria-logo.png",
+     "variant": "logo",
+     "w": 685,
+     "h": 203
+    },
+    {
+     "file": "akbaria-logo.svg",
+     "variant": "logo",
+     "vector": true
+    }
+   ]
+  },
+  {
+   "slug": "al-bilal",
+   "name": "Al-Bilal Mosque",
+   "aliases": [],
+   "category": "mosques",
+   "category_name": "Mosques & Islamic centres",
+   "path": "mosques/al-bilal/",
+   "vector": true,
+   "details": {
+    "address": "4 Sarum Rd, Luton",
+    "postcode": "LU3 2RA",
+    "website": "https://www.masjidbilal.uk/",
+    "phone": "07956 958630",
+    "lat": 51.903,
+    "lng": -0.4541,
+    "jummah": "13:00",
+    "source": "Inspire FM app"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "al-bilal-logo.png",
+     "variant": "logo",
+     "w": 974,
+     "h": 549
+    },
+    {
+     "file": "al-bilal-logo.svg",
+     "variant": "logo",
+     "vector": true
+    },
+    {
+     "file": "al-bilal-mono-white.png",
+     "variant": "mono-white",
+     "w": 974,
+     "h": 549,
+     "made": true
+    },
+    {
+     "file": "al-bilal-mono-black.png",
+     "variant": "mono-black",
+     "w": 974,
+     "h": 549,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "al-furqan",
+   "name": "Al-Furqan Mosque",
+   "aliases": [],
+   "category": "mosques",
+   "category_name": "Mosques & Islamic centres",
+   "path": "mosques/al-furqan/",
+   "vector": true,
+   "details": {
+    "address": "33-35 Mount Pleasant Rd, Luton",
+    "postcode": "LU3 2ST",
+    "website": "https://alfurqanllm.org/",
+    "lat": 51.9054,
+    "lng": -0.4564,
+    "jummah": "13:15",
+    "source": "Inspire FM app"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "al-furqan-logo.png",
+     "variant": "logo",
+     "w": 870,
+     "h": 995
+    },
+    {
+     "file": "al-furqan-logo.svg",
+     "variant": "logo",
+     "vector": true
+    },
+    {
+     "file": "al-furqan-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 870,
+     "h": 995,
+     "made": true
+    },
+    {
+     "file": "al-furqan-mono-white.png",
+     "variant": "mono-white",
+     "w": 870,
+     "h": 995,
+     "made": true
+    },
+    {
+     "file": "al-furqan-mono-black.png",
+     "variant": "mono-black",
+     "w": 870,
+     "h": 995,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "al-hira",
+   "name": "Al-Hira Educational & Cultural Centre",
+   "aliases": [],
+   "category": "mosques",
+   "category_name": "Mosques & Islamic centres",
+   "path": "mosques/al-hira/",
+   "vector": true,
+   "details": {
+    "address": "1-7 Beechwood Rd, Luton",
+    "postcode": "LU4 8RR",
+    "phone": "01582 848529",
+    "lat": 51.8933,
+    "lng": -0.4508,
+    "jummah": "12:30, 13:30",
+    "source": "Inspire FM app"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "al-hira-logo.png",
+     "variant": "logo",
+     "w": 1000,
+     "h": 359
+    },
+    {
+     "file": "al-hira-logo.svg",
+     "variant": "logo",
+     "vector": true
+    },
+    {
+     "file": "al-hira-mono-white.png",
+     "variant": "mono-white",
+     "w": 1000,
+     "h": 359,
+     "made": true
+    },
+    {
+     "file": "al-hira-mono-black.png",
+     "variant": "mono-black",
+     "w": 1000,
+     "h": 359,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "al-huda",
+   "name": "Al-Huda Mosque",
+   "aliases": [],
+   "category": "mosques",
+   "category_name": "Mosques & Islamic centres",
+   "path": "mosques/al-huda/",
+   "vector": true,
+   "details": {
+    "address": "Saxon Rd / 198b Leagrave Road, Luton",
+    "postcode": "LU3 1JD",
+    "lat": 51.8909,
+    "lng": -0.4328,
+    "jummah": "13:15",
+    "source": "Inspire FM app"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "al-huda-logo.png",
+     "variant": "logo",
+     "w": 989,
+     "h": 932
+    },
+    {
+     "file": "al-huda-logo.svg",
+     "variant": "logo",
+     "vector": true
+    },
+    {
+     "file": "al-huda-mono-white.png",
+     "variant": "mono-white",
+     "w": 989,
+     "h": 932,
+     "made": true
+    },
+    {
+     "file": "al-huda-mono-black.png",
+     "variant": "mono-black",
+     "w": 989,
+     "h": 932,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "al-jalal",
+   "name": "Al-Jalal Mosque",
+   "aliases": [],
+   "category": "mosques",
+   "category_name": "Mosques & Islamic centres",
+   "path": "mosques/al-jalal/",
+   "vector": true,
+   "details": {
+    "address": "314 Biscot Rd, Luton",
+    "postcode": "LU3 1AZ",
+    "website": "https://aljalalmasjid.org.uk",
+    "phone": "01582 411744",
+    "lat": 51.8953,
+    "lng": -0.4319,
+    "jummah": "12:30, 13:15",
+    "source": "Inspire FM app"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "al-jalal-logo.png",
+     "variant": "logo",
+     "w": 814,
+     "h": 995
+    },
+    {
+     "file": "al-jalal-logo.svg",
+     "variant": "logo",
+     "vector": true
+    },
+    {
+     "file": "al-jalal-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 814,
+     "h": 995,
+     "made": true
+    },
+    {
+     "file": "al-jalal-mono-white.png",
+     "variant": "mono-white",
+     "w": 814,
+     "h": 995,
+     "made": true
+    },
+    {
+     "file": "al-jalal-mono-black.png",
+     "variant": "mono-black",
+     "w": 814,
+     "h": 995,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "as-sunnah",
+   "name": "As-Sunnah Mosque",
+   "aliases": [],
+   "category": "mosques",
+   "category_name": "Mosques & Islamic centres",
+   "path": "mosques/as-sunnah/",
+   "vector": true,
+   "details": {
+    "address": "48 Kingsway, Luton",
+    "postcode": "LU4 8EH",
+    "website": "https://masjidas-sunnah.co.uk",
+    "phone": "01582 593306",
+    "lat": 51.8895,
+    "lng": -0.4437,
+    "jummah": "13:00",
+    "source": "Inspire FM app"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "as-sunnah-logo.png",
+     "variant": "logo",
+     "w": 803,
+     "h": 991
+    },
+    {
+     "file": "as-sunnah-logo.svg",
+     "variant": "logo",
+     "vector": true
+    },
+    {
+     "file": "as-sunnah-mono-white.png",
+     "variant": "mono-white",
+     "w": 803,
+     "h": 991,
+     "made": true
+    },
+    {
+     "file": "as-sunnah-mono-black.png",
+     "variant": "mono-black",
+     "w": 803,
+     "h": 991,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "bury-park-jami-masjid",
+   "name": "Bury Park Jami Masjid",
+   "aliases": [
+    "BPJM",
+    "Bury Park Jamia Masjid"
+   ],
+   "category": "mosques",
+   "category_name": "Mosques & Islamic centres",
+   "path": "mosques/bury-park-jami-masjid/",
+   "vector": false,
+   "details": {
+    "address": "21-27 Bury Park Rd, Luton",
+    "postcode": "LU1 1HB",
+    "website": "https://www.buryparkmasjid.co.uk/",
+    "phone": "01582 725412",
+    "lat": 51.8849,
+    "lng": -0.426,
+    "jummah": "13:00",
+    "source": "Inspire FM app"
+   },
+   "quality": "hd",
+   "files": [
+    {
+     "file": "bury-park-jami-masjid-logo.png",
+     "variant": "logo",
+     "w": 966,
+     "h": 463
+    },
+    {
+     "file": "bury-park-jami-masjid-logo-arabic.png",
+     "variant": "logo-arabic",
+     "w": 967,
+     "h": 652
+    },
+    {
+     "file": "bury-park-jami-masjid-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 966,
+     "h": 463,
+     "made": true
+    },
+    {
+     "file": "bury-park-jami-masjid-mono-white.png",
+     "variant": "mono-white",
+     "w": 966,
+     "h": 463,
+     "made": true
+    },
+    {
+     "file": "bury-park-jami-masjid-mono-black.png",
+     "variant": "mono-black",
+     "w": 966,
+     "h": 463,
+     "made": true
+    },
+    {
+     "file": "bury-park-jami-masjid-icon.png",
+     "variant": "icon",
+     "w": 448,
+     "h": 448,
+     "made": true
+    },
+    {
+     "file": "bury-park-jami-masjid-icon-white.png",
+     "variant": "icon-white",
+     "w": 448,
+     "h": 448,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "bushmead",
+   "name": "Bushmead Masjid",
+   "aliases": [],
+   "category": "mosques",
+   "category_name": "Mosques & Islamic centres",
+   "path": "mosques/bushmead/",
+   "vector": true,
+   "details": {
+    "address": "Hancock Dr, Luton",
+    "postcode": "LU2 7SF",
+    "lat": 51.9082,
+    "lng": -0.4116,
+    "jummah": "12:45, 13:30",
+    "source": "Inspire FM app"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "bushmead-logo.png",
+     "variant": "logo",
+     "w": 996,
+     "h": 879
+    },
+    {
+     "file": "bushmead-logo.svg",
+     "variant": "logo",
+     "vector": true
+    },
+    {
+     "file": "bushmead-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 996,
+     "h": 879,
+     "made": true
+    },
+    {
+     "file": "bushmead-mono-white.png",
+     "variant": "mono-white",
+     "w": 996,
+     "h": 879,
+     "made": true
+    },
+    {
+     "file": "bushmead-mono-black.png",
+     "variant": "mono-black",
+     "w": 996,
+     "h": 879,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "dallow-centre",
+   "name": "Dallow Centre",
+   "aliases": [],
+   "category": "mosques",
+   "category_name": "Mosques & Islamic centres",
+   "path": "mosques/dallow-centre/",
+   "vector": true,
+   "details": {
+    "address": "234 Dallow Road, Luton",
+    "postcode": "LU1 1TB",
+    "lat": 51.8831,
+    "lng": -0.4404,
+    "jummah": "13:30",
+    "source": "Inspire FM app"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "dallow-centre-logo.png",
+     "variant": "logo",
+     "w": 1000,
+     "h": 369
+    },
+    {
+     "file": "dallow-centre-logo.svg",
+     "variant": "logo",
+     "vector": true
+    },
+    {
+     "file": "dallow-centre-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 1000,
+     "h": 369,
+     "made": true
+    },
+    {
+     "file": "dallow-centre-mono-white.png",
+     "variant": "mono-white",
+     "w": 1000,
+     "h": 369,
+     "made": true
+    },
+    {
+     "file": "dallow-centre-mono-black.png",
+     "variant": "mono-black",
+     "w": 1000,
+     "h": 369,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "dunstable-masjid",
+   "name": "Dunstable Masjid",
+   "aliases": [],
+   "category": "mosques",
+   "category_name": "Mosques & Islamic centres",
+   "path": "mosques/dunstable-masjid/",
+   "vector": false,
+   "details": {
+    "address": "249 Luton Rd, Dunstable, Luton",
+    "postcode": "LU5 4LR",
+    "lat": 51.8898,
+    "lng": -0.4916,
+    "jummah": "13:15",
+    "source": "Inspire FM app"
+   },
+   "quality": "hd",
+   "files": [
+    {
+     "file": "dunstable-masjid-logo.png",
+     "variant": "logo",
+     "w": 966,
+     "h": 696
+    },
+    {
+     "file": "dunstable-masjid-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 966,
+     "h": 696,
+     "made": true
+    },
+    {
+     "file": "dunstable-masjid-mono-white.png",
+     "variant": "mono-white",
+     "w": 966,
+     "h": 696,
+     "made": true
+    },
+    {
+     "file": "dunstable-masjid-mono-black.png",
+     "variant": "mono-black",
+     "w": 966,
+     "h": 696,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "faizan-e-mushkil-kusha",
+   "name": "Faizan-e-Mushkil Kusha",
+   "aliases": [],
+   "category": "mosques",
+   "category_name": "Mosques & Islamic centres",
+   "path": "mosques/faizan-e-mushkil-kusha/",
+   "vector": false,
+   "details": {
+    "address": "91 Leagrave High Street, Luton",
+    "postcode": "LU4 9JZ",
+    "lat": 51.9014,
+    "lng": -0.4672,
+    "jummah": "12:30, 13:30",
+    "source": "Inspire FM app"
+   },
+   "quality": "hd",
+   "files": [
+    {
+     "file": "faizan-e-mushkil-kusha-logo.png",
+     "variant": "logo",
+     "w": 966,
+     "h": 693
+    },
+    {
+     "file": "faizan-e-mushkil-kusha-mono-white.png",
+     "variant": "mono-white",
+     "w": 966,
+     "h": 693,
+     "made": true
+    },
+    {
+     "file": "faizan-e-mushkil-kusha-mono-black.png",
+     "variant": "mono-black",
+     "w": 966,
+     "h": 693,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "farley-hill-cc",
+   "name": "Farley Hill Community Centre",
+   "aliases": [],
+   "category": "mosques",
+   "category_name": "Mosques & Islamic centres",
+   "path": "mosques/farley-hill-cc/",
+   "vector": true,
+   "details": {
+    "address": "Delphine Close, Luton",
+    "postcode": "LU1 5RE",
+    "lat": 51.8755,
+    "lng": -0.44,
+    "jummah": "13:00",
+    "source": "Inspire FM app"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "farley-hill-cc-logo.png",
+     "variant": "logo",
+     "w": 1000,
+     "h": 409
+    },
+    {
+     "file": "farley-hill-cc-logo.svg",
+     "variant": "logo",
+     "vector": true
+    },
+    {
+     "file": "farley-hill-cc-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 1000,
+     "h": 409,
+     "made": true
+    },
+    {
+     "file": "farley-hill-cc-mono-white.png",
+     "variant": "mono-white",
+     "w": 1000,
+     "h": 409,
+     "made": true
+    },
+    {
+     "file": "farley-hill-cc-mono-black.png",
+     "variant": "mono-black",
+     "w": 1000,
+     "h": 409,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "farley-hill-masjid",
+   "name": "Farley Hill Masjid",
+   "aliases": [],
+   "category": "mosques",
+   "category_name": "Mosques & Islamic centres",
+   "path": "mosques/farley-hill-masjid/",
+   "vector": true,
+   "details": {
+    "address": "31 The Cross Way, Luton",
+    "postcode": "LU1 5LY",
+    "phone": "07984 960703",
+    "lat": 51.8714,
+    "lng": -0.4286,
+    "jummah": "12:30, 13:15, 13:45",
+    "source": "Inspire FM app"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "farley-hill-masjid-logo.png",
+     "variant": "logo",
+     "w": 988,
+     "h": 345
+    },
+    {
+     "file": "farley-hill-masjid-logo.svg",
+     "variant": "logo",
+     "vector": true
+    },
+    {
+     "file": "farley-hill-masjid-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 988,
+     "h": 345,
+     "made": true
+    },
+    {
+     "file": "farley-hill-masjid-mono-white.png",
+     "variant": "mono-white",
+     "w": 988,
+     "h": 345,
+     "made": true
+    },
+    {
+     "file": "farley-hill-masjid-mono-black.png",
+     "variant": "mono-black",
+     "w": 988,
+     "h": 345,
+     "made": true
+    },
+    {
+     "file": "farley-hill-masjid-icon.png",
+     "variant": "icon",
+     "w": 277,
+     "h": 345,
+     "made": true
+    },
+    {
+     "file": "farley-hill-masjid-icon-white.png",
+     "variant": "icon-white",
+     "w": 277,
+     "h": 345,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "ghosia-trust",
+   "name": "Ghosia Trust",
+   "aliases": [],
+   "category": "mosques",
+   "category_name": "Mosques & Islamic centres",
+   "path": "mosques/ghosia-trust/",
+   "vector": true,
+   "details": {
+    "address": "23 Westbourne Rd, Luton",
+    "postcode": "LU4 8JD",
+    "phone": "01582 419885",
+    "lat": 51.8877,
+    "lng": -0.4334,
+    "jummah": "13:00",
+    "source": "Inspire FM app"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "ghosia-trust-logo.png",
+     "variant": "logo",
+     "w": 993,
+     "h": 179
+    },
+    {
+     "file": "ghosia-trust-logo.svg",
+     "variant": "logo",
+     "vector": true
+    },
+    {
+     "file": "ghosia-trust-mono-white.png",
+     "variant": "mono-white",
+     "w": 993,
+     "h": 179,
+     "made": true
+    },
+    {
+     "file": "ghosia-trust-mono-black.png",
+     "variant": "mono-black",
+     "w": 993,
+     "h": 179,
+     "made": true
+    },
+    {
+     "file": "ghosia-trust-icon.png",
+     "variant": "icon",
+     "w": 133,
+     "h": 169,
+     "made": true
+    },
+    {
+     "file": "ghosia-trust-icon-white.png",
+     "variant": "icon-white",
+     "w": 133,
+     "h": 169,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "hockwell-ring",
+   "name": "Hockwell Ring Masjid (HRM)",
+   "aliases": [
+    "HRM"
+   ],
+   "category": "mosques",
+   "category_name": "Mosques & Islamic centres",
+   "path": "mosques/hockwell-ring/",
+   "vector": false,
+   "details": {
+    "address": "13-17 Barley Lane, Luton",
+    "postcode": "LU4 9HT",
+    "website": "https://hockwellringmasjid.org.uk/",
+    "phone": "01582 563778",
+    "lat": 51.9061,
+    "lng": -0.4683,
+    "jummah": "12:30, 13:10",
+    "source": "Inspire FM app"
+   },
+   "quality": "hd",
+   "files": [
+    {
+     "file": "hockwell-ring-logo.png",
+     "variant": "logo",
+     "w": 881,
+     "h": 966
+    },
+    {
+     "file": "hockwell-ring-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 881,
+     "h": 966,
+     "made": true
+    },
+    {
+     "file": "hockwell-ring-mono-white.png",
+     "variant": "mono-white",
+     "w": 881,
+     "h": 966,
+     "made": true
+    },
+    {
+     "file": "hockwell-ring-mono-black.png",
+     "variant": "mono-black",
+     "w": 881,
+     "h": 966,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "irshad",
+   "name": "Irshad Trust",
+   "aliases": [],
+   "category": "mosques",
+   "category_name": "Mosques & Islamic centres",
+   "path": "mosques/irshad/",
+   "vector": false,
+   "details": {
+    "address": "400 Dallow Rd, Luton",
+    "postcode": "LU1 1UR",
+    "lat": 51.8853,
+    "lng": -0.4559,
+    "jummah": "12:30, 13:15",
+    "source": "Inspire FM app"
+   },
+   "quality": "hd",
+   "files": [
+    {
+     "file": "irshad-logo.png",
+     "variant": "logo",
+     "w": 968,
+     "h": 468
+    },
+    {
+     "file": "irshad-mono-white.png",
+     "variant": "mono-white",
+     "w": 968,
+     "h": 468,
+     "made": true
+    },
+    {
+     "file": "irshad-mono-black.png",
+     "variant": "mono-black",
+     "w": 968,
+     "h": 468,
+     "made": true
+    },
+    {
+     "file": "irshad-icon.png",
+     "variant": "icon",
+     "w": 305,
+     "h": 468,
+     "made": true
+    },
+    {
+     "file": "irshad-icon-white.png",
+     "variant": "icon-white",
+     "w": 305,
+     "h": 468,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "jalalabad",
+   "name": "Jalalabad Masjid & Islamic Centre",
+   "aliases": [],
+   "category": "mosques",
+   "category_name": "Mosques & Islamic centres",
+   "path": "mosques/jalalabad/",
+   "vector": false,
+   "details": {
+    "address": "36-38 Leagrave Rd, Luton",
+    "postcode": "LU4 8HZ",
+    "website": "https://jalalabadjamemasjid.org.uk",
+    "phone": "01582 483581",
+    "lat": 51.8871,
+    "lng": -0.4301,
+    "jummah": "13:00",
+    "source": "Inspire FM app"
+   },
+   "quality": "hd",
+   "files": [
+    {
+     "file": "jalalabad-logo.png",
+     "variant": "logo",
+     "w": 1000,
+     "h": 621
+    },
+    {
+     "file": "jalalabad-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 1000,
+     "h": 621,
+     "made": true
+    },
+    {
+     "file": "jalalabad-mono-white.png",
+     "variant": "mono-white",
+     "w": 1000,
+     "h": 621,
+     "made": true
+    },
+    {
+     "file": "jalalabad-mono-black.png",
+     "variant": "mono-black",
+     "w": 1000,
+     "h": 621,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "bait-ul-abraar",
+   "name": "Jamiatul Uloom Al Islamia (Bait-ul-Abraar)",
+   "aliases": [
+    "Jamiatul Uloom"
+   ],
+   "category": "mosques",
+   "category_name": "Mosques & Islamic centres",
+   "path": "mosques/bait-ul-abraar/",
+   "vector": false,
+   "details": {
+    "address": "364-370 Leagrave Rd, Luton",
+    "postcode": "LU3 1RF",
+    "phone": "01582 595535",
+    "lat": 51.8948,
+    "lng": -0.4381,
+    "jummah": "12:30, 13:20",
+    "source": "Inspire FM app"
+   },
+   "quality": "hd",
+   "files": [
+    {
+     "file": "bait-ul-abraar-logo.png",
+     "variant": "logo",
+     "w": 967,
+     "h": 326
+    },
+    {
+     "file": "bait-ul-abraar-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 967,
+     "h": 326,
+     "made": true
+    },
+    {
+     "file": "bait-ul-abraar-mono-white.png",
+     "variant": "mono-white",
+     "w": 967,
+     "h": 326,
+     "made": true
+    },
+    {
+     "file": "bait-ul-abraar-mono-black.png",
+     "variant": "mono-black",
+     "w": 967,
+     "h": 326,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "keech-hospice",
+   "name": "Keech Hospice (Jummah venue)",
+   "aliases": [],
+   "category": "mosques",
+   "category_name": "Mosques & Islamic centres",
+   "path": "mosques/keech-hospice/",
+   "vector": true,
+   "details": {
+    "address": "Great Bramingham Lane, Luton",
+    "postcode": "LU3 3NT",
+    "lat": 51.9278,
+    "lng": -0.4386,
+    "jummah": "13:00",
+    "source": "Inspire FM app"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "keech-hospice-logo.png",
+     "variant": "logo",
+     "w": 889,
+     "h": 383
+    },
+    {
+     "file": "keech-hospice-logo.svg",
+     "variant": "logo",
+     "vector": true
+    }
+   ]
+  },
+  {
+   "slug": "kokni",
+   "name": "Kokni Muslim Welfare",
+   "aliases": [],
+   "category": "mosques",
+   "category_name": "Mosques & Islamic centres",
+   "path": "mosques/kokni/",
+   "vector": true,
+   "details": {
+    "address": "2-3 Bury Park Estate, Bury Park Rd, Luton",
+    "postcode": "LU1 1HB",
+    "website": "https://masjid.kokniluton.co.uk",
+    "phone": "01582 803444",
+    "lat": 51.8849,
+    "lng": -0.426,
+    "jummah": "12:30",
+    "source": "Inspire FM app"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "kokni-logo.png",
+     "variant": "logo",
+     "w": 992,
+     "h": 631
+    },
+    {
+     "file": "kokni-logo.svg",
+     "variant": "logo",
+     "vector": true
+    },
+    {
+     "file": "kokni-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 992,
+     "h": 631,
+     "made": true
+    },
+    {
+     "file": "kokni-mono-white.png",
+     "variant": "mono-white",
+     "w": 992,
+     "h": 631,
+     "made": true
+    },
+    {
+     "file": "kokni-mono-black.png",
+     "variant": "mono-black",
+     "w": 992,
+     "h": 631,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "leagrave-hall",
+   "name": "Leagrave Hall Masjid",
+   "aliases": [],
+   "category": "mosques",
+   "category_name": "Mosques & Islamic centres",
+   "path": "mosques/leagrave-hall/",
+   "vector": false,
+   "details": {
+    "address": "145 High Street, Luton",
+    "postcode": "LU4 9LE",
+    "lat": 51.9001,
+    "lng": -0.4707,
+    "jummah": "12:45",
+    "source": "Inspire FM app"
+   },
+   "quality": "ok",
+   "files": [
+    {
+     "file": "leagrave-hall-logo.png",
+     "variant": "logo",
+     "w": 672,
+     "h": 147
+    },
+    {
+     "file": "leagrave-hall-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 672,
+     "h": 147,
+     "made": true
+    },
+    {
+     "file": "leagrave-hall-mono-white.png",
+     "variant": "mono-white",
+     "w": 672,
+     "h": 147,
+     "made": true
+    },
+    {
+     "file": "leagrave-hall-mono-black.png",
+     "variant": "mono-black",
+     "w": 672,
+     "h": 147,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "lewsey-cc",
+   "name": "Lewsey Community Centre",
+   "aliases": [],
+   "category": "mosques",
+   "category_name": "Mosques & Islamic centres",
+   "path": "mosques/lewsey-cc/",
+   "vector": true,
+   "details": {
+    "address": "Landrace Rd, Luton",
+    "postcode": "LU4 0SW",
+    "lat": 51.9019,
+    "lng": -0.4975,
+    "jummah": "12:30, 13:00",
+    "source": "Inspire FM app"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "lewsey-cc-logo.png",
+     "variant": "logo",
+     "w": 1000,
+     "h": 354
+    },
+    {
+     "file": "lewsey-cc-logo.svg",
+     "variant": "logo",
+     "vector": true
+    },
+    {
+     "file": "lewsey-cc-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 1000,
+     "h": 354,
+     "made": true
+    },
+    {
+     "file": "lewsey-cc-mono-white.png",
+     "variant": "mono-white",
+     "w": 1000,
+     "h": 354,
+     "made": true
+    },
+    {
+     "file": "lewsey-cc-mono-black.png",
+     "variant": "mono-black",
+     "w": 1000,
+     "h": 354,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "lucas-gardens",
+   "name": "Lucas Gardens",
+   "aliases": [],
+   "category": "mosques",
+   "category_name": "Mosques & Islamic centres",
+   "path": "mosques/lucas-gardens/",
+   "vector": true,
+   "details": {
+    "address": "St Margaret Church, Luton",
+    "postcode": "LU3 4BG",
+    "lat": 51.918,
+    "lng": -0.4354,
+    "jummah": "13:00",
+    "source": "Inspire FM app"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "lucas-gardens-logo.png",
+     "variant": "logo",
+     "w": 999,
+     "h": 195
+    },
+    {
+     "file": "lucas-gardens-logo.svg",
+     "variant": "logo",
+     "vector": true
+    },
+    {
+     "file": "lucas-gardens-mono-white.png",
+     "variant": "mono-white",
+     "w": 999,
+     "h": 195,
+     "made": true
+    },
+    {
+     "file": "lucas-gardens-mono-black.png",
+     "variant": "mono-black",
+     "w": 999,
+     "h": 195,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "luton-central",
+   "name": "Luton Central Mosque",
+   "aliases": [],
+   "category": "mosques",
+   "category_name": "Mosques & Islamic centres",
+   "path": "mosques/luton-central/",
+   "vector": true,
+   "details": {
+    "address": "2-12 Westbourne Rd, Luton",
+    "postcode": "LU4 8JD",
+    "website": "https://www.lutoncentralmosque.org/",
+    "phone": "01582 250986",
+    "lat": 51.8877,
+    "lng": -0.4334,
+    "jummah": "12:30, 13:30",
+    "source": "Inspire FM app"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "luton-central-logo.png",
+     "variant": "logo",
+     "w": 988,
+     "h": 466
+    },
+    {
+     "file": "luton-central-logo.svg",
+     "variant": "logo",
+     "vector": true
+    },
+    {
+     "file": "luton-central-mono-white.png",
+     "variant": "mono-white",
+     "w": 988,
+     "h": 466,
+     "made": true
+    },
+    {
+     "file": "luton-central-mono-black.png",
+     "variant": "mono-black",
+     "w": 988,
+     "h": 466,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "luton-islamic-centre",
+   "name": "Luton Islamic Centre",
+   "aliases": [],
+   "category": "mosques",
+   "category_name": "Mosques & Islamic centres",
+   "path": "mosques/luton-islamic-centre/",
+   "vector": true,
+   "details": {
+    "address": "116 Bury Park Rd, Luton",
+    "postcode": "LU1 1HE",
+    "website": "https://www.lutonislamiccentre.com",
+    "lat": 51.8862,
+    "lng": -0.4277,
+    "jummah": "12:50",
+    "source": "Inspire FM app"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "luton-islamic-centre-logo.png",
+     "variant": "logo",
+     "w": 990,
+     "h": 322
+    },
+    {
+     "file": "luton-islamic-centre-logo.svg",
+     "variant": "logo",
+     "vector": true
+    },
+    {
+     "file": "luton-islamic-centre-mono-white.png",
+     "variant": "mono-white",
+     "w": 990,
+     "h": 322,
+     "made": true
+    },
+    {
+     "file": "luton-islamic-centre-mono-black.png",
+     "variant": "mono-black",
+     "w": 990,
+     "h": 322,
+     "made": true
+    },
+    {
+     "file": "luton-islamic-centre-icon.png",
+     "variant": "icon",
+     "w": 319,
+     "h": 322,
+     "made": true
+    },
+    {
+     "file": "luton-islamic-centre-icon-white.png",
+     "variant": "icon-white",
+     "w": 319,
+     "h": 322,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "turkish-ca",
+   "name": "Luton Turkish Cultural Association (LTCA)",
+   "aliases": [
+    "LTCA"
+   ],
+   "category": "mosques",
+   "category_name": "Mosques & Islamic centres",
+   "path": "mosques/turkish-ca/",
+   "vector": false,
+   "details": {
+    "address": "58 Dumfries Street, Luton",
+    "postcode": "LU1 5BS",
+    "phone": "01582 483488",
+    "lat": 51.8767,
+    "lng": -0.4211,
+    "jummah": "12:30",
+    "source": "Inspire FM app"
+   },
+   "quality": "hd",
+   "files": [
+    {
+     "file": "turkish-ca-logo.png",
+     "variant": "logo",
+     "w": 1000,
+     "h": 1000
+    },
+    {
+     "file": "turkish-ca-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 1000,
+     "h": 1000,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "madinah",
+   "name": "Madinah Masjid",
+   "aliases": [],
+   "category": "mosques",
+   "category_name": "Mosques & Islamic centres",
+   "path": "mosques/madinah/",
+   "vector": true,
+   "details": {
+    "address": "Crescent Hall, 50 Dunstable Rd, Luton",
+    "postcode": "LU1 1EF",
+    "lat": 51.8832,
+    "lng": -0.4256,
+    "jummah": "13:00",
+    "source": "Inspire FM app"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "madinah-logo.png",
+     "variant": "logo",
+     "w": 984,
+     "h": 665
+    },
+    {
+     "file": "madinah-logo.svg",
+     "variant": "logo",
+     "vector": true
+    },
+    {
+     "file": "madinah-icon.png",
+     "variant": "icon",
+     "w": 236,
+     "h": 474
+    },
+    {
+     "file": "madinah-icon-white.png",
+     "variant": "icon-white",
+     "w": 236,
+     "h": 474
+    },
+    {
+     "file": "madinah-mono-white.png",
+     "variant": "mono-white",
+     "w": 984,
+     "h": 665,
+     "made": true
+    },
+    {
+     "file": "madinah-mono-black.png",
+     "variant": "mono-black",
+     "w": 984,
+     "h": 665,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "ibrahim",
+   "name": "Masjid Ibrahim",
+   "aliases": [],
+   "category": "mosques",
+   "category_name": "Mosques & Islamic centres",
+   "path": "mosques/ibrahim/",
+   "vector": false,
+   "details": {
+    "address": "45 Dudley Street, Luton",
+    "postcode": "LU2 0NP",
+    "lat": 51.884,
+    "lng": -0.4154,
+    "jummah": "12:35, 13:10",
+    "source": "Inspire FM app"
+   },
+   "quality": "hd",
+   "files": [
+    {
+     "file": "ibrahim-logo.png",
+     "variant": "logo",
+     "w": 967,
+     "h": 342
+    },
+    {
+     "file": "ibrahim-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 967,
+     "h": 342,
+     "made": true
+    },
+    {
+     "file": "ibrahim-mono-white.png",
+     "variant": "mono-white",
+     "w": 967,
+     "h": 342,
+     "made": true
+    },
+    {
+     "file": "ibrahim-mono-black.png",
+     "variant": "mono-black",
+     "w": 967,
+     "h": 342,
+     "made": true
+    },
+    {
+     "file": "ibrahim-icon.png",
+     "variant": "icon",
+     "w": 254,
+     "h": 342,
+     "made": true
+    },
+    {
+     "file": "ibrahim-icon-white.png",
+     "variant": "icon-white",
+     "w": 254,
+     "h": 342,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "masjid-e-noor",
+   "name": "Masjid Noor",
+   "aliases": [],
+   "category": "mosques",
+   "category_name": "Mosques & Islamic centres",
+   "path": "mosques/masjid-e-noor/",
+   "vector": false,
+   "details": {
+    "address": "20 Cromwell Rd, Luton",
+    "postcode": "LU3 1DN",
+    "website": "https://masjidnoorluton.co.uk/",
+    "phone": "01582 414031",
+    "lat": 51.8866,
+    "lng": -0.4232,
+    "jummah": "12:30, 13:30",
+    "source": "Inspire FM app"
+   },
+   "quality": "hd",
+   "files": [
+    {
+     "file": "masjid-e-noor-logo.png",
+     "variant": "logo",
+     "w": 966,
+     "h": 720
+    },
+    {
+     "file": "masjid-e-noor-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 966,
+     "h": 720,
+     "made": true
+    },
+    {
+     "file": "masjid-e-noor-mono-white.png",
+     "variant": "mono-white",
+     "w": 966,
+     "h": 720,
+     "made": true
+    },
+    {
+     "file": "masjid-e-noor-mono-black.png",
+     "variant": "mono-black",
+     "w": 966,
+     "h": 720,
+     "made": true
+    },
+    {
+     "file": "masjid-e-noor-icon.png",
+     "variant": "icon",
+     "w": 435,
+     "h": 479,
+     "made": true
+    },
+    {
+     "file": "masjid-e-noor-icon-white.png",
+     "variant": "icon-white",
+     "w": 435,
+     "h": 479,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "masjid-e-ali",
+   "name": "Masjid-e-Ali",
+   "aliases": [],
+   "category": "mosques",
+   "category_name": "Mosques & Islamic centres",
+   "path": "mosques/masjid-e-ali/",
+   "vector": true,
+   "details": {
+    "address": "2-32 Beechwood Rd, Luton",
+    "postcode": "LU4 8RP",
+    "phone": "01582 486841",
+    "lat": 51.8937,
+    "lng": -0.4509,
+    "jummah": "12:10",
+    "source": "Inspire FM app"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "masjid-e-ali-logo.png",
+     "variant": "logo",
+     "w": 892,
+     "h": 995
+    },
+    {
+     "file": "masjid-e-ali-logo.svg",
+     "variant": "logo",
+     "vector": true
+    }
+   ]
+  },
+  {
+   "slug": "raynham-way-cc",
+   "name": "Raynham Way Community Centre",
+   "aliases": [],
+   "category": "mosques",
+   "category_name": "Mosques & Islamic centres",
+   "path": "mosques/raynham-way-cc/",
+   "vector": false,
+   "details": {
+    "address": "66 Eaton Green Rd, Luton",
+    "postcode": "LU2 9JE",
+    "lat": 51.885,
+    "lng": -0.379,
+    "jummah": "13:00, 13:30",
+    "source": "Inspire FM app"
+   },
+   "quality": "hd",
+   "files": [
+    {
+     "file": "raynham-way-cc-logo.png",
+     "variant": "logo",
+     "w": 1000,
+     "h": 901
+    },
+    {
+     "file": "raynham-way-cc-mono-white.png",
+     "variant": "mono-white",
+     "w": 1000,
+     "h": 901,
+     "made": true
+    },
+    {
+     "file": "raynham-way-cc-mono-black.png",
+     "variant": "mono-black",
+     "w": 1000,
+     "h": 901,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "saints-area",
+   "name": "Saints Area Masjid",
+   "aliases": [],
+   "category": "mosques",
+   "category_name": "Mosques & Islamic centres",
+   "path": "mosques/saints-area/",
+   "vector": true,
+   "details": {
+    "address": "1 St. Ethelberts Avenue, Luton",
+    "postcode": "LU3 1QH",
+    "phone": "01582 516818",
+    "lat": 51.9002,
+    "lng": -0.4342,
+    "jummah": "12:30, 13:30",
+    "source": "Inspire FM app"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "saints-area-logo.png",
+     "variant": "logo",
+     "w": 989,
+     "h": 272
+    },
+    {
+     "file": "saints-area-logo.svg",
+     "variant": "logo",
+     "vector": true
+    },
+    {
+     "file": "saints-area-mono-white.png",
+     "variant": "mono-white",
+     "w": 989,
+     "h": 272,
+     "made": true
+    },
+    {
+     "file": "saints-area-mono-black.png",
+     "variant": "mono-black",
+     "w": 989,
+     "h": 272,
+     "made": true
+    },
+    {
+     "file": "saints-area-icon.png",
+     "variant": "icon",
+     "w": 218,
+     "h": 272,
+     "made": true
+    },
+    {
+     "file": "saints-area-icon-white.png",
+     "variant": "icon-white",
+     "w": 218,
+     "h": 272,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "shah-jalal",
+   "name": "Shah Jalal Islamic Foundation",
+   "aliases": [],
+   "category": "mosques",
+   "category_name": "Mosques & Islamic centres",
+   "path": "mosques/shah-jalal/",
+   "vector": false,
+   "details": {
+    "address": "Marsh Farm Futures House, Luton",
+    "postcode": "LU3 3QB",
+    "lat": 51.9186,
+    "lng": -0.4545,
+    "jummah": "13:00",
+    "source": "Inspire FM app"
+   },
+   "quality": "hd",
+   "files": [
+    {
+     "file": "shah-jalal-logo.png",
+     "variant": "logo",
+     "w": 966,
+     "h": 324
+    },
+    {
+     "file": "shah-jalal-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 966,
+     "h": 324,
+     "made": true
+    },
+    {
+     "file": "shah-jalal-mono-white.png",
+     "variant": "mono-white",
+     "w": 966,
+     "h": 324,
+     "made": true
+    },
+    {
+     "file": "shah-jalal-mono-black.png",
+     "variant": "mono-black",
+     "w": 966,
+     "h": 324,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "suffa-tul-islam",
+   "name": "Suffa Tul Islam Luton",
+   "aliases": [],
+   "category": "mosques",
+   "category_name": "Mosques & Islamic centres",
+   "path": "mosques/suffa-tul-islam/",
+   "vector": false,
+   "details": {
+    "address": "129 Bradley Rd, Luton",
+    "postcode": "LU4 8SW",
+    "lat": 51.8886,
+    "lng": -0.4659,
+    "jummah": "12:30, 13:15",
+    "source": "Inspire FM app"
+   },
+   "quality": "hd",
+   "files": [
+    {
+     "file": "suffa-tul-islam-logo.png",
+     "variant": "logo",
+     "w": 959,
+     "h": 966
+    },
+    {
+     "file": "suffa-tul-islam-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 959,
+     "h": 966,
+     "made": true
+    },
+    {
+     "file": "suffa-tul-islam-mono-white.png",
+     "variant": "mono-white",
+     "w": 959,
+     "h": 966,
+     "made": true
+    },
+    {
+     "file": "suffa-tul-islam-mono-black.png",
+     "variant": "mono-black",
+     "w": 959,
+     "h": 966,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "venue-central",
+   "name": "Venue Central",
+   "aliases": [],
+   "category": "mosques",
+   "category_name": "Mosques & Islamic centres",
+   "path": "mosques/venue-central/",
+   "vector": true,
+   "details": {
+    "address": "15-17 Chapel Street, Luton",
+    "postcode": "LU1 2SE",
+    "lat": 51.8777,
+    "lng": -0.416,
+    "jummah": "12:45, 13:30",
+    "source": "Inspire FM app"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "venue-central-logo.png",
+     "variant": "logo",
+     "w": 985,
+     "h": 509
+    },
+    {
+     "file": "venue-central-logo.svg",
+     "variant": "logo",
+     "vector": true
+    },
+    {
+     "file": "venue-central-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 985,
+     "h": 509,
+     "made": true
+    },
+    {
+     "file": "venue-central-mono-white.png",
+     "variant": "mono-white",
+     "w": 985,
+     "h": 509,
+     "made": true
+    },
+    {
+     "file": "venue-central-mono-black.png",
+     "variant": "mono-black",
+     "w": 985,
+     "h": 509,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "yusuf-hall",
+   "name": "Yusuf Hall, Sundon Park",
+   "aliases": [],
+   "category": "mosques",
+   "category_name": "Mosques & Islamic centres",
+   "path": "mosques/yusuf-hall/",
+   "vector": false,
+   "details": {
+    "address": "Hill Rise, Sundon Park, Luton",
+    "postcode": "LU3 3EE",
+    "lat": 51.9162,
+    "lng": -0.4661,
+    "jummah": "12:10, 12:50",
+    "source": "Inspire FM app"
+   },
+   "quality": "ok",
+   "files": [
+    {
+     "file": "yusuf-hall-logo.png",
+     "variant": "logo",
+     "w": 678,
+     "h": 167
+    },
+    {
+     "file": "yusuf-hall-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 678,
+     "h": 167,
+     "made": true
+    },
+    {
+     "file": "yusuf-hall-mono-white.png",
+     "variant": "mono-white",
+     "w": 678,
+     "h": 167,
+     "made": true
+    },
+    {
+     "file": "yusuf-hall-mono-black.png",
+     "variant": "mono-black",
+     "w": 678,
+     "h": 167,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "zakariya",
+   "name": "Zakariya Masjid",
+   "aliases": [],
+   "category": "mosques",
+   "category_name": "Mosques & Islamic centres",
+   "path": "mosques/zakariya/",
+   "vector": true,
+   "details": {
+    "address": "1 Beadlow Rd, Lewsey Farm, Luton",
+    "postcode": "LU4 0QY",
+    "website": "https://zakariyamasjid.org.uk",
+    "phone": "01582 213302",
+    "lat": 51.901,
+    "lng": -0.4924,
+    "jummah": "12:20, 13:15",
+    "source": "Inspire FM app"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "zakariya-logo.png",
+     "variant": "logo",
+     "w": 988,
+     "h": 394
+    },
+    {
+     "file": "zakariya-logo.svg",
+     "variant": "logo",
+     "vector": true
+    },
+    {
+     "file": "zakariya-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 988,
+     "h": 394,
+     "made": true
+    },
+    {
+     "file": "zakariya-mono-white.png",
+     "variant": "mono-white",
+     "w": 988,
+     "h": 394,
+     "made": true
+    },
+    {
+     "file": "zakariya-mono-black.png",
+     "variant": "mono-black",
+     "w": 988,
+     "h": 394,
+     "made": true
+    },
+    {
+     "file": "zakariya-icon.png",
+     "variant": "icon",
+     "w": 373,
+     "h": 260,
+     "made": true
+    },
+    {
+     "file": "zakariya-icon-white.png",
+     "variant": "icon-white",
+     "w": 373,
+     "h": 260,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "zuhri-academy",
+   "name": "Zuhri Academy",
+   "aliases": [],
+   "category": "mosques",
+   "category_name": "Mosques & Islamic centres",
+   "path": "mosques/zuhri-academy/",
+   "vector": true,
+   "details": {
+    "address": "Brittania House, Leagrave Rd, Luton",
+    "postcode": "LU3 1RJ",
+    "lat": 51.8924,
+    "lng": -0.4362,
+    "jummah": "13:00",
+    "source": "Inspire FM app"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "zuhri-academy-logo.png",
+     "variant": "logo",
+     "w": 995,
+     "h": 187
+    },
+    {
+     "file": "zuhri-academy-logo.svg",
+     "variant": "logo",
+     "vector": true
+    },
+    {
+     "file": "zuhri-academy-mono-white.png",
+     "variant": "mono-white",
+     "w": 995,
+     "h": 187,
+     "made": true
+    },
+    {
+     "file": "zuhri-academy-mono-black.png",
+     "variant": "mono-black",
+     "w": 995,
+     "h": 187,
+     "made": true
+    },
+    {
+     "file": "zuhri-academy-icon.png",
+     "variant": "icon",
+     "w": 175,
+     "h": 187,
+     "made": true
+    },
+    {
+     "file": "zuhri-academy-icon-white.png",
+     "variant": "icon-white",
+     "w": 175,
+     "h": 187,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "active-support",
+   "name": "Active Support Education Centre",
+   "aliases": [
+    "ASEC"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/active-support/",
+   "vector": true,
+   "details": {
+    "address": "Unit 1 Britannia Estates, Leagrave Road, Luton",
+    "postcode": "LU3 1RJ",
+    "website": "https://www.activesupporteducation.co.uk"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "active-support-logo.svg",
+     "variant": "logo",
+     "vector": true
+    },
+    {
+     "file": "active-support-logo-white.svg",
+     "variant": "logo-white",
+     "vector": true
+    },
+    {
+     "file": "active-support-mono-white.svg",
+     "variant": "mono-white",
+     "vector": true
+    }
+   ]
+  },
+  {
+   "slug": "barnfield-college",
+   "name": "Barnfield College",
+   "aliases": [],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/barnfield-college/",
+   "vector": false,
+   "details": {
+    "address": "Luton",
+    "postcode": "LU2 7BF",
+    "website": "https://www.barnfield.ac.uk"
+   },
+   "quality": "ok",
+   "files": [
+    {
+     "file": "barnfield-college-logo.png",
+     "variant": "logo",
+     "w": 746,
+     "h": 216
+    },
+    {
+     "file": "barnfield-college-logo-white.png",
+     "variant": "logo-white",
+     "w": 746,
+     "h": 216
+    },
+    {
+     "file": "barnfield-college-icon.png",
+     "variant": "icon",
+     "w": 477,
+     "h": 512
+    },
+    {
+     "file": "barnfield-college-mono-white.png",
+     "variant": "mono-white",
+     "w": 746,
+     "h": 216,
+     "made": true
+    },
+    {
+     "file": "barnfield-college-mono-black.png",
+     "variant": "mono-black",
+     "w": 746,
+     "h": 216,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "cardinal-newman",
+   "name": "Cardinal Newman Catholic School",
+   "aliases": [],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/cardinal-newman/",
+   "vector": false,
+   "details": {
+    "address": "Warden Hill Road, Luton",
+    "postcode": "LU2 7AE",
+    "website": "https://www.cardinalnewmanschool.net"
+   },
+   "quality": "low-res",
+   "files": [
+    {
+     "file": "cardinal-newman-icon.png",
+     "variant": "icon",
+     "w": 354,
+     "h": 498
+    }
+   ]
+  },
+  {
+   "slug": "chalk-hills",
+   "name": "Chalk Hills Academy",
+   "aliases": [],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/chalk-hills/",
+   "vector": false,
+   "details": {
+    "address": "Leagrave High Street, Luton",
+    "postcode": "LU4 0NE",
+    "website": "https://www.thechalkhillsacademy.co.uk"
+   },
+   "quality": "low-res",
+   "files": [
+    {
+     "file": "chalk-hills-icon.png",
+     "variant": "icon",
+     "w": 512,
+     "h": 505
+    }
+   ]
+  },
+  {
+   "slug": "challney-boys",
+   "name": "Challney High School for Boys",
+   "aliases": [],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/challney-boys/",
+   "vector": false,
+   "details": {
+    "address": "Stoneygate Road, Luton",
+    "postcode": "LU4 9TJ",
+    "website": "http://www.challneyboys.co.uk"
+   },
+   "quality": "low-res",
+   "files": [
+    {
+     "file": "challney-boys-icon.png",
+     "variant": "icon",
+     "w": 425,
+     "h": 512
+    },
+    {
+     "file": "challney-boys-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 425,
+     "h": 512,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "challney-girls",
+   "name": "Challney High School for Girls",
+   "aliases": [],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/challney-girls/",
+   "vector": false,
+   "details": {
+    "address": "Addington Way, Luton",
+    "postcode": "LU4 9FJ",
+    "website": "https://www.challneygirls.luton.sch.uk"
+   },
+   "quality": "low-res",
+   "files": [
+    {
+     "file": "challney-girls-icon.png",
+     "variant": "icon",
+     "w": 512,
+     "h": 512
+    }
+   ]
+  },
+  {
+   "slug": "chantry",
+   "name": "Chantry Primary Academy",
+   "aliases": [],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/chantry/",
+   "vector": false,
+   "details": {
+    "address": "Tomlinson Avenue, Luton",
+    "postcode": "LU4 0QP",
+    "website": "https://www.chantryprimaryacademy.com"
+   },
+   "quality": "low-res",
+   "files": [
+    {
+     "file": "chantry-icon.png",
+     "variant": "icon",
+     "w": 433,
+     "h": 512
+    }
+   ]
+  },
+  {
+   "slug": "chiltern-academy",
+   "name": "Chiltern Academy",
+   "aliases": [],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/chiltern-academy/",
+   "vector": true,
+   "details": {
+    "address": "Gipsy Lane, Luton",
+    "postcode": "LU1 3GF"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "chiltern-academy-logo.svg",
+     "variant": "logo",
+     "vector": true
+    },
+    {
+     "file": "chiltern-academy-logo.png",
+     "variant": "logo",
+     "w": 2162,
+     "h": 2446
+    },
+    {
+     "file": "chiltern-academy-logo-white.svg",
+     "variant": "logo-white",
+     "vector": true
+    },
+    {
+     "file": "chiltern-academy-crest.svg",
+     "variant": "crest",
+     "vector": true
+    },
+    {
+     "file": "chiltern-academy-crest.png",
+     "variant": "crest",
+     "w": 1576,
+     "h": 2004
+    }
+   ]
+  },
+  {
+   "slug": "chiltern-learning-trust",
+   "name": "Chiltern Learning Trust",
+   "aliases": [
+    "CLT"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/chiltern-learning-trust/",
+   "vector": false,
+   "details": {
+    "address": "Denbigh High School, Alexandra Avenue, Luton (registered office)",
+    "postcode": "LU3 1HE",
+    "website": "https://www.chilternlearningtrust.org"
+   },
+   "quality": "ok",
+   "files": [
+    {
+     "file": "chiltern-learning-trust-logo.png",
+     "variant": "logo",
+     "w": 759,
+     "h": 272
+    },
+    {
+     "file": "chiltern-learning-trust-logo-white.png",
+     "variant": "logo-white",
+     "w": 759,
+     "h": 272
+    },
+    {
+     "file": "chiltern-learning-trust-icon.png",
+     "variant": "icon",
+     "w": 480,
+     "h": 480
+    },
+    {
+     "file": "chiltern-learning-trust-mono-white.png",
+     "variant": "mono-white",
+     "w": 759,
+     "h": 272,
+     "made": true
+    },
+    {
+     "file": "chiltern-learning-trust-mono-black.png",
+     "variant": "mono-black",
+     "w": 759,
+     "h": 272,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "dallow",
+   "name": "Dallow Primary School",
+   "aliases": [],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/dallow/",
+   "vector": false,
+   "details": {
+    "address": "Dallow Road, Luton",
+    "postcode": "LU1 1LZ",
+    "website": "https://www.dallowprimary.net"
+   },
+   "quality": "low-res",
+   "files": [
+    {
+     "file": "dallow-icon.png",
+     "variant": "icon",
+     "w": 512,
+     "h": 342
+    },
+    {
+     "file": "dallow-mono-white.png",
+     "variant": "mono-white",
+     "w": 512,
+     "h": 342,
+     "made": true
+    },
+    {
+     "file": "dallow-mono-black.png",
+     "variant": "mono-black",
+     "w": 512,
+     "h": 342,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "denbigh",
+   "name": "Denbigh High School",
+   "aliases": [],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/denbigh/",
+   "vector": false,
+   "details": {
+    "address": "Alexandra Avenue, Luton",
+    "postcode": "LU3 1HE",
+    "website": "https://www.denbighhigh.co.uk"
+   },
+   "quality": "low-res",
+   "files": [
+    {
+     "file": "denbigh-icon.png",
+     "variant": "icon",
+     "w": 512,
+     "h": 506
+    }
+   ]
+  },
+  {
+   "slug": "downside",
+   "name": "Downside Primary School (DPS)",
+   "aliases": [
+    "DPS"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/downside/",
+   "vector": false,
+   "details": {
+    "address": "Chaul End Lane, Luton",
+    "postcode": "LU4 8EZ"
+   },
+   "quality": "low-res",
+   "files": [
+    {
+     "file": "downside-icon.png",
+     "variant": "icon",
+     "w": 476,
+     "h": 310
+    }
+   ]
+  },
+  {
+   "slug": "farley-junior",
+   "name": "Farley Junior Academy",
+   "aliases": [
+    "Farley"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/farley-junior/",
+   "vector": false,
+   "details": {
+    "address": "Northdrift Way, Luton",
+    "postcode": "LU1 5JF"
+   },
+   "quality": "low-res",
+   "files": [
+    {
+     "file": "farley-junior-logo.png",
+     "variant": "logo",
+     "w": 360,
+     "h": 248
+    },
+    {
+     "file": "farley-junior-tagline.png",
+     "variant": "tagline",
+     "w": 672,
+     "h": 74
+    },
+    {
+     "file": "farley-junior-mono-white.png",
+     "variant": "mono-white",
+     "w": 360,
+     "h": 248,
+     "made": true
+    },
+    {
+     "file": "farley-junior-mono-black.png",
+     "variant": "mono-black",
+     "w": 360,
+     "h": 248,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "hillborough",
+   "name": "Hillborough Junior School",
+   "aliases": [],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/hillborough/",
+   "vector": false,
+   "details": {
+    "address": "Hillborough Road, Luton",
+    "postcode": "LU1 5EZ"
+   },
+   "quality": "low-res",
+   "files": [
+    {
+     "file": "hillborough-icon.png",
+     "variant": "icon",
+     "w": 498,
+     "h": 512
+    },
+    {
+     "file": "hillborough-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 498,
+     "h": 512,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "icknield",
+   "name": "Icknield High School",
+   "aliases": [
+    "Icknield"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/icknield/",
+   "vector": true,
+   "details": {
+    "address": "Riddy Lane, Luton",
+    "postcode": "LU3 2AH",
+    "website": "https://www.icknield.beds.sch.uk"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "icknield-logo.svg",
+     "variant": "logo",
+     "vector": true
+    },
+    {
+     "file": "icknield-icon.png",
+     "variant": "icon",
+     "w": 498,
+     "h": 512
+    },
+    {
+     "file": "icknield-mono-white.png",
+     "variant": "mono-white",
+     "w": 498,
+     "h": 512,
+     "made": true
+    },
+    {
+     "file": "icknield-mono-black.png",
+     "variant": "mono-black",
+     "w": 498,
+     "h": 512,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "lea-manor",
+   "name": "Lea Manor High School",
+   "aliases": [],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/lea-manor/",
+   "vector": false,
+   "details": {
+    "address": "Northwell Drive, Luton",
+    "postcode": "LU3 3TL"
+   },
+   "quality": "low-res",
+   "files": [
+    {
+     "file": "lea-manor-icon.png",
+     "variant": "icon",
+     "w": 512,
+     "h": 170
+    },
+    {
+     "file": "lea-manor-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 512,
+     "h": 170,
+     "made": true
+    },
+    {
+     "file": "lea-manor-mono-white.png",
+     "variant": "mono-white",
+     "w": 512,
+     "h": 170,
+     "made": true
+    },
+    {
+     "file": "lea-manor-mono-black.png",
+     "variant": "mono-black",
+     "w": 512,
+     "h": 170,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "lealands",
+   "name": "Lealands High School",
+   "aliases": [],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/lealands/",
+   "vector": false,
+   "details": {
+    "address": "Sundon Park Road, Luton",
+    "postcode": "LU3 3AL"
+   },
+   "quality": "low-res",
+   "files": [
+    {
+     "file": "lealands-icon.png",
+     "variant": "icon",
+     "w": 495,
+     "h": 512
+    }
+   ]
+  },
+  {
+   "slug": "luton-sixth-form",
+   "name": "Luton Sixth Form College",
+   "aliases": [
+    "LSFC"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/luton-sixth-form/",
+   "vector": false,
+   "details": {
+    "address": "Bradgers Hill Road, Luton",
+    "postcode": "LU2 7EW",
+    "website": "https://www.lutonsfc.ac.uk"
+   },
+   "quality": "hd",
+   "files": [
+    {
+     "file": "luton-sixth-form-logo.png",
+     "variant": "logo",
+     "w": 1103,
+     "h": 255
+    },
+    {
+     "file": "luton-sixth-form-logo-white.png",
+     "variant": "logo-white",
+     "w": 1103,
+     "h": 255
+    },
+    {
+     "file": "luton-sixth-form-icon.png",
+     "variant": "icon",
+     "w": 512,
+     "h": 230
+    },
+    {
+     "file": "luton-sixth-form-mono-white.png",
+     "variant": "mono-white",
+     "w": 1103,
+     "h": 255,
+     "made": true
+    },
+    {
+     "file": "luton-sixth-form-mono-black.png",
+     "variant": "mono-black",
+     "w": 1103,
+     "h": 255,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "norton-road",
+   "name": "Norton Road Primary School",
+   "aliases": [],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/norton-road/",
+   "vector": false,
+   "details": {
+    "address": "Norton Road, Luton",
+    "postcode": "LU3 2NX"
+   },
+   "quality": "ok",
+   "files": [
+    {
+     "file": "norton-road-logo-compact.png",
+     "variant": "logo-compact",
+     "w": 745,
+     "h": 182
+    },
+    {
+     "file": "norton-road-wordmark.png",
+     "variant": "wordmark",
+     "w": 745,
+     "h": 182
+    },
+    {
+     "file": "norton-road-logo.png",
+     "variant": "logo",
+     "w": 286,
+     "h": 222
+    },
+    {
+     "file": "norton-road-mono-white.png",
+     "variant": "mono-white",
+     "w": 286,
+     "h": 222,
+     "made": true
+    },
+    {
+     "file": "norton-road-mono-black.png",
+     "variant": "mono-black",
+     "w": 286,
+     "h": 222,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "putteridge",
+   "name": "Putteridge High School",
+   "aliases": [],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/putteridge/",
+   "vector": false,
+   "details": {
+    "address": "Putteridge Road, Luton",
+    "postcode": "LU2 8HJ"
+   },
+   "quality": "low-res",
+   "files": [
+    {
+     "file": "putteridge-icon.png",
+     "variant": "icon",
+     "w": 512,
+     "h": 512
+    },
+    {
+     "file": "putteridge-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 512,
+     "h": 512,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "qes",
+   "name": "Queen Elizabeth School (QES)",
+   "aliases": [
+    "QES"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/qes/",
+   "vector": false,
+   "details": {
+    "address": "Crawley Green Road, Luton",
+    "postcode": "LU2 9AG"
+   },
+   "quality": "low-res",
+   "files": [
+    {
+     "file": "qes-icon.png",
+     "variant": "icon",
+     "w": 512,
+     "h": 512
+    }
+   ]
+  },
+  {
+   "slug": "stopsley",
+   "name": "Stopsley High School (SHS)",
+   "aliases": [
+    "SHS"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/stopsley/",
+   "vector": false,
+   "details": {
+    "address": "St Thomas' Road, Luton",
+    "postcode": "LU2 7UX"
+   },
+   "quality": "low-res",
+   "files": [
+    {
+     "file": "stopsley-icon.png",
+     "variant": "icon",
+     "w": 512,
+     "h": 379
+    },
+    {
+     "file": "stopsley-mono-white.png",
+     "variant": "mono-white",
+     "w": 512,
+     "h": 379,
+     "made": true
+    },
+    {
+     "file": "stopsley-mono-black.png",
+     "variant": "mono-black",
+     "w": 512,
+     "h": 379,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "stockwood-park",
+   "name": "The Stockwood Park Academy",
+   "aliases": [],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/stockwood-park/",
+   "vector": false,
+   "details": {
+    "address": "Rotheram Avenue, Luton",
+    "postcode": "LU1 5PP"
+   },
+   "quality": "low-res",
+   "files": [
+    {
+     "file": "stockwood-park-icon.png",
+     "variant": "icon",
+     "w": 512,
+     "h": 504
+    },
+    {
+     "file": "stockwood-park-mono-white.png",
+     "variant": "mono-white",
+     "w": 512,
+     "h": 504,
+     "made": true
+    },
+    {
+     "file": "stockwood-park-mono-black.png",
+     "variant": "mono-black",
+     "w": 512,
+     "h": 504,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "uni-beds",
+   "name": "University of Bedfordshire",
+   "aliases": [
+    "UoB"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/uni-beds/",
+   "vector": true,
+   "details": {
+    "address": "University of Bedfordshire, Luton campus",
+    "postcode": "LU1 3JU"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "uni-beds-logo.svg",
+     "variant": "logo",
+     "vector": true
+    }
+   ]
+  },
+  {
+   "slug": "wigmore",
+   "name": "Wigmore Primary School",
+   "aliases": [],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/wigmore/",
+   "vector": false,
+   "details": {
+    "address": "Twyford Drive, Luton",
+    "postcode": "LU2 9TB"
+   },
+   "quality": "low-res",
+   "files": [
+    {
+     "file": "wigmore-icon.png",
+     "variant": "icon",
+     "w": 512,
+     "h": 492
+    }
+   ]
+  },
+  {
+   "slug": "woodlands",
+   "name": "Woodlands Secondary School",
+   "aliases": [],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/woodlands/",
+   "vector": false,
+   "details": {
+    "address": "Northwell Drive, Luton",
+    "postcode": "LU3 3SP",
+    "website": "http://www.woodlands.luton.sch.uk"
+   },
+   "quality": "low-res",
+   "files": [
+    {
+     "file": "woodlands-icon.png",
+     "variant": "icon",
+     "w": 505,
+     "h": 512
+    },
+    {
+     "file": "woodlands-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 505,
+     "h": 512,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "blcf",
+   "name": "Bedfordshire & Luton Community Foundation",
+   "aliases": [
+    "BLCF"
+   ],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/blcf/",
+   "vector": false,
+   "details": {
+    "website": "https://blcf.org.uk/"
+   },
+   "quality": "low-res",
+   "files": [
+    {
+     "file": "blcf-logo.png",
+     "variant": "logo",
+     "w": 386,
+     "h": 399
+    },
+    {
+     "file": "blcf-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 386,
+     "h": 399,
+     "made": true
+    },
+    {
+     "file": "blcf-mono-white.png",
+     "variant": "mono-white",
+     "w": 386,
+     "h": 399,
+     "made": true
+    },
+    {
+     "file": "blcf-mono-black.png",
+     "variant": "mono-black",
+     "w": 386,
+     "h": 399,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "comic-relief",
+   "name": "Comic Relief",
+   "aliases": [],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/comic-relief/",
+   "vector": false,
+   "details": {
+    "website": "https://www.comicrelief.com"
+   },
+   "quality": "hd",
+   "files": [
+    {
+     "file": "comic-relief-logo.png",
+     "variant": "logo",
+     "w": 972,
+     "h": 545
+    }
+   ]
+  },
+  {
+   "slug": "ctp",
+   "name": "CTP",
+   "aliases": [
+    "CTP"
+   ],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/ctp/",
+   "vector": false,
+   "details": {
+    "website": "https://ctportal.org/"
+   },
+   "quality": "ok",
+   "files": [
+    {
+     "file": "ctp-logo.png",
+     "variant": "logo",
+     "w": 598,
+     "h": 329
+    }
+   ]
+  },
+  {
+   "slug": "discover-islam",
+   "name": "Discover Islam",
+   "aliases": [],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/discover-islam/",
+   "vector": false,
+   "details": {
+    "address": "37C Upper George Street, Luton",
+    "postcode": "LU1 2RD"
+   },
+   "quality": "hd",
+   "files": [
+    {
+     "file": "discover-islam-logo.png",
+     "variant": "logo",
+     "w": 972,
+     "h": 374
+    },
+    {
+     "file": "discover-islam-icon.png",
+     "variant": "icon",
+     "w": 480,
+     "h": 474
+    }
+   ]
+  },
+  {
+   "slug": "empowering",
+   "name": "Empowering Education",
+   "aliases": [],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/empowering/",
+   "vector": false,
+   "details": {
+    "website": "https://empoweringeducation.co.uk/"
+   },
+   "quality": "ok",
+   "files": [
+    {
+     "file": "empowering-logo.png",
+     "variant": "logo",
+     "w": 598,
+     "h": 112
+    },
+    {
+     "file": "empowering-logo-white.png",
+     "variant": "logo-white",
+     "w": 598,
+     "h": 112
+    },
+    {
+     "file": "empowering-mono-white.png",
+     "variant": "mono-white",
+     "w": 598,
+     "h": 112,
+     "made": true
+    },
+    {
+     "file": "empowering-mono-black.png",
+     "variant": "mono-black",
+     "w": 598,
+     "h": 112,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "faces",
+   "name": "FACES (Faiths Against Child Sexual Exploitation)",
+   "aliases": [
+    "FACES"
+   ],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/faces/",
+   "vector": false,
+   "details": {},
+   "quality": "hd",
+   "files": [
+    {
+     "file": "faces-logo.png",
+     "variant": "logo",
+     "w": 972,
+     "h": 383
+    }
+   ]
+  },
+  {
+   "slug": "fcg",
+   "name": "Farley Community Group",
+   "aliases": [
+    "FCG"
+   ],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/fcg/",
+   "vector": false,
+   "details": {
+    "website": "https://farleycommunitygroup.co.uk/"
+   },
+   "quality": "ok",
+   "files": [
+    {
+     "file": "fcg-logo.png",
+     "variant": "logo",
+     "w": 598,
+     "h": 193
+    }
+   ]
+  },
+  {
+   "slug": "groundwork",
+   "name": "Groundwork",
+   "aliases": [],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/groundwork/",
+   "vector": true,
+   "details": {
+    "address": "Memorial Park, Luton",
+    "website": "https://www.groundwork.org.uk"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "groundwork-logo.svg",
+     "variant": "logo",
+     "vector": true
+    },
+    {
+     "file": "groundwork-logo.png",
+     "variant": "logo",
+     "w": 966,
+     "h": 876
+    }
+   ]
+  },
+  {
+   "slug": "grow-your-potential",
+   "name": "Grow Your Potential",
+   "aliases": [
+    "GYP"
+   ],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/grow-your-potential/",
+   "vector": true,
+   "details": {
+    "address": "Hart Hill Community Centre, Falks Hill",
+    "postcode": "LU2 0FN"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "grow-your-potential-logo.svg",
+     "variant": "logo",
+     "vector": true
+    }
+   ]
+  },
+  {
+   "slug": "hightown-baptist",
+   "name": "Hightown Baptist Church",
+   "aliases": [
+    "HBC"
+   ],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/hightown-baptist/",
+   "vector": false,
+   "details": {},
+   "quality": "hd",
+   "files": [
+    {
+     "file": "hightown-baptist-logo.png",
+     "variant": "logo",
+     "w": 1170,
+     "h": 386
+    },
+    {
+     "file": "hightown-baptist-mono-white.png",
+     "variant": "mono-white",
+     "w": 1170,
+     "h": 386,
+     "made": true
+    },
+    {
+     "file": "hightown-baptist-mono-black.png",
+     "variant": "mono-black",
+     "w": 1170,
+     "h": 386,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "hilden",
+   "name": "Hilden",
+   "aliases": [],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/hilden/",
+   "vector": true,
+   "details": {},
+   "quality": "vector",
+   "files": [
+    {
+     "file": "hilden-logo.svg",
+     "variant": "logo",
+     "vector": true
+    }
+   ]
+  },
+  {
+   "slug": "human-appeal",
+   "name": "Human Appeal",
+   "aliases": [],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/human-appeal/",
+   "vector": true,
+   "details": {
+    "website": "https://humanappeal.org.uk"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "human-appeal-logo.svg",
+     "variant": "logo",
+     "vector": true
+    },
+    {
+     "file": "human-appeal-logo.png",
+     "variant": "logo",
+     "w": 1237,
+     "h": 1319
+    },
+    {
+     "file": "human-appeal-logo-white.svg",
+     "variant": "logo-white",
+     "vector": true
+    },
+    {
+     "file": "human-appeal-logo-white.png",
+     "variant": "logo-white",
+     "w": 1237,
+     "h": 1319
+    },
+    {
+     "file": "human-appeal-mono-white.png",
+     "variant": "mono-white",
+     "w": 1237,
+     "h": 1319,
+     "made": true
+    },
+    {
+     "file": "human-appeal-mono-black.png",
+     "variant": "mono-black",
+     "w": 1237,
+     "h": 1319,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "kdf",
+   "name": "Kashmir Development Foundation",
+   "aliases": [
+    "KDF"
+   ],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/kdf/",
+   "vector": false,
+   "details": {
+    "website": "https://www.kdfajk.org"
+   },
+   "quality": "low-res",
+   "files": [
+    {
+     "file": "kdf-logo.png",
+     "variant": "logo",
+     "w": 391,
+     "h": 447
+    },
+    {
+     "file": "kdf-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 391,
+     "h": 447,
+     "made": true
+    },
+    {
+     "file": "kdf-icon.png",
+     "variant": "icon",
+     "w": 380,
+     "h": 316,
+     "made": true
+    },
+    {
+     "file": "kdf-icon-white.png",
+     "variant": "icon-white",
+     "w": 380,
+     "h": 316,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "keech-hospice-care",
+   "name": "Keech Hospice Care",
+   "aliases": [
+    "Keech"
+   ],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/keech-hospice-care/",
+   "vector": true,
+   "details": {
+    "last_event_at": "Barnfield College LU2 7BF",
+    "website": "https://www.keech.org.uk"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "keech-hospice-care-logo.svg",
+     "variant": "logo",
+     "vector": true
+    }
+   ]
+  },
+  {
+   "slug": "lantern",
+   "name": "Lantern (Let's Eat Together partner)",
+   "aliases": [],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/lantern/",
+   "vector": false,
+   "details": {},
+   "quality": "low-res",
+   "files": [
+    {
+     "file": "lantern-icon.png",
+     "variant": "icon",
+     "w": 158,
+     "h": 475
+    },
+    {
+     "file": "lantern-mono-white.png",
+     "variant": "mono-white",
+     "w": 158,
+     "h": 475,
+     "made": true
+    },
+    {
+     "file": "lantern-mono-black.png",
+     "variant": "mono-black",
+     "w": 158,
+     "h": 475,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "lets-hub",
+   "name": "LETS Hub (Luton Employment Training Skills)",
+   "aliases": [
+    "letshub"
+   ],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/lets-hub/",
+   "vector": false,
+   "details": {},
+   "quality": "hd",
+   "files": [
+    {
+     "file": "lets-hub-logo.png",
+     "variant": "logo",
+     "w": 972,
+     "h": 397
+    }
+   ]
+  },
+  {
+   "slug": "level-trust",
+   "name": "Level Trust",
+   "aliases": [],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/level-trust/",
+   "vector": false,
+   "details": {
+    "website": "https://www.leveltrust.org"
+   },
+   "quality": "ok",
+   "files": [
+    {
+     "file": "level-trust-logo.png",
+     "variant": "logo",
+     "w": 746,
+     "h": 274
+    },
+    {
+     "file": "level-trust-logo-white.png",
+     "variant": "logo-white",
+     "w": 746,
+     "h": 274
+    },
+    {
+     "file": "level-trust-mono-white.png",
+     "variant": "mono-white",
+     "w": 746,
+     "h": 274,
+     "made": true
+    },
+    {
+     "file": "level-trust-mono-black.png",
+     "variant": "mono-black",
+     "w": 746,
+     "h": 274,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "luton-foodbank",
+   "name": "Luton Foodbank",
+   "aliases": [
+    "foodbank"
+   ],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/luton-foodbank/",
+   "vector": true,
+   "details": {
+    "website": "https://lutonfoodbank.org.uk",
+    "note": "Parcels from collection points across Luton, given after assessment; no public walk-in address"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "luton-foodbank-logo.svg",
+     "variant": "logo",
+     "vector": true
+    },
+    {
+     "file": "luton-foodbank-logo.png",
+     "variant": "logo",
+     "w": 1336,
+     "h": 505
+    },
+    {
+     "file": "luton-foodbank-logo-white.svg",
+     "variant": "logo-white",
+     "vector": true
+    },
+    {
+     "file": "luton-foodbank-logo-white.png",
+     "variant": "logo-white",
+     "w": 828,
+     "h": 312
+    },
+    {
+     "file": "luton-foodbank-logo-tagline.png",
+     "variant": "logo-tagline",
+     "w": 548,
+     "h": 255
+    },
+    {
+     "file": "luton-foodbank-mono-white.png",
+     "variant": "mono-white",
+     "w": 1336,
+     "h": 505,
+     "made": true
+    },
+    {
+     "file": "luton-foodbank-mono-black.png",
+     "variant": "mono-black",
+     "w": 1336,
+     "h": 505,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "luton-point",
+   "name": "Luton Point",
+   "aliases": [],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/luton-point/",
+   "vector": false,
+   "details": {},
+   "quality": "ok",
+   "files": [
+    {
+     "file": "luton-point-logo.png",
+     "variant": "logo",
+     "w": 422,
+     "h": 480
+    },
+    {
+     "file": "luton-point-mono-white.png",
+     "variant": "mono-white",
+     "w": 422,
+     "h": 480,
+     "made": true
+    },
+    {
+     "file": "luton-point-mono-black.png",
+     "variant": "mono-black",
+     "w": 422,
+     "h": 480,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "ltfc-trust",
+   "name": "Luton Town FC Community Trust",
+   "aliases": [],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/ltfc-trust/",
+   "vector": false,
+   "details": {},
+   "quality": "ok",
+   "files": [
+    {
+     "file": "ltfc-trust-logo.png",
+     "variant": "logo",
+     "w": 651,
+     "h": 203
+    },
+    {
+     "file": "ltfc-trust-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 651,
+     "h": 203,
+     "made": true
+    },
+    {
+     "file": "ltfc-trust-mono-white.png",
+     "variant": "mono-white",
+     "w": 651,
+     "h": 203,
+     "made": true
+    },
+    {
+     "file": "ltfc-trust-mono-black.png",
+     "variant": "mono-black",
+     "w": 651,
+     "h": 203,
+     "made": true
+    },
+    {
+     "file": "ltfc-trust-icon.png",
+     "variant": "icon",
+     "w": 201,
+     "h": 203,
+     "made": true
+    },
+    {
+     "file": "ltfc-trust-icon-white.png",
+     "variant": "icon-white",
+     "w": 201,
+     "h": 203,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "mary-seacole",
+   "name": "Mary Seacole Housing Association",
+   "aliases": [],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/mary-seacole/",
+   "vector": false,
+   "details": {
+    "website": "http://www.maryseacoleha.com"
+   },
+   "quality": "ok",
+   "files": [
+    {
+     "file": "mary-seacole-logo.png",
+     "variant": "logo",
+     "w": 746,
+     "h": 343
+    },
+    {
+     "file": "mary-seacole-logo-white.png",
+     "variant": "logo-white",
+     "w": 614,
+     "h": 323
+    },
+    {
+     "file": "mary-seacole-mono-white.png",
+     "variant": "mono-white",
+     "w": 746,
+     "h": 343,
+     "made": true
+    },
+    {
+     "file": "mary-seacole-mono-black.png",
+     "variant": "mono-black",
+     "w": 746,
+     "h": 343,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "national-trust",
+   "name": "National Trust",
+   "aliases": [],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/national-trust/",
+   "vector": true,
+   "details": {
+    "website": "https://www.nationaltrust.org.uk"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "national-trust-logo.svg",
+     "variant": "logo",
+     "vector": true
+    }
+   ]
+  },
+  {
+   "slug": "ngs",
+   "name": "NGS Youth & Community (Next Generation Scheme)",
+   "aliases": [
+    "NGS",
+    "Next Generation Scheme"
+   ],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/ngs/",
+   "vector": true,
+   "details": {
+    "email": "info@nextgenerationscheme.co.uk",
+    "phone": "07594 107633",
+    "website": "https://nextgenerationscheme.co.uk",
+    "note": "Website taken from the email domain; no public street address listed on the NGS site"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "ngs-logo.svg",
+     "variant": "logo",
+     "vector": true
+    },
+    {
+     "file": "ngs-logo-white.png",
+     "variant": "logo-white",
+     "w": 606,
+     "h": 316
+    }
+   ]
+  },
+  {
+   "slug": "nijjor-manush",
+   "name": "Nijjor Manush",
+   "aliases": [],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/nijjor-manush/",
+   "vector": false,
+   "details": {},
+   "quality": "hd",
+   "files": [
+    {
+     "file": "nijjor-manush-logo.png",
+     "variant": "logo",
+     "w": 972,
+     "h": 483
+    }
+   ]
+  },
+  {
+   "slug": "noah",
+   "name": "NOAH Enterprise",
+   "aliases": [
+    "NOAH"
+   ],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/noah/",
+   "vector": true,
+   "details": {
+    "address": "141 Park Street, Luton (Welfare Centre)",
+    "postcode": "LU1 3HG",
+    "website": "https://noahenterprise.org"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "noah-logo.svg",
+     "variant": "logo",
+     "vector": true
+    }
+   ]
+  },
+  {
+   "slug": "skt-welfare",
+   "name": "SKT Welfare",
+   "aliases": [],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/skt-welfare/",
+   "vector": true,
+   "details": {
+    "last_event_at": "Venue Central, 196A Leagrave Road LU3 1JD"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "skt-welfare-logo.svg",
+     "variant": "logo",
+     "vector": true
+    }
+   ]
+  },
+  {
+   "slug": "sunnah-charity",
+   "name": "Sunnah (charity that never ends)",
+   "aliases": [
+    "Sunnah"
+   ],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/sunnah-charity/",
+   "vector": false,
+   "details": {
+    "website": "https://sunnah.org.uk",
+    "charity": "1203441"
+   },
+   "quality": "low-res",
+   "files": [
+    {
+     "file": "sunnah-charity-logo.png",
+     "variant": "logo",
+     "w": 299,
+     "h": 146
+    },
+    {
+     "file": "sunnah-charity-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 299,
+     "h": 146,
+     "made": true
+    },
+    {
+     "file": "sunnah-charity-mono-white.png",
+     "variant": "mono-white",
+     "w": 299,
+     "h": 146,
+     "made": true
+    },
+    {
+     "file": "sunnah-charity-mono-black.png",
+     "variant": "mono-black",
+     "w": 299,
+     "h": 146,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "courtney-foundation",
+   "name": "The Courtney Foundation",
+   "aliases": [
+    "Courtney Foundation",
+    "cf"
+   ],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/courtney-foundation/",
+   "vector": false,
+   "details": {
+    "address": "145a High Street, Luton",
+    "postcode": "LU4 9LE",
+    "website": "https://thecourtneyfoundation.org",
+    "charity": "1187689"
+   },
+   "quality": "low-res",
+   "files": [
+    {
+     "file": "courtney-foundation-icon.png",
+     "variant": "icon",
+     "w": 400,
+     "h": 400
+    }
+   ]
+  },
+  {
+   "slug": "hygiene-bank",
+   "name": "The Hygiene Bank",
+   "aliases": [],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/hygiene-bank/",
+   "vector": true,
+   "details": {
+    "website": "https://www.thehygienebank.com"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "hygiene-bank-logo.svg",
+     "variant": "logo",
+     "vector": true
+    }
+   ]
+  },
+  {
+   "slug": "community-fund",
+   "name": "The National Lottery Community Fund",
+   "aliases": [
+    "TNLCF",
+    "National Lottery"
+   ],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/community-fund/",
+   "vector": false,
+   "details": {
+    "website": "https://tnlcommunityfund.org.uk"
+   },
+   "quality": "ok",
+   "files": [
+    {
+     "file": "community-fund-logo.png",
+     "variant": "logo",
+     "w": 612,
+     "h": 204
+    },
+    {
+     "file": "community-fund-logo-white.png",
+     "variant": "logo-white",
+     "w": 612,
+     "h": 204
+    },
+    {
+     "file": "community-fund-mono-white.png",
+     "variant": "mono-white",
+     "w": 612,
+     "h": 204,
+     "made": true
+    },
+    {
+     "file": "community-fund-mono-black.png",
+     "variant": "mono-black",
+     "w": 612,
+     "h": 204,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "raise-up",
+   "name": "The Raise Up Foundation",
+   "aliases": [
+    "Raise Up"
+   ],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/raise-up/",
+   "vector": true,
+   "details": {
+    "address": "Solway Community Centre, 5 All Saints Close, Luton",
+    "postcode": "LU3 1FA",
+    "website": "https://raiseupluton.co.uk",
+    "charity": "1188653"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "raise-up-logo.svg",
+     "variant": "logo",
+     "vector": true
+    },
+    {
+     "file": "raise-up-logo-white.svg",
+     "variant": "logo-white",
+     "vector": true
+    },
+    {
+     "file": "raise-up-icon.png",
+     "variant": "icon",
+     "w": 447,
+     "h": 447
+    }
+   ]
+  },
+  {
+   "slug": "utilita-giving",
+   "name": "Utilita Giving",
+   "aliases": [],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/utilita-giving/",
+   "vector": false,
+   "details": {},
+   "quality": "hd",
+   "files": [
+    {
+     "file": "utilita-giving-logo.png",
+     "variant": "logo",
+     "w": 1080,
+     "h": 666
+    }
+   ]
+  },
+  {
+   "slug": "wildlife-trust",
+   "name": "Wildlife Trust BCN",
+   "aliases": [],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/wildlife-trust/",
+   "vector": true,
+   "details": {
+    "website": "https://www.wildlifebcn.org"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "wildlife-trust-logo.svg",
+     "variant": "logo",
+     "vector": true
+    }
+   ]
+  },
+  {
+   "slug": "woodland-trust",
+   "name": "Woodland Trust",
+   "aliases": [],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/woodland-trust/",
+   "vector": true,
+   "details": {
+    "address": "Between Bramingham and Marsh Farm",
+    "postcode": "LU3 2RU",
+    "website": "https://www.woodlandtrust.org.uk"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "woodland-trust-logo.svg",
+     "variant": "logo",
+     "vector": true
+    }
+   ]
+  },
+  {
+   "slug": "active-luton",
+   "name": "Active Luton",
+   "aliases": [],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/active-luton/",
+   "vector": false,
+   "details": {
+    "address": "Butterfield Green Road",
+    "postcode": "LU2 8DD",
+    "website": "https://activeluton.co.uk"
+   },
+   "quality": "ok",
+   "files": [
+    {
+     "file": "active-luton-logo.png",
+     "variant": "logo",
+     "w": 654,
+     "h": 294
+    },
+    {
+     "file": "active-luton-mono-white.png",
+     "variant": "mono-white",
+     "w": 654,
+     "h": 294,
+     "made": true
+    },
+    {
+     "file": "active-luton-mono-black.png",
+     "variant": "mono-black",
+     "w": 654,
+     "h": 294,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "dunstable-tc",
+   "name": "Dunstable Town Council",
+   "aliases": [],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/dunstable-tc/",
+   "vector": true,
+   "details": {
+    "address": "Dunstable town centre",
+    "postcode": "LU5 4RB",
+    "website": "https://www.dunstable.gov.uk"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "dunstable-tc-logo.svg",
+     "variant": "logo",
+     "vector": true
+    }
+   ]
+  },
+  {
+   "slug": "hangout-luton",
+   "name": "Hangout Luton",
+   "aliases": [],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/hangout-luton/",
+   "vector": true,
+   "details": {
+    "address": "33 Park Street West",
+    "postcode": "LU1 3BE",
+    "website": "https://hangoutluton.co.uk"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "hangout-luton-logo.svg",
+     "variant": "logo",
+     "vector": true
+    }
+   ]
+  },
+  {
+   "slug": "luton-allstars",
+   "name": "Luton Allstars Football Club (MTAC)",
+   "aliases": [
+    "Allstars"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/luton-allstars/",
+   "vector": false,
+   "details": {
+    "website": "https://www.lutonallstars.com"
+   },
+   "quality": "ok",
+   "files": [
+    {
+     "file": "luton-allstars-logo.png",
+     "variant": "logo",
+     "w": 484,
+     "h": 484
+    },
+    {
+     "file": "luton-allstars-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 484,
+     "h": 484,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "luton-bid",
+   "name": "Luton BID (Step Forward Luton)",
+   "aliases": [],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/luton-bid/",
+   "vector": true,
+   "details": {
+    "website": "https://place.stepforwardluton.co.uk",
+    "last_event_at": "Market Hill, town centre"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "luton-bid-logo.svg",
+     "variant": "logo",
+     "vector": true
+    }
+   ]
+  },
+  {
+   "slug": "luton-council",
+   "name": "Luton Council",
+   "aliases": [
+    "LBC",
+    "Luton Borough Council"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/luton-council/",
+   "vector": true,
+   "details": {
+    "address": "Ashcroft Park, Stopsley",
+    "postcode": "LU2 9AY",
+    "website": "https://www.luton.gov.uk"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "luton-council-logo.svg",
+     "variant": "logo",
+     "vector": true
+    }
+   ]
+  },
+  {
+   "slug": "luton-energise",
+   "name": "Luton Energise Holiday Camps (HAF)",
+   "aliases": [
+    "Energise"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/luton-energise/",
+   "vector": false,
+   "details": {
+    "website": "https://www.activeluton.co.uk/activities/energise-luton-holiday-camps"
+   },
+   "quality": "ok",
+   "files": [
+    {
+     "file": "luton-energise-logo.png",
+     "variant": "logo",
+     "w": 653,
+     "h": 327
+    },
+    {
+     "file": "luton-energise-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 653,
+     "h": 327,
+     "made": true
+    },
+    {
+     "file": "luton-energise-mono-white.png",
+     "variant": "mono-white",
+     "w": 653,
+     "h": 327,
+     "made": true
+    },
+    {
+     "file": "luton-energise-mono-black.png",
+     "variant": "mono-black",
+     "w": 653,
+     "h": 327,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "luton-libraries",
+   "name": "Luton Libraries",
+   "aliases": [],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/luton-libraries/",
+   "vector": false,
+   "details": {
+    "website": "https://www.lutonlibraries.co.uk"
+   },
+   "quality": "hd",
+   "files": [
+    {
+     "file": "luton-libraries-logo.png",
+     "variant": "logo",
+     "w": 914,
+     "h": 418
+    },
+    {
+     "file": "luton-libraries-mono-white.png",
+     "variant": "mono-white",
+     "w": 914,
+     "h": 418,
+     "made": true
+    },
+    {
+     "file": "luton-libraries-mono-black.png",
+     "variant": "mono-black",
+     "w": 914,
+     "h": 418,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "luton-rising",
+   "name": "Luton Rising",
+   "aliases": [],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/luton-rising/",
+   "vector": false,
+   "details": {
+    "website": "https://lutonrising.org.uk"
+   },
+   "quality": "ok",
+   "files": [
+    {
+     "file": "luton-rising-logo.png",
+     "variant": "logo",
+     "w": 596,
+     "h": 243
+    },
+    {
+     "file": "luton-rising-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 596,
+     "h": 243,
+     "made": true
+    },
+    {
+     "file": "luton-rising-mono-white.png",
+     "variant": "mono-white",
+     "w": 596,
+     "h": 243,
+     "made": true
+    },
+    {
+     "file": "luton-rising-mono-black.png",
+     "variant": "mono-black",
+     "w": 596,
+     "h": 243,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "ltfc",
+   "name": "Luton Town Football Club",
+   "aliases": [
+    "LTFC",
+    "Hatters"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/ltfc/",
+   "vector": false,
+   "details": {
+    "address": "Kenilworth Road",
+    "postcode": "LU4 8AW",
+    "website": "https://www.lutontown.co.uk"
+   },
+   "quality": "low-res",
+   "files": [
+    {
+     "file": "ltfc-logo.png",
+     "variant": "logo",
+     "w": 201,
+     "h": 200
+    },
+    {
+     "file": "ltfc-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 201,
+     "h": 200,
+     "made": true
+    },
+    {
+     "file": "ltfc-mono-white.png",
+     "variant": "mono-white",
+     "w": 201,
+     "h": 200,
+     "made": true
+    },
+    {
+     "file": "ltfc-mono-black.png",
+     "variant": "mono-black",
+     "w": 201,
+     "h": 200,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "muslim-undertaker",
+   "name": "Muslim Undertaker",
+   "aliases": [],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/muslim-undertaker/",
+   "vector": true,
+   "details": {
+    "last_event_at": "Venue Central, 196A Leagrave Road LU3 1JD"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "muslim-undertaker-logo.svg",
+     "variant": "logo",
+     "vector": true
+    }
+   ]
+  },
+  {
+   "slug": "rosebuds",
+   "name": "Rosebuds Luton Sisters",
+   "aliases": [],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/rosebuds/",
+   "vector": false,
+   "details": {
+    "last_event_at": "Higher Ground, 63 Inkerman Street LU1 1JD"
+   },
+   "quality": "ok",
+   "files": [
+    {
+     "file": "rosebuds-logo.png",
+     "variant": "logo",
+     "w": 497,
+     "h": 163
+    },
+    {
+     "file": "rosebuds-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 497,
+     "h": 163,
+     "made": true
+    },
+    {
+     "file": "rosebuds-mono-white.png",
+     "variant": "mono-white",
+     "w": 497,
+     "h": 163,
+     "made": true
+    },
+    {
+     "file": "rosebuds-mono-black.png",
+     "variant": "mono-black",
+     "w": 497,
+     "h": 163,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "st-marys",
+   "name": "St Mary's Church Luton",
+   "aliases": [],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/st-marys/",
+   "vector": true,
+   "details": {
+    "website": "https://www.stmarysluton.org"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "st-marys-logo.svg",
+     "variant": "logo",
+     "vector": true
+    }
+   ]
+  },
+  {
+   "slug": "suez",
+   "name": "SUEZ",
+   "aliases": [],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/suez/",
+   "vector": false,
+   "details": {
+    "website": "https://www.suez.co.uk/en-gb"
+   },
+   "quality": "ok",
+   "files": [
+    {
+     "file": "suez-logo.png",
+     "variant": "logo",
+     "w": 524,
+     "h": 140
+    }
+   ]
+  },
+  {
+   "slug": "tokko",
+   "name": "Tokko Youth Hub",
+   "aliases": [
+    "Tokko"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/tokko/",
+   "vector": false,
+   "details": {
+    "address": "7 Gordon Street, Luton",
+    "postcode": "LU1 2QP",
+    "website": "https://tokko.co.uk"
+   },
+   "quality": "ok",
+   "files": [
+    {
+     "file": "tokko-logo.png",
+     "variant": "logo",
+     "w": 433,
+     "h": 691
+    },
+    {
+     "file": "tokko-logo-white.png",
+     "variant": "logo-white",
+     "w": 393,
+     "h": 614
+    },
+    {
+     "file": "tokko-lockup.png",
+     "variant": "lockup",
+     "w": 806,
+     "h": 399
+    },
+    {
+     "file": "tokko-wide.png",
+     "variant": "wide",
+     "w": 1102,
+     "h": 360
+    },
+    {
+     "file": "tokko-mono-white.png",
+     "variant": "mono-white",
+     "w": 433,
+     "h": 691,
+     "made": true
+    },
+    {
+     "file": "tokko-mono-black.png",
+     "variant": "mono-black",
+     "w": 433,
+     "h": 691,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "youthscape",
+   "name": "Youthscape",
+   "aliases": [],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/youthscape/",
+   "vector": true,
+   "details": {
+    "address": "74 Bute Street, Luton",
+    "postcode": "LU1 2EY",
+    "website": "https://www.youthscape.co.uk"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "youthscape-logo.svg",
+     "variant": "logo",
+     "vector": true
+    }
+   ]
+  },
+  {
+   "slug": "jummah-winter-campaign",
+   "name": "Jummah Winter Campaign",
+   "aliases": [
+    "JWA",
+    "Jummah Winter Appeal"
+   ],
+   "category": "campaigns",
+   "category_name": "Campaigns & events",
+   "path": "campaigns/jummah-winter-campaign/",
+   "vector": true,
+   "details": {},
+   "quality": "vector",
+   "files": [
+    {
+     "file": "jummah-winter-campaign-logo.svg",
+     "variant": "logo",
+     "vector": true
+    },
+    {
+     "file": "jummah-winter-campaign-logo.png",
+     "variant": "logo",
+     "w": 1257,
+     "h": 1219
+    },
+    {
+     "file": "jummah-winter-campaign-logo-white.png",
+     "variant": "logo-white",
+     "w": 1257,
+     "h": 1219
+    },
+    {
+     "file": "jummah-winter-campaign-logo-compact.png",
+     "variant": "logo-compact",
+     "w": 900,
+     "h": 873
+    },
+    {
+     "file": "jummah-winter-campaign-logo-compact-white.png",
+     "variant": "logo-compact-white",
+     "w": 900,
+     "h": 873
+    },
+    {
+     "file": "jummah-winter-campaign-icon.png",
+     "variant": "icon",
+     "w": 113,
+     "h": 86
+    },
+    {
+     "file": "jummah-winter-campaign-mono-white.png",
+     "variant": "mono-white",
+     "w": 1257,
+     "h": 1219,
+     "made": true
+    },
+    {
+     "file": "jummah-winter-campaign-mono-black.png",
+     "variant": "mono-black",
+     "w": 1257,
+     "h": 1219,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "lets-eat-together",
+   "name": "Let's Eat Together",
+   "aliases": [],
+   "category": "campaigns",
+   "category_name": "Campaigns & events",
+   "path": "campaigns/lets-eat-together/",
+   "vector": false,
+   "details": {
+    "website": "https://lutonfoodbank.org.uk/letseattogether"
+   },
+   "quality": "hd",
+   "files": [
+    {
+     "file": "lets-eat-together-wordmark.png",
+     "variant": "wordmark",
+     "w": 1323,
+     "h": 376
+    },
+    {
+     "file": "lets-eat-together-mono-white.png",
+     "variant": "mono-white",
+     "w": 1323,
+     "h": 376,
+     "made": true
+    },
+    {
+     "file": "lets-eat-together-mono-black.png",
+     "variant": "mono-black",
+     "w": 1323,
+     "h": 376,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "muslim-panto",
+   "name": "Muslim Panto (Abdullah Afzal Productions)",
+   "aliases": [],
+   "category": "campaigns",
+   "category_name": "Campaigns & events",
+   "path": "campaigns/muslim-panto/",
+   "vector": false,
+   "details": {
+    "last_event_at": "The Stockwood Park Academy LU1 5PP"
+   },
+   "quality": "ok",
+   "files": [
+    {
+     "file": "muslim-panto-logo.png",
+     "variant": "logo",
+     "w": 695,
+     "h": 160
+    },
+    {
+     "file": "muslim-panto-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 695,
+     "h": 160,
+     "made": true
+    },
+    {
+     "file": "muslim-panto-mono-white.png",
+     "variant": "mono-white",
+     "w": 695,
+     "h": 160,
+     "made": true
+    },
+    {
+     "file": "muslim-panto-mono-black.png",
+     "variant": "mono-black",
+     "w": 695,
+     "h": 160,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "big-iftar-luton",
+   "name": "The Big Iftar Luton",
+   "aliases": [
+    "Big Iftar"
+   ],
+   "category": "campaigns",
+   "category_name": "Campaigns & events",
+   "path": "campaigns/big-iftar-luton/",
+   "vector": false,
+   "details": {
+    "address": "Crescent Hall, 50 Dunstable Road, Luton",
+    "postcode": "LU1 1EF",
+    "note": "Hosted by Inspire FM each Ramadan"
+   },
+   "quality": "low-res",
+   "files": [
+    {
+     "file": "big-iftar-luton-logo.png",
+     "variant": "logo",
+     "w": 477,
+     "h": 417
+    },
+    {
+     "file": "big-iftar-luton-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 477,
+     "h": 417,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "wellness-walk",
+   "name": "Wellness Walk",
+   "aliases": [],
+   "category": "campaigns",
+   "category_name": "Campaigns & events",
+   "path": "campaigns/wellness-walk/",
+   "vector": false,
+   "details": {},
+   "quality": "low-res",
+   "files": [
+    {
+     "file": "wellness-walk-icon.png",
+     "variant": "icon",
+     "w": 460,
+     "h": 474
+    },
+    {
+     "file": "wellness-walk-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 460,
+     "h": 474,
+     "made": true
+    },
+    {
+     "file": "wellness-walk-mono-white.png",
+     "variant": "mono-white",
+     "w": 460,
+     "h": 474,
+     "made": true
+    },
+    {
+     "file": "wellness-walk-mono-black.png",
+     "variant": "mono-black",
+     "w": 460,
+     "h": 474,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "inspire-fm",
+   "name": "Inspire FM 105.1",
+   "aliases": [
+    "Inspire",
+    "Inspire FM"
+   ],
+   "category": "media",
+   "category_name": "Media",
+   "path": "media/inspire-fm/",
+   "vector": true,
+   "details": {
+    "address": "234 Dallow Road, Luton",
+    "postcode": "LU1 1TB",
+    "website": "https://www.inspirefm.org"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "inspire-fm-logo.svg",
+     "variant": "logo",
+     "vector": true
+    },
+    {
+     "file": "inspire-fm-logo.png",
+     "variant": "logo",
+     "w": 1400,
+     "h": 304
+    },
+    {
+     "file": "inspire-fm-logo-white.svg",
+     "variant": "logo-white",
+     "vector": true
+    },
+    {
+     "file": "inspire-fm-logo-white.png",
+     "variant": "logo-white",
+     "w": 1382,
+     "h": 299
+    },
+    {
+     "file": "inspire-fm-mono-white.png",
+     "variant": "mono-white",
+     "w": 1400,
+     "h": 304,
+     "made": true
+    },
+    {
+     "file": "inspire-fm-mono-black.png",
+     "variant": "mono-black",
+     "w": 1400,
+     "h": 304,
+     "made": true
+    },
+    {
+     "file": "inspire-fm-icon.png",
+     "variant": "icon",
+     "w": 177,
+     "h": 301,
+     "made": true
+    },
+    {
+     "file": "inspire-fm-icon-white.png",
+     "variant": "icon-white",
+     "w": 177,
+     "h": 301,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "agent-brains",
+   "name": "Agent Brains",
+   "aliases": [],
+   "category": "venues",
+   "category_name": "Venues & days out",
+   "path": "venues/agent-brains/",
+   "vector": true,
+   "details": {
+    "address": "Leys Avenue and Station Road, Letchworth",
+    "postcode": "SG6 3EW",
+    "website": "https://www.agentbrains.co.uk"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "agent-brains-logo.svg",
+     "variant": "logo",
+     "vector": true
+    }
+   ]
+  },
+  {
+   "slug": "bennetts-splash",
+   "name": "Bennett's Splash Park",
+   "aliases": [],
+   "category": "venues",
+   "category_name": "Venues & days out",
+   "path": "venues/bennetts-splash/",
+   "vector": true,
+   "details": {
+    "address": "Bennett\u2019s Recreation Ground, Dunstable",
+    "postcode": "LU6 1PJ",
+    "website": "https://www.dunstable.gov.uk"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "bennetts-splash-logo.svg",
+     "variant": "logo",
+     "vector": true
+    }
+   ]
+  },
+  {
+   "slug": "cineworld",
+   "name": "Cineworld Luton",
+   "aliases": [],
+   "category": "venues",
+   "category_name": "Venues & days out",
+   "path": "venues/cineworld/",
+   "vector": true,
+   "details": {
+    "address": "The Galaxy, Bridge Street",
+    "postcode": "LU1 2NB",
+    "website": "https://www.cineworld.co.uk"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "cineworld-logo.svg",
+     "variant": "logo",
+     "vector": true
+    }
+   ]
+  },
+  {
+   "slug": "dunstable-downs",
+   "name": "Dunstable Downs",
+   "aliases": [],
+   "category": "venues",
+   "category_name": "Venues & days out",
+   "path": "venues/dunstable-downs/",
+   "vector": false,
+   "details": {
+    "address": "Dunstable Downs",
+    "postcode": "LU6 2GY",
+    "website": "https://www.nationaltrust.org.uk"
+   },
+   "quality": "low-res",
+   "files": [
+    {
+     "file": "dunstable-downs-logo.png",
+     "variant": "logo",
+     "w": 396,
+     "h": 400
+    }
+   ]
+  },
+  {
+   "slug": "everyone-active",
+   "name": "Everyone Active (The Dunstable Centre)",
+   "aliases": [],
+   "category": "venues",
+   "category_name": "Venues & days out",
+   "path": "venues/everyone-active/",
+   "vector": true,
+   "details": {
+    "address": "Court Drive, Dunstable",
+    "postcode": "LU5 4JD",
+    "website": "https://everyoneactive.com"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "everyone-active-logo.svg",
+     "variant": "logo",
+     "vector": true
+    }
+   ]
+  },
+  {
+   "slug": "frasers-plus",
+   "name": "Frasers Plus Luton",
+   "aliases": [],
+   "category": "venues",
+   "category_name": "Venues & days out",
+   "path": "venues/frasers-plus/",
+   "vector": false,
+   "details": {
+    "last_event_at": "Frasers Plus Luton (The Mall)"
+   },
+   "quality": "low-res",
+   "files": [
+    {
+     "file": "frasers-plus-logo.png",
+     "variant": "logo",
+     "w": 188,
+     "h": 215
+    },
+    {
+     "file": "frasers-plus-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 188,
+     "h": 215,
+     "made": true
+    },
+    {
+     "file": "frasers-plus-mono-white.png",
+     "variant": "mono-white",
+     "w": 188,
+     "h": 215,
+     "made": true
+    },
+    {
+     "file": "frasers-plus-mono-black.png",
+     "variant": "mono-black",
+     "w": 188,
+     "h": 215,
+     "made": true
+    },
+    {
+     "file": "frasers-plus-icon.png",
+     "variant": "icon",
+     "w": 154,
+     "h": 151,
+     "made": true
+    },
+    {
+     "file": "frasers-plus-icon-white.png",
+     "variant": "icon-white",
+     "w": 154,
+     "h": 151,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "full-house",
+   "name": "Full House",
+   "aliases": [],
+   "category": "venues",
+   "category_name": "Venues & days out",
+   "path": "venues/full-house/",
+   "vector": false,
+   "details": {
+    "last_event_at": "Hat Factory Arts Centre, Bute Street LU1 2EY"
+   },
+   "quality": "low-res",
+   "files": [
+    {
+     "file": "full-house-logo.png",
+     "variant": "logo",
+     "w": 304,
+     "h": 211
+    },
+    {
+     "file": "full-house-mono-white.png",
+     "variant": "mono-white",
+     "w": 304,
+     "h": 211,
+     "made": true
+    },
+    {
+     "file": "full-house-mono-black.png",
+     "variant": "mono-black",
+     "w": 304,
+     "h": 211,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "funtura",
+   "name": "Funtura",
+   "aliases": [],
+   "category": "venues",
+   "category_name": "Venues & days out",
+   "path": "venues/funtura/",
+   "vector": true,
+   "details": {
+    "address": "40 to 44 George Street, town centre",
+    "postcode": "LU1 2AZ",
+    "website": "https://funturauk.com"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "funtura-logo.svg",
+     "variant": "logo",
+     "vector": true
+    }
+   ]
+  },
+  {
+   "slug": "grove-theatre",
+   "name": "Grove Theatre, Dunstable",
+   "aliases": [],
+   "category": "venues",
+   "category_name": "Venues & days out",
+   "path": "venues/grove-theatre/",
+   "vector": true,
+   "details": {
+    "address": "Grove Theatre, Dunstable",
+    "postcode": "LU5 4GP",
+    "website": "https://everyonetheatres.com"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "grove-theatre-logo.svg",
+     "variant": "logo",
+     "vector": true
+    }
+   ]
+  },
+  {
+   "slug": "happy-shark",
+   "name": "Happy Shark Comedy Club",
+   "aliases": [],
+   "category": "venues",
+   "category_name": "Venues & days out",
+   "path": "venues/happy-shark/",
+   "vector": false,
+   "details": {
+    "last_event_at": "The Bear Club, Mill Yard, Guildford Street LU1 2NR"
+   },
+   "quality": "low-res",
+   "files": [
+    {
+     "file": "happy-shark-logo.png",
+     "variant": "logo",
+     "w": 240,
+     "h": 210
+    },
+    {
+     "file": "happy-shark-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 240,
+     "h": 210,
+     "made": true
+    },
+    {
+     "file": "happy-shark-mono-white.png",
+     "variant": "mono-white",
+     "w": 240,
+     "h": 210,
+     "made": true
+    },
+    {
+     "file": "happy-shark-mono-black.png",
+     "variant": "mono-black",
+     "w": 240,
+     "h": 210,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "hat-factory",
+   "name": "Hat Factory Arts Centre",
+   "aliases": [],
+   "category": "venues",
+   "category_name": "Venues & days out",
+   "path": "venues/hat-factory/",
+   "vector": true,
+   "details": {
+    "address": "65 to 67 Bute Street",
+    "postcode": "LU1 2EY",
+    "website": "https://www.culturetrust.com"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "hat-factory-logo.svg",
+     "variant": "logo",
+     "vector": true
+    }
+   ]
+  },
+  {
+   "slug": "houghton-hall",
+   "name": "Houghton Hall Park",
+   "aliases": [],
+   "category": "venues",
+   "category_name": "Venues & days out",
+   "path": "venues/houghton-hall/",
+   "vector": false,
+   "details": {
+    "address": "Park Road North, Houghton Regis",
+    "postcode": "LU5 5AB",
+    "website": "https://www.houghtonhallpark.org"
+   },
+   "quality": "low-res",
+   "files": [
+    {
+     "file": "houghton-hall-logo.png",
+     "variant": "logo",
+     "w": 201,
+     "h": 200
+    },
+    {
+     "file": "houghton-hall-mono-white.png",
+     "variant": "mono-white",
+     "w": 201,
+     "h": 200,
+     "made": true
+    },
+    {
+     "file": "houghton-hall-mono-black.png",
+     "variant": "mono-black",
+     "w": 201,
+     "h": 200,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "luton-hoo",
+   "name": "Luton Hoo Estate",
+   "aliases": [],
+   "category": "venues",
+   "category_name": "Venues & days out",
+   "path": "venues/luton-hoo/",
+   "vector": true,
+   "details": {
+    "last_event_at": "Lime Tree Avenue, Luton Hoo Estate LU1 4LF"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "luton-hoo-logo.svg",
+     "variant": "logo",
+     "vector": true
+    }
+   ]
+  },
+  {
+   "slug": "luventertainment",
+   "name": "LUV Entertainment",
+   "aliases": [],
+   "category": "venues",
+   "category_name": "Venues & days out",
+   "path": "venues/luventertainment/",
+   "vector": true,
+   "details": {
+    "last_event_at": "Hat Factory Arts Centre, Bute Street LU1 2EY"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "luventertainment-logo.svg",
+     "variant": "logo",
+     "vector": true
+    }
+   ]
+  },
+  {
+   "slug": "orbital",
+   "name": "Orbital Trampoline Park",
+   "aliases": [],
+   "category": "venues",
+   "category_name": "Venues & days out",
+   "path": "venues/orbital/",
+   "vector": false,
+   "details": {
+    "address": "Hatters Way / Chaul End Lane, Luton",
+    "postcode": "LU4 8EZ",
+    "website": "https://www.orbitaltrampolinepark.co.uk"
+   },
+   "quality": "ok",
+   "files": [
+    {
+     "file": "orbital-logo.png",
+     "variant": "logo",
+     "w": 486,
+     "h": 218
+    },
+    {
+     "file": "orbital-mono-white.png",
+     "variant": "mono-white",
+     "w": 486,
+     "h": 218,
+     "made": true
+    },
+    {
+     "file": "orbital-mono-black.png",
+     "variant": "mono-black",
+     "w": 486,
+     "h": 218,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "padel-pass",
+   "name": "Padel Pass",
+   "aliases": [],
+   "category": "venues",
+   "category_name": "Venues & days out",
+   "path": "venues/padel-pass/",
+   "vector": true,
+   "details": {
+    "address": "Venue 360, 20 Gipsy Lane",
+    "postcode": "LU1 3JH",
+    "website": "https://padelpass.co.uk"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "padel-pass-logo.svg",
+     "variant": "logo",
+     "vector": true
+    }
+   ]
+  },
+  {
+   "slug": "paintball-herts",
+   "name": "Paintball Hertfordshire",
+   "aliases": [],
+   "category": "venues",
+   "category_name": "Venues & days out",
+   "path": "venues/paintball-herts/",
+   "vector": false,
+   "details": {
+    "address": "Lye Lane, Bricket Wood (near St Albans)",
+    "postcode": "AL2 3TF",
+    "website": "https://paintballhertfordshire.com"
+   },
+   "quality": "low-res",
+   "files": [
+    {
+     "file": "paintball-herts-logo.png",
+     "variant": "logo",
+     "w": 455,
+     "h": 162
+    },
+    {
+     "file": "paintball-herts-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 455,
+     "h": 162,
+     "made": true
+    },
+    {
+     "file": "paintball-herts-mono-white.png",
+     "variant": "mono-white",
+     "w": 455,
+     "h": 162,
+     "made": true
+    },
+    {
+     "file": "paintball-herts-mono-black.png",
+     "variant": "mono-black",
+     "w": 455,
+     "h": 162,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "parkrun",
+   "name": "parkrun",
+   "aliases": [],
+   "category": "venues",
+   "category_name": "Venues & days out",
+   "path": "venues/parkrun/",
+   "vector": true,
+   "details": {
+    "address": "Wardown Park",
+    "postcode": "LU2 7HA",
+    "website": "https://www.parkrun.org.uk"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "parkrun-logo.svg",
+     "variant": "logo",
+     "vector": true
+    }
+   ]
+  },
+  {
+   "slug": "rayners",
+   "name": "Rayners Deja Vu Dance Studio",
+   "aliases": [],
+   "category": "venues",
+   "category_name": "Venues & days out",
+   "path": "venues/rayners/",
+   "vector": true,
+   "details": {
+    "last_event_at": "Luton Library Theatre, St George\u2019s Square LU1 2NG"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "rayners-logo.svg",
+     "variant": "logo",
+     "vector": true
+    }
+   ]
+  },
+  {
+   "slug": "snakes-ladders",
+   "name": "Snakes & Ladders",
+   "aliases": [],
+   "category": "venues",
+   "category_name": "Venues & days out",
+   "path": "venues/snakes-ladders/",
+   "vector": true,
+   "details": {
+    "address": "Houghton Regis (Dunstable branch)",
+    "postcode": "LU5 5BQ",
+    "website": "https://www.snakes-and-ladders.co.uk"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "snakes-ladders-logo.svg",
+     "variant": "logo",
+     "vector": true
+    }
+   ]
+  },
+  {
+   "slug": "stockwood-discovery",
+   "name": "Stockwood Discovery Centre (The Culture Trust)",
+   "aliases": [
+    "Culture Trust"
+   ],
+   "category": "venues",
+   "category_name": "Venues & days out",
+   "path": "venues/stockwood-discovery/",
+   "vector": true,
+   "details": {
+    "address": "Stockwood Park, London Road",
+    "postcode": "LU1 4LX",
+    "website": "https://www.culturetrust.com"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "stockwood-discovery-logo.svg",
+     "variant": "logo",
+     "vector": true
+    }
+   ]
+  },
+  {
+   "slug": "stockwood-golf",
+   "name": "Stockwood Park Golf Centre",
+   "aliases": [],
+   "category": "venues",
+   "category_name": "Venues & days out",
+   "path": "venues/stockwood-golf/",
+   "vector": false,
+   "details": {
+    "address": "London Road, Stockwood Park",
+    "postcode": "LU1 4LX",
+    "website": "https://stockwoodparkgolf.co.uk"
+   },
+   "quality": "hd",
+   "files": [
+    {
+     "file": "stockwood-golf-logo.png",
+     "variant": "logo",
+     "w": 1220,
+     "h": 507
+    },
+    {
+     "file": "stockwood-golf-mono-white.png",
+     "variant": "mono-white",
+     "w": 1220,
+     "h": 507,
+     "made": true
+    },
+    {
+     "file": "stockwood-golf-mono-black.png",
+     "variant": "mono-black",
+     "w": 1220,
+     "h": 507,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "teamsport",
+   "name": "TeamSport Dunstable",
+   "aliases": [],
+   "category": "venues",
+   "category_name": "Venues & days out",
+   "path": "venues/teamsport/",
+   "vector": true,
+   "details": {
+    "address": "Verey Road, Dunstable",
+    "postcode": "LU5 4TT",
+    "website": "https://www.team-sport.co.uk"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "teamsport-logo.svg",
+     "variant": "logo",
+     "vector": true
+    }
+   ]
+  },
+  {
+   "slug": "tenpin",
+   "name": "Tenpin Luton",
+   "aliases": [],
+   "category": "venues",
+   "category_name": "Venues & days out",
+   "path": "venues/tenpin/",
+   "vector": true,
+   "details": {
+    "address": "The Galaxy, Bridge Street",
+    "postcode": "LU1 2NB",
+    "website": "https://www.tenpin.co.uk"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "tenpin-logo.svg",
+     "variant": "logo",
+     "vector": true
+    }
+   ]
+  },
+  {
+   "slug": "the-giggles",
+   "name": "The Giggles (Active Luton)",
+   "aliases": [],
+   "category": "venues",
+   "category_name": "Venues & days out",
+   "path": "venues/the-giggles/",
+   "vector": false,
+   "details": {
+    "address": "Futures House, The Moakes, Marsh Farm",
+    "postcode": "LU3 3QB",
+    "website": "https://thegiggles.co.uk"
+   },
+   "quality": "hd",
+   "files": [
+    {
+     "file": "the-giggles-logo.png",
+     "variant": "logo",
+     "w": 900,
+     "h": 363
+    }
+   ]
+  },
+  {
+   "slug": "upfront-comedy",
+   "name": "Upfront Comedy",
+   "aliases": [],
+   "category": "venues",
+   "category_name": "Venues & days out",
+   "path": "venues/upfront-comedy/",
+   "vector": false,
+   "details": {
+    "last_event_at": "Hat Factory Arts Centre, Bute Street LU1 2EY"
+   },
+   "quality": "low-res",
+   "files": [
+    {
+     "file": "upfront-comedy-logo.png",
+     "variant": "logo",
+     "w": 174,
+     "h": 220
+    },
+    {
+     "file": "upfront-comedy-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 174,
+     "h": 220,
+     "made": true
+    },
+    {
+     "file": "upfront-comedy-mono-white.png",
+     "variant": "mono-white",
+     "w": 174,
+     "h": 220,
+     "made": true
+    },
+    {
+     "file": "upfront-comedy-mono-black.png",
+     "variant": "mono-black",
+     "w": 174,
+     "h": 220,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "venue-360",
+   "name": "Venue 360",
+   "aliases": [],
+   "category": "venues",
+   "category_name": "Venues & days out",
+   "path": "venues/venue-360/",
+   "vector": true,
+   "details": {
+    "address": "Gipsy Lane",
+    "postcode": "LU1 3JH",
+    "website": "https://www.venue360.co.uk"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "venue-360-logo.svg",
+     "variant": "logo",
+     "vector": true
+    }
+   ]
+  },
+  {
+   "slug": "wardown-golf",
+   "name": "Wardown Adventure Golf",
+   "aliases": [],
+   "category": "venues",
+   "category_name": "Venues & days out",
+   "path": "venues/wardown-golf/",
+   "vector": false,
+   "details": {
+    "address": "Wardown Park",
+    "postcode": "LU2 7HA",
+    "website": "https://www.wardownadventuregolf.co.uk"
+   },
+   "quality": "ok",
+   "files": [
+    {
+     "file": "wardown-golf-logo.png",
+     "variant": "logo",
+     "w": 880,
+     "h": 194
+    }
+   ]
+  },
+  {
+   "slug": "wigmore-valley-park",
+   "name": "Wigmore Valley Park",
+   "aliases": [],
+   "category": "venues",
+   "category_name": "Venues & days out",
+   "path": "venues/wigmore-valley-park/",
+   "vector": false,
+   "details": {
+    "address": "Wigmore Valley Park, Wigmore",
+    "postcode": "LU2 9TN"
+   },
+   "quality": "ok",
+   "files": [
+    {
+     "file": "wigmore-valley-park-logo.png",
+     "variant": "logo",
+     "w": 694,
+     "h": 200
+    },
+    {
+     "file": "wigmore-valley-park-mono-white.png",
+     "variant": "mono-white",
+     "w": 694,
+     "h": 200,
+     "made": true
+    },
+    {
+     "file": "wigmore-valley-park-mono-black.png",
+     "variant": "mono-black",
+     "w": 694,
+     "h": 200,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "woburn",
+   "name": "Woburn Safari Park",
+   "aliases": [],
+   "category": "venues",
+   "category_name": "Venues & days out",
+   "path": "venues/woburn/",
+   "vector": false,
+   "details": {
+    "address": "Woburn, near Milton Keynes (Ridgmont gate)",
+    "postcode": "MK43 0TU",
+    "website": "https://woburnsafari.co.uk"
+   },
+   "quality": "low-res",
+   "files": [
+    {
+     "file": "woburn-logo.png",
+     "variant": "logo",
+     "w": 460,
+     "h": 200
+    },
+    {
+     "file": "woburn-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 460,
+     "h": 200,
+     "made": true
+    },
+    {
+     "file": "woburn-mono-white.png",
+     "variant": "mono-white",
+     "w": 460,
+     "h": 200,
+     "made": true
+    },
+    {
+     "file": "woburn-mono-black.png",
+     "variant": "mono-black",
+     "w": 460,
+     "h": 200,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "woodside-farm",
+   "name": "Woodside Farm",
+   "aliases": [],
+   "category": "venues",
+   "category_name": "Venues & days out",
+   "path": "venues/woodside-farm/",
+   "vector": false,
+   "details": {
+    "address": "Mancroft Road, Aley Green",
+    "postcode": "LU1 4DG",
+    "website": "https://www.woodsidefarm.co.uk"
+   },
+   "quality": "low-res",
+   "files": [
+    {
+     "file": "woodside-farm-logo.png",
+     "variant": "logo",
+     "w": 207,
+     "h": 198
+    },
+    {
+     "file": "woodside-farm-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 207,
+     "h": 198,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "whipsnade",
+   "name": "ZSL Whipsnade Zoo",
+   "aliases": [],
+   "category": "venues",
+   "category_name": "Venues & days out",
+   "path": "venues/whipsnade/",
+   "vector": true,
+   "details": {
+    "address": "Whipsnade, near Dunstable",
+    "postcode": "LU6 2LF",
+    "website": "https://www.whipsnadezoo.org"
+   },
+   "quality": "vector",
+   "files": [
+    {
+     "file": "whipsnade-logo.svg",
+     "variant": "logo",
+     "vector": true
+    }
+   ]
+  },
+  {
+   "slug": "aa-carpets",
+   "name": "AA Carpets and Furniture",
+   "aliases": [],
+   "category": "businesses",
+   "category_name": "Businesses & sponsors",
+   "path": "businesses/aa-carpets/",
+   "vector": false,
+   "details": {
+    "website": "https://aacf.co.uk"
+   },
+   "quality": "ok",
+   "files": [
+    {
+     "file": "aa-carpets-logo.png",
+     "variant": "logo",
+     "w": 598,
+     "h": 244
+    },
+    {
+     "file": "aa-carpets-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 598,
+     "h": 244,
+     "made": true
+    },
+    {
+     "file": "aa-carpets-mono-white.png",
+     "variant": "mono-white",
+     "w": 598,
+     "h": 244,
+     "made": true
+    },
+    {
+     "file": "aa-carpets-mono-black.png",
+     "variant": "mono-black",
+     "w": 598,
+     "h": 244,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "aegis",
+   "name": "Aegis Support Services",
+   "aliases": [],
+   "category": "businesses",
+   "category_name": "Businesses & sponsors",
+   "path": "businesses/aegis/",
+   "vector": false,
+   "details": {
+    "website": "https://aegissupportservices.com/"
+   },
+   "quality": "ok",
+   "files": [
+    {
+     "file": "aegis-logo.png",
+     "variant": "logo",
+     "w": 640,
+     "h": 302
+    }
+   ]
+  },
+  {
+   "slug": "aghaz",
+   "name": "Aghaz by AN",
+   "aliases": [],
+   "category": "businesses",
+   "category_name": "Businesses & sponsors",
+   "path": "businesses/aghaz/",
+   "vector": false,
+   "details": {
+    "instagram": "https://www.instagram.com/aaghaz_/"
+   },
+   "quality": "ok",
+   "files": [
+    {
+     "file": "aghaz-logo.png",
+     "variant": "logo",
+     "w": 595,
+     "h": 352
+    },
+    {
+     "file": "aghaz-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 595,
+     "h": 352,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "al-nikah",
+   "name": "Al Nikah Wedding Services",
+   "aliases": [],
+   "category": "businesses",
+   "category_name": "Businesses & sponsors",
+   "path": "businesses/al-nikah/",
+   "vector": false,
+   "details": {
+    "website": "https://alnikah.co.uk"
+   },
+   "quality": "low-res",
+   "files": [
+    {
+     "file": "al-nikah-logo.png",
+     "variant": "logo",
+     "w": 479,
+     "h": 363
+    },
+    {
+     "file": "al-nikah-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 479,
+     "h": 363,
+     "made": true
+    },
+    {
+     "file": "al-nikah-mono-white.png",
+     "variant": "mono-white",
+     "w": 479,
+     "h": 363,
+     "made": true
+    },
+    {
+     "file": "al-nikah-mono-black.png",
+     "variant": "mono-black",
+     "w": 479,
+     "h": 363,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "ambala",
+   "name": "Ambala",
+   "aliases": [],
+   "category": "businesses",
+   "category_name": "Businesses & sponsors",
+   "path": "businesses/ambala/",
+   "vector": false,
+   "details": {
+    "website": "https://ambala.co.uk"
+   },
+   "quality": "ok",
+   "files": [
+    {
+     "file": "ambala-logo.png",
+     "variant": "logo",
+     "w": 598,
+     "h": 181
+    },
+    {
+     "file": "ambala-mono-white.png",
+     "variant": "mono-white",
+     "w": 598,
+     "h": 181,
+     "made": true
+    },
+    {
+     "file": "ambala-mono-black.png",
+     "variant": "mono-black",
+     "w": 598,
+     "h": 181,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "amee-jee",
+   "name": "Amee Jee",
+   "aliases": [],
+   "category": "businesses",
+   "category_name": "Businesses & sponsors",
+   "path": "businesses/amee-jee/",
+   "vector": false,
+   "details": {
+    "website": "https://ameejee.com/"
+   },
+   "quality": "low-res",
+   "files": [
+    {
+     "file": "amee-jee-logo.png",
+     "variant": "logo",
+     "w": 358,
+     "h": 444
+    }
+   ]
+  },
+  {
+   "slug": "bhajis-kitchen",
+   "name": "Bhaji's Kitchen",
+   "aliases": [],
+   "category": "businesses",
+   "category_name": "Businesses & sponsors",
+   "path": "businesses/bhajis-kitchen/",
+   "vector": false,
+   "details": {
+    "website": "https://bajiskitchen.com"
+   },
+   "quality": "ok",
+   "files": [
+    {
+     "file": "bhajis-kitchen-logo.png",
+     "variant": "logo",
+     "w": 597,
+     "h": 125
+    },
+    {
+     "file": "bhajis-kitchen-mono-white.png",
+     "variant": "mono-white",
+     "w": 597,
+     "h": 125,
+     "made": true
+    },
+    {
+     "file": "bhajis-kitchen-mono-black.png",
+     "variant": "mono-black",
+     "w": 597,
+     "h": 125,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "bliss-boutique",
+   "name": "Bliss Boutique",
+   "aliases": [],
+   "category": "businesses",
+   "category_name": "Businesses & sponsors",
+   "path": "businesses/bliss-boutique/",
+   "vector": false,
+   "details": {
+    "website": "https://www.blissboutiqueltd.co.uk/"
+   },
+   "quality": "ok",
+   "files": [
+    {
+     "file": "bliss-boutique-logo.png",
+     "variant": "logo",
+     "w": 598,
+     "h": 580
+    },
+    {
+     "file": "bliss-boutique-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 598,
+     "h": 580,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "gao-express",
+   "name": "Gao Express",
+   "aliases": [],
+   "category": "businesses",
+   "category_name": "Businesses & sponsors",
+   "path": "businesses/gao-express/",
+   "vector": false,
+   "details": {
+    "website": "https://gaoexpress.co.uk"
+   },
+   "quality": "ok",
+   "files": [
+    {
+     "file": "gao-express-logo.png",
+     "variant": "logo",
+     "w": 598,
+     "h": 430
+    },
+    {
+     "file": "gao-express-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 598,
+     "h": 430,
+     "made": true
+    },
+    {
+     "file": "gao-express-mono-white.png",
+     "variant": "mono-white",
+     "w": 598,
+     "h": 430,
+     "made": true
+    },
+    {
+     "file": "gao-express-mono-black.png",
+     "variant": "mono-black",
+     "w": 598,
+     "h": 430,
+     "made": true
+    },
+    {
+     "file": "gao-express-icon.png",
+     "variant": "icon",
+     "w": 209,
+     "h": 301,
+     "made": true
+    },
+    {
+     "file": "gao-express-icon-white.png",
+     "variant": "icon-white",
+     "w": 209,
+     "h": 301,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "global-groceries",
+   "name": "Global Groceries Luton",
+   "aliases": [],
+   "category": "businesses",
+   "category_name": "Businesses & sponsors",
+   "path": "businesses/global-groceries/",
+   "vector": false,
+   "details": {},
+   "quality": "low-res",
+   "files": [
+    {
+     "file": "global-groceries-logo.png",
+     "variant": "logo",
+     "w": 404,
+     "h": 440
+    },
+    {
+     "file": "global-groceries-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 404,
+     "h": 440,
+     "made": true
+    },
+    {
+     "file": "global-groceries-mono-white.png",
+     "variant": "mono-white",
+     "w": 404,
+     "h": 440,
+     "made": true
+    },
+    {
+     "file": "global-groceries-mono-black.png",
+     "variant": "mono-black",
+     "w": 404,
+     "h": 440,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "grand-royale",
+   "name": "Grand Royale",
+   "aliases": [],
+   "category": "businesses",
+   "category_name": "Businesses & sponsors",
+   "path": "businesses/grand-royale/",
+   "vector": false,
+   "details": {
+    "website": "https://grandroyale.co.uk/",
+    "postcode": "LU2 0AH"
+   },
+   "quality": "ok",
+   "files": [
+    {
+     "file": "grand-royale-logo.png",
+     "variant": "logo",
+     "w": 600,
+     "h": 393
+    },
+    {
+     "file": "grand-royale-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 600,
+     "h": 393,
+     "made": true
+    },
+    {
+     "file": "grand-royale-mono-white.png",
+     "variant": "mono-white",
+     "w": 600,
+     "h": 393,
+     "made": true
+    },
+    {
+     "file": "grand-royale-mono-black.png",
+     "variant": "mono-black",
+     "w": 600,
+     "h": 393,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "hannah-solicitors",
+   "name": "Hannah Solicitors",
+   "aliases": [],
+   "category": "businesses",
+   "category_name": "Businesses & sponsors",
+   "path": "businesses/hannah-solicitors/",
+   "vector": false,
+   "details": {
+    "website": "https://www.hannahsolicitors.co.uk"
+   },
+   "quality": "ok",
+   "files": [
+    {
+     "file": "hannah-solicitors-logo.png",
+     "variant": "logo",
+     "w": 598,
+     "h": 598
+    }
+   ]
+  },
+  {
+   "slug": "house-of-elegance",
+   "name": "House of Elegance",
+   "aliases": [],
+   "category": "businesses",
+   "category_name": "Businesses & sponsors",
+   "path": "businesses/house-of-elegance/",
+   "vector": false,
+   "details": {
+    "instagram": "https://www.instagram.com/houseofeleganceuk/"
+   },
+   "quality": "low-res",
+   "files": [
+    {
+     "file": "house-of-elegance-logo.png",
+     "variant": "logo",
+     "w": 471,
+     "h": 363
+    },
+    {
+     "file": "house-of-elegance-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 471,
+     "h": 363,
+     "made": true
+    },
+    {
+     "file": "house-of-elegance-mono-white.png",
+     "variant": "mono-white",
+     "w": 471,
+     "h": 363,
+     "made": true
+    },
+    {
+     "file": "house-of-elegance-mono-black.png",
+     "variant": "mono-black",
+     "w": 471,
+     "h": 363,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "kashmir-catering",
+   "name": "Kashmir Catering Services",
+   "aliases": [],
+   "category": "businesses",
+   "category_name": "Businesses & sponsors",
+   "path": "businesses/kashmir-catering/",
+   "vector": false,
+   "details": {
+    "instagram": "https://www.instagram.com/kashmircateringluton/"
+   },
+   "quality": "ok",
+   "files": [
+    {
+     "file": "kashmir-catering-logo.png",
+     "variant": "logo",
+     "w": 656,
+     "h": 550
+    },
+    {
+     "file": "kashmir-catering-mono-white.png",
+     "variant": "mono-white",
+     "w": 656,
+     "h": 550,
+     "made": true
+    },
+    {
+     "file": "kashmir-catering-mono-black.png",
+     "variant": "mono-black",
+     "w": 656,
+     "h": 550,
+     "made": true
+    },
+    {
+     "file": "kashmir-catering-icon.png",
+     "variant": "icon",
+     "w": 656,
+     "h": 306,
+     "made": true
+    },
+    {
+     "file": "kashmir-catering-icon-white.png",
+     "variant": "icon-white",
+     "w": 656,
+     "h": 306,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "luton-halal",
+   "name": "Luton Halal Meat Centre",
+   "aliases": [],
+   "category": "businesses",
+   "category_name": "Businesses & sponsors",
+   "path": "businesses/luton-halal/",
+   "vector": false,
+   "details": {
+    "address": "189 Dunstable Road, Luton"
+   },
+   "quality": "ok",
+   "files": [
+    {
+     "file": "luton-halal-logo.png",
+     "variant": "logo",
+     "w": 587,
+     "h": 220
+    },
+    {
+     "file": "luton-halal-mono-white.png",
+     "variant": "mono-white",
+     "w": 587,
+     "h": 220,
+     "made": true
+    },
+    {
+     "file": "luton-halal-mono-black.png",
+     "variant": "mono-black",
+     "w": 587,
+     "h": 220,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "maliks-khan",
+   "name": "Maliks & Khan Solicitors",
+   "aliases": [],
+   "category": "businesses",
+   "category_name": "Businesses & sponsors",
+   "path": "businesses/maliks-khan/",
+   "vector": false,
+   "details": {
+    "website": "https://www.mandksolicitors.com"
+   },
+   "quality": "ok",
+   "files": [
+    {
+     "file": "maliks-khan-logo.png",
+     "variant": "logo",
+     "w": 490,
+     "h": 358
+    },
+    {
+     "file": "maliks-khan-mono-white.png",
+     "variant": "mono-white",
+     "w": 490,
+     "h": 358,
+     "made": true
+    },
+    {
+     "file": "maliks-khan-mono-black.png",
+     "variant": "mono-black",
+     "w": 490,
+     "h": 358,
+     "made": true
+    },
+    {
+     "file": "maliks-khan-icon.png",
+     "variant": "icon",
+     "w": 460,
+     "h": 217,
+     "made": true
+    },
+    {
+     "file": "maliks-khan-icon-white.png",
+     "variant": "icon-white",
+     "w": 460,
+     "h": 217,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "memsaab",
+   "name": "Memsaab",
+   "aliases": [],
+   "category": "businesses",
+   "category_name": "Businesses & sponsors",
+   "path": "businesses/memsaab/",
+   "vector": false,
+   "details": {
+    "website": "https://memsaabonline.com"
+   },
+   "quality": "ok",
+   "files": [
+    {
+     "file": "memsaab-logo.png",
+     "variant": "logo",
+     "w": 598,
+     "h": 172
+    },
+    {
+     "file": "memsaab-mono-white.png",
+     "variant": "mono-white",
+     "w": 598,
+     "h": 172,
+     "made": true
+    },
+    {
+     "file": "memsaab-mono-black.png",
+     "variant": "mono-black",
+     "w": 598,
+     "h": 172,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "niralla",
+   "name": "Niralla International Sweets",
+   "aliases": [],
+   "category": "businesses",
+   "category_name": "Businesses & sponsors",
+   "path": "businesses/niralla/",
+   "vector": false,
+   "details": {
+    "website": "https://niralla.co.uk"
+   },
+   "quality": "ok",
+   "files": [
+    {
+     "file": "niralla-logo.png",
+     "variant": "logo",
+     "w": 640,
+     "h": 640
+    },
+    {
+     "file": "niralla-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 640,
+     "h": 640,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "noreen",
+   "name": "Noreen Make Up Studio",
+   "aliases": [],
+   "category": "businesses",
+   "category_name": "Businesses & sponsors",
+   "path": "businesses/noreen/",
+   "vector": false,
+   "details": {
+    "instagram": "https://www.instagram.com/noreenshairandbeauty/"
+   },
+   "quality": "ok",
+   "files": [
+    {
+     "file": "noreen-logo.png",
+     "variant": "logo",
+     "w": 598,
+     "h": 192
+    },
+    {
+     "file": "noreen-mono-white.png",
+     "variant": "mono-white",
+     "w": 598,
+     "h": 192,
+     "made": true
+    },
+    {
+     "file": "noreen-mono-black.png",
+     "variant": "mono-black",
+     "w": 598,
+     "h": 192,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "nur-collection",
+   "name": "Nur Collection",
+   "aliases": [],
+   "category": "businesses",
+   "category_name": "Businesses & sponsors",
+   "path": "businesses/nur-collection/",
+   "vector": false,
+   "details": {
+    "instagram": "https://www.instagram.com/nur_collection_luton/"
+   },
+   "quality": "low-res",
+   "files": [
+    {
+     "file": "nur-collection-logo.png",
+     "variant": "logo",
+     "w": 476,
+     "h": 338
+    },
+    {
+     "file": "nur-collection-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 476,
+     "h": 338,
+     "made": true
+    },
+    {
+     "file": "nur-collection-mono-white.png",
+     "variant": "mono-white",
+     "w": 476,
+     "h": 338,
+     "made": true
+    },
+    {
+     "file": "nur-collection-mono-black.png",
+     "variant": "mono-black",
+     "w": 476,
+     "h": 338,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "pulse-av",
+   "name": "Pulse AV",
+   "aliases": [],
+   "category": "businesses",
+   "category_name": "Businesses & sponsors",
+   "path": "businesses/pulse-av/",
+   "vector": false,
+   "details": {
+    "website": "https://pulseav.co.uk/"
+   },
+   "quality": "ok",
+   "files": [
+    {
+     "file": "pulse-av-logo.png",
+     "variant": "logo",
+     "w": 615,
+     "h": 345
+    },
+    {
+     "file": "pulse-av-logo-white.png",
+     "variant": "logo-white",
+     "w": 615,
+     "h": 345
+    },
+    {
+     "file": "pulse-av-mono-white.png",
+     "variant": "mono-white",
+     "w": 615,
+     "h": 345,
+     "made": true
+    },
+    {
+     "file": "pulse-av-mono-black.png",
+     "variant": "mono-black",
+     "w": 615,
+     "h": 345,
+     "made": true
+    },
+    {
+     "file": "pulse-av-icon.png",
+     "variant": "icon",
+     "w": 382,
+     "h": 254,
+     "made": true
+    },
+    {
+     "file": "pulse-av-icon-white.png",
+     "variant": "icon-white",
+     "w": 382,
+     "h": 254,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "rainstone",
+   "name": "Rainstone Money Group",
+   "aliases": [],
+   "category": "businesses",
+   "category_name": "Businesses & sponsors",
+   "path": "businesses/rainstone/",
+   "vector": false,
+   "details": {
+    "website": "https://rainstonemoney.co.uk"
+   },
+   "quality": "ok",
+   "files": [
+    {
+     "file": "rainstone-logo.png",
+     "variant": "logo",
+     "w": 583,
+     "h": 167
+    },
+    {
+     "file": "rainstone-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 583,
+     "h": 167,
+     "made": true
+    },
+    {
+     "file": "rainstone-mono-white.png",
+     "variant": "mono-white",
+     "w": 583,
+     "h": 167,
+     "made": true
+    },
+    {
+     "file": "rainstone-mono-black.png",
+     "variant": "mono-black",
+     "w": 583,
+     "h": 167,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "shamzy",
+   "name": "Shamzy Hair & Makeup",
+   "aliases": [],
+   "category": "businesses",
+   "category_name": "Businesses & sponsors",
+   "path": "businesses/shamzy/",
+   "vector": false,
+   "details": {
+    "instagram": "https://www.instagram.com/shamzybeauty/"
+   },
+   "quality": "ok",
+   "files": [
+    {
+     "file": "shamzy-logo.png",
+     "variant": "logo",
+     "w": 654,
+     "h": 505
+    },
+    {
+     "file": "shamzy-mono-white.png",
+     "variant": "mono-white",
+     "w": 654,
+     "h": 505,
+     "made": true
+    },
+    {
+     "file": "shamzy-mono-black.png",
+     "variant": "mono-black",
+     "w": 654,
+     "h": 505,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "tops-pizza",
+   "name": "Tops Pizza",
+   "aliases": [],
+   "category": "businesses",
+   "category_name": "Businesses & sponsors",
+   "path": "businesses/tops-pizza/",
+   "vector": false,
+   "details": {
+    "website": "https://topspizza.co.uk/luton"
+   },
+   "quality": "ok",
+   "files": [
+    {
+     "file": "tops-pizza-logo.png",
+     "variant": "logo",
+     "w": 640,
+     "h": 512
+    }
+   ]
+  },
+  {
+   "slug": "two-side",
+   "name": "Two Side Studios",
+   "aliases": [],
+   "category": "businesses",
+   "category_name": "Businesses & sponsors",
+   "path": "businesses/two-side/",
+   "vector": false,
+   "details": {
+    "website": "https://twosidestudios.co.uk/"
+   },
+   "quality": "ok",
+   "files": [
+    {
+     "file": "two-side-logo.png",
+     "variant": "logo",
+     "w": 598,
+     "h": 345
+    },
+    {
+     "file": "two-side-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "w": 598,
+     "h": 345,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "smr-digital",
+   "name": "SMR Digital",
+   "aliases": [
+    "SMR"
+   ],
+   "category": "smr",
+   "category_name": "SMR",
+   "path": "smr/smr-digital/",
+   "vector": false,
+   "details": {
+    "address": "Luton",
+    "website": "https://smrgraphics.co.uk",
+    "email": "summar@smrgraphics.co.uk",
+    "instagram": "@smrdigitaluk"
+   },
+   "quality": "ok",
+   "files": [
+    {
+     "file": "smr-digital-logo.png",
+     "variant": "logo",
+     "w": 654,
+     "h": 109
+    },
+    {
+     "file": "smr-digital-logo-white.png",
+     "variant": "logo-white",
+     "w": 1871,
+     "h": 303
+    },
+    {
+     "file": "smr-digital-icon-white.png",
+     "variant": "icon-white",
+     "w": 312,
+     "h": 80
+    },
+    {
+     "file": "smr-digital-mono-white.png",
+     "variant": "mono-white",
+     "w": 654,
+     "h": 109,
+     "made": true
+    },
+    {
+     "file": "smr-digital-mono-black.png",
+     "variant": "mono-black",
+     "w": 654,
+     "h": 109,
+     "made": true
+    }
+   ]
+  }
+ ]
+}
