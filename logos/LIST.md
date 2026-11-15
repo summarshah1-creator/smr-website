@@ -1,8 +1,8 @@
 # SMR logo list
 
-306 organisations. Full details in logos.json and LIST.csv.
+309 organisations. Full details in logos.json and LIST.csv.
 
-## businesses (30)
+## businesses (31)
 - AA Carpets and Furniture
 - Aegis Support Services
 - Aghaz by AN
@@ -30,6 +30,7 @@
 - Rainstone Money Group
 - Shamzy Hair & Makeup
 - Tesco
+- The Great Outdoor Gym Company
 - Tops Pizza
 - TutorBook
 - Two Side Studios
@@ -132,10 +133,11 @@
 - Wildlife Trust BCN
 - Woodland Trust
 
-## community (68)
+## community (70)
 - ABCD Luton
 - Active Luton
 - Anne Gale School of Dance
+- Army Cadets (Beds & Herts ACF)
 - Baylands Equestrian Centre
 - Bedfordshire Chamber of Commerce
 - Bedfordshire Fire & Rescue Service
@@ -184,6 +186,7 @@
 - Next Generation Youth Theatre
 - NXT GEN Pathways
 - Pauline Quirke Academy (PQA Luton)
+- RAF Air Cadets
 - Rosebuds Luton Sisters
 - Sea Cadets (Luton Unit 226, TS Keyes)
 - St Joseph's RC Scouts, Icknield (Luton)

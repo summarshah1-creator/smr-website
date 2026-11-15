@@ -680,7 +680,7 @@
   "website": "https://www.agentbrains.co.uk"
  },
  "bennetts-splash": {
-  "address": "Bennett\u2019s Recreation Ground, Dunstable",
+  "address": "Bennett’s Recreation Ground, Dunstable",
   "postcode": "LU6 1PJ",
   "website": "https://www.dunstable.gov.uk"
  },
@@ -705,7 +705,7 @@
   "last_event_at": "Market Hill, town centre"
  },
  "rayners": {
-  "last_event_at": "Luton Library Theatre, St George\u2019s Square LU1 2NG"
+  "last_event_at": "Luton Library Theatre, St George’s Square LU1 2NG"
  },
  "luventertainment": {
   "last_event_at": "Hat Factory Arts Centre, Bute Street LU1 2EY"
@@ -867,12 +867,12 @@
   "postcode": "LU1 3NJ"
  },
  "rabia": {
-  "address": "12\u201316 Portland Road, Luton",
+  "address": "12–16 Portland Road, Luton",
   "postcode": "LU4 8AX",
   "note": "Covers Rabia Girls' School, Rabia Boys' School and Madrasa Islamia Primary"
  },
  "ukim-luton": {
-  "address": "126\u2013130 Oak Road, Luton",
+  "address": "126–130 Oak Road, Luton",
   "postcode": "LU4 8AD",
   "note": "UKIM logo is national; the lockups add the local name"
  },
@@ -887,12 +887,12 @@
   "note": "Luton community radio, 102.8 FM"
  },
  "ngyt": {
-  "address": "The Hat Factory Arts Centre, 65\u201367 Bute Street, Luton",
+  "address": "The Hat Factory Arts Centre, 65–67 Bute Street, Luton",
   "postcode": "LU1 2EY",
   "website": "https://ngyt.co.uk"
  },
  "al-madani": {
-  "address": "12\u201316 Portland Road, Luton",
+  "address": "12–16 Portland Road, Luton",
   "postcode": "LU4 8AX"
  },
  "eechc": {
@@ -1074,5 +1074,18 @@
   "address": "Beech Hill Community Primary School, Dunstable Road",
   "postcode": "LU4 8BW",
   "website": "https://pqacademy.com/academies/luton"
+ },
+ "tgo": {
+  "website": "https://www.tgogc.com"
+ },
+ "air-cadets": {
+  "address": "Cutenhoe Learning Centre",
+  "postcode": "LU1 3NJ",
+  "website": "https://www.raf.mod.uk/aircadets/"
+ },
+ "army-cadets": {
+  "address": "Marsh Road, Leagrave",
+  "postcode": "LU3 2RX",
+  "website": "https://armycadets.com/county/beds-herts-acf/"
  }
 }

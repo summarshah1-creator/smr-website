@@ -23333,6 +23333,231 @@
    ]
   },
   {
+   "slug": "air-cadets",
+   "name": "RAF Air Cadets",
+   "aliases": [
+    "Air Cadets",
+    "RAF Air Cadets",
+    "10F Luton Airport Squadron",
+    "Air Training Corps"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/air-cadets/",
+   "styles": [
+    "logo",
+    "icon"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "address": "Cutenhoe Learning Centre",
+    "postcode": "LU1 3NJ",
+    "website": "https://www.raf.mod.uk/aircadets/"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "air-cadets-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "air-cadets-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1581,
+     "h": 1066
+    },
+    {
+     "file": "air-cadets-icon.svg",
+     "variant": "icon",
+     "style": "icon",
+     "vector": true
+    },
+    {
+     "file": "air-cadets-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 1383,
+     "h": 1378
+    },
+    {
+     "file": "air-cadets-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1581,
+     "h": 1066,
+     "made": true
+    },
+    {
+     "file": "air-cadets-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1581,
+     "h": 1066,
+     "made": true
+    },
+    {
+     "file": "air-cadets-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "air-cadets-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "air-cadets-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon",
+     "w": 1383,
+     "h": 1378,
+     "made": true
+    },
+    {
+     "file": "air-cadets-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 1383,
+     "h": 1378,
+     "made": true
+    },
+    {
+     "file": "air-cadets-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "air-cadets-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "army-cadets",
+   "name": "Army Cadets (Beds & Herts ACF)",
+   "aliases": [
+    "Army Cadets",
+    "Army Cadet Force",
+    "Beds and Herts Army Cadets"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/army-cadets/",
+   "styles": [
+    "logo",
+    "icon"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "address": "Marsh Road, Leagrave",
+    "postcode": "LU3 2RX",
+    "website": "https://armycadets.com/county/beds-herts-acf/"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "army-cadets-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "army-cadets-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1561,
+     "h": 1800
+    },
+    {
+     "file": "army-cadets-icon.svg",
+     "variant": "icon",
+     "style": "icon",
+     "vector": true
+    },
+    {
+     "file": "army-cadets-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 1129,
+     "h": 1555
+    },
+    {
+     "file": "army-cadets-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1561,
+     "h": 1800,
+     "made": true
+    },
+    {
+     "file": "army-cadets-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1561,
+     "h": 1800,
+     "made": true
+    },
+    {
+     "file": "army-cadets-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "army-cadets-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "army-cadets-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon",
+     "w": 1129,
+     "h": 1555,
+     "made": true
+    },
+    {
+     "file": "army-cadets-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 1129,
+     "h": 1555,
+     "made": true
+    },
+    {
+     "file": "army-cadets-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "army-cadets-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
    "slug": "one-eid",
    "name": "1 Eid",
    "aliases": [
@@ -29677,6 +29902,116 @@
      "style": "logo",
      "w": 1596,
      "h": 918,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "tgo",
+   "name": "The Great Outdoor Gym Company",
+   "aliases": [
+    "TGO",
+    "tgo",
+    "Great Outdoor Gym"
+   ],
+   "category": "businesses",
+   "category_name": "Businesses & sponsors",
+   "path": "businesses/tgo/",
+   "styles": [
+    "logo",
+    "icon"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "website": "https://www.tgogc.com"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "tgo-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "tgo-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1586,
+     "h": 430
+    },
+    {
+     "file": "tgo-icon.svg",
+     "variant": "icon",
+     "style": "icon",
+     "vector": true
+    },
+    {
+     "file": "tgo-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 1563,
+     "h": 962
+    },
+    {
+     "file": "tgo-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1586,
+     "h": 430,
+     "made": true
+    },
+    {
+     "file": "tgo-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1586,
+     "h": 430,
+     "made": true
+    },
+    {
+     "file": "tgo-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "tgo-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "tgo-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon",
+     "w": 1563,
+     "h": 962,
+     "made": true
+    },
+    {
+     "file": "tgo-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 1563,
+     "h": 962,
+     "made": true
+    },
+    {
+     "file": "tgo-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "tgo-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
+     "vector": true,
      "made": true
     }
    ]
