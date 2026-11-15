@@ -15807,6 +15807,105 @@
    ]
   },
   {
+   "slug": "the-feast",
+   "name": "The Feast",
+   "aliases": [
+    "Feast",
+    "The Feast youth charity"
+   ],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/the-feast/",
+   "styles": [
+    "logo",
+    "icon"
+   ],
+   "original_vector": false,
+   "quality": "redrawn",
+   "details": {
+    "note": "Talking faith, making friends, changing lives. Remade in HD from the original."
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "the-feast-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true
+    },
+    {
+     "file": "the-feast-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1800,
+     "h": 1096
+    },
+    {
+     "file": "the-feast-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true,
+     "made": true
+    },
+    {
+     "file": "the-feast-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1800,
+     "h": 1096,
+     "made": true
+    },
+    {
+     "file": "the-feast-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true,
+     "made": true
+    },
+    {
+     "file": "the-feast-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1800,
+     "h": 1096,
+     "made": true
+    },
+    {
+     "file": "the-feast-logo-on-dark.svg",
+     "variant": "logo-on-dark",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true,
+     "made": true
+    },
+    {
+     "file": "the-feast-logo-on-dark.png",
+     "variant": "logo-on-dark",
+     "style": "logo",
+     "w": 1800,
+     "h": 1096,
+     "made": true
+    },
+    {
+     "file": "the-feast-icon.svg",
+     "variant": "icon",
+     "style": "icon",
+     "vector": true,
+     "redrawn": true
+    },
+    {
+     "file": "the-feast-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 1800,
+     "h": 2091
+    }
+   ]
+  },
+  {
    "slug": "hygiene-bank",
    "name": "The Hygiene Bank",
    "aliases": [],
@@ -20778,6 +20877,92 @@
      "style": "lockup-stacked",
      "w": 1800,
      "h": 1214,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "st-marys-youth",
+   "name": "St Marys Youth",
+   "aliases": [
+    "St Mary's Youth",
+    "St Mary's Church youth",
+    "Impact Youth Group"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/st-marys-youth/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": false,
+   "quality": "redrawn",
+   "details": {
+    "website": "https://www.stmarysluton.org",
+    "note": "Youth work at St Mary's Church Luton (Impact Youth Group). Remade in HD from the original."
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "st-marys-youth-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true
+    },
+    {
+     "file": "st-marys-youth-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1800,
+     "h": 1140
+    },
+    {
+     "file": "st-marys-youth-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true,
+     "made": true
+    },
+    {
+     "file": "st-marys-youth-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1800,
+     "h": 1140,
+     "made": true
+    },
+    {
+     "file": "st-marys-youth-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true,
+     "made": true
+    },
+    {
+     "file": "st-marys-youth-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1800,
+     "h": 1140,
+     "made": true
+    },
+    {
+     "file": "st-marys-youth-logo-on-dark.svg",
+     "variant": "logo-on-dark",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true,
+     "made": true
+    },
+    {
+     "file": "st-marys-youth-logo-on-dark.png",
+     "variant": "logo-on-dark",
+     "style": "logo",
+     "w": 1800,
+     "h": 1140,
      "made": true
     }
    ]

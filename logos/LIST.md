@@ -1,6 +1,6 @@
 # SMR logo list
 
-280 organisations. Full details in logos.json and LIST.csv.
+282 organisations. Full details in logos.json and LIST.csv.
 
 ## businesses (30)
 - AA Carpets and Furniture
@@ -43,7 +43,7 @@
 - The Big Iftar Luton
 - Wellness Walk
 
-## charities (86)
+## charities (87)
 - Action For Humanity
 - African Relief Fund
 - Age Concern Luton
@@ -121,6 +121,7 @@
 - Sunnah (charity that never ends)
 - The Courtney Foundation
 - The Disability Resource Centre
+- The Feast
 - The Hygiene Bank
 - The King's Trust
 - The Lady Fatemah Trust
@@ -131,7 +132,7 @@
 - Wildlife Trust BCN
 - Woodland Trust
 
-## community (47)
+## community (48)
 - ABCD Luton
 - Active Luton
 - Bedfordshire Chamber of Commerce
@@ -173,6 +174,7 @@
 - Sea Cadets (Luton Unit 226, TS Keyes)
 - St Joseph's RC Scouts, Icknield (Luton)
 - St Mary's Church Luton
+- St Marys Youth
 - SUEZ
 - The Culture Trust Luton
 - Tokko Youth Hub

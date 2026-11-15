@@ -330,6 +330,8 @@ M['your-wellbeing-beds']=('community','Your Wellbeing Bedfordshire',['Your Wellb
 M['luton-council'][3].append(('hand/luton-council-green.svg','logo-green'))
 M['lcc']=('community','Luton Creative Community CIC',['LCC','Luton Creative Community','Luton Library Theatre'],[('hand/lcc-logo.svg','logo'),('hand/lcc-logo-white.svg','logo-white'),('hand/lcc-logo-black.svg','logo-black'),('hand/lcc-logo-on-dark.svg','logo-on-dark')])
 M['care-homes']=('community','Care homes (general)',['Care home','Nursing home','Residential care'],[('hand/care-homes.svg','logo'),('hand/care-homes-white.svg','logo-white'),('hand/care-homes-icon.svg','icon')])
+M['st-marys-youth']=('community','St Marys Youth',["St Mary's Youth","St Mary's Church youth","Impact Youth Group"],[('hand/st-marys-youth-logo.svg','logo'),('hand/st-marys-youth-logo-white.svg','logo-white'),('hand/st-marys-youth-logo-black.svg','logo-black'),('hand/st-marys-youth-logo-on-dark.svg','logo-on-dark')])
+M['the-feast']=('charities','The Feast',['Feast','The Feast youth charity'],[('hand/the-feast-logo.svg','logo'),('hand/the-feast-logo-white.svg','logo-white'),('hand/the-feast-logo-black.svg','logo-black'),('hand/the-feast-logo-on-dark.svg','logo-on-dark'),('hand/the-feast-icon.svg','icon')])
 # ---------- name lockups (icon + full name), made by make_lockups.py ----------
 for _s in json.load(open('lockups.json')):
     if _s in M: M[_s][3].extend([('lockups/'+_s+'-h.png','lockup'),('lockups/'+_s+'-v.png','lockup-stacked')])
