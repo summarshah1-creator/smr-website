@@ -22718,7 +22718,11 @@
    ],
    "original_vector": true,
    "quality": "vector",
-   "details": {},
+   "details": {
+    "address": "6 Concorde Street, High Town",
+    "postcode": "LU1 0JD",
+    "note": "Logo remade in HD by SMR Digital from a small original."
+   },
    "signed_off": false,
    "files": [
     {
@@ -22782,7 +22786,9 @@
    ],
    "original_vector": true,
    "quality": "vector",
-   "details": {},
+   "details": {
+    "website": "https://www.gymfinitykids.co.uk"
+   },
    "signed_off": false,
    "files": [
     {
@@ -22871,7 +22877,11 @@
    ],
    "original_vector": true,
    "quality": "vector",
-   "details": {},
+   "details": {
+    "address": "Warden Hill Road, next to South Beds Golf Club",
+    "postcode": "LU2 7AE",
+    "note": "New logo designed by SMR Digital (Nov 2026) from the old sunshine and horse concept."
+   },
    "signed_off": false,
    "files": [
     {
