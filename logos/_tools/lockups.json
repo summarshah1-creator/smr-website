@@ -222,5 +222,17 @@
   "w1": 700,
   "w2": 500,
   "c1": "#1d2a52"
+ },
+ "beds-fire": {
+  "src": "crest",
+  "l1": "Bedfordshire",
+  "l2": "Fire &amp; Rescue Service",
+  "font": "open-sans",
+  "w1": 700,
+  "w2": 600,
+  "c1": "#000000",
+  "c2": "#c1272d",
+  "s1": 0.42,
+  "s2": 0.27
  }
 }

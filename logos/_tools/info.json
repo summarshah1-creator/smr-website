@@ -1,0 +1,931 @@
+{
+ "al-hira": {
+  "address": "1-7 Beechwood Rd, Luton",
+  "postcode": "LU4 8RR",
+  "phone": "01582 848529",
+  "lat": 51.8933,
+  "lng": -0.4508,
+  "jummah": "12:30, 13:30",
+  "source": "Inspire FM app"
+ },
+ "al-furqan": {
+  "address": "33-35 Mount Pleasant Rd, Luton",
+  "postcode": "LU3 2ST",
+  "website": "https://alfurqanllm.org/",
+  "lat": 51.9054,
+  "lng": -0.4564,
+  "jummah": "13:15",
+  "source": "Inspire FM app"
+ },
+ "al-jalal": {
+  "address": "314 Biscot Rd, Luton",
+  "postcode": "LU3 1AZ",
+  "website": "https://aljalalmasjid.org.uk",
+  "phone": "01582 411744",
+  "lat": 51.8953,
+  "lng": -0.4319,
+  "jummah": "12:30, 13:15",
+  "source": "Inspire FM app"
+ },
+ "bait-ul-abraar": {
+  "address": "364-370 Leagrave Rd, Luton",
+  "postcode": "LU3 1RF",
+  "phone": "01582 595535",
+  "lat": 51.8948,
+  "lng": -0.4381,
+  "jummah": "12:30, 13:20",
+  "source": "Inspire FM app"
+ },
+ "bury-park-jami-masjid": {
+  "address": "21-27 Bury Park Rd, Luton",
+  "postcode": "LU1 1HB",
+  "website": "https://www.buryparkmasjid.co.uk/",
+  "phone": "01582 725412",
+  "lat": 51.8849,
+  "lng": -0.426,
+  "jummah": "13:00",
+  "source": "Inspire FM app"
+ },
+ "bushmead": {
+  "address": "Hancock Dr, Luton",
+  "postcode": "LU2 7SF",
+  "lat": 51.9082,
+  "lng": -0.4116,
+  "jummah": "12:45, 13:30",
+  "source": "Inspire FM app"
+ },
+ "dunstable-masjid": {
+  "address": "249 Luton Rd, Dunstable, Luton",
+  "postcode": "LU5 4LR",
+  "lat": 51.8898,
+  "lng": -0.4916,
+  "jummah": "13:15",
+  "source": "Inspire FM app"
+ },
+ "faizan-e-mushkil-kusha": {
+  "address": "91 Leagrave High Street, Luton",
+  "postcode": "LU4 9JZ",
+  "lat": 51.9014,
+  "lng": -0.4672,
+  "jummah": "12:30, 13:30",
+  "source": "Inspire FM app"
+ },
+ "farley-hill-cc": {
+  "address": "Delphine Close, Luton",
+  "postcode": "LU1 5RE",
+  "lat": 51.8755,
+  "lng": -0.44,
+  "jummah": "13:00",
+  "source": "Inspire FM app"
+ },
+ "farley-hill-masjid": {
+  "address": "31 The Cross Way, Luton",
+  "postcode": "LU1 5LY",
+  "phone": "07984 960703",
+  "lat": 51.8714,
+  "lng": -0.4286,
+  "jummah": "12:30, 13:15, 13:45",
+  "source": "Inspire FM app"
+ },
+ "hockwell-ring": {
+  "address": "13-17 Barley Lane, Luton",
+  "postcode": "LU4 9HT",
+  "website": "https://hockwellringmasjid.org.uk/",
+  "phone": "01582 563778",
+  "lat": 51.9061,
+  "lng": -0.4683,
+  "jummah": "12:30, 13:10",
+  "source": "Inspire FM app"
+ },
+ "jalalabad": {
+  "address": "36-38 Leagrave Rd, Luton",
+  "postcode": "LU4 8HZ",
+  "website": "https://jalalabadjamemasjid.org.uk",
+  "phone": "01582 483581",
+  "lat": 51.8871,
+  "lng": -0.4301,
+  "jummah": "13:00",
+  "source": "Inspire FM app"
+ },
+ "akbaria": {
+  "address": "241 Selbourne Rd, Luton",
+  "postcode": "LU4 8NP",
+  "lat": 51.8959,
+  "lng": -0.4454,
+  "jummah": "12:00, 13:00",
+  "source": "Inspire FM app"
+ },
+ "ghosia-trust": {
+  "address": "23 Westbourne Rd, Luton",
+  "postcode": "LU4 8JD",
+  "phone": "01582 419885",
+  "lat": 51.8877,
+  "lng": -0.4334,
+  "jummah": "13:00",
+  "source": "Inspire FM app"
+ },
+ "keech-hospice": {
+  "address": "Great Bramingham Lane, Luton",
+  "postcode": "LU3 3NT",
+  "lat": 51.9278,
+  "lng": -0.4386,
+  "jummah": "13:00",
+  "source": "Inspire FM app"
+ },
+ "kokni": {
+  "address": "2-3 Bury Park Estate, Bury Park Rd, Luton",
+  "postcode": "LU1 1HB",
+  "website": "https://masjid.kokniluton.co.uk",
+  "phone": "01582 803444",
+  "lat": 51.8849,
+  "lng": -0.426,
+  "jummah": "12:30",
+  "source": "Inspire FM app"
+ },
+ "leagrave-hall": {
+  "address": "145 High Street, Luton",
+  "postcode": "LU4 9LE",
+  "lat": 51.9001,
+  "lng": -0.4707,
+  "jummah": "12:45",
+  "source": "Inspire FM app"
+ },
+ "lewsey-cc": {
+  "address": "Landrace Rd, Luton",
+  "postcode": "LU4 0SW",
+  "lat": 51.9019,
+  "lng": -0.4975,
+  "jummah": "12:30, 13:00",
+  "source": "Inspire FM app"
+ },
+ "lucas-gardens": {
+  "address": "St Margaret Church, Luton",
+  "postcode": "LU3 4BG",
+  "lat": 51.918,
+  "lng": -0.4354,
+  "jummah": "13:00",
+  "source": "Inspire FM app"
+ },
+ "luton-central": {
+  "address": "2-12 Westbourne Rd, Luton",
+  "postcode": "LU4 8JD",
+  "website": "https://www.lutoncentralmosque.org/",
+  "phone": "01582 250986",
+  "lat": 51.8877,
+  "lng": -0.4334,
+  "jummah": "12:30, 13:30",
+  "source": "Inspire FM app"
+ },
+ "luton-islamic-centre": {
+  "address": "116 Bury Park Rd, Luton",
+  "postcode": "LU1 1HE",
+  "website": "https://www.lutonislamiccentre.com",
+  "lat": 51.8862,
+  "lng": -0.4277,
+  "jummah": "12:50",
+  "source": "Inspire FM app"
+ },
+ "madinah": {
+  "address": "Crescent Hall, 50 Dunstable Rd, Luton",
+  "postcode": "LU1 1EF",
+  "lat": 51.8832,
+  "lng": -0.4256,
+  "jummah": "13:00",
+  "source": "Inspire FM app"
+ },
+ "al-huda": {
+  "address": "Saxon Rd / 198b Leagrave Road, Luton",
+  "postcode": "LU3 1JD",
+  "lat": 51.8909,
+  "lng": -0.4328,
+  "jummah": "13:15",
+  "source": "Inspire FM app"
+ },
+ "as-sunnah": {
+  "address": "48 Kingsway, Luton",
+  "postcode": "LU4 8EH",
+  "website": "https://masjidas-sunnah.co.uk",
+  "phone": "01582 593306",
+  "lat": 51.8895,
+  "lng": -0.4437,
+  "jummah": "13:00",
+  "source": "Inspire FM app"
+ },
+ "al-bilal": {
+  "address": "4 Sarum Rd, Luton",
+  "postcode": "LU3 2RA",
+  "website": "https://www.masjidbilal.uk/",
+  "phone": "07956 958630",
+  "lat": 51.903,
+  "lng": -0.4541,
+  "jummah": "13:00",
+  "source": "Inspire FM app"
+ },
+ "masjid-e-ali": {
+  "address": "2-32 Beechwood Rd, Luton",
+  "postcode": "LU4 8RP",
+  "phone": "01582 486841",
+  "lat": 51.8937,
+  "lng": -0.4509,
+  "jummah": "12:10",
+  "source": "Inspire FM app"
+ },
+ "ibrahim": {
+  "address": "45 Dudley Street, Luton",
+  "postcode": "LU2 0NP",
+  "lat": 51.884,
+  "lng": -0.4154,
+  "jummah": "12:35, 13:10",
+  "source": "Inspire FM app"
+ },
+ "irshad": {
+  "address": "400 Dallow Rd, Luton",
+  "postcode": "LU1 1UR",
+  "lat": 51.8853,
+  "lng": -0.4559,
+  "jummah": "12:30, 13:15",
+  "source": "Inspire FM app"
+ },
+ "suffa-tul-islam": {
+  "address": "129 Bradley Rd, Luton",
+  "postcode": "LU4 8SW",
+  "lat": 51.8886,
+  "lng": -0.4659,
+  "jummah": "12:30, 13:15",
+  "source": "Inspire FM app"
+ },
+ "masjid-e-noor": {
+  "address": "20 Cromwell Rd, Luton",
+  "postcode": "LU3 1DN",
+  "website": "https://masjidnoorluton.co.uk/",
+  "phone": "01582 414031",
+  "lat": 51.8866,
+  "lng": -0.4232,
+  "jummah": "12:30, 13:30",
+  "source": "Inspire FM app"
+ },
+ "raynham-way-cc": {
+  "address": "66 Eaton Green Rd, Luton",
+  "postcode": "LU2 9JE",
+  "lat": 51.885,
+  "lng": -0.379,
+  "jummah": "13:00, 13:30",
+  "source": "Inspire FM app"
+ },
+ "saints-area": {
+  "address": "1 St. Ethelberts Avenue, Luton",
+  "postcode": "LU3 1QH",
+  "phone": "01582 516818",
+  "lat": 51.9002,
+  "lng": -0.4342,
+  "jummah": "12:30, 13:30",
+  "source": "Inspire FM app"
+ },
+ "shah-jalal": {
+  "address": "Marsh Farm Futures House, Luton",
+  "postcode": "LU3 3QB",
+  "lat": 51.9186,
+  "lng": -0.4545,
+  "jummah": "13:00",
+  "source": "Inspire FM app"
+ },
+ "dallow-centre": {
+  "address": "234 Dallow Road, Luton",
+  "postcode": "LU1 1TB",
+  "lat": 51.8831,
+  "lng": -0.4404,
+  "jummah": "13:30",
+  "source": "Inspire FM app"
+ },
+ "turkish-ca": {
+  "address": "58 Dumfries Street, Luton",
+  "postcode": "LU1 5BS",
+  "phone": "01582 483488",
+  "lat": 51.8767,
+  "lng": -0.4211,
+  "jummah": "12:30",
+  "source": "Inspire FM app"
+ },
+ "venue-central": {
+  "address": "15-17 Chapel Street, Luton",
+  "postcode": "LU1 2SE",
+  "lat": 51.8777,
+  "lng": -0.416,
+  "jummah": "12:45, 13:30",
+  "source": "Inspire FM app"
+ },
+ "yusuf-hall": {
+  "address": "Hill Rise, Sundon Park, Luton",
+  "postcode": "LU3 3EE",
+  "lat": 51.9162,
+  "lng": -0.4661,
+  "jummah": "12:10, 12:50",
+  "source": "Inspire FM app"
+ },
+ "zakariya": {
+  "address": "1 Beadlow Rd, Lewsey Farm, Luton",
+  "postcode": "LU4 0QY",
+  "website": "https://zakariyamasjid.org.uk",
+  "phone": "01582 213302",
+  "lat": 51.901,
+  "lng": -0.4924,
+  "jummah": "12:20, 13:15",
+  "source": "Inspire FM app"
+ },
+ "zuhri-academy": {
+  "address": "Brittania House, Leagrave Rd, Luton",
+  "postcode": "LU3 1RJ",
+  "lat": 51.8924,
+  "lng": -0.4362,
+  "jummah": "13:00",
+  "source": "Inspire FM app"
+ },
+ "icknield": {
+  "address": "Riddy Lane, Luton",
+  "postcode": "LU3 2AH",
+  "website": "https://www.icknield.beds.sch.uk"
+ },
+ "cardinal-newman": {
+  "address": "Warden Hill Road, Luton",
+  "postcode": "LU2 7AE",
+  "website": "https://www.cardinalnewmanschool.net"
+ },
+ "chalk-hills": {
+  "address": "Leagrave High Street, Luton",
+  "postcode": "LU4 0NE",
+  "website": "https://www.thechalkhillsacademy.co.uk"
+ },
+ "challney-boys": {
+  "address": "Stoneygate Road, Luton",
+  "postcode": "LU4 9TJ",
+  "website": "http://www.challneyboys.co.uk"
+ },
+ "challney-girls": {
+  "address": "Addington Way, Luton",
+  "postcode": "LU4 9FJ",
+  "website": "https://www.challneygirls.luton.sch.uk"
+ },
+ "chantry": {
+  "address": "Tomlinson Avenue, Luton",
+  "postcode": "LU4 0QP",
+  "website": "https://www.chantryprimaryacademy.com"
+ },
+ "dallow": {
+  "address": "Dallow Road, Luton",
+  "postcode": "LU1 1LZ",
+  "website": "https://www.dallowprimary.net"
+ },
+ "denbigh": {
+  "address": "Alexandra Avenue, Luton",
+  "postcode": "LU3 1HE",
+  "website": "https://www.denbighhigh.co.uk"
+ },
+ "downside": {
+  "address": "Chaul End Lane, Luton",
+  "postcode": "LU4 8EZ"
+ },
+ "farley-junior": {
+  "address": "Northdrift Way, Luton",
+  "postcode": "LU1 5JF"
+ },
+ "hillborough": {
+  "address": "Hillborough Road, Luton",
+  "postcode": "LU1 5EZ"
+ },
+ "lea-manor": {
+  "address": "Northwell Drive, Luton",
+  "postcode": "LU3 3TL"
+ },
+ "lealands": {
+  "address": "Sundon Park Road, Luton",
+  "postcode": "LU3 3AL"
+ },
+ "norton-road": {
+  "address": "Norton Road, Luton",
+  "postcode": "LU3 2NX"
+ },
+ "putteridge": {
+  "address": "Putteridge Road, Luton",
+  "postcode": "LU2 8HJ"
+ },
+ "qes": {
+  "address": "Crawley Green Road, Luton",
+  "postcode": "LU2 9AG"
+ },
+ "stockwood-park": {
+  "address": "Rotheram Avenue, Luton",
+  "postcode": "LU1 5PP"
+ },
+ "stopsley": {
+  "address": "St Thomas' Road, Luton",
+  "postcode": "LU2 7UX"
+ },
+ "wigmore": {
+  "address": "Twyford Drive, Luton",
+  "postcode": "LU2 9TB"
+ },
+ "woodlands": {
+  "address": "Northwell Drive, Luton",
+  "postcode": "LU3 3SP",
+  "website": "http://www.woodlands.luton.sch.uk"
+ },
+ "chiltern-academy": {
+  "address": "Gipsy Lane, Luton",
+  "postcode": "LU1 3GF"
+ },
+ "luton-sixth-form": {
+  "address": "Bradgers Hill Road, Luton",
+  "postcode": "LU2 7EW",
+  "website": "https://www.lutonsfc.ac.uk"
+ },
+ "active-support": {
+  "address": "Unit 1 Britannia Estates, Leagrave Road, Luton",
+  "postcode": "LU3 1RJ",
+  "website": "https://www.activesupporteducation.co.uk"
+ },
+ "chiltern-learning-trust": {
+  "address": "Denbigh High School, Alexandra Avenue, Luton (registered office)",
+  "postcode": "LU3 1HE",
+  "website": "https://www.chilternlearningtrust.org"
+ },
+ "barnfield-college": {
+  "address": "Luton",
+  "postcode": "LU2 7BF",
+  "website": "https://www.barnfield.ac.uk"
+ },
+ "uni-beds": {
+  "address": "University of Bedfordshire, Luton campus",
+  "postcode": "LU1 3JU"
+ },
+ "raise-up": {
+  "address": "Solway Community Centre, 5 All Saints Close, Luton",
+  "postcode": "LU3 1FA",
+  "website": "https://raiseupluton.co.uk",
+  "charity": "1188653"
+ },
+ "courtney-foundation": {
+  "address": "145a High Street, Luton",
+  "postcode": "LU4 9LE",
+  "website": "https://thecourtneyfoundation.org",
+  "charity": "1187689"
+ },
+ "inspire-fm": {
+  "address": "234 Dallow Road, Luton",
+  "postcode": "LU1 1TB",
+  "website": "https://www.inspirefm.org"
+ },
+ "luton-foodbank": {
+  "website": "https://lutonfoodbank.org.uk",
+  "note": "Parcels from collection points across Luton, given after assessment; no public walk-in address"
+ },
+ "discover-islam": {
+  "address": "37C Upper George Street, Luton",
+  "postcode": "LU1 2RD"
+ },
+ "noah": {
+  "address": "141 Park Street, Luton (Welfare Centre)",
+  "postcode": "LU1 3HG",
+  "website": "https://noahenterprise.org"
+ },
+ "hygiene-bank": {
+  "website": "https://www.thehygienebank.com"
+ },
+ "sunnah-charity": {
+  "website": "https://sunnah.org.uk",
+  "charity": "1203441"
+ },
+ "tokko": {
+  "address": "7 Gordon Street, Luton",
+  "postcode": "LU1 2QP",
+  "website": "https://tokko.co.uk"
+ },
+ "lets-eat-together": {
+  "website": "https://lutonfoodbank.org.uk/letseattogether"
+ },
+ "smr-digital": {
+  "address": "Luton",
+  "website": "https://smrgraphics.co.uk",
+  "email": "summar@smrgraphics.co.uk",
+  "instagram": "@smrdigitaluk"
+ },
+ "wigmore-valley-park": {
+  "address": "Wigmore Valley Park, Wigmore",
+  "postcode": "LU2 9TN"
+ },
+ "woburn": {
+  "address": "Woburn, near Milton Keynes (Ridgmont gate)",
+  "postcode": "MK43 0TU",
+  "website": "https://woburnsafari.co.uk"
+ },
+ "active-luton": {
+  "address": "Butterfield Green Road",
+  "postcode": "LU2 8DD",
+  "website": "https://activeluton.co.uk"
+ },
+ "everyone-active": {
+  "address": "Court Drive, Dunstable",
+  "postcode": "LU5 4JD",
+  "website": "https://everyoneactive.com"
+ },
+ "rosebuds": {
+  "last_event_at": "Higher Ground, 63 Inkerman Street LU1 1JD"
+ },
+ "orbital": {
+  "address": "Hatters Way / Chaul End Lane, Luton",
+  "postcode": "LU4 8EZ",
+  "website": "https://www.orbitaltrampolinepark.co.uk"
+ },
+ "the-giggles": {
+  "address": "Futures House, The Moakes, Marsh Farm",
+  "postcode": "LU3 3QB",
+  "website": "https://thegiggles.co.uk"
+ },
+ "funtura": {
+  "address": "40 to 44 George Street, town centre",
+  "postcode": "LU1 2AZ",
+  "website": "https://funturauk.com"
+ },
+ "tenpin": {
+  "address": "The Galaxy, Bridge Street",
+  "postcode": "LU1 2NB",
+  "website": "https://www.tenpin.co.uk"
+ },
+ "cineworld": {
+  "address": "The Galaxy, Bridge Street",
+  "postcode": "LU1 2NB",
+  "website": "https://www.cineworld.co.uk"
+ },
+ "padel-pass": {
+  "address": "Venue 360, 20 Gipsy Lane",
+  "postcode": "LU1 3JH",
+  "website": "https://padelpass.co.uk"
+ },
+ "stockwood-golf": {
+  "address": "London Road, Stockwood Park",
+  "postcode": "LU1 4LX",
+  "website": "https://stockwoodparkgolf.co.uk"
+ },
+ "venue-360": {
+  "address": "Gipsy Lane",
+  "postcode": "LU1 3JH",
+  "website": "https://www.venue360.co.uk"
+ },
+ "ltfc-trust": {},
+ "luton-council": {
+  "address": "Ashcroft Park, Stopsley",
+  "postcode": "LU2 9AY",
+  "website": "https://www.luton.gov.uk"
+ },
+ "woodland-trust": {
+  "address": "Between Bramingham and Marsh Farm",
+  "postcode": "LU3 2RU",
+  "website": "https://www.woodlandtrust.org.uk"
+ },
+ "parkrun": {
+  "address": "Wardown Park",
+  "postcode": "LU2 7HA",
+  "website": "https://www.parkrun.org.uk"
+ },
+ "groundwork": {
+  "address": "Memorial Park, Luton",
+  "website": "https://www.groundwork.org.uk"
+ },
+ "wardown-golf": {
+  "address": "Wardown Park",
+  "postcode": "LU2 7HA",
+  "website": "https://www.wardownadventuregolf.co.uk"
+ },
+ "stockwood-discovery": {
+  "address": "Stockwood Park, London Road",
+  "postcode": "LU1 4LX",
+  "website": "https://www.culturetrust.com"
+ },
+ "culture-trust": {
+  "website": "https://www.culturetrust.com"
+ },
+ "hat-factory": {
+  "address": "65 to 67 Bute Street",
+  "postcode": "LU1 2EY",
+  "website": "https://www.culturetrust.com"
+ },
+ "luton-libraries": {
+  "website": "https://www.lutonlibraries.co.uk"
+ },
+ "youthscape": {
+  "address": "74 Bute Street, Luton",
+  "postcode": "LU1 2EY",
+  "website": "https://www.youthscape.co.uk"
+ },
+ "grow-your-potential": {
+  "address": "Hart Hill Community Centre, Falks Hill",
+  "postcode": "LU2 0FN"
+ },
+ "st-marys": {
+  "website": "https://www.stmarysluton.org"
+ },
+ "hangout-luton": {
+  "address": "33 Park Street West",
+  "postcode": "LU1 3BE",
+  "website": "https://hangoutluton.co.uk"
+ },
+ "wildlife-trust": {
+  "website": "https://www.wildlifebcn.org"
+ },
+ "luton-energise": {
+  "website": "https://www.activeluton.co.uk/activities/energise-luton-holiday-camps"
+ },
+ "teamsport": {
+  "address": "Verey Road, Dunstable",
+  "postcode": "LU5 4TT",
+  "website": "https://www.team-sport.co.uk"
+ },
+ "snakes-ladders": {
+  "address": "Houghton Regis (Dunstable branch)",
+  "postcode": "LU5 5BQ",
+  "website": "https://www.snakes-and-ladders.co.uk"
+ },
+ "woodside-farm": {
+  "address": "Mancroft Road, Aley Green",
+  "postcode": "LU1 4DG",
+  "website": "https://www.woodsidefarm.co.uk"
+ },
+ "whipsnade": {
+  "address": "Whipsnade, near Dunstable",
+  "postcode": "LU6 2LF",
+  "website": "https://www.whipsnadezoo.org"
+ },
+ "dunstable-downs": {
+  "address": "Dunstable Downs",
+  "postcode": "LU6 2GY",
+  "website": "https://www.nationaltrust.org.uk"
+ },
+ "houghton-hall": {
+  "address": "Park Road North, Houghton Regis",
+  "postcode": "LU5 5AB",
+  "website": "https://www.houghtonhallpark.org"
+ },
+ "dunstable-tc": {
+  "address": "Dunstable town centre",
+  "postcode": "LU5 4RB",
+  "website": "https://www.dunstable.gov.uk"
+ },
+ "paintball-herts": {
+  "address": "Lye Lane, Bricket Wood (near St Albans)",
+  "postcode": "AL2 3TF",
+  "website": "https://paintballhertfordshire.com"
+ },
+ "agent-brains": {
+  "address": "Leys Avenue and Station Road, Letchworth",
+  "postcode": "SG6 3EW",
+  "website": "https://www.agentbrains.co.uk"
+ },
+ "bennetts-splash": {
+  "address": "Bennett\u2019s Recreation Ground, Dunstable",
+  "postcode": "LU6 1PJ",
+  "website": "https://www.dunstable.gov.uk"
+ },
+ "muslim-undertaker": {
+  "last_event_at": "Venue Central, 196A Leagrave Road LU3 1JD"
+ },
+ "muslim-panto": {
+  "last_event_at": "The Stockwood Park Academy LU1 5PP"
+ },
+ "keech-hospice-care": {
+  "last_event_at": "Barnfield College LU2 7BF",
+  "website": "https://www.keech.org.uk"
+ },
+ "skt-welfare": {
+  "last_event_at": "Venue Central, 196A Leagrave Road LU3 1JD"
+ },
+ "happy-shark": {
+  "last_event_at": "The Bear Club, Mill Yard, Guildford Street LU1 2NR"
+ },
+ "luton-bid": {
+  "website": "https://place.stepforwardluton.co.uk",
+  "last_event_at": "Market Hill, town centre"
+ },
+ "rayners": {
+  "last_event_at": "Luton Library Theatre, St George\u2019s Square LU1 2NG"
+ },
+ "luventertainment": {
+  "last_event_at": "Hat Factory Arts Centre, Bute Street LU1 2EY"
+ },
+ "frasers-plus": {
+  "last_event_at": "Frasers Plus Luton (The Mall)"
+ },
+ "luton-hoo": {
+  "last_event_at": "Lime Tree Avenue, Luton Hoo Estate LU1 4LF"
+ },
+ "full-house": {
+  "last_event_at": "Hat Factory Arts Centre, Bute Street LU1 2EY"
+ },
+ "upfront-comedy": {
+  "last_event_at": "Hat Factory Arts Centre, Bute Street LU1 2EY"
+ },
+ "ltfc": {
+  "address": "Kenilworth Road",
+  "postcode": "LU4 8AW",
+  "website": "https://www.lutontown.co.uk"
+ },
+ "grove-theatre": {
+  "address": "Grove Theatre, Dunstable",
+  "postcode": "LU5 4GP",
+  "website": "https://everyonetheatres.com"
+ },
+ "luton-rising": {
+  "website": "https://lutonrising.org.uk"
+ },
+ "blcf": {
+  "website": "https://blcf.org.uk/"
+ },
+ "suez": {
+  "website": "https://www.suez.co.uk/en-gb"
+ },
+ "community-fund": {
+  "website": "https://tnlcommunityfund.org.uk"
+ },
+ "fcg": {
+  "website": "https://farleycommunitygroup.co.uk/"
+ },
+ "kdf": {
+  "website": "https://www.kdfajk.org"
+ },
+ "empowering": {
+  "website": "https://empoweringeducation.co.uk/"
+ },
+ "luton-allstars": {
+  "website": "https://www.lutonallstars.com"
+ },
+ "level-trust": {
+  "website": "https://www.leveltrust.org"
+ },
+ "pulse-av": {
+  "website": "https://pulseav.co.uk/"
+ },
+ "mary-seacole": {
+  "website": "http://www.maryseacoleha.com"
+ },
+ "ctp": {
+  "website": "https://ctportal.org/"
+ },
+ "aa-carpets": {
+  "website": "https://aacf.co.uk"
+ },
+ "aegis": {
+  "website": "https://aegissupportservices.com/"
+ },
+ "tops-pizza": {
+  "website": "https://topspizza.co.uk/luton"
+ },
+ "two-side": {
+  "website": "https://twosidestudios.co.uk/"
+ },
+ "hannah-solicitors": {
+  "website": "https://www.hannahsolicitors.co.uk"
+ },
+ "maliks-khan": {
+  "website": "https://www.mandksolicitors.com"
+ },
+ "niralla": {
+  "website": "https://niralla.co.uk"
+ },
+ "kashmir-catering": {
+  "instagram": "https://www.instagram.com/kashmircateringluton/"
+ },
+ "grand-royale": {
+  "website": "https://grandroyale.co.uk/",
+  "postcode": "LU2 0AH"
+ },
+ "al-nikah": {
+  "website": "https://alnikah.co.uk"
+ },
+ "shamzy": {
+  "instagram": "https://www.instagram.com/shamzybeauty/"
+ },
+ "bliss-boutique": {
+  "website": "https://www.blissboutiqueltd.co.uk/"
+ },
+ "noreen": {
+  "instagram": "https://www.instagram.com/noreenshairandbeauty/"
+ },
+ "memsaab": {
+  "website": "https://memsaabonline.com"
+ },
+ "nur-collection": {
+  "instagram": "https://www.instagram.com/nur_collection_luton/"
+ },
+ "house-of-elegance": {
+  "instagram": "https://www.instagram.com/houseofeleganceuk/"
+ },
+ "aghaz": {
+  "instagram": "https://www.instagram.com/aaghaz_/"
+ },
+ "bhajis-kitchen": {
+  "website": "https://bajiskitchen.com"
+ },
+ "gao-express": {
+  "website": "https://gaoexpress.co.uk"
+ },
+ "ambala": {
+  "website": "https://ambala.co.uk"
+ },
+ "amee-jee": {
+  "website": "https://ameejee.com/"
+ },
+ "rainstone": {
+  "website": "https://rainstonemoney.co.uk"
+ },
+ "luton-halal": {
+  "address": "189 Dunstable Road, Luton"
+ },
+ "ngs": {
+  "email": "info@nextgenerationscheme.co.uk",
+  "phone": "07594 107633",
+  "website": "https://nextgenerationscheme.co.uk",
+  "note": "Website taken from the email domain; no public street address listed on the NGS site"
+ },
+ "human-appeal": {
+  "website": "https://humanappeal.org.uk"
+ },
+ "comic-relief": {
+  "website": "https://www.comicrelief.com"
+ },
+ "national-trust": {
+  "website": "https://www.nationaltrust.org.uk"
+ },
+ "big-iftar-luton": {
+  "address": "Crescent Hall, 50 Dunstable Road, Luton",
+  "postcode": "LU1 1EF",
+  "note": "Hosted by Inspire FM each Ramadan"
+ },
+ "lady-zia-wernher": {
+  "address": "Ashcroft Road, Stopsley, Luton",
+  "postcode": "LU2 9AY"
+ },
+ "avenue-centre": {
+  "address": "Cutenhoe Road, Luton",
+  "postcode": "LU1 3NJ"
+ },
+ "rabia": {
+  "address": "12\u201316 Portland Road, Luton",
+  "postcode": "LU4 8AX",
+  "note": "Covers Rabia Girls' School, Rabia Boys' School and Madrasa Islamia Primary"
+ },
+ "ukim-luton": {
+  "address": "126\u2013130 Oak Road, Luton",
+  "postcode": "LU4 8AD",
+  "note": "UKIM logo is national; the lockups add the local name"
+ },
+ "al-falah": {
+  "address": "Leagrave, Luton"
+ },
+ "higher-ground": {
+  "address": "63 Inkerman Street, Luton",
+  "postcode": "LU1 1JD"
+ },
+ "diverse-fm": {
+  "note": "Luton community radio, 102.8 FM"
+ },
+ "ngyt": {
+  "address": "The Hat Factory Arts Centre, 65\u201367 Bute Street, Luton",
+  "postcode": "LU1 2EY"
+ },
+ "al-madani": {
+  "address": "12\u201316 Portland Road, Luton",
+  "postcode": "LU4 8AX"
+ },
+ "eechc": {
+  "address": "Units 7-8, Meadow Lane, St Ives, Cambridgeshire",
+  "postcode": "PE27 4LG",
+  "website": "https://eastofenglandcommunityhealthandcare.nhs.uk",
+  "note": "Formed 1 April 2026 from Cambridgeshire Community Services and Norfolk Community Health and Care; runs Luton community health services"
+ },
+ "elft": {
+  "website": "https://www.elft.nhs.uk",
+  "note": "Runs mental health services in Bedfordshire and Luton"
+ },
+ "disability-resource-centre": {
+  "address": "The Mayfield Centre, 4 Mayfield Road, Dunstable",
+  "postcode": "LU5 4AP",
+  "website": "https://drcbeds.org.uk",
+  "phone": "01582 470900"
+ },
+ "samaritans-luton": {
+  "address": "33 Cardiff Road, Luton",
+  "postcode": "LU1 1PP",
+  "website": "https://www.samaritans.org/branches/luton/",
+  "phone": "116 123 (free, 24/7)",
+  "note": "Charity 1170449; uses the national Samaritans logo"
+ },
+ "st-john-ambulance": {
+  "website": "https://www.sja.org.uk"
+ },
+ "beds-fire": {
+  "website": "https://www.bedsfire.gov.uk"
+ },
+ "ukcca": {
+  "address": "3 St Mary's Road, Luton",
+  "postcode": "LU1 3JA",
+  "website": "https://www.carnivalarts.org.uk"
+ }
+}

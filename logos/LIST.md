@@ -1,0 +1,285 @@
+# SMR logo list
+
+263 organisations. Full details in logos.json and LIST.csv.
+
+## businesses (26)
+- AA Carpets and Furniture
+- Aegis Support Services
+- Aghaz by AN
+- Al Nikah Wedding Services
+- Ambala
+- Amee Jee
+- Bhaji's Kitchen
+- Bliss Boutique
+- Gao Express
+- Global Groceries Luton
+- Grand Royale
+- Hannah Solicitors
+- House of Elegance
+- Kashmir Catering Services
+- Luton Halal Meat Centre
+- Maliks & Khan Solicitors
+- Memsaab
+- Niralla International Sweets
+- Noreen Make Up Studio
+- Nur Collection
+- Pulse AV
+- Rainstone Money Group
+- Shamzy Hair & Makeup
+- Tops Pizza
+- TutorBook
+- Two Side Studios
+
+## campaigns (7)
+- 1 Eid
+- Jummah Winter Campaign
+- Let's Eat Together
+- Luton Mela
+- Muslim Panto (Abdullah Afzal Productions)
+- The Big Iftar Luton
+- Wellness Walk
+
+## charities (81)
+- Action For Humanity
+- African Relief Fund
+- Age Concern Luton
+- Age UK Bedfordshire
+- Aghosh UK
+- Al-Khair Foundation
+- Amanah Project
+- Bedford Hospital Charity & Friends
+- Bedfordshire & Luton Community Foundation
+- Bedfordshire Rural Communities Charity
+- British Red Cross
+- Citizens Advice Luton
+- Comic Relief
+- Community Interest Luton
+- CTP
+- Discover Islam
+- Emaan Relief
+- Empowering Education
+- Ethar Relief
+- FACES (Faiths Against Child Sexual Exploitation)
+- Farley Community Group
+- Forgotten Women
+- Friends of Bright Eyes
+- Global Helping Hands
+- Global Relief Trust
+- Grassroots
+- Groundwork
+- Grow Your Potential
+- Hightown Baptist Church
+- Hilden
+- Home-Start Luton
+- Human Appeal
+- Islamic Aid
+- Islamic Help
+- Islamic Relief UK
+- Kashmir Development Foundation
+- Kassar's Foundation
+- Keech Hospice Care
+- Lantern · Muslim Women's Voices
+- LETS Hub (Luton Employment Training Skills)
+- Level Trust
+- Luton All Women's Centre
+- Luton Foodbank
+- Luton Point
+- Luton Town FC Community Trust
+- Luton, South Beds & Harpenden Samaritans
+- Mary Seacole Housing Association
+- MATW Project (Muslims Around The World)
+- Mind BLMK
+- Muslim Aid
+- Muslim Charity
+- Muslim Global Relief
+- Muslim Hands
+- National Trust
+- National Zakat Foundation
+- NGS Youth & Community (Next Generation Scheme)
+- Nijjor Manush
+- NOAH Enterprise
+- One Nation
+- One Ummah
+- Orphans in Need
+- Penny Appeal
+- Penrose Roots
+- READ Foundation
+- Salam Charity
+- SignPosts Luton
+- SKT Welfare
+- St John Ambulance
+- Stepping Stones
+- Sunnah (charity that never ends)
+- The Courtney Foundation
+- The Disability Resource Centre
+- The Hygiene Bank
+- The King's Trust
+- The Lady Fatemah Trust
+- The National Lottery Community Fund
+- The Raise Up Foundation
+- Ummah Welfare Trust
+- Utilita Giving
+- Wildlife Trust BCN
+- Woodland Trust
+
+## community (39)
+- Active Luton
+- Bedfordshire Chamber of Commerce
+- Bedfordshire Fire & Rescue Service
+- Bedfordshire Hospitals NHS Foundation Trust
+- Bedfordshire Police
+- Bedfordshire Police & Crime Commissioner
+- Dunstable Town Council
+- East London NHS Foundation Trust
+- East of England Community Health and Care NHS Trust
+- Falkes (Luton) Scout District
+- Girlguiding (Bedfordshire · Luton South)
+- Hangout Luton
+- Higher Ground
+- Jobcentre Plus
+- Luton & Dunstable University Hospital
+- Luton Allstars Football Club (MTAC)
+- Luton BID (Step Forward Luton)
+- Luton Council
+- Luton Council of Faiths
+- Luton Energise Holiday Camps (HAF)
+- Luton Friends of Parks and Green Spaces
+- Luton Irish Forum
+- Luton Libraries
+- Luton Rising
+- Luton Town Football Club
+- Luton Youth Council
+- Luton Youth Partnership Service
+- Muslim Undertaker
+- Near Neighbours
+- Next Generation Youth Theatre
+- NXT GEN Pathways
+- Rosebuds Luton Sisters
+- Sea Cadets (Luton Unit 226, TS Keyes)
+- St Mary's Church Luton
+- SUEZ
+- The Culture Trust Luton
+- Tokko Youth Hub
+- UK Centre for Carnival Arts
+- Youthscape
+
+## media (2)
+- Diverse FM
+- Inspire FM 105.1
+
+## mosques (43)
+- Akbaria Mosque
+- Al Falah Community Centre
+- Al-Bilal Mosque
+- Al-Furqan Mosque
+- Al-Hira Educational & Cultural Centre
+- Al-Huda Mosque
+- Al-Jalal Mosque
+- As-Sunnah Mosque
+- Bury Park Jami Masjid
+- Bushmead Masjid
+- Dallow Centre
+- Dunstable Masjid
+- Faizan-e-Mushkil Kusha
+- Farley Hill Community Centre
+- Farley Hill Masjid
+- Ghosia Trust
+- Hockwell Ring Masjid (HRM)
+- Irshad Trust
+- Jalalabad Masjid & Islamic Centre
+- Jamiatul Uloom Al Islamia (Bait-ul-Abraar)
+- Kokni Muslim Welfare
+- Leagrave Hall Masjid
+- Lewsey Community Centre
+- Lucas Gardens
+- Luton Central Mosque
+- Luton Council of Mosques
+- Luton Islamic Centre
+- Luton Sunni Council of Mosques
+- Luton Turkish Cultural Association (LTCA)
+- Madina Masjid (UKIM Luton)
+- Madinah Masjid
+- Masjid al-Madani
+- Masjid Ibrahim
+- Masjid Noor
+- Masjid-e-Ali
+- Raynham Way Community Centre
+- Saints Area Masjid
+- Shah Jalal Islamic Foundation
+- Suffa Tul Islam Luton
+- Venue Central
+- Yusuf Hall, Sundon Park
+- Zakariya Masjid
+- Zuhri Academy
+
+## schools (32)
+- Active Support Education Centre
+- Al-Hikmah (Bury Park Educational Institute)
+- Avenue Centre for Education
+- Barnfield College
+- Cardinal Newman Catholic School
+- Chalk Hills Academy
+- Challney High School for Boys
+- Challney High School for Girls
+- Chantry Primary Academy
+- Chiltern Academy
+- Chiltern Learning Trust
+- Dallow Primary School
+- Denbigh High School
+- Downside Primary School (DPS)
+- Farley Junior Academy
+- Hillborough Junior School
+- Icknield High School
+- Lady Zia Wernher School
+- Lea Manor High School
+- Lealands High School
+- Luton Sixth Form College
+- Mehria Primary School
+- Norton Road Primary School
+- Oakwood Primary School
+- Putteridge High School
+- Queen Elizabeth School (QES)
+- Rabia Education Trust
+- Stopsley High School (SHS)
+- The Stockwood Park Academy
+- University of Bedfordshire
+- Wigmore Primary School
+- Woodlands Secondary School
+
+## smr (1)
+- SMR Digital
+
+## venues (32)
+- Agent Brains
+- Bennett's Splash Park
+- Cineworld Luton
+- Dunstable Downs
+- Everyone Active (The Dunstable Centre)
+- Frasers Plus Luton
+- Full House
+- Funtura
+- Grove Theatre, Dunstable
+- Happy Shark Comedy Club
+- Hat Factory Arts Centre
+- Houghton Hall Park
+- Luton Hoo Estate
+- LUV Entertainment
+- Orbital Trampoline Park
+- Padel Pass
+- Paintball Hertfordshire
+- parkrun
+- Rayners Deja Vu Dance Studio
+- Snakes & Ladders
+- Stockwood Discovery Centre (The Culture Trust)
+- Stockwood Park Golf Centre
+- TeamSport Dunstable
+- Tenpin Luton
+- The Giggles (Active Luton)
+- Upfront Comedy
+- Venue 360
+- Wardown Adventure Golf
+- Wigmore Valley Park
+- Woburn Safari Park
+- Woodside Farm
+- ZSL Whipsnade Zoo
+

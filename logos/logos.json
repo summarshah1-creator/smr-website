@@ -10646,6 +10646,79 @@
    ]
   },
   {
+   "slug": "fobe",
+   "name": "Friends of Bright Eyes",
+   "aliases": [
+    "FOBE",
+    "fobe",
+    "Bright Eyes"
+   ],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/fobe/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": true,
+   "quality": "redrawn",
+   "details": {},
+   "signed_off": false,
+   "files": [
+    {
+     "file": "fobe-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true
+    },
+    {
+     "file": "fobe-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1592,
+     "h": 852
+    },
+    {
+     "file": "fobe-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1592,
+     "h": 852,
+     "made": true
+    },
+    {
+     "file": "fobe-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1592,
+     "h": 852,
+     "made": true
+    },
+    {
+     "file": "fobe-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "fobe-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "fobe-logo-brand-colour.png",
+     "variant": "logo-brand-colour",
+     "style": "logo",
+     "w": 1592,
+     "h": 852,
+     "made": true
+    }
+   ]
+  },
+  {
    "slug": "global-helping-hands",
    "name": "Global Helping Hands",
    "aliases": [
@@ -12760,6 +12833,74 @@
    ]
   },
   {
+   "slug": "samaritans-luton",
+   "name": "Luton, South Beds & Harpenden Samaritans",
+   "aliases": [
+    "Samaritans",
+    "Luton Samaritans",
+    "Samaritans of Luton, South Beds and Harpenden"
+   ],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/samaritans-luton/",
+   "styles": [
+    "logo",
+    "logo-white",
+    "logo-black"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "address": "33 Cardiff Road, Luton",
+    "postcode": "LU1 1PP",
+    "website": "https://www.samaritans.org/branches/luton/",
+    "phone": "116 123 (free, 24/7)",
+    "note": "Charity 1170449; uses the national Samaritans logo"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "samaritans-luton-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "samaritans-luton-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1597,
+     "h": 428
+    },
+    {
+     "file": "samaritans-luton-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "vector": true
+    },
+    {
+     "file": "samaritans-luton-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "w": 1597,
+     "h": 428
+    },
+    {
+     "file": "samaritans-luton-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo-black",
+     "vector": true
+    },
+    {
+     "file": "samaritans-luton-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo-black",
+     "w": 1597,
+     "h": 428
+    }
+   ]
+  },
+  {
    "slug": "mary-seacole",
    "name": "Mary Seacole Housing Association",
    "aliases": [],
@@ -14691,6 +14832,180 @@
    ]
   },
   {
+   "slug": "st-john-ambulance",
+   "name": "St John Ambulance",
+   "aliases": [
+    "St John",
+    "SJA"
+   ],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/st-john-ambulance/",
+   "styles": [
+    "logo",
+    "logo-white",
+    "logo-tile-full",
+    "icon"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "website": "https://www.sja.org.uk"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "st-john-ambulance-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "st-john-ambulance-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1597,
+     "h": 478
+    },
+    {
+     "file": "st-john-ambulance-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "vector": true
+    },
+    {
+     "file": "st-john-ambulance-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "w": 1597,
+     "h": 478
+    },
+    {
+     "file": "st-john-ambulance-logo-tile-full.svg",
+     "variant": "logo-tile-full",
+     "style": "logo-tile-full",
+     "vector": true
+    },
+    {
+     "file": "st-john-ambulance-logo-tile-full.png",
+     "variant": "logo-tile-full",
+     "style": "logo-tile-full",
+     "w": 1600,
+     "h": 672
+    },
+    {
+     "file": "st-john-ambulance-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 477,
+     "h": 478,
+     "made": true
+    },
+    {
+     "file": "st-john-ambulance-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon",
+     "w": 477,
+     "h": 478,
+     "made": true
+    },
+    {
+     "file": "st-john-ambulance-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 477,
+     "h": 478,
+     "made": true
+    },
+    {
+     "file": "st-john-ambulance-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "st-john-ambulance-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "st-john-ambulance-icon-on-dark.png",
+     "variant": "icon-on-dark",
+     "style": "icon",
+     "w": 477,
+     "h": 478,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "stepping-stones",
+   "name": "Stepping Stones",
+   "aliases": [],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/stepping-stones/",
+   "styles": [
+    "logo",
+    "logo-white",
+    "logo-black",
+    "icon",
+    "icon-white",
+    "icon-black"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {},
+   "signed_off": false,
+   "files": [
+    {
+     "file": "stepping-stones-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1800,
+     "h": 792
+    },
+    {
+     "file": "stepping-stones-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "w": 1800,
+     "h": 792
+    },
+    {
+     "file": "stepping-stones-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo-black",
+     "w": 1800,
+     "h": 792
+    },
+    {
+     "file": "stepping-stones-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 666,
+     "h": 1328
+    },
+    {
+     "file": "stepping-stones-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon-white",
+     "w": 666,
+     "h": 1328
+    },
+    {
+     "file": "stepping-stones-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon-black",
+     "w": 666,
+     "h": 1328
+    }
+   ]
+  },
+  {
    "slug": "sunnah-charity",
    "name": "Sunnah (charity that never ends)",
    "aliases": [
@@ -14940,6 +15255,97 @@
      "w": 228,
      "h": 279,
      "made": true
+    }
+   ]
+  },
+  {
+   "slug": "disability-resource-centre",
+   "name": "The Disability Resource Centre",
+   "aliases": [
+    "DRC",
+    "DRC Beds",
+    "Disability Resource Centre"
+   ],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/disability-resource-centre/",
+   "styles": [
+    "logo",
+    "logo-white",
+    "logo-black",
+    "icon",
+    "icon-white",
+    "icon-black"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "address": "The Mayfield Centre, 4 Mayfield Road, Dunstable",
+    "postcode": "LU5 4AP",
+    "website": "https://drcbeds.org.uk",
+    "phone": "01582 470900"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "disability-resource-centre-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1800,
+     "h": 559
+    },
+    {
+     "file": "disability-resource-centre-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "w": 1800,
+     "h": 559
+    },
+    {
+     "file": "disability-resource-centre-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo-black",
+     "w": 1800,
+     "h": 559
+    },
+    {
+     "file": "disability-resource-centre-icon.svg",
+     "variant": "icon",
+     "style": "icon",
+     "vector": true
+    },
+    {
+     "file": "disability-resource-centre-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 1362,
+     "h": 900
+    },
+    {
+     "file": "disability-resource-centre-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon-white",
+     "vector": true
+    },
+    {
+     "file": "disability-resource-centre-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon-white",
+     "w": 1362,
+     "h": 900
+    },
+    {
+     "file": "disability-resource-centre-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon-black",
+     "vector": true
+    },
+    {
+     "file": "disability-resource-centre-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon-black",
+     "w": 1362,
+     "h": 900
     }
    ]
   },
@@ -16175,6 +16581,190 @@
    ]
   },
   {
+   "slug": "beds-fire",
+   "name": "Bedfordshire Fire & Rescue Service",
+   "aliases": [
+    "Beds Fire",
+    "BFRS",
+    "Bedfordshire Fire and Rescue"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/beds-fire/",
+   "styles": [
+    "crest",
+    "lockup",
+    "lockup-stacked"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {
+    "website": "https://www.bedsfire.gov.uk"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "beds-fire-crest.png",
+     "variant": "crest",
+     "style": "crest",
+     "w": 851,
+     "h": 852
+    },
+    {
+     "file": "beds-fire-lockup.png",
+     "variant": "lockup",
+     "style": "lockup",
+     "w": 1800,
+     "h": 456
+    },
+    {
+     "file": "beds-fire-lockup-stacked.png",
+     "variant": "lockup-stacked",
+     "style": "lockup-stacked",
+     "w": 1800,
+     "h": 1296
+    },
+    {
+     "file": "beds-fire-crest-black.png",
+     "variant": "crest-black",
+     "style": "crest",
+     "w": 851,
+     "h": 852,
+     "made": true
+    },
+    {
+     "file": "beds-fire-crest-white.png",
+     "variant": "crest-white",
+     "style": "crest",
+     "w": 851,
+     "h": 852,
+     "made": true
+    },
+    {
+     "file": "beds-fire-crest-black.svg",
+     "variant": "crest-black",
+     "style": "crest",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "beds-fire-crest-white.svg",
+     "variant": "crest-white",
+     "style": "crest",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "beds-fire-crest-on-dark.png",
+     "variant": "crest-on-dark",
+     "style": "crest",
+     "w": 851,
+     "h": 852,
+     "made": true
+    },
+    {
+     "file": "beds-fire-crest-brand-colour.png",
+     "variant": "crest-brand-colour",
+     "style": "crest",
+     "w": 851,
+     "h": 852,
+     "made": true
+    },
+    {
+     "file": "beds-fire-lockup-black.png",
+     "variant": "lockup-black",
+     "style": "lockup",
+     "w": 1800,
+     "h": 456,
+     "made": true
+    },
+    {
+     "file": "beds-fire-lockup-white.png",
+     "variant": "lockup-white",
+     "style": "lockup",
+     "w": 1800,
+     "h": 456,
+     "made": true
+    },
+    {
+     "file": "beds-fire-lockup-black.svg",
+     "variant": "lockup-black",
+     "style": "lockup",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "beds-fire-lockup-white.svg",
+     "variant": "lockup-white",
+     "style": "lockup",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "beds-fire-lockup-on-dark.png",
+     "variant": "lockup-on-dark",
+     "style": "lockup",
+     "w": 1800,
+     "h": 456,
+     "made": true
+    },
+    {
+     "file": "beds-fire-lockup-brand-colour.png",
+     "variant": "lockup-brand-colour",
+     "style": "lockup",
+     "w": 1800,
+     "h": 456,
+     "made": true
+    },
+    {
+     "file": "beds-fire-lockup-stacked-black.png",
+     "variant": "lockup-stacked-black",
+     "style": "lockup-stacked",
+     "w": 1800,
+     "h": 1296,
+     "made": true
+    },
+    {
+     "file": "beds-fire-lockup-stacked-white.png",
+     "variant": "lockup-stacked-white",
+     "style": "lockup-stacked",
+     "w": 1800,
+     "h": 1296,
+     "made": true
+    },
+    {
+     "file": "beds-fire-lockup-stacked-black.svg",
+     "variant": "lockup-stacked-black",
+     "style": "lockup-stacked",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "beds-fire-lockup-stacked-white.svg",
+     "variant": "lockup-stacked-white",
+     "style": "lockup-stacked",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "beds-fire-lockup-stacked-on-dark.png",
+     "variant": "lockup-stacked-on-dark",
+     "style": "lockup-stacked",
+     "w": 1800,
+     "h": 1296,
+     "made": true
+    },
+    {
+     "file": "beds-fire-lockup-stacked-brand-colour.png",
+     "variant": "lockup-stacked-brand-colour",
+     "style": "lockup-stacked",
+     "w": 1800,
+     "h": 1296,
+     "made": true
+    }
+   ]
+  },
+  {
    "slug": "beds-hospitals",
    "name": "Bedfordshire Hospitals NHS Foundation Trust",
    "aliases": [
@@ -16185,10 +16775,13 @@
    "category_name": "Council, public & youth",
    "path": "community/beds-hospitals/",
    "styles": [
-    "logo"
+    "logo",
+    "nhs",
+    "nhs-white",
+    "nhs-black"
    ],
    "original_vector": true,
-   "quality": "redrawn",
+   "quality": "vector",
    "details": {},
    "signed_off": false,
    "files": [
@@ -16205,6 +16798,45 @@
      "style": "logo",
      "w": 1599,
      "h": 504
+    },
+    {
+     "file": "beds-hospitals-nhs.svg",
+     "variant": "nhs",
+     "style": "nhs",
+     "vector": true
+    },
+    {
+     "file": "beds-hospitals-nhs.png",
+     "variant": "nhs",
+     "style": "nhs",
+     "w": 1600,
+     "h": 644
+    },
+    {
+     "file": "beds-hospitals-nhs-white.svg",
+     "variant": "nhs-white",
+     "style": "nhs-white",
+     "vector": true
+    },
+    {
+     "file": "beds-hospitals-nhs-white.png",
+     "variant": "nhs-white",
+     "style": "nhs-white",
+     "w": 1600,
+     "h": 644
+    },
+    {
+     "file": "beds-hospitals-nhs-black.svg",
+     "variant": "nhs-black",
+     "style": "nhs-black",
+     "vector": true
+    },
+    {
+     "file": "beds-hospitals-nhs-black.png",
+     "variant": "nhs-black",
+     "style": "nhs-black",
+     "w": 1600,
+     "h": 644
     },
     {
      "file": "beds-hospitals-logo-black.png",
@@ -16273,23 +16905,23 @@
      "file": "beds-police-crest.png",
      "variant": "crest",
      "style": "crest",
-     "w": 466,
-     "h": 546
+     "w": 580,
+     "h": 674
     },
     {
      "file": "beds-police-crest-black.png",
      "variant": "crest-black",
      "style": "crest",
-     "w": 466,
-     "h": 546,
+     "w": 580,
+     "h": 674,
      "made": true
     },
     {
      "file": "beds-police-crest-white.png",
      "variant": "crest-white",
      "style": "crest",
-     "w": 466,
-     "h": 546,
+     "w": 580,
+     "h": 674,
      "made": true
     },
     {
@@ -16307,19 +16939,11 @@
      "made": true
     },
     {
-     "file": "beds-police-crest-on-dark.png",
-     "variant": "crest-on-dark",
-     "style": "crest",
-     "w": 466,
-     "h": 546,
-     "made": true
-    },
-    {
      "file": "beds-police-crest-brand-colour.png",
      "variant": "crest-brand-colour",
      "style": "crest",
-     "w": 466,
-     "h": 546,
+     "w": 580,
+     "h": 674,
      "made": true
     }
    ]
@@ -16504,6 +17128,187 @@
      "w": 315,
      "h": 459,
      "made": true
+    }
+   ]
+  },
+  {
+   "slug": "elft",
+   "name": "East London NHS Foundation Trust",
+   "aliases": [
+    "ELFT",
+    "NHS"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/elft/",
+   "styles": [
+    "logo",
+    "logo-white",
+    "logo-black",
+    "nhs",
+    "nhs-white",
+    "nhs-black"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "website": "https://www.elft.nhs.uk",
+    "note": "Runs mental health services in Bedfordshire and Luton"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "elft-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1800,
+     "h": 881
+    },
+    {
+     "file": "elft-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "w": 1800,
+     "h": 881
+    },
+    {
+     "file": "elft-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo-black",
+     "w": 1800,
+     "h": 881
+    },
+    {
+     "file": "elft-nhs.svg",
+     "variant": "nhs",
+     "style": "nhs",
+     "vector": true
+    },
+    {
+     "file": "elft-nhs.png",
+     "variant": "nhs",
+     "style": "nhs",
+     "w": 1600,
+     "h": 644
+    },
+    {
+     "file": "elft-nhs-white.svg",
+     "variant": "nhs-white",
+     "style": "nhs-white",
+     "vector": true
+    },
+    {
+     "file": "elft-nhs-white.png",
+     "variant": "nhs-white",
+     "style": "nhs-white",
+     "w": 1600,
+     "h": 644
+    },
+    {
+     "file": "elft-nhs-black.svg",
+     "variant": "nhs-black",
+     "style": "nhs-black",
+     "vector": true
+    },
+    {
+     "file": "elft-nhs-black.png",
+     "variant": "nhs-black",
+     "style": "nhs-black",
+     "w": 1600,
+     "h": 644
+    }
+   ]
+  },
+  {
+   "slug": "eechc",
+   "name": "East of England Community Health and Care NHS Trust",
+   "aliases": [
+    "EEC",
+    "EECHC",
+    "NHS",
+    "Cambridgeshire Community Services",
+    "CCS"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/eechc/",
+   "styles": [
+    "logo",
+    "logo-white",
+    "logo-black",
+    "nhs",
+    "nhs-white",
+    "nhs-black"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "address": "Units 7-8, Meadow Lane, St Ives, Cambridgeshire",
+    "postcode": "PE27 4LG",
+    "website": "https://eastofenglandcommunityhealthandcare.nhs.uk",
+    "note": "Formed 1 April 2026 from Cambridgeshire Community Services and Norfolk Community Health and Care; runs Luton community health services"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "eechc-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1800,
+     "h": 655
+    },
+    {
+     "file": "eechc-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "w": 1800,
+     "h": 655
+    },
+    {
+     "file": "eechc-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo-black",
+     "w": 1800,
+     "h": 655
+    },
+    {
+     "file": "eechc-nhs.svg",
+     "variant": "nhs",
+     "style": "nhs",
+     "vector": true
+    },
+    {
+     "file": "eechc-nhs.png",
+     "variant": "nhs",
+     "style": "nhs",
+     "w": 1600,
+     "h": 644
+    },
+    {
+     "file": "eechc-nhs-white.svg",
+     "variant": "nhs-white",
+     "style": "nhs-white",
+     "vector": true
+    },
+    {
+     "file": "eechc-nhs-white.png",
+     "variant": "nhs-white",
+     "style": "nhs-white",
+     "w": 1600,
+     "h": 644
+    },
+    {
+     "file": "eechc-nhs-black.svg",
+     "variant": "nhs-black",
+     "style": "nhs-black",
+     "vector": true
+    },
+    {
+     "file": "eechc-nhs-black.png",
+     "variant": "nhs-black",
+     "style": "nhs-black",
+     "w": 1600,
+     "h": 644
     }
    ]
   },
@@ -17614,6 +18419,139 @@
      "w": 1592,
      "h": 791,
      "made": true
+    }
+   ]
+  },
+  {
+   "slug": "lfpgs",
+   "name": "Luton Friends of Parks and Green Spaces",
+   "aliases": [
+    "LFPGS",
+    "Friends of Parks"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/lfpgs/",
+   "styles": [
+    "logo",
+    "logo-white",
+    "logo-black",
+    "lockup",
+    "lockup-white",
+    "lockup-black",
+    "name",
+    "name-white",
+    "name-black",
+    "icon",
+    "icon-white",
+    "icon-black"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {},
+   "signed_off": false,
+   "files": [
+    {
+     "file": "lfpgs-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1800,
+     "h": 662
+    },
+    {
+     "file": "lfpgs-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "w": 1800,
+     "h": 662
+    },
+    {
+     "file": "lfpgs-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo-black",
+     "w": 1800,
+     "h": 662
+    },
+    {
+     "file": "lfpgs-lockup.png",
+     "variant": "lockup",
+     "style": "lockup",
+     "w": 1800,
+     "h": 627
+    },
+    {
+     "file": "lfpgs-lockup-white.png",
+     "variant": "lockup-white",
+     "style": "lockup-white",
+     "w": 1800,
+     "h": 627
+    },
+    {
+     "file": "lfpgs-lockup-black.png",
+     "variant": "lockup-black",
+     "style": "lockup-black",
+     "w": 1800,
+     "h": 627
+    },
+    {
+     "file": "lfpgs-name.png",
+     "variant": "name",
+     "style": "name",
+     "w": 1800,
+     "h": 497
+    },
+    {
+     "file": "lfpgs-name-white.png",
+     "variant": "name-white",
+     "style": "name-white",
+     "w": 1800,
+     "h": 497
+    },
+    {
+     "file": "lfpgs-name-black.png",
+     "variant": "name-black",
+     "style": "name-black",
+     "w": 1800,
+     "h": 497
+    },
+    {
+     "file": "lfpgs-icon.svg",
+     "variant": "icon",
+     "style": "icon",
+     "vector": true
+    },
+    {
+     "file": "lfpgs-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 1599,
+     "h": 1596
+    },
+    {
+     "file": "lfpgs-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon-white",
+     "vector": true
+    },
+    {
+     "file": "lfpgs-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon-white",
+     "w": 1599,
+     "h": 1596
+    },
+    {
+     "file": "lfpgs-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon-black",
+     "vector": true
+    },
+    {
+     "file": "lfpgs-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon-black",
+     "w": 1599,
+     "h": 1596
     }
    ]
   },
@@ -19227,6 +20165,76 @@
      "style": "wide",
      "w": 1102,
      "h": 360,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "ukcca",
+   "name": "UK Centre for Carnival Arts",
+   "aliases": [
+    "UKCCA",
+    "Luton Carnival",
+    "Carnival Arts Centre"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/ukcca/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {
+    "address": "3 St Mary's Road, Luton",
+    "postcode": "LU1 3JA",
+    "website": "https://www.carnivalarts.org.uk"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "ukcca-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1101,
+     "h": 430
+    },
+    {
+     "file": "ukcca-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1101,
+     "h": 430,
+     "made": true
+    },
+    {
+     "file": "ukcca-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1101,
+     "h": 430,
+     "made": true
+    },
+    {
+     "file": "ukcca-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "ukcca-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "ukcca-logo-brand-colour.png",
+     "variant": "logo-brand-colour",
+     "style": "logo",
+     "w": 1101,
+     "h": 430,
      "made": true
     }
    ]

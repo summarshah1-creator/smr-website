@@ -210,7 +210,7 @@ M['mehria']=('schools','Mehria Primary School',['Mehria'],[('new/mehria.png','lo
 M['al-falah']=('mosques','Al Falah Community Centre',['Al Falah'],[('new/al-falah.png','logo')])
 M['ukim-luton']=('mosques','Madina Masjid (UKIM Luton)',['UKIM','UK Islamic Mission','Madina Masjid Oak Road'],[('new/ukim.png','icon')])
 M['beds-chamber']=('community','Bedfordshire Chamber of Commerce',['Beds Chamber'],[('new/beds-chamber.png','logo'),('new/beds-chamber-small.png','logo-alt')])
-M['beds-police']=('community','Bedfordshire Police',[],[('new/beds-police.png','crest')])
+M['beds-police']=('community','Bedfordshire Police',[],[('new/beds-police-crii.png','crest')])
 M['beds-pcc']=('community','Bedfordshire Police & Crime Commissioner',['PCC'],[('new/beds-pcc.png','logo')])
 M['luton-council'][3].append(('new/luton-wordmark.png','wordmark'))
 M['lscm']=('mosques','Luton Sunni Council of Mosques',['LSCM'],[('new/lscm.png','logo'),('new/lscm-lockup.png','lockup')])
@@ -298,6 +298,18 @@ M['aegis'][3][:]=[('hand/aegis-logo.svg','logo'),('hand/aegis-logo-white.svg','l
 M['amanah']=('charities','Amanah Project',[],[('hand/amanah-logo.png','logo'),('hand/amanah-logo-white.png','logo-white'),('hand/amanah-logo-black.png','logo-black'),('hand/amanah-mark.svg','icon')])
 M['luton-mela']=('campaigns','Luton Mela',[],[('hand/mela.png','logo')])
 M['british-red-cross']=('charities','British Red Cross',['Red Cross'],[('hand/british-red-cross.svg','logo'),('hand/british-red-cross-white.svg','logo-white'),('hand/british-red-cross-black.svg','logo-black')])
+# ---------- 15 Nov: NHS, DRC, Samaritans, St John, Beds Fire ----------
+M['eechc']=('community','East of England Community Health and Care NHS Trust',['EEC','EECHC','NHS','Cambridgeshire Community Services','CCS'],[('hand/eechc.png','logo'),('hand/eechc-white.png','logo-white'),('hand/eechc-black.png','logo-black'),('hand/nhs.svg','nhs'),('hand/nhs-white.svg','nhs-white'),('hand/nhs-black.svg','nhs-black')])
+M['elft']=('community','East London NHS Foundation Trust',['ELFT','NHS'],[('hand/elft.png','logo'),('hand/elft-white.png','logo-white'),('hand/elft-black.png','logo-black'),('hand/nhs.svg','nhs'),('hand/nhs-white.svg','nhs-white'),('hand/nhs-black.svg','nhs-black')])
+M['beds-hospitals'][3].extend([('hand/nhs.svg','nhs'),('hand/nhs-white.svg','nhs-white'),('hand/nhs-black.svg','nhs-black')])
+M['disability-resource-centre']=('charities','The Disability Resource Centre',['DRC','DRC Beds','Disability Resource Centre'],[('hand/drc.png','logo'),('hand/drc-white.png','logo-white'),('hand/drc-black.png','logo-black'),('hand/drc-icon.svg','icon'),('hand/drc-icon-white.svg','icon-white'),('hand/drc-icon-black.svg','icon-black')])
+M['samaritans-luton']=('charities','Luton, South Beds & Harpenden Samaritans',['Samaritans','Luton Samaritans','Samaritans of Luton, South Beds and Harpenden'],[('hand/samaritans.svg','logo'),('hand/samaritans-white.svg','logo-white'),('hand/samaritans-black.svg','logo-black')])
+M['st-john-ambulance']=('charities','St John Ambulance',['St John','SJA'],[('hand/st-john.svg','logo'),('hand/st-john-white.svg','logo-white'),('hand/st-john-tile.svg','logo-tile-full')])
+M['beds-fire']=('community','Bedfordshire Fire & Rescue Service',['Beds Fire','BFRS','Bedfordshire Fire and Rescue'],[('new/beds-fire-crest.jpg','crest')])
+M['ukcca']=('community','UK Centre for Carnival Arts',['UKCCA','Luton Carnival','Carnival Arts Centre'],[('new/ukcca.webp','logo')])
+M['stepping-stones']=('charities','Stepping Stones',[],[('hand/stepping-stones.png','logo'),('hand/stepping-stones-white.png','logo-white'),('hand/stepping-stones-black.png','logo-black'),('hand/stepping-stones-foot.png','icon'),('hand/stepping-stones-foot-white.png','icon-white'),('hand/stepping-stones-foot-black.png','icon-black')])
+M['fobe']=('charities','Friends of Bright Eyes',['FOBE','fobe','Bright Eyes'],[('new/fobe.webp','logo')])
+M['lfpgs']=('community','Luton Friends of Parks and Green Spaces',['LFPGS','Friends of Parks'],[('hand/lfpgs.png','logo'),('hand/lfpgs-white.png','logo-white'),('hand/lfpgs-black.png','logo-black'),('hand/lfpgs-full.png','lockup'),('hand/lfpgs-full-white.png','lockup-white'),('hand/lfpgs-full-black.png','lockup-black'),('hand/lfpgs-name.png','name'),('hand/lfpgs-name-white.png','name-white'),('hand/lfpgs-name-black.png','name-black'),('hand/lfpgs-tree.svg','icon'),('hand/lfpgs-tree-white.svg','icon-white'),('hand/lfpgs-tree-black.svg','icon-black')])
 # ---------- name lockups (icon + full name), made by make_lockups.py ----------
 for _s in json.load(open('lockups.json')):
     if _s in M: M[_s][3].extend([('lockups/'+_s+'-h.png','lockup'),('lockups/'+_s+'-v.png','lockup-stacked')])
