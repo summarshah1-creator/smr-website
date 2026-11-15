@@ -1,6 +1,6 @@
 # SMR logo list
 
-292 organisations. Full details in logos.json and LIST.csv.
+297 organisations. Full details in logos.json and LIST.csv.
 
 ## businesses (30)
 - AA Carpets and Furniture
@@ -132,7 +132,7 @@
 - Wildlife Trust BCN
 - Woodland Trust
 
-## community (55)
+## community (59)
 - ABCD Luton
 - Active Luton
 - Bedfordshire Chamber of Commerce
@@ -148,6 +148,7 @@
 - Falkes (Luton) Scout District
 - Flying Start
 - Girlguiding (Bedfordshire · Luton South)
+- Golden Arrow Archery
 - Hangout Luton
 - Higher Ground
 - Jobcentre Plus
@@ -164,6 +165,7 @@
 - Luton Irish Forum
 - Luton Libraries
 - Luton Literature
+- Luton RFC
 - Luton Rising
 - Luton School of Judo
 - Luton Town Football Club
@@ -182,10 +184,12 @@
 - Stockwood Park RFC
 - Storm Gym
 - SUEZ
+- Sunnah Archery Club
 - The Culture Trust Luton
 - Tokko Youth Hub
 - UK Centre for Carnival Arts
 - Ultimate Athlete MMA
+- Wicketz (Lord's Taverners)
 - Your Wellbeing Bedfordshire
 - Youthscape
 
@@ -275,7 +279,7 @@
 ## smr (1)
 - SMR Digital
 
-## venues (35)
+## venues (36)
 - Agent Brains
 - Bennett's Splash Park
 - Cineworld Luton
@@ -289,6 +293,7 @@
 - Happy Shark Comedy Club
 - Hat Factory Arts Centre
 - Houghton Hall Park
+- I'm Puzzled
 - Laser SWAT
 - Luton Hoo Estate
 - LUV Entertainment

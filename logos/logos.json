@@ -18370,6 +18370,51 @@
    ]
   },
   {
+   "slug": "golden-arrow-archery",
+   "name": "Golden Arrow Archery",
+   "aliases": [
+    "Golden Arrow Archery CIC",
+    "Golden Arrow"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/golden-arrow-archery/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": false,
+   "quality": "ok",
+   "details": {
+    "website": "https://g-arrow.co.uk"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "golden-arrow-archery-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 796,
+     "h": 800
+    },
+    {
+     "file": "golden-arrow-archery-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 796,
+     "h": 800,
+     "made": true
+    },
+    {
+     "file": "golden-arrow-archery-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 796,
+     "h": 800,
+     "made": true
+    }
+   ]
+  },
+  {
    "slug": "hangout-luton",
    "name": "Hangout Luton",
    "aliases": [],
@@ -19866,6 +19911,53 @@
    ]
   },
   {
+   "slug": "luton-rfc",
+   "name": "Luton RFC",
+   "aliases": [
+    "Luton Rugby",
+    "Luton Rugby Club"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/luton-rfc/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": false,
+   "quality": "ok",
+   "details": {
+    "address": "Newlands Road",
+    "postcode": "LU1 4BQ",
+    "website": "https://lutonrfc.rfu.club"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "luton-rfc-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 800,
+     "h": 605
+    },
+    {
+     "file": "luton-rfc-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 800,
+     "h": 605,
+     "made": true
+    },
+    {
+     "file": "luton-rfc-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 800,
+     "h": 605,
+     "made": true
+    }
+   ]
+  },
+  {
    "slug": "luton-rising",
    "name": "Luton Rising",
    "aliases": [],
@@ -21326,6 +21418,52 @@
    ]
   },
   {
+   "slug": "sunnah-archery-club",
+   "name": "Sunnah Archery Club",
+   "aliases": [
+    "Sunnah Archery"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/sunnah-archery-club/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": false,
+   "quality": "ok",
+   "details": {
+    "address": "Shire House Community Centre, 400b Dallow Road",
+    "postcode": "LU1 1UR",
+    "website": "https://sunnaharcheryclub.com"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "sunnah-archery-club-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 780,
+     "h": 800
+    },
+    {
+     "file": "sunnah-archery-club-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 780,
+     "h": 800,
+     "made": true
+    },
+    {
+     "file": "sunnah-archery-club-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 780,
+     "h": 800,
+     "made": true
+    }
+   ]
+  },
+  {
    "slug": "culture-trust",
    "name": "The Culture Trust Luton",
    "aliases": [
@@ -21763,6 +21901,49 @@
      "style": "logo",
      "w": 900,
      "h": 900,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "luton-wicketz",
+   "name": "Wicketz (Lord's Taverners)",
+   "aliases": [
+    "Luton Wicketz",
+    "Wicketz cricket"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/luton-wicketz/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {},
+   "signed_off": false,
+   "files": [
+    {
+     "file": "luton-wicketz-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 900,
+     "h": 254
+    },
+    {
+     "file": "luton-wicketz-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 900,
+     "h": 254,
+     "made": true
+    },
+    {
+     "file": "luton-wicketz-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 900,
+     "h": 254,
      "made": true
     }
    ]
@@ -23931,6 +24112,51 @@
      "style": "logo",
      "w": 1584,
      "h": 1577,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "im-puzzled",
+   "name": "I'm Puzzled",
+   "aliases": [
+    "Im Puzzled",
+    "I am Puzzled"
+   ],
+   "category": "venues",
+   "category_name": "Venues & days out",
+   "path": "venues/im-puzzled/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {
+    "website": "https://www.im-puzzled.com"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "im-puzzled-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 900,
+     "h": 421
+    },
+    {
+     "file": "im-puzzled-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 900,
+     "h": 421,
+     "made": true
+    },
+    {
+     "file": "im-puzzled-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 900,
+     "h": 421,
      "made": true
     }
    ]
