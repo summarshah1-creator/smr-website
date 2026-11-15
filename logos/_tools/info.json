@@ -1144,5 +1144,16 @@
   "address": "Tring Road, Dunstable",
   "postcode": "LU6 2JP",
   "website": "https://www.londonglidingclub.co.uk"
+ },
+ "spa-gymnastics": {
+  "website": "https://spagymnastics.classforkids.io"
+ },
+ "willen-lake": {
+  "website": "https://www.willenlake.org.uk"
+ },
+ "tinas-school-of-dance": {},
+ "the-xc": {
+  "address": "Hemel Hempstead",
+  "website": "https://thexc.co.uk"
  }
 }

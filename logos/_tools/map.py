@@ -379,3 +379,7 @@ M['bletchley-park']=('venues','Bletchley Park',['Bletchley Park codebreakers'],[
 M['st-albans-museums']=('venues','St Albans Museums',['Verulamium Museum','St Albans Museum + Gallery'],[('hand/st-albans-museums-logo.svg','logo')])
 M['leighton-buzzard-railway']=('venues','Leighton Buzzard Narrow Gauge Railway',['Leighton Buzzard Railway','LBNGR'],[('hand/leighton-buzzard-railway-logo.svg','logo')])
 M['london-gliding-club']=('community','London Gliding Club',['LGC','London Gliding Club Dunstable'],[('hand/london-gliding-club-logo.svg','logo')])
+M['spa-gymnastics']=('community','SPA Gymnastics Academy',['SPA Gymnastics','Spa Gymnastics Academy'],[('hand/spa-gymnastics-logo.svg','logo')])
+M['willen-lake']=('venues','Willen Lake',['Willen Lake Milton Keynes','The Parks Trust Willen Lake'],[('hand/willen-lake-logo.svg','logo')])
+M['tinas-school-of-dance']=('community',"Tina's School of Dance",['TSD',"Tina's Dance"],[('hand/tinas-school-of-dance-logo.svg','logo'),('hand/tinas-school-of-dance-tile.svg','logo-tile-full')])
+M['the-xc']=('venues','The XC',['XC Hemel','The XC Hemel Hempstead'],[('hand/the-xc-logo.svg','logo')])

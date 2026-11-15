@@ -23690,6 +23690,148 @@
    ]
   },
   {
+   "slug": "spa-gymnastics",
+   "name": "SPA Gymnastics Academy",
+   "aliases": [
+    "SPA Gymnastics",
+    "Spa Gymnastics Academy"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/spa-gymnastics/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "website": "https://spagymnastics.classforkids.io"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "spa-gymnastics-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "spa-gymnastics-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1593,
+     "h": 1571
+    },
+    {
+     "file": "spa-gymnastics-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1593,
+     "h": 1571,
+     "made": true
+    },
+    {
+     "file": "spa-gymnastics-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1593,
+     "h": 1571,
+     "made": true
+    },
+    {
+     "file": "spa-gymnastics-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "spa-gymnastics-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "tinas-school-of-dance",
+   "name": "Tina's School of Dance",
+   "aliases": [
+    "TSD",
+    "Tina's Dance"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/tinas-school-of-dance/",
+   "styles": [
+    "logo",
+    "logo-tile-full"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {},
+   "signed_off": false,
+   "files": [
+    {
+     "file": "tinas-school-of-dance-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "tinas-school-of-dance-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1597,
+     "h": 682
+    },
+    {
+     "file": "tinas-school-of-dance-logo-tile-full.svg",
+     "variant": "logo-tile-full",
+     "style": "logo-tile-full",
+     "vector": true
+    },
+    {
+     "file": "tinas-school-of-dance-logo-tile-full.png",
+     "variant": "logo-tile-full",
+     "style": "logo-tile-full",
+     "w": 1600,
+     "h": 843
+    },
+    {
+     "file": "tinas-school-of-dance-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1597,
+     "h": 682,
+     "made": true
+    },
+    {
+     "file": "tinas-school-of-dance-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1597,
+     "h": 682,
+     "made": true
+    },
+    {
+     "file": "tinas-school-of-dance-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "tinas-school-of-dance-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
    "slug": "one-eid",
    "name": "1 Eid",
    "aliases": [
@@ -28200,6 +28342,137 @@
     },
     {
      "file": "leighton-buzzard-railway-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "willen-lake",
+   "name": "Willen Lake",
+   "aliases": [
+    "Willen Lake Milton Keynes",
+    "The Parks Trust Willen Lake"
+   ],
+   "category": "venues",
+   "category_name": "Venues & days out",
+   "path": "venues/willen-lake/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "website": "https://www.willenlake.org.uk"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "willen-lake-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "willen-lake-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1589,
+     "h": 533
+    },
+    {
+     "file": "willen-lake-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1589,
+     "h": 533,
+     "made": true
+    },
+    {
+     "file": "willen-lake-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1589,
+     "h": 533,
+     "made": true
+    },
+    {
+     "file": "willen-lake-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "willen-lake-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "the-xc",
+   "name": "The XC",
+   "aliases": [
+    "XC Hemel",
+    "The XC Hemel Hempstead"
+   ],
+   "category": "venues",
+   "category_name": "Venues & days out",
+   "path": "venues/the-xc/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "address": "Hemel Hempstead",
+    "website": "https://thexc.co.uk"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "the-xc-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "the-xc-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1550,
+     "h": 652
+    },
+    {
+     "file": "the-xc-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1550,
+     "h": 652,
+     "made": true
+    },
+    {
+     "file": "the-xc-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1550,
+     "h": 652,
+     "made": true
+    },
+    {
+     "file": "the-xc-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "the-xc-logo-white.svg",
      "variant": "logo-white",
      "style": "logo",
      "vector": true,

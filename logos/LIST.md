@@ -1,6 +1,6 @@
 # SMR logo list
 
-324 organisations. Full details in logos.json and LIST.csv.
+328 organisations. Full details in logos.json and LIST.csv.
 
 ## businesses (38)
 - AA Carpets and Furniture
@@ -140,7 +140,7 @@
 - Wildlife Trust BCN
 - Woodland Trust
 
-## community (72)
+## community (74)
 - ABCD Luton
 - Active Luton
 - Anne Gale School of Dance
@@ -198,6 +198,7 @@
 - RAF Air Cadets
 - Rosebuds Luton Sisters
 - Sea Cadets (Luton Unit 226, TS Keyes)
+- SPA Gymnastics Academy
 - St Joseph's RC Scouts, Icknield (Luton)
 - St Mary's Church Luton
 - St Marys Youth
@@ -207,6 +208,7 @@
 - Sunnah Archery Club
 - Sunshine Riding School
 - The Culture Trust Luton
+- Tina's School of Dance
 - Tokko Youth Hub
 - UK Centre for Carnival Arts
 - Ultimate Athlete MMA
@@ -300,7 +302,7 @@
 ## smr (1)
 - SMR Digital
 
-## venues (42)
+## venues (44)
 - Agent Brains
 - Bennett's Splash Park
 - Bletchley Park
@@ -335,11 +337,13 @@
 - Tenpin Luton
 - The Giggles (Active Luton)
 - The Snow Centre
+- The XC
 - Upfront Comedy
 - Venue 360
 - Voyager Flight Simulation
 - Wardown Adventure Golf
 - Wigmore Valley Park
+- Willen Lake
 - Woburn Safari Park
 - Woodside Farm
 - ZSL Whipsnade Zoo
