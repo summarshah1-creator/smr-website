@@ -375,3 +375,7 @@ M['fairlands-valley']=('venues','Fairlands Valley Outdoor Activities',['Fairland
 M['snow-centre']=('venues','The Snow Centre',['Snow Centre Hemel','The Snow Centre Hemel Hempstead'],[('hand/snow-centre-logo.svg','logo'),('hand/snow-centre-icon.svg','icon')])
 M['knebworth']=('venues','Knebworth House',['Knebworth','Knebworth Park'],[('hand/knebworth-logo.svg','logo'),('hand/knebworth-icon.svg','icon')])
 M['mystics']=('community','Mystics Trampoline & Gymnastics Club',['Mystics','Mystics St Albans'],[('hand/mystics-logo.svg','logo')])
+M['bletchley-park']=('venues','Bletchley Park',['Bletchley Park codebreakers'],[('hand/bletchley-park-logo.svg','logo'),('hand/bletchley-park-tile.svg','logo-tile-full')])
+M['st-albans-museums']=('venues','St Albans Museums',['Verulamium Museum','St Albans Museum + Gallery'],[('hand/st-albans-museums-logo.svg','logo')])
+M['leighton-buzzard-railway']=('venues','Leighton Buzzard Narrow Gauge Railway',['Leighton Buzzard Railway','LBNGR'],[('hand/leighton-buzzard-railway-logo.svg','logo')])
+M['london-gliding-club']=('community','London Gliding Club',['LGC','London Gliding Club Dunstable'],[('hand/london-gliding-club-logo.svg','logo')])

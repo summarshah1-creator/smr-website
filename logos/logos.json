@@ -23623,6 +23623,73 @@
    ]
   },
   {
+   "slug": "london-gliding-club",
+   "name": "London Gliding Club",
+   "aliases": [
+    "LGC",
+    "London Gliding Club Dunstable"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/london-gliding-club/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "address": "Tring Road, Dunstable",
+    "postcode": "LU6 2JP",
+    "website": "https://www.londonglidingclub.co.uk"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "london-gliding-club-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "london-gliding-club-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1595,
+     "h": 1494
+    },
+    {
+     "file": "london-gliding-club-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1595,
+     "h": 1494,
+     "made": true
+    },
+    {
+     "file": "london-gliding-club-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1595,
+     "h": 1494,
+     "made": true
+    },
+    {
+     "file": "london-gliding-club-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "london-gliding-club-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
    "slug": "one-eid",
    "name": "1 Eid",
    "aliases": [
@@ -27924,6 +27991,217 @@
      "file": "knebworth-icon-white.svg",
      "variant": "icon-white",
      "style": "icon",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "bletchley-park",
+   "name": "Bletchley Park",
+   "aliases": [
+    "Bletchley Park codebreakers"
+   ],
+   "category": "venues",
+   "category_name": "Venues & days out",
+   "path": "venues/bletchley-park/",
+   "styles": [
+    "logo",
+    "logo-tile-full"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "address": "Sherwood Drive, Bletchley",
+    "postcode": "MK3 6EB",
+    "website": "https://bletchleypark.org.uk"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "bletchley-park-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "bletchley-park-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1593,
+     "h": 139
+    },
+    {
+     "file": "bletchley-park-logo-tile-full.svg",
+     "variant": "logo-tile-full",
+     "style": "logo-tile-full",
+     "vector": true
+    },
+    {
+     "file": "bletchley-park-logo-tile-full.png",
+     "variant": "logo-tile-full",
+     "style": "logo-tile-full",
+     "w": 1600,
+     "h": 729
+    },
+    {
+     "file": "bletchley-park-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1593,
+     "h": 139,
+     "made": true
+    },
+    {
+     "file": "bletchley-park-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1593,
+     "h": 139,
+     "made": true
+    },
+    {
+     "file": "bletchley-park-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "bletchley-park-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "st-albans-museums",
+   "name": "St Albans Museums",
+   "aliases": [
+    "Verulamium Museum",
+    "St Albans Museum + Gallery"
+   ],
+   "category": "venues",
+   "category_name": "Venues & days out",
+   "path": "venues/st-albans-museums/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "website": "https://www.stalbansmuseums.org.uk"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "st-albans-museums-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "st-albans-museums-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1584,
+     "h": 1570
+    },
+    {
+     "file": "st-albans-museums-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1584,
+     "h": 1570,
+     "made": true
+    },
+    {
+     "file": "st-albans-museums-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1584,
+     "h": 1570,
+     "made": true
+    },
+    {
+     "file": "st-albans-museums-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "st-albans-museums-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "leighton-buzzard-railway",
+   "name": "Leighton Buzzard Narrow Gauge Railway",
+   "aliases": [
+    "Leighton Buzzard Railway",
+    "LBNGR"
+   ],
+   "category": "venues",
+   "category_name": "Venues & days out",
+   "path": "venues/leighton-buzzard-railway/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "address": "Pages Park, Billington Road, Leighton Buzzard",
+    "website": "https://www.buzzrail.co.uk"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "leighton-buzzard-railway-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "leighton-buzzard-railway-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1575,
+     "h": 1740
+    },
+    {
+     "file": "leighton-buzzard-railway-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1575,
+     "h": 1740,
+     "made": true
+    },
+    {
+     "file": "leighton-buzzard-railway-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1575,
+     "h": 1740,
+     "made": true
+    },
+    {
+     "file": "leighton-buzzard-railway-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "leighton-buzzard-railway-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
      "vector": true,
      "made": true
     }

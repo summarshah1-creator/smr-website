@@ -1,6 +1,6 @@
 # SMR logo list
 
-320 organisations. Full details in logos.json and LIST.csv.
+324 organisations. Full details in logos.json and LIST.csv.
 
 ## businesses (38)
 - AA Carpets and Furniture
@@ -140,7 +140,7 @@
 - Wildlife Trust BCN
 - Woodland Trust
 
-## community (71)
+## community (72)
 - ABCD Luton
 - Active Luton
 - Anne Gale School of Dance
@@ -166,6 +166,7 @@
 - Hockwell Ring Amateur Boxing Club
 - Jobcentre Plus
 - Legends MMA & Fitness Centre
+- London Gliding Club
 - Luton & Dunstable University Hospital
 - Luton Allstars Football Club (MTAC)
 - Luton BID (Step Forward Luton)
@@ -299,9 +300,10 @@
 ## smr (1)
 - SMR Digital
 
-## venues (39)
+## venues (42)
 - Agent Brains
 - Bennett's Splash Park
+- Bletchley Park
 - Cineworld Luton
 - Delta Force Paintball
 - Dunstable Downs
@@ -317,6 +319,7 @@
 - I'm Puzzled
 - Knebworth House
 - Laser SWAT
+- Leighton Buzzard Narrow Gauge Railway
 - Luton Hoo Estate
 - LUV Entertainment
 - Orbital Trampoline Park
@@ -325,6 +328,7 @@
 - parkrun
 - Rayners Deja Vu Dance Studio
 - Snakes & Ladders
+- St Albans Museums
 - Stockwood Discovery Centre (The Culture Trust)
 - Stockwood Park Golf Centre
 - TeamSport Dunstable
