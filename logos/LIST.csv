@@ -129,6 +129,7 @@ beds-fire,Bedfordshire Fire & Rescue Service,community,Beds Fire; BFRS; Bedfords
 beds-hospitals,Bedfordshire Hospitals NHS Foundation Trust,community,Bedfordshire Hospitals; NHS,"logo, nhs, nhs-white, nhs-black",,,,logos/community/beds-hospitals/
 beds-police,Bedfordshire Police,community,,crest,,,,logos/community/beds-police/
 beds-pcc,Bedfordshire Police & Crime Commissioner,community,PCC,logo,,,,logos/community/beds-pcc/
+care-homes,Care homes (general),community,Care home; Nursing home; Residential care,"logo, logo-white, icon",,,,logos/community/care-homes/
 dunstable-tc,Dunstable Town Council,community,,"logo, icon",Dunstable town centre,LU5 4RB,https://www.dunstable.gov.uk,logos/community/dunstable-tc/
 elft,East London NHS Foundation Trust,community,ELFT; NHS,"logo, logo-white, logo-black, nhs, nhs-white, nhs-black",,,https://www.elft.nhs.uk,logos/community/elft/
 eechc,East of England Community Health and Care NHS Trust,community,EEC; EECHC; NHS; Cambridgeshire Community Services; CCS,"logo, logo-white, logo-black, nhs, nhs-white, nhs-black","Units 7-8, Meadow Lane, St Ives, Cambridgeshire",PE27 4LG,https://eastofenglandcommunityhealthandcare.nhs.uk,logos/community/eechc/
@@ -142,8 +143,9 @@ jobcentre-plus,Jobcentre Plus,community,DWP,"logo-tile, logo",,,,logos/community
 l-and-d-hospital,Luton & Dunstable University Hospital,community,L&D; L and D Hospital,"logo, icon",,,,logos/community/l-and-d-hospital/
 luton-allstars,Luton Allstars Football Club (MTAC),community,Allstars,logo,,,https://www.lutonallstars.com,logos/community/luton-allstars/
 luton-bid,Luton BID (Step Forward Luton),community,,"logo, icon",,,https://place.stepforwardluton.co.uk,logos/community/luton-bid/
-luton-council,Luton Council,community,LBC; Luton Borough Council,"logo, wordmark","Ashcroft Park, Stopsley",LU2 9AY,https://www.luton.gov.uk,logos/community/luton-council/
+luton-council,Luton Council,community,LBC; Luton Borough Council,"logo, wordmark, logo-green","Ashcroft Park, Stopsley",LU2 9AY,https://www.luton.gov.uk,logos/community/luton-council/
 luton-council-of-faiths,Luton Council of Faiths,community,LCF,"logo-tile, logo-white, logo",,,,logos/community/luton-council-of-faiths/
+lcc,Luton Creative Community CIC,community,LCC; Luton Creative Community; Luton Library Theatre,"logo, logo-white, logo-black, logo-on-dark",,,https://www.librarytheatre.net,logos/community/lcc/
 luton-energise,Luton Energise Holiday Camps (HAF),community,Energise,logo,,,https://www.activeluton.co.uk/activities/energise-luton-holiday-camps,logos/community/luton-energise/
 lfpgs,Luton Friends of Parks and Green Spaces,community,LFPGS; Friends of Parks,"logo, logo-white, logo-black, lockup, lockup-white, lockup-black, name, name-white, name-black, icon, icon-white, icon-black",,,,logos/community/lfpgs/
 luton-irish-forum,Luton Irish Forum,community,,"logo, icon",,,,logos/community/luton-irish-forum/

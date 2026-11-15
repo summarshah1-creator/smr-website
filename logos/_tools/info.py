@@ -126,3 +126,6 @@ I['foodcycle']={'website':'https://foodcycle.org.uk'}
 json.dump(I,open('info.json','w'),indent=1)
 I['mencap']={'website':'https://www.mencap.org.uk'}
 json.dump(I,open('info.json','w'),indent=1)
+I['lcc']={'website':'https://www.librarytheatre.net','note':'Runs Luton Library Theatre. Remade from scratch from the original hand-drawn logo.'}
+I['care-homes']={'note':'General care homes logo drawn by SMR Digital (not an organisation). Used for the NGS "Visit residents at a care home" listing.'}
+json.dump(I,open('info.json','w'),indent=1)

@@ -1,6 +1,6 @@
 # SMR logo list
 
-278 organisations. Full details in logos.json and LIST.csv.
+280 organisations. Full details in logos.json and LIST.csv.
 
 ## businesses (30)
 - AA Carpets and Furniture
@@ -131,7 +131,7 @@
 - Wildlife Trust BCN
 - Woodland Trust
 
-## community (45)
+## community (47)
 - ABCD Luton
 - Active Luton
 - Bedfordshire Chamber of Commerce
@@ -139,6 +139,7 @@
 - Bedfordshire Hospitals NHS Foundation Trust
 - Bedfordshire Police
 - Bedfordshire Police & Crime Commissioner
+- Care homes (general)
 - Dunstable Town Council
 - East London NHS Foundation Trust
 - East of England Community Health and Care NHS Trust
@@ -154,6 +155,7 @@
 - Luton BID (Step Forward Luton)
 - Luton Council
 - Luton Council of Faiths
+- Luton Creative Community CIC
 - Luton Energise Holiday Camps (HAF)
 - Luton Friends of Parks and Green Spaces
 - Luton Irish Forum

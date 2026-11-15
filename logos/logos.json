@@ -16304,14 +16304,14 @@
      "variant": "icon",
      "style": "icon",
      "vector": true,
-     "redrawn": true
+     "rebuilt_from_logo": true
     },
     {
      "file": "raise-up-icon.png",
      "variant": "icon",
      "style": "icon",
-     "w": 1588,
-     "h": 1588
+     "w": 1600,
+     "h": 1600
     },
     {
      "file": "raise-up-logo-black.png",
@@ -16355,16 +16355,24 @@
      "file": "raise-up-icon-black.png",
      "variant": "icon-black",
      "style": "icon",
-     "w": 1588,
-     "h": 1588,
+     "w": 1600,
+     "h": 1600,
      "made": true
     },
     {
      "file": "raise-up-icon-white.png",
      "variant": "icon-white",
      "style": "icon",
-     "w": 1588,
-     "h": 1588,
+     "w": 1600,
+     "h": 1600,
+     "made": true
+    },
+    {
+     "file": "raise-up-icon-on-dark.png",
+     "variant": "icon-on-dark",
+     "style": "icon",
+     "w": 1600,
+     "h": 1600,
      "made": true
     },
     {
@@ -16385,8 +16393,8 @@
      "file": "raise-up-icon-brand-colour.png",
      "variant": "icon-brand-colour",
      "style": "icon",
-     "w": 1588,
-     "h": 1588,
+     "w": 1600,
+     "h": 1600,
      "made": true
     }
    ]
@@ -17599,6 +17607,70 @@
      "w": 758,
      "h": 412,
      "made": true
+    }
+   ]
+  },
+  {
+   "slug": "care-homes",
+   "name": "Care homes (general)",
+   "aliases": [
+    "Care home",
+    "Nursing home",
+    "Residential care"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/care-homes/",
+   "styles": [
+    "logo",
+    "logo-white",
+    "icon"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "note": "General care homes logo drawn by SMR Digital (not an organisation). Used for the NGS \"Visit residents at a care home\" listing."
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "care-homes-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "care-homes-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1600,
+     "h": 691
+    },
+    {
+     "file": "care-homes-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "care-homes-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1600,
+     "h": 691
+    },
+    {
+     "file": "care-homes-icon.svg",
+     "variant": "icon",
+     "style": "icon",
+     "vector": true
+    },
+    {
+     "file": "care-homes-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 1600,
+     "h": 1477
     }
    ]
   },
@@ -18846,7 +18918,8 @@
    "path": "community/luton-council/",
    "styles": [
     "logo",
-    "wordmark"
+    "wordmark",
+    "logo-green"
    ],
    "original_vector": true,
    "quality": "vector",
@@ -18959,6 +19032,21 @@
      "w": 1584,
      "h": 597,
      "made": true
+    },
+    {
+     "file": "luton-council-logo-green.svg",
+     "variant": "logo-green",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "luton-council-logo-green.png",
+     "variant": "logo-green",
+     "style": "logo",
+     "w": 1580,
+     "h": 604,
+     "made": true
     }
    ]
   },
@@ -19039,6 +19127,95 @@
      "style": "logo",
      "w": 847,
      "h": 271,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "lcc",
+   "name": "Luton Creative Community CIC",
+   "aliases": [
+    "LCC",
+    "Luton Creative Community",
+    "Luton Library Theatre"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/lcc/",
+   "styles": [
+    "logo",
+    "logo-white",
+    "logo-black",
+    "logo-on-dark"
+   ],
+   "original_vector": false,
+   "quality": "redrawn",
+   "details": {
+    "website": "https://www.librarytheatre.net",
+    "note": "Runs Luton Library Theatre. Remade from scratch from the original hand-drawn logo."
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "lcc-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true
+    },
+    {
+     "file": "lcc-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1800,
+     "h": 1235
+    },
+    {
+     "file": "lcc-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true,
+     "made": true
+    },
+    {
+     "file": "lcc-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1800,
+     "h": 1235,
+     "made": true
+    },
+    {
+     "file": "lcc-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true,
+     "made": true
+    },
+    {
+     "file": "lcc-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1800,
+     "h": 1235,
+     "made": true
+    },
+    {
+     "file": "lcc-logo-on-dark.svg",
+     "variant": "logo-on-dark",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true,
+     "made": true
+    },
+    {
+     "file": "lcc-logo-on-dark.png",
+     "variant": "logo-on-dark",
+     "style": "logo",
+     "w": 1800,
+     "h": 1235,
      "made": true
     }
    ]

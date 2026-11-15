@@ -72,7 +72,7 @@ M = {
 'active-support': ('schools','Active Support Education Centre',['ASEC'],[('asec/asec-mark.svg','logo'),('asec/asec-mark-on-dark.svg','logo-white'),('asec/asec-mark-white.svg','mono-white')]),
 # ---------- charities & community organisations ----------
 'ngs':            ('charities','NGS Youth & Community (Next Generation Scheme)',['NGS','Next Generation Scheme'],[('ngs/ngs.svg','logo'),('ngs/ngs-light.webp','logo-white')]),
-'raise-up':       ('charities','The Raise Up Foundation',['Raise Up'],[('raiseup/raise-up.svg','logo'),('raiseup/raise-up-white.svg','logo-white'),('raiseup/raise-up-mark.webp','icon')]),
+'raise-up':       ('charities','The Raise Up Foundation',['Raise Up'],[('raiseup/raise-up.svg','logo'),('raiseup/raise-up-white.svg','logo-white'),('hand/raise-up-icon.svg','icon')]),
 'courtney-foundation':('charities','The Courtney Foundation',['Courtney Foundation','cf'],[('courtney/courtney-mark.webp','app-icon')]),
 'luton-foodbank': ('charities','Luton Foodbank',['foodbank'],[('winter/foodbank.svg','logo'),('winter/foodbank.png','logo'),('winter/foodbank-white.svg','logo-white'),('winter/foodbank-white.png','logo-white'),('ngs/luton-foodbank.webp','logo-tagline')]),
 'human-appeal':   ('charities','Human Appeal',[],[('winter/human-appeal.svg','logo'),('winter/human-appeal.png','logo'),('winter/human-appeal-white.svg','logo-white'),('winter/human-appeal-white.png','logo-white')]),
@@ -327,6 +327,9 @@ M['wildlife-trust']=('charities','Wildlife Trust BCN',['The Wildlife Trust for B
 M['mencap']=('charities','Mencap',['Royal Mencap Society','Luton Mencap'],[('hand/mencap-tile.png','logo-tile-full'),('hand/mencap.png','logo'),('hand/mencap-white.png','logo-white'),('hand/mencap-black.png','logo-black')])
 M['edible-high-town']=('community','Edible High Town',['Edible Hightown','High Town community garden'],[('new/edible-high-town.png','logo')])
 M['your-wellbeing-beds']=('community','Your Wellbeing Bedfordshire',['Your Wellbeing','YWB'],[('hand/your-wellbeing.png','logo'),('hand/your-wellbeing-white.png','logo-white'),('hand/your-wellbeing-black.png','logo-black'),('hand/ywb-icon.svg','icon'),('hand/ywb-icon-white.svg','icon-white'),('hand/ywb-icon-black.svg','icon-black')])
+M['luton-council'][3].append(('hand/luton-council-green.svg','logo-green'))
+M['lcc']=('community','Luton Creative Community CIC',['LCC','Luton Creative Community','Luton Library Theatre'],[('hand/lcc-logo.svg','logo'),('hand/lcc-logo-white.svg','logo-white'),('hand/lcc-logo-black.svg','logo-black'),('hand/lcc-logo-on-dark.svg','logo-on-dark')])
+M['care-homes']=('community','Care homes (general)',['Care home','Nursing home','Residential care'],[('hand/care-homes.svg','logo'),('hand/care-homes-white.svg','logo-white'),('hand/care-homes-icon.svg','icon')])
 # ---------- name lockups (icon + full name), made by make_lockups.py ----------
 for _s in json.load(open('lockups.json')):
     if _s in M: M[_s][3].extend([('lockups/'+_s+'-h.png','lockup'),('lockups/'+_s+'-v.png','lockup-stacked')])

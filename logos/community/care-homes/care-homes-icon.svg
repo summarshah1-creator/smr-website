@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 0 52 48" role="img" aria-label="Care homes"><g  fill="none" stroke="#12324f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+<path d="M9 19v22h26V19" fill="#fff6d6"/><path d="M3 21L20 6l17 15" stroke-width="3.2"/>
+<path d="M20 19s-4.5-2.7-4.5-5.6a2.5 2.5 0 0 1 4.5-1.5 2.5 2.5 0 0 1 4.5 1.5c0 2.9-4.5 5.6-4.5 5.6z" fill="#e2564b" stroke="none"/>
+<rect x="12" y="23" width="6" height="6" rx="1" fill="#f8c62b" stroke-width="2.4"/><rect x="23" y="23" width="6" height="6" rx="1" fill="#f8c62b" stroke-width="2.4"/>
+<path d="M16.8 41v-5.5a3.2 3.2 0 0 1 6.4 0V41" stroke-width="2.6"/><path d="M2 41h44"/>
+<circle cx="40" cy="21" r="2.8" fill="#f8c62b" stroke-width="2.4"/><path d="M40 24.5v9M40 33.5l-2.6 7.5M40 33.5l2.4 7.5M40 27.5l4.5 2.5M45 30v11" stroke-width="2.6"/></g></svg>
