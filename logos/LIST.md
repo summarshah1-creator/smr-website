@@ -1,6 +1,6 @@
 # SMR logo list
 
-263 organisations. Full details in logos.json and LIST.csv.
+265 organisations. Full details in logos.json and LIST.csv.
 
 ## businesses (26)
 - AA Carpets and Furniture
@@ -39,7 +39,7 @@
 - The Big Iftar Luton
 - Wellness Walk
 
-## charities (81)
+## charities (83)
 - Action For Humanity
 - African Relief Fund
 - Age Concern Luton
@@ -65,9 +65,11 @@
 - Friends of Bright Eyes
 - Global Helping Hands
 - Global Relief Trust
+- GoodGym Luton
 - Grassroots
 - Groundwork
 - Grow Your Potential
+- Guide Dogs
 - Hightown Baptist Church
 - Hilden
 - Home-Start Luton

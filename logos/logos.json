@@ -10895,6 +10895,148 @@
    ]
   },
   {
+   "slug": "goodgym",
+   "name": "GoodGym Luton",
+   "aliases": [
+    "GoodGym",
+    "Good Gym"
+   ],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/goodgym/",
+   "styles": [
+    "logo",
+    "logo-white",
+    "logo-black",
+    "luton",
+    "luton-white",
+    "luton-black",
+    "luton-tile-full",
+    "icon"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "website": "https://www.goodgym.org/areas/luton"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "goodgym-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "goodgym-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1586,
+     "h": 706
+    },
+    {
+     "file": "goodgym-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "vector": true
+    },
+    {
+     "file": "goodgym-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "w": 1586,
+     "h": 706
+    },
+    {
+     "file": "goodgym-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo-black",
+     "vector": true
+    },
+    {
+     "file": "goodgym-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo-black",
+     "w": 1586,
+     "h": 706
+    },
+    {
+     "file": "goodgym-luton.png",
+     "variant": "luton",
+     "style": "luton",
+     "w": 993,
+     "h": 623
+    },
+    {
+     "file": "goodgym-luton-white.png",
+     "variant": "luton-white",
+     "style": "luton-white",
+     "w": 993,
+     "h": 623
+    },
+    {
+     "file": "goodgym-luton-black.png",
+     "variant": "luton-black",
+     "style": "luton-black",
+     "w": 993,
+     "h": 623
+    },
+    {
+     "file": "goodgym-luton-tile-full.png",
+     "variant": "luton-tile-full",
+     "style": "luton-tile-full",
+     "w": 1180,
+     "h": 760
+    },
+    {
+     "file": "goodgym-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 705,
+     "h": 333,
+     "made": true
+    },
+    {
+     "file": "goodgym-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon",
+     "w": 705,
+     "h": 333,
+     "made": true
+    },
+    {
+     "file": "goodgym-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 705,
+     "h": 333,
+     "made": true
+    },
+    {
+     "file": "goodgym-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "goodgym-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "goodgym-icon-brand-colour.png",
+     "variant": "icon-brand-colour",
+     "style": "icon",
+     "w": 705,
+     "h": 333,
+     "made": true
+    }
+   ]
+  },
+  {
    "slug": "grassroots",
    "name": "Grassroots",
    "aliases": [],
@@ -11106,6 +11248,93 @@
      "w": 1542,
      "h": 1585,
      "made": true
+    }
+   ]
+  },
+  {
+   "slug": "guide-dogs",
+   "name": "Guide Dogs",
+   "aliases": [
+    "Guide Dogs for the Blind",
+    "Guide Dogs UK"
+   ],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/guide-dogs/",
+   "styles": [
+    "logo",
+    "logo-white",
+    "logo-black",
+    "icon",
+    "icon-white",
+    "icon-black"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "website": "https://www.guidedogs.org.uk"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "guide-dogs-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1696,
+     "h": 708
+    },
+    {
+     "file": "guide-dogs-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "w": 1696,
+     "h": 708
+    },
+    {
+     "file": "guide-dogs-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo-black",
+     "w": 1696,
+     "h": 708
+    },
+    {
+     "file": "guide-dogs-icon.svg",
+     "variant": "icon",
+     "style": "icon",
+     "vector": true
+    },
+    {
+     "file": "guide-dogs-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 1471,
+     "h": 1546
+    },
+    {
+     "file": "guide-dogs-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon-white",
+     "vector": true
+    },
+    {
+     "file": "guide-dogs-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon-white",
+     "w": 1471,
+     "h": 1546
+    },
+    {
+     "file": "guide-dogs-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon-black",
+     "vector": true
+    },
+    {
+     "file": "guide-dogs-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon-black",
+     "w": 1471,
+     "h": 1546
     }
    ]
   },
@@ -18448,7 +18677,9 @@
    ],
    "original_vector": true,
    "quality": "vector",
-   "details": {},
+   "details": {
+    "note": "Luton Friends of Parks and Green Spaces"
+   },
    "signed_off": false,
    "files": [
     {
