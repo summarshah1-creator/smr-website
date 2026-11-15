@@ -1,3 +1,4 @@
+import json
 # slug: (category, name, aliases, [(raw file, variant), ...], note)
 # Variants: logo = full colour main logo · logo-white = version for dark backgrounds · icon = symbol only
 #           crest/lockup/wordmark/tagline = other official arrangements · two-tone etc. as named
@@ -72,7 +73,7 @@ M = {
 # ---------- charities & community organisations ----------
 'ngs':            ('charities','NGS Youth & Community (Next Generation Scheme)',['NGS','Next Generation Scheme'],[('ngs/ngs.svg','logo'),('ngs/ngs-light.webp','logo-white')]),
 'raise-up':       ('charities','The Raise Up Foundation',['Raise Up'],[('raiseup/raise-up.svg','logo'),('raiseup/raise-up-white.svg','logo-white'),('raiseup/raise-up-mark.webp','icon')]),
-'courtney-foundation':('charities','The Courtney Foundation',['Courtney Foundation','cf'],[('courtney/courtney-mark.webp','icon')]),
+'courtney-foundation':('charities','The Courtney Foundation',['Courtney Foundation','cf'],[('courtney/courtney-mark.webp','app-icon')]),
 'luton-foodbank': ('charities','Luton Foodbank',['foodbank'],[('winter/foodbank.svg','logo'),('winter/foodbank.png','logo'),('winter/foodbank-white.svg','logo-white'),('winter/foodbank-white.png','logo-white'),('ngs/luton-foodbank.webp','logo-tagline')]),
 'human-appeal':   ('charities','Human Appeal',[],[('winter/human-appeal.svg','logo'),('winter/human-appeal.png','logo'),('winter/human-appeal-white.svg','logo-white'),('winter/human-appeal-white.png','logo-white')]),
 'sunnah-charity': ('charities','Sunnah (charity that never ends)',['Sunnah'],[('let/sunnah-charity.png','logo')]),
@@ -199,3 +200,96 @@ M['groundwork'][3].insert(0,('ngs2/groundwork.svg','logo'))
 M['grow-your-potential']=('charities','Grow Your Potential',['GYP'],[('ngs2/grow-your-potential.svg','logo')])
 M['wigmore-valley-park']=('venues','Wigmore Valley Park',[],[('ngs2/wigmore.webp','logo')])
 M['smr-digital'][3].append(('ngs2/smr-digital-white.webp','logo-white'))
+
+# ---------- added 15 Nov (owner uploads) ----------
+M['faces']=('charities','FACES (Faiths Against Child Sexual Exploitation)',['FACES'],[('new/faces.png','logo')])
+M['lady-zia-wernher']=('schools','Lady Zia Wernher School',[],[('new/lady-zia-wernher.png','logo')])
+M['avenue-centre']=('schools','Avenue Centre for Education',['Avenue'],[('new/avenue.png','logo')])
+M['rabia']=('schools','Rabia Education Trust',["Rabia Girls' School","Rabia Boys' School",'Madrasa Islamia Primary','Rabia'],[('new/rabia.png','logo')])
+M['mehria']=('schools','Mehria Primary School',['Mehria'],[('new/mehria.png','logo')])
+M['al-falah']=('mosques','Al Falah Community Centre',['Al Falah'],[('new/al-falah.png','logo')])
+M['ukim-luton']=('mosques','Madina Masjid (UKIM Luton)',['UKIM','UK Islamic Mission','Madina Masjid Oak Road'],[('new/ukim.png','icon')])
+M['beds-chamber']=('community','Bedfordshire Chamber of Commerce',['Beds Chamber'],[('new/beds-chamber.png','logo'),('new/beds-chamber-small.png','logo-alt')])
+M['beds-police']=('community','Bedfordshire Police',[],[('new/beds-police.png','crest')])
+M['beds-pcc']=('community','Bedfordshire Police & Crime Commissioner',['PCC'],[('new/beds-pcc.png','logo')])
+M['luton-council'][3].append(('new/luton-wordmark.png','wordmark'))
+M['lscm']=('mosques','Luton Sunni Council of Mosques',['LSCM'],[('new/lscm.png','logo'),('new/lscm-lockup.png','lockup')])
+M['lcm']=('mosques','Luton Council of Mosques',['LCM'],[('new/lcm.png','logo'),('new/lcm-strip.png','logo-alt')])
+# ---------- added 15 Nov, batch 2 ----------
+M['higher-ground']=('community','Higher Ground',[],[('new/higher-ground.png','logo'),('new/higher-ground-alt.png','logo-alt')])
+M['aegis']=('businesses','Aegis Support Services',['Aegis'],[('new/aegis.png','logo'),('new/aegis-training.png','training')])
+M['community-interest-luton']=('charities','Community Interest Luton',['CIL'],[('new/cil.png','logo')])
+M['one-eid']=('campaigns','1 Eid',['One Eid'],[('new/one-eid.png','logo')])
+M['luton-mela']=('campaigns','Luton Mela',[],[('new/luton-mela.png','logo-tile')])
+M['diverse-fm']=('media','Diverse FM',['Diverse'],[('new/diverse.png','logo')])
+M['sunnah-charity'][3].insert(0,('new/sunnah.png','logo'))
+M['ummah-welfare-trust']=('charities','Ummah Welfare Trust',['UWT'],[('new/ummah-welfare.png','logo')])
+M['one-ummah']=('charities','One Ummah',[],[('new/one-ummah.png','logo-tile')])
+M['islamic-relief']=('charities','Islamic Relief UK',['Islamic Relief','IRUK'],[('new/islamic-relief-uk.png','lockup-tile'),('new/islamic-relief.png','emblem-tile')])
+M['human-appeal'][3].append(('new/human-appeal-stacked.png','logo-stacked'))
+# ---------- added 15 Nov, batch 3 ----------
+for s,c,n,al,f,v in [
+ ('muslim-hands','charities','Muslim Hands',[],'muslim-hands','logo'),
+ ('beds-hospitals','community','Bedfordshire Hospitals NHS Foundation Trust',['Bedfordshire Hospitals','NHS'],'beds-hospitals','logo'),
+ ('beds-rcc','charities','Bedfordshire Rural Communities Charity',['Beds RCC','BRCC'],'beds-rcc','logo'),
+ ('bedford-hospital-charity','charities','Bedford Hospital Charity & Friends',[],'bedford-hospital-charity','logo'),
+ ('l-and-d-hospital','community','Luton & Dunstable University Hospital',['L&D','L and D Hospital'],'l-and-d-hospital','logo'),
+ ('penrose-roots','charities','Penrose Roots',[],'penrose-roots','logo'),
+ ('luton-irish-forum','community','Luton Irish Forum',[],'luton-irish-forum','logo'),
+ ('luton-all-womens-centre','charities',"Luton All Women's Centre",['LAWC'],'luton-all-womens-centre','logo'),
+ ('signposts','charities','SignPosts Luton',['Signposts'],'signposts','logo'),
+ ('home-start','charities','Home-Start Luton',['Home Start'],'home-start','logo'),
+ ('mind-blmk','charities','Mind BLMK',['Mind'],'mind-blmk','logo'),
+ ('jobcentre-plus','community','Jobcentre Plus',['DWP'],'jobcentre-plus','logo-tile'),
+ ('citizens-advice','charities','Citizens Advice Luton',['CAB','Citizens Advice'],'citizens-advice','logo'),
+ ('age-concern-luton','charities','Age Concern Luton',[],'age-concern-luton','logo'),
+ ('age-uk-beds','charities','Age UK Bedfordshire',['Age UK'],'age-uk-beds','logo'),
+ ('kings-trust','charities',"The King's Trust",["Prince's Trust"],'kings-trust','logo'),
+ ('youth-partnership-service','community','Luton Youth Partnership Service',['YPS'],'youth-partnership-service','logo'),
+ ('sea-cadets','community','Sea Cadets (Luton Unit 226, TS Keyes)',['TS Keyes'],'sea-cadets','logo'),
+ ('nxt-gen-pathways','community','NXT GEN Pathways',[],'nxt-gen-pathways','logo'),
+ ('ngyt','community','Next Generation Youth Theatre',['NGYT'],'ngyt','logo-white'),
+ ('luton-youth-council','community','Luton Youth Council',['LYC'],'luton-youth-council','logo')]:
+    M[s]=(c,n,al,[('new/'+f+'.png',v)])
+M['lantern']=('charities',"Lantern · Muslim Women's Voices",['Lantern'],[('new/lantern.png','logo'),('let/lantern.png','icon')])
+M['girlguiding']=('community','Girlguiding (Bedfordshire · Luton South)',['Girlguiding Luton'],[('new/girlguiding-beds.png','logo-white'),('new/girlguiding-luton-south.png','luton-south-tile')])
+# ---------- added 15 Nov, batch 4 ----------
+M['al-madani']=('mosques','Masjid al-Madani',['Al Madani','Masjid al Madani'],[('new/al-madani.png','logo')])
+M['penny-appeal']=('charities','Penny Appeal',[],[('new/penny-appeal.png','logo-tile')])
+M['al-khair']=('charities','Al-Khair Foundation',['Al Khair'],[('new/al-khair.png','logo-tile')])
+M['islamic-help']=('charities','Islamic Help',[],[('new/islamic-help.png','logo'),('new/islamic-help-tile.png','logo-stacked-tile')])
+M['salam-charity']=('charities','Salam Charity',[],[('new/salam-charity.png','logo')])
+M['muslim-aid']=('charities','Muslim Aid',[],[('new/muslim-aid.png','logo')])
+M['luton-council-of-faiths']=('community','Luton Council of Faiths',['LCF'],[('new/luton-council-of-faiths.png','logo-tile')])
+M['scouts-luton']=('community','Falkes (Luton) Scout District',['Scouts','Luton Scouts'],[('new/scouts-luton.png','logo')])
+# ---------- added 15 Nov, batch 5 (charities) ----------
+for _s,_n,_al,_f in [('one-nation','One Nation',[],[('one-nation','logo')]),('aghosh','Aghosh UK',['Aghosh'],[('aghosh','logo')]),
+ ('muslim-charity','Muslim Charity',[],[('muslim-charity','logo')]),('nzf','National Zakat Foundation',['NZF'],[('nzf','logo')]),
+ ('read-foundation','READ Foundation',['READ'],[('read-foundation','logo')]),('lady-fatemah','The Lady Fatemah Trust',['Lady Fatemah'],[('lady-fatemah','logo')]),
+ ('african-relief','African Relief Fund',[],[('african-relief','logo')]),('ethar-relief','Ethar Relief',[],[('ethar-relief','logo-tile')]),
+ ('kassars','Kassar\'s Foundation',[],[('kassars','logo')]),('grt','Global Relief Trust',['GRT'],[('grt','logo')]),
+ ('matw','MATW Project (Muslims Around The World)',['MATW'],[('matw','logo'),('matw-tile','logo-tile')]),
+ ('action-for-humanity','Action For Humanity',[],[('action-for-humanity','logo')]),('orphans-in-need','Orphans in Need',['OIN'],[('orphans-in-need','logo-tile')]),
+ ('emaan-relief','Emaan Relief',[],[('emaan-relief','logo')]),('amanah','Amanah Project',[],[('amanah','logo')]),
+ ('global-helping-hands','Global Helping Hands',['GHH'],[('global-helping-hands','logo-tile')]),('forgotten-women','Forgotten Women',[],[('forgotten-women','logo')]),
+ ('islamic-aid','Islamic Aid',[],[('islamic-aid','logo')]),('mgr','Muslim Global Relief',['MGR'],[('mgr','logo')])]:
+    M[_s]=('charities',_n,_al,[('new/'+f+'.png',v) for f,v in _f])
+M['luton-council-of-faiths'][3].append(('new/lcf-white.png','logo-white'))
+M['near-neighbours']=('community','Near Neighbours',[],[('new/near-neighbours.png','logo')])
+M['grassroots']=('charities','Grassroots',[],[('new/grassroots.png','logo-tile')])
+M['norton-road']=('schools','Norton Road Primary School',[],[('new/norton-road-colour.png','logo'),('new/norton-road-white.png','logo-white'),('new/norton-road-crest.svg','crest')])
+M['tutorbook']=('businesses','TutorBook',[],[('new/tutorbook.png','logo')])
+M['oakwood']=('schools','Oakwood Primary School',[],[('new/oakwood.png','logo')])
+M['al-hikmah']=('schools','Al-Hikmah (Bury Park Educational Institute)',['Al Hikmah','Bury Park Educational Institute'],[('new/al-hikmah.png','logo')])
+M['culture-trust']=('community','The Culture Trust Luton',['Culture Trust'],[('new/culture-trust.png','logo')])
+# ---------- retyped / cleaned versions (fixes.py) ----------
+M['lcm']=('mosques','Luton Council of Mosques',['LCM'],[('fixed/lcm.png','logo')])
+M['lscm']=('mosques','Luton Sunni Council of Mosques',['LSCM'],[('fixed/lscm-logo.png','logo'),('fixed/lscm-lockup.png','lockup')])
+M['al-hikmah'][3][:]=[('fixed/al-hikmah.png','logo')]
+M['tops-pizza'][3][:]=[('fixed/tops-pizza.png','logo')]
+M['kashmir-catering'][3][:]=[('fixed/kashmir-catering.png','logo')]
+M['beds-pcc'][3][:]=[('fixed/beds-pcc.png','logo')]
+M['girlguiding']=('community','Girlguiding (Bedfordshire · Luton South)',['Girlguiding Luton'],[('new/girlguiding-beds.png','logo-white'),('fixed/girlguiding-luton-south.png','luton-south'),('fixed/girlguiding-luton-south-tile.png','luton-south-tile')])
+# ---------- name lockups (icon + full name), made by make_lockups.py ----------
+for _s in json.load(open('lockups.json')):
+    if _s in M: M[_s][3].extend([('lockups/'+_s+'-h.png','lockup'),('lockups/'+_s+'-v.png','lockup-stacked')])

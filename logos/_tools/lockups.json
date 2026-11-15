@@ -1,0 +1,226 @@
+{
+ "ukim-luton": {
+  "src": "icon",
+  "l1": "UKIM",
+  "l2": "Madina Masjid \u00b7 Luton",
+  "font": "montserrat",
+  "w1": 800,
+  "w2": 600,
+  "c1": "#111111",
+  "c2": "#b8862b",
+  "s1": 0.34
+ },
+ "courtney-foundation": {
+  "src": "app-icon",
+  "l1": "The **Courtney**",
+  "l2": "Foundation",
+  "font": "raleway",
+  "w1": 400,
+  "w2": 400,
+  "c1": "#4d5361",
+  "c2": "#4d5361",
+  "upper": true,
+  "ls1": "0.3em",
+  "ls2": "0.415em",
+  "s1": 0.2,
+  "s2": 0.2
+ },
+ "active-support": {
+  "src": "logo",
+  "l1": "Active Support",
+  "l2": "Education Centre",
+  "font": "outfit",
+  "w1": 500,
+  "w2": 300,
+  "c1": "#0b1a10",
+  "c2": "#0b1a10",
+  "upper": true,
+  "ls1": "0.14em",
+  "ls2": "0.14em",
+  "s1": 0.2,
+  "s2": 0.16
+ },
+ "hockwell-ring": {
+  "src": "logo",
+  "l1": "Hockwell Ring",
+  "l2": "Masjid \u00b7 Luton",
+  "font": "montserrat",
+  "w1": 700,
+  "w2": 500
+ },
+ "turkish-ca": {
+  "src": "logo",
+  "l1": "Luton Turkish",
+  "l2": "Cultural Association",
+  "font": "montserrat",
+  "w1": 700,
+  "w2": 500
+ },
+ "st-marys": {
+  "src": "logo",
+  "l1": "St Mary's Church",
+  "l2": "Luton",
+  "font": "montserrat",
+  "w1": 600,
+  "w2": 400
+ },
+ "wellness-walk": {
+  "src": "icon",
+  "l1": "Wellness Walk",
+  "l2": "Luton",
+  "font": "montserrat",
+  "w1": 700,
+  "w2": 500
+ },
+ "cardinal-newman": {
+  "src": "icon",
+  "l1": "Cardinal Newman",
+  "l2": "Catholic School",
+  "font": "cinzel",
+  "w1": 700,
+  "w2": 400,
+  "s1": 0.24,
+  "s2": 0.16
+ },
+ "chalk-hills": {
+  "src": "icon",
+  "l1": "The Chalk Hills",
+  "l2": "Academy",
+  "font": "montserrat",
+  "w1": 700,
+  "w2": 500
+ },
+ "challney-boys": {
+  "src": "icon",
+  "l1": "Challney High School",
+  "l2": "for Boys",
+  "font": "montserrat",
+  "w1": 700,
+  "w2": 500,
+  "s1": 0.24
+ },
+ "challney-girls": {
+  "src": "icon",
+  "l1": "Challney High School",
+  "l2": "for Girls",
+  "font": "montserrat",
+  "w1": 700,
+  "w2": 500,
+  "s1": 0.24
+ },
+ "dallow": {
+  "src": "icon",
+  "l1": "Dallow",
+  "l2": "Primary School",
+  "font": "montserrat",
+  "w1": 800,
+  "w2": 500
+ },
+ "denbigh": {
+  "src": "icon",
+  "l1": "Denbigh",
+  "l2": "High School",
+  "font": "cinzel",
+  "w1": 700,
+  "w2": 400
+ },
+ "downside": {
+  "src": "icon",
+  "l1": "Downside",
+  "l2": "Primary School",
+  "font": "montserrat",
+  "w1": 800,
+  "w2": 500
+ },
+ "hillborough": {
+  "src": "icon",
+  "l1": "Hillborough",
+  "l2": "Junior School",
+  "font": "cinzel",
+  "w1": 700,
+  "w2": 400
+ },
+ "lea-manor": {
+  "src": "icon",
+  "l1": "Lea Manor",
+  "l2": "High School",
+  "font": "montserrat",
+  "w1": 700,
+  "w2": 500
+ },
+ "lealands": {
+  "src": "icon",
+  "l1": "Lealands",
+  "l2": "High School",
+  "font": "montserrat",
+  "w1": 700,
+  "w2": 500
+ },
+ "putteridge": {
+  "src": "icon",
+  "l1": "Putteridge",
+  "l2": "High School",
+  "font": "cinzel",
+  "w1": 700,
+  "w2": 400
+ },
+ "qes": {
+  "src": "icon",
+  "l1": "Queen Elizabeth",
+  "l2": "School \u00b7 Luton",
+  "font": "cinzel",
+  "w1": 700,
+  "w2": 400,
+  "s1": 0.24
+ },
+ "stockwood-park": {
+  "src": "icon",
+  "l1": "The Stockwood Park",
+  "l2": "Academy",
+  "font": "montserrat",
+  "w1": 700,
+  "w2": 500,
+  "s1": 0.24
+ },
+ "stopsley": {
+  "src": "icon",
+  "l1": "Stopsley",
+  "l2": "High School",
+  "font": "montserrat",
+  "w1": 700,
+  "w2": 500
+ },
+ "wigmore": {
+  "src": "icon",
+  "l1": "Wigmore",
+  "l2": "Primary School",
+  "font": "montserrat",
+  "w1": 700,
+  "w2": 500
+ },
+ "woodlands": {
+  "src": "icon",
+  "l1": "Woodlands",
+  "l2": "Secondary School",
+  "font": "montserrat",
+  "w1": 700,
+  "w2": 500
+ },
+ "farley-junior": {
+  "src": "logo",
+  "l1": "Farley Junior",
+  "l2": "Academy",
+  "font": "montserrat",
+  "w1": 700,
+  "w2": 500
+ },
+ "barnfield-college": {
+  "src": "icon",
+  "l1": "Barnfield",
+  "l2": "College",
+  "font": "montserrat",
+  "w1": 700,
+  "w2": 500,
+  "c1": "#1d2a52"
+ }
+}

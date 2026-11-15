@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 760" width="640" height="760">
+<defs><clipPath id="sh"><path d="M14 8H626V512C626 640 470 700 320 752C170 700 14 640 14 512Z"/></clipPath></defs>
+<g clip-path="url(#sh)">
+ <rect x="0" y="0" width="640" height="372" fill="#005a9c"/>
+ <g fill="#a6002b" stroke="#fff" stroke-width="14" stroke-linejoin="miter">
+  <path d="M-20 136H52V108H96V136H138V108H182V136H226V390H-20Z"/>
+  <path d="M414 136H458V108H502V136H544V108H588V136H660V390H414Z"/>
+  <path d="M238 14H268V46H302V14H338V46H372V14H402V390H238Z"/>
+ </g>
+ <path fill="none" stroke="#fff" stroke-width="14" d="M254 380V236A66 66 0 0 1 386 236V380"/>
+ <path fill="none" stroke="#fff" stroke-width="11" d="M280 380V246A40 40 0 0 1 360 246V380"/>
+ <rect x="-10" y="378" width="660" height="400" fill="#00a85a" stroke="#fff" stroke-width="14"/>
+ <path fill="#005a9c" stroke="#fff" stroke-width="12" d="M-10 540C120 540 200 434 320 434S520 540 650 540V648C520 648 440 562 320 562S120 648 -10 648Z"/>
+ <path fill="none" stroke="#fff" stroke-width="10" d="M-10 578C120 578 200 474 320 474S520 578 650 578"/>
+ <path fill="none" stroke="#fff" stroke-width="10" d="M-10 616C120 616 200 520 320 520S520 616 650 616"/>
+</g>
+</svg>
