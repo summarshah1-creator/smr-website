@@ -370,3 +370,7 @@ M['dont-get-locked-in']=('businesses',"Don't Get Locked In",['DGLI',"Don't Get L
 M['mead-open-farm']=('businesses','Mead Open Farm',['Mead Farm'],[('hand/mead-open-farm-logo.svg','logo'),('hand/mead-open-farm-icon.svg','icon')])
 M['ninja-warrior-uk']=('businesses','Ninja Warrior UK Adventure Park',['Ninja Warrior UK','Ninja Warrior Milton Keynes'],[('hand/ninja-warrior-uk-logo.svg','logo')])
 M['blackout-escape-rooms']=('businesses','Blackout Escape Rooms',['Blackout Escape Room','Blackout Bletchley'],[('hand/blackout-escape-rooms-logo.svg','logo'),('hand/blackout-escape-rooms-tile.svg','logo-tile-full')])
+M['hollywood-bowl']=('businesses','Hollywood Bowl',['Hollywood Bowl Stevenage'],[('hand/hollywood-bowl-logo.svg','logo'),('hand/hollywood-bowl-icon.svg','icon')])
+M['fairlands-valley']=('venues','Fairlands Valley Outdoor Activities',['Fairlands Valley Park','Fairlands Valley'],[('hand/fairlands-valley-logo.svg','logo')])
+M['snow-centre']=('venues','The Snow Centre',['Snow Centre Hemel','The Snow Centre Hemel Hempstead'],[('hand/snow-centre-logo.svg','logo'),('hand/snow-centre-icon.svg','icon')])
+M['knebworth']=('venues','Knebworth House',['Knebworth','Knebworth Park'],[('hand/knebworth-logo.svg','logo'),('hand/knebworth-icon.svg','icon')])

@@ -27581,6 +27581,290 @@
    ]
   },
   {
+   "slug": "fairlands-valley",
+   "name": "Fairlands Valley Outdoor Activities",
+   "aliases": [
+    "Fairlands Valley Park",
+    "Fairlands Valley"
+   ],
+   "category": "venues",
+   "category_name": "Venues & days out",
+   "path": "venues/fairlands-valley/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "address": "Six Hills Way, Stevenage"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "fairlands-valley-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "fairlands-valley-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1593,
+     "h": 530
+    },
+    {
+     "file": "fairlands-valley-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1593,
+     "h": 530,
+     "made": true
+    },
+    {
+     "file": "fairlands-valley-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1593,
+     "h": 530,
+     "made": true
+    },
+    {
+     "file": "fairlands-valley-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "fairlands-valley-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "snow-centre",
+   "name": "The Snow Centre",
+   "aliases": [
+    "Snow Centre Hemel",
+    "The Snow Centre Hemel Hempstead"
+   ],
+   "category": "venues",
+   "category_name": "Venues & days out",
+   "path": "venues/snow-centre/",
+   "styles": [
+    "logo",
+    "icon"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "address": "St Albans Hill, Hemel Hempstead",
+    "website": "https://www.thesnowcentre.com"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "snow-centre-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "snow-centre-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1599,
+     "h": 491
+    },
+    {
+     "file": "snow-centre-icon.svg",
+     "variant": "icon",
+     "style": "icon",
+     "vector": true
+    },
+    {
+     "file": "snow-centre-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 1587,
+     "h": 1477
+    },
+    {
+     "file": "snow-centre-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1599,
+     "h": 491,
+     "made": true
+    },
+    {
+     "file": "snow-centre-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1599,
+     "h": 491,
+     "made": true
+    },
+    {
+     "file": "snow-centre-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "snow-centre-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "snow-centre-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon",
+     "w": 1587,
+     "h": 1477,
+     "made": true
+    },
+    {
+     "file": "snow-centre-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 1587,
+     "h": 1477,
+     "made": true
+    },
+    {
+     "file": "snow-centre-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "snow-centre-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "knebworth",
+   "name": "Knebworth House",
+   "aliases": [
+    "Knebworth",
+    "Knebworth Park"
+   ],
+   "category": "venues",
+   "category_name": "Venues & days out",
+   "path": "venues/knebworth/",
+   "styles": [
+    "logo",
+    "icon"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "website": "https://www.knebworthhouse.com"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "knebworth-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "knebworth-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1574,
+     "h": 394
+    },
+    {
+     "file": "knebworth-icon.svg",
+     "variant": "icon",
+     "style": "icon",
+     "vector": true
+    },
+    {
+     "file": "knebworth-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 1248,
+     "h": 1318
+    },
+    {
+     "file": "knebworth-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1574,
+     "h": 394,
+     "made": true
+    },
+    {
+     "file": "knebworth-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1574,
+     "h": 394,
+     "made": true
+    },
+    {
+     "file": "knebworth-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "knebworth-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "knebworth-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon",
+     "w": 1248,
+     "h": 1318,
+     "made": true
+    },
+    {
+     "file": "knebworth-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 1248,
+     "h": 1318,
+     "made": true
+    },
+    {
+     "file": "knebworth-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "knebworth-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
    "slug": "aa-carpets",
    "name": "AA Carpets and Furniture",
    "aliases": [],
@@ -30513,6 +30797,114 @@
      "style": "icon",
      "w": 1554,
      "h": 922,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "hollywood-bowl",
+   "name": "Hollywood Bowl",
+   "aliases": [
+    "Hollywood Bowl Stevenage"
+   ],
+   "category": "businesses",
+   "category_name": "Businesses & sponsors",
+   "path": "businesses/hollywood-bowl/",
+   "styles": [
+    "logo",
+    "icon"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "website": "https://www.hollywoodbowl.co.uk"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "hollywood-bowl-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "hollywood-bowl-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1564,
+     "h": 1345
+    },
+    {
+     "file": "hollywood-bowl-icon.svg",
+     "variant": "icon",
+     "style": "icon",
+     "vector": true
+    },
+    {
+     "file": "hollywood-bowl-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 1511,
+     "h": 1402
+    },
+    {
+     "file": "hollywood-bowl-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1564,
+     "h": 1345,
+     "made": true
+    },
+    {
+     "file": "hollywood-bowl-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1564,
+     "h": 1345,
+     "made": true
+    },
+    {
+     "file": "hollywood-bowl-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "hollywood-bowl-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "hollywood-bowl-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon",
+     "w": 1511,
+     "h": 1402,
+     "made": true
+    },
+    {
+     "file": "hollywood-bowl-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 1511,
+     "h": 1402,
+     "made": true
+    },
+    {
+     "file": "hollywood-bowl-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "hollywood-bowl-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
+     "vector": true,
      "made": true
     }
    ]

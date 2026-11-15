@@ -1,8 +1,8 @@
 # SMR logo list
 
-315 organisations. Full details in logos.json and LIST.csv.
+319 organisations. Full details in logos.json and LIST.csv.
 
-## businesses (37)
+## businesses (38)
 - AA Carpets and Furniture
 - Aegis Support Services
 - Aghaz by AN
@@ -21,6 +21,7 @@
 - Grand Royale
 - Gravity Active Entertainment
 - Hannah Solicitors
+- Hollywood Bowl
 - House of Elegance
 - Kashmir Catering Services
 - Lidl
@@ -297,13 +298,14 @@
 ## smr (1)
 - SMR Digital
 
-## venues (36)
+## venues (39)
 - Agent Brains
 - Bennett's Splash Park
 - Cineworld Luton
 - Delta Force Paintball
 - Dunstable Downs
 - Everyone Active (The Dunstable Centre)
+- Fairlands Valley Outdoor Activities
 - Frasers Plus Luton
 - Full House
 - Funtura
@@ -312,6 +314,7 @@
 - Hat Factory Arts Centre
 - Houghton Hall Park
 - I'm Puzzled
+- Knebworth House
 - Laser SWAT
 - Luton Hoo Estate
 - LUV Entertainment
@@ -326,6 +329,7 @@
 - TeamSport Dunstable
 - Tenpin Luton
 - The Giggles (Active Luton)
+- The Snow Centre
 - Upfront Comedy
 - Venue 360
 - Voyager Flight Simulation
