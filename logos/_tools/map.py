@@ -374,3 +374,4 @@ M['hollywood-bowl']=('businesses','Hollywood Bowl',['Hollywood Bowl Stevenage'],
 M['fairlands-valley']=('venues','Fairlands Valley Outdoor Activities',['Fairlands Valley Park','Fairlands Valley'],[('hand/fairlands-valley-logo.svg','logo')])
 M['snow-centre']=('venues','The Snow Centre',['Snow Centre Hemel','The Snow Centre Hemel Hempstead'],[('hand/snow-centre-logo.svg','logo'),('hand/snow-centre-icon.svg','icon')])
 M['knebworth']=('venues','Knebworth House',['Knebworth','Knebworth Park'],[('hand/knebworth-logo.svg','logo'),('hand/knebworth-icon.svg','icon')])
+M['mystics']=('community','Mystics Trampoline & Gymnastics Club',['Mystics','Mystics St Albans'],[('hand/mystics-logo.svg','logo')])

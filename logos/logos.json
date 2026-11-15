@@ -23558,6 +23558,71 @@
    ]
   },
   {
+   "slug": "mystics",
+   "name": "Mystics Trampoline & Gymnastics Club",
+   "aliases": [
+    "Mystics",
+    "Mystics St Albans"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/mystics/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "address": "St Albans"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "mystics-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "mystics-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1582,
+     "h": 368
+    },
+    {
+     "file": "mystics-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1582,
+     "h": 368,
+     "made": true
+    },
+    {
+     "file": "mystics-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1582,
+     "h": 368,
+     "made": true
+    },
+    {
+     "file": "mystics-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "mystics-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
    "slug": "one-eid",
    "name": "1 Eid",
    "aliases": [

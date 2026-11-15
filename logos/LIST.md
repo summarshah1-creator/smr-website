@@ -1,6 +1,6 @@
 # SMR logo list
 
-319 organisations. Full details in logos.json and LIST.csv.
+320 organisations. Full details in logos.json and LIST.csv.
 
 ## businesses (38)
 - AA Carpets and Furniture
@@ -140,7 +140,7 @@
 - Wildlife Trust BCN
 - Woodland Trust
 
-## community (70)
+## community (71)
 - ABCD Luton
 - Active Luton
 - Anne Gale School of Dance
@@ -189,6 +189,7 @@
 - Luton Youth Council
 - Luton Youth Partnership Service
 - Muslim Undertaker
+- Mystics Trampoline & Gymnastics Club
 - Near Neighbours
 - Next Generation Youth Theatre
 - NXT GEN Pathways
