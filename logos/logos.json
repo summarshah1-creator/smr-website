@@ -18687,6 +18687,51 @@
    ]
   },
   {
+   "slug": "legends-mma",
+   "name": "Legends MMA & Fitness Centre",
+   "aliases": [
+    "Legends MMA",
+    "Legends Gym Luton"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/legends-mma/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {
+    "website": "https://www.legendsmma.uk"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "legends-mma-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 900,
+     "h": 702
+    },
+    {
+     "file": "legends-mma-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 900,
+     "h": 702,
+     "made": true
+    },
+    {
+     "file": "legends-mma-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 900,
+     "h": 702,
+     "made": true
+    }
+   ]
+  },
+  {
    "slug": "l-and-d-hospital",
    "name": "Luton & Dunstable University Hospital",
    "aliases": [
@@ -19536,6 +19581,53 @@
    ]
   },
   {
+   "slug": "luton-grappling-club",
+   "name": "Luton Grappling Club",
+   "aliases": [
+    "Luton Grappling Academy",
+    "Luton BJJ"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/luton-grappling-club/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": false,
+   "quality": "ok",
+   "details": {
+    "address": "Stuart Place Studios, 76 Stuart Place",
+    "postcode": "LU1 5DL",
+    "website": "https://luton-grappling-academy.classforkids.io"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "luton-grappling-club-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 625,
+     "h": 625
+    },
+    {
+     "file": "luton-grappling-club-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 625,
+     "h": 625,
+     "made": true
+    },
+    {
+     "file": "luton-grappling-club-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 625,
+     "h": 625,
+     "made": true
+    }
+   ]
+  },
+  {
    "slug": "luton-irish-forum",
    "name": "Luton Irish Forum",
    "aliases": [],
@@ -19853,6 +19945,52 @@
    ]
   },
   {
+   "slug": "luton-school-of-judo",
+   "name": "Luton School of Judo",
+   "aliases": [
+    "Luton Judo"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/luton-school-of-judo/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": false,
+   "quality": "ok",
+   "details": {
+    "address": "Raynham Way Community Centre, 66 Eaton Green Road",
+    "postcode": "LU2 9JE",
+    "website": "https://www.lutonjudo.co.uk"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "luton-school-of-judo-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 616,
+     "h": 610
+    },
+    {
+     "file": "luton-school-of-judo-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 616,
+     "h": 610,
+     "made": true
+    },
+    {
+     "file": "luton-school-of-judo-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 616,
+     "h": 610,
+     "made": true
+    }
+   ]
+  },
+  {
    "slug": "ltfc",
    "name": "Luton Town Football Club",
    "aliases": [
@@ -19925,6 +20063,53 @@
      "style": "logo",
      "w": 402,
      "h": 400,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "luton-town-hc",
+   "name": "Luton Town Hockey Club",
+   "aliases": [
+    "Luton Town HC",
+    "LTHC"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/luton-town-hc/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": false,
+   "quality": "ok",
+   "details": {
+    "address": "Challney High School for Girls, Addington Way",
+    "postcode": "LU4 9FJ",
+    "website": "https://www.lutontownhc.com"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "luton-town-hc-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 528,
+     "h": 630
+    },
+    {
+     "file": "luton-town-hc-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 528,
+     "h": 630,
+     "made": true
+    },
+    {
+     "file": "luton-town-hc-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 528,
+     "h": 630,
      "made": true
     }
    ]
@@ -20968,6 +21153,108 @@
    ]
   },
   {
+   "slug": "stockwood-park-rfc",
+   "name": "Stockwood Park RFC",
+   "aliases": [
+    "SPRFC",
+    "Stockwood Park Rugby Club"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/stockwood-park-rfc/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {
+    "address": "London Road",
+    "postcode": "LU1 3RN",
+    "website": "https://stockwoodparkrfc.co.uk"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "stockwood-park-rfc-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 787,
+     "h": 900
+    },
+    {
+     "file": "stockwood-park-rfc-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 787,
+     "h": 900,
+     "made": true
+    },
+    {
+     "file": "stockwood-park-rfc-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 787,
+     "h": 900,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "storm-gym",
+   "name": "Storm Gym",
+   "aliases": [
+    "Storm Gym Luton",
+    "Storm Gym Fitness & Martial Arts"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/storm-gym/",
+   "styles": [
+    "logo",
+    "icon"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {
+    "address": "Unit 16, 141 New Bedford Road",
+    "postcode": "LU3 1LF",
+    "website": "https://www.stormgym.co.uk"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "storm-gym-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 900,
+     "h": 422
+    },
+    {
+     "file": "storm-gym-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 900,
+     "h": 422,
+     "made": true
+    },
+    {
+     "file": "storm-gym-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 900,
+     "h": 422,
+     "made": true
+    },
+    {
+     "file": "storm-gym-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 447,
+     "h": 447
+    }
+   ]
+  },
+  {
    "slug": "suez",
    "name": "SUEZ",
    "aliases": [],
@@ -21429,6 +21716,53 @@
      "style": "logo",
      "w": 1101,
      "h": 430,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "ultimate-athlete",
+   "name": "Ultimate Athlete MMA",
+   "aliases": [
+    "Ultimate Athlete",
+    "UA MMA"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/ultimate-athlete/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {
+    "address": "88 to 90 Inkerman Street",
+    "postcode": "LU1 1JD",
+    "website": "https://cademy.io/ultimate-athlete-mma-combat-facility"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "ultimate-athlete-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 900,
+     "h": 900
+    },
+    {
+     "file": "ultimate-athlete-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 900,
+     "h": 900,
+     "made": true
+    },
+    {
+     "file": "ultimate-athlete-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 900,
+     "h": 900,
      "made": true
     }
    ]
@@ -22813,6 +23147,52 @@
    ]
   },
   {
+   "slug": "delta-force-paintball",
+   "name": "Delta Force Paintball",
+   "aliases": [
+    "Delta Force"
+   ],
+   "category": "venues",
+   "category_name": "Venues & days out",
+   "path": "venues/delta-force-paintball/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": false,
+   "quality": "ok",
+   "details": {
+    "address": "Half Moon Lane, Pepperstock",
+    "postcode": "LU1 4LL",
+    "website": "https://www.paintballgames.co.uk/centre/north-london-paintball/"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "delta-force-paintball-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 783,
+     "h": 534
+    },
+    {
+     "file": "delta-force-paintball-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 783,
+     "h": 534,
+     "made": true
+    },
+    {
+     "file": "delta-force-paintball-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 783,
+     "h": 534,
+     "made": true
+    }
+   ]
+  },
+  {
    "slug": "dunstable-downs",
    "name": "Dunstable Downs",
    "aliases": [],
@@ -23551,6 +23931,48 @@
      "style": "logo",
      "w": 1584,
      "h": 1577,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "laser-swat",
+   "name": "Laser SWAT",
+   "aliases": [
+    "Laser SWAT Luton"
+   ],
+   "category": "venues",
+   "category_name": "Venues & days out",
+   "path": "venues/laser-swat/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": false,
+   "quality": "ok",
+   "details": {},
+   "signed_off": false,
+   "files": [
+    {
+     "file": "laser-swat-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 735,
+     "h": 834
+    },
+    {
+     "file": "laser-swat-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 735,
+     "h": 834,
+     "made": true
+    },
+    {
+     "file": "laser-swat-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 735,
+     "h": 834,
      "made": true
     }
    ]
@@ -24867,6 +25289,52 @@
      "style": "icon",
      "w": 1226,
      "h": 1158,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "voyager-flight-sim",
+   "name": "Voyager Flight Simulation",
+   "aliases": [
+    "Voyager",
+    "Voyager Flight Sim"
+   ],
+   "category": "venues",
+   "category_name": "Venues & days out",
+   "path": "venues/voyager-flight-sim/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {
+    "address": "Voyager House, 142 Prospect Way",
+    "postcode": "LU2 9QH"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "voyager-flight-sim-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 900,
+     "h": 233
+    },
+    {
+     "file": "voyager-flight-sim-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 900,
+     "h": 233,
+     "made": true
+    },
+    {
+     "file": "voyager-flight-sim-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 900,
+     "h": 233,
      "made": true
     }
    ]

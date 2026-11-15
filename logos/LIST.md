@@ -1,6 +1,6 @@
 # SMR logo list
 
-282 organisations. Full details in logos.json and LIST.csv.
+292 organisations. Full details in logos.json and LIST.csv.
 
 ## businesses (30)
 - AA Carpets and Furniture
@@ -132,7 +132,7 @@
 - Wildlife Trust BCN
 - Woodland Trust
 
-## community (48)
+## community (55)
 - ABCD Luton
 - Active Luton
 - Bedfordshire Chamber of Commerce
@@ -151,6 +151,7 @@
 - Hangout Luton
 - Higher Ground
 - Jobcentre Plus
+- Legends MMA & Fitness Centre
 - Luton & Dunstable University Hospital
 - Luton Allstars Football Club (MTAC)
 - Luton BID (Step Forward Luton)
@@ -159,11 +160,14 @@
 - Luton Creative Community CIC
 - Luton Energise Holiday Camps (HAF)
 - Luton Friends of Parks and Green Spaces
+- Luton Grappling Club
 - Luton Irish Forum
 - Luton Libraries
 - Luton Literature
 - Luton Rising
+- Luton School of Judo
 - Luton Town Football Club
+- Luton Town Hockey Club
 - Luton Youth Council
 - Luton Youth Partnership Service
 - Muslim Undertaker
@@ -175,10 +179,13 @@
 - St Joseph's RC Scouts, Icknield (Luton)
 - St Mary's Church Luton
 - St Marys Youth
+- Stockwood Park RFC
+- Storm Gym
 - SUEZ
 - The Culture Trust Luton
 - Tokko Youth Hub
 - UK Centre for Carnival Arts
+- Ultimate Athlete MMA
 - Your Wellbeing Bedfordshire
 - Youthscape
 
@@ -268,10 +275,11 @@
 ## smr (1)
 - SMR Digital
 
-## venues (32)
+## venues (35)
 - Agent Brains
 - Bennett's Splash Park
 - Cineworld Luton
+- Delta Force Paintball
 - Dunstable Downs
 - Everyone Active (The Dunstable Centre)
 - Frasers Plus Luton
@@ -281,6 +289,7 @@
 - Happy Shark Comedy Club
 - Hat Factory Arts Centre
 - Houghton Hall Park
+- Laser SWAT
 - Luton Hoo Estate
 - LUV Entertainment
 - Orbital Trampoline Park
@@ -296,9 +305,9 @@
 - The Giggles (Active Luton)
 - Upfront Comedy
 - Venue 360
+- Voyager Flight Simulation
 - Wardown Adventure Golf
 - Wigmore Valley Park
 - Woburn Safari Park
 - Woodside Farm
 - ZSL Whipsnade Zoo
-
