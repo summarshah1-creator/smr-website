@@ -13458,6 +13458,59 @@
    ]
   },
   {
+   "slug": "mencap",
+   "name": "Mencap",
+   "aliases": [
+    "Royal Mencap Society",
+    "Luton Mencap"
+   ],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/mencap/",
+   "styles": [
+    "logo-tile-full",
+    "logo",
+    "logo-white",
+    "logo-black"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {
+    "website": "https://www.mencap.org.uk"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "mencap-logo-tile-full.png",
+     "variant": "logo-tile-full",
+     "style": "logo-tile-full",
+     "w": 1800,
+     "h": 994
+    },
+    {
+     "file": "mencap-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1541,
+     "h": 808
+    },
+    {
+     "file": "mencap-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "w": 1541,
+     "h": 808
+    },
+    {
+     "file": "mencap-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo-black",
+     "w": 1541,
+     "h": 808
+    }
+   ]
+  },
+  {
    "slug": "mind-blmk",
    "name": "Mind BLMK",
    "aliases": [
@@ -17850,6 +17903,78 @@
    ]
   },
   {
+   "slug": "edible-high-town",
+   "name": "Edible High Town",
+   "aliases": [
+    "Edible Hightown",
+    "High Town community garden"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/edible-high-town/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": true,
+   "quality": "redrawn",
+   "details": {},
+   "signed_off": false,
+   "files": [
+    {
+     "file": "edible-high-town-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true
+    },
+    {
+     "file": "edible-high-town-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1600,
+     "h": 1488
+    },
+    {
+     "file": "edible-high-town-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1600,
+     "h": 1488,
+     "made": true
+    },
+    {
+     "file": "edible-high-town-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1600,
+     "h": 1488,
+     "made": true
+    },
+    {
+     "file": "edible-high-town-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "edible-high-town-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "edible-high-town-logo-brand-colour.png",
+     "variant": "logo-brand-colour",
+     "style": "logo",
+     "w": 1600,
+     "h": 1488,
+     "made": true
+    }
+   ]
+  },
+  {
    "slug": "scouts-luton",
    "name": "Falkes (Luton) Scout District",
    "aliases": [
@@ -20943,6 +21068,91 @@
      "w": 1101,
      "h": 430,
      "made": true
+    }
+   ]
+  },
+  {
+   "slug": "your-wellbeing-beds",
+   "name": "Your Wellbeing Bedfordshire",
+   "aliases": [
+    "Your Wellbeing",
+    "YWB"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/your-wellbeing-beds/",
+   "styles": [
+    "logo",
+    "logo-white",
+    "logo-black",
+    "icon",
+    "icon-white",
+    "icon-black"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {},
+   "signed_off": false,
+   "files": [
+    {
+     "file": "your-wellbeing-beds-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1800,
+     "h": 951
+    },
+    {
+     "file": "your-wellbeing-beds-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "w": 1800,
+     "h": 951
+    },
+    {
+     "file": "your-wellbeing-beds-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo-black",
+     "w": 1800,
+     "h": 951
+    },
+    {
+     "file": "your-wellbeing-beds-icon.svg",
+     "variant": "icon",
+     "style": "icon",
+     "vector": true
+    },
+    {
+     "file": "your-wellbeing-beds-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 1158,
+     "h": 1565
+    },
+    {
+     "file": "your-wellbeing-beds-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon-white",
+     "vector": true
+    },
+    {
+     "file": "your-wellbeing-beds-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon-white",
+     "w": 1158,
+     "h": 1565
+    },
+    {
+     "file": "your-wellbeing-beds-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon-black",
+     "vector": true
+    },
+    {
+     "file": "your-wellbeing-beds-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon-black",
+     "w": 1158,
+     "h": 1565
     }
    ]
   },

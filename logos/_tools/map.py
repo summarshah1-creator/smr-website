@@ -324,6 +324,9 @@ M['tesco']=('businesses','Tesco',[],[('new/tesco.jpg','logo')])
 M['abcd-luton']=('community','ABCD Luton',['ABCD','Asset Based Community Development Luton'],[('hand/abcd-luton-disc.png','logo'),('hand/abcd-luton.png','logo-clear'),('hand/abcd-luton-white.png','logo-white'),('hand/abcd-luton-black.png','logo-black')])
 M['foodcycle']=('charities','FoodCycle',['FoodCycle Luton','Food Cycle'],[('hand/foodcycle.svg','logo'),('hand/foodcycle-white.svg','logo-white'),('hand/foodcycle-black.svg','logo-black'),('hand/foodcycle-tile.svg','logo-tile-full')])
 M['wildlife-trust']=('charities','Wildlife Trust BCN',['The Wildlife Trust for Beds, Cambs & Northants','Wildlife Trust','BCN Wildlife Trust'],[('new/wildlife-trust-lockup.png','logo'),('new/wildlife-trust-roundel.jpg','roundel')])
+M['mencap']=('charities','Mencap',['Royal Mencap Society','Luton Mencap'],[('hand/mencap-tile.png','logo-tile-full'),('hand/mencap.png','logo'),('hand/mencap-white.png','logo-white'),('hand/mencap-black.png','logo-black')])
+M['edible-high-town']=('community','Edible High Town',['Edible Hightown','High Town community garden'],[('new/edible-high-town.png','logo')])
+M['your-wellbeing-beds']=('community','Your Wellbeing Bedfordshire',['Your Wellbeing','YWB'],[('hand/your-wellbeing.png','logo'),('hand/your-wellbeing-white.png','logo-white'),('hand/your-wellbeing-black.png','logo-black'),('hand/ywb-icon.svg','icon'),('hand/ywb-icon-white.svg','icon-white'),('hand/ywb-icon-black.svg','icon-black')])
 # ---------- name lockups (icon + full name), made by make_lockups.py ----------
 for _s in json.load(open('lockups.json')):
     if _s in M: M[_s][3].extend([('lockups/'+_s+'-h.png','lockup'),('lockups/'+_s+'-v.png','lockup-stacked')])

@@ -1,6 +1,6 @@
 # SMR logo list
 
-275 organisations. Full details in logos.json and LIST.csv.
+278 organisations. Full details in logos.json and LIST.csv.
 
 ## businesses (30)
 - AA Carpets and Furniture
@@ -43,7 +43,7 @@
 - The Big Iftar Luton
 - Wellness Walk
 
-## charities (85)
+## charities (86)
 - Action For Humanity
 - African Relief Fund
 - Age Concern Luton
@@ -96,6 +96,7 @@
 - Luton, South Beds & Harpenden Samaritans
 - Mary Seacole Housing Association
 - MATW Project (Muslims Around The World)
+- Mencap
 - Mind BLMK
 - Muslim Aid
 - Muslim Charity
@@ -130,7 +131,7 @@
 - Wildlife Trust BCN
 - Woodland Trust
 
-## community (43)
+## community (45)
 - ABCD Luton
 - Active Luton
 - Bedfordshire Chamber of Commerce
@@ -141,6 +142,7 @@
 - Dunstable Town Council
 - East London NHS Foundation Trust
 - East of England Community Health and Care NHS Trust
+- Edible High Town
 - Falkes (Luton) Scout District
 - Flying Start
 - Girlguiding (Bedfordshire · Luton South)
@@ -173,6 +175,7 @@
 - The Culture Trust Luton
 - Tokko Youth Hub
 - UK Centre for Carnival Arts
+- Your Wellbeing Bedfordshire
 - Youthscape
 
 ## media (2)

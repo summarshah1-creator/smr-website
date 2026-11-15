@@ -124,3 +124,5 @@ for k,w in {'aldi':'https://www.aldi.co.uk','lidl':'https://www.lidl.co.uk','asd
 json.dump(I,open('info.json','w'),indent=1)
 I['foodcycle']={'website':'https://foodcycle.org.uk'}
 json.dump(I,open('info.json','w'),indent=1)
+I['mencap']={'website':'https://www.mencap.org.uk'}
+json.dump(I,open('info.json','w'),indent=1)
