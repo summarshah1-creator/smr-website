@@ -9944,6 +9944,104 @@
    ]
   },
   {
+   "slug": "cvs",
+   "name": "Community Voluntary Service",
+   "aliases": [
+    "CVS",
+    "CVS Luton",
+    "Community Voluntary Service Luton"
+   ],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/cvs/",
+   "styles": [
+    "logo",
+    "logo-white",
+    "logo-black",
+    "icon"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {},
+   "signed_off": false,
+   "files": [
+    {
+     "file": "cvs-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1800,
+     "h": 558
+    },
+    {
+     "file": "cvs-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "w": 1800,
+     "h": 560
+    },
+    {
+     "file": "cvs-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo-black",
+     "w": 1800,
+     "h": 560
+    },
+    {
+     "file": "cvs-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 816,
+     "h": 580
+    },
+    {
+     "file": "cvs-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon",
+     "w": 816,
+     "h": 580,
+     "made": true
+    },
+    {
+     "file": "cvs-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 816,
+     "h": 580,
+     "made": true
+    },
+    {
+     "file": "cvs-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "cvs-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "cvs-icon-on-dark.png",
+     "variant": "icon-on-dark",
+     "style": "icon",
+     "w": 816,
+     "h": 580,
+     "made": true
+    },
+    {
+     "file": "cvs-icon-brand-colour.png",
+     "variant": "icon-brand-colour",
+     "style": "icon",
+     "w": 816,
+     "h": 580,
+     "made": true
+    }
+   ]
+  },
+  {
    "slug": "ctp",
    "name": "CTP",
    "aliases": [
@@ -17607,6 +17705,46 @@
    ]
   },
   {
+   "slug": "flying-start",
+   "name": "Flying Start",
+   "aliases": [],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/flying-start/",
+   "styles": [
+    "logo",
+    "logo-white",
+    "logo-black"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {},
+   "signed_off": false,
+   "files": [
+    {
+     "file": "flying-start-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1800,
+     "h": 328
+    },
+    {
+     "file": "flying-start-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "w": 1800,
+     "h": 328
+    },
+    {
+     "file": "flying-start-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo-black",
+     "w": 1800,
+     "h": 328
+    }
+   ]
+  },
+  {
    "slug": "girlguiding",
    "name": "Girlguiding (Bedfordshire \u00b7 Luton South)",
    "aliases": [
@@ -18983,6 +19121,48 @@
    ]
   },
   {
+   "slug": "luton-literature",
+   "name": "Luton Literature",
+   "aliases": [
+    "Luton Literature Festival"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/luton-literature/",
+   "styles": [
+    "logo",
+    "logo-white",
+    "logo-black"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {},
+   "signed_off": false,
+   "files": [
+    {
+     "file": "luton-literature-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1800,
+     "h": 981
+    },
+    {
+     "file": "luton-literature-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "w": 1800,
+     "h": 981
+    },
+    {
+     "file": "luton-literature-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo-black",
+     "w": 1800,
+     "h": 981
+    }
+   ]
+  },
+  {
    "slug": "luton-rising",
    "name": "Luton Rising",
    "aliases": [],
@@ -19815,6 +19995,92 @@
      "w": 416,
      "h": 464,
      "made": true
+    }
+   ]
+  },
+  {
+   "slug": "scouts-st-josephs",
+   "name": "St Joseph's RC Scouts, Icknield (Luton)",
+   "aliases": [
+    "Scouts",
+    "St Joseph's Scouts",
+    "Icknield Scouts"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/scouts-st-josephs/",
+   "styles": [
+    "logo",
+    "logo-white",
+    "logo-black",
+    "icon",
+    "icon-white",
+    "icon-black"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {},
+   "signed_off": false,
+   "files": [
+    {
+     "file": "scouts-st-josephs-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1516,
+     "h": 1656
+    },
+    {
+     "file": "scouts-st-josephs-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "w": 1516,
+     "h": 1656
+    },
+    {
+     "file": "scouts-st-josephs-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo-black",
+     "w": 1516,
+     "h": 1656
+    },
+    {
+     "file": "scouts-st-josephs-icon.svg",
+     "variant": "icon",
+     "style": "icon",
+     "vector": true
+    },
+    {
+     "file": "scouts-st-josephs-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 1506,
+     "h": 1372
+    },
+    {
+     "file": "scouts-st-josephs-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon-white",
+     "vector": true
+    },
+    {
+     "file": "scouts-st-josephs-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon-white",
+     "w": 1506,
+     "h": 1372
+    },
+    {
+     "file": "scouts-st-josephs-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon-black",
+     "vector": true
+    },
+    {
+     "file": "scouts-st-josephs-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon-black",
+     "w": 1506,
+     "h": 1372
     }
    ]
   },
