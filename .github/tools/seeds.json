@@ -472,6 +472,24 @@
   ]
  },
  {
+  "slug": "inspire-fm-brief",
+  "version": "2026-11-16a",
+  "ver": "1.0",
+  "name": "Inspire FM · Brief Edition",
+  "accent": "#15283f",
+  "tagline": "Radio, faith & community website · built to the brief · Luton",
+  "description": "Website for Inspire FM 105.1 built exactly to the Director Review Pack (Oct 2026), with every feature of today's inspirefm.org improved: live radio with a full player, schedule, shows and podcasts, prayer times and timetables, a mosque jama'ah finder, Jummah timetable, Quran, duas, seasonal hubs, Watch & Reels, events, news, giving with Zakat and Fitrana calculators, self-service advertising and a staff dashboard.",
+  "tips": [
+   "The menu stays fixed at the top and Listen Live is on every page: the bottom player opens into a full player with today's schedule, show reminders and Message the studio.",
+   "The homepage follows the approved wireframe: campaign hero, today's prayer times, on air / up next / later today, shows, podcasts, reels, videos, events and articles, then charity and advertising.",
+   "Prayer times for Luton, Dunstable, Houghton Regis, Bedford and Hitchin, with Hanafi or standard Asr, a monthly timetable that downloads as a PDF or spreadsheet, and a phone wallpaper maker.",
+   "The mosque jama'ah finder and Jummah timetable cover 38 Luton mosques: searchable, with directions and a clean PDF instead of one crowded file.",
+   "Giving: appeals with images and progress, Give by chance, See it reach them, donations in action, donor feedback and Zakat, Fitrana and Fidya calculators. Donations update the totals straight away.",
+   "Advertisers book themselves in five steps: package, dates, details, creative, pay. Each order then moves through Awaiting Review, Approved, Scheduled, Live and Completed.",
+   "The staff dashboard shows how the team runs it without a developer: one inbox for every form, advert orders, donations, feedback approval, and events and articles that go live at once."
+  ]
+ },
+ {
   "slug": "phillyz",
   "version": "2026-11-13a",
   "ver": "1.0",
