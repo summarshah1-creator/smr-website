@@ -1,0 +1,26 @@
+name: Send me a notification
+on:
+  workflow_dispatch:
+    inputs:
+      title:
+        description: Title
+        required: true
+        default: Reminder
+      body:
+        description: Message
+        required: true
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send through the admin API
+        env:
+          PIN: ${{ secrets.ADMIN_PIN || '1275' }}
+          TITLE: ${{ inputs.title }}
+          BODY: ${{ inputs.body }}
+        run: |
+          H=https://smrgraphics.co.uk; A=$H/demo-admin/api.php
+          CSRF=$(curl -sf -c c.txt -b c.txt -H "Origin: $H" -H 'Content-Type: application/json' -d "{\"pin\":\"$PIN\"}" "$A?a=login" | jq -r .csrf)
+          jq -n --arg t "$TITLE" --arg b "$BODY" '{title:$t,body:$b}' > body.json
+          curl -s -b c.txt -H "Origin: $H" -H "X-CSRF: $CSRF" -H "Content-Type: application/json" -d @body.json "$A?a=push_note" | tee out.json
+          jq -e .ok out.json

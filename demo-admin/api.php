@@ -405,6 +405,13 @@ case 'push_test':
     require_once dirname(__DIR__) . '/demo-lib/push.php';
     json_out_then(['ok' => true], function () { push_all('SMR Admin', 'Test notification: it works.', '/demo-admin/#live', 'test'); });
 
+case 'push_note':
+    require_once dirname(__DIR__) . '/demo-lib/push.php';
+    $t = trim(mb_substr((string) ($in['title'] ?? 'SMR Admin'), 0, 80)) ?: 'SMR Admin';
+    $bd = trim(mb_substr((string) ($in['body'] ?? ''), 0, 300));
+    if ($bd === '') json_out(['error' => 'Empty message.'], 400);
+    json_out_then(['ok' => true], function () use ($t, $bd) { push_all($t, $bd, '/demo-admin/', 'note-' . time()); });
+
 case 'link_create':
     $apps = array_values(array_unique(array_filter(array_map('strval', (array) ($in['apps'] ?? [])), function ($s) { return (bool) demo_by_slug($s); })));
     if (!$apps) json_out(['error' => 'Choose at least one demo.'], 400);
