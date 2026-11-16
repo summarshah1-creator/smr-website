@@ -457,8 +457,8 @@ return json_decode(<<<'JSON'
  },
  {
   "slug": "inspire-fm",
-  "version": "2026-11-16a",
-  "ver": "2.0",
+  "version": "2026-11-16b",
+  "ver": "3.0",
   "name": "Inspire FM 105.1",
   "accent": "#5e9b1f",
   "tagline": "Radio, faith & community app · Luton",
