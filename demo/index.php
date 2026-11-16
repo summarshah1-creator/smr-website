@@ -258,6 +258,7 @@ body.appmode{height:100%;overflow:hidden;display:flex;flex-direction:column}
 body.appmode .hd{position:relative;flex:none}
 body.appmode .stage{position:relative;top:auto;left:auto;right:auto;bottom:auto;flex:1 1 auto;min-height:0}
 body.appmode .glow{display:none}
+body.appmode .hd{transition:margin-top .35s cubic-bezier(.32,.72,0,1)}body.appfull .ft-tab,body.appfull .ft-card{display:none!important}
 .stage iframe{display:block;width:100%;height:100%;border:0;background:#fff}
 .stage .dev{width:100%;height:100%}
 @media(min-width:900px){
@@ -638,6 +639,10 @@ $('viewsw').addEventListener('click',function(){phone=!phone;setPhone();try{loca
 /* Each time an app is opened it starts from scratch (intro, empty basket). */
 var fresh=function(){try{for(var i=localStorage.length-1;i>=0;i--){var k=localStorage.key(i);if(k&&k.indexOf('smrDemo')!==0)localStorage.removeItem(k)}}catch(e){}
   try{for(var j=sessionStorage.length-1;j>=0;j--){var q=sessionStorage.key(j);if(q&&q.indexOf('smrTip')!==0)sessionStorage.removeItem(q)}}catch(e){}};
+/* an app can ask for the whole screen (e.g. Inspire FM's full-screen player): the demo bar slides away until it's closed */
+var setFull=function(on){var h=document.getElementById('hd');document.body.classList.toggle('appfull',!!on);if(h)h.style.marginTop=on?(-h.offsetHeight)+'px':''};
+window.addEventListener('message',function(e){var d=e.data;if(!d||typeof d!=='object'||!frame||e.source!==frame.contentWindow)return;if('ifmPlayer' in d)setFull(d.ifmPlayer);else if('smrFull' in d)setFull(d.smrFull)});
+if(frame)frame.addEventListener('load',function(){setFull(0)});
 var show=function(slug){
   if(stopped)return;
   closeMenu();
@@ -648,7 +653,7 @@ var show=function(slug){
     startTips(slug,false);deckUi();
   }else{
     if(current){frame.src='about:blank';current=null}
-    stage.classList.remove('on');home.style.display='';document.body.classList.remove('locked','appmode');
+    stage.classList.remove('on');home.style.display='';document.body.classList.remove('locked','appmode');setFull(0);
     document.title=<?= json_encode($pageTitle) ?>;hideTips();deckUi();
   }
 };
