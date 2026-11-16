@@ -385,3 +385,5 @@ M['tinas-school-of-dance']=('community',"Tina's School of Dance",['TSD',"Tina's 
 M['the-xc']=('venues','The XC',['XC Hemel','The XC Hemel Hempstead'],[('hand/the-xc-logo.svg','logo')])
 M['teamsport']=('venues','TeamSport Dunstable',['TeamSport'],[('hand/teamsport-logo.svg','logo'),('hand/teamsport-icon.svg','icon')])
 M['gymfinity-kids']=('community','Gymfinity Kids Clubs',['Gymfinity','Gymfinity Kids'],[('hand/gymfinity-kids-logo.svg','logo'),('hand/gymfinity-kids-tile.svg','logo-tile-full')])
+M['barnfield-college']=('schools','Barnfield College',[],[('hand/barnfield-logo.svg','logo'),('hand/barnfield-logo-white.svg','logo-white'),('hand/barnfield-icon.svg','icon')])
+M['barnfield-college'][3].extend([('lockups/barnfield-college-h.png','lockup'),('lockups/barnfield-college-v.png','lockup-stacked')])

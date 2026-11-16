@@ -4742,7 +4742,7 @@
     "lockup-stacked"
    ],
    "original_vector": true,
-   "quality": "redrawn",
+   "quality": "vector",
    "details": {
     "address": "Luton",
     "postcode": "LU2 7BF",
@@ -4754,110 +4754,69 @@
      "file": "barnfield-college-logo.svg",
      "variant": "logo",
      "style": "logo",
-     "vector": true,
-     "redrawn": true
+     "vector": true
     },
     {
      "file": "barnfield-college-logo.png",
      "variant": "logo",
      "style": "logo",
-     "w": 1595,
-     "h": 458
+     "w": 1591,
+     "h": 437
     },
     {
      "file": "barnfield-college-logo-white.svg",
      "variant": "logo-white",
      "style": "logo-white",
-     "vector": true,
-     "redrawn": true
+     "vector": true
     },
     {
      "file": "barnfield-college-logo-white.png",
      "variant": "logo-white",
      "style": "logo-white",
-     "w": 1595,
-     "h": 458
+     "w": 1591,
+     "h": 437
     },
     {
      "file": "barnfield-college-icon.svg",
      "variant": "icon",
      "style": "icon",
-     "vector": true,
-     "redrawn": true
+     "vector": true
     },
     {
      "file": "barnfield-college-icon.png",
      "variant": "icon",
      "style": "icon",
-     "w": 1491,
-     "h": 1600
+     "w": 1594,
+     "h": 1711
     },
     {
      "file": "barnfield-college-lockup.png",
      "variant": "lockup",
      "style": "lockup",
      "w": 1800,
-     "h": 706
+     "h": 703
     },
     {
      "file": "barnfield-college-lockup-stacked.png",
      "variant": "lockup-stacked",
      "style": "lockup-stacked",
-     "w": 1431,
+     "w": 1433,
      "h": 1800
-    },
-    {
-     "file": "barnfield-college-logo-black.png",
-     "variant": "logo-black",
-     "style": "logo",
-     "w": 1595,
-     "h": 458,
-     "made": true
-    },
-    {
-     "file": "barnfield-college-logo-white.png",
-     "variant": "logo-white",
-     "style": "logo",
-     "w": 1595,
-     "h": 458,
-     "made": true
-    },
-    {
-     "file": "barnfield-college-logo-black.svg",
-     "variant": "logo-black",
-     "style": "logo",
-     "vector": true,
-     "made": true
-    },
-    {
-     "file": "barnfield-college-logo-white.svg",
-     "variant": "logo-white",
-     "style": "logo",
-     "vector": true,
-     "made": true
-    },
-    {
-     "file": "barnfield-college-logo-brand-colour.png",
-     "variant": "logo-brand-colour",
-     "style": "logo",
-     "w": 1595,
-     "h": 458,
-     "made": true
     },
     {
      "file": "barnfield-college-icon-black.png",
      "variant": "icon-black",
      "style": "icon",
-     "w": 1491,
-     "h": 1600,
+     "w": 1594,
+     "h": 1711,
      "made": true
     },
     {
      "file": "barnfield-college-icon-white.png",
      "variant": "icon-white",
      "style": "icon",
-     "w": 1491,
-     "h": 1600,
+     "w": 1594,
+     "h": 1711,
      "made": true
     },
     {
@@ -4875,19 +4834,11 @@
      "made": true
     },
     {
-     "file": "barnfield-college-icon-brand-colour.png",
-     "variant": "icon-brand-colour",
-     "style": "icon",
-     "w": 1491,
-     "h": 1600,
-     "made": true
-    },
-    {
      "file": "barnfield-college-lockup-black.png",
      "variant": "lockup-black",
      "style": "lockup",
      "w": 1800,
-     "h": 706,
+     "h": 703,
      "made": true
     },
     {
@@ -4895,7 +4846,7 @@
      "variant": "lockup-white",
      "style": "lockup",
      "w": 1800,
-     "h": 706,
+     "h": 703,
      "made": true
     },
     {
@@ -4917,14 +4868,14 @@
      "variant": "lockup-brand-colour",
      "style": "lockup",
      "w": 1800,
-     "h": 706,
+     "h": 703,
      "made": true
     },
     {
      "file": "barnfield-college-lockup-stacked-black.png",
      "variant": "lockup-stacked-black",
      "style": "lockup-stacked",
-     "w": 1431,
+     "w": 1433,
      "h": 1800,
      "made": true
     },
@@ -4932,7 +4883,7 @@
      "file": "barnfield-college-lockup-stacked-white.png",
      "variant": "lockup-stacked-white",
      "style": "lockup-stacked",
-     "w": 1431,
+     "w": 1433,
      "h": 1800,
      "made": true
     },
@@ -4954,7 +4905,7 @@
      "file": "barnfield-college-lockup-stacked-brand-colour.png",
      "variant": "lockup-stacked-brand-colour",
      "style": "lockup-stacked",
-     "w": 1431,
+     "w": 1433,
      "h": 1800,
      "made": true
     }
