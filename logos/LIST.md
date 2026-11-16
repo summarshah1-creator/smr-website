@@ -1,6 +1,6 @@
 # SMR logo list
 
-328 organisations. Full details in logos.json and LIST.csv.
+348 organisations. Full details in logos.json and LIST.csv.
 
 ## businesses (38)
 - AA Carpets and Furniture
@@ -51,7 +51,7 @@
 - The Big Iftar Luton
 - Wellness Walk
 
-## charities (87)
+## charities (96)
 - Action For Humanity
 - African Relief Fund
 - Age Concern Luton
@@ -59,10 +59,12 @@
 - Aghosh UK
 - Al-Khair Foundation
 - Amanah Project
+- Ameina Centre
 - Bedford Hospital Charity & Friends
 - Bedfordshire & Luton Community Foundation
 - Bedfordshire Rural Communities Charity
 - British Red Cross
+- Care4Calais
 - Citizens Advice Luton
 - Comic Relief
 - Community Interest Luton
@@ -79,6 +81,7 @@
 - Friends of Bright Eyes
 - Global Helping Hands
 - Global Relief Trust
+- Go Dharmic
 - GoodGym Luton
 - Grassroots
 - Groundwork
@@ -98,8 +101,11 @@
 - LETS Hub (Luton Employment Training Skills)
 - Level Trust
 - Luton All Women's Centre
+- Luton Clothing Bank
 - Luton Foodbank
 - Luton Point
+- Luton Rights
+- Luton Sikh Soup Kitchen
 - Luton Town FC Community Trust
 - Luton, South Beds & Harpenden Samaritans
 - Mary Seacole Housing Association
@@ -115,6 +121,7 @@
 - NGS Youth & Community (Next Generation Scheme)
 - Nijjor Manush
 - NOAH Enterprise
+- Oasis Women's Centre
 - One Nation
 - One Ummah
 - Orphans in Need
@@ -135,12 +142,14 @@
 - The Lady Fatemah Trust
 - The National Lottery Community Fund
 - The Raise Up Foundation
+- Thrive Hub
+- UCKG HelpCentre
 - Ummah Welfare Trust
 - Utilita Giving
 - Wildlife Trust BCN
 - Woodland Trust
 
-## community (74)
+## community (82)
 - ABCD Luton
 - Active Luton
 - Anne Gale School of Dance
@@ -151,6 +160,7 @@
 - Bedfordshire Hospitals NHS Foundation Trust
 - Bedfordshire Police
 - Bedfordshire Police & Crime Commissioner
+- Calvary Church of God in Christ (COGIC UK)
 - Care homes (general)
 - Dunstable Town Council
 - East London NHS Foundation Trust
@@ -164,12 +174,14 @@
 - Hangout Luton
 - Higher Ground
 - Hockwell Ring Amateur Boxing Club
+- Hope Church Luton
 - Jobcentre Plus
 - Legends MMA & Fitness Centre
 - London Gliding Club
 - Luton & Dunstable University Hospital
 - Luton Allstars Football Club (MTAC)
 - Luton BID (Step Forward Luton)
+- Luton Christian Fellowship
 - Luton Council
 - Luton Council of Faiths
 - Luton Creative Community CIC
@@ -189,13 +201,16 @@
 - Luton Town Hockey Club
 - Luton Youth Council
 - Luton Youth Partnership Service
+- Marsh Farm Futures
 - Muslim Undertaker
 - Mystics Trampoline & Gymnastics Club
 - Near Neighbours
 - Next Generation Youth Theatre
+- NHS Healthy Start
 - NXT GEN Pathways
 - Pauline Quirke Academy (PQA Luton)
 - RAF Air Cadets
+- Ramridge Baptist Church
 - Rosebuds Luton Sisters
 - Sea Cadets (Luton Unit 226, TS Keyes)
 - SPA Gymnastics Academy
@@ -208,10 +223,12 @@
 - Sunnah Archery Club
 - Sunshine Riding School
 - The Culture Trust Luton
+- The Parish Church of The Holy Cross, Marsh Farm
 - Tina's School of Dance
 - Tokko Youth Hub
 - UK Centre for Carnival Arts
 - Ultimate Athlete MMA
+- We Are Marsh Farm
 - Wicketz (Lord's Taverners)
 - Your Wellbeing Bedfordshire
 - Youthscape
@@ -265,7 +282,7 @@
 - Zakariya Masjid
 - Zuhri Academy
 
-## schools (32)
+## schools (35)
 - Active Support Education Centre
 - Al-Hikmah (Bury Park Educational Institute)
 - Avenue Centre for Education
@@ -279,6 +296,7 @@
 - Chiltern Learning Trust
 - Dallow Primary School
 - Denbigh High School
+- Denbigh Primary School
 - Downside Primary School (DPS)
 - Farley Junior Academy
 - Hillborough Junior School
@@ -286,6 +304,7 @@
 - Lady Zia Wernher School
 - Lea Manor High School
 - Lealands High School
+- Luton Adult Learning
 - Luton Sixth Form College
 - Mehria Primary School
 - Norton Road Primary School
@@ -294,6 +313,7 @@
 - Queen Elizabeth School (QES)
 - Rabia Education Trust
 - Stopsley High School (SHS)
+- The Ferrars Academy
 - The Stockwood Park Academy
 - University of Bedfordshire
 - Wigmore Primary School

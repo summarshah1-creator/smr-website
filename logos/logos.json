@@ -8889,6 +8889,231 @@
    ]
   },
   {
+   "slug": "denbigh-primary",
+   "name": "Denbigh Primary School",
+   "aliases": [
+    "Denbigh Primary"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/denbigh-primary/",
+   "styles": [
+    "logo",
+    "icon"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {},
+   "signed_off": false,
+   "files": [
+    {
+     "file": "denbigh-primary-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1724,
+     "h": 480
+    },
+    {
+     "file": "denbigh-primary-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 546,
+     "h": 480,
+     "made": true
+    },
+    {
+     "file": "denbigh-primary-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1724,
+     "h": 480,
+     "made": true
+    },
+    {
+     "file": "denbigh-primary-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1724,
+     "h": 480,
+     "made": true
+    },
+    {
+     "file": "denbigh-primary-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "denbigh-primary-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "denbigh-primary-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon",
+     "w": 546,
+     "h": 480,
+     "made": true
+    },
+    {
+     "file": "denbigh-primary-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 546,
+     "h": 480,
+     "made": true
+    },
+    {
+     "file": "denbigh-primary-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "denbigh-primary-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "denbigh-primary-icon-brand-colour.png",
+     "variant": "icon-brand-colour",
+     "style": "icon",
+     "w": 546,
+     "h": 480,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "ferrars-academy",
+   "name": "The Ferrars Academy",
+   "aliases": [
+    "Ferrars",
+    "Ferrars Academy"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/ferrars-academy/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {},
+   "signed_off": false,
+   "files": [
+    {
+     "file": "ferrars-academy-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1028,
+     "h": 1134
+    },
+    {
+     "file": "ferrars-academy-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1028,
+     "h": 1134,
+     "made": true
+    },
+    {
+     "file": "ferrars-academy-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1028,
+     "h": 1134,
+     "made": true
+    },
+    {
+     "file": "ferrars-academy-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "ferrars-academy-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "luton-adult-learning",
+   "name": "Luton Adult Learning",
+   "aliases": [
+    "Luton Adult & Community Learning",
+    "LACL",
+    "Luton ACL"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/luton-adult-learning/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": true,
+   "quality": "redrawn",
+   "details": {},
+   "signed_off": false,
+   "files": [
+    {
+     "file": "luton-adult-learning-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true
+    },
+    {
+     "file": "luton-adult-learning-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1594,
+     "h": 851
+    },
+    {
+     "file": "luton-adult-learning-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1594,
+     "h": 851,
+     "made": true
+    },
+    {
+     "file": "luton-adult-learning-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1594,
+     "h": 851,
+     "made": true
+    },
+    {
+     "file": "luton-adult-learning-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "luton-adult-learning-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
    "slug": "action-for-humanity",
    "name": "Action For Humanity",
    "aliases": [],
@@ -16872,6 +17097,614 @@
    ]
   },
   {
+   "slug": "thrive-hub",
+   "name": "Thrive Hub",
+   "aliases": [
+    "Thrive",
+    "Thrive Hub Luton"
+   ],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/thrive-hub/",
+   "styles": [
+    "logo",
+    "icon"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {},
+   "signed_off": false,
+   "files": [
+    {
+     "file": "thrive-hub-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1800,
+     "h": 237
+    },
+    {
+     "file": "thrive-hub-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 336,
+     "h": 237,
+     "made": true
+    },
+    {
+     "file": "thrive-hub-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1800,
+     "h": 237,
+     "made": true
+    },
+    {
+     "file": "thrive-hub-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1800,
+     "h": 237,
+     "made": true
+    },
+    {
+     "file": "thrive-hub-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "thrive-hub-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "thrive-hub-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon",
+     "w": 336,
+     "h": 237,
+     "made": true
+    },
+    {
+     "file": "thrive-hub-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 336,
+     "h": 237,
+     "made": true
+    },
+    {
+     "file": "thrive-hub-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "thrive-hub-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "thrive-hub-icon-brand-colour.png",
+     "variant": "icon-brand-colour",
+     "style": "icon",
+     "w": 336,
+     "h": 237,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "oasis-centre-luton",
+   "name": "Oasis Women's Centre",
+   "aliases": [
+    "Oasis Centre",
+    "Oasis Centre Luton",
+    "Oasis drop-in"
+   ],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/oasis-centre-luton/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {},
+   "signed_off": false,
+   "files": [
+    {
+     "file": "oasis-centre-luton-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1800,
+     "h": 222
+    },
+    {
+     "file": "oasis-centre-luton-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1800,
+     "h": 222,
+     "made": true
+    },
+    {
+     "file": "oasis-centre-luton-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1800,
+     "h": 222,
+     "made": true
+    },
+    {
+     "file": "oasis-centre-luton-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "oasis-centre-luton-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "care4calais",
+   "name": "Care4Calais",
+   "aliases": [
+    "Care 4 Calais",
+    "Care4Calais Bedfordshire"
+   ],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/care4calais/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": true,
+   "quality": "redrawn",
+   "details": {},
+   "signed_off": false,
+   "files": [
+    {
+     "file": "care4calais-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true
+    },
+    {
+     "file": "care4calais-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1598,
+     "h": 681
+    },
+    {
+     "file": "care4calais-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1598,
+     "h": 681,
+     "made": true
+    },
+    {
+     "file": "care4calais-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1598,
+     "h": 681,
+     "made": true
+    },
+    {
+     "file": "care4calais-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "care4calais-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "luton-rights",
+   "name": "Luton Rights",
+   "aliases": [],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/luton-rights/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {},
+   "signed_off": false,
+   "files": [
+    {
+     "file": "luton-rights-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1111,
+     "h": 229
+    },
+    {
+     "file": "luton-rights-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1111,
+     "h": 229,
+     "made": true
+    },
+    {
+     "file": "luton-rights-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1111,
+     "h": 229,
+     "made": true
+    },
+    {
+     "file": "luton-rights-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "luton-rights-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "luton-clothing-bank",
+   "name": "Luton Clothing Bank",
+   "aliases": [
+    "LCB"
+   ],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/luton-clothing-bank/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {},
+   "signed_off": false,
+   "files": [
+    {
+     "file": "luton-clothing-bank-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 970,
+     "h": 328
+    },
+    {
+     "file": "luton-clothing-bank-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 970,
+     "h": 328,
+     "made": true
+    },
+    {
+     "file": "luton-clothing-bank-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 970,
+     "h": 328,
+     "made": true
+    },
+    {
+     "file": "luton-clothing-bank-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "luton-clothing-bank-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "ameina-centre",
+   "name": "Ameina Centre",
+   "aliases": [
+    "Ameina"
+   ],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/ameina-centre/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {},
+   "signed_off": false,
+   "files": [
+    {
+     "file": "ameina-centre-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1485,
+     "h": 258
+    },
+    {
+     "file": "ameina-centre-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1485,
+     "h": 258,
+     "made": true
+    },
+    {
+     "file": "ameina-centre-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1485,
+     "h": 258,
+     "made": true
+    },
+    {
+     "file": "ameina-centre-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "ameina-centre-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "go-dharmic",
+   "name": "Go Dharmic",
+   "aliases": [
+    "GoDharmic"
+   ],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/go-dharmic/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {},
+   "signed_off": false,
+   "files": [
+    {
+     "file": "go-dharmic-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1298,
+     "h": 604
+    },
+    {
+     "file": "go-dharmic-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1298,
+     "h": 604,
+     "made": true
+    },
+    {
+     "file": "go-dharmic-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1298,
+     "h": 604,
+     "made": true
+    },
+    {
+     "file": "go-dharmic-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "go-dharmic-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "uckg-helpcentre",
+   "name": "UCKG HelpCentre",
+   "aliases": [
+    "UCKG",
+    "UCKG Luton"
+   ],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/uckg-helpcentre/",
+   "styles": [
+    "logo",
+    "icon"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {},
+   "signed_off": false,
+   "files": [
+    {
+     "file": "uckg-helpcentre-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 942,
+     "h": 667
+    },
+    {
+     "file": "uckg-helpcentre-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 454,
+     "h": 352,
+     "made": true
+    },
+    {
+     "file": "uckg-helpcentre-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 942,
+     "h": 667,
+     "made": true
+    },
+    {
+     "file": "uckg-helpcentre-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 942,
+     "h": 667,
+     "made": true
+    },
+    {
+     "file": "uckg-helpcentre-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "uckg-helpcentre-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "uckg-helpcentre-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon",
+     "w": 454,
+     "h": 352,
+     "made": true
+    },
+    {
+     "file": "uckg-helpcentre-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 454,
+     "h": 352,
+     "made": true
+    },
+    {
+     "file": "uckg-helpcentre-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "uckg-helpcentre-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "uckg-helpcentre-icon-brand-colour.png",
+     "variant": "icon-brand-colour",
+     "style": "icon",
+     "w": 454,
+     "h": 352,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "luton-sikh-soup-kitchen",
+   "name": "Luton Sikh Soup Kitchen",
+   "aliases": [
+    "Sikh Soup Kitchen"
+   ],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/luton-sikh-soup-kitchen/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {},
+   "signed_off": false,
+   "files": [
+    {
+     "file": "luton-sikh-soup-kitchen-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 979,
+     "h": 485
+    },
+    {
+     "file": "luton-sikh-soup-kitchen-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 979,
+     "h": 485,
+     "made": true
+    },
+    {
+     "file": "luton-sikh-soup-kitchen-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 979,
+     "h": 485,
+     "made": true
+    },
+    {
+     "file": "luton-sikh-soup-kitchen-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "luton-sikh-soup-kitchen-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
    "slug": "abcd-luton",
    "name": "ABCD Luton",
    "aliases": [
@@ -23766,6 +24599,519 @@
     },
     {
      "file": "tinas-school-of-dance-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "nhs-healthy-start",
+   "name": "NHS Healthy Start",
+   "aliases": [
+    "Healthy Start"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/nhs-healthy-start/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": true,
+   "quality": "redrawn",
+   "details": {},
+   "signed_off": false,
+   "files": [
+    {
+     "file": "nhs-healthy-start-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true
+    },
+    {
+     "file": "nhs-healthy-start-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1596,
+     "h": 1596
+    },
+    {
+     "file": "nhs-healthy-start-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1596,
+     "h": 1596,
+     "made": true
+    },
+    {
+     "file": "nhs-healthy-start-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1596,
+     "h": 1596,
+     "made": true
+    },
+    {
+     "file": "nhs-healthy-start-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "nhs-healthy-start-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "we-are-marsh-farm",
+   "name": "We Are Marsh Farm",
+   "aliases": [
+    "Marsh Farm",
+    "WAMF"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/we-are-marsh-farm/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {},
+   "signed_off": false,
+   "files": [
+    {
+     "file": "we-are-marsh-farm-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 936,
+     "h": 554
+    },
+    {
+     "file": "we-are-marsh-farm-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 936,
+     "h": 554,
+     "made": true
+    },
+    {
+     "file": "we-are-marsh-farm-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 936,
+     "h": 554,
+     "made": true
+    },
+    {
+     "file": "we-are-marsh-farm-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "we-are-marsh-farm-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "marsh-farm-futures",
+   "name": "Marsh Farm Futures",
+   "aliases": [
+    "MFF"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/marsh-farm-futures/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {},
+   "signed_off": false,
+   "files": [
+    {
+     "file": "marsh-farm-futures-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1800,
+     "h": 546
+    },
+    {
+     "file": "marsh-farm-futures-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1800,
+     "h": 546,
+     "made": true
+    },
+    {
+     "file": "marsh-farm-futures-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1800,
+     "h": 546,
+     "made": true
+    },
+    {
+     "file": "marsh-farm-futures-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "marsh-farm-futures-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "hope-church-luton",
+   "name": "Hope Church Luton",
+   "aliases": [
+    "Hope Church"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/hope-church-luton/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {},
+   "signed_off": false,
+   "files": [
+    {
+     "file": "hope-church-luton-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1397,
+     "h": 495
+    },
+    {
+     "file": "hope-church-luton-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1397,
+     "h": 495,
+     "made": true
+    },
+    {
+     "file": "hope-church-luton-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1397,
+     "h": 495,
+     "made": true
+    },
+    {
+     "file": "hope-church-luton-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "hope-church-luton-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "luton-christian-fellowship",
+   "name": "Luton Christian Fellowship",
+   "aliases": [
+    "LCF Church"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/luton-christian-fellowship/",
+   "styles": [
+    "logo",
+    "icon"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {},
+   "signed_off": false,
+   "files": [
+    {
+     "file": "luton-christian-fellowship-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1800,
+     "h": 346
+    },
+    {
+     "file": "luton-christian-fellowship-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 345,
+     "h": 346,
+     "made": true
+    },
+    {
+     "file": "luton-christian-fellowship-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1800,
+     "h": 346,
+     "made": true
+    },
+    {
+     "file": "luton-christian-fellowship-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1800,
+     "h": 346,
+     "made": true
+    },
+    {
+     "file": "luton-christian-fellowship-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "luton-christian-fellowship-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "luton-christian-fellowship-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon",
+     "w": 345,
+     "h": 346,
+     "made": true
+    },
+    {
+     "file": "luton-christian-fellowship-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 345,
+     "h": 346,
+     "made": true
+    },
+    {
+     "file": "luton-christian-fellowship-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "luton-christian-fellowship-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "luton-christian-fellowship-icon-on-dark.png",
+     "variant": "icon-on-dark",
+     "style": "icon",
+     "w": 345,
+     "h": 346,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "ramridge-baptist",
+   "name": "Ramridge Baptist Church",
+   "aliases": [
+    "Ramridge",
+    "Tin Town"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/ramridge-baptist/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {},
+   "signed_off": false,
+   "files": [
+    {
+     "file": "ramridge-baptist-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1800,
+     "h": 571
+    },
+    {
+     "file": "ramridge-baptist-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1800,
+     "h": 571,
+     "made": true
+    },
+    {
+     "file": "ramridge-baptist-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1800,
+     "h": 571,
+     "made": true
+    },
+    {
+     "file": "ramridge-baptist-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "ramridge-baptist-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "holy-cross-luton",
+   "name": "The Parish Church of The Holy Cross, Marsh Farm",
+   "aliases": [
+    "Holy Cross Church",
+    "Holy Cross Marsh Farm"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/holy-cross-luton/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {},
+   "signed_off": false,
+   "files": [
+    {
+     "file": "holy-cross-luton-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "holy-cross-luton-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1327,
+     "h": 561
+    },
+    {
+     "file": "holy-cross-luton-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1327,
+     "h": 561,
+     "made": true
+    },
+    {
+     "file": "holy-cross-luton-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1327,
+     "h": 561,
+     "made": true
+    },
+    {
+     "file": "holy-cross-luton-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "holy-cross-luton-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "cogic-calvary",
+   "name": "Calvary Church of God in Christ (COGIC UK)",
+   "aliases": [
+    "COGIC UK",
+    "Calvary Church",
+    "BACCA"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/cogic-calvary/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {},
+   "signed_off": false,
+   "files": [
+    {
+     "file": "cogic-calvary-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1363,
+     "h": 1363
+    },
+    {
+     "file": "cogic-calvary-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1363,
+     "h": 1363,
+     "made": true
+    },
+    {
+     "file": "cogic-calvary-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1363,
+     "h": 1363,
+     "made": true
+    },
+    {
+     "file": "cogic-calvary-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "cogic-calvary-logo-white.svg",
      "variant": "logo-white",
      "style": "logo",
      "vector": true,

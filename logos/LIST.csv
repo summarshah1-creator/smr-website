@@ -74,6 +74,9 @@ stockwood-park,The Stockwood Park Academy,schools,,"icon, lockup, lockup-stacked
 uni-beds,University of Bedfordshire,schools,UoB,"logo, icon","University of Bedfordshire, Luton campus",LU1 3JU,,logos/schools/uni-beds/
 wigmore,Wigmore Primary School,schools,,"icon, lockup, lockup-stacked","Twyford Drive, Luton",LU2 9TB,,logos/schools/wigmore/
 woodlands,Woodlands Secondary School,schools,,"icon, lockup, lockup-stacked","Northwell Drive, Luton",LU3 3SP,http://www.woodlands.luton.sch.uk,logos/schools/woodlands/
+denbigh-primary,Denbigh Primary School,schools,Denbigh Primary,"logo, icon",,,,logos/schools/denbigh-primary/
+ferrars-academy,The Ferrars Academy,schools,Ferrars; Ferrars Academy,logo,,,,logos/schools/ferrars-academy/
+luton-adult-learning,Luton Adult Learning,schools,Luton Adult & Community Learning; LACL; Luton ACL,logo,,,,logos/schools/luton-adult-learning/
 action-for-humanity,Action For Humanity,charities,,logo,,,,logos/charities/action-for-humanity/
 african-relief,African Relief Fund,charities,,logo,,,,logos/charities/african-relief/
 age-concern-luton,Age Concern Luton,charities,,logo,,,,logos/charities/age-concern-luton/
@@ -161,6 +164,15 @@ ummah-welfare-trust,Ummah Welfare Trust,charities,UWT,logo,,,,logos/charities/um
 utilita-giving,Utilita Giving,charities,,logo,,,,logos/charities/utilita-giving/
 wildlife-trust,Wildlife Trust BCN,charities,"The Wildlife Trust for Beds, Cambs & Northants; Wildlife Trust; BCN Wildlife Trust","logo, roundel, icon",,,https://www.wildlifebcn.org,logos/charities/wildlife-trust/
 woodland-trust,Woodland Trust,charities,,"logo, icon",Between Bramingham and Marsh Farm,LU3 2RU,https://www.woodlandtrust.org.uk,logos/charities/woodland-trust/
+thrive-hub,Thrive Hub,charities,Thrive; Thrive Hub Luton,"logo, icon",,,,logos/charities/thrive-hub/
+oasis-centre-luton,Oasis Women's Centre,charities,Oasis Centre; Oasis Centre Luton; Oasis drop-in,logo,,,,logos/charities/oasis-centre-luton/
+care4calais,Care4Calais,charities,Care 4 Calais; Care4Calais Bedfordshire,logo,,,,logos/charities/care4calais/
+luton-rights,Luton Rights,charities,,logo,,,,logos/charities/luton-rights/
+luton-clothing-bank,Luton Clothing Bank,charities,LCB,logo,,,,logos/charities/luton-clothing-bank/
+ameina-centre,Ameina Centre,charities,Ameina,logo,,,,logos/charities/ameina-centre/
+go-dharmic,Go Dharmic,charities,GoDharmic,logo,,,,logos/charities/go-dharmic/
+uckg-helpcentre,UCKG HelpCentre,charities,UCKG; UCKG Luton,"logo, icon",,,,logos/charities/uckg-helpcentre/
+luton-sikh-soup-kitchen,Luton Sikh Soup Kitchen,charities,Sikh Soup Kitchen,logo,,,,logos/charities/luton-sikh-soup-kitchen/
 abcd-luton,ABCD Luton,community,ABCD; Asset Based Community Development Luton,"logo, logo-clear, logo-white, logo-black",,,,logos/community/abcd-luton/
 active-luton,Active Luton,community,,logo,Butterfield Green Road,LU2 8DD,https://activeluton.co.uk,logos/community/active-luton/
 beds-chamber,Bedfordshire Chamber of Commerce,community,Beds Chamber,"logo, logo-alt, icon",,,,logos/community/beds-chamber/
@@ -235,6 +247,14 @@ mystics,Mystics Trampoline & Gymnastics Club,community,Mystics; Mystics St Alban
 london-gliding-club,London Gliding Club,community,LGC; London Gliding Club Dunstable,logo,"Tring Road, Dunstable",LU6 2JP,https://www.londonglidingclub.co.uk,logos/community/london-gliding-club/
 spa-gymnastics,SPA Gymnastics Academy,community,SPA Gymnastics; Spa Gymnastics Academy,logo,,,https://spagymnastics.classforkids.io,logos/community/spa-gymnastics/
 tinas-school-of-dance,Tina's School of Dance,community,TSD; Tina's Dance,"logo, logo-tile-full",,,,logos/community/tinas-school-of-dance/
+nhs-healthy-start,NHS Healthy Start,community,Healthy Start,logo,,,,logos/community/nhs-healthy-start/
+we-are-marsh-farm,We Are Marsh Farm,community,Marsh Farm; WAMF,logo,,,,logos/community/we-are-marsh-farm/
+marsh-farm-futures,Marsh Farm Futures,community,MFF,logo,,,,logos/community/marsh-farm-futures/
+hope-church-luton,Hope Church Luton,community,Hope Church,logo,,,,logos/community/hope-church-luton/
+luton-christian-fellowship,Luton Christian Fellowship,community,LCF Church,"logo, icon",,,,logos/community/luton-christian-fellowship/
+ramridge-baptist,Ramridge Baptist Church,community,Ramridge; Tin Town,logo,,,,logos/community/ramridge-baptist/
+holy-cross-luton,"The Parish Church of The Holy Cross, Marsh Farm",community,Holy Cross Church; Holy Cross Marsh Farm,logo,,,,logos/community/holy-cross-luton/
+cogic-calvary,Calvary Church of God in Christ (COGIC UK),community,COGIC UK; Calvary Church; BACCA,logo,,,,logos/community/cogic-calvary/
 one-eid,1 Eid,campaigns,One Eid,"logo, icon",,,,logos/campaigns/one-eid/
 jummah-winter-campaign,Jummah Winter Campaign,campaigns,JWA; Jummah Winter Appeal,"logo, logo-white, logo-compact, icon",,,,logos/campaigns/jummah-winter-campaign/
 lets-eat-together,Let's Eat Together,campaigns,,wordmark,,,https://lutonfoodbank.org.uk/letseattogether,logos/campaigns/lets-eat-together/
