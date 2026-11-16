@@ -411,3 +411,6 @@ M['uckg-helpcentre']=('charities','UCKG HelpCentre',['UCKG', 'UCKG Luton'],[('ha
 M['luton-sikh-soup-kitchen']=('charities','Luton Sikh Soup Kitchen',['Sikh Soup Kitchen'],[('hand/luton-sikh-soup-kitchen-logo.png','logo')])
 M['someries-infant']=('schools','Someries Infant School',['Someries','Someries Infants'],[('hand/someries-infant-logo.png','logo')])
 M['st-christophers-luton']=('community',"St Andrew & St Christopher's Church, Luton",["St Christopher's",'St A & C',"St Christopher's Community Lunch"],[('hand/st-christophers-luton-logo.png','logo')])
+M['love-for-the-family']=('charities','Love for the Family',['Love Baby Essential','Love for the Family Luton'],[('hand/love-for-the-family-logo.svg','logo')])
+M['brass']=('charities','BRASS (Bedfordshire Refugee and Asylum Seeker Support)',['BRASS','Bedfordshire Refugee and Asylum Seeker Support','BRASS Bedford'],[('hand/brass-logo.svg','logo')])
+M['harpur-trust']=('charities','Harpur Trust',['The Harpur Trust'],[('hand/harpur-trust-logo.svg','logo')])

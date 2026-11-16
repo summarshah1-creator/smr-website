@@ -10012,6 +10012,70 @@
    ]
   },
   {
+   "slug": "brass",
+   "name": "BRASS (Bedfordshire Refugee and Asylum Seeker Support)",
+   "aliases": [
+    "BRASS",
+    "Bedfordshire Refugee and Asylum Seeker Support",
+    "BRASS Bedford"
+   ],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/brass/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {},
+   "signed_off": false,
+   "files": [
+    {
+     "file": "brass-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "brass-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1800,
+     "h": 411
+    },
+    {
+     "file": "brass-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1800,
+     "h": 411,
+     "made": true
+    },
+    {
+     "file": "brass-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1800,
+     "h": 411,
+     "made": true
+    },
+    {
+     "file": "brass-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "brass-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
    "slug": "british-red-cross",
    "name": "British Red Cross",
    "aliases": [
@@ -11985,6 +12049,115 @@
    ]
   },
   {
+   "slug": "harpur-trust",
+   "name": "Harpur Trust",
+   "aliases": [
+    "The Harpur Trust"
+   ],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/harpur-trust/",
+   "styles": [
+    "logo",
+    "icon"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {},
+   "signed_off": false,
+   "files": [
+    {
+     "file": "harpur-trust-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "harpur-trust-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1800,
+     "h": 472
+    },
+    {
+     "file": "harpur-trust-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 382,
+     "h": 472,
+     "made": true
+    },
+    {
+     "file": "harpur-trust-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1800,
+     "h": 472,
+     "made": true
+    },
+    {
+     "file": "harpur-trust-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1800,
+     "h": 472,
+     "made": true
+    },
+    {
+     "file": "harpur-trust-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "harpur-trust-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "harpur-trust-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon",
+     "w": 382,
+     "h": 472,
+     "made": true
+    },
+    {
+     "file": "harpur-trust-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 382,
+     "h": 472,
+     "made": true
+    },
+    {
+     "file": "harpur-trust-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "harpur-trust-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "harpur-trust-icon-brand-colour.png",
+     "variant": "icon-brand-colour",
+     "style": "icon",
+     "w": 382,
+     "h": 472,
+     "made": true
+    }
+   ]
+  },
+  {
    "slug": "hightown-baptist",
    "name": "Hightown Baptist Church",
    "aliases": [
@@ -13289,6 +13462,69 @@
      "style": "logo",
      "w": 1595,
      "h": 584,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "love-for-the-family",
+   "name": "Love for the Family",
+   "aliases": [
+    "Love Baby Essential",
+    "Love for the Family Luton"
+   ],
+   "category": "charities",
+   "category_name": "Charities",
+   "path": "charities/love-for-the-family/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {},
+   "signed_off": false,
+   "files": [
+    {
+     "file": "love-for-the-family-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "love-for-the-family-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1270,
+     "h": 989
+    },
+    {
+     "file": "love-for-the-family-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1270,
+     "h": 989,
+     "made": true
+    },
+    {
+     "file": "love-for-the-family-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1270,
+     "h": 989,
+     "made": true
+    },
+    {
+     "file": "love-for-the-family-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "love-for-the-family-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
      "made": true
     }
    ]
