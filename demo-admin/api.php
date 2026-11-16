@@ -410,7 +410,7 @@ case 'push_note':
     $t = trim(mb_substr((string) ($in['title'] ?? 'SMR Admin'), 0, 80)) ?: 'SMR Admin';
     $bd = trim(mb_substr((string) ($in['body'] ?? ''), 0, 300));
     if ($bd === '') json_out(['error' => 'Empty message.'], 400);
-    json_out_then(['ok' => true], function () use ($t, $bd) { push_all($t, $bd, '/demo-admin/', 'note-' . time()); });
+    json_out(['ok' => true, 'sent' => push_all($t, $bd, '/demo-admin/', 'note-' . time())]);
 
 case 'link_create':
     $apps = array_values(array_unique(array_filter(array_map('strval', (array) ($in['apps'] ?? [])), function ($s) { return (bool) demo_by_slug($s); })));

@@ -74,11 +74,12 @@ function push_encrypt(string $payload, string $p256dh, string $auth): string {
 }
 
 /* Send to every saved device. Never throws: notifications are best effort. */
-function push_all(string $title, string $body, string $url = '/demo-admin/#live', string $tag = ''): void {
+function push_all(string $title, string $body, string $url = '/demo-admin/#live', string $tag = ''): array {
+    $out = [];
     try {
-        if (!function_exists('curl_init')) return;
+        if (!function_exists('curl_init')) return ['no curl'];
         $subs = db()->query('SELECT * FROM push_subs')->fetchAll();
-        if (!$subs) return;
+        if (!$subs) return ['no devices'];
         $payload = json_encode(['title' => $title, 'body' => $body, 'url' => $url, 'tag' => $tag], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
         foreach ($subs as $s) {
             $ch = curl_init($s['endpoint']);
@@ -90,10 +91,13 @@ function push_all(string $title, string $body, string $url = '/demo-admin/#live'
             ]);
             curl_exec($ch);
             $code = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $err = curl_error($ch);
             curl_close($ch);
+            $out[] = parse_url($s['endpoint'], PHP_URL_HOST) . ' ' . $code . ($err ? ' ' . $err : '');
             if ($code === 404 || $code === 410) db()->prepare('DELETE FROM push_subs WHERE endpoint = ?')->execute([$s['endpoint']]);
         }
-    } catch (Throwable $e) { /* ignore */ }
+    } catch (Throwable $e) { $out[] = 'error ' . $e->getMessage(); }
+    return $out;
 }
 
 /* Activity log + notification. */
