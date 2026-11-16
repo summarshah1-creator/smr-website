@@ -9114,6 +9114,125 @@
    ]
   },
   {
+   "slug": "someries-infant",
+   "name": "Someries Infant School",
+   "aliases": [
+    "Someries",
+    "Someries Infants"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/someries-infant/",
+   "styles": [
+    "logo",
+    "icon"
+   ],
+   "original_vector": true,
+   "quality": "redrawn",
+   "details": {},
+   "signed_off": false,
+   "files": [
+    {
+     "file": "someries-infant-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true
+    },
+    {
+     "file": "someries-infant-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1598,
+     "h": 1365
+    },
+    {
+     "file": "someries-infant-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 761,
+     "h": 968,
+     "made": true
+    },
+    {
+     "file": "someries-infant-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1598,
+     "h": 1365,
+     "made": true
+    },
+    {
+     "file": "someries-infant-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1598,
+     "h": 1365,
+     "made": true
+    },
+    {
+     "file": "someries-infant-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "someries-infant-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "someries-infant-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon",
+     "w": 761,
+     "h": 968,
+     "made": true
+    },
+    {
+     "file": "someries-infant-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 761,
+     "h": 968,
+     "made": true
+    },
+    {
+     "file": "someries-infant-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "someries-infant-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "someries-infant-icon-on-dark.png",
+     "variant": "icon-on-dark",
+     "style": "icon",
+     "w": 761,
+     "h": 968,
+     "made": true
+    },
+    {
+     "file": "someries-infant-icon-brand-colour.png",
+     "variant": "icon-brand-colour",
+     "style": "icon",
+     "w": 761,
+     "h": 968,
+     "made": true
+    }
+   ]
+  },
+  {
    "slug": "action-for-humanity",
    "name": "Action For Humanity",
    "aliases": [],
@@ -25112,6 +25231,71 @@
     },
     {
      "file": "cogic-calvary-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "st-christophers-luton",
+   "name": "St Andrew & St Christopher's Church, Luton",
+   "aliases": [
+    "St Christopher's",
+    "St A & C",
+    "St Christopher's Community Lunch"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/st-christophers-luton/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": true,
+   "quality": "redrawn",
+   "details": {},
+   "signed_off": false,
+   "files": [
+    {
+     "file": "st-christophers-luton-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true
+    },
+    {
+     "file": "st-christophers-luton-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1596,
+     "h": 1407
+    },
+    {
+     "file": "st-christophers-luton-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1596,
+     "h": 1407,
+     "made": true
+    },
+    {
+     "file": "st-christophers-luton-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1596,
+     "h": 1407,
+     "made": true
+    },
+    {
+     "file": "st-christophers-luton-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "st-christophers-luton-logo-white.svg",
      "variant": "logo-white",
      "style": "logo",
      "vector": true,

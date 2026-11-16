@@ -409,3 +409,5 @@ M['go-dharmic']=('charities','Go Dharmic',['GoDharmic'],[('hand/go-dharmic-logo.
 M['cogic-calvary']=('community','Calvary Church of God in Christ (COGIC UK)',['COGIC UK', 'Calvary Church', 'BACCA'],[('hand/cogic-calvary-logo.png','logo')])
 M['uckg-helpcentre']=('charities','UCKG HelpCentre',['UCKG', 'UCKG Luton'],[('hand/uckg-helpcentre-logo.png','logo')])
 M['luton-sikh-soup-kitchen']=('charities','Luton Sikh Soup Kitchen',['Sikh Soup Kitchen'],[('hand/luton-sikh-soup-kitchen-logo.png','logo')])
+M['someries-infant']=('schools','Someries Infant School',['Someries','Someries Infants'],[('hand/someries-infant-logo.png','logo')])
+M['st-christophers-luton']=('community',"St Andrew & St Christopher's Church, Luton",["St Christopher's",'St A & C',"St Christopher's Community Lunch"],[('hand/st-christophers-luton-logo.png','logo')])

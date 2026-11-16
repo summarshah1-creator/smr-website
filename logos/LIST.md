@@ -1,6 +1,6 @@
 # SMR logo list
 
-348 organisations. Full details in logos.json and LIST.csv.
+350 organisations. Full details in logos.json and LIST.csv.
 
 ## businesses (38)
 - AA Carpets and Furniture
@@ -149,7 +149,7 @@
 - Wildlife Trust BCN
 - Woodland Trust
 
-## community (82)
+## community (83)
 - ABCD Luton
 - Active Luton
 - Anne Gale School of Dance
@@ -214,6 +214,7 @@
 - Rosebuds Luton Sisters
 - Sea Cadets (Luton Unit 226, TS Keyes)
 - SPA Gymnastics Academy
+- St Andrew & St Christopher's Church, Luton
 - St Joseph's RC Scouts, Icknield (Luton)
 - St Mary's Church Luton
 - St Marys Youth
@@ -282,7 +283,7 @@
 - Zakariya Masjid
 - Zuhri Academy
 
-## schools (35)
+## schools (36)
 - Active Support Education Centre
 - Al-Hikmah (Bury Park Educational Institute)
 - Avenue Centre for Education
@@ -312,6 +313,7 @@
 - Putteridge High School
 - Queen Elizabeth School (QES)
 - Rabia Education Trust
+- Someries Infant School
 - Stopsley High School (SHS)
 - The Ferrars Academy
 - The Stockwood Park Academy
