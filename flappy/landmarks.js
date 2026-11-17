@@ -2,10 +2,13 @@
    light from the left, same ground line. Each draws with its base on y = G and returns its width. */
 (function () {
 const OUT = '#1b1a24';
-const R = (c, col, x, y, w, h) => { c.fillStyle = col; c.fillRect(Math.round(x), Math.round(y), Math.round(w), Math.round(h)); };
+// RK = the scale a landmark is being drawn at (SCALE below). Rects snap to whole screen pixels at that scale, and 1px lines stay 1px, so resized buildings stay crisp.
+let RK = 1;
+const R = (c, col, x, y, w, h) => { c.fillStyle = col; if (RK === 1) { c.fillRect(Math.round(x), Math.round(y), Math.round(w), Math.round(h)); return; }
+  const x0 = Math.round(x * RK), y0 = Math.round(y * RK); let ww = Math.round((x + w) * RK) - x0, hh = Math.round((y + h) * RK) - y0; if (w > 0 && ww < 1) ww = 1; if (h > 0 && hh < 1) hh = 1; c.fillRect(x0 / RK, y0 / RK, ww / RK, hh / RK); };
 const SH = (col, k) => { const n = parseInt(col.slice(1), 16); let r = n >> 16, g = (n >> 8) & 255, b = n & 255; r = Math.max(0, Math.min(255, Math.round(r * k))); g = Math.max(0, Math.min(255, Math.round(g * k))); b = Math.max(0, Math.min(255, Math.round(b * k))); return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1); };
 const BOX = (c, col, x, y, w, h) => { R(c, OUT, x - 1, y - 1, w + 2, h + 2); R(c, col, x, y, w, h); if (col[0] === '#' && w > 6 && h > 6) { R(c, SH(col, 1.08), x, y, 1, h); R(c, SH(col, 1.1), x, y, w, 1); R(c, SH(col, .86), x + w - 2, y + 1, 2, h - 1); } };
-const P = (c, col, pts, out) => { c.beginPath(); pts.forEach(([a, b], i) => i ? c.lineTo(a, b) : c.moveTo(a, b)); c.closePath(); c.fillStyle = col; c.fill(); if (out) { c.strokeStyle = OUT; c.lineWidth = 1; c.stroke(); } };
+const P = (c, col, pts, out) => { c.beginPath(); pts.forEach(([a, b], i) => i ? c.lineTo(a, b) : c.moveTo(a, b)); c.closePath(); c.fillStyle = col; c.fill(); if (out) { c.strokeStyle = OUT; c.lineWidth = 1 / RK; c.stroke(); } };
 const CIRC = (c, col, cx, cy, r) => { for (let dy = -r; dy <= r; dy++) { const dx = Math.round(Math.sqrt(r * r - dy * dy)); R(c, col, cx - dx, cy + dy, dx * 2 + 1, 1); } };
 const T = (c, s, x, y, px, col, align = 'center', bold = true) => { c.font = `${bold ? 700 : 400} ${px}px Silk`; c.textAlign = align; c.textBaseline = 'top'; c.fillStyle = col; c.fillText(s, x, y); };
 const TS = (c, s, x, y, px, col, sh, align) => { T(c, s, x + 1, y + 1, px, sh, align); T(c, s, x, y, px, col, align); };
@@ -47,8 +50,14 @@ L.chaiiwala = { n: 'Chaiiwala and Nando\'s', w: 290, d(c, x, G) {
   CIRC(c, '#ffffff', x + 20, G - 89, 8); CIRC(c, '#1d2735', x + 20, G - 89, 6); R(c, '#ffffff', x + 17, G - 91, 6, 5); R(c, '#ffffff', x + 19, G - 94, 2, 2);
   TS(c, 'chaiiwala', x + 74, G - 95, 12, '#ffffff', '#0e141c');
   P(c, '#d7dce1', [[x + 3, G - 72], [x + 127, G - 72], [x + 122, G - 66], [x + 8, G - 66]], true);
-  BOX(c, '#26303d', x + 5, G - 66, 120, 66); for (let i = 0; i < 5; i++) { R(c, '#3a4656', x + 9 + i * 23, G - 64, 1, 64); CIRC(c, '#f5c46b', x + 17 + i * 23, G - 58, 1); }
-  BOX(c, '#3a4656', x + 50, G - 40, 26, 40); R(c, '#9fc1d8', x + 53, G - 37, 20, 37);
+  // dark glass frontage: warm hanging bulbs, arched mirrors and booths inside, glass door
+  BOX(c, '#15191f', x + 5, G - 66, 120, 66); R(c, '#1d232b', x + 6, G - 65, 118, 64);
+  for (let i = 0; i < 4; i++) { const ax = x + 14 + i * 28; c.strokeStyle = '#8a6a3a'; c.lineWidth = 1 / RK; c.beginPath(); c.moveTo(ax, G - 22); c.lineTo(ax, G - 40); c.arc(ax + 9, G - 40, 9, Math.PI, 0); c.lineTo(ax + 18, G - 22); c.stroke(); R(c, '#2a2f38', ax + 1, G - 40, 16, 18); }
+  for (let i = 0; i < 9; i++) { const lx = x + 11 + i * 13, ly = G - 60 + (i % 3) * 4; R(c, '#3a3a3a', lx, G - 65, 1, ly - (G - 65)); R(c, '#ffd27a', lx - 1, ly, 3, 3); R(c, 'rgba(255,200,110,.25)', lx - 3, ly - 1, 7, 6); }
+  for (let i = 0; i < 4; i++) { R(c, '#3a2c22', x + 12 + i * 28, G - 14, 14, 3); R(c, '#2a201a', x + 18 + i * 28, G - 11, 2, 11); }
+  for (const fx of [x + 36, x + 64, x + 92]) R(c, '#0d1014', fx, G - 66, 2, 66); R(c, '#0d1014', x + 5, G - 46, 120, 1);
+  R(c, 'rgba(255,255,255,.12)', x + 8, G - 64, 3, 60); R(c, 'rgba(255,255,255,.12)', x + 70, G - 64, 3, 60);
+  BOX(c, '#0d1014', x + 50, G - 40, 26, 40); R(c, '#4a5868', x + 52, G - 38, 22, 38); R(c, '#ffd27a', x + 60, G - 34, 2, 2); R(c, '#9aa3ad', x + 70, G - 22, 1, 8);
   // Nando's unit (right, a little longer)
   c.save(); c.translate(-50, 0);
   BOX(c, '#3a3d44', x + 180, G - 110, 158, 110); R(c, '#4a4e56', x + 180, G - 110, 158, 2);
@@ -76,19 +85,47 @@ L.periperi = { n: 'Peri-Peri Original', w: 180, d(c, x, G) {
   P(c, '#5a3a2e', [[x + 58, G - 128], [x + 186, G - 128], [x + 172, G - 146], [x + 72, G - 146]], true); for (let i = 0; i < 4; i++) R(c, '#4a2f25', x + 66 + i * 3, G - 140 + i * 3, 110 - i * 6, 1);
   BRICK(c, x + 150, G - 162, 14, 18); R(c, OUT, x + 149, G - 163, 16, 1);
   BOX(c, '#3d4047', x + 64, G - 64, 116, 14); R(c, '#4a4e55', x + 64, G - 58, 116, 1);
-  BOX(c, '#6e737b', x + 64, G - 50, 116, 50); WIN(c, x + 70, G - 46, 50, 44, '#3d4047', '#f6e2a8'); WIN(c, x + 124, G - 46, 50, 44, '#3d4047', '#f6e2a8');
-  R(c, '#d84b3c', x + 78, G - 14, 6, 6); R(c, '#4caf50', x + 90, G - 14, 6, 6); R(c, '#ffffff', x + 132, G - 22, 36, 4); R(c, '#2d2d33', x + 140, G - 40, 8, 14);
+  BOX(c, '#6e737b', x + 64, G - 50, 116, 50);
+  for (const wx of [x + 70, x + 124]) { BOX(c, '#3d4047', wx, G - 46, 50, 44); R(c, '#f7e6b8', wx + 2, G - 44, 46, 40); R(c, '#efd79a', wx + 2, G - 44, 46, 10); R(c, '#e6e2d8', wx + 2, G - 18, 46, 14);
+    for (let k = 0; k < 4; k++) { R(c, '#1f2228', wx + 4 + k * 11, G - 42, 9, 6); R(c, k % 2 ? '#e0281a' : '#f2c43a', wx + 5 + k * 11, G - 41, 7, 1); R(c, '#ffffff', wx + 5 + k * 11, G - 39, 5, 1); }
+    for (let k = 0; k < 3; k++) { const tx = wx + 6 + k * 15; R(c, '#ffffff', tx, G - 16, 10, 2); R(c, '#4a4e55', tx + 4, G - 14, 2, 10); R(c, k % 2 ? '#4caf50' : '#e0281a', tx - 3, G - 18, 3, 14); R(c, k % 2 ? '#4caf50' : '#e0281a', tx + 10, G - 18, 3, 14); }
+    R(c, 'rgba(255,255,255,.3)', wx + 4, G - 44, 2, 38); R(c, '#3d4047', wx + 24, G - 44, 1, 40); }
+  BOX(c, '#3d4047', x + 118, G - 46, 8, 46);
   T(c, 'Peri-Peri', x + 122, G - 80, 16, '#ff9d8c'); T(c, 'Peri-Peri', x + 121, G - 81, 16, '#ff2e1f');
   BOX(c, '#f4f2ec', x + 98, G - 63, 48, 9); T(c, 'ORIGINAL', x + 122, G - 62, 8, '#e0281a', 'center', false);
 } };
 
-L.frasers = { n: 'Frasers Plus Luton', w: 170, d(c, x, G) {
-  BOX(c, '#b8bcc2', x + 118, G - 120, 52, 120); for (let i = 0; i < 6; i++) R(c, '#a3a8af', x + 118, G - 110 + i * 18, 52, 2); T(c, 'TK MAXX', x + 144, G - 112, 8, '#8a9098', 'center', false);
-  BOX(c, '#4f86a8', x, G - 156, 120, 156);
-  for (let i = 0; i < 6; i++) for (let j = 0; j < 8; j++) R(c, (i + j) % 3 ? '#5e95b8' : '#76aacb', x + 2 + i * 20, G - 154 + j * 20, 18, 18);
-  BOX(c, '#1e2a4a', x + 6, G - 108, 108, 34); CIRC(c, '#e04d8a', x + 18, G - 91, 5); CIRC(c, '#3fb5e5', x + 22, G - 91, 3);
-  T(c, 'FRASERSPLUS', x + 68, G - 102, 8, '#ffffff'); T(c, 'LUTON', x + 68, G - 88, 8, '#cfd8ea', 'center', false);
-  BOX(c, '#26314d', x + 34, G - 22, 52, 22); R(c, '#4f86a8', x + 38, G - 18, 44, 18);
+L.frasers = { n: 'Frasers Plus Luton', w: 292, d(c, x, G) {
+  // TK Maxx block behind on the right: striped cladding, a few dark windows, purple accent tiles, red shop fascia at street level
+  const tx = x + 124, tw = 168, th = 112;
+  R(c, '#8a9098', tx + 2, G - th - 7, tw - 4, 1); for (let i = 0; i <= 27; i++) R(c, '#8a9098', tx + 2 + i * 6, G - th - 7, 1, 7);
+  BOX(c, '#e9e4dc', tx, G - th, tw, th);
+  const CL = ['#ece7df', '#d9c6c2', '#c9c0b9', '#f3efe8', '#beb7b1', '#e2cfd0', '#d6d0c8'];
+  for (let row = 0, yy = G - th + 3; yy < G - 40; row++, yy += 5) { let xx = tx + 1, k = 0; while (xx < tx + tw - 1) { const len = Math.min(16 + ((row * 31 + k * 17) % 5) * 9, tx + tw - 1 - xx); R(c, CL[(row * 3 + k * 5) % CL.length], xx, yy, len, 4); R(c, '#b8b0a8', xx, yy + 4, len, 1); xx += len; k++; } }
+  for (const [px, py] of [[tx + 112, G - 104], [tx + 40, G - 92], [tx + 150, G - 86], [tx + 70, G - 76], [tx + 128, G - 62], [tx + 20, G - 58]]) { R(c, '#6b35b8', px, py, 7, 4); R(c, '#8b5fd6', px, py, 7, 1); }
+  const GW = (wx, wy, w, h) => { BOX(c, '#3e6a70', wx, wy, w, h); R(c, '#5d8d92', wx + 1, wy + 1, w - 2, 2); for (let v = wx + 8; v < wx + w - 2; v += 8) R(c, '#2a4a50', v, wy, 1, h); };
+  GW(tx + 78, G - 92, 32, 14); GW(tx + 128, G - 98, 34, 22); GW(tx + 56, G - 66, 22, 8); GW(tx + 92, G - 62, 34, 12); GW(tx + 132, G - 64, 26, 14);
+  c.font = '700 12px Silk'; c.textAlign = 'center'; c.textBaseline = 'top'; c.fillStyle = '#ffffff'; c.fillText('TK MAXX', tx + 52, G - th + 7); c.fillStyle = '#5a5653'; c.fillText('TK MAXX', tx + 51, G - th + 6);
+  R(c, '#8e1f2a', tx, G - 40, tw, 6); R(c, '#b3262f', tx + 60, G - 40, tw - 60, 6); R(c, '#e8c9b0', tx + 6, G - 38, 18, 2);
+  BOX(c, '#2a3038', tx, G - 34, tw, 34); for (let i = 0; i < 6; i++) { const wx = tx + 3 + i * 27; R(c, '#4d5c66', wx, G - 31, 24, 28); R(c, '#6d808c', wx + 2, G - 29, 4, 24); R(c, '#e7c97a', wx + 6, G - 22, 12, 1); }
+  for (let i = 0; i <= 6; i++) R(c, '#d9d3c9', tx + i * 27, G - 34, 2, 34);
+  // Frasers Plus: tall glass cube in front on the left
+  const fw = 128, fh = 152;
+  BOX(c, '#22333a', x, G - fh, fw, fh); R(c, '#7b8a92', x - 1, G - fh - 3, fw + 2, 3);
+  const rows = 10, cols = 8, ph = (fh - 2) / rows, pw = (fw - 2) / cols;
+  const tint = r => r < 3 ? ['#86bfd8', '#a3d0e3', '#73aecb'] : r < 6 ? ['#3b2f66', '#46397a', '#352b5c'] : ['#3f7f86', '#4f9196', '#3a7278'];
+  for (let r = 0; r < rows; r++) for (let q = 0; q < cols; q++) { const T3 = tint(r); R(c, T3[(r * 2 + q * 3) % 3], x + 1 + q * pw, G - fh + 1 + r * ph, pw - 1, ph - 1); }
+  for (let k = 0; k < 9; k++) R(c, 'rgba(255,255,255,.18)', x + 8 + k * 13, G - fh + 4 + k * 4, 6, 2);
+  // sign on the purple glass: small rainbow tile + FRASERSPLUS / LUTON in white
+  { const lx = x + 14, ly = G - 104; R(c, '#1b1a24', lx - 1, ly - 1, 14, 14); const RB = ['#e8417a', '#f08a2a', '#f2d23a', '#3fc27a', '#3a8fe0', '#8a4fd8']; for (let i = 0; i < 6; i++) R(c, RB[i], lx + i * 2, ly, 2, 12); R(c, '#ffffff', lx + 5, ly + 3, 2, 6); R(c, '#ffffff', lx + 3, ly + 5, 6, 2); }
+  c.textAlign = 'left'; c.textBaseline = 'top'; c.fillStyle = '#ffffff'; let fz = 11; do { c.font = `700 ${fz}px Silk`; } while (c.measureText('FRASERSPLUS').width > 90 && --fz > 6); c.fillText('FRASERSPLUS', x + 31, G - 105);
+  c.font = '700 8px Silk'; c.textAlign = 'right'; c.fillText('LUTON', x + 121, G - 92);
+  // blue entrance canopy, glass doors, bollards
+  BOX(c, '#1f4fa8', x + 6, G - 36, fw - 12, 9); c.font = '6px Silk'; c.textAlign = 'center'; c.fillStyle = '#ffffff'; c.fillText('FRASERSPLUS LUTON', x + 64, G - 35);
+  BOX(c, '#26313a', x + 8, G - 27, fw - 16, 27); for (let i = 0; i < 7; i++) { R(c, '#8fb7c6', x + 10 + i * 16, G - 25, 14, 25); R(c, '#b8d6e0', x + 11 + i * 16, G - 24, 2, 22); }
+  for (let i = 0; i < 9; i++) { R(c, OUT, x - 6 + i * 18, G - 10, 3, 10); R(c, '#4a505c', x - 6 + i * 18, G - 10, 3, 1); }
+  // trees in front of TK Maxx
+  TREE(c, tx + 24, G, .95, '#6aa83a', '#4f8a2c'); TREE(c, tx + 92, G, .85, '#6aa83a', '#4f8a2c'); TREE(c, tx + 152, G, .95, '#6aa83a', '#4f8a2c');
 } };
 
 L.townhall = { n: 'Luton Town Hall', w: 200, d(c, x, G) {
@@ -260,15 +297,27 @@ L.airport = { n: 'London Luton Airport', w: 420, d(c, x, G) {
   BOX(c, '#d84b6a', x + 60, G - 24, 12, 24); BOX(c, '#f2c14e', x + 240, G - 20, 12, 20); BOX(c, '#e8641c', x + 252, G - 14, 8, 14);
 } };
 
-L.hatfactory = { n: 'The Hat Factory', w: 180, d(c, x, G) {
-  BRICK(c, x, G - 170, 150, 170, '#8f4a35', '#7c3f2c'); R(c, OUT, x - 1, G - 171, 152, 1); R(c, OUT, x - 1, G - 170, 1, 170); R(c, OUT, x + 150, G - 170, 1, 170);
-  P(c, '#8f4a35', [[x, G - 170], [x + 60, G - 186], [x + 150, G - 170]], true); P(c, '#e8e3d8', [[x + 52, G - 184], [x + 60, G - 188], [x + 150, G - 172], [x + 150, G - 170]]);
-  for (let r = 0; r < 5; r++) { R(c, '#d8cbb0', x, G - 150 + r * 28, 150, 3); for (let i = 0; i < 3; i++) WIN(c, x + 6 + i * 16, G - 144 + r * 28, 12, 20, '#f4f2ec', '#7f97a8'); }
-  BOX(c, '#5e5e60', x + 56, G - 140, 10, 100); c.save(); c.translate(x + 64, G - 136); c.rotate(Math.PI / 2); T(c, 'the hat factory', 0, 0, 8, '#ffffff', 'left', false); c.restore();
-  BOX(c, '#c86a3a', x + 76, G - 150, 66, 92); const pc = ['#e8e3d8', '#2f4a8a', '#d84b3c', '#f2c14e', '#1f6f6a'];
-  for (let i = 0; i < 16; i++) for (let j = 0; j < 22; j++) if ((i + j) % 2 === 0) R(c, pc[(i * 3 + j) % 5], x + 78 + i * 4, G - 148 + j * 4, 3, 3); ['IF YOU', 'CAN', 'DREAM IT', 'YOU MUST', 'DO IT'].forEach((w, k) => { T(c, w, x + 110, G - 140 + k * 15, 8, '#5a1f3a'); T(c, w, x + 109, G - 141 + k * 15, 8, '#f6c6d6'); });
-  BOX(c, '#e9e6df', x, G - 30, 150, 30); for (let i = 0; i < 6; i++) R(c, '#7fa7c4', x + 4 + i * 24, G - 26, 20, 26);
-  BOX(c, '#b9bdc2', x + 150, G - 120, 30, 120); R(c, '#a3a8af', x + 150, G - 100, 30, 1);
+L.hatfactory = { n: 'The Hat Factory', w: 140, d(c, x, G) {
+  // gable end of the old factory: brick wall rising to a point, stone bands either side, the "If you can dream it" mural, metal hoarding at street level
+  const B = '#8f4a35', BL = '#7c3f2c', W = 140, top = G - 208, eave = G - 176;
+  BRICK(c, x, eave, W, 176, B, BL);
+  c.save(); c.beginPath(); c.moveTo(x, eave); c.lineTo(x + W / 2, top); c.lineTo(x + W, eave); c.closePath(); c.clip(); BRICK(c, x, top, W, 34, B, BL); c.restore();
+  P(c, '#e8e3d8', [[x - 3, eave + 1], [x + W / 2, top - 3], [x + W + 3, eave + 1], [x + W, eave + 2], [x + W / 2, top + 1], [x, eave + 2]]);
+  R(c, OUT, x - 1, eave, 1, 176); R(c, OUT, x + W, eave, 1, 176);
+  // three pale stone bands on each side of the mural
+  for (const yy of [G - 152, G - 116, G - 80]) { R(c, '#e8e1d2', x, yy, 14, 4); R(c, '#cfc6b4', x, yy + 4, 14, 1); R(c, '#e8e1d2', x + W - 14, yy, 14, 4); R(c, '#cfc6b4', x + W - 14, yy + 4, 14, 1); }
+  // mural: patterned tiles, big pink capitals with a blue shadow so they stand out
+  const mx = x + 16, mw = W - 32, my = G - 170, mh = 122;
+  BOX(c, '#c98a7c', mx, my, mw, mh); const pc = ['#d9a596', '#a9b6c8', '#c77a6e', '#e2c7a8', '#9fb0a8', '#d8a8b8'];
+  for (let i = 0; i * 4 < mw - 4; i++) for (let j = 0; j * 4 < mh - 4; j++) if ((i + j) % 2 === 0) R(c, pc[(i * 3 + j * 5) % 6], mx + 2 + i * 4, my + 2 + j * 4, 3, 3);
+  const words = ['IF YOU', 'CAN', 'DREAM IT', 'YOU MUST', 'DO IT']; let fz = 14; c.font = `700 ${fz}px Silk`; while (fz > 9 && words.some(w => c.measureText(w).width > mw - 8)) c.font = `700 ${--fz}px Silk`;
+  c.textAlign = 'center'; c.textBaseline = 'top';
+  words.forEach((w, k) => { const ty = my + 8 + k * 22; c.fillStyle = '#1f3f8f'; c.fillText(w, mx + mw / 2 + 2, ty + 2); c.fillStyle = '#3a6fd8'; c.fillText(w, mx + mw / 2 + 1, ty + 1); c.fillStyle = '#f9d2de'; c.fillText(w, mx + mw / 2, ty); });
+  // small dark sign under the mural
+  BOX(c, '#1f2a4a', x + W / 2 - 16, G - 44, 32, 10); R(c, '#ffffff', x + W / 2 - 12, G - 41, 24, 1); R(c, '#9fb3d8', x + W / 2 - 10, G - 38, 20, 1);
+  // metal sheet hoarding around the bottom, a little wider than the building
+  BOX(c, '#9aa1a8', x - 8, G - 30, W + 16, 30); for (let i = 0; i * 12 < W + 16; i++) { R(c, i % 2 ? '#aab1b8' : '#8e959c', x - 8 + i * 12, G - 30, 12, 30); R(c, '#6e757c', x - 8 + i * 12, G - 30, 1, 30); for (let k = 0; k < 5; k++) R(c, 'rgba(255,255,255,.18)', x - 6 + i * 12, G - 27 + k * 6, 8, 1); }
+  R(c, '#5d646b', x - 8, G - 30, W + 16, 2); for (let i = 0; i < 6; i++) { R(c, '#3a3d44', x - 6 + i * 29, G - 3, 4, 3); }
 } };
 
 L.letters = { n: 'Step Forward Luton', w: 190, d(c, x, G) {
@@ -292,8 +341,8 @@ L.oak = { n: 'Kenilworth Road, Oak Stand', w: 210, d(c, x, G) {
 
 L.krispy = { n: 'Krispy Lemon Chicken', w: 140, d(c, x, G) {
   // flats over the shop: about Toro's height, sign level with Toro's sign
-  BRICK(c, x, G - 196, 140, 196, '#a8503a', '#94452f'); R(c, OUT, x - 1, G - 197, 142, 1); R(c, OUT, x - 1, G - 196, 1, 196); R(c, OUT, x + 140, G - 196, 1, 196); BOX(c, '#3a3a3e', x - 4, G - 202, 148, 6);
-  for (const wy of [G - 186, G - 124]) for (let i = 0; i < 3; i++) { const wx = x + 15 + i * 42; WIN(c, wx, wy, 24, 36); R(c, '#e6ddd0', wx - 2, wy + 36, 28, 3); R(c, '#c9bfb0', wx - 2, wy + 39, 28, 1); }
+  BRICK(c, x, G - 150, 140, 150, '#a8503a', '#94452f'); R(c, OUT, x - 1, G - 151, 142, 1); R(c, OUT, x - 1, G - 150, 1, 150); R(c, OUT, x + 140, G - 150, 1, 150); BOX(c, '#3a3a3e', x - 4, G - 156, 148, 6);
+  for (let i = 0; i < 3; i++) { const wx = x + 10 + i * 44, wy = G - 132; WIN(c, wx, wy, 32, 44); R(c, '#e6ddd0', wx - 2, wy + 44, 36, 3); R(c, '#c9bfb0', wx - 2, wy + 47, 36, 1); R(c, '#e6ddd0', wx - 2, wy - 3, 36, 3); }
   R(c, '#f4f6c8', x + 8, G - 80, 8, 4); R(c, '#f4f6c8', x + 124, G - 80, 8, 4); R(c, '#3a3a3e', x + 11, G - 76, 2, 4); R(c, '#3a3a3e', x + 127, G - 76, 2, 4);
   BOX(c, '#6e1f33', x + 4, G - 70, 132, 22); R(c, '#f2c96b', x + 6, G - 51, 128, 1);
   T(c, 'KRISPY LEMON', x + 60, G - 67, 8, '#f2c96b'); T(c, 'CHICKEN', x + 60, G - 58, 8, '#f2c96b');
@@ -302,7 +351,9 @@ L.krispy = { n: 'Krispy Lemon Chicken', w: 140, d(c, x, G) {
   BOX(c, '#d9d7d1', x + 8, G - 40, 126, 40); for (let i = 0; i < 8; i++) R(c, '#c6c3bb', x + 8, G - 38 + i * 5, 126, 1);
   BOX(c, '#c62828', x + 8, G - 40, 3, 40); BOX(c, '#c62828', x + 131, G - 40, 3, 40);
   BOX(c, '#2b2b30', x + 16, G - 36, 24, 36); R(c, '#e7c35a', x + 19, G - 30, 18, 2); R(c, '#e7c35a', x + 19, G - 24, 18, 2);
-  BOX(c, '#46505a', x + 46, G - 36, 80, 26); R(c, '#e7c35a', x + 62, G - 30, 48, 2); R(c, '#e7c35a', x + 58, G - 24, 56, 3);
+  BOX(c, '#2a2a30', x + 46, G - 36, 80, 30); R(c, '#e8d9b8', x + 48, G - 34, 76, 26); R(c, '#1f2a3a', x + 52, G - 33, 20, 9); R(c, '#1f2a3a', x + 76, G - 33, 20, 9); R(c, '#1f2a3a', x + 100, G - 33, 20, 9);
+  for (let k = 0; k < 3; k++) { R(c, '#f2c43a', x + 54 + k * 24, G - 31, 14, 1); R(c, '#ffffff', x + 54 + k * 24, G - 28, 10, 1); R(c, '#e0393a', x + 64 + k * 24, G - 28, 5, 2); }
+  R(c, '#c9ced4', x + 48, G - 18, 76, 2); R(c, '#9aa3ad', x + 48, G - 16, 76, 8); R(c, '#e7c35a', x + 54, G - 21, 10, 3); R(c, '#d84b3c', x + 70, G - 21, 8, 3); R(c, 'rgba(255,255,255,.3)', x + 50, G - 34, 2, 24);
 } };
 
 L.sixthform = { n: 'Luton Sixth Form College', w: 244, d(c, x, G) {
@@ -518,9 +569,13 @@ L.alquds = { n: 'Al-Quds', w: 160, d(c, x, G) {
   TS(c, 'AL-QUDS', x + 74, G - 55, 16, '#f2c43a', '#7a5a10'); T(c, 'ARABIC . GRILL . SHAWARMA', x + 80, G - 40, 8, '#e0263a', 'center', false);
   c.font = '700 8px Amiri'; c.textAlign = 'right'; c.textBaseline = 'middle'; c.fillStyle = '#ffffff'; c.direction = 'rtl'; c.fillText('حلال', x + 152, G - 44); c.direction = 'ltr';
   BOX(c, '#1a1c20', x + 6, G - 28, 150, 28); R(c, '#2a2c30', x + 6, G - 30, 150, 2);
-  BOX(c, '#1a1c20', x + 8, G - 26, 22, 26); R(c, '#c9b48a', x + 10, G - 24, 18, 24); R(c, '#1a1c20', x + 10, G - 13, 18, 2);
-  R(c, '#d8c398', x + 32, G - 26, 122, 26); for (let i = 0; i < 5; i++) { R(c, '#3a2a20', x + 40 + i * 24, G - 10, 10, 10); CIRC(c, '#f6c46a', x + 44 + i * 24, G - 23, 2); } R(c, '#1a1c20', x + 92, G - 26, 2, 26); R(c, '#1a1c20', x + 32, G - 14, 122, 2);
-  CIRC(c, '#2fb35a', x + 38, G - 20, 3);
+  BOX(c, '#1a1c20', x + 8, G - 26, 22, 26); R(c, '#cfa968', x + 10, G - 24, 18, 24); R(c, '#e9cf98', x + 11, G - 23, 3, 22); R(c, '#9aa3ad', x + 26, G - 14, 1, 6);
+  R(c, '#b8894e', x + 32, G - 26, 122, 26); R(c, '#cf9f5c', x + 32, G - 26, 122, 9); for (let k = 0; k < 122; k += 6) R(c, '#a6773f', x + 32 + k, G - 26, 1, 9);
+  for (let i = 0; i < 6; i++) { const lx = x + 40 + i * 20; R(c, '#3a2a1e', lx, G - 26, 1, 4); R(c, '#f7d27a', lx - 2, G - 22, 5, 2); R(c, 'rgba(255,220,140,.35)', lx - 4, G - 20, 9, 3); }
+  for (let i = 0; i < 5; i++) { const tx2 = x + 38 + i * 24; R(c, '#5a3a24', tx2, G - 11, 14, 2); R(c, '#4a2e1c', tx2 + 6, G - 9, 2, 9); R(c, '#7a1e22', tx2 - 3, G - 13, 3, 13); R(c, '#7a1e22', tx2 + 14, G - 13, 3, 13); }
+  for (const fx of [x + 52, x + 74, x + 92, x + 114, x + 134]) R(c, '#1a1c20', fx, G - 26, 2, 26); R(c, '#1a1c20', x + 32, G - 17, 122, 1);
+  R(c, 'rgba(255,255,255,.18)', x + 36, G - 24, 2, 20); R(c, 'rgba(255,255,255,.18)', x + 96, G - 24, 2, 20);
+  CIRC(c, '#2fb35a', x + 41, G - 21, 3); R(c, '#ffffff', x + 40, G - 22, 2, 1);
   c.restore();
   BOX(c, '#2a2c30', x, G - 10, 160, 10); for (let i = 0; i < 20; i++) R(c, i % 2 ? '#3a3d44' : '#30333a', x + 1 + i * 8, G - 9, 7, 8);
 } };
@@ -531,7 +586,10 @@ L.karwan = { n: 'Karwan Afghan Cuisine', w: 230, d(c, x, G) {
   BOX(c, '#121214', x + 2, G - 72, 168, 22); T(c, 'KARWAN', x + 70, G - 70, 16, '#e0262a'); T(c, 'AFGHAN CUISINE', x + 70, G - 57, 8, '#ffffff', 'center', false); T(c, '5-7', x + 10, G - 66, 8, '#ffffff', 'center', false); T(c, '01582', x + 148, G - 60, 8, '#ffffff', 'center', false);
   BOX(c, '#121214', x + 172, G - 72, 46, 22); T(c, 'WELCOME', x + 195, G - 71, 8, '#ffffff', 'center', false); T(c, 'KARWAN', x + 195, G - 63, 8, '#e0262a', 'center', false);
   BOX(c, '#2aa8b8', x + 220, G - 76, 12, 18); R(c, '#ffffff', x + 224, G - 72, 1, 8); R(c, '#ffffff', x + 227, G - 72, 1, 8);
-  for (const [wx, ww] of [[x + 6, 34], [x + 46, 74], [x + 126, 40]]) { BOX(c, '#2a2a2e', wx, G - 46, ww, 22); R(c, '#3e3a36', wx + 2, G - 44, ww - 4, 18); R(c, '#55524e', wx + 2, G - 30, ww - 4, 4); CIRC(c, '#f6c46a', wx + ww / 2, G - 40, 1); BOX(c, '#3a3f4a', wx, G - 22, ww, 22); }
+  for (const [wx, ww] of [[x + 6, 34], [x + 46, 74], [x + 126, 40]]) { BOX(c, '#2a2a2e', wx, G - 46, ww, 26); R(c, '#6a4a34', wx + 2, G - 44, ww - 4, 22); R(c, '#8a6a4a', wx + 2, G - 44, ww - 4, 6);
+    for (let k = 0; k * 12 < ww - 8; k++) { const lx = wx + 6 + k * 12; R(c, '#2a1e16', lx, G - 44, 1, 3); R(c, '#ffd27a', lx - 1, G - 41, 3, 2); }
+    for (let k = 0; k * 14 < ww - 10; k++) { const tx = wx + 4 + k * 14; R(c, '#f1efea', tx, G - 30, 9, 2); R(c, '#4a2e1c', tx + 4, G - 28, 1, 6); R(c, '#8a1d2a', tx - 2, G - 32, 2, 10); }
+    R(c, 'rgba(255,255,255,.2)', wx + 3, G - 44, 2, 20); BOX(c, '#3a3f4a', wx, G - 20, ww, 20); R(c, '#4a505a', wx + 1, G - 19, ww - 2, 2); }
   R(c, '#f1efea', x + 82, G - 46, 2, 22);
   BOX(c, '#2a2a2e', x + 176, G - 46, 40, 46); R(c, '#4a505a', x + 178, G - 44, 16, 44); R(c, '#1a1a1e', x + 196, G - 44, 18, 44);
 } };
@@ -707,7 +765,11 @@ L.bandq = { n: 'B&Q', w: 440, d(c, x, G) {
 L.lidl = { n: 'Lidl', w: 260, d(c, x, G) {
   P(c, '#d6d9de', [[x - 8, G - 118], [x + 268, G - 118], [x + 260, G - 128], [x, G - 128]], true);
   BOX(c, '#c9b8a3', x, G - 118, 260, 52); for (let i = 0; i < 52; i++) R(c, ['#b8a690', '#d6c8b4', '#a8967f', '#cfc0aa'][i % 4], x + i * 5, G - 118, 3, 52);
-  GLASS(c, x, G - 66, 170, 66, '#4a6a86', 8, 2); for (let i = 0; i < 6; i++) BOX(c, ['#2f8a4a', '#d84b3c', '#2f8a4a', '#e8a33c', '#2f8a4a', '#d84b6a'][i], x + 10 + i * 26, G - 40, 14, 20);
+  GLASS(c, x, G - 66, 170, 66, '#4a6a86', 8, 2);
+  // inside: bright store, shelves stocked with goods, fruit & veg crates at the front
+  R(c, '#e9eef2', x + 2, G - 62, 166, 46); for (let k = 0; k < 3; k++) { const sy = G - 58 + k * 13; R(c, '#9aa3ad', x + 4, sy + 9, 162, 2); for (let i = 0; i < 40; i++) R(c, ['#d84b3c', '#1f52b0', '#f2c43a', '#2f8a4a', '#e8a33c', '#ffffff', '#b8292f'][(i * 3 + k * 5) % 7], x + 5 + i * 4, sy + 2 + ((i + k) % 3), 3, 7 - ((i + k) % 3)); }
+  for (let i = 0; i < 6; i++) { const cx = x + 8 + i * 27; R(c, '#7a5a3a', cx, G - 18, 22, 6); for (let k = 0; k < 5; k++) CIRC(c, ['#2f8a4a', '#d84b3c', '#e8a33c', '#f2d23a', '#7fbf4a', '#d84b6a'][i], cx + 3 + k * 4, G - 20, 2); }
+  R(c, 'rgba(120,160,190,.3)', x + 2, G - 62, 166, 58); for (let i = 0; i < 9; i++) R(c, '#3a4a5a', x + i * 21, G - 66, 2, 66); R(c, 'rgba(255,255,255,.35)', x + 30, G - 62, 3, 40); R(c, 'rgba(255,255,255,.35)', x + 110, G - 62, 3, 40);
   BOX(c, '#2a3036', x + 170, G - 66, 90, 66); for (let i = 0; i < 4; i++) { CIRC(c, '#7fbf4a', x + 186 + i * 20, G - 40, 6); CIRC(c, '#f4f2ec', x + 186 + i * 20, G - 40, 3); } for (const px of [x + 172, x + 214, x + 256]) BOX(c, '#ecebe7', px, G - 66, 4, 66);
   const LOGO = (lx, ly, sz) => { BOX(c, '#1f52b0', lx, ly, sz, sz); CIRC(c, '#d32f2f', lx + sz / 2, ly + sz / 2, sz / 2 - 3); CIRC(c, '#ffe23a', lx + sz / 2, ly + sz / 2, sz / 2 - 5); T(c, 'LIDL', lx + sz / 2, ly + sz / 2 - 4, 8, '#1f52b0'); R(c, '#d32f2f', lx + sz / 2 - 3, ly + sz / 2 - 7, 2, 2); };
   LOGO(x + 108, G - 116, 44);
@@ -907,10 +969,13 @@ L.toros = { n: "Toro's Steakhouse", w: 220, d(c, x, G) {
   { const bx = x + 14, by = G - 38; P(c, '#f4f2ec', [[bx - 9, by - 7], [bx - 5, by - 3], [bx + 5, by - 3], [bx + 9, by - 7], [bx + 7, by - 1], [bx + 4, by], [bx + 3, by + 6], [bx, by + 8], [bx - 3, by + 6], [bx - 4, by], [bx - 7, by - 1]]); R(c, '#1f1d1e', bx - 3, by + 1, 2, 2); R(c, '#1f1d1e', bx + 1, by + 1, 2, 2); R(c, '#d8262f', bx - 1, by + 6, 2, 1); }
   c.font = '700 16px Silk'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.lineJoin = 'round'; c.lineWidth = 3; c.strokeStyle = '#f4f2ec'; c.strokeText("TORO'S", x + 76, G - 38); c.fillStyle = '#d8262f'; c.fillText("TORO'S", x + 76, G - 38);
   T(c, 'STEAKHOUSE', x + 162, G - 42, 8, '#f4f2ec', 'center', false); R(c, '#c9a64a', x + 132, G - 33, 60, 1);
-  BOX(c, '#1f1d1e', x + 22, G - 62, 12, 12); CIRC(c, '#c8202a', x + 28, G - 56, 2);
   c.restore();
   BOX(c, '#2f6a2e', x, G - 46, 200, 46); for (let i = 0; i < 180; i++) R(c, i % 2 ? '#24561f' : '#3e8238', x + (i * 37) % 198, G - 45 + (i * 13) % 44, 2, 2);
-  for (let i = 0; i < 4; i++) { BOX(c, '#2a2226', x + 10 + i * 36, G - 42, 30, 34); R(c, '#5a6470', x + 12 + i * 36, G - 40, 26, 30); R(c, '#8a96a2', x + 14 + i * 36, G - 38, 3, 26); R(c, '#c8202a', x + 20 + i * 36, G - 26, 6, 1); }
+  for (let i = 0; i < 4; i++) { const wx = x + 10 + i * 36; BOX(c, '#1f1d1e', wx, G - 42, 30, 38);
+    // reflective glass: sky, the brick and white buildings opposite, pavement
+    R(c, '#c9d6de', wx + 1, G - 41, 28, 36); R(c, '#9a6252', wx + 1, G - 36, 13, 12); R(c, '#e9e6df', wx + 15, G - 38, 14, 16); for (let k = 0; k < 3; k++) { R(c, '#5d6a74', wx + 3 + k * 4, G - 33, 2, 3); R(c, '#7d8a94', wx + 17 + k * 4, G - 34, 2, 4); }
+    R(c, '#8a9298', wx + 1, G - 20, 28, 15); R(c, '#a2aab0', wx + 1, G - 20, 28, 2); R(c, 'rgba(255,255,255,.35)', wx + 4, G - 40, 2, 34);
+    CIRC(c, '#1f1d1e', wx + 15, G - 27, 3); R(c, '#f4f2ec', wx + 13, G - 28, 4, 1); }
   BOX(c, '#3a2a20', x + 164, G - 40, 18, 40); R(c, '#9fc1d8', x + 167, G - 37, 12, 16); CIRC(c, '#f2c43a', x + 173, G - 14, 2);
   // neighbours
 } };
@@ -920,7 +985,7 @@ L.gna = { n: 'G and A Fast Food', w: 150, d(c, x, G) {
   P(c, '#7a4a3a', [[x - 8, G - 118], [x + 158, G - 118], [x + 146, G - 150], [x + 4, G - 150]], true); for (let i = 1; i < 8; i++) R(c, '#6a3e30', x - 6 + i * 1.5, G - 118 - i * 4, 164 - i * 3, 1); for (let i = 0; i < 40; i++) R(c, '#8a5646', x + 4 + (i * 13) % 140, G - 146 + (i * 7) % 26, 3, 1);
   BRICK(c, x + 112, G - 172, 22, 30, '#8a4a36', '#76402e'); R(c, OUT, x + 111, G - 173, 24, 1); R(c, '#b9b3a6', x + 110, G - 174, 26, 3); R(c, '#9a9a9a', x + 128, G - 200, 2, 28); R(c, '#9a9a9a', x + 120, G - 194, 16, 1); R(c, '#9a9a9a', x + 122, G - 188, 12, 1);
   BRICK(c, x, G - 120, 150, 70, '#5a3e34', '#4a332a'); R(c, OUT, x - 1, G - 121, 152, 1); BOX(c, '#c9ced4', x + 44, G - 116, 62, 60); for (let i = 0; i < 3; i++) R(c, '#6a7a8a', x + 47 + i * 20, G - 113, 16, 54);
-  BOX(c, '#121214', x - 2, G - 52, 154, 26); BOX(c, '#e9e6df', x + 2, G - 50, 30, 22); for (let i = 0; i < 5; i++) R(c, '#c8202a', x + 34, G - 48 + i * 4, 14, 1);
+  BOX(c, '#121214', x - 2, G - 52, 154, 26); BOX(c, '#e9e6df', x + 2, G - 50, 30, 22); for (let i = 0; i < 5; i++) { R(c, '#f2f2f2', x + 35, G - 49 + i * 4, 8 + (i * 3) % 5, 2); R(c, '#c8202a', x + 34, G - 47 + i * 4, 14, 1); }
   P(c, '#e0391e', [[x + 82, G - 52], [x + 84, G - 56], [x + 88, G - 53], [x + 92, G - 57], [x + 96, G - 53], [x + 100, G - 56], [x + 102, G - 52]], true);
   T(c, 'G', x + 78, G - 52, 16, '#e0391e'); T(c, 'A', x + 106, G - 52, 16, '#e0391e'); c.font = '16px PS'; c.textAlign = 'center'; c.textBaseline = 'top'; c.fillStyle = '#e0391e'; c.fillText('&', x + 92, G - 51); R(c, '#e0391e', x + 74, G - 36, 36, 1); T(c, 'FAST FOOD', x + 92, G - 35, 8, '#e0391e', 'center', false);
   R(c, '#e0391e', x + 124, G - 50, 1, 8); R(c, '#e0391e', x + 128, G - 50, 1, 8); R(c, '#e0391e', x + 132, G - 50, 1, 8); R(c, '#e0391e', x + 136, G - 50, 1, 8); T(c, '01582', x + 132, G - 40, 8, '#ffffff', 'center', false);
@@ -929,8 +994,15 @@ L.gna = { n: 'G and A Fast Food', w: 150, d(c, x, G) {
     for (let j = 0; j < 22; j++) for (let i = 0; i < 30; i++) { const ch = PIC[j][i] || '.'; c.fillStyle = ch === 'k' ? '#1b1b1d' : ch === 'g' ? '#78787c' : ch === 's' ? '#f6f6f6' : (j % 3 === 2 ? '#d4d4d4' : '#ececec'); c.fillRect(px + i, py + j, 1, 1); }
     R(c, OUT, px - 1, py - 1, 32, 1); R(c, OUT, px - 1, py + 22, 32, 1); R(c, OUT, px - 1, py - 1, 1, 24); R(c, OUT, px + 30, py - 1, 1, 24); }
   c.restore();
-  BOX(c, '#121214', x, G - 42, 150, 42); R(c, '#e8c89a', x + 10, G - 40, 40, 38); R(c, '#e8c89a', x + 98, G - 40, 42, 38); R(c, '#f2e2c4', x + 54, G - 40, 40, 40); R(c, '#121214', x + 73, G - 40, 2, 40); R(c, '#d8cbb4', x + 10, G - 24, 40, 1); R(c, '#d8cbb4', x + 98, G - 24, 42, 1);
-  for (const bx of [x + 14, x + 112]) { R(c, '#d8cbb4', bx, G - 12, 22, 6); R(c, '#9a6a4a', bx, G - 6, 22, 2); } BOX(c, '#3a7de0', x + 18, G - 36, 12, 5); T(c, 'OPEN', x + 24, G - 37, 8, '#ffffff', 'center', false);
+  // black shopfront, three lit windows: warm wood walls, pendant lights, booths and tables, glass double doors
+  BOX(c, '#121214', x, G - 42, 150, 42);
+  for (const [wx, ww] of [[x + 8, 44], [x + 98, 44]]) { R(c, '#e3bf8c', wx, G - 39, ww, 37); for (let k = 0; k < ww; k += 5) R(c, '#cfa874', wx + k, G - 39, 1, 20); R(c, '#f3e6cc', wx, G - 19, ww, 17);
+    for (let k = 0; k < 3; k++) { const lx = wx + 7 + k * 15; R(c, '#3a2a1e', lx, G - 39, 1, 5); R(c, '#2a1e16', lx - 2, G - 34, 5, 3); R(c, '#ffd98a', lx - 1, G - 31, 3, 1); }
+    R(c, '#b0573e', wx + 3, G - 16, 12, 9); R(c, '#8a4230', wx + 3, G - 16, 12, 2); R(c, '#e9e3d8', wx + 20, G - 15, 10, 2); R(c, '#4a3a2e', wx + 24, G - 13, 2, 9); R(c, '#e9e3d8', wx + ww - 12, G - 17, 9, 2); R(c, '#4a3a2e', wx + ww - 8, G - 15, 2, 11);
+    R(c, '#121214', wx + Math.floor(ww / 2), G - 39, 1, 37); R(c, 'rgba(255,255,255,.25)', wx + 2, G - 37, 2, 30); }
+  BOX(c, '#1a1a1d', x + 54, G - 40, 42, 40); for (const dx of [x + 56, x + 76]) { R(c, '#efe0c2', dx, G - 38, 18, 38); R(c, '#e3bf8c', dx, G - 38, 18, 14); R(c, '#9aa3ad', dx + (dx === x + 56 ? 15 : 1), G - 22, 2, 8); R(c, 'rgba(255,255,255,.3)', dx + 2, G - 36, 2, 30); }
+  R(c, '#1a1a1d', x + 74, G - 40, 2, 40);
+  BOX(c, '#f4f4f2', x + 14, G - 37, 18, 7); T(c, 'OPEN', x + 23, G - 37, 6, '#1a1a1d', 'center', true);
 } };
 
 L.topspizza = { n: 'Tops Pizza', w: 180, d(c, x, G) {
@@ -940,19 +1012,27 @@ L.topspizza = { n: 'Tops Pizza', w: 180, d(c, x, G) {
   P(c, '#ece7e0', [[x + 50, G - 118 - U], [x + 90, G - 166 - U], [x + 130, G - 118 - U]], true); c.save(); c.beginPath(); c.moveTo(x + 52, G - 118 - U); c.lineTo(x + 90, G - 164 - U); c.lineTo(x + 128, G - 118 - U); c.closePath(); c.clip();
   for (let i = 0; i < 6; i++) R(c, '#2a2426', x + 54 + i * 15, G - 166 - U, 3, 48); R(c, '#2a2426', x + 50, G - 140 - U, 80, 3); c.restore(); P(c, '#2a2426', [[x + 46, G - 116 - U], [x + 90, G - 170 - U], [x + 134, G - 116 - U], [x + 128, G - 116 - U], [x + 90, G - 162 - U], [x + 52, G - 116 - U]]);
   WIN(c, x + 80, G - 150 - U, 20, 18, '#f4f2ec', '#9fb7c9');
-  for (const bx of [x + 22, x + 112]) { BOX(c, '#f4f2ec', bx, G - 104 - U, 44, 24); for (let i = 0; i < 3; i++) R(c, '#b9c9d6', bx + 2 + i * 14, G - 102 - U, 12, 20); P(c, '#b9b3a6', [[bx - 2, G - 80 - U], [bx + 46, G - 80 - U], [bx + 40, G - 74 - U], [bx + 4, G - 74 - U]], true); }
+  for (const bx of [x + 22, x + 112]) { const y0 = G - 106 - U;
+    P(c, '#3a3436', [[bx - 2, y0], [bx + 46, y0], [bx + 40, y0 - 5], [bx + 4, y0 - 5]], true);
+    P(c, '#f4f2ec', [[bx, y0], [bx + 8, y0], [bx + 8, y0 + 26], [bx, y0 + 23]], true); P(c, '#f4f2ec', [[bx + 36, y0], [bx + 44, y0], [bx + 44, y0 + 23], [bx + 36, y0 + 26]], true);
+    R(c, '#9fb4c6', bx + 2, y0 + 3, 4, 18); R(c, '#9fb4c6', bx + 38, y0 + 3, 4, 18);
+    BOX(c, '#f4f2ec', bx + 8, y0, 28, 26); R(c, '#b9c9d6', bx + 10, y0 + 2, 11, 22); R(c, '#b9c9d6', bx + 23, y0 + 2, 11, 22); R(c, '#f4f2ec', bx + 10, y0 + 8, 24, 1); R(c, '#e8e4dc', bx + 11, y0 + 9, 4, 14); R(c, '#e8e4dc', bx + 29, y0 + 9, 4, 14);
+    P(c, '#d9d4cb', [[bx - 2, y0 + 26], [bx + 46, y0 + 26], [bx + 40, y0 + 32], [bx + 4, y0 + 32]], true); }
   // sign (higher)
   BOX(c, '#121214', x - 2, G - 68, 184, 22); R(c, '#e0262a', x + 50, G - 68, 2, 22);
   { const hx = x + 27; R(c, '#f4f2ec', hx - 8, G - 67, 16, 13); R(c, '#2a2a2e', hx - 7, G - 66, 14, 11); R(c, '#4a4a50', hx - 6, G - 66, 2, 9); R(c, '#e0262a', hx - 7, G - 58, 14, 3);
     R(c, '#f4f2ec', hx - 13, G - 55, 26, 3); R(c, '#2a2a2e', hx - 12, G - 54, 24, 1); R(c, '#f4f2ec', hx - 14, G - 57, 2, 2); R(c, '#f4f2ec', hx + 12, G - 57, 2, 2); }
   T(c, 'Tops Pizza', x + 118, G - 69, 16, '#f2e0b8'); T(c, 'DELIVERY', x + 150, G - 56, 8, '#e0262a', 'center', false);
   // tall glass shopfront
-  BOX(c, '#26203a', x, G - 46, 180, 46); R(c, '#9a6ae8', x, G - 46, 180, 2); R(c, '#9a6ae8', x, G - 46, 2, 46); R(c, '#9a6ae8', x + 178, G - 46, 2, 46);
-  R(c, '#e9ecef', x + 4, G - 42, 172, 40); for (const fx of [x + 60, x + 118]) R(c, '#3a3d44', fx, G - 42, 2, 42);
-  for (let i = 0; i < 3; i++) { BOX(c, '#e0262a', x + 8 + i * 60, G - 40, 22, 16); R(c, '#f2c43a', x + 11 + i * 60, G - 36, 16, 3); R(c, '#ffffff', x + 11 + i * 60, G - 31, 16, 1); }
-  for (let i = 0; i < 6; i++) R(c, '#c8ccd2', x + 34 + i * 20, G - 40, 14, 10);
-  BOX(c, '#5a6070', x + 70, G - 22, 40, 2); BOX(c, '#3a3d44', x + 124, G - 34, 50, 32); R(c, '#e8a33c', x + 128, G - 30, 42, 3); T(c, 'OPEN', x + 149, G - 26, 8, '#f2c43a', 'center', false);
-  BOX(c, '#c8202a', x + 10, G - 18, 26, 4); for (let i = 0; i < 4; i++) BOX(c, i % 2 ? '#2a2a2e' : '#c8202a', x + 10 + i * 9, G - 12, 6, 12);
+  BOX(c, '#1c1830', x, G - 46, 180, 46); R(c, '#e0262a', x, G - 46, 180, 1); R(c, '#4a6cff', x + 1, G - 45, 178, 2); R(c, '#4a6cff', x + 1, G - 45, 2, 44); R(c, '#4a6cff', x + 177, G - 45, 2, 44); R(c, 'rgba(120,150,255,.35)', x + 3, G - 43, 174, 2);
+  R(c, '#f1f2f4', x + 4, G - 42, 172, 40); R(c, '#e3e6ea', x + 4, G - 18, 172, 16); R(c, '#dfe3e8', x + 4, G - 42, 172, 3);
+  const PO = (px, py, w, h) => { BOX(c, '#e0262a', px, py, w, h); R(c, '#f2c43a', px + 2, py + 2, w - 4, 3); R(c, '#ffffff', px + 2, py + 7, w - 6, 1); R(c, '#ffffff', px + 2, py + 10, w - 8, 1); R(c, '#f2c43a', px + 2, py + h - 4, 6, 2); };
+  PO(x + 8, G - 40, 16, 20); PO(x + 40, G - 40, 14, 16); PO(x + 100, G - 40, 14, 16); PO(x + 150, G - 40, 16, 20);
+  for (let i = 0; i < 7; i++) R(c, '#c8ccd2', x + 58 + i * 6, G - 40, 4, 6); R(c, '#e0262a', x + 120, G - 38, 24, 8); R(c, '#ffffff', x + 123, G - 36, 18, 1); R(c, '#ffffff', x + 123, G - 33, 14, 1);
+  R(c, '#b9c0c8', x + 60, G - 22, 66, 3); R(c, '#e9ecef', x + 60, G - 19, 66, 17); R(c, '#e0262a', x + 66, G - 16, 54, 2); for (let i = 0; i < 4; i++) R(c, '#d0a060', x + 70 + i * 12, G - 26, 9, 3);
+  for (let i = 0; i < 4; i++) { const cx2 = x + 10 + i * 11, col = i % 2 ? '#1c1c20' : '#e0262a'; R(c, col, cx2, G - 14, 7, 3); R(c, col, cx2, G - 20, 2, 9); R(c, '#2a2a2e', cx2 + 1, G - 11, 1, 9); R(c, '#2a2a2e', cx2 + 5, G - 11, 1, 9); }
+  for (const fx of [x + 56, x + 134]) R(c, '#3a3d44', fx, G - 42, 2, 42); R(c, '#3a3d44', x + 4, G - 22, 50, 1);
+  R(c, '#2a2a2e', x + 138, G - 30, 36, 28); R(c, '#e8a33c', x + 141, G - 27, 30, 2); T(c, 'OPEN', x + 156, G - 23, 8, '#f2c43a', 'center', false);
 } };
 
 L.kaya = { n: 'Kaya Lounge', w: 230, d(c, x, G) {
@@ -973,7 +1053,7 @@ const SHELTER = (c, x, G) => { R(c, '#8a9098', x, G - 22, 30, 2); R(c, '#8a9098'
 const BIRCH = (c, x, G) => { R(c, '#efece4', x, G - 30, 2, 30); for (let i = 0; i < 4; i++) R(c, OUT, x, G - 26 + i * 7, 2, 1); for (let i = 0; i < 8; i++) R(c, '#7e9a5a', x - 6 + (i * 5) % 14, G - 40 + (i * 7) % 14, 2, 2); };
 const MOPED = (c, x, G) => { CIRC(c, OUT, x + 4, G - 4, 4); CIRC(c, OUT, x + 22, G - 4, 4); CIRC(c, '#666', x + 4, G - 4, 2); CIRC(c, '#666', x + 22, G - 4, 2); BOX(c, '#8a1d2a', x + 4, G - 12, 18, 5); BOX(c, '#14182a', x - 2, G - 26, 14, 12); R(c, '#3f7de0', x, G - 20, 10, 2); PERSON(c, x + 12, G - 6, '#2a3a5a', '#22222a', '#c58c5c', '#14141a'); };
 const EX = {
-  toros(c, x, G) { BOX(c, '#f4f2ec', x + 140, G - 26, 12, 18); CIRC(c, '#d32f2f', x + 146, G - 16, 4); CIRC(c, '#2f4fa8', x + 146, G - 16, 3); R(c, '#1a1a1e', x + 140, G - 28, 12, 2); PERSON(c, x - 4, G, '#2a2a33', '#7f9ab8'); },
+  toros(c, x, G) { },
   gurdwara(c, x, G) { R(c, '#b9b3a6', x - 6, G - 3, 452, 3); for (let i = 0; i < 60; i++) R(c, i % 2 ? '#a39d90' : '#cfc9bc', x - 4 + (i * 37) % 448, G - 3 + (i % 3), 2, 1); PERSON(c, x + 200, G, '#1a1a1e'); PERSON(c, x + 212, G, '#2a2a33', '#9aa3ad', '#c58c5c', '#1f3f8a'); },
   stockwood(c, x, G) { PERSON(c, x + 90, G, '#2f4a8a'); PERSON(c, x + 98, G, '#e0458a'); },
   inspire(c, x, G) { R(c, '#6fbf4a', x, G - 4, 230, 4); for (const tx of [x + 150, x + 196]) { R(c, '#5a3d2a', tx, G - 26, 2, 26); CIRC(c, '#5f8f3c', tx + 1, G - 30, 6); }
@@ -1018,8 +1098,7 @@ const EX = {
     FLOWERS(c, x + 30, G, 40); FLOWERS(c, x + 172, G, 26); CAR(c, x - 34, G, '#1a1a1e'); R(c, '#f2c14e', x - 24, G - 13, 6, 2); LAMP(c, x + 6, G, 56); PERSON(c, x + 178, G, '#2f4a8a'); PERSON(c, x + 186, G, '#e8e0cf', '#3a3a44'); BIN(c, x + 128, G); },
   letters(c, x, G) { for (let i = 0; i < 10; i++) R(c, '#a8a59c', x + i * 19, G - 6, 1, 6); BOX(c, '#c58f52', x - 20, G - 14, 20, 14); R(c, '#a8743e', x - 20, G - 9, 20, 1); BOX(c, '#c58f52', x + 172, G - 12, 22, 12);
     PERSON(c, x + 58, G - 4, '#1a1a1e', '#2a2a33', '#e2b38a', '#f4f2ec'); PERSON(c, x + 66, G - 4, '#5a6e8a', '#5a6e8a', '#e2b38a', '#e8c766');  },
-  frasers(c, x, G) { BOX(c, '#2bb3c8', x + 6, G - 16, 26, 14); R(c, '#ffffff', x + 9, G - 13, 20, 3); CIRC(c, OUT, x + 12, G - 2, 2); CIRC(c, OUT, x + 26, G - 2, 2); FLOWERS(c, x + 92, G, 22); TREE(c, x + 160, G, .9); PERSON(c, x + 40, G, '#d84b6a'); PERSON(c, x + 100, G - 6, '#3a6ea5'); PERSON(c, x + 130, G, '#f2c14e'); },
-  hatfactory(c, x, G) { LAMP(c, x + 164, G, 120); for (let i = 0; i < 9; i++) P(c, i % 2 ? '#4f8a3c' : '#6faa4e', [[x + 120, G - 2], [x + 112 + i * 3, G - 22 - (i % 3) * 4], [x + 124, G - 2]]); BOX(c, '#4a2f25', x + 104, G - 4, 34, 4);
+  hatfactory(c, x, G) { for (let i = 0; i < 9; i++) P(c, i % 2 ? '#4f8a3c' : '#6faa4e', [[x + 160, G - 2], [x + 152 + i * 3, G - 22 - (i % 3) * 4], [x + 164, G - 2]]); BOX(c, '#4a2f25', x + 146, G - 4, 34, 4);
     for (let i = 0; i < 4; i++) { BOX(c, '#e8641c', x - 30 + i * 10, G - 10, 9, 8); R(c, '#ffffff', x - 30 + i * 10, G - 7, 9, 2); } BOX(c, '#d8262f', x + 86, G - 22, 8, 8); R(c, '#2f6fb5', x + 88, G - 14, 3, 14); R(c, '#f2c14e', x + 82, G - 14, 16, 2); PERSON(c, x + 66, G, '#3a3d44'); PERSON(c, x + 150, G, '#e0558c'); BIN(c, x + 40, G); },
   chaiiwala(c, x, G) { for (const bx of [x + 180, x + 206, x + 232]) BOLL(c, bx, G); R(c, '#c96a4a', x + 130, G - 3, 160, 3); },
   nadeem(c, x, G) { R(c, '#c25a3c', x - 6, G - 3, 162, 3); for (let i = 0; i < 20; i++) R(c, '#a84a30', x - 4 + i * 8, G - 3, 1, 3);
@@ -1031,8 +1110,7 @@ const EX = {
     for (let i = 0; i < 6; i++) R(c, '#f4f2ec', x + 12 + i * 34, G - 74, 18, 2); for (const tx of [x + 72, x + 150]) { BOX(c, '#e8e0cf', tx, G - 44, 12, 4); } },
   periperi(c, x, G) { for (let i = 0; i < 6; i++) CIRC(c, '#fff4cc', x + 74 + i * 18, G - 47, 1); for (let i = 0; i < 5; i++) { BOX(c, '#22252b', x + 76 + i * 20, G - 44, 16, 6); R(c, i % 2 ? '#e0281a' : '#f2c14e', x + 78 + i * 20, G - 42, 12, 2); }
     R(c, '#f4f6c8', x + 178, G - 56, 3, 3); BOX(c, '#e8e8e8', x + 66, G - 124, 6, 6); R(c, '#e0a020', x + 152, G - 124, 6, 8); CAR(c, x + 168, G, '#1f2430'); R(c, 'rgba(255,60,40,.25)', x + 64, G - 82, 116, 18); },
-  krispy(c, x, G) {
-    for (let i = 0; i < 5; i++) R(c, '#e7c35a', x + 50 + i * 15, G - 34, 9, 1); R(c, '#4caf50', x + 84, G - 20, 6, 6); },
+  krispy(c, x, G) { },
   uob(c, x, G) { R(c, '#5f9e3c', x + 80, G - 6, 110, 6); R(c, '#4f8a33', x + 84, G - 2, 100, 2); for (let i = 0; i < 9; i++) BOLL(c, x + 86 + i * 12, G); BIRCH(c, x + 30, G); BIRCH(c, x + 96, G); PERSON(c, x + 150, G - 6, '#1a1a1e'); },
   sixthform(c, x, G) { LAMP(c, x - 6, G, 80); for (let i = 0; i < 6; i++) R(c, '#2e8b57', x + 2 + i * 4, G - 26, 2, 26); R(c, '#2e8b57', x + 2, G - 26, 24, 2); P(c, '#e8e8e8', [[x - 2, G - 64], [x + 46, G - 64], [x + 40, G - 58], [x + 4, G - 58]], true);
     PERSON(c, x + 40, G, '#9aa3ad', '#2a2a33'); PERSON(c, x + 74, G, '#3a6ea5'); PERSON(c, x + 120, G, '#5a3a2e', '#1a1a1e', '#c58c5c', '#1f6f6a'); PERSON(c, x + 166, G, '#2f4a8a'); BIN(c, x + 128, G, '#8a9098'); BIN(c, x + 98, G, '#8a9098'); for (let i = 0; i < 3; i++) P(c, i === 1 ? '#d8262f' : '#f4f2ec', [[x + 174 + i * 7, G - 64], [x + 180 + i * 7, G - 72], [x + 183 + i * 7, G - 72], [x + 177 + i * 7, G - 64]]); },
@@ -1085,10 +1163,6 @@ const WIDEN = {
     for (const px of [x + 24, x + 72]) { BOX(c, '#1f6fd6', px + 1, G - 60, 10, 30); CIRC(c, '#8ad646', px + 6, G - 55, 3); CIRC(c, '#1f6fd6', px + 6, G - 55, 1.6); for (let j = 0; j < 4; j++) R(c, '#ffffff', px + 5, G - 50 + j * 4, 2, 2); }
     for (const bx of [x + 17, x + 89]) { R(c, '#2a9a8a', bx, G - 10, 2, 10); R(c, '#2a9a8a', bx - 1, G - 11, 4, 2); }
   } },
-  frasers: { w: 210, dx: 40, pre(c, x, G) {
-    BOX(c, '#4f86a8', x, G - 140, 60, 140); for (let i = 0; i < 3; i++) for (let j = 0; j < 7; j++) R(c, (i + j) % 3 ? '#5e95b8' : '#76aacb', x + 2 + i * 20, G - 138 + j * 20, 18, 18);
-    BOX(c, '#9aa3ad', x + 4, G - 30, 50, 30); for (let i = 0; i < 6; i++) R(c, '#868e98', x + 4, G - 28 + i * 5, 50, 1);
-  } },
   venue: { w: 420, dx: 120, pre(c, x, G) {
     const B = '#e6dccb'; BOX(c, B, x, G - 66, 124, 66); for (let i = 0; i < 4; i++) R(c, SH(B, .94), x, G - 50 + i * 12, 124, 1); R(c, SH(B, .85), x + 120, G - 66, 4, 66);
     BOX(c, '#4a4d54', x - 2, G - 84, 128, 18); for (let i = 0; i < 9; i++) R(c, '#6a6e76', x, G - 82 + i * 2, 124, 1); for (let i = 0; i < 9; i++) R(c, '#33363c', x + i * 15, G - 84, 2, 18);
@@ -1113,10 +1187,9 @@ const SHARP = {
     // crisp, slightly taller sign after the 0.82 scale-down
     const sx = X(4), sw = Math.round(132 * f), top = Y(76), bot = Y(48);
     BOX(c, '#6e1f33', sx, top, sw, bot - top); R(c, '#f2c96b', sx + 2, bot - 2, sw - 4, 1);
-    T(c, 'KRISPY LEMON', sx + Math.round(sw * .44), top + 2, 8, '#f2c96b'); T(c, 'CHICKEN', sx + Math.round(sw * .44), top + 11, 8, '#f2c96b');
+    { const cx = sx + Math.round(sw * .44); c.font = '700 8px Silk'; c.textAlign = 'left'; c.textBaseline = 'top'; c.fillStyle = '#f2c96b'; for (const [t, ty] of [['KRISPY LEMON', top + 2], ['CHICKEN', top + 11]]) c.fillText(t, Math.round(cx - c.measureText(t).width / 2), ty); }
     const cx = sx + sw - 11, cy = top + 11; CIRC(c, '#ffffff', cx, cy, 4); R(c, '#f2c14e', cx + 3, cy - 1, 3, 2); R(c, '#d84b3c', cx - 1, cy - 6, 3, 2); R(c, '#1b1a24', cx + 1, cy - 1, 1, 1);
-    BOX(c, '#c62828', sx, bot, sw, 9); c.font = '7px Silk'; let fz = 7; while (fz > 5 && (c.font = fz + 'px Silk', c.measureText('BURGERS · PIZZA · CHIPS').width > sw - 6)) fz--;
-    T(c, 'BURGERS · PIZZA · CHIPS', sx + Math.round(sw / 2), bot + 1, fz, '#ffffff', 'center', false); },
+    BOX(c, '#c62828', sx, bot, sw, 10); c.font = '8px Silk'; c.textAlign = 'left'; c.textBaseline = 'top'; c.fillStyle = '#ffffff'; { let t = 'BURGERS \u00b7 PIZZA \u00b7 CHIPS'; if (c.measureText(t).width > sw - 4) t = 'BURGERS\u00b7PIZZA\u00b7CHIPS'; c.fillText(t, Math.round(sx + (sw - c.measureText(t).width) / 2), bot + 1); } },
   spudkingz(c, x, G, f) { const X = v => Math.round(x + v * f), Y = v => Math.round(G - v * f);
     const fs = Math.max(8, Math.round(12 * f / .64)); c.font = `700 ${fs}px Silk`; c.textBaseline = 'middle'; const w1 = c.measureText('Spud ').width, w2 = c.measureText('Kingz').width, sx0 = Math.round(X(110) - (w1 + w2) / 2);
     R(c, '#141416', sx0 + 3, Y(105), Math.round(w1 + w2) - 6, 2);
@@ -1143,7 +1216,7 @@ const SHARP = {
     BOX(c, '#151618', X(-4), Y(88), Math.round(96 * f), 17); T(c, 'CHAIIKHANA', X(44), Y(88) + 4, 8, '#f4f4f2', 'center', true);
     T(c, 'ORDER', X(34), Y(30) + 2, 8, '#e0458a', 'center', true); },
 };
-const SCALE = { letters: .8, townhall: 1.2, masjidali: 1.5, inspire: 1.21, funfair: 1.25, airport: 1.2, sixthform: 1.44, uob: 1.2, chiltern: 1.2, lewsey: 1.2, grandbazar: 1.2, lidl: 1.2, matalan: 1.5, bandq: 1.56, tesco: 1.5, cycleking: .98, topspizza: .82, alquds: .82, kahwa: .82, gna: .82, toros: .82, krispy: .82, lutonhoo: 1.5, currys: 1.15, masjid: 1.32, suffa: 1.08, oak: .82, chaiikhana: .85, spudkingz: .48, nadeem: 1.52, chaiiwala: 1.32, frasers: 1.73, stmarys: 1.02, hatfactory: 1.3 };
+const SCALE = { letters: .8, townhall: 1.2, masjidali: 1.5, inspire: 1.21, funfair: 1.25, airport: 1.2, sixthform: 1.44, uob: 1.2, chiltern: 1.2, lewsey: 1.2, grandbazar: 1.2, lidl: 1.2, matalan: 1.5, bandq: 1.56, tesco: 1.5, cycleking: .98, topspizza: .82, alquds: .82, kahwa: .82, gna: .82, toros: .82, krispy: .82, lutonhoo: 1.5, currys: 1.15, masjid: 1.32, suffa: 1.08, oak: .82, chaiikhana: .85, spudkingz: .48, nadeem: 1.52, chaiiwala: 1.32, frasers: 1.6, stmarys: 1.02, hatfactory: 1.3 };
 // (SCALE is applied at the end of the file, once every landmark is defined)
 
 /* things drawn after scaling, so they keep their own size */
@@ -1299,7 +1372,10 @@ L.miamicrispy = { n: 'Miami Crispy', w: 150, d(c, x, G) {
   BOX(c, '#e8501e', x - 2, G - 62, 154, 22); for (let i = 0; i < 5; i++) R(c, '#c8401a', x, G - 58 + i * 4, 150, 1); R(c, '#ff7a3a', x - 1, G - 61, 152, 1);
   TS(c, 'MIAMI CRISPY', x + 75, G - 58, 14, '#ffffff', '#9a2a10');
   // orange framed glass shopfront
-  BOX(c, '#e8641c', x, G - 40, 150, 36); for (const [gx, gw] of [[x + 4, 44], [x + 70, 76]]) { R(c, '#a9c3cf', gx, G - 37, gw, 31); R(c, '#cfe0e8', gx + 2, G - 35, 6, 27); R(c, '#cfe0e8', gx + 10, G - 35, 2, 27); }
+  BOX(c, '#e8641c', x, G - 40, 150, 36); for (const [gx, gw] of [[x + 4, 44], [x + 70, 76]]) { R(c, '#dfe6ea', gx, G - 37, gw, 31); R(c, '#f2f4f5', gx, G - 37, gw, 8);
+    for (let k = 0; k * 14 < gw - 12; k++) { R(c, '#1f2228', gx + 3 + k * 14, G - 36, 12, 6); R(c, '#e8641c', gx + 4 + k * 14, G - 35, 10, 1); R(c, '#ffffff', gx + 4 + k * 14, G - 33, 7, 1); }
+    R(c, '#c9ced4', gx, G - 20, gw, 2); R(c, '#3a3d44', gx, G - 18, gw, 12); for (let k = 0; k * 10 < gw - 6; k++) { R(c, '#e8641c', gx + 3 + k * 10, G - 24, 6, 2); R(c, '#2a2a2e', gx + 5 + k * 10, G - 22, 1, 4); }
+    R(c, 'rgba(160,200,215,.35)', gx, G - 37, gw, 31); R(c, '#ffffff', gx + 2, G - 35, 2, 27); }
   R(c, '#8a6a4a', x + 52, G - 37, 15, 33); R(c, '#e8641c', x + 58, G - 37, 1, 33); R(c, '#d0703a', x + 54, G - 20, 4, 2); R(c, '#d0703a', x + 61, G - 20, 4, 2);
   T(c, 'Luton', x + 120, G - 26, 8, '#e8641c', 'center'); P(c, '#e8641c', [[x + 84, G - 30], [x + 90, G - 24], [x + 96, G - 30], [x + 93, G - 33], [x + 90, G - 31], [x + 87, G - 33]]);
   BOX(c, '#4a4e56', x, G - 4, 150, 4);
@@ -1401,7 +1477,9 @@ window.LM_ANIM.funfair = (c, x, G, t) => {
 
 window.LM_ORDER = ['galaxy', 'townhall', 'stmarys', 'letters', 'frasers', 'station', 'hatfactory', 'chaiiwala', 'chaiikhana', 'spudkingz', 'miamicrispy', 'masjid', 'masjidali', 'suffa', 'gurdwara', 'ldh', 'lutonhoo', 'foodbank', 'inspire', 'nadeem', 'oak', 'periperi', 'toros', 'cycleking', 'gna', 'kahwa', 'leagrave', 'topspizza', 'alquds', 'kaya', 'karwan', 'krispy', 'tesco', 'currys', 'bandq', 'matalan', 'lidl', 'jdgyms', 'bigyellow', 'grandbazar', 'lewsey', 'venue', 'chiltern', 'uob', 'sixthform', 'wardownfield', 'wardown', 'wardownbridge', 'funfair', 'stockwood', 'welcome', 'airport'];
 Object.keys(SCALE).forEach(k => { const f = SCALE[k], d0 = L[k].d, w0 = L[k].w, M = 80, H = 320; L[k].w = Math.round(w0 * f);
-  L[k].d = (c, x, G) => { const oc = document.createElement('canvas'); oc.width = w0 + M * 2; oc.height = H; const o = oc.getContext('2d'); d0(o, M, H - 10);
-    c.save(); c.imageSmoothingEnabled = k === 'leagrave' || f < 1; c.imageSmoothingQuality = 'high'; c.drawImage(oc, 0, 0, oc.width, H - 10, x - M * f, G - (H - 10) * f, oc.width * f, (H - 10) * f); c.restore(); if (SHARP[k]) SHARP[k](c, x, G, f); }; });
+  // drawn natively at the new size (not a stretched picture), so edges, lines and text stay sharp
+  L[k].d = (c, x, G) => { const pk = RK; c.save(); c.translate(Math.round(x), Math.round(G)); c.scale(f, f); c.beginPath(); c.rect(-M, -H, w0 + M * 2, H); c.clip(); RK = f; try { d0(c, 0, 0); } finally { RK = pk; c.restore(); } if (SHARP[k]) SHARP[k](c, x, G, f); }; });
 window.SCALE = SCALE;
+// draw any landmark/house function natively at a scale (used for the houses in index.html)
+window.drawScaled = (c, d0, x, G, f) => { const pk = RK; c.save(); c.translate(Math.round(x), Math.round(G)); c.scale(f, f); c.beginPath(); c.rect(-200, -400, 2000, 400); c.clip(); RK = f; try { d0(c, 0, 0); } finally { RK = pk; c.restore(); } };
 })();

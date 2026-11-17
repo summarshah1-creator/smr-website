@@ -202,7 +202,7 @@ html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:m
 </div></div>
   <div id="tap" class="hide">TAP TO FLAP</div>
 </div>
-<script src="landmarks.js?v=1117zp"></script>
+<script src="landmarks.js?v=1117zq"></script>
 <script src="vehicles.js?v=1117q"></script>
 <script src="namecheck.js"></script>
 <script>
@@ -225,9 +225,9 @@ function prerender() {
 }
 const houseSprites = [];
 const HOUSE_SCALE = 1.35; // houses sized so their ground floor matches the shops built into houses
-function prerenderHouses() { Object.keys(HOUSES).forEach(k => { const Hh = HOUSES[k]; const t = document.createElement('canvas'); t.width = Hh.w + M * 2; t.height = LH; Hh.d(t.getContext('2d'), M, LH - 6);
-  const oc = document.createElement('canvas'), w = Math.round(Hh.w * HOUSE_SCALE); oc.width = w + M * 2; oc.height = LH; const o = oc.getContext('2d'); o.imageSmoothingEnabled = false;
-  const sw = t.width * HOUSE_SCALE, sh = LH * HOUSE_SCALE; o.drawImage(t, Math.round(M - M * HOUSE_SCALE), Math.round(LH - 6 - (LH - 6) * HOUSE_SCALE), Math.round(sw), Math.round(sh)); houseSprites.push({ k, n: '', w, c: oc }); }); }
+function prerenderHouses() { Object.keys(HOUSES).forEach(k => { const Hh = HOUSES[k], w = Math.round(Hh.w * HOUSE_SCALE);
+  const oc = document.createElement('canvas'); oc.width = w + M * 2; oc.height = LH; const o = oc.getContext('2d'); o.imageSmoothingEnabled = false;
+  window.drawScaled(o, Hh.d.bind(Hh), M, LH - 6, HOUSE_SCALE); houseSprites.push({ k, n: '', w, c: oc }); }); }
 const carSprites = [];
 function prerenderCars() {
   // every model in every colour; a model's weight is shared between its colours, so supercars and lorries stay rare
@@ -468,7 +468,7 @@ const LB = (() => { const api = 'api.php'; let online = null, data = { today: []
 /* ---------- always the latest version, also when saved to the Home Screen ----------
    version.json is rewritten on every deploy; when it changes the page reloads itself (straight away on the menu,
    or right after the current game ends), with a cache-busting query so the phone fetches the new HTML. */
-(() => { const BUILD = '20261117231533'; let pending = false;
+(() => { const BUILD = '20261117233804'; let pending = false;
   const go = () => { let last = 0; try { last = +sessionStorage.getItem('fk_upd_t') || 0; } catch (e) {} if (Date.now() - last < 60000) return;   // never loop: at most one reload a minute
     try { sessionStorage.setItem('fk_upd_t', String(Date.now())); } catch (e) {} location.replace(location.pathname + '?u=' + Date.now() + location.hash); };
   const check = () => fetch('version.json?ts=' + Date.now(), { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(j => {
