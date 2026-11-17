@@ -84,10 +84,14 @@ function fk_stats(int $days): array {
     $src = $q("SELECT src, COUNT(DISTINCT vid) u, COUNT(*) n FROM fk_events WHERE ev = 'visit' AND day >= ? GROUP BY src ORDER BY u DESC", [$from])->fetchAll();
     $dev = $q("SELECT dev, COUNT(DISTINCT vid) u FROM fk_events WHERE ev = 'visit' AND day >= ? GROUP BY dev ORDER BY u DESC", [$from])->fetchAll();
     $appv = (int) $q("SELECT COUNT(DISTINCT vid) FROM fk_events WHERE ev = 'visit' AND app = 1 AND day >= ?", [$from])->fetchColumn();
-    $back = (int) $q("SELECT COUNT(*) FROM (SELECT vid FROM fk_events WHERE ev = 'visit' AND day >= ? GROUP BY vid HAVING COUNT(DISTINCT day) > 1)", [$from])->fetchColumn();
+    $opens = (int) $q("SELECT COUNT(*) FROM fk_events WHERE ev = 'visit' AND day >= ?", [$from])->fetchColumn();
+    $uniq = (int) $q("SELECT COUNT(DISTINCT vid) FROM fk_events WHERE ev = 'visit' AND day >= ?", [$from])->fetchColumn();
+    // new = first ever visit falls inside the range; returning = has opened it on 2+ different days (ever) and came in this range
+    $new = (int) $q("SELECT COUNT(*) FROM (SELECT vid, MIN(day) f FROM fk_events WHERE ev = 'visit' GROUP BY vid) WHERE f >= ? AND vid IN (SELECT vid FROM fk_events WHERE ev = 'visit' AND day >= ?)", [$from, $from])->fetchColumn();
+    $back = (int) $q("SELECT COUNT(*) FROM (SELECT vid FROM fk_events WHERE ev = 'visit' GROUP BY vid HAVING COUNT(DISTINCT day) > 1) WHERE vid IN (SELECT vid FROM fk_events WHERE ev = 'visit' AND day >= ?)", [$from])->fetchColumn();
     $places = $q("SELECT extra place, COUNT(*) n FROM fk_events WHERE ev = 'over' AND extra != '' AND day >= ? GROUP BY extra ORDER BY n DESC LIMIT 10", [$from])->fetchAll();
     $daily = $q("SELECT day, COUNT(DISTINCT vid) v, SUM(ev = 'play') g FROM fk_events WHERE day >= ? GROUP BY day ORDER BY day", [date('Y-m-d', strtotime('-29 days'))])->fetchAll();
-    return ['days' => $days, 'visitors' => $visitors, 'returning' => $back, 'app_users' => $appv, 'events' => $tot, 'games' => (int) $sc['n'], 'avg' => round((float) $sc['a'], 1), 'best' => (int) $sc['m'], 'sources' => $src, 'devices' => $dev, 'places' => $places, 'daily' => $daily];
+    return ['days' => $days, 'visitors' => $visitors, 'opens' => $opens, 'unique' => $uniq, 'new' => $new, 'returning' => $back, 'app_users' => $appv, 'events' => $tot, 'games' => (int) $sc['n'], 'avg' => round((float) $sc['a'], 1), 'best' => (int) $sc['m'], 'sources' => $src, 'devices' => $dev, 'places' => $places, 'daily' => $daily];
 }
 
 $a = $_GET['a'] ?? $_POST['a'] ?? '';
