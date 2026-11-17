@@ -212,7 +212,7 @@ L.sixthform = { n: 'Luton Sixth Form College', w: 220, d(c, x, G) {
 } };
 
 
-L.masjid = { n: 'Bury Park Jamia Masjid', w: 230, d(c, x, G) {
+L.masjid = { n: 'Luton Central Mosque', w: 230, d(c, x, G) {
   const B = '#b8483a', BL = '#a33d31';
   BRICK(c, x, G - 120, 100, 120, B, BL); R(c, OUT, x - 1, G - 121, 102, 1); R(c, OUT, x - 1, G - 120, 1, 120);
   for (let i = 0; i < 8; i++) { R(c, SH(B, .88), x + 6 + i * 12, G - 112, 6, 60); CIRC(c, SH(B, .88), x + 9 + i * 12, G - 112, 3); }
