@@ -398,20 +398,21 @@
  },
  {
   "slug": "rouh",
-  "version": "2026-11-09a",
+  "version": "2026-11-17a",
   "name": "ROUH",
   "accent": "#00af52",
   "tagline": "Clothing brand website · online shop · London",
-  "description": "A bold, animated website for ROUH: best sellers, the full shop with filters, product pages, bag, sale, lookbook and drop sign-ups.",
+  "description": "A bold, animated website for ROUH: a 3D clothing rail you pull pieces off, the full shop with filters, product pages, bag, sale, lookbook and drop sign-ups.",
   "tips": [
    "A bold animated homepage in your own green and black, built to feel like a fashion brand, not a template shop.",
-   "Best sellers slide across the top so your strongest pieces get seen first.",
+   "The Rail: every piece hangs side-on from a chrome rail. Swipe along it, tap one and it lifts off the bar and turns to face the customer.",
    "The full shop with filters by category: t-shirts, hoodies, windbreakers, bottoms.",
    "Each product opens with a photo gallery, sizes and an add-to-bag button.",
    "The bag slides in from the side, so customers keep shopping while they add pieces.",
    "A sale section and a lookbook of your campaign shots keep people browsing.",
    "\"Secret drops\" sign-up builds your mailing list, with early access to drops and sales."
-  ]
+  ],
+  "ver": "2.0"
  },
  {
   "slug": "ngs",
