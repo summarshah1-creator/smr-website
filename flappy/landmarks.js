@@ -174,6 +174,53 @@ L.kahwa = { n: 'Kahwa Cafe', w: 110, d(c, x, G) {
   for (const lx of [x + 24, x + 56, x + 86]) R(c, '#ffe08a', lx, G - 42, 4, 1);
 } };
 
+L.leagrave = { n: 'Leagrave Road', w: 148, d(c, x, G) {
+  const GR = '#d6d8d8', GD = '#b8bcbc', RW = '#b0503c';
+  // brown tiled roof (same slope both ends), three skylights spread evenly, chimney on the left edge
+  P(c, '#6e6354', [[x + 4, G - 112], [x + 108, G - 112], [x + 102, G - 150], [x + 10, G - 150]], true); for (let i = 1; i < 10; i++) R(c, '#605646', x + 6 + i * .65, G - 112 - i * 4, 100 - i * 1.3, 1);
+  for (const sx of [x + 18, x + 49, x + 80]) { BOX(c, '#3a4048', sx, G - 140, 14, 8); R(c, '#7f98ac', sx + 1, G - 139, 12, 3); }
+  BRICK(c, x + 11, G - 164, 14, 16, '#9a5440', '#84463a'); R(c, '#b9b3a6', x + 9, G - 166, 18, 3); R(c, '#c0603a', x + 12, G - 172, 4, 6); R(c, '#c0603a', x + 19, G - 172, 4, 6);
+  // light grey rendered house
+  BOX(c, GR, x + 8, G - 112, 96, 112); R(c, '#e2e4e4', x + 9, G - 111, 94, 2); R(c, GD, x + 60, G - 112, 1, 112);
+  R(c, '#e8eaea', x + 98, G - 110, 3, 110);   // white downpipe on the right
+  // left windows: thin pane, two middle panes, thin pane; each with a small opening window across its top
+  const BAYWIN = (wx, wy, h, glass, blinds) => { BOX(c, '#f4f4f2', wx, wy, 42, h); const top = wy + 3, ph = h - 6;
+    for (const [px, pw] of [[3, 4], [9, 11], [22, 11], [35, 4]]) { R(c, glass, wx + px, top, pw, ph); R(c, SH(glass, 1.08), wx + px, top, pw, 5); R(c, '#f4f4f2', wx + px, top + 5, pw, 1.4);
+      if (blinds) for (let i = 1; i < pw; i += 3) R(c, SH(glass, .86), wx + px + i, top + 7, 1, ph - 8); }
+  };
+  BAYWIN(x + 14, G - 104, 30, '#c8d2da', false); R(c, GD, x + 12, G - 74, 46, 3);
+  BOX(c, '#f4f4f2', x + 66, G - 104, 30, 30); R(c, '#9db3c4', x + 69, G - 101, 24, 11); R(c, '#9db3c4', x + 69, G - 88, 24, 11); R(c, GD, x + 64, G - 74, 34, 3);
+  { const dx = x + 99, dy = G - 66; R(c, '#5a5e66', dx + 4, dy - 1, 4, 1.4); c.fillStyle = OUT; c.beginPath(); c.ellipse(dx, dy, 4.6, 6, -.35, 0, 7); c.fill(); c.fillStyle = '#7d838c'; c.beginPath(); c.ellipse(dx, dy, 3.8, 5.2, -.35, 0, 7); c.fill(); c.fillStyle = '#9aa1aa'; c.beginPath(); c.ellipse(dx - .8, dy - .8, 2.2, 3.4, -.35, 0, 7); c.fill(); R(c, '#3a3d44', dx + 2, dy + 1, 4, 1); }
+  BAYWIN(x + 14, G - 62, 32, '#b8c4ce', true); R(c, GD, x + 12, G - 30, 46, 3);
+  BOX(c, '#6e7276', x + 66, G - 54, 22, 54); BOX(c, '#3e4654', x + 70, G - 49, 14, 49); for (const dy of [G - 42, G - 33, G - 24]) P(c, '#9db3c4', [[x + 77, dy - 2.5], [x + 79.5, dy], [x + 77, dy + 2.5], [x + 74.5, dy]], false); R(c, '#c9ced4', x + 81, G - 26, 1.5, 3);
+  // red brick pier on the left against the house, wide black garage-style gate, red pier after it
+  BRICK(c, x, G - 16, 8, 16, RW, '#984232'); R(c, '#2a2a2e', x, G - 18, 8, 2); R(c, OUT, x, G, 8, 1);
+  // the building further back, peeping over the gate: white wall and a red roof, faded because it's behind
+  P(c, '#bc6e5c', [[x + 104, G - 60], [x + 131, G - 60], [x + 129, G - 66], [x + 104, G - 66]], false); R(c, '#a85e4e', x + 104, G - 63, 26, 1);
+  R(c, '#c9cbcc', x + 104, G - 60, 27, 14); R(c, '#bfc1c2', x + 104, G - 60, 27, 1); R(c, '#b4b7b9', x + 130, G - 60, 1, 14);
+  BOX(c, '#1e2024', x + 104, G - 46, 36, 46); for (let i = 0; i < 9; i++) R(c, '#34383e', x + 106 + i * 4, G - 44, 2, 44); R(c, '#34383e', x + 104, G - 46, 36, 2); R(c, '#4a4e56', x + 104, G - 24, 36, 1);
+  BRICK(c, x + 140, G - 16, 8, 16, RW, '#984232'); R(c, '#2a2a2e', x + 140, G - 18, 8, 2); R(c, OUT, x + 140, G, 8, 1);
+  // block-paved drive, wall to wall
+  R(c, '#b06a54', x + 8, G - 3, 132, 3); for (let i = 0; i < 33; i++) R(c, '#9a5a46', x + 8 + i * 4, G - 3, 1, 3);
+  // three cars parked nose-in, so we see their backs: black saloon, blue saloon, red hatchback
+  const BACK = (bx, col, light) => { const D = SH(col, .78);
+    P(c, col, [[bx, G - 4], [bx, G - 16], [bx + 3, G - 19], [bx + 31, G - 19], [bx + 34, G - 16], [bx + 34, G - 4]], true);
+    P(c, D, [[bx + 6, G - 19], [bx + 9, G - 28], [bx + 25, G - 28], [bx + 28, G - 19]], true); R(c, '#2a3038', bx + 9, G - 26, 16, 6); R(c, 'rgba(255,255,255,.25)', bx + 10, G - 25, 6, 1);
+    R(c, light, bx + 1, G - 15, 7, 3); R(c, light, bx + 26, G - 15, 7, 3); R(c, '#f2c94c', bx + 12, G - 11, 10, 4); R(c, D, bx + 1, G - 7, 32, 2);
+    R(c, '#141416', bx + 2, G - 4, 6, 4); R(c, '#141416', bx + 26, G - 4, 6, 4); };
+  // red A45-style hot hatch from behind: same height and plate as the others, roof spoiler, big rear window, plain black bottom
+  const HATCH = (bx, col) => { const L = SH(col, 1.15);   // narrower than the saloons
+    P(c, col, [[bx, G - 4], [bx, G - 15], [bx + 2.2, G - 18], [bx + 4.4, G - 26], [bx + 26.6, G - 26], [bx + 28.8, G - 18], [bx + 31, G - 15], [bx + 31, G - 4]], true);
+    R(c, '#141416', bx + 2.8, G - 28, 25.5, 2); R(c, '#e83030', bx + 10.5, G - 27.5, 10, .6);
+    P(c, '#22262c', [[bx + 5.5, G - 18], [bx + 7.2, G - 25], [bx + 23.8, G - 25], [bx + 25.5, G - 18]], false); R(c, 'rgba(255,255,255,.22)', bx + 8.9, G - 24, 5, 1);
+    P(c, '#7a0c10', [[bx + 1.7, G - 16], [bx + 6.6, G - 17], [bx + 7.8, G - 14], [bx + 2.2, G - 13]], false); P(c, '#7a0c10', [[bx + 29.3, G - 16], [bx + 24.4, G - 17], [bx + 23.2, G - 14], [bx + 28.8, G - 13]], false); R(c, '#f0f0f0', bx + 2.8, G - 15, 3, .6); R(c, '#f0f0f0', bx + 24.9, G - 15, 3, .6);
+    R(c, '#f2c94c', bx + 10, G - 11, 10, 4); R(c, L, bx + 3.3, G - 12.5, 24.5, .6);
+    R(c, '#141416', bx + 1.1, G - 7, 29, 3);
+    R(c, '#141416', bx + 2.2, G - 4, 6, 4); R(c, '#141416', bx + 22.1, G - 4, 6, 4); };
+  // the drive is full: even gaps from wall to car, between the cars, and to the far wall; the red one sits in front of the gate
+  BACK(x + 16, '#1c1d22', '#c8202a'); BACK(x + 58, '#2e3d6e', '#e0302a'); HATCH(x + 100.5, '#d8141c');
+} };
+
 L.uob = { n: 'University of Bedfordshire', w: 200, d(c, x, G) {
   BOX(c, '#3e3f45', x, G - 140, 80, 140); for (let r = 0; r < 5; r++) for (let i = 0; i < 4; i++) WIN(c, x + 6 + i * 18, G - 132 + r * 22, 14, 14, '#e9e9e6', '#7fa7c4');
   BOX(c, '#3d6584', x + 80, G - 96, 26, 96); for (let j = 0; j < 6; j++) R(c, '#5f8fb0', x + 82, G - 94 + j * 16, 22, 14);
@@ -1209,5 +1256,5 @@ window.LM_ANIM.funfair = (c, x, G, t) => {
   CIRC(c, OUT, px, py, 5); CIRC(c, '#9aa3ad', px, py, 4); BOX(c, '#d32f2f', px - 4, py - 10, 8, 6);
 };
 
-window.LM_ORDER = ['galaxy', 'townhall', 'stmarys', 'letters', 'frasers', 'station', 'hatfactory', 'chaiiwala', 'chaiikhana', 'spudkingz', 'miamicrispy', 'masjid', 'masjidali', 'suffa', 'gurdwara', 'ldh', 'foodbank', 'inspire', 'nadeem', 'oak', 'periperi', 'toros', 'gna', 'kahwa', 'topspizza', 'alquds', 'kaya', 'karwan', 'krispy', 'tesco', 'currys', 'bandq', 'matalan', 'lidl', 'jdgyms', 'bigyellow', 'grandbazar', 'lewsey', 'venue', 'chiltern', 'uob', 'sixthform', 'wardownfield', 'wardown', 'wardownbridge', 'funfair', 'stockwood', 'welcome', 'airport'];
+window.LM_ORDER = ['galaxy', 'townhall', 'stmarys', 'letters', 'frasers', 'station', 'hatfactory', 'chaiiwala', 'chaiikhana', 'spudkingz', 'miamicrispy', 'masjid', 'masjidali', 'suffa', 'gurdwara', 'ldh', 'foodbank', 'inspire', 'nadeem', 'oak', 'periperi', 'toros', 'gna', 'kahwa', 'leagrave', 'topspizza', 'alquds', 'kaya', 'karwan', 'krispy', 'tesco', 'currys', 'bandq', 'matalan', 'lidl', 'jdgyms', 'bigyellow', 'grandbazar', 'lewsey', 'venue', 'chiltern', 'uob', 'sixthform', 'wardownfield', 'wardown', 'wardownbridge', 'funfair', 'stockwood', 'welcome', 'airport'];
 })();
