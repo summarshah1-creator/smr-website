@@ -193,9 +193,9 @@ html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:m
 </div></div>
   <div id="tap" class="hide">TAP TO FLAP</div>
 </div>
-<script src="landmarks.js?v=20261117d"></script>
-<script src="vehicles.js?v=20261117d"></script>
-<script src="namecheck.js?v=20261117d"></script>
+<script src="landmarks.js?v=20261117e"></script>
+<script src="vehicles.js?v=20261117e"></script>
+<script src="namecheck.js?v=20261117e"></script>
 <script>
 (() => {
 const H = 300, GY = 250, ROAD = 262;            // world: 300 units tall, pavement top at 250
@@ -486,7 +486,7 @@ function draw() {
   if (BE > 0) { ctx.fillStyle = '#8f8a7e'; ctx.fillRect(0, H, W, 2); ctx.fillStyle = '#c9c4b8'; ctx.fillRect(0, H + 2, W, 12); ctx.fillStyle = '#b3ad9f'; for (let x = -po; x < W; x += 12) ctx.fillRect(Math.round(x), H + 2, 1, 12);
     ctx.fillStyle = '#5f9e44'; ctx.fillRect(0, H + 14, W, BE); ctx.fillStyle = '#4f8a36'; const go = Math.floor((t * speed * .9) % 16); for (let y = H + 18; y < H + BE; y += 8) for (let x = -go + ((y / 8) % 2) * 8; x < W; x += 16) ctx.fillRect(Math.round(x), y, 2, 2);
     ctx.fillStyle = '#3f7d33'; for (let x = -go; x < W; x += 16) ctx.fillRect(Math.round(x), H + 14, 14, 4); }
-  pipes.forEach(p => { pipe(p.x, -OY, p.top + OY, 'top'); pipe(p.x, p.top + p.gap, GY - p.top - p.gap, 'bottom'); });
+  pipes.forEach(p => { pipe(p.x, -OY, p.top + OY, 'top'); pipe(p.x, p.top + p.gap, ROAD - p.top - p.gap, 'bottom'); ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.fillRect(Math.round(p.x) - 2, ROAD, PW + 4, 2); });
   // vehicles go in front of the pipes
   const CS = .5; cars.filter(c => c.lane === 0).forEach(c => ctx.drawImage(c.sp.c, Math.round(c.x), Math.round(ROAD + 14 - c.sp.gy * CS), c.sp.c.width * CS, c.sp.c.height * CS));
   cars.filter(c => c.lane === 1).forEach(c => ctx.drawImage(c.sp.flip, Math.round(c.x), Math.round(H - 3 - c.sp.gy * CS), c.sp.flip.width * CS, c.sp.flip.height * CS));
