@@ -307,10 +307,9 @@ L.chiltern = { n: 'The Chiltern Hotel', w: 350, d(c, x, G) {
 
 L.chaiikhana = { n: 'Chaiikhana', w: 200, d(c, x, G) {
   const CL = (bx, by, w, h) => { BOX(c, '#3a3d42', bx, by, w, h); for (let yy = by + 4; yy < by + h; yy += 5) { R(c, '#2c2f34', bx, yy, w, 1); R(c, '#464a50', bx, yy + 1, w, 1); } };
-  BRICK(c, x + 82, G - 90, 118, 36, '#5a4a40', '#4a3c34'); R(c, OUT, x + 81, G - 91, 120, 1);
   CL(x + 84, G - 56, 116, 56); BOX(c, '#2a2c30', x + 84, G - 60, 116, 4);
   BOX(c, '#26282c', x + 150, G - 50, 34, 26); for (let i = 0; i < 9; i++) R(c, '#3a3d42', x + 151, G - 48 + i * 3, 32, 1);
-  CIRC(c, 'rgba(255,250,220,.6)', x + 140, G - 64, 4); CIRC(c, '#fffbe6', x + 140, G - 64, 2); BOX(c, '#c86a8a', x + 188, G - 62, 12, 4);
+  CIRC(c, 'rgba(255,250,220,.6)', x + 140, G - 50, 4); CIRC(c, '#fffbe6', x + 140, G - 50, 2); BOX(c, '#c86a8a', x + 188, G - 56, 10, 4);
   CL(x, G - 66, 84, 66); BOX(c, '#22252a', x - 2, G - 70, 88, 6);
   BOX(c, '#151618', x + 6, G - 86, 74, 16); T(c, 'chaiikhana', x + 43, G - 83, 8, '#e8e8e6', 'center', false);
   BOX(c, '#1c1e22', x + 8, G - 60, 50, 26); R(c, '#c9cfd4', x + 10, G - 58, 46, 22); R(c, '#9aa3ad', x + 10, G - 45, 46, 1);
@@ -797,7 +796,7 @@ const WIDEN = {
 Object.keys(WIDEN).forEach(k => { const o = WIDEN[k], d0 = L[k].d; L[k].w = o.w; L[k].d = (c, x, G) => { if (o.pre) o.pre(c, x, G); d0(c, x + o.dx, G); if (o.post) o.post(c, x + (o.dx || 0), G); }; });
 
 /* ---------- size tweaks: draw at 1x off-screen, then scale with crisp pixels ---------- */
-const SCALE = { nadeem: 1.2, chaiiwala: 1.1, frasers: 1.3, stmarys: 1.02, hatfactory: 1.3 };
+const SCALE = { chaiikhana: .85, spudkingz: .88, nadeem: 1.2, chaiiwala: 1.1, frasers: 1.3, stmarys: 1.02, hatfactory: 1.3 };
 Object.keys(SCALE).forEach(k => { const f = SCALE[k], d0 = L[k].d, w0 = L[k].w, M = 80, H = 320; L[k].w = Math.round(w0 * f);
   L[k].d = (c, x, G) => { const oc = document.createElement('canvas'); oc.width = w0 + M * 2; oc.height = H; const o = oc.getContext('2d'); d0(o, M, H - 10);
     c.save(); c.imageSmoothingEnabled = false; c.drawImage(oc, 0, 0, oc.width, H - 10, x - M * f, G - (H - 10) * f, oc.width * f, (H - 10) * f); c.restore(); }; });
