@@ -203,8 +203,8 @@ html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:m
 </div></div>
   <div id="tap" class="hide">TAP TO FLAP</div>
 </div>
-<script src="landmarks.js?v=1117z"></script>
-<script src="vehicles.js?v=1117j"></script>
+<script src="landmarks.js?v=1117ze"></script>
+<script src="vehicles.js?v=1117p"></script>
 <script src="namecheck.js"></script>
 <script>
 (() => {
@@ -232,9 +232,9 @@ function prerenderHouses() { Object.keys(HOUSES).forEach(k => { const Hh = HOUSE
 const carSprites = [];
 function prerenderCars() {
   // every model in every colour; a model's weight is shared between its colours, so supercars and lorries stay rare
-  VEHICLE_ORDER.forEach(k => { const V = VEHICLES[k]; V.colours.forEach(col => { const oc = document.createElement('canvas'); oc.width = (V.w + 6) * 2; oc.height = 180; const o = oc.getContext('2d'); o.scale(2, 2); V.d(o, 3, 86, col);
+  VEHICLE_ORDER.forEach(k => { const V = VEHICLES[k]; V.colours.forEach(col => { const oc = document.createElement('canvas'); oc.width = (V.w + 6) * 2; oc.height = 180; const o = oc.getContext('2d'); o.scale(2, 2); window.__WREC = []; V.d(o, 3, 86, col); const wh = window.__WREC; window.__WREC = null;
     const d = o.getImageData(0, 0, oc.width, oc.height).data; let top = oc.height; for (let y = 0; y < oc.height && top === oc.height; y++) for (let x = 0; x < oc.width; x++) if (d[(y * oc.width + x) * 4 + 3] > 40) { top = y; break; }
-    carSprites.push({ k, w: V.w, c: oc, flip: null, gy: 172, ht: (172 - top) / 2, wt: V.weight / V.colours.length, sp: V.speed }); }); });
+    carSprites.push({ k, wh, w: V.w, c: oc, flip: null, gy: 172, ht: (172 - top) / 2, wt: V.weight / V.colours.length, sp: V.speed }); }); });
   carSprites.forEach(s => { const f = document.createElement('canvas'); f.width = s.c.width; f.height = s.c.height; const o = f.getContext('2d'); o.translate(f.width, 0); o.scale(-1, 1); o.drawImage(s.c, 0, 0); o.setTransform(1, 0, 0, 1, 0, 0);
     if (VEHICLES[s.k].fixMirror) { o.scale(2, 2); VEHICLES[s.k].fixMirror(o, 3, 86, f.width / 2); } s.flip = f; });
 }
@@ -303,7 +303,7 @@ function reset() {
   pipes = []; nextPipe = W + 40; score = 0; speed = 72; seen = [];
   lmQueue = []; lmX = 20; lmIdx = 0; prevHouses = 0; const at = location.hash.match(/^#at-(\w+)/); playlist = buildPlaylist(at ? at[1] : null); if (at) lmX = Math.round(W * .6);
   while (lmX < W + 600) pushLandmark();
-  cars = []; vanT = 0; vanNext = 12; plane = null; for (let i = 0; i < 3; i++) spawnCar(Math.random() * W);
+  cars = []; vanT = 0; vanNext = 12; plane = null; bplane = null; for (let i = 0; i < 3; i++) spawnCar(Math.random() * W);
   clouds = []; for (let i = 0; i < 6; i++) clouds.push({ x: Math.random() * (W + 200), y: -OY + 20 + Math.random() * (90 + OY), s: .6 + Math.random() * .8 });
 }
 const ANIM_K = { masjidali: 1, wardown: 1, wardownbridge: 1, funfair: 1 }, CHAIN = ['wardownfield', 'wardown', 'wardownbridge', 'funfair'];
@@ -343,7 +343,27 @@ function pushLandmark() { const sp = nextSprite(), nx = peekSprite(); lmQueue.pu
   for (let i = 0; i < n; i++) { const h = houseSprites[Math.floor(Math.random() * houseSprites.length)]; lmQueue.push({ sp: h, x: lmX, passed: true, house: true }); lmX += Math.round(h.w + 6 + Math.random() * 10); }
   if (n) lmX += 12; }
 let lastCarK = '';
-let vanT = 0, vanNext = 12, plane = null;
+let vanT = 0, vanNext = 12, plane = null, bplane = null;
+/* banner plane: text drawn once at 4x, then waved slice by slice behind a small propeller plane */
+const BANNER = (() => { const txt = 'DONNER RUSH  \u00b7  OPEN NOW OUTSIDE CURRYS', k = 4, o = document.createElement('canvas'), g = o.getContext('2d'), B = { c: o, w: 10, h: 18, k };
+  // size it from the real font each time it's drawn (Silk may load after the first draw)
+  const draw = () => { g.font = '700 44px Silk'; B.w = Math.ceil(g.measureText(txt).width / k) + 18; o.width = B.w * k; o.height = B.h * k; g.imageSmoothingEnabled = false;
+    g.fillStyle = '#1b1a24'; g.fillRect(0, 0, o.width, o.height); g.fillStyle = '#fff6e0'; g.fillRect(k, k, o.width - 2 * k, o.height - 2 * k);
+    g.fillStyle = '#e3261c'; g.fillRect(k, k, o.width - 2 * k, k); g.fillRect(k, o.height - 2 * k, o.width - 2 * k, k);
+    g.font = '700 44px Silk'; g.textBaseline = 'middle'; g.textAlign = 'center'; g.fillStyle = '#1b1a24'; g.fillText(txt, o.width / 2, o.height / 2 + k * .5); };
+  draw(); if (document.fonts) { document.fonts.ready.then(draw); document.fonts.load('700 8px Silk').then(draw).catch(() => {}); } return B; })();
+function drawBannerPlane(px, py, d) { const c = ctx, B = BANNER;
+  // tow rope then the waving banner behind (to the right of) the plane
+  const bx = px + 46; c.strokeStyle = '#3a3a40'; c.lineWidth = .6; c.beginPath(); c.moveTo(px + 34, py + 1); c.lineTo(bx, py + 1 + Math.sin(t * 7) * .6); c.stroke();
+  for (let i = 0; i < B.w; i += 2) { const oy = Math.sin(t * 6 - i * .07) * 2 * Math.min(1, i / 30); c.drawImage(B.c, i * B.k, 0, 2 * B.k, B.h * B.k, bx + i, py - B.h / 2 + 1 + oy, 2, B.h); }
+  // the plane, facing left: red and white with a spinning propeller
+  const R2 = (col, x, y, w, h) => { c.fillStyle = col; c.fillRect(px + x * 1.4, py + y * 1.4, w * 1.4, h * 1.4); };
+  R2('#1b1a24', -1, -3, 26, 7); R2('#f4f2ec', 0, -2, 25, 5); R2('#e3261c', 0, 0, 25, 1.4); R2('#e3261c', 0, -2, 4, 5);
+  R2('#1b1a24', 6, -6, 4, 4); R2('#7fb4d8', 7, -5, 2, 2);
+  R2('#1b1a24', 8, 1, 10, 3); R2('#e3261c', 9, 1.5, 8, 1.6);
+  R2('#1b1a24', 20, -7, 6, 6); R2('#e3261c', 21, -6, 4, 4); R2('#1b1a24', 19, 1, 7, 2); R2('#f4f2ec', 20, 1.4, 5, 1);
+  R2('#1b1a24', -3, -1, 3, 2); const sp = Math.floor(t * 30) % 2; R2('rgba(60,60,70,.7)', -4, sp ? -5 : -3, 1, sp ? 10 : 6);
+}
 function pickCar() { const tot = carSprites.reduce((a, s) => a + s.wt, 0); for (let tries = 0; tries < 4; tries++) { let r = Math.random() * tot, s = carSprites[0]; for (const c of carSprites) { r -= c.wt; if (r <= 0) { s = c; break; } } if (s.k !== lastCarK || tries === 3) { lastCarK = s.k; return s; } } }
 function spawnCar(x, key) { const sp = key ? carSprites.find(s => s.k === key) : pickCar(), far = ROAD + 14 - GY - 1, dir = sp.ht > far ? -1 : Math.random() < .5 ? 1 : -1, lane = dir > 0 ? 0 : 1, sx = x != null ? x : (dir > 0 ? -110 : W + 20);
   if (cars.some(c => c.lane === lane && sx < c.x + c.sp.w + 14 && c.x < sx + sp.w + 14)) return;
@@ -449,7 +469,7 @@ const LB = (() => { const api = 'api.php'; let online = null, data = { today: []
 /* ---------- always the latest version, also when saved to the Home Screen ----------
    version.json is rewritten on every deploy; when it changes the page reloads itself (straight away on the menu,
    or right after the current game ends), with a cache-busting query so the phone fetches the new HTML. */
-(() => { const BUILD = '20261117172927'; let pending = false;
+(() => { const BUILD = '20261117174632'; let pending = false;
   const go = () => { let last = 0; try { last = +sessionStorage.getItem('fk_upd_t') || 0; } catch (e) {} if (Date.now() - last < 60000) return;   // never loop: at most one reload a minute
     try { sessionStorage.setItem('fk_upd_t', String(Date.now())); } catch (e) {} location.replace(location.pathname + '?u=' + Date.now() + location.hash); };
   const check = () => fetch('version.json?ts=' + Date.now(), { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(j => {
@@ -522,10 +542,11 @@ function update(dt) {
   // no driving through each other: a faster car slows to the speed of the one in front
   cars.forEach(c => { let ahead = null, gap = 1e9; cars.forEach(o => { if (o === c || o.lane !== c.lane) return; const d = c.dir > 0 ? o.x - (c.x + c.sp.w) : c.x - (o.x + o.sp.w); if (d > -4 && d < gap) { gap = d; ahead = o; } });
     c.cv = ahead && gap < 26 ? Math.min(c.v, ahead.cv != null ? ahead.cv : ahead.v) * (gap < 10 ? .85 : 1) : c.v; });
-  cars.forEach(c => c.x += c.dir * c.cv * dt - (moving ? step : 0));
+  cars.forEach(c => { c.x += c.dir * c.cv * dt - (moving ? step : 0); c.dist = (c.dist || 0) + c.dir * c.cv * dt; });
   cars = cars.filter(c => c.x > -220 && c.x < W + 220); if (cars.length < 4 && Math.random() < dt * .8) spawnCar();
   // Mr Rushed ice cream van: its own timer, roughly every 30 seconds (first one a bit sooner)
-  vanT += dt; if (vanT >= vanNext && !cars.some(c => c.sp.k === 'mrrushed') && spawnCar(null, 'mrrushed')) { vanT = 0; vanNext = 26 + Math.random() * 8; }
+  vanT += dt; const vanParked = lmQueue.some(l => l.sp.k === 'currys' && l.x < W + 700 && l.x + l.sp.w > -300);   // he's parked at Currys: don't also drive him past
+  if (vanT >= vanNext && !vanParked && !cars.some(c => c.sp.k === 'mrrushed') && spawnCar(null, 'mrrushed')) { vanT = 0; vanNext = 26 + Math.random() * 8; }
   if (placeTimer > 0) { placeTimer -= dt; if (placeTimer <= 0) $('place').classList.remove('on'); }
   if (flashT > 0) flashT -= dt;
 
@@ -585,6 +606,9 @@ function draw() {
     if (l.sp.k === 'funfair' && l.x < W * .9 && l.x + l.sp.w > W * .1) AMB.fair = 1;
     ctx.drawImage(l.sp.c, Math.round(l.x - M), GY - LH + 6); if (ANIM_K[l.sp.k]) LM_ANIM[l.sp.k](ctx, Math.round(l.x), GY, t); });
   if (PL && plane && !planeDrawn) drawPlane(PL);
+  // banner plane over Currys: a little propeller plane towing "@DONNERRUSH · OPEN NOW OUTSIDE CURRYS"
+  if (!bplane) { const cu = lmQueue.find(l => l.sp.k === 'currys' && !l.bannerGone && l.x < W * .75 && l.x + l.sp.w > 0); if (cu) { cu.bannerGone = 1; bplane = { t0: t }; } }
+  if (bplane) { const d = t - bplane.t0, px = Math.round(W + 20 - d * 30), py = Math.round(GY - 238 + Math.sin(d * 1.4) * 3); drawBannerPlane(px, py, d); if (px + 40 + BANNER.w < -10) bplane = null; }
   // pavement + road
   ctx.fillStyle = '#c9c4b8'; ctx.fillRect(0, GY, W, ROAD - GY); ctx.fillStyle = '#b3ad9f'; const po = SCi % 12; for (let x = -po; x < W; x += 12) ctx.fillRect(Math.round(x), GY, 1, ROAD - GY); ctx.fillRect(0, GY + 6, W, 1);
   ctx.fillStyle = '#8f8a7e'; ctx.fillRect(0, ROAD - 2, W, 2);
@@ -594,8 +618,15 @@ function draw() {
     ctx.fillStyle = '#3f7d33'; for (let x = -go; x < W; x += 16) ctx.fillRect(Math.round(x), H + 14, 14, 4); }
   pipes.forEach(p => { pipe(p.x, -OY, p.top + OY, 'top'); pipe(p.x, p.top + p.gap, ROAD - 4 - p.top - p.gap, 'bottom'); ctx.fillStyle = 'rgba(0,0,0,.22)'; ctx.fillRect(Math.round(p.x) - 2, ROAD - 4, PW + 4, 2); });
   // vehicles go in front of the pipes
-  const CS = .5; cars.filter(c => c.lane === 0).forEach(c => ctx.drawImage(c.sp.c, Math.round(c.x), Math.round(ROAD + 14 - c.sp.gy * CS), c.sp.c.width * CS, c.sp.c.height * CS));
-  cars.filter(c => c.lane === 1).forEach(c => ctx.drawImage(c.sp.flip, Math.round(c.x), Math.round(H - 3 - c.sp.gy * CS), c.sp.flip.width * CS, c.sp.flip.height * CS));
+  const CS = .5;
+  // turning wheels: repaint each rim with its spokes rotated by how far the car has driven
+  const spin = (c, x0, y0, flip) => { (c.sp.wh || []).forEach(w => { const rr = w.r * CS, cx = x0 + (flip ? c.sp.c.width - w.x : w.x) * CS, cy = y0 + w.y * CS, rim = w.rim || '#c9ced4';
+    ctx.save(); ctx.translate(cx, cy); ctx.rotate((c.dist || 0) / Math.max(1, rr)); ctx.beginPath(); ctx.arc(0, 0, rr * .64, 0, 7); ctx.fillStyle = rim; ctx.fill();
+    if (w.ring) { ctx.strokeStyle = w.ring; ctx.lineWidth = .7 * CS * 2; ctx.stroke(); }
+    ctx.strokeStyle = 'rgba(20,20,26,.55)'; ctx.lineWidth = .8; for (let i = 0; i < (w.spokes || 5); i++) { const a = i * 2 * Math.PI / (w.spokes || 5); ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(Math.cos(a) * rr * .6, Math.sin(a) * rr * .6); ctx.stroke(); }
+    ctx.beginPath(); ctx.arc(0, 0, rr * .16, 0, 7); ctx.fillStyle = '#5a5d66'; ctx.fill(); ctx.restore(); }); };
+  cars.filter(c => c.lane === 0).forEach(c => { const x0 = Math.round(c.x), y0 = Math.round(ROAD + 14 - c.sp.gy * CS); ctx.drawImage(c.sp.c, x0, y0, c.sp.c.width * CS, c.sp.c.height * CS); spin(c, x0, y0, false); });
+  cars.filter(c => c.lane === 1).forEach(c => { const x0 = Math.round(c.x), y0 = Math.round(H - 3 - c.sp.gy * CS); ctx.drawImage(c.sp.flip, x0, y0, c.sp.flip.width * CS, c.sp.flip.height * CS); spin(c, x0, y0, true); });
   const rot = state === 'menu' || state === 'ready' ? 0 : Math.max(-.45, Math.min(1.3, bird.vy / 320));
   drawPigeon(Math.round(bird.x), Math.round(bird.y), rot, bird.frame);
   if (flashT > 0) { ctx.fillStyle = 'rgba(255,255,255,' + (flashT / .15) * .8 + ')'; ctx.fillRect(0, 0, W, H); }

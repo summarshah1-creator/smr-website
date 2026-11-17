@@ -7,7 +7,8 @@ const fill = (c, col, pts, line = true) => { path(c, pts); c.fillStyle = col; c.
 const R = (c, col, x, y, w, h) => { c.fillStyle = col; c.fillRect(x, y, w, h); };
 const disc = (c, col, x, y, r) => { c.beginPath(); c.arc(x, y, r, 0, 7); c.fillStyle = col; c.fill(); };
 const SH = (hex, k) => { const n = parseInt(hex.slice(1), 16), f = v => Math.max(0, Math.min(255, Math.round(v * k))); return '#' + [f(n >> 16), f(n >> 8 & 255), f(n & 255)].map(v => v.toString(16).padStart(2, '0')).join(''); };
-const wheel = (c, x, G, r, rim, cal, spokes = 5, ring) => { disc(c, 'rgba(0,0,0,.25)', x, G, r * .9); disc(c, OUT, x, G - r, r + .8); disc(c, '#16171a', x, G - r, r); disc(c, rim, x, G - r, r * .64);
+const wheel = (c, x, G, r, rim, cal, spokes = 5, ring) => { if (window.__WREC) { const T = c.getTransform(), p = T.transformPoint(new DOMPoint(x, G - r)); window.__WREC.push({ x: p.x, y: p.y, r: r * Math.hypot(T.a, T.b), rim, spokes, ring }); }
+  disc(c, 'rgba(0,0,0,.25)', x, G, r * .9); disc(c, OUT, x, G - r, r + .8); disc(c, '#16171a', x, G - r, r); disc(c, rim, x, G - r, r * .64);
   if (ring) { c.strokeStyle = ring; c.lineWidth = .7; c.beginPath(); c.arc(x, G - r, r * .64, 0, 7); c.stroke(); }
   c.strokeStyle = SH(rim, .55); c.lineWidth = .8; for (let i = 0; i < spokes; i++) { const a = i * 2 * Math.PI / spokes - .3; c.beginPath(); c.moveTo(x, G - r); c.lineTo(x + Math.cos(a) * r * .6, G - r + Math.sin(a) * r * .6); c.stroke(); }
   if (cal) { c.fillStyle = cal; c.fillRect(x + r * .15, G - r - r * .42, r * .3, r * .62); } disc(c, '#5a5d66', x, G - r, r * .16); };
@@ -15,10 +16,10 @@ const arch = (c, x, G, r) => { c.beginPath(); c.arc(x, G - r + .5, r + 1.5, Math
 const glass = (c, pts, tint = '#26303a') => { fill(c, tint, pts); c.save(); path(c, pts); c.clip(); c.fillStyle = 'rgba(255,255,255,.2)'; const [x0, y0] = pts[0]; c.beginPath(); c.moveTo(x0 + 7, y0 - 20); c.lineTo(x0 + 12, y0 - 20); c.lineTo(x0 + 3, y0 + 10); c.lineTo(x0 - 2, y0 + 10); c.fill(); c.restore(); };
 const shine = (c, x, y, w) => R(c, 'rgba(255,255,255,.28)', x, y, w, 1);
 const person = (c, x, y, top, skin = '#c58c5c', helmet) => { R(c, top, x - 1.5, y, 3, 5); disc(c, helmet || skin, x, y - 1.5, helmet ? 2.2 : 1.6); };
-const RS = (c, cx, cy, px) => { c.font = `700 ${px}px Silk`; c.textAlign = 'center'; c.textBaseline = 'middle'; const w = c.measureText('MR RUSHED').width;
-  c.lineWidth = px * .28; c.strokeStyle = '#ffffff'; c.lineJoin = 'round'; c.strokeText('MR RUSHED', cx, cy);
+const RS = (c, cx, cy, px, txt = 'MR RUSHED') => { c.font = `700 ${px}px Silk`; c.textAlign = 'center'; c.textBaseline = 'middle'; const w = c.measureText(txt).width;
+  c.lineWidth = px * .28; c.strokeStyle = '#ffffff'; c.lineJoin = 'round'; c.strokeText(txt, cx, cy);
   const g = c.createLinearGradient(cx - w / 2, 0, cx + w / 2, 0); g.addColorStop(0, '#2f7fe6'); g.addColorStop(.55, '#5a8ff0'); g.addColorStop(1, '#ff4f9a');
-  c.save(); c.globalAlpha = .88; c.fillStyle = g; c.fillText('MR RUSHED', cx, cy); c.restore(); };
+  c.save(); c.globalAlpha = .88; c.fillStyle = g; c.fillText(txt, cx, cy); c.restore(); };
 const V = {};
 const COMMON = [['Black', '#1e2024'], ['White', '#eceef2'], ['Silver', '#b9bec6'], ['Grey', '#6e737b'], ['Blue', '#2c4f8f'], ['Red', '#b8252a']];
 
@@ -288,6 +289,21 @@ V.mrrushed = { n: 'Mr Rushed ice cream van', w: 98, h: 60, weight: 0, speed: [16
 
 { const f = 1.3, d0 = V.mrrushed.d; V.mrrushed.w = Math.round(98 * f); V.mrrushed.h = Math.round(60 * f);   // bigger and more prominent than ordinary vans
   V.mrrushed.d = (c, x, G, col) => { c.save(); c.translate(x, G); c.scale(f, f); d0(c, 0, 0, col); c.restore(); };
+  // parked copies for the car park scenery: any size, any name on the roof sign (Donna Rushed is his second van)
+  V.mrrushed.parked = (c, x, G, s, name) => { c.save(); c.translate(x, G); c.scale(s, s); d0(c, 0, 0, V.mrrushed.colours[0]);
+    // parked and serving: window open, flap propped up over it, someone inside holding out a cone
+    R(c, '#f8e6c8', 24, -38, 26, 18); R(c, '#fff4dc', 24, -38, 26, 4); R(c, '#e8d4b0', 24, -24, 26, 4);
+    disc(c, OUT, 37, -30.5, 3.6); disc(c, '#c58c5c', 37, -30.5, 3); R(c, '#3a2a20', 34, -34, 6, 2); R(c, OUT, 32, -27, 10, 7); R(c, '#ffffff', 33, -26, 8, 6); R(c, '#f2559a', 33, -26, 8, 1.5);
+    fill(c, '#d9a35a', [[42, -27], [46, -27], [44, -21]]); disc(c, OUT, 44, -28.5, 2.6); disc(c, '#f7a8c4', 44, -28.5, 2.1);
+    R(c, '#c9ced4', 22, -20.5, 30, 2); R(c, '#9aa0a8', 22, -18.5, 30, .8);
+    fill(c, '#f2559a', [[21, -38], [53, -38], [55, -43], [19, -43]]); R(c, 'rgba(255,255,255,.4)', 20, -42.5, 34, 1);
+    if (name) { const wide = name.length > 9, a = wide ? 3 : 9, b = wide ? 64 : 61;
+      if (wide) { c.fillStyle = '#2f9be6'; c.fillRect(a, -61, b - a, 14); c.fillStyle = '#1f7cc4'; c.fillRect(a, -49, b - a, 2); }
+      c.fillStyle = '#ffffff'; c.fillRect(a + 2.5, -59, b - a - 5, 9.4); c.fillStyle = '#f2559a'; c.fillRect(a + 3.6, -58, b - a - 7.2, 7.4); RS(c, (a + b) / 2, -54.2, wide ? 5.2 : 6, name); } c.restore();
+    if (!name) { const X = u => Math.round(x + u * s), Y = v => Math.round(G + v * s);
+      c.fillStyle = OUT; c.fillRect(X(4) - 1, Y(-62) - 1, X(66) - X(4) + 2, Y(-47) - Y(-62) + 2); c.fillStyle = '#2f9be6'; c.fillRect(X(4), Y(-62), X(66) - X(4), Y(-47) - Y(-62));
+      c.fillStyle = '#ffffff'; c.fillRect(X(6), Y(-60), X(64) - X(6), Y(-49) - Y(-60)); c.fillStyle = '#f2559a'; c.fillRect(X(7), Y(-59), X(63) - X(7), Y(-50) - Y(-59));
+      RS(c, X(35), Y(-54.5) + .5, 8); } };
   // when the sprite is mirrored for the near lane, repaint the roof sign so MR RUSHED still reads the right way round
   V.mrrushed.fixMirror = (c, x0, G, Wc) => { const X = u => Wc - x0 - u * f, Y = u => G + u * f;
     c.fillStyle = '#f2559a'; c.fillRect(X(56.8), Y(-58), (56.8 - 13.2) * f, 7.4 * f); RS(c, X(35), Y(-54.2), 6 * f); }; }
@@ -296,5 +312,55 @@ V.bus.fixMirror = (c, x0, G, Wc) => { const X = u => Wc - x0 - u, B = V.bus.colo
   c.fillStyle = B; c.fillRect(X(70), G - 20, 36, 7.5);
   disc(c, '#ffffff', X(63), G - 16.5, 2.4); disc(c, B, X(63), G - 16.5, 1.5); R(c, '#ffffff', X(63) - .6, G - 17.6, 1.2, 2.2);
   c.font = '700 6px Silk'; c.textAlign = 'left'; c.textBaseline = 'middle'; c.fillStyle = '#ffffff'; c.fillText('arriva', X(63) + 4, G - 16.3); };
+// Donner Rush: black box-body food truck (Mr Rushed's second van) with gold + pink flames, parked up in the Currys car park
+V.donner = { n: 'Donner Rush food truck', w: 100, h: 66, weight: 0, speed: [16, 26], colours: [['Black', '#141418']],
+  d(c, x, G, [, B]) { const GD = '#e8b44a', GL = '#ffe08a', PK = '#e8308c', AL = '#c9ced4', D = '#0c0c0f';
+  arch(c, x + 20, G, 7); arch(c, x + 82, G, 7);
+  // box body with aluminium edges
+  fill(c, B, [[x + 1, G - 9], [x + 1, G - 62], [x + 66, G - 62], [x + 66, G - 9]]);
+  // cab (high-roof van nose)
+  fill(c, B, [[x + 66, G - 9], [x + 66, G - 56], [x + 80, G - 56], [x + 84, G - 50], [x + 86, G - 38], [x + 96, G - 30], [x + 99, G - 24], [x + 99, G - 9]]);
+  // gold and pink flame swooshes along the lower body
+  c.save(); path(c, [[x + 1, G - 9], [x + 1, G - 62], [x + 66, G - 62], [x + 66, G - 56], [x + 80, G - 56], [x + 84, G - 50], [x + 86, G - 38], [x + 96, G - 30], [x + 99, G - 24], [x + 99, G - 9]]); c.clip();
+  // curved swooshes leaning back, like flames streaming past
+  const sw = (x0, y0, col, len, th) => { c.beginPath(); c.moveTo(x0, y0); c.quadraticCurveTo(x0 + len * .45, y0 - len * .15, x0 + len, y0 - len * .55); c.quadraticCurveTo(x0 + len * .5, y0 - len * .05 + th, x0 + th * .4, y0 + th); c.closePath(); c.fillStyle = col; c.fill(); };
+  for (let i = 0; i < 10; i++) { const x0 = x - 6 + i * 11; sw(x0, G - 10, i % 2 ? PK : GD, 15 + (i % 3) * 3, 2.6); sw(x0 + 5, G - 16, i % 2 ? GD : PK, 11, 1.8); }
+  for (let i = 0; i < 4; i++) sw(x + 1, G - 26 - i * 7, i % 2 ? GD : PK, 7, 1.6);
+  c.restore();
+  R(c, AL, x + 1, G - 63, 66, 2); R(c, AL, x + 1, G - 62, 1.5, 53); R(c, AL, x + 64.5, G - 62, 2, 53); R(c, AL, x + 1, G - 10, 65, 1.4);
+  // serving hatch: flap propped up and out like a canopy, steel kitchen inside with the donner turning
+  fill(c, '#3a3d44', [[x + 5, G - 54], [x + 37, G - 54], [x + 40, G - 61], [x + 2, G - 61]]); R(c, '#e8e8e8', x + 3, G - 61, 37, .8); for (const lx of [x + 11, x + 20, x + 29]) R(c, '#fff3b0', lx, G - 55.5, 3, 1);
+  R(c, '#2a2a2e', x + 6, G - 54, 1, 6); R(c, '#2a2a2e', x + 36, G - 54, 1, 6);
+  R(c, OUT, x + 6, G - 53, 31, 24); R(c, '#aab2bc', x + 7, G - 52, 29, 22); R(c, '#c8d0d8', x + 7, G - 52, 29, 4); R(c, '#8a929c', x + 7, G - 38, 29, 1);
+  R(c, '#6a727c', x + 11, G - 50, 1.5, 15); fill(c, '#a8602a', [[x + 8.5, G - 47], [x + 14.5, G - 47], [x + 13, G - 37], [x + 10, G - 37]], false); R(c, 'rgba(255,200,120,.5)', x + 9.5, G - 46, 1, 8); R(c, '#6a727c', x + 8, G - 36, 8, 2);
+  for (const bx of [x + 28, x + 32]) { R(c, '#d8dde2', bx, G - 36, 3, 4); R(c, '#9aa0a8', bx, G - 36, 3, 1); }
+  R(c, AL, x + 4, G - 30, 35, 2.4); R(c, '#9aa0a8', x + 4, G - 27.6, 35, .8);
+  // socials row under the hatch
+  [['#fffc00'], ['#d6249f'], ['#111111'], ['#25d366']].forEach(([col], i) => { R(c, OUT, x + 9 + i * 7, G - 25, 5, 5); R(c, col, x + 9.5 + i * 7, G - 24.5, 4, 4); R(c, '#ffffff', x + 11 + i * 7, G - 23, 1, 1); });
+  // the Donner Rush badge: gold ring, black disc, pink flames, gold donner, DONNER / RUSH in gold
+  { const cx = x + 52, cy = G - 40; disc(c, OUT, cx, cy, 13.4); disc(c, GD, cx, cy, 12.6); disc(c, '#a8761c', cx, cy, 11.6); disc(c, '#0e0a0c', cx, cy, 10.8);
+    for (const s of [-1, 1]) { fill(c, PK, [[cx + s * 2.5, cy + 3], [cx + s * 8.5, cy - 1], [cx + s * 6.5, cy - 5], [cx + s * 8, cy - 8.5], [cx + s * 3.6, cy - 4], [cx + s * 2.6, cy - 7]], false);
+      fill(c, '#ff7ac0', [[cx + s * 3.6, cy + 2], [cx + s * 7, cy - 1], [cx + s * 5.6, cy - 3.6], [cx + s * 4.2, cy - 2]], false); }
+    R(c, GD, cx - .5, cy - 14, 1, 4); fill(c, GD, [[cx - 4.6, cy - 10], [cx + 4.6, cy - 10], [cx + 2.4, cy + .5], [cx - 2.4, cy + .5]]);
+    c.strokeStyle = '#a8761c'; c.lineWidth = .5; for (let i = 0; i < 5; i++) { const yy = cy - 8.6 + i * 2, hw = 4.2 - i * .4; c.beginPath(); c.moveTo(cx - hw, yy); c.lineTo(cx + hw, yy + .5); c.stroke(); }
+    c.textAlign = 'center'; c.textBaseline = 'middle'; c.lineJoin = 'round';
+    c.font = '700 5.4px Silk'; c.lineWidth = 1.6; c.strokeStyle = OUT; c.strokeText('DONNER', cx, cy + 3.6); c.fillStyle = GL; c.fillText('DONNER', cx, cy + 3.6); R(c, PK, cx - 8, cy + 5.8, 16, .8);
+    c.font = '700 5px Silk'; c.lineWidth = 1.5; c.strokeText('RUSH', cx, cy + 8.6); c.fillStyle = GL; c.fillText('RUSH', cx, cy + 8.6); }
+  // cab: windows, small badge on the roof and door, mirror, lights
+  glass(c, [[x + 69, G - 36], [x + 69, G - 50], [x + 81, G - 50], [x + 84, G - 38], [x + 84, G - 36]], '#26303a'); R(c, D, x + 76, G - 50, 1, 14);
+  for (const [bx, by, r] of [[x + 74, G - 53.5, 2.2], [x + 92, G - 26, 2]]) { disc(c, GD, bx, by, r); disc(c, D, bx, by, r - .7); R(c, PK, bx - .6, by - .6, 1.2, 1.2); }
+  R(c, '#1e2024', x + 85, G - 44, 3, 5); R(c, D, x + 1.5, G - 12, 97, 3); R(c, '#2a2c31', x + 94, G - 14, 5, 5); R(c, '#f4f6f8', x + 95, G - 22, 3.5, 2.5); R(c, '#d42a2a', x + 1, G - 24, 1.6, 6);
+  R(c, '#2a2c31', x - 1, G - 12, 4, 3);
+  wheel(c, x + 20, G, 6.8, '#c9ced4', null, 8); wheel(c, x + 82, G, 6.8, '#c9ced4', null, 8);
+} };
+{ const d0 = V.donner.d; V.donner.parked = (c, x, G, s) => { c.save(); c.translate(x, G); c.scale(s, s); d0(c, 0, 0, V.donner.colours[0]);
+    // someone serving in the hatch, wrap in hand
+    disc(c, OUT, 22, -43, 3.6); disc(c, '#a8703c', 22, -43, 3); R(c, '#1a1a1a', 19, -46.5, 6, 2); R(c, OUT, 17, -39.5, 10, 9); R(c, '#141418', 18, -38.5, 8, 8); R(c, '#e8308c', 18, -38.5, 8, 1);
+    fill(c, '#f4e6c8', [[26, -35], [30, -37], [31, -33.5], [27, -32.5]]); R(c, '#4f9a44', 28, -36, 2, 1); R(c, '#c9ced4', 4, -30, 35, 2.4); c.restore();
+    // crisp DONNER / RUSH at the font's own size, breaking out of the ring like the real badge
+    const X = u => Math.round(x + u * s), Y = v => Math.round(G + v * s); c.fillStyle = '#0e0a0c'; c.beginPath(); c.arc(X(52), Y(-40) + 4, 9 * s, 0, Math.PI); c.fill();
+    c.font = '700 8px Silk'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.lineJoin = 'round'; c.lineWidth = 2.4; c.strokeStyle = '#1b1a24';
+    c.strokeText('DONNER', X(52), Y(-36)); c.fillStyle = '#ffd56a'; c.fillText('DONNER', X(52), Y(-36)); c.fillStyle = '#e8308c'; c.fillRect(X(52) - 15, Y(-36) + 4, 30, 1);
+    c.strokeText('RUSH', X(52), Y(-36) + 9); c.fillStyle = '#ffd56a'; c.fillText('RUSH', X(52), Y(-36) + 9); }; }
 window.VEHICLES = V; window.VEHICLE_ORDER = ['phantom', 'c63', 'gwagon', 'golf', 'a45', 'rs3', 'p911', 'f40', 'lambo', 'taxi', 'pickup', 'van', 'smallvan', 'binlorry', 'lorry', 'bus', 'coach', 'mrrushed', 'motorbike', 'bike'];
 })();

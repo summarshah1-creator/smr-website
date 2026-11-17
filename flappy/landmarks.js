@@ -316,14 +316,15 @@ L.tesco = { n: 'Tesco Extra', w: 240, d(c, x, G) {
   for (let i = 0; i < 10; i++) R(c, '#cfcac0', x + 4 + i * 4, G - 52, 1, 52);
 } };
 
-L.currys = { n: 'Currys PC World', w: 360, d(c, x, G) {
+L.currys = { n: 'Currys', w: 360, d(c, x, G) {
   for (const wx of [x, x + 260]) { BRICK(c, wx, G - 104, 100, 104, '#d2a46a', '#bf9259'); R(c, OUT, wx - 1, G - 105, 102, 1); BOX(c, '#ecebe7', wx, G - 118, 100, 14); R(c, '#3a3d44', wx, G - 10, 100, 10); }
   BOX(c, '#22408a', x + 8, G - 98, 76, 22); T(c, 'Carphone', x + 46, G - 96, 8, '#ffffff', 'center', false); T(c, 'Warehouse', x + 46, G - 86, 8, '#ffffff', 'center', false);
   BOX(c, '#22408a', x + 276, G - 98, 76, 22); T(c, 'Carphone', x + 314, G - 96, 8, '#ffffff', 'center', false); T(c, 'Warehouse', x + 314, G - 86, 8, '#ffffff', 'center', false);
   BOX(c, '#f1f1ee', x + 84, G - 166, 192, 166); P(c, '#f6f6f3', [[x + 78, G - 166], [x + 104, G - 182], [x + 256, G - 182], [x + 282, G - 166]], true); for (let i = 0; i < 12; i++) R(c, '#dcdcd8', x + 92 + i * 16, G - 160, 1, 26);
-  BOX(c, '#5a3fa8', x + 92, G - 154, 176, 48); R(c, '#4a64c8', x + 92, G - 154, 70, 48); R(c, '#5250b8', x + 162, G - 154, 40, 48);
-  CIRC(c, OUT, x + 116, G - 130, 15); CIRC(c, '#f4f2ec', x + 116, G - 130, 14); CIRC(c, '#e0472f', x + 116, G - 130, 12); R(c, '#f5a23a', x + 104, G - 132, 24, 4);
-  TS(c, 'Currys', x + 196, G - 150, 16, '#ffffff', '#2a2f6a'); TS(c, 'PC World', x + 196, G - 129, 16, '#ffffff', '#2a2f6a');
+  // the new standalone Currys sign: purple panel, thin white ring, lowercase name
+  BOX(c, '#3f2a9c', x + 92, G - 154, 176, 48); R(c, '#4c36b0', x + 93, G - 153, 174, 2);
+  c.strokeStyle = '#ece8fa'; c.lineWidth = 1.5; c.beginPath(); c.arc(x + 180, G - 130, 23, 0, 7); c.stroke();
+  c.font = '700 8px Silk'; c.textAlign = 'center'; c.textBaseline = 'top'; c.fillStyle = '#251766'; c.fillText('currys', x + 181, G - 133); c.fillStyle = '#ffffff'; c.fillText('currys', x + 180, G - 134);
   GLASS(c, x + 96, G - 104, 168, 104, '#4a6a86', 8, 3); BOX(c, '#c9ced4', x + 92, G - 68, 176, 5);
   for (const bx of [x + 92, x + 106, x + 246, x + 260]) { BOX(c, '#1f6f3f', bx, G - 26, 9, 14); R(c, '#e8e8e8', bx + 4, G - 12, 1, 12); }
 } };
@@ -857,7 +858,8 @@ const EX = {
     CIRC(c, OUT, x + 330, G - 30, 19); CIRC(c, '#4f8a3c', x + 330, G - 30, 18); CIRC(c, '#6faa4e', x + 324, G - 36, 9); R(c, '#9aa3ad', x + 304, G - 40, 2, 28); CIRC(c, '#e8e8e8', x + 305, G - 42, 3); PERSON(c, x + 160, G, '#2f4a8a'); },
   venue(c, x, G) { R(c, '#d9cdb6', x - 6, G - 2, 232, 2); const POT = (px, col, h, leaf) => { BOX(c, col, px, G - 7, 8, 7); R(c, '#5a3d2a', px + 3, G - 7 - h, 2, h); CIRC(c, leaf, px + 4, G - 9 - h, 6); };
     POT(x + 60, '#2a2a2e', 18, '#a84a3a'); POT(x + 146, '#2a2a2e', 18, '#b2402e'); POT(x + 34, '#f0ede6', 8, '#5f8f3c'); POT(x + 164, '#e8e3d8', 6, '#6faa4e'); BOX(c, '#2a2a2e', x + 180, G - 8, 18, 8); for (let i = 0; i < 5; i++) CIRC(c, i % 2 ? '#f4f2ec' : '#5f8f3c', x + 183 + i * 3, G - 10, 2); PERSON(c, x + 100, G, '#2a2a33', '#1a1a1e', '#c58c5c', '#1a1a1e'); },
-  currys(c, x, G) { TREE(c, x + 60, G, 1.1, '#6faa3e', '#4f8a2c'); TREE(c, x + 300, G, 1.4, '#7fb04a', '#5a8a34'); CAR(c, x + 130, G, '#c9ced4'); CAR(c, x + 200, G, '#8a9aaa'); PERSON(c, x + 120, G, '#3a3d44'); PERSON(c, x + 176, G, '#5a6e8a'); for (let i = 0; i < 6; i++) BOLL(c, x + 6 + i * 10, G); },
+  currys(c, x, G) { TREE(c, x + 60, G, 1.1, '#6faa3e', '#4f8a2c'); TREE(c, x + 300, G, 1.4, '#7fb04a', '#5a8a34'); for (let i = 0; i < 6; i++) BOLL(c, x + 6 + i * 10, G);
+  },
   tesco(c, x, G) { for (const cx of [x + 8, x + 30, x + 140, x + 196]) { P(c, '#e8641c', [[cx, G], [cx + 3, G - 12], [cx + 6, G]], true); R(c, '#ffffff', cx + 1, G - 6, 4, 2); } for (const bx of [x + 118, x + 228, x + 234]) BOLL(c, bx, G); BIN(c, x + 104, G, '#2f6fb5'); PERSON(c, x + 92, G, '#5a6e8a'); },
   masjid(c, x, G) { TREE(c, x - 26, G, 1.3, '#5f8f3c', '#47702c'); PERSON(c, x + 72, G, '#f4f2ec', '#f4f2ec', '#c58c5c', '#f4f2ec'); PERSON(c, x + 80, G, '#3a6e5a', '#2a2a33', '#c58c5c', '#f4f2ec'); PERSON(c, x + 196, G, '#2a2a33', '#f4f2ec', '#c58c5c', '#1a1a1e'); BIN(c, x + 150, G); },
   galaxy(c, x, G) { R(c, 'rgba(0,0,0,.16)', x + 4, G - 140, 14, 96); R(c, 'rgba(0,0,0,.08)', x + 18, G - 140, 10, 96); R(c, 'rgba(0,0,0,.18)', x + 180, G - 140, 16, 96); R(c, 'rgba(255,255,255,.12)', x + 60, G - 140, 30, 96);
@@ -976,14 +978,26 @@ const SHARP = {
   oak(c, x, G, f) { const X = v => Math.round(x + v * f), Y = v => Math.round(G - v * f);
     BOX(c, '#1e3fa3', X(34), Y(64), Math.round(142 * f), Math.round(18 * f)); T(c, 'OAK STAND', X(105), Y(64) + 4, 8, '#ffffff');
     T(c, 'F.G', X(44), Y(64) + 4, 8, '#ffffff', 'center', false); T(c, 'D.E', X(166), Y(64) + 4, 8, '#ffffff', 'center', false); },
+  currys(c, x, G, f) { const X = v => Math.round(x + v * f), Y = v => Math.round(G - v * f);
+    for (const sx of [8, 276]) { BOX(c, '#22408a', X(sx), Y(98), Math.round(76 * f), Math.round(22 * f)); T(c, 'Carphone', X(sx + 38), Y(98) + 3, 8, '#ffffff', 'center', false); T(c, 'Warehouse', X(sx + 38), Y(98) + 14, 8, '#ffffff', 'center', false); }
+    BOX(c, '#3f2a9c', X(92), Y(154), Math.round(176 * f), Math.round(48 * f)); R(c, '#4c36b0', X(92) + 1, Y(154) + 1, Math.round(176 * f) - 2, 2);
+    c.strokeStyle = '#ece8fa'; c.lineWidth = 1.5; c.beginPath(); c.arc(X(180), Y(130), 25, 0, 7); c.stroke();
+    c.font = '700 8px Silk'; c.textAlign = 'center'; c.textBaseline = 'top'; c.fillStyle = '#251766'; c.fillText('currys', X(180) + 1, Y(130) - 3); c.fillStyle = '#ffffff'; c.fillText('currys', X(180), Y(130) - 4); },
   chaiikhana(c, x, G, f) { const X = v => Math.round(x + v * f), Y = v => Math.round(G - v * f);
     BOX(c, '#151618', X(-4), Y(88), Math.round(96 * f), 17); T(c, 'CHAIIKHANA', X(44), Y(88) + 4, 8, '#f4f4f2', 'center', true);
     T(c, 'ORDER', X(34), Y(30) + 2, 8, '#e0458a', 'center', true); },
 };
-const SCALE = { masjid: 1.1, suffa: .9, oak: .82, chaiikhana: .85, spudkingz: .64, nadeem: 1.2, chaiiwala: 1.1, frasers: 1.3, stmarys: 1.02, hatfactory: 1.3 };
+const SCALE = { currys: 1.15, masjid: 1.1, suffa: .9, oak: .82, chaiikhana: .85, spudkingz: .64, nadeem: 1.2, chaiiwala: 1.1, frasers: 1.3, stmarys: 1.02, hatfactory: 1.3 };
 Object.keys(SCALE).forEach(k => { const f = SCALE[k], d0 = L[k].d, w0 = L[k].w, M = 80, H = 320; L[k].w = Math.round(w0 * f);
   L[k].d = (c, x, G) => { const oc = document.createElement('canvas'); oc.width = w0 + M * 2; oc.height = H; const o = oc.getContext('2d'); d0(o, M, H - 10);
     c.save(); c.imageSmoothingEnabled = false; c.drawImage(oc, 0, 0, oc.width, H - 10, x - M * f, G - (H - 10) * f, oc.width * f, (H - 10) * f); c.restore(); if (SHARP[k]) SHARP[k](c, x, G, f); }; });
+
+/* things drawn after scaling, so they keep their own size */
+const POST = {
+  // Mr Rushed's ice cream van and his black Donner Rush food truck, parked up together in the Currys car park
+  currys(c, x, G) { const V = window.VEHICLES; if (V && V.mrrushed && V.mrrushed.parked) { V.mrrushed.parked(c, x + 84, G, 1.05, null); if (V.donner) V.donner.parked(c, x + 212, G, 1.08); } },
+};
+Object.keys(POST).forEach(k => { const d0 = L[k].d; L[k].d = (c, x, G) => { d0(c, x, G); POST[k](c, x, G); }; });
 
 /* ---------- in-between houses (not landmarks) ---------- */
 const HOUSES = {};
