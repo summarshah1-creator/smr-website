@@ -174,7 +174,7 @@ L.kahwa = { n: 'Kahwa Cafe', w: 110, d(c, x, G) {
   for (const lx of [x + 24, x + 56, x + 86]) R(c, '#ffe08a', lx, G - 42, 4, 1);
 } };
 
-L.leagrave = { n: 'Leagrave Road', w: 148, d(c, x, G) {
+L.leagrave = { n: '', nolabel: true, w: 148, d(c, x, G) {
   const GR = '#d6d8d8', GD = '#b8bcbc', RW = '#b0503c';
   // brown tiled roof (same slope both ends), three skylights spread evenly, chimney on the left edge
   P(c, '#6e6354', [[x + 4, G - 112], [x + 108, G - 112], [x + 102, G - 150], [x + 10, G - 150]], true); for (let i = 1; i < 10; i++) R(c, '#605646', x + 6 + i * .65, G - 112 - i * 4, 100 - i * 1.3, 1);

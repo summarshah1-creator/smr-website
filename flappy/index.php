@@ -203,7 +203,7 @@ html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:m
 </div></div>
   <div id="tap" class="hide">TAP TO FLAP</div>
 </div>
-<script src="landmarks.js?v=1117zk"></script>
+<script src="landmarks.js?v=1117zl"></script>
 <script src="vehicles.js?v=1117p"></script>
 <script src="namecheck.js"></script>
 <script>
@@ -469,7 +469,7 @@ const LB = (() => { const api = 'api.php'; let online = null, data = { today: []
 /* ---------- always the latest version, also when saved to the Home Screen ----------
    version.json is rewritten on every deploy; when it changes the page reloads itself (straight away on the menu,
    or right after the current game ends), with a cache-busting query so the phone fetches the new HTML. */
-(() => { const BUILD = '20261117180802'; let pending = false;
+(() => { const BUILD = '20261117181433'; let pending = false;
   const go = () => { let last = 0; try { last = +sessionStorage.getItem('fk_upd_t') || 0; } catch (e) {} if (Date.now() - last < 60000) return;   // never loop: at most one reload a minute
     try { sessionStorage.setItem('fk_upd_t', String(Date.now())); } catch (e) {} location.replace(location.pathname + '?u=' + Date.now() + location.hash); };
   const check = () => fetch('version.json?ts=' + Date.now(), { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(j => {
@@ -537,7 +537,7 @@ function update(dt) {
   SC += v * .45 * dt; const step = Math.floor(SC) - SCi; SCi += step; lmQueue.forEach(l => l.x -= step); lmX -= step;
   while (lmQueue.length && lmQueue[0].x + lmQueue[0].sp.w < -420) lmQueue.shift();
   while (lmX < W + 600) pushLandmark();
-  if (state === 'play') lmQueue.forEach(l => { if (!l.passed && l.x + l.sp.w / 2 < bird.x) { l.passed = true; if (!seen.includes(l.sp.n)) seen.push(l.sp.n); showPlace(l.sp.n); } });
+  if (state === 'play') lmQueue.forEach(l => { if (!l.passed && l.sp.n && l.x + l.sp.w / 2 < bird.x) { l.passed = true; if (!seen.includes(l.sp.n)) seen.push(l.sp.n); showPlace(l.sp.n); } });
   // cars drive both ways on the road
   // no driving through each other: a faster car slows to the speed of the one in front
   cars.forEach(c => { let ahead = null, gap = 1e9; cars.forEach(o => { if (o === c || o.lane !== c.lane) return; const d = c.dir > 0 ? o.x - (c.x + c.sp.w) : c.x - (o.x + o.sp.w); if (d > -4 && d < gap) { gap = d; ahead = o; } });
