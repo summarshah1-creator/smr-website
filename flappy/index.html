@@ -89,7 +89,12 @@ html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:m
 .lbB{display:block;width:100%;margin:8px 0 0;cursor:pointer;background:#ffd84a;color:#1b1a24;border:2px solid #1b1a24;box-shadow:0 3px 0 #1b1a24;border-radius:6px;padding:8px;font:700 10px Silk;letter-spacing:.06em}
 .top1{width:auto;display:inline-block;margin:8px auto 0;padding:5px 10px;font-size:9px}
 .orow .hm,.orow .shr{font-size:9px;padding:9px 4px}
-#mute{position:absolute;left:-10px;top:-10px;z-index:3;width:34px;height:34px;border-radius:50%;border:3px solid #1b1a24;background:#fff;font-size:15px;line-height:1;cursor:pointer;box-shadow:0 3px 0 #1b1a24}
+#mute{position:absolute;left:-12px;top:-14px;z-index:3;display:flex;align-items:center;gap:5px;height:34px;padding:0 9px 0 6px;border-radius:18px;border:3px solid #1b1a24;background:#fff;cursor:pointer;box-shadow:0 3px 0 #1b1a24;font:700 8px Silk;color:#1b1a24;letter-spacing:.04em}
+#mute svg{width:24px;height:20px;shape-rendering:crispEdges;display:block}
+#mute .w{opacity:0}#mute.on .w1{animation:wv1 1s steps(1) infinite}#mute.on .w2{animation:wv2 1s steps(1) infinite}#mute.on .w3{animation:wv3 1s steps(1) infinite}
+@keyframes wv1{0%,100%{opacity:1}}@keyframes wv2{0%{opacity:0}33%,100%{opacity:1}}@keyframes wv3{0%,33%{opacity:0}66%,100%{opacity:1}}
+#mute:not(.on){animation:mpulse 1.6s ease-in-out infinite}#mute:not(.on) .x{opacity:1}#mute.on .x{opacity:0}#mute:not(.on) .w{opacity:.25}
+@keyframes mpulse{0%,100%{box-shadow:0 3px 0 #1b1a24,0 0 0 0 rgba(255,216,74,.9)}50%{box-shadow:0 3px 0 #1b1a24,0 0 0 6px rgba(255,216,74,0)}}
 #lbM,#cardM{position:fixed;inset:0;z-index:50;background:rgba(15,14,22,.6);display:flex;align-items:center;justify-content:center;pointer-events:auto}#lbM.hide,#cardM.hide{display:none}
 #lbM .box,#cardM .box{position:relative;width:min(330px,90vw);max-height:88vh;overflow:auto;background:#f6efd8;border:4px solid #1b1a24;box-shadow:0 6px 0 #1b1a24;border-radius:6px;padding:16px;color:#1b1a24;text-align:left}
 #lbM .x,#cardM .x{position:absolute;right:8px;top:8px;width:28px;height:28px;border:2px solid #1b1a24;border-radius:4px;background:#fff;font:700 16px/1 sans-serif;cursor:pointer}
@@ -115,7 +120,7 @@ html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:m
   <div id="start" class="panel">
     <div class="wsign"><i class="p l"></i><i class="p r"></i><div class="fr"><div class="wb"><div class="wt">Welcome to</div><div class="wl">Luton</div><div class="wu"></div><div class="wv">Proud &nbsp;Vibrant &nbsp;Ambitious &nbsp;Innovative</div>
       <svg viewBox="0 0 30 36"><path d="M15 2l2 3h-4z M8 6c2-2 5-2 7 0 2-2 5-2 7 0l-1 3H9z" fill="#5b2a86"/><path d="M6 10h18v11c0 6-4 10-9 12-5-2-9-6-9-12z" fill="#5b2a86"/><path d="M13.5 12h3v7h6v3h-6v8h-3v-8h-6v-3h6z" fill="#fff"/><path d="M3 30c4 3 8 4 12 4s8-1 12-4" stroke="#5b2a86" stroke-width="2" fill="none"/></svg></div></div></div>
-    <button id="mute" type="button" aria-label="Sound on or off">&#128266;</button>
+    <button id="mute" type="button" aria-label="Sound on or off"><svg viewBox="0 0 24 20" aria-hidden="true"><rect x="1" y="7" width="4" height="6" fill="#1b1a24"/><rect x="5" y="5" width="2" height="10" fill="#1b1a24"/><rect x="7" y="3" width="2" height="14" fill="#1b1a24"/><rect x="9" y="1" width="2" height="18" fill="#1b1a24"/><rect x="2" y="8" width="2" height="2" fill="#ffd84a"/><g class="w w1" fill="#e8641c"><rect x="13" y="8" width="2" height="4"/></g><g class="w w2" fill="#e8641c"><rect x="16" y="5" width="2" height="2"/><rect x="17" y="7" width="2" height="6"/><rect x="16" y="13" width="2" height="2"/></g><g class="w w3" fill="#e8641c"><rect x="19" y="2" width="2" height="2"/><rect x="20" y="4" width="2" height="2"/><rect x="21" y="6" width="2" height="8"/><rect x="20" y="14" width="2" height="2"/><rect x="19" y="16" width="2" height="2"/></g><g class="x" fill="#c8402a"><rect x="14" y="6" width="2" height="2"/><rect x="16" y="8" width="2" height="2"/><rect x="18" y="10" width="2" height="2"/><rect x="18" y="6" width="2" height="2"/><rect x="14" y="10" width="2" height="2"/><rect x="20" y="12" width="2" height="2"/><rect x="12" y="12" width="2" height="2"/><rect x="20" y="4" width="2" height="2"/><rect x="12" y="4" width="2" height="2"/></g></svg><span id="muteT">SOUND OFF</span></button>
     <div class="logo">
       <canvas id="logoBird" width="34" height="26"></canvas>
       <div class="lt1">FLAPPY</div>
@@ -200,7 +205,8 @@ const carSprites = [];
 function prerenderCars() {
   // every model in every colour; a model's weight is shared between its colours, so supercars and lorries stay rare
   VEHICLE_ORDER.forEach(k => { const V = VEHICLES[k]; V.colours.forEach(col => { const oc = document.createElement('canvas'); oc.width = (V.w + 6) * 2; oc.height = 112; const o = oc.getContext('2d'); o.scale(2, 2); V.d(o, 3, 52, col);
-    carSprites.push({ k, w: V.w, c: oc, flip: null, gy: 104, wt: V.weight / V.colours.length, sp: V.speed }); }); });
+    const d = o.getImageData(0, 0, oc.width, oc.height).data; let top = oc.height; for (let y = 0; y < oc.height && top === oc.height; y++) for (let x = 0; x < oc.width; x++) if (d[(y * oc.width + x) * 4 + 3] > 40) { top = y; break; }
+    carSprites.push({ k, w: V.w, c: oc, flip: null, gy: 104, ht: (104 - top) / 2, wt: V.weight / V.colours.length, sp: V.speed }); }); });
   carSprites.forEach(s => { const f = document.createElement('canvas'); f.width = s.c.width; f.height = s.c.height; const o = f.getContext('2d'); o.translate(f.width, 0); o.scale(-1, 1); o.drawImage(s.c, 0, 0); s.flip = f; });
 }
 
@@ -278,7 +284,7 @@ function pushLandmark() { const sp = sprites[lmIdx % sprites.length], nx = sprit
   const n = 1 + Math.floor(Math.random() * 2); for (let i = 0; i < n; i++) { const h = houseSprites[Math.floor(Math.random() * houseSprites.length)]; lmQueue.push({ sp: h, x: lmX, passed: true, house: true }); lmX += h.w + 6 + Math.random() * 10; } lmX += 12; }
 let lastCarK = '';
 function pickCar() { const tot = carSprites.reduce((a, s) => a + s.wt, 0); for (let tries = 0; tries < 4; tries++) { let r = Math.random() * tot, s = carSprites[0]; for (const c of carSprites) { r -= c.wt; if (r <= 0) { s = c; break; } } if (s.k !== lastCarK || tries === 3) { lastCarK = s.k; return s; } } }
-function spawnCar(x) { const sp = pickCar(), dir = Math.random() < .5 ? 1 : -1, lane = dir > 0 ? 0 : 1, sx = x != null ? x : (dir > 0 ? -110 : W + 20);
+function spawnCar(x) { const sp = pickCar(), far = ROAD + 14 - GY - 1, dir = sp.ht > far ? -1 : Math.random() < .5 ? 1 : -1, lane = dir > 0 ? 0 : 1, sx = x != null ? x : (dir > 0 ? -110 : W + 20);
   if (cars.some(c => c.lane === lane && sx < c.x + c.sp.w + 14 && c.x < sx + sp.w + 14)) return;
   cars.push({ sp, x: sx, dir, v: sp.sp[0] + Math.random() * (sp.sp[1] - sp.sp[0]), lane }); }
 
@@ -328,8 +334,9 @@ const SFX = (() => { let ac = null, on = store.get('fk_sound', 0) === 1, amb = n
     flap: () => noise(.09, 900, 2400, .13), point: () => { tone(988, 988, .09, 'square', .07); tone(1319, 1319, .22, 'square', .07, .08); }, hit: () => { noise(.12, 600, 150, .26); tone(180, 60, .14, 'triangle', .2); }, die: () => tone(720, 140, .45, 'square', .06), swoosh: () => noise(.28, 400, 3000, .1),
     get on() { return on; }, toggle() { on = !on; store.set('fk_sound', on ? 1 : 0); if (on) { ctxA(); api.point(); } else stopAmb(); return on; } };
   addEventListener('pointerdown', () => ctxA(), { once: true }); return api; })();
-$('mute').textContent = SFX.on ? '\u{1F50A}' : '\u{1F507}';
-$('mute').addEventListener('click', e => { e.stopPropagation(); $('mute').textContent = SFX.toggle() ? '\u{1F50A}' : '\u{1F507}'; });
+const muteUI = on => { $('mute').classList.toggle('on', on); $('muteT').textContent = on ? 'SOUND ON' : 'SOUND OFF'; };
+muteUI(SFX.on);
+$('mute').addEventListener('click', e => { e.stopPropagation(); muteUI(SFX.toggle()); });
 
 /* ---------- leaderboard: today + all time (online on the SMR website, this phone only elsewhere) ---------- */
 const LB = (() => { const api = 'api.php'; let online = null, data = { today: [], all: [] }, tab = 'today', lastName = store.get('fk_name', ''), myRow = null;
@@ -387,7 +394,7 @@ const LB = (() => { const api = 'api.php'; let online = null, data = { today: []
 })();
 
 /* ---------- update ---------- */
-const GAP = 84, PW = 30; let deathWhy = ''; window.__fk = () => ({ flap, sprites, state, score, bird, pipes, W, OY, lm: lmQueue.map(l => l.sp.k) });
+const GAP = 84, PW = 30; let deathWhy = ''; window.__fk = () => ({ flap, sprites, cars, carSprites, state, score, bird, pipes, W, OY, lm: lmQueue.map(l => l.sp.k) });
 function update(dt) {
   t += dt;
   const moving = state === 'play' || state === 'ready' || state === 'menu';
@@ -465,9 +472,10 @@ function draw() {
   if (BE > 0) { ctx.fillStyle = '#8f8a7e'; ctx.fillRect(0, H, W, 2); ctx.fillStyle = '#c9c4b8'; ctx.fillRect(0, H + 2, W, 12); ctx.fillStyle = '#b3ad9f'; for (let x = -po; x < W; x += 12) ctx.fillRect(Math.round(x), H + 2, 1, 12);
     ctx.fillStyle = '#5f9e44'; ctx.fillRect(0, H + 14, W, BE); ctx.fillStyle = '#4f8a36'; const go = Math.floor((t * speed * .9) % 16); for (let y = H + 18; y < H + BE; y += 8) for (let x = -go + ((y / 8) % 2) * 8; x < W; x += 16) ctx.fillRect(Math.round(x), y, 2, 2);
     ctx.fillStyle = '#3f7d33'; for (let x = -go; x < W; x += 16) ctx.fillRect(Math.round(x), H + 14, 14, 4); }
+  pipes.forEach(p => { pipe(p.x, -OY, p.top + OY, 'top'); pipe(p.x, p.top + p.gap, GY - p.top - p.gap, 'bottom'); });
+  // vehicles go in front of the pipes
   const CS = .5; cars.filter(c => c.lane === 0).forEach(c => ctx.drawImage(c.sp.c, Math.round(c.x), Math.round(ROAD + 14 - c.sp.gy * CS), c.sp.c.width * CS, c.sp.c.height * CS));
   cars.filter(c => c.lane === 1).forEach(c => ctx.drawImage(c.sp.flip, Math.round(c.x), Math.round(H - 3 - c.sp.gy * CS), c.sp.flip.width * CS, c.sp.flip.height * CS));
-  pipes.forEach(p => { pipe(p.x, -OY, p.top + OY, 'top'); pipe(p.x, p.top + p.gap, GY - p.top - p.gap, 'bottom'); });
   const rot = state === 'menu' || state === 'ready' ? 0 : Math.max(-.45, Math.min(1.3, bird.vy / 320));
   drawPigeon(Math.round(bird.x), Math.round(bird.y), rot, bird.frame);
   if (flashT > 0) { ctx.fillStyle = 'rgba(255,255,255,' + (flashT / .15) * .8 + ')'; ctx.fillRect(0, 0, W, H); }
