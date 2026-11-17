@@ -196,8 +196,8 @@ L.leagrave = { n: 'Leagrave Road', w: 148, d(c, x, G) {
   // red brick pier on the left against the house, wide black garage-style gate, red pier after it
   BRICK(c, x, G - 16, 8, 16, RW, '#984232'); R(c, '#2a2a2e', x, G - 18, 8, 2); R(c, OUT, x, G, 8, 1);
   // the building further back, peeping over the gate: white wall and a red roof, faded because it's behind
-  P(c, '#bc6e5c', [[x + 104, G - 60], [x + 131, G - 60], [x + 129, G - 66], [x + 104, G - 66]], false); R(c, '#a85e4e', x + 104, G - 63, 26, 1);
-  R(c, '#c9cbcc', x + 104, G - 60, 27, 14); R(c, '#bfc1c2', x + 104, G - 60, 27, 1); R(c, '#b4b7b9', x + 130, G - 60, 1, 14);
+  P(c, '#bc6e5c', [[x + 104, G - 51], [x + 131, G - 51], [x + 129.5, G - 55.5], [x + 104, G - 55.5]], false); R(c, '#a85e4e', x + 104, G - 53.5, 26, 1);
+  R(c, '#c9cbcc', x + 104, G - 51, 27, 5); R(c, '#bfc1c2', x + 104, G - 51, 27, 1); R(c, '#b4b7b9', x + 130, G - 51, 1, 5);
   BOX(c, '#1e2024', x + 104, G - 46, 36, 46); for (let i = 0; i < 9; i++) R(c, '#34383e', x + 106 + i * 4, G - 44, 2, 44); R(c, '#34383e', x + 104, G - 46, 36, 2); R(c, '#4a4e56', x + 104, G - 24, 36, 1);
   BRICK(c, x + 140, G - 16, 8, 16, RW, '#984232'); R(c, '#2a2a2e', x + 140, G - 18, 8, 2); R(c, OUT, x + 140, G, 8, 1);
   // block-paved drive, wall to wall
