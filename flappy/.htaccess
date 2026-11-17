@@ -1,6 +1,12 @@
-# always fetch the newest game files (home-screen installs included)
+# always fetch the newest game (home-screen installs included)
+DirectoryIndex index.php
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  # old Home Screen installs open /flappy/index.html: send them to the live PHP page
+  RewriteRule ^index\.html$ index.php [L]
+</IfModule>
 <IfModule mod_headers.c>
-  <FilesMatch "\.(html|json|js)$">
+  <FilesMatch "\.(html|json|js|php)$">
     Header set Cache-Control "no-cache, no-store, must-revalidate"
     Header set Pragma "no-cache"
     Header set Expires "0"
