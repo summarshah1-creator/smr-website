@@ -203,7 +203,7 @@ html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:m
 </div></div>
   <div id="tap" class="hide">TAP TO FLAP</div>
 </div>
-<script src="landmarks.js?v=1117x"></script>
+<script src="landmarks.js?v=1117z"></script>
 <script src="vehicles.js?v=1117j"></script>
 <script src="namecheck.js"></script>
 <script>
@@ -294,13 +294,14 @@ const BEST = (() => { const ck = () => { const m = document.cookie.match(/(?:^|;
   return { now: () => Math.max(+store.get('fk_best', 0) || 0, ck()), save, later: () => idb('readonly') }; })();
 let state = 'menu', t = 0, best = BEST.now(), score = 0, speed = 72;
 BEST.later().then(v => { if (v > best) { best = v; $('bestS').textContent = best; } if (best > v) BEST.save(best); });
+let SC = 0, SCi = 0;   // shared ground scroll (float + whole pixels)
 let bird, pipes, lmX, lmIdx, lmQueue, cars, clouds, seen, nextPipe, flashT = 0, placeTimer = 0, dieT = 0;
 $('bestS').textContent = best;
 
 function reset() {
   bird = { x: Math.min(W * .32, 90), y: 130, vy: 0, frame: 0, ft: 0 };
   pipes = []; nextPipe = W + 40; score = 0; speed = 72; seen = [];
-  lmQueue = []; lmX = 20; lmIdx = 0; prevHouses = 0; const at = location.hash.match(/^#at-(\w+)/); playlist = buildPlaylist(at ? at[1] : null); if (at) lmX = W * .6;
+  lmQueue = []; lmX = 20; lmIdx = 0; prevHouses = 0; const at = location.hash.match(/^#at-(\w+)/); playlist = buildPlaylist(at ? at[1] : null); if (at) lmX = Math.round(W * .6);
   while (lmX < W + 600) pushLandmark();
   cars = []; vanT = 0; vanNext = 12; plane = null; for (let i = 0; i < 3; i++) spawnCar(Math.random() * W);
   clouds = []; for (let i = 0; i < 6; i++) clouds.push({ x: Math.random() * (W + 200), y: -OY + 20 + Math.random() * (90 + OY), s: .6 + Math.random() * .8 });
@@ -333,13 +334,13 @@ const inSameSet = (a, b) => SETS.some(u => { const i = u.indexOf(a); return i >=
 let prevHouses = 0;
 function pushLandmark() { const sp = nextSprite(), nx = peekSprite(); lmQueue.push({ sp, x: lmX, passed: false });
   const chain = inSameSet(sp.k, nx.k) && CHAIN.includes(sp.k), tight = inSameSet(sp.k, nx.k) || sp.k === 'station' || nx.k === 'station';
-  lmX += sp.w + (chain ? 0 : tight ? 10 : 18 + Math.random() * 16); lmIdx++;
+  lmX += Math.round(sp.w + (chain ? 0 : tight ? 10 : 18 + Math.random() * 16)); lmIdx++;
   if (tight) return;
   // houses now and then: none 40%, one 40%, two 20% (never three gaps of nothing in a row, never houses twice in a row more than twice)
   let r = Math.random(), n = r < .4 ? 0 : r < .8 ? 1 : 2; if (prevHouses >= 2 && n) n = 0;
   if (sp.k === 'oak' || nx.k === 'oak') n = 0;   // the Oak Stand house is bigger than the terraces, so never put houses next to it
   prevHouses = n ? prevHouses + 1 : 0;
-  for (let i = 0; i < n; i++) { const h = houseSprites[Math.floor(Math.random() * houseSprites.length)]; lmQueue.push({ sp: h, x: lmX, passed: true, house: true }); lmX += h.w + 6 + Math.random() * 10; }
+  for (let i = 0; i < n; i++) { const h = houseSprites[Math.floor(Math.random() * houseSprites.length)]; lmQueue.push({ sp: h, x: lmX, passed: true, house: true }); lmX += Math.round(h.w + 6 + Math.random() * 10); }
   if (n) lmX += 12; }
 let lastCarK = '';
 let vanT = 0, vanNext = 12, plane = null;
@@ -448,7 +449,7 @@ const LB = (() => { const api = 'api.php'; let online = null, data = { today: []
 /* ---------- always the latest version, also when saved to the Home Screen ----------
    version.json is rewritten on every deploy; when it changes the page reloads itself (straight away on the menu,
    or right after the current game ends), with a cache-busting query so the phone fetches the new HTML. */
-(() => { const BUILD = '20261117152840'; let pending = false;
+(() => { const BUILD = '20261117172927'; let pending = false;
   const go = () => { let last = 0; try { last = +sessionStorage.getItem('fk_upd_t') || 0; } catch (e) {} if (Date.now() - last < 60000) return;   // never loop: at most one reload a minute
     try { sessionStorage.setItem('fk_upd_t', String(Date.now())); } catch (e) {} location.replace(location.pathname + '?u=' + Date.now() + location.hash); };
   const check = () => fetch('version.json?ts=' + Date.now(), { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(j => {
@@ -505,14 +506,15 @@ const TRACK = (() => {
 window.TRACK = TRACK;
 
 /* ---------- update ---------- */
-let GAP = 84; const PW = 30; let deathWhy = ''; window.__fk = () => ({ flap, sprites, cars, carSprites, buildPlaylist, lmQueue, state, score, bird, pipes, W, OY, lm: lmQueue.map(l => l.sp.k) });
+let GAP = 84; const PW = 30; let deathWhy = ''; window.__fk = () => ({ flap, spawnCar, setScore: v => { score = v; }, sprites, cars, carSprites, buildPlaylist, lmQueue, state, score, bird, pipes, W, OY, lm: lmQueue.map(l => l.sp.k) });
 function update(dt) {
   t += dt;
   const moving = state === 'play' || state === 'ready' || state === 'menu';
   const v = moving ? speed : 0;
   clouds.forEach(cl => { cl.x -= v * .12 * cl.s * dt + (moving ? 0 : 0); if (cl.x < -60) { cl.x = W + 20 + Math.random() * 60; cl.y = -OY + 20 + Math.random() * (90 + OY); } });
   // landmarks scroll at 45% speed (parallax)
-  const lv = v * .45 * dt; lmQueue.forEach(l => l.x -= lv); lmX -= lv;
+  // one shared scroll for buildings, pavement, road markings, grass and cars: whole pixels only, so they all move together
+  SC += v * .45 * dt; const step = Math.floor(SC) - SCi; SCi += step; lmQueue.forEach(l => l.x -= step); lmX -= step;
   while (lmQueue.length && lmQueue[0].x + lmQueue[0].sp.w < -420) lmQueue.shift();
   while (lmX < W + 600) pushLandmark();
   if (state === 'play') lmQueue.forEach(l => { if (!l.passed && l.x + l.sp.w / 2 < bird.x) { l.passed = true; if (!seen.includes(l.sp.n)) seen.push(l.sp.n); showPlace(l.sp.n); } });
@@ -520,7 +522,7 @@ function update(dt) {
   // no driving through each other: a faster car slows to the speed of the one in front
   cars.forEach(c => { let ahead = null, gap = 1e9; cars.forEach(o => { if (o === c || o.lane !== c.lane) return; const d = c.dir > 0 ? o.x - (c.x + c.sp.w) : c.x - (o.x + o.sp.w); if (d > -4 && d < gap) { gap = d; ahead = o; } });
     c.cv = ahead && gap < 26 ? Math.min(c.v, ahead.cv != null ? ahead.cv : ahead.v) * (gap < 10 ? .85 : 1) : c.v; });
-  cars.forEach(c => c.x += (c.dir * c.cv + (moving ? -v * .9 : 0)) * dt);
+  cars.forEach(c => c.x += c.dir * c.cv * dt - (moving ? step : 0));
   cars = cars.filter(c => c.x > -220 && c.x < W + 220); if (cars.length < 4 && Math.random() < dt * .8) spawnCar();
   // Mr Rushed ice cream van: its own timer, roughly every 30 seconds (first one a bit sooner)
   vanT += dt; if (vanT >= vanNext && !cars.some(c => c.sp.k === 'mrrushed') && spawnCar(null, 'mrrushed')) { vanT = 0; vanNext = 26 + Math.random() * 8; }
@@ -584,11 +586,11 @@ function draw() {
     ctx.drawImage(l.sp.c, Math.round(l.x - M), GY - LH + 6); if (ANIM_K[l.sp.k]) LM_ANIM[l.sp.k](ctx, Math.round(l.x), GY, t); });
   if (PL && plane && !planeDrawn) drawPlane(PL);
   // pavement + road
-  ctx.fillStyle = '#c9c4b8'; ctx.fillRect(0, GY, W, ROAD - GY); ctx.fillStyle = '#b3ad9f'; const po = Math.floor((t * speed * .45) % 12); for (let x = -po; x < W; x += 12) ctx.fillRect(Math.round(x), GY, 1, ROAD - GY); ctx.fillRect(0, GY + 6, W, 1);
+  ctx.fillStyle = '#c9c4b8'; ctx.fillRect(0, GY, W, ROAD - GY); ctx.fillStyle = '#b3ad9f'; const po = SCi % 12; for (let x = -po; x < W; x += 12) ctx.fillRect(Math.round(x), GY, 1, ROAD - GY); ctx.fillRect(0, GY + 6, W, 1);
   ctx.fillStyle = '#8f8a7e'; ctx.fillRect(0, ROAD - 2, W, 2);
-  ctx.fillStyle = '#4a4e55'; ctx.fillRect(0, ROAD, W, H - ROAD); ctx.fillStyle = '#e8e6df'; const ro = Math.floor((t * speed * .9) % 24); for (let x = -ro; x < W; x += 24) ctx.fillRect(Math.round(x), ROAD + 17, 12, 2);
+  ctx.fillStyle = '#4a4e55'; ctx.fillRect(0, ROAD, W, H - ROAD); ctx.fillStyle = '#e8e6df'; const ro = SCi % 24; for (let x = -ro; x < W; x += 24) ctx.fillRect(Math.round(x), ROAD + 17, 12, 2);
   if (BE > 0) { ctx.fillStyle = '#8f8a7e'; ctx.fillRect(0, H, W, 2); ctx.fillStyle = '#c9c4b8'; ctx.fillRect(0, H + 2, W, 12); ctx.fillStyle = '#b3ad9f'; for (let x = -po; x < W; x += 12) ctx.fillRect(Math.round(x), H + 2, 1, 12);
-    ctx.fillStyle = '#5f9e44'; ctx.fillRect(0, H + 14, W, BE); ctx.fillStyle = '#4f8a36'; const go = Math.floor((t * speed * .9) % 16); for (let y = H + 18; y < H + BE; y += 8) for (let x = -go + ((y / 8) % 2) * 8; x < W; x += 16) ctx.fillRect(Math.round(x), y, 2, 2);
+    ctx.fillStyle = '#5f9e44'; ctx.fillRect(0, H + 14, W, BE); ctx.fillStyle = '#4f8a36'; const go = SCi % 16; for (let y = H + 18; y < H + BE; y += 8) for (let x = -go + ((y / 8) % 2) * 8; x < W; x += 16) ctx.fillRect(Math.round(x), y, 2, 2);
     ctx.fillStyle = '#3f7d33'; for (let x = -go; x < W; x += 16) ctx.fillRect(Math.round(x), H + 14, 14, 4); }
   pipes.forEach(p => { pipe(p.x, -OY, p.top + OY, 'top'); pipe(p.x, p.top + p.gap, ROAD - 4 - p.top - p.gap, 'bottom'); ctx.fillStyle = 'rgba(0,0,0,.22)'; ctx.fillRect(Math.round(p.x) - 2, ROAD - 4, PW + 4, 2); });
   // vehicles go in front of the pipes

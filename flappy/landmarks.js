@@ -137,6 +137,43 @@ L.welcome = { n: 'Welcome to Luton', w: 260, d(c, x, G) {
   T(c, 'WELCOME TO', x + 130, G - 72, 16, '#f6f6f2'); T(c, 'LUTON', x + 131, G - 51, 40, '#c9c9c4'); T(c, 'LUTON', x + 130, G - 52, 40, '#ffffff');
 } };
 
+L.kahwa = { n: 'Kahwa Cafe', w: 110, d(c, x, G) {
+  const BR = '#4a2a1e', BH = '#5e3828', CR = '#f3e9d6';
+  // slate roof + chimney with aerials
+  P(c, '#4e535c', [[x - 6, G - 126], [x + 116, G - 126], [x + 107, G - 154], [x + 3, G - 154]], true); for (let i = 1; i < 7; i++) R(c, '#434850', x - 4 + i * 1.5, G - 126 - i * 4, 120 - i * 3, 1);
+  BRICK(c, x + 72, G - 176, 18, 26, '#9a5440', '#84463a'); R(c, OUT, x + 71, G - 177, 20, 1); R(c, '#b9b3a6', x + 70, G - 178, 22, 3); R(c, '#c0603a', x + 76, G - 184, 4, 6); R(c, '#c0603a', x + 82, G - 184, 4, 6);
+  R(c, '#9a9a9a', x + 88, G - 206, 2, 30); R(c, '#9a9a9a', x + 80, G - 202, 18, 1); R(c, '#9a9a9a', x + 82, G - 197, 14, 1); R(c, '#9a9a9a', x + 83, G - 192, 12, 1);
+  // red brick first floor with two sash windows under white lintels
+  BRICK(c, x, G - 128, 110, 72, '#a8503a', '#94452f'); R(c, OUT, x - 1, G - 129, 112, 1);
+  for (const wx of [x + 14, x + 66]) { P(c, '#eeeae2', [[wx - 4, G - 112], [wx + 34, G - 112], [wx + 31, G - 120], [wx - 1, G - 120]], true); R(c, '#d8d2c6', wx + 13, G - 120, 4, 8);
+    BOX(c, '#f4f2ec', wx, G - 110, 30, 44); R(c, '#9db3c4', wx + 3, G - 107, 24, 18); R(c, '#9db3c4', wx + 3, G - 86, 24, 17); R(c, '#f4f2ec', wx + 3, G - 89, 24, 3); R(c, '#e6e2da', wx + 4, G - 106, 7, 16); R(c, '#e6e2da', wx + 19, G - 106, 7, 16); R(c, '#d8d4cc', wx - 2, G - 66, 34, 3); }
+  // dark brown fascia with the name (8px = the font's own crisp size)
+  BOX(c, BR, x - 3, G - 62, 116, 20); R(c, BH, x - 2, G - 61, 114, 2); R(c, '#3a2016', x - 2, G - 44, 114, 2);
+  c.font = '700 8px Silk'; c.textAlign = 'center'; c.textBaseline = 'top'; c.fillStyle = '#1e100a'; c.fillText('KAHWA CAFE', x + 67, G - 55); c.fillStyle = CR; c.fillText('KAHWA CAFE', x + 66, G - 56);
+  // round hanging sign: sun, coffee bean, mountains, water lines
+  { const sx = x + 14, sy = G - 66; CIRC(c, OUT, sx, sy, 13); CIRC(c, '#5a3424', sx, sy, 12); CIRC(c, BR, sx, sy, 10);
+    for (const [a, b] of [[-5, -8], [-2, -9], [1, -9], [4, -8]]) R(c, CR, sx + a, sy + b, 1, 2);
+    P(c, CR, [[sx - 8, sy + 2], [sx - 4, sy - 3], [sx - 2, sy], [sx, sy - 4], [sx + 3, sy], [sx + 5, sy - 3], [sx + 8, sy + 2]], false);
+    P(c, BR, [[sx - 6, sy + 2], [sx - 4, sy - 1], [sx - 2, sy + 2]], false); P(c, BR, [[sx + 3, sy + 2], [sx + 5, sy - 1], [sx + 7, sy + 2]], false);
+    R(c, CR, sx - 1, sy - 5, 3, 4); R(c, BR, sx, sy - 4, 1, 2);
+    for (const [a, w] of [[4, 14], [6, 10], [8, 6]]) R(c, CR, sx - w / 2, sy + a, w, 1);
+    R(c, '#2a1810', x + 0, G - 68, 4, 2); }
+  // glazed shopfront between posts the same brown as the sign
+  BOX(c, BR, x - 2, G - 42, 8, 42); BOX(c, BR, x + 104, G - 42, 8, 42); R(c, BH, x - 1, G - 41, 2, 41); R(c, BH, x + 105, G - 41, 2, 41);
+  R(c, '#2a1810', x + 6, G - 42, 98, 42);
+  // door with shelves of jars behind
+  BOX(c, '#141416', x + 8, G - 40, 25, 40); R(c, '#5a3c26', x + 11, G - 37, 19, 37); for (const yy of [G - 32, G - 24, G - 16]) { R(c, '#8a6040', x + 12, yy, 11, 1); for (let i = 0; i < 4; i++) R(c, ['#e8b060', '#c0703a', '#f0d090', '#a05030'][i], x + 12 + i * 3, yy - 3, 2, 3); }
+  R(c, '#3a2a1e', x + 11, G - 12, 19, 12); R(c, '#141416', x + 27, G - 26, 1, 10);
+  // big window: warm light, pendant lamp, plant, chairs, grey brick below
+  R(c, '#141416', x + 35, G - 40, 67, 27); R(c, '#c8945c', x + 37, G - 38, 63, 23); R(c, '#dcae74', x + 37, G - 38, 63, 6); R(c, '#a87848', x + 37, G - 20, 63, 5);
+  R(c, '#141416', x + 60, G - 38, 1, 6); P(c, '#2a2a2e', [[x + 54, G - 29], [x + 56, G - 32], [x + 65, G - 32], [x + 67, G - 29]], false); R(c, '#ffe6a0', x + 57, G - 29, 7, 1);
+  for (const cx of [x + 43, x + 70]) { R(c, '#8a5a30', cx, G - 25, 2, 9); R(c, '#8a5a30', cx + 9, G - 25, 2, 9); R(c, '#8a5a30', cx, G - 21, 11, 2); for (let i = 0; i < 4; i++) R(c, '#a8703c', cx + 1 + i * 3, G - 29 + (i % 2), 1, 7); }
+  R(c, '#3a7a3a', x + 92, G - 30, 2, 14); for (const [a, b, w] of [[-5, -32, 6], [2, -34, 5], [-5, -26, 6], [2, -28, 5], [-3, -36, 4]]) R(c, '#4f9a44', x + 92 + a, G + b, w, 2); R(c, '#6a4a2a', x + 89, G - 18, 8, 3);
+  R(c, 'rgba(255,255,255,.18)', x + 40, G - 37, 2, 20); R(c, BR, x + 35, G - 14, 67, 2);
+  BRICK(c, x + 35, G - 12, 67, 12, '#5c5e66', '#4a4c54');
+  for (const lx of [x + 24, x + 56, x + 86]) R(c, '#ffe08a', lx, G - 42, 4, 1);
+} };
+
 L.uob = { n: 'University of Bedfordshire', w: 200, d(c, x, G) {
   BOX(c, '#3e3f45', x, G - 140, 80, 140); for (let r = 0; r < 5; r++) for (let i = 0; i < 4; i++) WIN(c, x + 6 + i * 18, G - 132 + r * 22, 14, 14, '#e9e9e6', '#7fa7c4');
   BOX(c, '#3d6584', x + 80, G - 96, 26, 96); for (let j = 0; j < 6; j++) R(c, '#5f8fb0', x + 82, G - 94 + j * 16, 22, 14);
@@ -1158,5 +1195,5 @@ window.LM_ANIM.funfair = (c, x, G, t) => {
   CIRC(c, OUT, px, py, 5); CIRC(c, '#9aa3ad', px, py, 4); BOX(c, '#d32f2f', px - 4, py - 10, 8, 6);
 };
 
-window.LM_ORDER = ['galaxy', 'townhall', 'stmarys', 'letters', 'frasers', 'station', 'hatfactory', 'chaiiwala', 'chaiikhana', 'spudkingz', 'miamicrispy', 'masjid', 'masjidali', 'suffa', 'gurdwara', 'ldh', 'foodbank', 'inspire', 'nadeem', 'oak', 'periperi', 'toros', 'gna', 'topspizza', 'alquds', 'kaya', 'karwan', 'krispy', 'tesco', 'currys', 'bandq', 'matalan', 'lidl', 'jdgyms', 'bigyellow', 'grandbazar', 'lewsey', 'venue', 'chiltern', 'uob', 'sixthform', 'wardownfield', 'wardown', 'wardownbridge', 'funfair', 'stockwood', 'welcome', 'airport'];
+window.LM_ORDER = ['galaxy', 'townhall', 'stmarys', 'letters', 'frasers', 'station', 'hatfactory', 'chaiiwala', 'chaiikhana', 'spudkingz', 'miamicrispy', 'masjid', 'masjidali', 'suffa', 'gurdwara', 'ldh', 'foodbank', 'inspire', 'nadeem', 'oak', 'periperi', 'toros', 'gna', 'kahwa', 'topspizza', 'alquds', 'kaya', 'karwan', 'krispy', 'tesco', 'currys', 'bandq', 'matalan', 'lidl', 'jdgyms', 'bigyellow', 'grandbazar', 'lewsey', 'venue', 'chiltern', 'uob', 'sixthform', 'wardownfield', 'wardown', 'wardownbridge', 'funfair', 'stockwood', 'welcome', 'airport'];
 })();
