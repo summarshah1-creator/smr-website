@@ -223,5 +223,35 @@ V.taxi = { n: 'Prius taxi', w: 60, h: 24, weight: 4, speed: [30, 50], colours: [
   wheel(c, x + 12, G, 5, '#9aa2ab', null, 5); wheel(c, x + 48, G, 5, '#9aa2ab', null, 5);
 } };
 
-window.VEHICLES = V; window.VEHICLE_ORDER = ['phantom', 'c63', 'gwagon', 'golf', 'a45', 'rs3', 'p911', 'f40', 'lambo', 'taxi', 'pickup', 'van', 'smallvan', 'binlorry', 'lorry', 'motorbike', 'bike'];
+/* Luton single-deck town bus: teal, dark window band, white swoosh behind the front door, gold skirt line, orange destination screen */
+V.bus = { n: 'Luton bus', w: 112, h: 44, weight: 1.6, speed: [20, 32], colours: [['Teal', '#17a3b5']],
+  d(c, x, G, [, B]) { const D = SH(B, .8);
+  arch(c, x + 20, G, 7); arch(c, x + 88, G, 7);
+  fill(c, B, [[x + 1, G - 6], [x + 1, G - 40], [x + 4, G - 43], [x + 104, G - 43], [x + 108, G - 40], [x + 111, G - 30], [x + 111, G - 6]]);
+  R(c, '#1c2a33', x + 4, G - 37, 82, 15); for (let i = 1; i < 6; i++) R(c, B, x + 4 + i * 14, G - 37, 1.4, 15); R(c, 'rgba(255,255,255,.18)', x + 6, G - 36, 78, 1);
+  R(c, '#1c2a33', x + 89, G - 37, 9, 28); R(c, B, x + 93, G - 37, .8, 28);
+  glass(c, [[x + 100, G - 22], [x + 100, G - 39], [x + 106, G - 39], [x + 110, G - 30], [x + 110, G - 22]], '#1c2a33');
+  R(c, '#111316', x + 100, G - 41, 9, 3.4); R(c, '#ff8a1e', x + 101, G - 40.2, 5, 1.6); R(c, '#ff8a1e', x + 107, G - 40.4, 1.4, 2);
+  fill(c, '#f4f6f8', [[x + 74, G - 22], [x + 82, G - 22], [x + 88, G - 8], [x + 82, G - 8]], false);
+  R(c, '#e3a321', x + 2, G - 10, 109, .9); R(c, D, x + 1.5, G - 9, 109, 3);
+  R(c, '#2a2c31', x + 108, G - 12, 3, 4); R(c, '#f4f6f8', x + 107, G - 17, 3, 2); R(c, '#d42a2a', x + 1, G - 20, 1.6, 6); shine(c, x + 4, G - 42, 100);
+  wheel(c, x + 20, G, 6.5, '#b9bec6', null, 8); wheel(c, x + 88, G, 6.5, '#b9bec6', null, 8);
+} };
+
+/* intercity coach: white, tall black window band, curved front screen with mirrors, blue + red name stripe and rear slashes */
+V.coach = { n: 'Intercity coach', w: 120, h: 50, weight: 1.1, speed: [26, 40], colours: [['White', '#f2f3f5']],
+  d(c, x, G, [, B]) { const D = SH(B, .84);
+  arch(c, x + 24, G, 7.5); arch(c, x + 92, G, 7.5);
+  fill(c, B, [[x + 1, G - 6], [x + 1, G - 44], [x + 6, G - 49], [x + 104, G - 49], [x + 112, G - 46], [x + 117, G - 36], [x + 119, G - 22], [x + 119, G - 6]]);
+  fill(c, '#14161a', [[x + 4, G - 28], [x + 4, G - 44], [x + 8, G - 47], [x + 98, G - 47], [x + 98, G - 28]], false); R(c, 'rgba(255,255,255,.14)', x + 8, G - 45, 86, 1); for (let i = 1; i < 6; i++) R(c, '#22252b', x + 4 + i * 16, G - 46, .8, 18);
+  glass(c, [[x + 100, G - 24], [x + 100, G - 46], [x + 110, G - 46], [x + 116, G - 36], [x + 117.5, G - 24]], '#2a3440');
+  fill(c, B, [[x + 110, G - 44], [x + 116, G - 44], [x + 116, G - 41], [x + 113, G - 41], [x + 113, G - 34], [x + 111, G - 34]]);
+  R(c, '#1f5fc0', x + 34, G - 24, 22, 3.2); R(c, '#d8262f', x + 58, G - 24, 20, 3.2);
+  for (let i = 0; i < 6; i++) fill(c, '#3a3d44', [[x + 82 + i * 2.4, G - 21], [x + 84 + i * 2.4, G - 27], [x + 85 + i * 2.4, G - 27], [x + 83 + i * 2.4, G - 21]], false);
+  R(c, D, x + 1.5, G - 9, 117, 3); for (const sx of [x + 40, x + 56, x + 72]) R(c, SH(B, .9), sx, G - 18, .7, 9);
+  R(c, '#2a2c31', x + 115, G - 12, 4, 4); R(c, '#f4f6f8', x + 114, G - 17, 4, 2.4); R(c, '#d42a2a', x + 1, G - 22, 1.8, 8); shine(c, x + 6, G - 48.5, 98);
+  wheel(c, x + 24, G, 7, '#c9ced4', null, 8); wheel(c, x + 92, G, 7, '#c9ced4', null, 8);
+} };
+
+window.VEHICLES = V; window.VEHICLE_ORDER = ['phantom', 'c63', 'gwagon', 'golf', 'a45', 'rs3', 'p911', 'f40', 'lambo', 'taxi', 'pickup', 'van', 'smallvan', 'binlorry', 'lorry', 'bus', 'coach', 'motorbike', 'bike'];
 })();

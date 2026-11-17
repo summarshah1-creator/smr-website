@@ -25,13 +25,14 @@ const PLANE = (c, x, y, s = 1) => { const g = '#e9edf2', d = '#9aa3ad'; R(c, OUT
 const L = {};
 
 L.galaxy = { n: 'The Galaxy', w: 200, d(c, x, G) {
-  BRICK(c, x, G - 44, 200, 44, '#c99a86', '#b5826e'); BOX(c, '#9aa1a8', x + 70, G - 36, 60, 36); for (let i = 0; i < 9; i++) R(c, '#7f868d', x + 72, G - 33 + i * 4, 56, 1);
+  R(c, '#d9c3ac', x, G - 44, 200, 44); for (let j = 0; j < 6; j++) R(c, '#5a5f6e', x, G - 40 + j * 7, 200, 1); R(c, '#4a4f5c', x, G - 8, 200, 8); R(c, OUT, x - 1, G - 45, 202, 1); BOX(c, '#9aa1a8', x + 70, G - 36, 60, 36); for (let i = 0; i < 9; i++) R(c, '#7f868d', x + 72, G - 33 + i * 4, 56, 1);
   BOX(c, '#a89c8c', x + 4, G - 140, 192, 96); for (let i = 16; i < 192; i += 16) R(c, '#968a7a', x + 4 + i, G - 140, 1, 96); R(c, '#b9ae9f', x + 4, G - 140, 192, 4);
   BOX(c, '#ddd4c4', x - 2, G - 150, 204, 10); R(c, '#c7bdab', x - 2, G - 143, 204, 3);
-  TS(c, 'GALAXY', x + 100, G - 128, 16, '#ffffff', '#6f6557');
+  { c.font = '700 12px Silk'; const tw = Math.ceil(c.measureText('GALAXY').width), s2 = x + 193 - tw, dv = s2 - 4; /* second GALAXY ends at the right edge */
+    TS(c, 'GALAXY', dv - 4, G - 126, 12, '#ffffff', '#6f6557', 'right'); R(c, '#f4f2ee', dv, G - 131, 1, 20); R(c, '#6f6557', dv + 1, G - 131, 1, 20); TS(c, 'GALAXY', s2, G - 126, 12, '#ffffff', '#6f6557', 'left'); }
   const bb = [[x + 14, 20, '#1f8fd6'], [x + 38, 28, '#d8262f'], [x + 70, 34, '#ffffff'], [x + 112, 36, '#f2f0f0'], [x + 154, 32, '#2a2a2e']];
   bb.forEach(([bx, w, col]) => BOX(c, col, bx, G - 92, w, 36));
-  CIRC(c, '#ffffff', x + 24, G - 74, 5); R(c, '#1f8fd6', x + 22, G - 76, 4, 4);
+  CIRC(c, '#8ad646', x + 24, G - 80, 5); CIRC(c, '#1f8fd6', x + 24, G - 80, 3); R(c, '#8ad646', x + 26, G - 80, 2, 6); R(c, '#ffffff', x + 18, G - 70, 12, 1); R(c, '#ffffff', x + 18, G - 67, 10, 1); R(c, '#ffffff', x + 18, G - 64, 12, 1);
   CIRC(c, '#ffffff', x + 48, G - 76, 4); CIRC(c, '#ffffff', x + 56, G - 76, 4); P(c, '#ffffff', [[x + 43, G - 74], [x + 61, G - 74], [x + 52, G - 64]]); CIRC(c, '#1aa34a', x + 87, G - 74, 14); CIRC(c, '#f4c430', x + 87, G - 74, 10); CIRC(c, '#2f8fdc', x + 87, G - 74, 6);
   T(c, 'ten', x + 130, G - 86, 8, '#e0558c', 'center', false); CIRC(c, '#e0558c', x + 130, G - 68, 7); CIRC(c, '#f2f0f0', x + 130, G - 68, 5); R(c, '#e0558c', x + 129, G - 72, 2, 8); R(c, '#d8262f', x + 160, G - 78, 6, 6); 
   TREE(c, x + 186, G, 1.2);
@@ -88,9 +89,19 @@ L.townhall = { n: 'Luton Town Hall', w: 200, d(c, x, G) {
   BOX(c, '#5e9e8a', x + 4, G - 114, 192, 22); for (let i = 0; i < 9; i++) BOX(c, '#3c5a54', x + 10 + i * 21, G - 108, 10, 12);
   BOX(c, '#e8e0cf', x, G - 92, 200, 92); R(c, '#d8cfbb', x, G - 92, 200, 3);
   for (let r = 0; r < 3; r++) for (let i = 0; i < 9; i++) { const wx = x + 8 + i * 21; if (wx > x + 78 && wx < x + 114) continue; WIN(c, wx, G - 84 + r * 26, 10, 16, '#f4f2ec', '#6f8fa8'); }
-  BOX(c, '#ece5d5', x + 84, G - 196, 32, 104); R(c, '#d8cfbb', x + 112, G - 196, 4, 104); BOX(c, '#e2dac8', x + 82, G - 202, 36, 8);
-  BOX(c, '#c9bfa8', x + 92, G - 186, 16, 14); CIRC(c, OUT, x + 100, G - 158, 9); CIRC(c, '#2b2b2b', x + 100, G - 158, 8); CIRC(c, '#d9b44a', x + 100, G - 158, 1); R(c, '#d9b44a', x + 100, G - 164, 1, 6); R(c, '#d9b44a', x + 100, G - 158, 5, 1);
-  R(c, '#c9bfa8', x + 98, G - 144, 4, 26); R(c, '#c9bfa8', x + 98, G - 114, 4, 14);
+  { const ST = '#e9e3d4', SD = '#d3cab6', GO = '#d4ad3a';
+    BOX(c, ST, x + 80, G - 102, 40, 10); BOX(c, ST, x + 83, G - 108, 34, 6);                       // stepped base
+    BOX(c, ST, x + 85, G - 172, 30, 64); R(c, SD, x + 85, G - 172, 3, 64); R(c, SD, x + 112, G - 172, 3, 64); R(c, '#f3eee2', x + 89, G - 172, 2, 64); // shaft with corner piers
+    BOX(c, ST, x + 82, G - 176, 36, 5);                                                              // ledge under the upper stage
+    BOX(c, ST, x + 89, G - 202, 22, 26); R(c, SD, x + 89, G - 202, 2, 26); R(c, SD, x + 109, G - 202, 2, 26);   // upper stage
+    BOX(c, '#cfc6b2', x + 95, G - 198, 10, 16); for (let i = 0; i < 4; i++) for (let j = 0; j < 6; j++) R(c, '#9a927f', x + 96 + i * 2.4, G - 197 + j * 2.6, 1.4, 1.6); BOX(c, ST, x + 93, G - 182, 14, 3);  // grille window + sill
+    P(c, ST, [[x + 88, G - 202], [x + 112, G - 202], [x + 110, G - 210], [x + 107, G - 213], [x + 93, G - 213], [x + 90, G - 210]], true); R(c, SD, x + 89, G - 206, 22, 1); R(c, '#9a927f', x + 99, G - 210, 2, 2);  // chamfered top
+    BOX(c, '#f4f2ee', x + 98, G - 218, 4, 5); R(c, '#f4f2ee', x + 99, G - 220, 2, 2);                // little finial
+    BOX(c, ST, x + 93, G - 168, 14, 4);                                                              // small hood above the clock
+    CIRC(c, GO, x + 100, G - 152, 8); CIRC(c, ST, x + 100, G - 152, 6.5); CIRC(c, '#c9a64a', x + 100, G - 152, 5.6); CIRC(c, ST, x + 100, G - 152, 4.8);   // gold ring clock on stone
+    R(c, '#5a4a2a', x + 99, G - 158, 1.4, 6); R(c, '#5a4a2a', x + 100, G - 152, 4, 1.4);
+    R(c, '#bfb6a2', x + 99, G - 144, 3, 34); R(c, '#9a8a5a', x + 99.5, G - 136, 2, 8); R(c, '#9a8a5a', x + 99.5, G - 124, 2, 8); BOX(c, ST, x + 96, G - 112, 8, 4);  // long groove down the middle
+  }
   P(c, '#ece5d5', [[x + 76, G - 54], [x + 100, G - 66], [x + 124, G - 54]], true); BOX(c, '#ece5d5', x + 78, G - 54, 44, 54); for (let i = 0; i < 4; i++) R(c, '#f8f5ee', x + 81 + i * 11, G - 52, 4, 44); BOX(c, '#8a4b2a', x + 94, G - 24, 12, 24);
   // war memorial statue: stone plinth, bronze robed figure, palm frond raised, shield at her side
   { const B = '#2f3b37', HI = '#5f8c7c', sx = x + 160;
@@ -311,11 +322,10 @@ L.chaiikhana = { n: 'Chaiikhana', w: 200, d(c, x, G) {
   BOX(c, '#26282c', x + 150, G - 50, 34, 26); for (let i = 0; i < 9; i++) R(c, '#3a3d42', x + 151, G - 48 + i * 3, 32, 1);
   CIRC(c, 'rgba(255,250,220,.6)', x + 140, G - 50, 4); CIRC(c, '#fffbe6', x + 140, G - 50, 2); BOX(c, '#c86a8a', x + 188, G - 56, 10, 4);
   CL(x, G - 66, 84, 66); BOX(c, '#22252a', x - 2, G - 70, 88, 6);
-  BOX(c, '#151618', x + 6, G - 86, 74, 16); T(c, 'chaiikhana', x + 43, G - 83, 8, '#e8e8e6', 'center', false);
   BOX(c, '#1c1e22', x + 8, G - 60, 50, 26); R(c, '#c9cfd4', x + 10, G - 58, 46, 22); R(c, '#9aa3ad', x + 10, G - 45, 46, 1);
   for (const [bx, col] of [[x + 14, '#2e7d32'], [x + 24, '#8ad646']]) { BOX(c, '#d8dce0', bx, G - 54, 7, 10); R(c, col, bx + 1, G - 50, 5, 5); }
   R(c, '#5a6068', x + 38, G - 54, 14, 8); BOX(c, '#2a2c30', x + 6, G - 34, 54, 3);
-  BOX(c, '#151618', x + 10, G - 30, 48, 18); T(c, 'ORDER', x + 34, G - 29, 8, '#e0458a', 'center', false); R(c, '#e0458a', x + 14, G - 19, 3, 3); R(c, '#e0458a', x + 19, G - 19, 3, 3); R(c, '#f26a2a', x + 13, G - 15, 8, 2); R(c, '#2fb35a', x + 44, G - 16, 10, 2);
+  BOX(c, '#151618', x + 10, G - 30, 48, 18); R(c, '#e0458a', x + 14, G - 19, 3, 3); R(c, '#e0458a', x + 19, G - 19, 3, 3); R(c, '#f26a2a', x + 13, G - 15, 8, 2); R(c, '#2fb35a', x + 44, G - 16, 10, 2);
   BOX(c, '#1a1a1e', x + 62, G - 58, 14, 34); for (let i = 0; i < 9; i++) R(c, '#c8c8c8', x + 64, G - 54 + i * 3, 8, 1); R(c, '#e0458a', x + 63, G - 58, 12, 3); BOX(c, '#f0a8c8', x + 63, G - 28, 12, 6);
 } };
 
@@ -633,7 +643,15 @@ L.gna = { n: 'G and A Fast Food', w: 150, d(c, x, G) {
   T(c, 'G', x + 78, G - 52, 16, '#e0391e'); T(c, 'A', x + 106, G - 52, 16, '#e0391e'); c.font = '16px PS'; c.textAlign = 'center'; c.textBaseline = 'top'; c.fillStyle = '#e0391e'; c.fillText('&', x + 92, G - 51); R(c, '#e0391e', x + 74, G - 36, 36, 1); T(c, 'FAST FOOD', x + 92, G - 35, 8, '#e0391e', 'center', false);
   R(c, '#e0391e', x + 124, G - 50, 1, 8); R(c, '#e0391e', x + 128, G - 50, 1, 8); R(c, '#e0391e', x + 132, G - 50, 1, 8); R(c, '#e0391e', x + 136, G - 50, 1, 8); T(c, '01582', x + 132, G - 40, 8, '#ffffff', 'center', false);
   // thin figure on the white panel next to the sign
-  CIRC(c, '#1a1a1e', x + 17, G - 45, 2); R(c, '#1a1a1e', x + 16, G - 43, 2, 8); R(c, '#1a1a1e', x + 12, G - 41, 10, 1); R(c, '#1a1a1e', x + 15, G - 35, 1, 6); R(c, '#1a1a1e', x + 18, G - 35, 1, 6);
+  { const px = x + 2, py = G - 50; for (let i = 0; i < 22; i++) R(c, SH('#bdbdbd', 1.12 - i * .012), px, py + i, 30, 1); R(c, '#e8e8e8', px + 2, py + 2, 4, 8);
+    P(c, '#1c1c1e', [[px + 5, py + 22], [px + 8, py + 15], [px + 12, py + 13], [px + 20, py + 13], [px + 24, py + 15], [px + 27, py + 22]], true);
+    P(c, '#f2f2f2', [[px + 14, py + 13], [px + 16, py + 19], [px + 18, py + 13]], true); R(c, '#1c1c1e', px + 15, py + 14, 2, 4); R(c, '#3a3a3e', px + 11, py + 15, 1, 6); R(c, '#3a3a3e', px + 21, py + 15, 1, 6);
+    R(c, '#6a6a6e', px + 14, py + 10, 4, 4); CIRC(c, '#7a7a7e', px + 16, py + 7, 5); R(c, '#4a4a4e', px + 13, py + 6, 2, 5); R(c, '#9a9a9e', px + 18, py + 5, 2, 3);
+    P(c, '#111113', [[px + 10, py + 6], [px + 12, py + 1], [px + 17, py], [px + 21, py + 2], [px + 22, py + 5], [px + 18, py + 3], [px + 13, py + 4], [px + 12, py + 8]], true);
+    R(c, '#2a2a2c', px + 15, py + 9, 4, 1); R(c, '#3a3a3c', px + 16, py + 11, 3, 1);
+    R(c, '#5a4a3a', px + 19, py + 10, 6, 2); R(c, '#e8e8e8', px + 25, py + 10, 1, 2);
+    for (const [a, b] of [[26, 8], [27, 6], [26, 4], [27, 2]]) R(c, 'rgba(255,255,255,.75)', px + a, py + b, 1, 1);
+    R(c, OUT, px - 1, py - 1, 32, 1); R(c, OUT, px - 1, py + 22, 32, 1); R(c, OUT, px - 1, py - 1, 1, 24); R(c, OUT, px + 30, py - 1, 1, 24); }
   c.restore();
   BOX(c, '#121214', x, G - 42, 150, 42); R(c, '#e8c89a', x + 10, G - 40, 40, 38); R(c, '#e8c89a', x + 98, G - 40, 42, 38); R(c, '#f2e2c4', x + 54, G - 40, 40, 40); R(c, '#121214', x + 73, G - 40, 2, 40); R(c, '#d8cbb4', x + 10, G - 24, 40, 1); R(c, '#d8cbb4', x + 98, G - 24, 42, 1);
   for (const bx of [x + 14, x + 112]) { R(c, '#d8cbb4', bx, G - 12, 22, 6); R(c, '#9a6a4a', bx, G - 6, 22, 2); } BOX(c, '#3a7de0', x + 18, G - 36, 12, 5); T(c, 'OPEN', x + 24, G - 37, 8, '#ffffff', 'center', false);
@@ -673,7 +691,7 @@ L.kaya = { n: 'Kaya Lounge', w: 230, d(c, x, G) {
 } };
 
 /* ---------- extra detail from the photos ---------- */
-const BUS = (c, x, G) => { BOX(c, '#f4f2ec', x, G - 22, 46, 19); R(c, '#e8641c', x, G - 9, 46, 4); R(c, '#2a4f9a', x, G - 5, 46, 2); for (let i = 0; i < 5; i++) R(c, '#3d4b5a', x + 3 + i * 8, G - 19, 6, 7); R(c, '#3d4b5a', x + 40, G - 19, 5, 12); CIRC(c, OUT, x + 9, G - 2, 3); CIRC(c, OUT, x + 36, G - 2, 3); };
+const BUS = (c, x, G) => { BOX(c, '#17a3b5', x, G - 24, 48, 21); R(c, '#1c2a33', x + 2, G - 21, 36, 8); for (let i = 1; i < 4; i++) R(c, '#17a3b5', x + 2 + i * 9, G - 21, 1, 8); R(c, '#1c2a33', x + 40, G - 21, 7, 13); R(c, '#111316', x + 39, G - 24, 9, 2); R(c, '#ff8a1e', x + 40, G - 24, 5, 1); P(c, '#f4f6f8', [[x + 32, G - 13], [x + 36, G - 13], [x + 39, G - 5], [x + 35, G - 5]]); R(c, '#e3a321', x, G - 6, 48, 1); CIRC(c, OUT, x + 10, G - 2, 3.4); CIRC(c, '#b9bec6', x + 10, G - 2, 1.4); CIRC(c, OUT, x + 38, G - 2, 3.4); CIRC(c, '#b9bec6', x + 38, G - 2, 1.4); };
 const POSTBOX = (c, x, G) => { BOX(c, '#c8202a', x, G - 14, 7, 14); R(c, '#8a141b', x, G - 15, 7, 2); R(c, OUT, x + 2, G - 11, 3, 1); };
 const SHELTER = (c, x, G) => { R(c, '#8a9098', x, G - 22, 30, 2); R(c, '#8a9098', x, G - 22, 1, 22); R(c, '#8a9098', x + 29, G - 22, 1, 22); R(c, 'rgba(180,210,230,.45)', x + 1, G - 20, 28, 14); BOX(c, '#c8202a', x + 6, G - 7, 18, 2); };
 const BIRCH = (c, x, G) => { R(c, '#efece4', x, G - 30, 2, 30); for (let i = 0; i < 4; i++) R(c, OUT, x, G - 26 + i * 7, 2, 1); for (let i = 0; i < 8; i++) R(c, '#7e9a5a', x - 6 + (i * 5) % 14, G - 40 + (i * 7) % 14, 2, 2); };
@@ -718,10 +736,8 @@ const EX = {
   masjid(c, x, G) { TREE(c, x + 6, G, 1.3, '#5f8f3c', '#47702c'); CAR(c, x + 30, G, '#9aa3ad'); CAR(c, x + 150, G, '#2f6fb5'); PERSON(c, x + 72, G, '#f4f2ec', '#f4f2ec', '#c58c5c', '#f4f2ec'); PERSON(c, x + 80, G, '#3a6e5a', '#2a2a33', '#c58c5c', '#f4f2ec'); PERSON(c, x + 196, G, '#2a2a33', '#f4f2ec', '#c58c5c', '#1a1a1e'); BIN(c, x + 120, G); },
   galaxy(c, x, G) { R(c, 'rgba(0,0,0,.16)', x + 4, G - 140, 14, 96); R(c, 'rgba(0,0,0,.08)', x + 18, G - 140, 10, 96); R(c, 'rgba(0,0,0,.18)', x + 180, G - 140, 16, 96); R(c, 'rgba(255,255,255,.12)', x + 60, G - 140, 30, 96);
     BOX(c, '#c9ced4', x + 6, G - 140, 188, 8); for (let i = 0; i < 24; i++) R(c, '#a9aeb4', x + 8 + i * 8, G - 139, 1, 6);
-    for (let i = 0; i < 6; i++) R(c, '#a8846f', x + 4 + i * 34, G - 44, 4, 44);
-    SHELTER(c, x + 92, G); BUS(c, x - 30, G); POSTBOX(c, x + 132, G); LAMP(c, x + 70, G, 66); BIN(c, x + 128 + 18, G); PERSON(c, x + 22, G, '#d8262f'); PERSON(c, x + 170, G, '#6a4c93'); },
-  townhall(c, x, G) { for (let r = 0; r < 3; r++) for (let i = 0; i < 3; i++) R(c, '#d6ccb6', x + 90 + i * 8, G - 196 + 4 + r * 2, 4, 1);
-    BOX(c, '#c9bfa8', x + 88, G - 128, 24, 4); R(c, '#bcb29a', x + 86, G - 92, 28, 3);
+    SHELTER(c, x + 92, G); POSTBOX(c, x + 132, G); BIN(c, x + 128 + 18, G); PERSON(c, x + 22, G, '#d8262f'); PERSON(c, x + 170, G, '#6a4c93'); },
+  townhall(c, x, G) {
     for (let i = 0; i < 9; i++) { const lx = 4 + i * 22; if ((lx > 74 && lx < 126) || (lx > 140 && lx < 180)) continue; R(c, '#d6ccb6', x + lx, G - 92, 1, 92); } // wall lines, kept off the portico and the statue
     FLOWERS(c, x + 30, G, 40); FLOWERS(c, x + 172, G, 26); CAR(c, x - 34, G, '#1a1a1e'); R(c, '#f2c14e', x - 24, G - 13, 6, 2); LAMP(c, x + 6, G, 56); PERSON(c, x + 178, G, '#2f4a8a'); PERSON(c, x + 186, G, '#e8e0cf', '#3a3a44'); BIN(c, x + 128, G); },
   letters(c, x, G) { for (let i = 0; i < 10; i++) R(c, '#a8a59c', x + i * 19, G - 6, 1, 6); BOX(c, '#c58f52', x - 20, G - 14, 20, 14); R(c, '#a8743e', x - 20, G - 9, 20, 1); BOX(c, '#c58f52', x + 172, G - 12, 22, 12);
@@ -768,10 +784,23 @@ const WIDEN = {
     BOX(c, '#c8202a', x + 20, G - 62, 10, 8); P(c, '#d64545', [[x + 20, G - 84], [x + 30, G - 84], [x + 25, G - 76]], true);
     BOX(c, '#9aa3ad', x + 320, G - 54, 40, 54); for (let i = 0; i < 12; i++) R(c, '#868e98', x + 320, G - 52 + i * 4, 40, 1); R(c, '#c9ced4', x + 368, G - 120, 3, 120); BOX(c, '#d64545', x + 300, G - 50, 6, 10);
   } },
-  galaxy: { w: 270, dx: 64, pre(c, x, G) {
-    BOX(c, '#c9b7a3', x, G - 104, 72, 104); R(c, '#b9a690', x, G - 104, 72, 6); for (let i = 0; i < 6; i++) { R(c, '#a8846f', x + 2 + i * 12, G - 60, 8, 60); R(c, '#cfa58c', x + 2 + i * 12, G - 60, 2, 60); } for (let i = 0; i < 8; i++) R(c, '#b5826e', x, G - 56 + i * 7, 72, 1);
-    BOX(c, '#d8d2c6', x - 2, G - 110, 76, 6); BOX(c, '#e3dfd6', x + 4, G - 136, 20, 30); R(c, '#cfcac0', x + 4, G - 136, 20, 2);
-    for (let i = 0; i < 4; i++) { CIRC(c, '#d84b8a', x + 8 + i * 16, G - 44, 3); R(c, '#4f8a3c', x + 7 + i * 16, G - 40, 2, 4); }
+  galaxy: { w: 330, dx: 124, pre(c, x, G) {
+    // long left wing (no red): striped beige brick piers, cream lintels, gym windows and doors, GALAXY letters in the top glass panels
+    const WW = 132; BOX(c, '#c9b7a3', x, G - 104, WW, 104); BOX(c, '#d8d2c6', x - 2, G - 110, WW + 4, 6);
+    R(c, '#9aa6b0', x, G - 96, WW, 26); for (let i = 0; i < 6; i++) R(c, '#b4bec7', x + 2 + i * 20, G - 94, 18, 22);
+    c.globalAlpha = .55; 'GALAXY'.split('').forEach((ch, i) => T(c, ch, x + 11 + i * 20, G - 90, 12, '#ffffff', 'center', true)); c.globalAlpha = 1;
+    R(c, 'rgba(255,255,255,.5)', x + 20, G - 80, 30, 1); R(c, 'rgba(255,255,255,.5)', x + 64, G - 86, 1, 12); R(c, 'rgba(255,255,255,.5)', x + 96, G - 76, 22, 1); CIRC(c, '#ffffff', x + 120, G - 88, 1.5);
+    R(c, '#6f7a84', x, G - 70, WW, 2);
+    for (let i = 0; i < 5; i++) { const bx = x + 12 + i * 24;
+      BOX(c, '#ece0c4', bx, G - 66, 12, 8); R(c, '#1a1c21', bx, G - 58, 12, 30); for (let k = 0; k < 3; k++) R(c, '#262930', bx, G - 50 + k * 8, 12, 1);   // black panels down to the bottom of the banners
+      R(c, '#5c6670', bx, G - 28, 12, 5);
+      R(c, '#7f9bb0', bx, G - 23, 12, 23); R(c, '#9db6c8', bx, G - 23, 12, 2); R(c, '#2a3542', bx, G - 23, 12, 1); for (const v of [3, 8]) R(c, '#2a3542', bx + v, G - 23, 1, 23);
+      if (i === 2) { BOX(c, '#1f6fd6', bx - 1, G - 29, 14, 6); CIRC(c, '#8ad646', bx + 2, G - 26, 1.6); R(c, '#ffffff', bx + 5, G - 27, 6, 1); R(c, '#ffffff', bx + 5, G - 25, 5, 1);
+        R(c, '#3a4552', bx + 1, G - 22, 10, 22); R(c, '#9db6c8', bx + 2, G - 21, 3.5, 20); R(c, '#9db6c8', bx + 6.5, G - 21, 3.5, 20); R(c, '#c9ced4', bx + 5, G - 12, 2, 3); }
+      else { R(c, '#2a2f38', bx + 2, G - 8, 7, 2); R(c, '#2a2f38', bx + 7, G - 12, 2, 4); R(c, '#8ad646', bx + 1, G - 18, 4, 1); } }
+    for (let i = 0; i < 6; i++) { const px = x + i * 24; R(c, '#d9c3ac', px, G - 68, 12, 68); R(c, '#e8d6c2', px, G - 68, 2, 68); R(c, '#c3ab94', px + 10, G - 68, 2, 68); for (let j = 0; j < 8; j++) R(c, '#5a5f6e', px, G - 62 + j * 8, 12, 1); R(c, '#4a4f5c', px, G - 12, 12, 12); }
+    for (const px of [x + 24, x + 72]) { BOX(c, '#1f6fd6', px + 1, G - 60, 10, 30); CIRC(c, '#8ad646', px + 6, G - 55, 3); CIRC(c, '#1f6fd6', px + 6, G - 55, 1.6); for (let j = 0; j < 4; j++) R(c, '#ffffff', px + 5, G - 50 + j * 4, 2, 2); }
+    for (const bx of [x + 17, x + 89]) { R(c, '#2a9a8a', bx, G - 10, 2, 10); R(c, '#2a9a8a', bx - 1, G - 11, 4, 2); }
   } },
   frasers: { w: 210, dx: 40, pre(c, x, G) {
     BOX(c, '#4f86a8', x, G - 140, 60, 140); for (let i = 0; i < 3; i++) for (let j = 0; j < 7; j++) R(c, (i + j) % 3 ? '#5e95b8' : '#76aacb', x + 2 + i * 20, G - 138 + j * 20, 18, 18);
@@ -796,10 +825,16 @@ const WIDEN = {
 Object.keys(WIDEN).forEach(k => { const o = WIDEN[k], d0 = L[k].d; L[k].w = o.w; L[k].d = (c, x, G) => { if (o.pre) o.pre(c, x, G); d0(c, x + o.dx, G); if (o.post) o.post(c, x + (o.dx || 0), G); }; });
 
 /* ---------- size tweaks: draw at 1x off-screen, then scale with crisp pixels ---------- */
+// text drawn after a landmark is scaled, so small lettering stays crisp (sx/sy = original coordinates)
+const SHARP = {
+  chaiikhana(c, x, G, f) { const X = v => Math.round(x + v * f), Y = v => Math.round(G - v * f);
+    BOX(c, '#151618', X(-4), Y(88), Math.round(96 * f), 17); T(c, 'CHAIIKHANA', X(44), Y(88) + 4, 8, '#f4f4f2', 'center', true);
+    T(c, 'ORDER', X(34), Y(30) + 2, 8, '#e0458a', 'center', true); },
+};
 const SCALE = { chaiikhana: .85, spudkingz: .88, nadeem: 1.2, chaiiwala: 1.1, frasers: 1.3, stmarys: 1.02, hatfactory: 1.3 };
 Object.keys(SCALE).forEach(k => { const f = SCALE[k], d0 = L[k].d, w0 = L[k].w, M = 80, H = 320; L[k].w = Math.round(w0 * f);
   L[k].d = (c, x, G) => { const oc = document.createElement('canvas'); oc.width = w0 + M * 2; oc.height = H; const o = oc.getContext('2d'); d0(o, M, H - 10);
-    c.save(); c.imageSmoothingEnabled = false; c.drawImage(oc, 0, 0, oc.width, H - 10, x - M * f, G - (H - 10) * f, oc.width * f, (H - 10) * f); c.restore(); }; });
+    c.save(); c.imageSmoothingEnabled = false; c.drawImage(oc, 0, 0, oc.width, H - 10, x - M * f, G - (H - 10) * f, oc.width * f, (H - 10) * f); c.restore(); if (SHARP[k]) SHARP[k](c, x, G, f); }; });
 
 /* ---------- in-between houses (not landmarks) ---------- */
 const HOUSES = {};
