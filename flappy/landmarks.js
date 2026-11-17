@@ -12,7 +12,8 @@ const TS = (c, s, x, y, px, col, sh, align) => { T(c, s, x + 1, y + 1, px, sh, a
 const WIN = (c, x, y, w, h, frame = '#f4f2ec', glass = '#7fa7c4') => { BOX(c, frame, x, y, w, h); R(c, glass, x + 2, y + 2, w - 4, h - 4); R(c, frame, x + 2, y + Math.floor(h / 2), w - 4, 1); R(c, 'rgba(255,255,255,.5)', x + 3, y + 3, 2, 2); };
 const BRICK = (c, x, y, w, h, base = '#a8503a', line = '#94452f') => { R(c, base, x, y, w, h); let row = 0; for (let yy = y + 3; yy < y + h; yy += 4, row++) { R(c, line, x, yy, w, 1); for (let xx = x + (row % 2 ? 4 : 0); xx < x + w; xx += 8) R(c, line, xx, yy - 3, 1, 3); } for (let i = 0; i < w * h / 90; i++) { const rx = x + ((i * 37) % w), ry = y + ((i * 53) % h); R(c, SH(base, (i % 3) ? .92 : 1.08), rx, ry - (ry - y) % 4, 3, 3); } R(c, 'rgba(0,0,0,.12)', x + w - 4, y, 4, h); };
 const GLASS = (c, x, y, w, h, base = '#5f8fb0', cols = 4, rows = 3) => { BOX(c, '#2a333d', x, y, w, h); const pw = (w - 1) / cols, ph = (h - 1) / rows; for (let i = 0; i < cols; i++) for (let j = 0; j < rows; j++) { const px = x + 1 + i * pw, py = y + 1 + j * ph; R(c, (i + j) % 2 ? base : SH(base, 1.1), px, py, pw - 1, ph - 1); } c.save(); c.beginPath(); c.rect(x, y, w, h); c.clip(); c.fillStyle = 'rgba(255,255,255,.18)'; for (let k = -h; k < w; k += 26) { c.beginPath(); c.moveTo(x + k, y + h); c.lineTo(x + k + h * .6, y); c.lineTo(x + k + h * .6 + 6, y); c.lineTo(x + k + 6, y + h); c.fill(); } c.restore(); };
-const PERSON = (c, x, G, top = '#3f6fb5', leg = '#2a2a33', skin = '#c58c5c', head = null) => { R(c, OUT, x - 1, G - 15, 6, 15); R(c, leg, x, G - 6, 4, 6); R(c, OUT, x + 1, G - 6, 1, 6); R(c, top, x, G - 11, 4, 5); R(c, skin, x + 1, G - 14, 2, 3); if (head) R(c, head, x, G - 15, 4, 3); };
+const PERSON0 = (c, x, G, top = '#3f6fb5', leg = '#2a2a33', skin = '#c58c5c', head = null) => { R(c, OUT, x - 1, G - 15, 6, 15); R(c, leg, x, G - 6, 4, 6); R(c, OUT, x + 1, G - 6, 1, 6); R(c, top, x, G - 11, 4, 5); R(c, skin, x + 1, G - 14, 2, 3); if (head) R(c, head, x, G - 15, 4, 3); };
+const PERSON = () => {}; // no people in front of the buildings (owner rule); PERSON0 is only used for the pedalo riders
 const LAMP = (c, x, G, h = 60) => { R(c, '#3a3d44', x, G - h, 2, h); R(c, '#3a3d44', x - 6, G - h, 8, 2); R(c, '#f7e7a1', x - 6, G - h + 2, 4, 2); };
 const BOLL = (c, x, G) => { BOX(c, '#c9cdd2', x, G - 8, 3, 8); };
 const BIN = (c, x, G, col = '#3a3d44') => { BOX(c, col, x, G - 10, 8, 10); R(c, SH(col, 1.3), x, G - 10, 8, 2); };
@@ -487,12 +488,12 @@ L.spudkingz = { n: 'Spud Kingz', w: 210, d(c, x, G) {
   for (const wx of [x + 120, x + 146]) { CIRC(c, OUT, wx, G - 12, 12); CIRC(c, '#1a1a1e', wx, G - 12, 11); CIRC(c, '#9aa3ad', wx, G - 12, 6); CIRC(c, '#2a2a2e', wx, G - 12, 2); }
   R(c, '#2a2a2e', x + 196, G - 18, 3, 18); R(c, '#d9b05a', x + 100, G - 6, 8, 6);
   // sign frame bolted to the trailer roof: two posts + black board, text on one line, potato sitting on top
-  const SX = x + 116; R(c, '#141416', SX - 52, G - 108, 3, 20); R(c, '#141416', SX + 49, G - 108, 3, 20);
-  BOX(c, '#141416', SX - 72, G - 112, 144, 22); R(c, '#3a3a40', SX - 70, G - 110, 140, 1);
-  c.font = '700 14px Silk'; const w1 = c.measureText('Spud ').width, w2 = c.measureText('Kingz').width, sx0 = Math.round(SX - (w1 + w2) / 2);
-  TS(c, 'Spud', sx0, G - 108, 14, '#4fbf5a', '#0a0a0c', 'left'); TS(c, 'Kingz', sx0 + w1, G - 108, 14, '#f2c43a', '#0a0a0c', 'left');
-  CIRC(c, OUT, SX, G - 124, 11); CIRC(c, '#c9944a', SX, G - 124, 10); CIRC(c, '#b07c38', SX + 3, G - 121, 4); R(c, '#e2b878', SX - 5, G - 129, 3, 2); R(c, '#7a5230', SX - 2, G - 120, 2, 2); R(c, '#7a5230', SX + 4, G - 127, 2, 2);
-  P(c, '#f2c43a', [[SX - 9, G - 132], [SX - 8, G - 142], [SX - 4, G - 136], [SX, G - 144], [SX + 4, G - 136], [SX + 8, G - 142], [SX + 9, G - 132]], true);
+  const SX = x + 110; R(c, '#141416', SX - 66, G - 112, 3, 24); R(c, '#141416', SX + 63, G - 112, 3, 24);
+  BOX(c, '#141416', SX - 96, G - 118, 192, 30); R(c, '#3a3a40', SX - 94, G - 116, 188, 1); R(c, '#f2c43a', SX - 94, G - 91, 188, 1);
+  c.font = '700 18px Silk'; const w1 = c.measureText('Spud ').width, w2 = c.measureText('Kingz').width, sx0 = Math.round(SX - (w1 + w2) / 2);
+  TS(c, 'Spud', sx0, G - 113, 18, '#5fd36a', '#0a0a0c', 'left'); TS(c, 'Kingz', sx0 + w1, G - 113, 18, '#f6c933', '#0a0a0c', 'left');
+  CIRC(c, OUT, SX, G - 131, 13); CIRC(c, '#c9944a', SX, G - 131, 12); CIRC(c, '#b07c38', SX + 4, G - 127, 5); R(c, '#e2b878', SX - 6, G - 137, 4, 2); R(c, '#7a5230', SX - 3, G - 127, 2, 2); R(c, '#7a5230', SX + 5, G - 134, 2, 2);
+  P(c, '#f2c43a', [[SX - 11, G - 141], [SX - 10, G - 153], [SX - 5, G - 146], [SX, G - 156], [SX + 5, G - 146], [SX + 10, G - 153], [SX + 11, G - 141]], true);
 } };
 
 L.station = { n: 'Luton Station', w: 270, d(c, x, G) {
@@ -878,7 +879,7 @@ window.LM_ANIM.wardown = (c, x, G, t) => {
   const span = 150, ph = (t * 14) % (span * 2), dir = ph < span ? 1 : -1, bx = Math.round(x + 8 + (ph < span ? ph : span * 2 - ph)), by = Math.round(G - 12 + Math.sin(t * 3) * 1);
   R(c, 'rgba(255,255,255,.55)', bx - dir * 6 + (dir < 0 ? 22 : 0), by + 6, 8, 1); R(c, 'rgba(255,255,255,.35)', bx - dir * 12 + (dir < 0 ? 22 : 0), by + 7, 6, 1);
   c.restore();
-  PERSON(c, bx + 5, by + 5, '#e8641c', '#2a2a33'); PERSON(c, bx + 16, by + 5, '#2a2a33', '#2a2a33', '#e2b38a');
+  PERSON0(c, bx + 5, by + 5, '#e8641c', '#2a2a33'); PERSON0(c, bx + 16, by + 5, '#2a2a33', '#2a2a33', '#e2b38a');
   BOX(c, '#2f7fd0', bx, by, 26, 7); R(c, '#1f5fa8', bx + 1, by + 5, 24, 1); R(c, '#4fa0ea', bx + 1, by - 3, 4, 3); R(c, '#4fa0ea', bx + 21, by - 3, 4, 3); R(c, '#f4f2ec', bx + 11, by + 2, 4, 2);
 };
 window.LANDMARKS = L;
@@ -919,7 +920,7 @@ L.foodbank = { n: 'Luton Foodbank', w: 300, d(c, x, G) {
   { const hx = x + 131, hy = G - 90; CIRC(c, OUT, hx - 5, hy - 4, 7); CIRC(c, OUT, hx + 5, hy - 4, 7); P(c, OUT, [[hx - 12, hy - 2], [hx + 12, hy - 2], [hx, hy + 12]]);
     CIRC(c, '#ffffff', hx - 5, hy - 4, 6); CIRC(c, '#ffffff', hx + 5, hy - 4, 6); P(c, '#ffffff', [[hx - 11, hy - 2], [hx + 11, hy - 2], [hx, hy + 10]]); CIRC(c, '#f2a71e', hx, hy - 1, 4); CIRC(c, '#f7c64a', hx - 1, hy - 2, 2); R(c, '#ffffff', hx - 2, hy - 3, 1, 1); }
   // two kids carrying a crate
-  PERSON(c, x + 108, G, '#ffffff', '#1a1a1e', '#c58c5c', '#3a2a1e'); PERSON(c, x + 134, G, '#ffffff', '#1a1a1e', '#e2b38a', '#5a3a1e'); BOX(c, '#2a6fd8', x + 112, G - 12, 22, 7); R(c, '#e8a33c', x + 116, G - 14, 6, 3);
+  PERSON(c, x + 108, G, '#ffffff', '#1a1a1e', '#c58c5c', '#3a2a1e'); PERSON(c, x + 134, G, '#ffffff', '#1a1a1e', '#e2b38a', '#5a3a1e');
 } };
 
 // ---- Wardown Park chain: field + play area | lake | bridge over the stream | funfair ----
