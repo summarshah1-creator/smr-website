@@ -71,8 +71,8 @@ html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:m
 .shr,.hm{display:block;width:100%;margin:8px 0 0;cursor:pointer;background:#2a6fd8;color:#fff;border:2px solid #1b1a24;box-shadow:0 3px 0 #1b1a24;border-radius:6px;padding:9px 8px;font:700 10px Silk;letter-spacing:.06em}.hm{background:#fff;color:#1b1a24}
 .orow{display:flex;gap:8px}.orow button{flex:1}
 #shT{position:fixed;left:50%;bottom:22%;transform:translateX(-50%);z-index:60;background:#1b1a24;color:#fff;font:700 10px Silk;padding:9px 12px;border-radius:6px;opacity:0;transition:opacity .25s;pointer-events:none}#shT.on{opacity:1}
-#hsBtn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin:8px 0 0;cursor:pointer;background:#1b1a24;color:#fff;border:0;border-radius:6px;padding:9px 8px;font:700 9px Silk;letter-spacing:.06em}
-#hsBtn img{width:22px;height:22px;border-radius:5px;image-rendering:pixelated}
+#hsBtn,.hsB{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin:8px 0 0;cursor:pointer;background:#1b1a24;color:#fff;border:0;border-radius:6px;padding:9px 8px;font:700 9px Silk;letter-spacing:.06em}
+.hsB img{width:22px;height:22px;border-radius:5px;image-rendering:pixelated}
 #hsM{position:fixed;inset:0;z-index:50;background:rgba(15,14,22,.6);display:flex;align-items:center;justify-content:center;pointer-events:auto}#hsM.hide{display:none}
 #hsM .box{position:relative;width:min(330px,90vw);max-height:88vh;overflow:auto;background:#f6efd8;border:4px solid #1b1a24;box-shadow:0 6px 0 #1b1a24;border-radius:6px;padding:16px;font:500 13px/1.45 -apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#1b1a24;text-align:left}
 #hsM .x{position:absolute;right:8px;top:8px;width:28px;height:28px;border:2px solid #1b1a24;border-radius:4px;background:#fff;font:700 16px/1 sans-serif;cursor:pointer}
@@ -89,11 +89,13 @@ html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:m
 .lbB{display:block;width:100%;margin:8px 0 0;cursor:pointer;background:#ffd84a;color:#1b1a24;border:2px solid #1b1a24;box-shadow:0 3px 0 #1b1a24;border-radius:6px;padding:8px;font:700 10px Silk;letter-spacing:.06em}
 .top1{width:auto;display:inline-block;margin:8px auto 0;padding:5px 10px;font-size:9px}
 .orow .hm,.orow .shr{font-size:9px;padding:9px 4px}
-#mute{position:absolute;left:-12px;top:-14px;z-index:3;display:flex;align-items:center;gap:5px;height:34px;padding:0 9px 0 6px;border-radius:18px;border:3px solid #1b1a24;background:#fff;cursor:pointer;box-shadow:0 3px 0 #1b1a24;font:700 8px Silk;color:#1b1a24;letter-spacing:.04em}
-#mute svg{width:24px;height:20px;shape-rendering:crispEdges;display:block}
-#mute .w{opacity:0}#mute.on .w1{animation:wv1 1s steps(1) infinite}#mute.on .w2{animation:wv2 1s steps(1) infinite}#mute.on .w3{animation:wv3 1s steps(1) infinite}
+.mute{position:absolute;left:-8px;top:-14px;z-index:3;display:flex;align-items:center;justify-content:center;width:40px;height:40px;padding:0;border-radius:50%;border:3px solid #1b1a24;background:#fff;cursor:pointer;box-shadow:0 3px 0 #1b1a24}
+.muteT{display:none}
+@media (max-width:340px){.mute{left:3px;top:-10px;width:34px;height:34px}.mute svg{width:20px}}
+.mute svg{width:24px;height:20px;shape-rendering:crispEdges;display:block}
+.mute .w{opacity:0}.mute.on .w1{animation:wv1 1s steps(1) infinite}.mute.on .w2{animation:wv2 1s steps(1) infinite}.mute.on .w3{animation:wv3 1s steps(1) infinite}
 @keyframes wv1{0%,100%{opacity:1}}@keyframes wv2{0%{opacity:0}33%,100%{opacity:1}}@keyframes wv3{0%,33%{opacity:0}66%,100%{opacity:1}}
-#mute:not(.on){animation:mpulse 1.6s ease-in-out infinite}#mute:not(.on) .x{opacity:1}#mute.on .x{opacity:0}#mute:not(.on) .w{opacity:.25}
+.mute:not(.on){animation:mpulse 1.6s ease-in-out infinite}.mute:not(.on) .x{opacity:1}.mute.on .x{opacity:0}.mute:not(.on) .w{opacity:.25}
 @keyframes mpulse{0%,100%{box-shadow:0 3px 0 #1b1a24,0 0 0 0 rgba(255,216,74,.9)}50%{box-shadow:0 3px 0 #1b1a24,0 0 0 6px rgba(255,216,74,0)}}
 #lbM,#cardM{position:fixed;inset:0;z-index:50;background:rgba(15,14,22,.6);display:flex;align-items:center;justify-content:center;pointer-events:auto}#lbM.hide,#cardM.hide{display:none}
 #lbM .box,#cardM .box{position:relative;width:min(330px,90vw);max-height:88vh;overflow:auto;background:#f6efd8;border:4px solid #1b1a24;box-shadow:0 6px 0 #1b1a24;border-radius:6px;padding:16px;color:#1b1a24;text-align:left}
@@ -108,7 +110,18 @@ html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:m
 .prow .btn{font-size:16px;animation:go 1.1s ease-in-out infinite}.prow .lbB{font-size:9px;box-shadow:0 4px 0 #1b1a24;border-width:3px}
 @keyframes go{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-3px) scale(1.05)}}
 .prow .btn:active{animation:none}
-#start{top:calc(50% + 34px)}
+
+.ic{width:14px;height:14px;flex:0 0 auto;display:inline-block;vertical-align:-2px;margin-right:6px}
+.prow .btn .ic{width:16px;height:16px}
+.homeB{flex:1;height:48px;display:flex;align-items:center;justify-content:center;background:#fff;color:#1b1a24;border:3px solid #1b1a24;box-shadow:0 4px 0 #1b1a24;border-radius:5px;font:700 13px Silk;cursor:pointer}
+.homeB .ic{width:18px;height:18px;color:#e8641c}.homeB:active{transform:translateY(3px);box-shadow:0 1px 0 #1b1a24}
+#over .prow .btn{animation:go 1.1s ease-in-out infinite}
+.orow{margin-top:10px}.orow button{display:flex;align-items:center;justify-content:center;flex:1;font-size:8px!important;padding:9px 3px!important;margin:0!important;line-height:1.2;min-height:40px}
+.orow .ic{margin-right:4px}.shr,.lbB{display:flex;align-items:center;justify-content:center}
+.seen{max-height:46px}
+#rot{display:none;position:fixed;inset:0;z-index:90;background:#2f8fd8;color:#fff;align-items:center;justify-content:center;text-align:center;font:600 14px -apple-system,'Segoe UI',Roboto,sans-serif;pointer-events:auto}
+#rot div{font-size:46px;line-height:1.2}#rot b{display:block;font:700 15px Silk;margin:10px 0 6px;color:#ffd84a;text-shadow:2px 2px 0 #1b1a24}#rot span{display:block;font-size:14px}
+@media (orientation:landscape) and (max-height:500px) and (pointer:coarse){#rot{display:flex}}
 </style>
 <link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icon-180.png"><link rel="icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Kabootar"><meta name="theme-color" content="#2f8fd8">
 </head>
@@ -118,9 +131,9 @@ html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:m
   <div id="score" class="hide">0</div>
   <div id="place"><small>FLYING PAST</small><span id="placeN"></span></div>
   <div id="start" class="panel">
+    <button class="mute" id="mute" type="button" aria-label="Sound on or off"><svg viewBox="0 0 24 20" aria-hidden="true"><rect x="1" y="7" width="4" height="6" fill="#1b1a24"/><rect x="5" y="5" width="2" height="10" fill="#1b1a24"/><rect x="7" y="3" width="2" height="14" fill="#1b1a24"/><rect x="9" y="1" width="2" height="18" fill="#1b1a24"/><rect x="2" y="8" width="2" height="2" fill="#ffd84a"/><g class="w w1" fill="#e8641c"><rect x="13" y="8" width="2" height="4"/></g><g class="w w2" fill="#e8641c"><rect x="16" y="5" width="2" height="2"/><rect x="17" y="7" width="2" height="6"/><rect x="16" y="13" width="2" height="2"/></g><g class="w w3" fill="#e8641c"><rect x="19" y="2" width="2" height="2"/><rect x="20" y="4" width="2" height="2"/><rect x="21" y="6" width="2" height="8"/><rect x="20" y="14" width="2" height="2"/><rect x="19" y="16" width="2" height="2"/></g><g class="x" fill="#c8402a"><rect x="14" y="6" width="2" height="2"/><rect x="16" y="8" width="2" height="2"/><rect x="18" y="10" width="2" height="2"/><rect x="18" y="6" width="2" height="2"/><rect x="14" y="10" width="2" height="2"/><rect x="20" y="12" width="2" height="2"/><rect x="12" y="12" width="2" height="2"/><rect x="20" y="4" width="2" height="2"/><rect x="12" y="4" width="2" height="2"/></g></svg><span class="muteT">SOUND OFF</span></button>
     <div class="wsign"><i class="p l"></i><i class="p r"></i><div class="fr"><div class="wb"><div class="wt">Welcome to</div><div class="wl">Luton</div><div class="wu"></div><div class="wv">Proud &nbsp;Vibrant &nbsp;Ambitious &nbsp;Innovative</div>
       <svg viewBox="0 0 30 36"><path d="M15 2l2 3h-4z M8 6c2-2 5-2 7 0 2-2 5-2 7 0l-1 3H9z" fill="#5b2a86"/><path d="M6 10h18v11c0 6-4 10-9 12-5-2-9-6-9-12z" fill="#5b2a86"/><path d="M13.5 12h3v7h6v3h-6v8h-3v-8h-6v-3h6z" fill="#fff"/><path d="M3 30c4 3 8 4 12 4s8-1 12-4" stroke="#5b2a86" stroke-width="2" fill="none"/></svg></div></div></div>
-    <button id="mute" type="button" aria-label="Sound on or off"><svg viewBox="0 0 24 20" aria-hidden="true"><rect x="1" y="7" width="4" height="6" fill="#1b1a24"/><rect x="5" y="5" width="2" height="10" fill="#1b1a24"/><rect x="7" y="3" width="2" height="14" fill="#1b1a24"/><rect x="9" y="1" width="2" height="18" fill="#1b1a24"/><rect x="2" y="8" width="2" height="2" fill="#ffd84a"/><g class="w w1" fill="#e8641c"><rect x="13" y="8" width="2" height="4"/></g><g class="w w2" fill="#e8641c"><rect x="16" y="5" width="2" height="2"/><rect x="17" y="7" width="2" height="6"/><rect x="16" y="13" width="2" height="2"/></g><g class="w w3" fill="#e8641c"><rect x="19" y="2" width="2" height="2"/><rect x="20" y="4" width="2" height="2"/><rect x="21" y="6" width="2" height="8"/><rect x="20" y="14" width="2" height="2"/><rect x="19" y="16" width="2" height="2"/></g><g class="x" fill="#c8402a"><rect x="14" y="6" width="2" height="2"/><rect x="16" y="8" width="2" height="2"/><rect x="18" y="10" width="2" height="2"/><rect x="18" y="6" width="2" height="2"/><rect x="14" y="10" width="2" height="2"/><rect x="20" y="12" width="2" height="2"/><rect x="12" y="12" width="2" height="2"/><rect x="20" y="4" width="2" height="2"/><rect x="12" y="4" width="2" height="2"/></g></svg><span id="muteT">SOUND OFF</span></button>
     <div class="logo">
       <canvas id="logoBird" width="34" height="26"></canvas>
       <div class="lt1">FLAPPY</div>
@@ -128,23 +141,24 @@ html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:m
       <div class="lt3">FLYING THROUGH LUTON</div>
     </div>
     <div class="hs"><small>YOUR HIGH SCORE</small><b id="bestS">0</b></div>
-    <div class="prow"><div class="btn" id="go">&#9654; PLAY</div><button class="lbB" type="button" id="top1">&#127942; LEADERBOARD</button></div>
+    <div class="prow"><div class="btn" id="go"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M3 1h2v1h2v1h2v1h2v1h2v1h1v2h-1v1h-2v1H9v1H7v1H5v1H3z"/></svg> PLAY</div><button class="lbB" type="button" id="top1"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M3 1h10v2h3v4h-1v1h-2v1h-1v1h-1v1H9v2h2v2H5v-2h2v-2H6v-1H5V9H4V8H2V7H1V3h2zM2 4v2h1V4zm11 0v2h1V4z" fill-rule="evenodd"/></svg> LEADERBOARD</button></div>
     <p style="margin-bottom:0;font-size:10px;color:#6a5a3a">Tap, click or press space to flap</p>
-    <button class="shr" type="button" data-share="home">&#128279; SHARE THE GAME</button>
-    <button id="hsBtn" type="button"><img src="icon-192.png" alt="">SAVE TO YOUR HOME SCREEN</button>
+    <button class="shr" type="button" data-share="home"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M7 0h2v1h1v1h1v1h1v2H9v6H7V5H4V3h1V2h1V1h1zM1 7h4v2H3v5h10V9h-2V7h4v9H1z"/></svg> SHARE THE GAME</button>
+    <button id="hsBtn" class="hsB" type="button"><img src="icon-192.png" alt="">SAVE TO YOUR HOME SCREEN</button>
     <button class="rec" type="button">&#128205; Recommend a Luton place to feature</button>
     <a class="pw" href="https://smrgraphics.co.uk" target="_blank" rel="noopener"><span>Designed &amp; built by</span><img src="smr.png" alt="SMR Digital"><i>&#8599;</i></a>
   </div>
   <div id="over" class="panel hide">
+    <button class="mute" id="mute2" type="button" aria-label="Sound on or off"><svg viewBox="0 0 24 20" aria-hidden="true"><rect x="1" y="7" width="4" height="6" fill="#1b1a24"/><rect x="5" y="5" width="2" height="10" fill="#1b1a24"/><rect x="7" y="3" width="2" height="14" fill="#1b1a24"/><rect x="9" y="1" width="2" height="18" fill="#1b1a24"/><rect x="2" y="8" width="2" height="2" fill="#ffd84a"/><g class="w w1" fill="#e8641c"><rect x="13" y="8" width="2" height="4"/></g><g class="w w2" fill="#e8641c"><rect x="16" y="5" width="2" height="2"/><rect x="17" y="7" width="2" height="6"/><rect x="16" y="13" width="2" height="2"/></g><g class="w w3" fill="#e8641c"><rect x="19" y="2" width="2" height="2"/><rect x="20" y="4" width="2" height="2"/><rect x="21" y="6" width="2" height="8"/><rect x="20" y="14" width="2" height="2"/><rect x="19" y="16" width="2" height="2"/></g><g class="x" fill="#c8402a"><rect x="14" y="6" width="2" height="2"/><rect x="16" y="8" width="2" height="2"/><rect x="18" y="10" width="2" height="2"/><rect x="18" y="6" width="2" height="2"/><rect x="14" y="10" width="2" height="2"/><rect x="20" y="12" width="2" height="2"/><rect x="12" y="12" width="2" height="2"/><rect x="20" y="4" width="2" height="2"/><rect x="12" y="4" width="2" height="2"/></g></svg><span class="muteT">SOUND OFF</span></button>
     <h1>GAME<span>OVER</span></h1>
     <p id="why" style="margin:-2px 0 8px;font:700 10px Silk;color:#c8402a"></p>
     <div class="row"><div><b id="sc">0</b><small>SCORE</small></div><div><b id="be">0</b><small>BEST</small></div></div>
     <div id="nameBox" class="nb hide"><b id="nbT">NEW HIGH SCORE!</b><span id="nbS">Put your name on the leaderboard</span><div class="nbr"><input id="nbI" maxlength="14" placeholder="Your name" autocomplete="nickname"><button type="button" id="nbB">SAVE</button></div><em id="nbE"></em></div>
-    <div class="btn" id="again">FLY AGAIN</div>
-    <div class="orow"><button class="shr" type="button" data-share="app">&#128279; SHARE APP</button><button class="hm" type="button" id="cardB">&#128248; CARD</button><button class="hm" type="button" id="homeB">&#8962; HOME</button></div>
-    <button class="lbB" type="button">&#127942; LEADERBOARD</button>
+    <div class="prow"><div class="btn" id="again"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M3 1h2v1h2v1h2v1h2v1h2v1h1v2h-1v1h-2v1H9v1H7v1H5v1H3z"/></svg> FLY AGAIN</div><button class="homeB" type="button" id="homeB"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M7 1h2v1h1v1h1v1h1v1h1v1h1v1h1v2h-2v6H9v-4H7v4H3V9H1V7h1V6h1V5h1V4h1V3h1V2h1z"/></svg> HOME</button></div>
+    <div class="orow"><button class="shr" type="button" data-share="app"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M7 0h2v1h1v1h1v1h1v2H9v6H7V5H4V3h1V2h1V1h1zM1 7h4v2H3v5h10V9h-2V7h4v9H1z"/></svg> SHARE</button><button class="hm" type="button" id="cardB"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M5 2h6v2h4v10H1V4h4zM8 6a3 3 0 1 0 .01 0zM8 8a1 1 0 1 1-.01 0z" fill-rule="evenodd"/></svg> SCORE CARD</button><button class="lbB" type="button"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M3 1h10v2h3v4h-1v1h-2v1h-1v1h-1v1H9v2h2v2H5v-2h2v-2H6v-1H5V9H4V8H2V7H1V3h2zM2 4v2h1V4zm11 0v2h1V4z" fill-rule="evenodd"/></svg> TOP 10</button></div>
     <p id="seenH" style="margin:8px 0 0;font-weight:700">Places you flew past</p>
     <div class="seen" id="seen"></div>
+    <button class="hsB" type="button"><img src="icon-192.png" alt="">SAVE TO YOUR HOME SCREEN</button>
     <button class="rec" type="button">&#128205; Recommend a Luton place to feature</button>
   </div>
   <div id="lbM" class="hide"><div class="box"><button class="x" type="button" aria-label="Close">&times;</button><h3>&#127942; LEADERBOARD</h3>
@@ -152,6 +166,7 @@ html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:m
     <ol id="lbL"></ol><p id="lbN" class="lbn"></p></div></div>
   <div id="cardM" class="hide"><div class="box"><button class="x" type="button" aria-label="Close">&times;</button><img id="cardI" alt="Your score card"><p class="lbn">Screenshot it, or save and share it.</p><button class="send" type="button" id="cardS">SAVE / SHARE</button></div></div>
   <div id="shT"></div>
+  <div id="rot"><div>&#128241;<b>TURN YOUR PHONE UPRIGHT</b><span>Flappy Kabootar plays in portrait.</span></div></div>
 <div id="hsM" class="hide"><div class="box" role="dialog" aria-modal="true" aria-label="Save to your Home Screen">
   <button class="x" type="button" aria-label="Close">&times;</button>
   <div class="hd"><img src="icon-192.png" alt=""><b>SAVE FLAPPY KABOOTAR TO YOUR HOME SCREEN</b></div>
@@ -178,9 +193,9 @@ html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:m
 </div></div>
   <div id="tap" class="hide">TAP TO FLAP</div>
 </div>
-<script src="landmarks.js?v=20261117c"></script>
-<script src="vehicles.js?v=20261117c"></script>
-<script src="namecheck.js?v=20261117c"></script>
+<script src="landmarks.js?v=20261117d"></script>
+<script src="vehicles.js?v=20261117d"></script>
+<script src="namecheck.js?v=20261117d"></script>
 <script>
 (() => {
 const H = 300, GY = 250, ROAD = 262;            // world: 300 units tall, pavement top at 250
@@ -293,12 +308,13 @@ function flap() {
   if (state === 'ready') { state = 'play'; $('tap').classList.add('hide'); }
   if (state === 'play') { bird.vy = -175; bird.frame = 0; bird.ft = 0; SFX.flap(); }
 }
-function start() { reset(); state = 'ready'; $('start').classList.add('hide'); $('over').classList.add('hide'); $('score').classList.remove('hide'); $('score').textContent = '0'; $('tap').classList.remove('hide'); }
+function start() { reset(); state = 'ready'; $('place').classList.remove('on'); placeTimer = 0; $('start').classList.add('hide'); $('over').classList.add('hide'); $('score').classList.remove('hide'); $('score').textContent = '0'; $('tap').classList.remove('hide'); }
 $('go').addEventListener('click', e => { e.stopPropagation(); start(); });
 $('again').addEventListener('click', e => { e.stopPropagation(); start(); });
-const down = e => { if (e.target.closest && e.target.closest(".btn,a,button,input,#hsM,#recM,#lbM,#cardM")) return; e.preventDefault(); flap(); };
+const modalOpen = () => ['lbM', 'cardM', 'hsM', 'recM'].some(id => { const m = document.getElementById(id); return m && !m.classList.contains('hide'); });
+const down = e => { if (modalOpen()) return; if (e.target.closest && e.target.closest(".btn,a,button,input,#hsM,#recM,#lbM,#cardM")) return; e.preventDefault(); flap(); };
 addEventListener('pointerdown', down, { passive: false });
-addEventListener('keydown', e => { if (e.code === 'Space' || e.code === 'ArrowUp') { e.preventDefault(); if (state === 'menu' || (state === 'over' && dieT > .6)) start(); else flap(); } });
+addEventListener('keydown', e => { if (e.key === 'Escape') { ['lbM', 'cardM', 'hsM', 'recM'].forEach(id => $(id).classList.add('hide')); return; } if (modalOpen() || (e.target && /INPUT|TEXTAREA/.test(e.target.tagName))) return; if (e.code === 'Space' || e.code === 'ArrowUp') { e.preventDefault(); if (state === 'menu' || (state === 'over' && dieT > .6)) start(); else flap(); } });
 
 function showPlace(n) { $('placeN').textContent = n; const p = $('place'); p.classList.add('on'); placeTimer = 2.2; }
 
@@ -306,10 +322,8 @@ function die(why) {
   if (state !== 'play') return; deathWhy = why || ''; if (window.__fkLog) window.__fkLog.push({why, y: bird.y, vy: bird.vy, score, pipes: pipes.map(p => [Math.round(p.x), Math.round(p.top)])}); state = 'dead'; dieT = 0; flashT = .15; SFX.hit(); if (why === 'pipe') setTimeout(() => SFX.die(), 260);
   if (score > best) { best = score; BEST.save(best); }
 }
-function goHome() { reset(); state = 'menu'; $('start').classList.remove('hide'); $('over').classList.add('hide'); $('score').classList.add('hide'); $('tap').classList.add('hide'); $('bestS').textContent = best; }
+function goHome() { reset(); state = 'menu'; $('place').classList.remove('on'); placeTimer = 0; $('start').classList.remove('hide'); $('over').classList.add('hide'); $('score').classList.add('hide'); $('tap').classList.add('hide'); $('bestS').textContent = best; }
 $('homeB').addEventListener('click', e => { e.stopPropagation(); goHome(); });
-addEventListener('pageshow', e => { if (e.persisted) goHome(); });
-document.addEventListener('visibilitychange', () => { if (document.hidden && (state === 'over' || state === 'dead')) goHome(); });
 function showOver() {
   state = 'over'; $('why').textContent = deathWhy === 'ground' ? 'You landed on the pavement!' : 'You clipped a pipe!'; $('sc').textContent = score; $('be').textContent = best; $('bestS').textContent = best;
   $('seen').textContent = seen.length ? seen.join('  ·  ') : 'Fly further to see Luton!'; $('over').classList.remove('hide'); $('tap').classList.add('hide');
@@ -318,7 +332,7 @@ function showOver() {
 
 
 /* ---------- sound effects (made in the browser, no files): flap, point, hit, fall, swoosh ---------- */
-const SFX = (() => { let ac = null, on = store.get('fk_sound', 0) === 1, amb = null, ambKey = '';
+const SFX = (() => { let ac = null, on = store.get('fk_sound', 0) === 1 || /(?:^|; )fk_sound=1/.test(document.cookie), amb = null, ambKey = '';
   const ctxA = () => { if (!ac) { try { ac = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { ac = null; } } if (ac && ac.state === 'suspended') ac.resume(); return ac; };
   const tone = (f0, f1, dur, type = 'square', vol = .12, delay = 0) => { const a = on && ctxA(); if (!a) return; const t0 = a.currentTime + delay, o = a.createOscillator(), g = a.createGain(); o.type = type; o.frequency.setValueAtTime(f0, t0); o.frequency.exponentialRampToValueAtTime(Math.max(30, f1), t0 + dur); g.gain.setValueAtTime(vol, t0); g.gain.exponentialRampToValueAtTime(.0008, t0 + dur); o.connect(g).connect(a.destination); o.start(t0); o.stop(t0 + dur + .02); };
   const noise = (dur, f0, f1, vol = .18, delay = 0) => { const a = on && ctxA(); if (!a) return; const t0 = a.currentTime + delay, n = a.createBufferSource(), b = a.createBuffer(1, Math.ceil(a.sampleRate * dur), a.sampleRate), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; n.buffer = b; const fl = a.createBiquadFilter(); fl.type = 'bandpass'; fl.Q.value = 1.2; fl.frequency.setValueAtTime(f0, t0); fl.frequency.exponentialRampToValueAtTime(f1, t0 + dur); const g = a.createGain(); g.gain.setValueAtTime(vol, t0); g.gain.exponentialRampToValueAtTime(.001, t0 + dur); n.connect(fl).connect(g).connect(a.destination); n.start(t0); };
@@ -332,11 +346,11 @@ const SFX = (() => { let ac = null, on = store.get('fk_sound', 0) === 1, amb = n
     amb = { g, stop: () => { nodes.forEach(n => { try { n.stop(); } catch (e) {} }); timers.forEach(clearTimeout); try { g.disconnect(); } catch (e) {} } }; ambKey = k; };
   const api = { ambient(k) { if (!on) { if (amb) stopAmb(); return; } if (k === ambKey) return; if (window.__ambLog) window.__ambLog.push(k); stopAmb(); if (k) startAmb(k); },
     flap: () => noise(.09, 900, 2400, .13), point: () => { tone(988, 988, .09, 'square', .07); tone(1319, 1319, .22, 'square', .07, .08); }, hit: () => { noise(.12, 600, 150, .26); tone(180, 60, .14, 'triangle', .2); }, die: () => tone(720, 140, .45, 'square', .06), swoosh: () => noise(.28, 400, 3000, .1),
-    get on() { return on; }, toggle() { on = !on; store.set('fk_sound', on ? 1 : 0); if (on) { ctxA(); api.point(); } else stopAmb(); return on; } };
+    get on() { return on; }, toggle() { on = !on; store.set('fk_sound', on ? 1 : 0); try { document.cookie = 'fk_sound=' + (on ? 1 : 0) + '; max-age=315360000; path=/; samesite=lax'; } catch (e) {} if (on) { ctxA(); api.point(); } else stopAmb(); return on; } };
   addEventListener('pointerdown', () => ctxA(), { once: true }); return api; })();
-const muteUI = on => { $('mute').classList.toggle('on', on); $('muteT').textContent = on ? 'SOUND ON' : 'SOUND OFF'; };
+const muteUI = on => document.querySelectorAll('.mute').forEach(m => { m.classList.toggle('on', on); m.querySelector('.muteT').textContent = on ? 'SOUND ON' : 'SOUND OFF'; });
 muteUI(SFX.on);
-$('mute').addEventListener('click', e => { e.stopPropagation(); muteUI(SFX.toggle()); });
+document.querySelectorAll('.mute').forEach(m => m.addEventListener('click', e => { e.stopPropagation(); const on = SFX.toggle(); muteUI(on); const t = $('shT'); t.textContent = on ? 'SOUND ON' : 'SOUND OFF'; t.classList.add('on'); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('on'), 1300); }));
 
 /* ---------- leaderboard: today + all time (online on the SMR website, this phone only elsewhere) ---------- */
 const LB = (() => { const api = 'api.php'; let online = null, data = { today: [], all: [] }, tab = 'today', lastName = store.get('fk_name', ''), myRow = null;
@@ -514,18 +528,24 @@ Promise.all([document.fonts.load('700 8px Silk'), document.fonts.load('400 8px S
 })();
 
 /* ---------- save to home screen ---------- */
-(() => { const $ = id => document.getElementById(id), m = $('hsM'), b = $('hsBtn'); if (!m || !b) return;
-  if (matchMedia('(display-mode: standalone)').matches || navigator.standalone) { b.remove(); return; }
+(() => { const $ = id => document.getElementById(id), m = $('hsM'), bs = document.querySelectorAll('.hsB'); if (!m || !bs.length) return;
+  if (matchMedia('(display-mode: standalone)').matches || navigator.standalone) { bs.forEach(b => b.remove()); return; }
   const ua = navigator.userAgent, ios = /iP(hone|ad|od)/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1), sam = /SamsungBrowser/i.test(ua) || /SM-[A-Z0-9]/.test(ua);
   const os = k => { m.querySelectorAll('div[data-os]').forEach(d => d.classList.toggle('hide', d.dataset.os !== k)); m.querySelectorAll('.tabs button').forEach(t => t.classList.toggle('on', t.dataset.os === k)); };
   os(ios ? 'ios' : sam ? 'sam' : 'and'); m.querySelectorAll('.tabs button').forEach(t => t.addEventListener('click', e => { e.stopPropagation(); os(t.dataset.os); }));
   $('hsChrome').href = 'intent://' + location.host + location.pathname + '#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=' + encodeURIComponent('https://play.google.com/store/apps/details?id=com.android.chrome') + ';end';
   let dp = null; addEventListener('beforeinstallprompt', e => { e.preventDefault(); dp = e; $('hsInst').classList.remove('hide'); });
   $('hsInst').addEventListener('click', async e => { e.stopPropagation(); if (!dp) return; dp.prompt(); try { await dp.userChoice; } catch (x) {} dp = null; $('hsInst').classList.add('hide'); m.classList.add('hide'); });
-  b.addEventListener('click', e => { e.stopPropagation(); m.classList.remove('hide'); });
+  bs.forEach(b => b.addEventListener('click', e => { e.stopPropagation(); m.classList.remove('hide'); }));
   m.querySelector('.x').addEventListener('click', e => { e.stopPropagation(); m.classList.add('hide'); });
   m.addEventListener('pointerdown', e => { e.stopPropagation(); if (e.target === m) m.classList.add('hide'); }); m.addEventListener('keydown', e => e.stopPropagation());
 })();
+
+/* ---------- keep the menus on screen on small phones (scale down, never cut off) ---------- */
+(() => { const fit = () => {  ['start', 'over'].forEach(id => { const p = document.getElementById(id); if (!p || p.classList.contains('hide')) return; p.style.transform = 'translate(-50%,-50%)';
+    const extra = id === 'start' ? 92 : 24, need = p.offsetHeight + extra, room = innerHeight - 16, k = Math.min(innerWidth > 640 ? Math.min(1.45, innerWidth * .62 / p.offsetWidth) : 1, room / need), dy = id === 'start' ? Math.round(78 * k / 2) : 0;
+    p.style.top = 'calc(50% + ' + (id === 'start' ? dy : 0) + 'px)'; p.style.transform = 'translate(-50%,-50%) scale(' + k.toFixed(3) + ')'; }); };
+  addEventListener('resize', fit); new MutationObserver(fit).observe(document.body, { subtree: true, attributes: true, attributeFilter: ['class'] }); setTimeout(fit, 50); setTimeout(fit, 600); })();
 
 /* ---------- share + home ---------- */
 (() => { const $ = id => document.getElementById(id), toast = m => { const t = $('shT'); t.textContent = m; t.classList.add('on'); setTimeout(() => t.classList.remove('on'), 1800); };
