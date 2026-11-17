@@ -722,7 +722,7 @@ const EX = {
     SHELTER(c, x + 92, G); BUS(c, x - 30, G); POSTBOX(c, x + 132, G); LAMP(c, x + 70, G, 66); BIN(c, x + 128 + 18, G); PERSON(c, x + 22, G, '#d8262f'); PERSON(c, x + 170, G, '#6a4c93'); },
   townhall(c, x, G) { for (let r = 0; r < 3; r++) for (let i = 0; i < 3; i++) R(c, '#d6ccb6', x + 90 + i * 8, G - 196 + 4 + r * 2, 4, 1);
     BOX(c, '#c9bfa8', x + 88, G - 128, 24, 4); R(c, '#bcb29a', x + 86, G - 92, 28, 3);
-    for (let i = 0; i < 9; i++) R(c, '#d6ccb6', x + 4 + i * 22, G - 92, 1, 92);
+    for (let i = 0; i < 9; i++) { const lx = 4 + i * 22; if ((lx > 74 && lx < 126) || (lx > 140 && lx < 180)) continue; R(c, '#d6ccb6', x + lx, G - 92, 1, 92); } // wall lines, kept off the portico and the statue
     FLOWERS(c, x + 30, G, 40); FLOWERS(c, x + 172, G, 26); CAR(c, x - 34, G, '#1a1a1e'); R(c, '#f2c14e', x - 24, G - 13, 6, 2); LAMP(c, x + 6, G, 56); PERSON(c, x + 178, G, '#2f4a8a'); PERSON(c, x + 186, G, '#e8e0cf', '#3a3a44'); BIN(c, x + 128, G); },
   letters(c, x, G) { for (let i = 0; i < 10; i++) R(c, '#a8a59c', x + i * 19, G - 6, 1, 6); BOX(c, '#c58f52', x - 20, G - 14, 20, 14); R(c, '#a8743e', x - 20, G - 9, 20, 1); BOX(c, '#c58f52', x + 172, G - 12, 22, 12);
     PERSON(c, x + 58, G - 4, '#1a1a1e', '#2a2a33', '#e2b38a', '#f4f2ec'); PERSON(c, x + 66, G - 4, '#5a6e8a', '#5a6e8a', '#e2b38a', '#e8c766');  },
