@@ -284,15 +284,18 @@ L.oak = { n: 'Kenilworth Road, Oak Stand', w: 210, d(c, x, G) {
 } };
 
 L.krispy = { n: 'Krispy Lemon Chicken', w: 170, d(c, x, G) {
-  BRICK(c, x, G - 130, 170, 130, '#a8503a', '#94452f'); R(c, OUT, x - 1, G - 131, 172, 1); BOX(c, '#3a3a3e', x - 4, G - 136, 178, 6);
-  WIN(c, x + 48, G - 122, 26, 26); WIN(c, x + 104, G - 122, 26, 26); R(c, '#f4f6c8', x + 30, G - 92, 8, 4); R(c, '#f4f6c8', x + 140, G - 92, 8, 4);
-  BOX(c, '#6e1f33', x + 34, G - 86, 116, 30); T(c, 'Krispy Lemon', x + 84, G - 82, 8, '#f2c96b'); T(c, 'Chicken', x + 84, G - 71, 8, '#f2c96b');
-  CIRC(c, '#ffffff', x + 136, G - 72, 5); R(c, '#f2c14e', x + 140, G - 74, 4, 2); R(c, '#d84b3c', x + 135, G - 79, 3, 3);
-  BOX(c, '#c62828', x + 16, G - 54, 152, 8); T(c, 'BURGERS . PIZZA . CHIPS', x + 92, G - 54, 8, '#ffffff', 'center', false);
-  BOX(c, '#d9d7d1', x + 16, G - 46, 152, 46); for (let i = 0; i < 9; i++) R(c, '#c6c3bb', x + 16, G - 44 + i * 5, 152, 1);
-  BOX(c, '#c62828', x + 16, G - 46, 3, 46); BOX(c, '#c62828', x + 165, G - 46, 3, 46);
-  BOX(c, '#2b2b30', x + 24, G - 42, 26, 42); R(c, '#e7c35a', x + 27, G - 36, 20, 2); R(c, '#e7c35a', x + 27, G - 30, 20, 2);
-  BOX(c, '#46505a', x + 56, G - 42, 104, 26); R(c, '#e7c35a', x + 80, G - 36, 56, 2); R(c, '#e7c35a', x + 76, G - 30, 64, 3);
+  // flats over the shop: same height as Toro's, sign level with Toro's sign
+  BRICK(c, x, G - 184, 170, 184, '#a8503a', '#94452f'); R(c, OUT, x - 1, G - 185, 172, 1); R(c, OUT, x - 1, G - 184, 1, 184); R(c, OUT, x + 170, G - 184, 1, 184); BOX(c, '#3a3a3e', x - 4, G - 190, 178, 6);
+  for (const wy of [G - 174, G - 124]) for (let i = 0; i < 3; i++) { const wx = x + 20 + i * 52; WIN(c, wx, wy, 26, 30); R(c, '#e6ddd0', wx - 2, wy + 30, 30, 3); R(c, '#c9bfb0', wx - 2, wy + 33, 30, 1); }
+  R(c, '#f4f6c8', x + 10, G - 80, 8, 4); R(c, '#f4f6c8', x + 152, G - 80, 8, 4); R(c, '#3a3a3e', x + 13, G - 76, 2, 4); R(c, '#3a3a3e', x + 155, G - 76, 2, 4);
+  BOX(c, '#6e1f33', x + 6, G - 70, 160, 22); R(c, '#f2c96b', x + 8, G - 68, 156, 1); R(c, '#f2c96b', x + 8, G - 51, 156, 1);
+  T(c, 'KRISPY LEMON CHICKEN', x + 78, G - 63, 8, '#f2c96b');
+  CIRC(c, '#ffffff', x + 152, G - 59, 5); R(c, '#f2c14e', x + 156, G - 61, 4, 2); R(c, '#d84b3c', x + 151, G - 66, 3, 3); R(c, '#1b1a24', x + 153, G - 60, 1, 1);
+  BOX(c, '#c62828', x + 6, G - 48, 160, 8); T(c, 'BURGERS . PIZZA . CHIPS', x + 86, G - 48, 8, '#ffffff', 'center', false);
+  BOX(c, '#d9d7d1', x + 10, G - 40, 154, 40); for (let i = 0; i < 8; i++) R(c, '#c6c3bb', x + 10, G - 38 + i * 5, 154, 1);
+  BOX(c, '#c62828', x + 10, G - 40, 3, 40); BOX(c, '#c62828', x + 161, G - 40, 3, 40);
+  BOX(c, '#2b2b30', x + 20, G - 36, 26, 36); R(c, '#e7c35a', x + 23, G - 30, 20, 2); R(c, '#e7c35a', x + 23, G - 24, 20, 2);
+  BOX(c, '#46505a', x + 52, G - 36, 104, 26); R(c, '#e7c35a', x + 76, G - 30, 56, 2); R(c, '#e7c35a', x + 72, G - 24, 64, 3);
 } };
 
 L.sixthform = { n: 'Luton Sixth Form College', w: 244, d(c, x, G) {
@@ -493,6 +496,7 @@ L.lewsey = { n: 'Lewsey Sports Park', w: 280, d(c, x, G) {
 
 L.alquds = { n: 'Al-Quds', w: 160, d(c, x, G) {
   const Y = '#efe2a2';
+  c.save(); c.translate(0, -10);
   P(c, '#4a4d54', [[x - 4, G - 150], [x + 164, G - 150], [x + 150, G - 166], [x + 10, G - 166]], true); BRICK(c, x + 22, G - 176, 14, 12, '#7a4a3a', '#6a3e30'); BRICK(c, x + 128, G - 176, 14, 12, '#7a4a3a', '#6a3e30');
   BRICK(c, x, G - 150, 160, 90, Y, '#ddd08a'); R(c, OUT, x - 1, G - 151, 162, 1); R(c, OUT, x - 1, G - 150, 1, 90); R(c, OUT, x + 160, G - 150, 1, 90); BOX(c, '#f4f2ec', x - 2, G - 152, 164, 4);
   const AW = (wx, wy, w, h) => { R(c, OUT, wx - 1, wy - 1, w + 2, h + 2); R(c, '#f4f2ec', wx, wy, w, h); R(c, '#8a9aa8', wx + 2, wy + 2, w - 4, h - 4); R(c, '#d8c98a', wx - 2, wy - 4, w + 4, 3); R(c, '#d8c98a', wx + 2, wy - 6, w - 4, 2); R(c, '#f4f2ec', wx - 2, wy + h, w + 4, 2); };
@@ -508,6 +512,8 @@ L.alquds = { n: 'Al-Quds', w: 160, d(c, x, G) {
   BOX(c, '#1a1c20', x + 8, G - 26, 22, 26); R(c, '#c9b48a', x + 10, G - 24, 18, 24); R(c, '#1a1c20', x + 10, G - 13, 18, 2);
   R(c, '#d8c398', x + 32, G - 26, 122, 26); for (let i = 0; i < 5; i++) { R(c, '#3a2a20', x + 40 + i * 24, G - 10, 10, 10); CIRC(c, '#f6c46a', x + 44 + i * 24, G - 23, 2); } R(c, '#1a1c20', x + 92, G - 26, 2, 26); R(c, '#1a1c20', x + 32, G - 14, 122, 2);
   CIRC(c, '#2fb35a', x + 38, G - 20, 3);
+  c.restore();
+  BOX(c, '#2a2c30', x, G - 10, 160, 10); for (let i = 0; i < 20; i++) R(c, i % 2 ? '#3a3d44' : '#30333a', x + 1 + i * 8, G - 9, 7, 8);
 } };
 
 L.karwan = { n: 'Karwan Afghan Cuisine', w: 230, d(c, x, G) {
@@ -931,7 +937,7 @@ const EX = {
   periperi(c, x, G) { for (let i = 0; i < 6; i++) CIRC(c, '#fff4cc', x + 74 + i * 18, G - 47, 1); for (let i = 0; i < 5; i++) { BOX(c, '#22252b', x + 76 + i * 20, G - 44, 16, 6); R(c, i % 2 ? '#e0281a' : '#f2c14e', x + 78 + i * 20, G - 42, 12, 2); }
     R(c, '#f4f6c8', x + 178, G - 56, 3, 3); BOX(c, '#e8e8e8', x + 66, G - 124, 6, 6); R(c, '#e0a020', x + 152, G - 124, 6, 8); CAR(c, x + 168, G, '#1f2430'); R(c, 'rgba(255,60,40,.25)', x + 64, G - 82, 116, 18); },
   krispy(c, x, G) {
-    for (let i = 0; i < 6; i++) R(c, '#e7c35a', x + 60 + i * 16, G - 40, 10, 1); R(c, '#4caf50', x + 100, G - 26, 6, 6); },
+    for (let i = 0; i < 6; i++) R(c, '#e7c35a', x + 56 + i * 16, G - 34, 10, 1); R(c, '#4caf50', x + 96, G - 20, 6, 6); },
   uob(c, x, G) { R(c, '#5f9e3c', x + 80, G - 6, 110, 6); R(c, '#4f8a33', x + 84, G - 2, 100, 2); for (let i = 0; i < 9; i++) BOLL(c, x + 86 + i * 12, G); BIRCH(c, x + 30, G); BIRCH(c, x + 96, G); PERSON(c, x + 150, G - 6, '#1a1a1e'); },
   sixthform(c, x, G) { LAMP(c, x - 6, G, 80); for (let i = 0; i < 6; i++) R(c, '#2e8b57', x + 2 + i * 4, G - 26, 2, 26); R(c, '#2e8b57', x + 2, G - 26, 24, 2); P(c, '#e8e8e8', [[x - 2, G - 64], [x + 46, G - 64], [x + 40, G - 58], [x + 4, G - 58]], true);
     PERSON(c, x + 40, G, '#9aa3ad', '#2a2a33'); PERSON(c, x + 74, G, '#3a6ea5'); PERSON(c, x + 120, G, '#5a3a2e', '#1a1a1e', '#c58c5c', '#1f6f6a'); PERSON(c, x + 166, G, '#2f4a8a'); BIN(c, x + 128, G, '#8a9098'); BIN(c, x + 98, G, '#8a9098'); for (let i = 0; i < 3; i++) P(c, i === 1 ? '#d8262f' : '#f4f2ec', [[x + 174 + i * 7, G - 64], [x + 180 + i * 7, G - 72], [x + 183 + i * 7, G - 72], [x + 177 + i * 7, G - 64]]); },

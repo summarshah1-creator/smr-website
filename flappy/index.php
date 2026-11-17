@@ -33,9 +33,9 @@ html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:m
 #tap{position:absolute;bottom:calc(env(safe-area-inset-bottom) + 70px);left:0;right:0;font:700 14px Silk;text-shadow:0 2px 0 #1b1a24,2px 0 0 #1b1a24,-2px 0 0 #1b1a24;animation:bl 1s steps(2) infinite}
 @keyframes bl{50%{opacity:.25}}
 
-.wsign{position:absolute;left:50%;top:0;width:196px;height:96px;transform:translate(-50%,-78px);z-index:-1;animation:pop .9s cubic-bezier(.3,1.6,.5,1) .2s both;pointer-events:none}
+.wsign{position:absolute;left:50%;top:0;width:240px;height:108px;transform:translate(-50%,-88px);z-index:-1;animation:pop .9s cubic-bezier(.3,1.6,.5,1) .2s both;pointer-events:none}
 @keyframes pop{0%{transform:translate(-50%,0)}100%{transform:translate(-50%,-78px)}}
-.wsign .p{position:absolute;bottom:0;width:9px;height:96px;background:#4a3326;border:2px solid #1b1a24}.wsign .p.l{left:6px}.wsign .p.r{right:6px}
+.wsign canvas{display:block;width:240px;height:108px;image-rendering:pixelated}.wsign .p{position:absolute;bottom:0;width:9px;height:96px;background:#4a3326;border:2px solid #1b1a24}.wsign .p.l{left:6px}.wsign .p.r{right:6px}
 .wsign .fr{position:absolute;left:4px;right:4px;top:6px;height:72px;background:#4a3326;clip-path:polygon(0 16%,50% 0,100% 16%,100% 100%,0 100%);padding:4px}
 .wsign .wb{position:relative;height:100%;background:#fbfbfd;clip-path:polygon(0 14%,50% 0,100% 14%,100% 100%,0 100%);font-family:-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#5b2a86;padding:9px 0 0 9px;box-sizing:border-box;text-align:left}
 .wsign .wt{font-weight:600;font-size:11px;line-height:1}.wsign .wl{font-weight:800;font-size:27px;line-height:1;letter-spacing:-.01em;margin-top:1px}
@@ -140,8 +140,7 @@ html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:m
   <div id="place"><small>FLYING PAST</small><span id="placeN"></span></div>
   <div id="start" class="panel">
     <button class="mute" id="mute" type="button" aria-label="Sound on or off"><svg viewBox="0 0 24 20" aria-hidden="true"><rect x="1" y="7" width="4" height="6" fill="#1b1a24"/><rect x="5" y="5" width="2" height="10" fill="#1b1a24"/><rect x="7" y="3" width="2" height="14" fill="#1b1a24"/><rect x="9" y="1" width="2" height="18" fill="#1b1a24"/><rect x="2" y="8" width="2" height="2" fill="#ffd84a"/><g class="w w1" fill="#e8641c"><rect x="13" y="8" width="2" height="4"/></g><g class="w w2" fill="#e8641c"><rect x="16" y="5" width="2" height="2"/><rect x="17" y="7" width="2" height="6"/><rect x="16" y="13" width="2" height="2"/></g><g class="w w3" fill="#e8641c"><rect x="19" y="2" width="2" height="2"/><rect x="20" y="4" width="2" height="2"/><rect x="21" y="6" width="2" height="8"/><rect x="20" y="14" width="2" height="2"/><rect x="19" y="16" width="2" height="2"/></g><g class="x" fill="#c8402a"><rect x="14" y="6" width="2" height="2"/><rect x="16" y="8" width="2" height="2"/><rect x="18" y="10" width="2" height="2"/><rect x="18" y="6" width="2" height="2"/><rect x="14" y="10" width="2" height="2"/><rect x="20" y="12" width="2" height="2"/><rect x="12" y="12" width="2" height="2"/><rect x="20" y="4" width="2" height="2"/><rect x="12" y="4" width="2" height="2"/></g></svg><span class="muteT">SOUND OFF</span></button>
-    <div class="wsign"><i class="p l"></i><i class="p r"></i><div class="fr"><div class="wb"><div class="wt">Welcome to</div><div class="wl">Luton</div><div class="wu"></div><div class="wv">Proud &nbsp;Vibrant &nbsp;Ambitious &nbsp;Innovative</div>
-      <svg viewBox="0 0 30 36"><path d="M15 2l2 3h-4z M8 6c2-2 5-2 7 0 2-2 5-2 7 0l-1 3H9z" fill="#5b2a86"/><path d="M6 10h18v11c0 6-4 10-9 12-5-2-9-6-9-12z" fill="#5b2a86"/><path d="M13.5 12h3v7h6v3h-6v8h-3v-8h-6v-3h6z" fill="#fff"/><path d="M3 30c4 3 8 4 12 4s8-1 12-4" stroke="#5b2a86" stroke-width="2" fill="none"/></svg></div></div></div>
+    <div class="wsign"><canvas id="wsc" width="240" height="108"></canvas></div>
     <div class="logo">
       <canvas id="logoBird" width="64" height="48"></canvas>
       <div class="lt1">FLAPPY</div>
@@ -203,8 +202,8 @@ html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:m
 </div></div>
   <div id="tap" class="hide">TAP TO FLAP</div>
 </div>
-<script src="landmarks.js?v=1117zl"></script>
-<script src="vehicles.js?v=1117p"></script>
+<script src="landmarks.js?v=1117zm"></script>
+<script src="vehicles.js?v=1117q"></script>
 <script src="namecheck.js"></script>
 <script>
 (() => {
@@ -345,12 +344,12 @@ function pushLandmark() { const sp = nextSprite(), nx = peekSprite(); lmQueue.pu
 let lastCarK = '';
 let vanT = 0, vanNext = 12, plane = null, bplane = null;
 /* banner plane: text drawn once at 4x, then waved slice by slice behind a small propeller plane */
-const BANNER = (() => { const txt = 'DONNER RUSH  \u00b7  OPEN NOW OUTSIDE CURRYS', k = 4, o = document.createElement('canvas'), g = o.getContext('2d'), B = { c: o, w: 10, h: 18, k };
+const BANNER = (() => { const txt = 'DONNER RUSH \u00b7 NOW AT CURRYS', k = 4, o = document.createElement('canvas'), g = o.getContext('2d'), B = { c: o, w: 10, h: 15, k };
   // size it from the real font each time it's drawn (Silk may load after the first draw)
-  const draw = () => { g.font = '700 44px Silk'; B.w = Math.ceil(g.measureText(txt).width / k) + 18; o.width = B.w * k; o.height = B.h * k; g.imageSmoothingEnabled = false;
+  const draw = () => { g.font = '700 34px Silk'; B.w = Math.ceil(g.measureText(txt).width / k) + 18; o.width = B.w * k; o.height = B.h * k; g.imageSmoothingEnabled = false;
     g.fillStyle = '#1b1a24'; g.fillRect(0, 0, o.width, o.height); g.fillStyle = '#fff6e0'; g.fillRect(k, k, o.width - 2 * k, o.height - 2 * k);
     g.fillStyle = '#e3261c'; g.fillRect(k, k, o.width - 2 * k, k); g.fillRect(k, o.height - 2 * k, o.width - 2 * k, k);
-    g.font = '700 44px Silk'; g.textBaseline = 'middle'; g.textAlign = 'center'; g.fillStyle = '#1b1a24'; g.fillText(txt, o.width / 2, o.height / 2 + k * .5); };
+    g.font = '700 34px Silk'; g.textBaseline = 'middle'; g.textAlign = 'center'; g.fillStyle = '#1b1a24'; g.fillText(txt, o.width / 2, o.height / 2 + k * .5); };
   draw(); if (document.fonts) { document.fonts.ready.then(draw); document.fonts.load('700 8px Silk').then(draw).catch(() => {}); } return B; })();
 function drawBannerPlane(px, py, d) { const c = ctx, B = BANNER;
   // tow rope then the waving banner behind (to the right of) the plane
@@ -469,7 +468,7 @@ const LB = (() => { const api = 'api.php'; let online = null, data = { today: []
 /* ---------- always the latest version, also when saved to the Home Screen ----------
    version.json is rewritten on every deploy; when it changes the page reloads itself (straight away on the menu,
    or right after the current game ends), with a cache-busting query so the phone fetches the new HTML. */
-(() => { const BUILD = '20261117181433'; let pending = false;
+(() => { const BUILD = '20261117184456'; let pending = false;
   const go = () => { let last = 0; try { last = +sessionStorage.getItem('fk_upd_t') || 0; } catch (e) {} if (Date.now() - last < 60000) return;   // never loop: at most one reload a minute
     try { sessionStorage.setItem('fk_upd_t', String(Date.now())); } catch (e) {} location.replace(location.pathname + '?u=' + Date.now() + location.hash); };
   const check = () => fetch('version.json?ts=' + Date.now(), { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(j => {
@@ -640,6 +639,26 @@ function loop(now) { const dt = Math.min(.033, (now - last) / 1000); last = now;
 Promise.all([document.fonts.load('700 8px Silk'), document.fonts.load('400 8px Silk'), document.fonts.load('24px PS', '&'), document.fonts.load('700 16px Amiri', 'ا')]).catch(() => {}).then(() => {
   prerender(); prerenderHouses(); prerenderCars();
   /* home-screen pigeon: drawn at double size with extra feather detail, and it keeps flapping */
+  /* Welcome to Luton road sign, drawn as pixel art in the game's own style */
+  (() => { const cv = $('wsc'); if (!cv) return; const k = 3; cv.width = 240 * k; cv.height = 108 * k; const g = cv.getContext('2d'); g.scale(k, k); g.imageSmoothingEnabled = false;
+    const O = '#1b1a24', PU = '#5b2a86', PL = '#7a45ab', R = (c, x, y, w, h) => { g.fillStyle = c; g.fillRect(x, y, w, h); };
+    const draw = () => { g.clearRect(0, 0, 240, 108);
+      // wooden posts with grain, bolted on, a little grass at the feet
+      for (const px of [26, 206]) { R(O, px - 1, 6, 10, 102); R('#6b4a33', px, 7, 8, 101); R('#8a6244', px + 1, 7, 2, 101); R('#4e3524', px + 6, 7, 2, 101); for (let y = 14; y < 104; y += 9) R('#5a3e2b', px + 3, y, 2, 3); }
+      // sign board: outline, shadow, white panel with a pointed top
+      const shape = (dx, dy, w, h, peak, col) => { g.beginPath(); g.moveTo(dx, dy + peak); g.lineTo(dx + w / 2, dy); g.lineTo(dx + w, dy + peak); g.lineTo(dx + w, dy + h); g.lineTo(dx, dy + h); g.closePath(); g.fillStyle = col; g.fill(); };
+      shape(14, 16, 216, 74, 10, 'rgba(0,0,0,.25)'); shape(10, 12, 216, 74, 10, O); shape(12, 14, 212, 70, 9, '#f6f2ea'); shape(16, 18, 204, 62, 8, '#ffffff');
+      R('#e8e2d6', 16, 76, 204, 4); for (const [bx, by] of [[20, 26], [216, 26], [20, 72], [216, 72]]) { R('#9aa0a8', bx, by, 3, 3); R('#c9ced4', bx, by, 2, 2); }
+      // lettering
+      g.textAlign = 'left'; g.textBaseline = 'top'; g.font = '700 8px Silk'; g.fillStyle = PU; g.fillText('WELCOME TO', 26, 28);
+      g.font = '700 24px Silk'; g.fillStyle = '#c9b6dc'; g.fillText('LUTON', 27, 38); g.fillStyle = PU; g.fillText('LUTON', 26, 37);
+      R(PU, 26, 63, 138, 2); g.font = '8px Silk'; g.fillStyle = PL; g.fillText('PROUD VIBRANT AMBITIOUS INNOVATIVE', 26, 68);
+      // crest: crown over a purple shield with a white cross, ribbon underneath
+      const cx = 192, cy = 24; R(O, cx - 9, cy - 1, 18, 7); R('#e8b84a', cx - 8, cy, 16, 5); for (const tx of [cx - 8, cx - 2, cx + 4]) { R(O, tx - 1, cy - 4, 6, 4); R('#e8b84a', tx, cy - 3, 4, 3); } R('#c0392b', cx - 1, cy + 1, 2, 2);
+      g.beginPath(); g.moveTo(cx - 13, cy + 7); g.lineTo(cx + 13, cy + 7); g.lineTo(cx + 13, cy + 22); g.quadraticCurveTo(cx + 12, cy + 33, cx, cy + 39); g.quadraticCurveTo(cx - 12, cy + 33, cx - 13, cy + 22); g.closePath(); g.fillStyle = O; g.fill();
+      g.beginPath(); g.moveTo(cx - 11, cy + 9); g.lineTo(cx + 11, cy + 9); g.lineTo(cx + 11, cy + 22); g.quadraticCurveTo(cx + 10, cy + 31, cx, cy + 36); g.quadraticCurveTo(cx - 10, cy + 31, cx - 11, cy + 22); g.closePath(); g.fillStyle = PU; g.fill();
+      R(PL, cx - 11, cy + 9, 4, 14); R('#ffffff', cx - 2, cy + 12, 4, 20); R('#ffffff', cx - 8, cy + 18, 16, 4); };
+    draw(); if (document.fonts) { document.fonts.load('700 24px Silk').then(draw).catch(() => {}); document.fonts.ready.then(draw); } })();
   (() => { const lc = $('logoBird').getContext('2d'); lc.imageSmoothingEnabled = false;
     const TX = { g: ['#aab3c4', '#8e97aa'], l: ['#d3d9e5', '#b1b9c9'], d: ['#8a93a5', '#6c7587'], t: ['#6a7488', '#4b5466'], n: ['#7fd39a', '#3d8a57'], p: ['#b58ad9', '#6f4895'], h: ['#97a1b5', '#6c768b'], w: ['#ffffff', '#b9c1cf'], K: ['#465063', '#22283a'] };
     const paint = (rows, ox, oy, wing) => rows.forEach((r, j) => { for (let i = 0; i < r.length; i++) { const ch = r[i]; if (ch === '.') continue; const X = (ox + i) * 2, Y = (oy + j) * 2;
