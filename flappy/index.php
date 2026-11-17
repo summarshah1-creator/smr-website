@@ -354,10 +354,10 @@ const BANNER = (() => { const txt = 'DONNER RUSH  \u00b7  OPEN NOW OUTSIDE CURRY
   draw(); if (document.fonts) { document.fonts.ready.then(draw); document.fonts.load('700 8px Silk').then(draw).catch(() => {}); } return B; })();
 function drawBannerPlane(px, py, d) { const c = ctx, B = BANNER;
   // tow rope then the waving banner behind (to the right of) the plane
-  const bx = px + 46; c.strokeStyle = '#3a3a40'; c.lineWidth = .6; c.beginPath(); c.moveTo(px + 34, py + 1); c.lineTo(bx, py + 1 + Math.sin(t * 7) * .6); c.stroke();
-  for (let i = 0; i < B.w; i += 2) { const oy = Math.sin(t * 6 - i * .07) * 2 * Math.min(1, i / 30); c.drawImage(B.c, i * B.k, 0, 2 * B.k, B.h * B.k, bx + i, py - B.h / 2 + 1 + oy, 2, B.h); }
-  // the plane, facing left: red and white with a spinning propeller
-  const R2 = (col, x, y, w, h) => { c.fillStyle = col; c.fillRect(px + x * 1.4, py + y * 1.4, w * 1.4, h * 1.4); };
+  const bx = px - 46 - B.w; c.strokeStyle = '#3a3a40'; c.lineWidth = .6; c.beginPath(); c.moveTo(px - 34, py + 1); c.lineTo(bx + B.w, py + 1 + Math.sin(t * 7) * .6); c.stroke();
+  for (let i = 0; i < B.w; i += 2) { const fromRope = B.w - i, oy = Math.sin(t * 6 + i * .07) * 2 * Math.min(1, fromRope / 30); c.drawImage(B.c, i * B.k, 0, 2 * B.k, B.h * B.k, bx + i, py - B.h / 2 + 1 + oy, 2, B.h); }
+  // the plane, facing right: red and white with a spinning propeller
+  const R2 = (col, x, y, w, h) => { c.fillStyle = col; c.fillRect(px - (x + w) * 1.4, py + y * 1.4, w * 1.4, h * 1.4); };   // drawn mirrored: nose to the right
   R2('#1b1a24', -1, -3, 26, 7); R2('#f4f2ec', 0, -2, 25, 5); R2('#e3261c', 0, 0, 25, 1.4); R2('#e3261c', 0, -2, 4, 5);
   R2('#1b1a24', 6, -6, 4, 4); R2('#7fb4d8', 7, -5, 2, 2);
   R2('#1b1a24', 8, 1, 10, 3); R2('#e3261c', 9, 1.5, 8, 1.6);
@@ -469,7 +469,7 @@ const LB = (() => { const api = 'api.php'; let online = null, data = { today: []
 /* ---------- always the latest version, also when saved to the Home Screen ----------
    version.json is rewritten on every deploy; when it changes the page reloads itself (straight away on the menu,
    or right after the current game ends), with a cache-busting query so the phone fetches the new HTML. */
-(() => { const BUILD = '20261117174632'; let pending = false;
+(() => { const BUILD = '20261117175143'; let pending = false;
   const go = () => { let last = 0; try { last = +sessionStorage.getItem('fk_upd_t') || 0; } catch (e) {} if (Date.now() - last < 60000) return;   // never loop: at most one reload a minute
     try { sessionStorage.setItem('fk_upd_t', String(Date.now())); } catch (e) {} location.replace(location.pathname + '?u=' + Date.now() + location.hash); };
   const check = () => fetch('version.json?ts=' + Date.now(), { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(j => {
@@ -545,8 +545,7 @@ function update(dt) {
   cars.forEach(c => { c.x += c.dir * c.cv * dt - (moving ? step : 0); c.dist = (c.dist || 0) + c.dir * c.cv * dt; });
   cars = cars.filter(c => c.x > -220 && c.x < W + 220); if (cars.length < 4 && Math.random() < dt * .8) spawnCar();
   // Mr Rushed ice cream van: its own timer, roughly every 30 seconds (first one a bit sooner)
-  vanT += dt; const vanParked = lmQueue.some(l => l.sp.k === 'currys' && l.x < W + 700 && l.x + l.sp.w > -300);   // he's parked at Currys: don't also drive him past
-  if (vanT >= vanNext && !vanParked && !cars.some(c => c.sp.k === 'mrrushed') && spawnCar(null, 'mrrushed')) { vanT = 0; vanNext = 26 + Math.random() * 8; }
+  // Mr Rushed is parked outside Currys now, so his van never drives on the road
   if (placeTimer > 0) { placeTimer -= dt; if (placeTimer <= 0) $('place').classList.remove('on'); }
   if (flashT > 0) flashT -= dt;
 
@@ -607,8 +606,8 @@ function draw() {
     ctx.drawImage(l.sp.c, Math.round(l.x - M), GY - LH + 6); if (ANIM_K[l.sp.k]) LM_ANIM[l.sp.k](ctx, Math.round(l.x), GY, t); });
   if (PL && plane && !planeDrawn) drawPlane(PL);
   // banner plane over Currys: a little propeller plane towing "@DONNERRUSH · OPEN NOW OUTSIDE CURRYS"
-  if (!bplane) { const cu = lmQueue.find(l => l.sp.k === 'currys' && !l.bannerGone && l.x < W * .75 && l.x + l.sp.w > 0); if (cu) { cu.bannerGone = 1; bplane = { t0: t }; } }
-  if (bplane) { const d = t - bplane.t0, px = Math.round(W + 20 - d * 30), py = Math.round(GY - 238 + Math.sin(d * 1.4) * 3); drawBannerPlane(px, py, d); if (px + 40 + BANNER.w < -10) bplane = null; }
+  if (!bplane) { const cu = lmQueue.find(l => l.sp.k === 'currys' && !l.bannerGone && l.x < W * .75 && l.x + l.sp.w > 0); if (cu) { cu.bannerGone = 1; bplane = { t0: t }; } }   // flies in from the left, against the scroll, so it's always clearly moving
+  if (bplane) { const d = t - bplane.t0, px = Math.round(-20 + d * 42), py = Math.round(GY - 238 + Math.sin(d * 1.4) * 3); drawBannerPlane(px, py, d); if (px - 46 - BANNER.w > W + 10) bplane = null; }
   // pavement + road
   ctx.fillStyle = '#c9c4b8'; ctx.fillRect(0, GY, W, ROAD - GY); ctx.fillStyle = '#b3ad9f'; const po = SCi % 12; for (let x = -po; x < W; x += 12) ctx.fillRect(Math.round(x), GY, 1, ROAD - GY); ctx.fillRect(0, GY + 6, W, 1);
   ctx.fillStyle = '#8f8a7e'; ctx.fillRect(0, ROAD - 2, W, 2);
