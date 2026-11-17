@@ -401,7 +401,7 @@ const LB = (() => { const api = 'api.php'; let online = null, data = { today: []
     return c; };
   $('cardB').addEventListener('click', e => { e.stopPropagation(); const c = make(); $('cardI').src = c.toDataURL('image/png'); c.toBlob(b => { blob = b; }, 'image/png'); $('cardM').classList.remove('hide'); });
   $('cardS').addEventListener('click', async e => { e.stopPropagation(); if (!blob) return; const f = new File([blob], 'flappy-kabootar-score.png', { type: 'image/png' });
-    try { if (navigator.canShare && navigator.canShare({ files: [f] })) { await navigator.share({ files: [f], title: 'Flappy Kabootar' }); return; } } catch (x) { if (x && x.name === 'AbortError') return; }
+    try { if (navigator.canShare && navigator.canShare({ files: [f] })) { await navigator.share({ files: [f], title: 'Flappy Kabootar', text: '\u{1F426} I scored ' + score + ' on Flappy Kabootar! Can you beat me? ' + location.href.split('#')[0] }); return; } } catch (x) { if (x && x.name === 'AbortError') return; }
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = f.name; document.body.appendChild(a); a.click(); a.remove(); });
   $('cardM').querySelector('.x').addEventListener('click', e => { e.stopPropagation(); $('cardM').classList.add('hide'); });
   $('cardM').addEventListener('pointerdown', e => { e.stopPropagation(); if (e.target === $('cardM')) $('cardM').classList.add('hide'); });
@@ -551,7 +551,7 @@ Promise.all([document.fonts.load('700 8px Silk'), document.fonts.load('400 8px S
 (() => { const $ = id => document.getElementById(id), toast = m => { const t = $('shT'); t.textContent = m; t.classList.add('on'); setTimeout(() => t.classList.remove('on'), 1800); };
   const url = () => location.href.split('#')[0];
   document.querySelectorAll('.shr').forEach(b => b.addEventListener('click', async e => { e.stopPropagation();
-    const sc = $('sc') ? $('sc').textContent : '0', text = 'Play Flappy Kabootar: fly a pigeon through Luton and spot the places you know!';
+    const sc = $('sc') ? $('sc').textContent : '0', text = b.dataset.share === 'app' && +sc > 0 ? '\u{1F426} I just scored ' + sc + ' on Flappy Kabootar, flying through Luton! Think you can beat me? Try it here:' : '\u{1F426} Play Flappy Kabootar: flap your way through Luton and see how many places you can spot! Try it here:';
     try { if (navigator.share) { await navigator.share({ title: 'Flappy Kabootar', text, url: url() }); return; } } catch (x) { if (x && x.name === 'AbortError') return; }
     try { await navigator.clipboard.writeText(text + ' ' + url()); toast('LINK COPIED!'); } catch (x) { window.open('https://wa.me/?text=' + encodeURIComponent(text + ' ' + url()), '_blank'); } }));
 })();
