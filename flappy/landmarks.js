@@ -802,7 +802,7 @@ const WIDEN = {
 Object.keys(WIDEN).forEach(k => { const o = WIDEN[k], d0 = L[k].d; L[k].w = o.w; L[k].d = (c, x, G) => { if (o.pre) o.pre(c, x, G); d0(c, x + o.dx, G); if (o.post) o.post(c, x + (o.dx || 0), G); }; });
 
 /* ---------- size tweaks: draw at 1x off-screen, then scale with crisp pixels ---------- */
-const SCALE = { nadeem: 1.2, chaiiwala: 1.1, frasers: 1.3, stmarys: 0.85, hatfactory: 1.3 };
+const SCALE = { nadeem: 1.2, chaiiwala: 1.1, frasers: 1.3, stmarys: 1.02, hatfactory: 1.3 };
 Object.keys(SCALE).forEach(k => { const f = SCALE[k], d0 = L[k].d, w0 = L[k].w, M = 80, H = 320; L[k].w = Math.round(w0 * f);
   L[k].d = (c, x, G) => { const oc = document.createElement('canvas'); oc.width = w0 + M * 2; oc.height = H; const o = oc.getContext('2d'); d0(o, M, H - 10);
     c.save(); c.imageSmoothingEnabled = false; c.drawImage(oc, 0, 0, oc.width, H - 10, x - M * f, G - (H - 10) * f, oc.width * f, (H - 10) * f); c.restore(); }; });

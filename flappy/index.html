@@ -193,9 +193,9 @@ html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:m
 </div></div>
   <div id="tap" class="hide">TAP TO FLAP</div>
 </div>
-<script src="landmarks.js?v=20261117f"></script>
-<script src="vehicles.js?v=20261117f"></script>
-<script src="namecheck.js?v=20261117f"></script>
+<script src="landmarks.js?v=20261117g"></script>
+<script src="vehicles.js?v=20261117g"></script>
+<script src="namecheck.js?v=20261117g"></script>
 <script>
 (() => {
 const H = 300, GY = 250, ROAD = 262;            // world: 300 units tall, pavement top at 250
@@ -215,7 +215,10 @@ function prerender() {
   LM_ORDER.forEach(k => { const L = LANDMARKS[k]; const oc = document.createElement('canvas'); oc.width = L.w + M * 2; oc.height = LH; const o = oc.getContext('2d'); o.imageSmoothingEnabled = false; L.d(o, M, LH - 6); sprites.push({ k, n: L.n, w: L.w, c: oc }); });
 }
 const houseSprites = [];
-function prerenderHouses() { Object.keys(HOUSES).forEach(k => { const Hh = HOUSES[k]; const oc = document.createElement('canvas'); oc.width = Hh.w + M * 2; oc.height = LH; const o = oc.getContext('2d'); Hh.d(o, M, LH - 6); houseSprites.push({ k, n: '', w: Hh.w, c: oc }); }); }
+const HOUSE_SCALE = .8; // houses a bit smaller than the landmarks
+function prerenderHouses() { Object.keys(HOUSES).forEach(k => { const Hh = HOUSES[k]; const t = document.createElement('canvas'); t.width = Hh.w + M * 2; t.height = LH; Hh.d(t.getContext('2d'), M, LH - 6);
+  const oc = document.createElement('canvas'), w = Math.round(Hh.w * HOUSE_SCALE); oc.width = w + M * 2; oc.height = LH; const o = oc.getContext('2d'); o.imageSmoothingEnabled = false;
+  const sw = t.width * HOUSE_SCALE, sh = LH * HOUSE_SCALE; o.drawImage(t, Math.round(M - M * HOUSE_SCALE), Math.round(LH - 6 - (LH - 6) * HOUSE_SCALE), Math.round(sw), Math.round(sh)); houseSprites.push({ k, n: '', w, c: oc }); }); }
 const carSprites = [];
 function prerenderCars() {
   // every model in every colour; a model's weight is shared between its colours, so supercars and lorries stay rare
