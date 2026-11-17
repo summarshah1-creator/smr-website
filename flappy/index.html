@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>Flappy Kabootar</title>
 <style>
@@ -200,8 +201,8 @@ html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:m
 </div></div>
   <div id="tap" class="hide">TAP TO FLAP</div>
 </div>
-<script src="landmarks.js?v=1117e"></script>
-<script src="vehicles.js?v=1117d"></script>
+<script src="landmarks.js?v=1117q"></script>
+<script src="vehicles.js?v=1117j"></script>
 <script src="namecheck.js"></script>
 <script>
 (() => {
@@ -229,10 +230,11 @@ function prerenderHouses() { Object.keys(HOUSES).forEach(k => { const Hh = HOUSE
 const carSprites = [];
 function prerenderCars() {
   // every model in every colour; a model's weight is shared between its colours, so supercars and lorries stay rare
-  VEHICLE_ORDER.forEach(k => { const V = VEHICLES[k]; V.colours.forEach(col => { const oc = document.createElement('canvas'); oc.width = (V.w + 6) * 2; oc.height = 112; const o = oc.getContext('2d'); o.scale(2, 2); V.d(o, 3, 52, col);
+  VEHICLE_ORDER.forEach(k => { const V = VEHICLES[k]; V.colours.forEach(col => { const oc = document.createElement('canvas'); oc.width = (V.w + 6) * 2; oc.height = 180; const o = oc.getContext('2d'); o.scale(2, 2); V.d(o, 3, 86, col);
     const d = o.getImageData(0, 0, oc.width, oc.height).data; let top = oc.height; for (let y = 0; y < oc.height && top === oc.height; y++) for (let x = 0; x < oc.width; x++) if (d[(y * oc.width + x) * 4 + 3] > 40) { top = y; break; }
-    carSprites.push({ k, w: V.w, c: oc, flip: null, gy: 104, ht: (104 - top) / 2, wt: V.weight / V.colours.length, sp: V.speed }); }); });
-  carSprites.forEach(s => { const f = document.createElement('canvas'); f.width = s.c.width; f.height = s.c.height; const o = f.getContext('2d'); o.translate(f.width, 0); o.scale(-1, 1); o.drawImage(s.c, 0, 0); s.flip = f; });
+    carSprites.push({ k, w: V.w, c: oc, flip: null, gy: 172, ht: (172 - top) / 2, wt: V.weight / V.colours.length, sp: V.speed }); }); });
+  carSprites.forEach(s => { const f = document.createElement('canvas'); f.width = s.c.width; f.height = s.c.height; const o = f.getContext('2d'); o.translate(f.width, 0); o.scale(-1, 1); o.drawImage(s.c, 0, 0); o.setTransform(1, 0, 0, 1, 0, 0);
+    if (VEHICLES[s.k].fixMirror) { o.scale(2, 2); VEHICLES[s.k].fixMirror(o, 3, 86, f.width / 2); } s.flip = f; });
 }
 
 /* ---------- the kabootar (pigeon) ---------- */
@@ -298,10 +300,10 @@ function reset() {
   pipes = []; nextPipe = W + 40; score = 0; speed = 72; seen = [];
   lmQueue = []; lmX = 20; lmIdx = 0; prevHouses = 0; const at = location.hash.match(/^#at-(\w+)/); playlist = buildPlaylist(at ? at[1] : null); if (at) lmX = W * .6;
   while (lmX < W + 600) pushLandmark();
-  cars = []; for (let i = 0; i < 3; i++) spawnCar(Math.random() * W);
+  cars = []; vanT = 0; vanNext = 12; plane = null; for (let i = 0; i < 3; i++) spawnCar(Math.random() * W);
   clouds = []; for (let i = 0; i < 6; i++) clouds.push({ x: Math.random() * (W + 200), y: -OY + 20 + Math.random() * (90 + OY), s: .6 + Math.random() * .8 });
 }
-const ANIM_K = { wardown: 1, wardownbridge: 1, funfair: 1 }, CHAIN = ['wardownfield', 'wardown', 'wardownbridge', 'funfair'];
+const ANIM_K = { masjidali: 1, wardown: 1, wardownbridge: 1, funfair: 1 }, CHAIN = ['wardownfield', 'wardown', 'wardownbridge', 'funfair'];
 /* ---------- landmark playlist: shuffled every lap, with a few rules so it feels like a real town ----------
    - set pieces stay together: Frasers → Station → Hat Factory (train), Wardown field → lake → bridge → funfair, Welcome sign → Airport
    - never more than 2 big buildings in a row, never two retail-park sheds back to back
@@ -333,14 +335,16 @@ function pushLandmark() { const sp = nextSprite(), nx = peekSprite(); lmQueue.pu
   if (tight) return;
   // houses now and then: none 40%, one 40%, two 20% (never three gaps of nothing in a row, never houses twice in a row more than twice)
   let r = Math.random(), n = r < .4 ? 0 : r < .8 ? 1 : 2; if (prevHouses >= 2 && n) n = 0;
+  if (sp.k === 'oak' || nx.k === 'oak') n = 0;   // the Oak Stand house is bigger than the terraces, so never put houses next to it
   prevHouses = n ? prevHouses + 1 : 0;
   for (let i = 0; i < n; i++) { const h = houseSprites[Math.floor(Math.random() * houseSprites.length)]; lmQueue.push({ sp: h, x: lmX, passed: true, house: true }); lmX += h.w + 6 + Math.random() * 10; }
   if (n) lmX += 12; }
 let lastCarK = '';
+let vanT = 0, vanNext = 12, plane = null;
 function pickCar() { const tot = carSprites.reduce((a, s) => a + s.wt, 0); for (let tries = 0; tries < 4; tries++) { let r = Math.random() * tot, s = carSprites[0]; for (const c of carSprites) { r -= c.wt; if (r <= 0) { s = c; break; } } if (s.k !== lastCarK || tries === 3) { lastCarK = s.k; return s; } } }
-function spawnCar(x) { const sp = pickCar(), far = ROAD + 14 - GY - 1, dir = sp.ht > far ? -1 : Math.random() < .5 ? 1 : -1, lane = dir > 0 ? 0 : 1, sx = x != null ? x : (dir > 0 ? -110 : W + 20);
+function spawnCar(x, key) { const sp = key ? carSprites.find(s => s.k === key) : pickCar(), far = ROAD + 14 - GY - 1, dir = sp.ht > far ? -1 : Math.random() < .5 ? 1 : -1, lane = dir > 0 ? 0 : 1, sx = x != null ? x : (dir > 0 ? -110 : W + 20);
   if (cars.some(c => c.lane === lane && sx < c.x + c.sp.w + 14 && c.x < sx + sp.w + 14)) return;
-  cars.push({ sp, x: sx, dir, v: sp.sp[0] + Math.random() * (sp.sp[1] - sp.sp[0]), lane }); }
+  cars.push({ sp, x: sx, dir, v: sp.sp[0] + Math.random() * (sp.sp[1] - sp.sp[0]), lane }); return true; }
 
 function flap() {
   if (state === 'menu' || state === 'over') return;
@@ -438,6 +442,17 @@ const LB = (() => { const api = 'api.php'; let online = null, data = { today: []
   $('lbM').addEventListener('pointerdown', e => { e.stopPropagation(); if (e.target === $('lbM')) $('lbM').classList.add('hide'); });
   load(); return { check, load, get online() { return online; } }; })(); window.LB = LB;
 
+
+/* ---------- always the latest version, also when saved to the Home Screen ----------
+   version.json is rewritten on every deploy; when it changes the page reloads itself (straight away on the menu,
+   or right after the current game ends), with a cache-busting query so the phone fetches the new HTML. */
+(() => { const BUILD = '20261117151044'; let pending = false;
+  const go = () => { let last = 0; try { last = +sessionStorage.getItem('fk_upd_t') || 0; } catch (e) {} if (Date.now() - last < 60000) return;   // never loop: at most one reload a minute
+    try { sessionStorage.setItem('fk_upd_t', String(Date.now())); } catch (e) {} location.replace(location.pathname + '?u=' + Date.now() + location.hash); };
+  const check = () => fetch('version.json?ts=' + Date.now(), { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(j => {
+    if (!j || !j.v || j.v === BUILD || BUILD.startsWith('__')) return; pending = true; if (typeof state === 'undefined' || state !== 'play') go(); }).catch(() => {});
+  setInterval(() => { if (pending && state !== 'play') go(); }, 1500);
+  setInterval(check, 60000); document.addEventListener('visibilitychange', () => { if (!document.hidden) check(); }); window.addEventListener('pageshow', check); window.addEventListener('focus', check); check(); })();
 /* ---------- score card picture ---------- */
 (() => { let blob = null;
   const make = () => { const c = document.createElement('canvas'); c.width = 1080; c.height = 1350; const x = c.getContext('2d'); x.imageSmoothingEnabled = false;
@@ -505,6 +520,8 @@ function update(dt) {
     c.cv = ahead && gap < 26 ? Math.min(c.v, ahead.cv != null ? ahead.cv : ahead.v) * (gap < 10 ? .85 : 1) : c.v; });
   cars.forEach(c => c.x += (c.dir * c.cv + (moving ? -v * .9 : 0)) * dt);
   cars = cars.filter(c => c.x > -220 && c.x < W + 220); if (cars.length < 4 && Math.random() < dt * .8) spawnCar();
+  // Mr Rushed ice cream van: its own timer, roughly every 30 seconds (first one a bit sooner)
+  vanT += dt; if (vanT >= vanNext && !cars.some(c => c.sp.k === 'mrrushed') && spawnCar(null, 'mrrushed')) { vanT = 0; vanNext = 26 + Math.random() * 8; }
   if (placeTimer > 0) { placeTimer -= dt; if (placeTimer <= 0) $('place').classList.remove('on'); }
   if (flashT > 0) flashT -= dt;
 
@@ -552,13 +569,18 @@ function draw() {
     // is right over the station as the station passes the pigeon, then slips behind the next building
     const k = 504 / (0.4 * W + 270), off = (pv.sp.w - 224) + k * (0.7 * W - st.x);
     if (off > 0 && off < x1 - x0) { const tx = x0 + 6 + off; if (tx < W && tx + 218 > 0 && Math.max(tx, pv.x + pv.sp.w) < Math.min(tx + 218, nx.x)) AMB.train = 1; ctx.save(); ctx.beginPath(); ctx.rect(x0, GY - 150, x1 - x0, 70); ctx.clip(); LM_ANIM.train(ctx, Math.round(x0 + 6 + off), GY); ctx.restore(); } }
-  let planeLate = null;
+  // plane: rises from behind the airport (small and low, half hidden by the roof), keeps climbing as the airport scrolls away, leaves off the top
+  const PL = plane ? (() => { const d = t - plane.t0, sc = .5 + Math.min(.7, d * .14);
+    return { x: Math.round(plane.x + d * 6), y: Math.round(GY - 126 - d * 7 - d * d * 5), a: -0.12 - Math.min(.32, d * .07), sc }; })() : null;
+  const drawPlane = P => { ctx.save(); ctx.translate(P.x, P.y); ctx.scale(P.sc, P.sc); LM_ANIM.plane(ctx, 0, 0, P.a); ctx.restore(); };
+  let planeDrawn = false;
+  if (PL && (PL.y < -OY - 60 || PL.x > W + 80)) plane = null; else if (PL && PL.x > 0 && PL.x < W) AMB.plane = 1;
   lmQueue.forEach(l => { if (l.x > W + 260 || l.x + l.sp.w < -260) return;
-    if (l.sp.k === 'airport') { const p = Math.max(0, (W * .9 - l.x) / (l.sp.w + W * .4)); const px = Math.round(l.x + 120 + p * 340), py = Math.round(GY - 70 - p * p * 260);
-      if (p > 0 && py > -OY - 40 && px < W + 60) { const a = Math.max(-0.5, -0.12 - p * .3); if (p < .22) LM_ANIM.plane(ctx, px, py, a); else planeLate = [px, py, a]; if (px > 0 && px < W) AMB.plane = 1; } }
+    if (l.sp.k === 'airport') { if (!l.planeGone && !plane && l.x + 300 < W * .6) { plane = { t0: t, x: l.x + 300 }; l.planeGone = 1; }
+      if (PL && plane && PL.y > GY - 166) { drawPlane(PL); planeDrawn = true; } }   // still below the roofline: draw it first so the terminal hides its lower half
     if (l.sp.k === 'funfair' && l.x < W * .9 && l.x + l.sp.w > W * .1) AMB.fair = 1;
     ctx.drawImage(l.sp.c, Math.round(l.x - M), GY - LH + 6); if (ANIM_K[l.sp.k]) LM_ANIM[l.sp.k](ctx, Math.round(l.x), GY, t); });
-  if (planeLate) LM_ANIM.plane(ctx, planeLate[0], planeLate[1], planeLate[2]);
+  if (PL && plane && !planeDrawn) drawPlane(PL);
   // pavement + road
   ctx.fillStyle = '#c9c4b8'; ctx.fillRect(0, GY, W, ROAD - GY); ctx.fillStyle = '#b3ad9f'; const po = Math.floor((t * speed * .45) % 12); for (let x = -po; x < W; x += 12) ctx.fillRect(Math.round(x), GY, 1, ROAD - GY); ctx.fillRect(0, GY + 6, W, 1);
   ctx.fillStyle = '#8f8a7e'; ctx.fillRect(0, ROAD - 2, W, 2);

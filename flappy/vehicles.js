@@ -15,6 +15,10 @@ const arch = (c, x, G, r) => { c.beginPath(); c.arc(x, G - r + .5, r + 1.5, Math
 const glass = (c, pts, tint = '#26303a') => { fill(c, tint, pts); c.save(); path(c, pts); c.clip(); c.fillStyle = 'rgba(255,255,255,.2)'; const [x0, y0] = pts[0]; c.beginPath(); c.moveTo(x0 + 7, y0 - 20); c.lineTo(x0 + 12, y0 - 20); c.lineTo(x0 + 3, y0 + 10); c.lineTo(x0 - 2, y0 + 10); c.fill(); c.restore(); };
 const shine = (c, x, y, w) => R(c, 'rgba(255,255,255,.28)', x, y, w, 1);
 const person = (c, x, y, top, skin = '#c58c5c', helmet) => { R(c, top, x - 1.5, y, 3, 5); disc(c, helmet || skin, x, y - 1.5, helmet ? 2.2 : 1.6); };
+const RS = (c, cx, cy, px) => { c.font = `700 ${px}px Silk`; c.textAlign = 'center'; c.textBaseline = 'middle'; const w = c.measureText('MR RUSHED').width;
+  c.lineWidth = px * .28; c.strokeStyle = '#ffffff'; c.lineJoin = 'round'; c.strokeText('MR RUSHED', cx, cy);
+  const g = c.createLinearGradient(cx - w / 2, 0, cx + w / 2, 0); g.addColorStop(0, '#2f7fe6'); g.addColorStop(.55, '#5a8ff0'); g.addColorStop(1, '#ff4f9a');
+  c.save(); c.globalAlpha = .88; c.fillStyle = g; c.fillText('MR RUSHED', cx, cy); c.restore(); };
 const V = {};
 const COMMON = [['Black', '#1e2024'], ['White', '#eceef2'], ['Silver', '#b9bec6'], ['Grey', '#6e737b'], ['Blue', '#2c4f8f'], ['Red', '#b8252a']];
 
@@ -234,6 +238,8 @@ V.bus = { n: 'Luton bus', w: 112, h: 44, weight: 1.6, speed: [20, 32], colours: 
   R(c, '#111316', x + 100, G - 41, 9, 3.4); R(c, '#ff8a1e', x + 101, G - 40.2, 5, 1.6); R(c, '#ff8a1e', x + 107, G - 40.4, 1.4, 2);
   fill(c, '#f4f6f8', [[x + 74, G - 22], [x + 82, G - 22], [x + 88, G - 8], [x + 82, G - 8]], false);
   R(c, '#e3a321', x + 2, G - 10, 109, .9); R(c, D, x + 1.5, G - 9, 109, 3);
+  disc(c, '#ffffff', x + 37, G - 16.5, 2.4); disc(c, B, x + 37, G - 16.5, 1.5); R(c, '#ffffff', x + 36.4, G - 17.6, 1.2, 2.2);
+  c.font = '700 6px Silk'; c.textAlign = 'left'; c.textBaseline = 'middle'; c.fillStyle = '#ffffff'; c.fillText('arriva', x + 41, G - 16.3);   // Arriva name on the side
   R(c, '#2a2c31', x + 108, G - 12, 3, 4); R(c, '#f4f6f8', x + 107, G - 17, 3, 2); R(c, '#d42a2a', x + 1, G - 20, 1.6, 6); shine(c, x + 4, G - 42, 100);
   wheel(c, x + 20, G, 6.5, '#b9bec6', null, 8); wheel(c, x + 88, G, 6.5, '#b9bec6', null, 8);
 } };
@@ -253,5 +259,42 @@ V.coach = { n: 'Intercity coach', w: 120, h: 50, weight: 1.1, speed: [26, 40], c
   wheel(c, x + 24, G, 7, '#c9ced4', null, 8); wheel(c, x + 92, G, 7, '#c9ced4', null, 8);
 } };
 
-window.VEHICLES = V; window.VEHICLE_ORDER = ['phantom', 'c63', 'gwagon', 'golf', 'a45', 'rs3', 'p911', 'f40', 'lambo', 'taxi', 'pickup', 'van', 'smallvan', 'binlorry', 'lorry', 'bus', 'coach', 'motorbike', 'bike'];
+/* Mr Rushed ice cream van (Luton business): Sprinter van, pink waffle-cone lattice, blue drip top, roof sign with cones */
+V.mrrushed = { n: 'Mr Rushed ice cream van', w: 98, h: 60, weight: 0, speed: [16, 26], colours: [['Pink', '#ee3d6c']],
+  d(c, x, G, [, B]) { const BL = '#2f9be6', BD = '#1f7cc4', D = SH(B, .8);
+  arch(c, x + 20, G, 7); arch(c, x + 78, G, 7);
+  const body = [[x + 1, G - 8], [x + 1, G - 44], [x + 3, G - 47], [x + 68, G - 47], [x + 70, G - 42], [x + 80, G - 41], [x + 92, G - 27], [x + 96, G - 24], [x + 97, G - 14], [x + 97, G - 8]];
+  fill(c, B, body);
+  c.save(); path(c, body); c.clip(); c.strokeStyle = 'rgba(255,255,255,.75)'; c.lineWidth = .7;
+  for (let i = -60; i < 110; i += 6) { c.beginPath(); c.moveTo(x + i, G); c.lineTo(x + i + 50, G - 50); c.stroke(); c.beginPath(); c.moveTo(x + i, G - 50); c.lineTo(x + i + 50, G); c.stroke(); }
+  // blue drip top
+  c.fillStyle = BL; c.fillRect(x, G - 48, 72, 10); for (let i = 0; i < 9; i++) { const dx = x + 3 + i * 8, h = [5, 8, 4, 9, 6, 7, 4, 8, 5][i]; c.fillRect(dx, G - 39, 4, h); c.beginPath(); c.arc(dx + 2, G - 39 + h, 2, 0, 7); c.fill(); }
+  c.fillRect(x + 68, G - 44, 14, 5); c.restore();
+  R(c, 'rgba(255,255,255,.35)', x + 4, G - 46, 64, 1);
+  // cab glass + bonnet
+  glass(c, [[x + 70, G - 26], [x + 70, G - 39], [x + 79, G - 39], [x + 90, G - 27], [x + 90, G - 26]], '#26303a'); R(c, D, x + 74, G - 39, 1, 13);
+  R(c, '#1e2024', x + 87, G - 33, 3, 4);                                                        // mirror
+  // serving window: same blue drip / pink pattern, just a shade darker with an outline, centred on the side
+  c.fillStyle = 'rgba(20,20,60,.18)'; c.fillRect(x + 24, G - 38, 26, 18); c.strokeStyle = OUT; c.lineWidth = 1; c.strokeRect(x + 24, G - 38, 26, 18); R(c, 'rgba(255,255,255,.55)', x + 24, G - 20, 26, 1.2);
+  // roof sign box with MR RUSHED, one big cone at the front
+  fill(c, BL, [[x + 9, G - 47], [x + 9, G - 61], [x + 61, G - 61], [x + 61, G - 47]]); R(c, BD, x + 9, G - 49, 52, 2); R(c, 'rgba(255,255,255,.35)', x + 10, G - 60, 50, .8);
+  fill(c, '#ffffff', [[x + 12, G - 49.6], [x + 12, G - 59], [x + 58, G - 59], [x + 58, G - 49.6]]); fill(c, '#f2559a', [[x + 13.2, G - 50.6], [x + 13.2, G - 58], [x + 56.8, G - 58], [x + 56.8, G - 50.6]], false);
+  RS(c, x + 35, G - 54.2, 6);
+  { const cx = x + 70; fill(c, '#d9a35a', [[cx - 4.5, G - 54], [cx + 4.5, G - 54], [cx, G - 43]]); c.strokeStyle = '#b07a3a'; c.lineWidth = .6; for (const o of [-2, 1]) { c.beginPath(); c.moveTo(cx + o - 1.5, G - 52); c.lineTo(cx + o + 2, G - 47); c.stroke(); }
+    disc(c, OUT, cx, G - 56.5, 5.4); disc(c, '#fff4e8', cx, G - 56.5, 4.8); disc(c, '#f7a8c4', cx + 1.2, G - 58, 2.6); disc(c, '#ffffff', cx - 2, G - 58.5, 1); }
+  R(c, D, x + 1.5, G - 11, 95, 3); R(c, '#2a2c31', x + 92, G - 13, 5, 5); R(c, '#f4f6f8', x + 93, G - 20, 3.5, 2.5); R(c, '#d42a2a', x + 1, G - 22, 1.6, 6);
+  wheel(c, x + 20, G, 6.5, '#c9ced4', null, 8); wheel(c, x + 78, G, 6.5, '#c9ced4', null, 8);
+} };
+
+{ const f = 1.3, d0 = V.mrrushed.d; V.mrrushed.w = Math.round(98 * f); V.mrrushed.h = Math.round(60 * f);   // bigger and more prominent than ordinary vans
+  V.mrrushed.d = (c, x, G, col) => { c.save(); c.translate(x, G); c.scale(f, f); d0(c, 0, 0, col); c.restore(); };
+  // when the sprite is mirrored for the near lane, repaint the roof sign so MR RUSHED still reads the right way round
+  V.mrrushed.fixMirror = (c, x0, G, Wc) => { const X = u => Wc - x0 - u * f, Y = u => G + u * f;
+    c.fillStyle = '#f2559a'; c.fillRect(X(56.8), Y(-58), (56.8 - 13.2) * f, 7.4 * f); RS(c, X(35), Y(-54.2), 6 * f); }; }
+// the bus drives mirrored in the near lane: repaint its Arriva name so it still reads left to right
+V.bus.fixMirror = (c, x0, G, Wc) => { const X = u => Wc - x0 - u, B = V.bus.colours[0][1];
+  c.fillStyle = B; c.fillRect(X(70), G - 20, 36, 7.5);
+  disc(c, '#ffffff', X(63), G - 16.5, 2.4); disc(c, B, X(63), G - 16.5, 1.5); R(c, '#ffffff', X(63) - .6, G - 17.6, 1.2, 2.2);
+  c.font = '700 6px Silk'; c.textAlign = 'left'; c.textBaseline = 'middle'; c.fillStyle = '#ffffff'; c.fillText('arriva', X(63) + 4, G - 16.3); };
+window.VEHICLES = V; window.VEHICLE_ORDER = ['phantom', 'c63', 'gwagon', 'golf', 'a45', 'rs3', 'p911', 'f40', 'lambo', 'taxi', 'pickup', 'van', 'smallvan', 'binlorry', 'lorry', 'bus', 'coach', 'mrrushed', 'motorbike', 'bike'];
 })();
