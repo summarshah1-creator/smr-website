@@ -13,6 +13,12 @@ function fk_db(): PDO {
         $pdo->exec('CREATE INDEX IF NOT EXISTS fk_scores_day ON fk_scores(day, score)');
         $pdo->exec('CREATE INDEX IF NOT EXISTS fk_scores_all ON fk_scores(score)');
         $pdo->exec("CREATE TABLE IF NOT EXISTS fk_recs (id INTEGER PRIMARY KEY, name TEXT NOT NULL, address TEXT DEFAULT '', note TEXT DEFAULT '', at INTEGER NOT NULL, ip TEXT DEFAULT '', done INTEGER DEFAULT 0)");
+        $pdo->exec("CREATE TABLE IF NOT EXISTS fk_meta (k TEXT PRIMARY KEY, v TEXT)");
+        // one-off leaderboard entries added by the owner (applied once, then never again)
+        foreach ([['seed-summar-68', 'SUMMAR', 68]] as [$key, $name, $score]) {
+            $st = $pdo->prepare('SELECT 1 FROM fk_meta WHERE k = ?'); $st->execute([$key]);
+            if (!$st->fetchColumn()) { $pdo->prepare('INSERT INTO fk_scores (name, score, day, at, ip) VALUES (?, ?, ?, ?, ?)')->execute([$name, $score, date('Y-m-d'), time(), 'owner']); $pdo->prepare('INSERT INTO fk_meta (k, v) VALUES (?, ?)')->execute([$key, (string) time()]); }
+        }
         $ok = true;
     }
     return $pdo;

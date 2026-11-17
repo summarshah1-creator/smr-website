@@ -37,17 +37,19 @@ L.galaxy = { n: 'The Galaxy', w: 200, d(c, x, G) {
   TREE(c, x + 186, G, 1.2);
 } };
 
-L.chaiiwala = { n: 'Chaiiwala and Nando\'s', w: 400, d(c, x, G) {
+L.chaiiwala = { n: 'Chaiiwala and Nando\'s', w: 350, d(c, x, G) {
   // shared sweeping roof over both units
-  P(c, '#3a3d44', [[x - 8, G - 112], [x + 408, G - 112], [x + 400, G - 124], [x + 4, G - 124]], true); R(c, '#c9ced4', x - 8, G - 112, 416, 2); for (let i = 0; i < 3; i++) R(c, '#2e3138', x + 6 + i * 2, G - 121 + i * 3, 392 - i * 4, 1);
-  // Chaiiwala unit (left)
-  BOX(c, '#b9c0c8', x, G - 110, 180, 110);
-  BOX(c, '#1d2735', x + 6, G - 102, 168, 50);
-  BOX(c, '#26303d', x + 6, G - 46, 168, 46); for (let i = 0; i < 7; i++) { R(c, '#3a4656', x + 10 + i * 23, G - 44, 1, 44); CIRC(c, '#f5c46b', x + 18 + i * 23, G - 38, 1); }
-  BOX(c, '#1d2735', x + 12, G - 94, 30, 34); CIRC(c, '#ffffff', x + 27, G - 77, 10); CIRC(c, '#1d2735', x + 27, G - 77, 8); R(c, '#ffffff', x + 23, G - 80, 8, 7); R(c, '#ffffff', x + 26, G - 84, 2, 3);
-  TS(c, 'chaiiwala', x + 110, G - 84, 16, '#ffffff', '#0e141c');
-  P(c, '#d7dce1', [[x + 4, G - 50], [x + 176, G - 50], [x + 170, G - 44], [x + 10, G - 44]], true);
+  P(c, '#3a3d44', [[x - 8, G - 112], [x + 358, G - 112], [x + 350, G - 124], [x + 4, G - 124]], true); R(c, '#c9ced4', x - 8, G - 112, 366, 2); for (let i = 0; i < 3; i++) R(c, '#2e3138', x + 6 + i * 2, G - 121 + i * 3, 342 - i * 4, 1);
+  // Chaiiwala unit (left, narrower; sign lined up with the Nando's sign)
+  BOX(c, '#b9c0c8', x, G - 110, 130, 110);
+  BOX(c, '#1d2735', x + 5, G - 106, 120, 34); R(c, '#2a3648', x + 5, G - 106, 120, 2);
+  CIRC(c, '#ffffff', x + 20, G - 89, 8); CIRC(c, '#1d2735', x + 20, G - 89, 6); R(c, '#ffffff', x + 17, G - 91, 6, 5); R(c, '#ffffff', x + 19, G - 94, 2, 2);
+  TS(c, 'chaiiwala', x + 74, G - 95, 12, '#ffffff', '#0e141c');
+  P(c, '#d7dce1', [[x + 3, G - 72], [x + 127, G - 72], [x + 122, G - 66], [x + 8, G - 66]], true);
+  BOX(c, '#26303d', x + 5, G - 66, 120, 66); for (let i = 0; i < 5; i++) { R(c, '#3a4656', x + 9 + i * 23, G - 64, 1, 64); CIRC(c, '#f5c46b', x + 17 + i * 23, G - 58, 1); }
+  BOX(c, '#3a4656', x + 50, G - 40, 26, 40); R(c, '#9fc1d8', x + 53, G - 37, 20, 37);
   // Nando's unit (right, a little longer)
+  c.save(); c.translate(-50, 0);
   BOX(c, '#3a3d44', x + 180, G - 110, 220, 110); R(c, '#4a4e56', x + 180, G - 110, 220, 2);
   for (let i = 0; i < 18; i++) R(c, ['#8a6a4a', '#a58258', '#6e5236', '#9a7650'][i % 4], x + 184 + i * 6, G - 106, 5, 34);
   T(c, "Nando's", x + 238, G - 98, 16, '#7a1418'); T(c, "Nando's", x + 237, G - 99, 16, '#e0262a');
@@ -56,6 +58,7 @@ L.chaiiwala = { n: 'Chaiiwala and Nando\'s', w: 400, d(c, x, G) {
   BOX(c, '#2a2c30', x + 292, G - 110, 46, 110); for (let j = 0; j < 4; j++) R(c, '#34373c', x + 292, G - 82 + j * 22, 46, 1);
   CIRC(c, '#e0262a', x + 315, G - 88, 15); CIRC(c, '#2a2c30', x + 315, G - 88, 13); R(c, '#e0262a', x + 313, G - 98, 4, 6); CIRC(c, '#e0262a', x + 315, G - 86, 4); R(c, '#e0262a', x + 313, G - 82, 4, 8); R(c, '#e0262a', x + 310, G - 76, 10, 2);
   BOX(c, '#9aa0a8', x + 338, G - 110, 62, 110); for (let i = 0; i < 4; i++) R(c, '#868c94', x + 338 + i * 16, G - 110, 1, 110); for (let j = 0; j < 5; j++) R(c, '#868c94', x + 338, G - 90 + j * 20, 62, 1); R(c, '#d6d9de', x + 380, G - 104, 2, 104);
+  c.restore();
 } };
 
 L.periperi = { n: 'Peri-Peri Original', w: 180, d(c, x, G) {
@@ -727,7 +730,7 @@ const EX = {
   frasers(c, x, G) { BOX(c, '#2bb3c8', x + 6, G - 16, 26, 14); R(c, '#ffffff', x + 9, G - 13, 20, 3); CIRC(c, OUT, x + 12, G - 2, 2); CIRC(c, OUT, x + 26, G - 2, 2); FLOWERS(c, x + 92, G, 22); TREE(c, x + 160, G, .9); PERSON(c, x + 40, G, '#d84b6a'); PERSON(c, x + 100, G - 6, '#3a6ea5'); PERSON(c, x + 130, G, '#f2c14e'); },
   hatfactory(c, x, G) { LAMP(c, x + 164, G, 120); for (let i = 0; i < 9; i++) P(c, i % 2 ? '#4f8a3c' : '#6faa4e', [[x + 120, G - 2], [x + 112 + i * 3, G - 22 - (i % 3) * 4], [x + 124, G - 2]]); BOX(c, '#4a2f25', x + 104, G - 4, 34, 4);
     for (let i = 0; i < 4; i++) { BOX(c, '#e8641c', x - 30 + i * 10, G - 10, 9, 8); R(c, '#ffffff', x - 30 + i * 10, G - 7, 9, 2); } BOX(c, '#d8262f', x + 86, G - 22, 8, 8); R(c, '#2f6fb5', x + 88, G - 14, 3, 14); R(c, '#f2c14e', x + 82, G - 14, 16, 2); PERSON(c, x + 66, G, '#3a3d44'); PERSON(c, x + 150, G, '#e0558c'); BIN(c, x + 40, G); },
-  chaiiwala(c, x, G) { for (const bx of [x + 230, x + 256, x + 282]) BOLL(c, bx, G); CAR(c, x + 150, G, '#3a3d44'); PERSON(c, x + 60, G, '#2f4a8a'); R(c, '#c96a4a', x + 180, G - 3, 220, 3); },
+  chaiiwala(c, x, G) { for (const bx of [x + 180, x + 206, x + 232]) BOLL(c, bx, G); R(c, '#c96a4a', x + 130, G - 3, 220, 3); },
   nadeem(c, x, G) { R(c, '#c25a3c', x - 6, G - 3, 162, 3); for (let i = 0; i < 20; i++) R(c, '#a84a30', x - 4 + i * 8, G - 3, 1, 3);
     R(c, '#3a3d44', x + 6, G - 110, 2, 110); R(c, '#3a3d44', x - 2, G - 110, 18, 2); R(c, '#f7e7a1', x - 2, G - 108, 4, 2); R(c, '#f7e7a1', x + 12, G - 108, 4, 2);
     for (const bx of [x + 2, x + 132, x + 142]) BOX(c, '#1a1a1e', bx, G - 12, 3, 12);
@@ -752,14 +755,6 @@ Object.keys(EX).forEach(k => { const d0 = L[k].d; L[k].d = (c, x, G) => { d0(c, 
 
 /* ---------- wider buildings: extra sections either side ---------- */
 const WIDEN = {
-  grandbazar: { w: 436, dx: 0, post(c, x, G) {
-    const NV = '#2a3f6e', LM = '#9ccc2a', X = x + 298;
-    BOX(c, '#c9ced6', X, G - 96, 140, 96); for (let i = 0; i < 6; i++) R(c, '#b9bec6', X, G - 90 + i * 14, 140, 1);
-    BOX(c, NV, X, G - 92, 136, 18); R(c, '#34508a', X, G - 92, 136, 2); T(c, 'FRESH . AFFORDABLE', X + 66, G - 87, 8, '#ffffff', 'center', false);
-    GLASS(c, X, G - 72, 136, 72, '#5d7d98', 7, 2); const pics = ['#7fae4e', '#d84b3c', '#f2c14e', '#c8402e', '#4f8a3c'];
-    for (let i = 0; i < 5; i++) { const px = X + 4 + i * 24; BOX(c, pics[i], px, G - 62, 20, 50); CIRC(c, pics[(i + 2) % 5], px + 10, G - 44, 6); CIRC(c, pics[(i + 4) % 5], px + 7, G - 26, 5); }
-    BOX(c, LM, X + 124, G - 66, 12, 54); BOX(c, '#c9ced6', X + 136, G - 80, 4, 80);
-  } },
   sixthform: { w: 330, dx: 110, pre(c, x, G) {
     BRICK(c, x, G - 70, 112, 70, '#d9a84e', '#c9973f'); R(c, OUT, x - 1, G - 71, 114, 1); R(c, OUT, x - 1, G - 70, 1, 70); R(c, '#3d3d42', x, G - 6, 112, 6);
     for (let i = 0; i < 3; i++) WIN(c, x + 10 + i * 34, G - 52, 18, 28, '#3d3d42', '#5aa6a4');
