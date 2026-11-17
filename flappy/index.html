@@ -122,14 +122,13 @@ html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:m
       <div class="lt2"><span>K</span><span>A</span><span>B</span><span>O</span><span>O</span><span>T</span><span>A</span><span>R</span></div>
       <div class="lt3">FLYING THROUGH LUTON</div>
     </div>
-    <p>Fly your kabootar across Luton. Dodge the pipes and spot the places you know.</p>
     <div class="hs"><small>YOUR HIGH SCORE</small><b id="bestS">0</b></div>
     <div class="prow"><div class="btn" id="go">&#9654; PLAY</div><button class="lbB" type="button" id="top1">&#127942; LEADERBOARD</button></div>
     <p style="margin-bottom:0;font-size:10px;color:#6a5a3a">Tap, click or press space to flap</p>
     <button class="shr" type="button" data-share="home">&#128279; SHARE THE GAME</button>
     <button id="hsBtn" type="button"><img src="icon-192.png" alt="">SAVE TO YOUR HOME SCREEN</button>
     <button class="rec" type="button">&#128205; Recommend a Luton place to feature</button>
-    <a class="pw" href="https://smrgraphics.co.uk" target="_blank" rel="noopener"><span>Powered by</span><img src="smr.png" alt="SMR Digital"><i>&#8599;</i></a>
+    <a class="pw" href="https://smrgraphics.co.uk" target="_blank" rel="noopener"><span>Designed &amp; built by</span><img src="smr.png" alt="SMR Digital"><i>&#8599;</i></a>
   </div>
   <div id="over" class="panel hide">
     <h1>GAME<span>OVER</span></h1>
@@ -174,8 +173,9 @@ html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:m
 </div></div>
   <div id="tap" class="hide">TAP TO FLAP</div>
 </div>
-<script src="landmarks.js?v=20261117b"></script>
-<script src="cars.js?v=20261117b"></script>
+<script src="landmarks.js?v=20261117c"></script>
+<script src="vehicles.js?v=20261117c"></script>
+<script src="namecheck.js?v=20261117c"></script>
 <script>
 (() => {
 const H = 300, GY = 250, ROAD = 262;            // world: 300 units tall, pavement top at 250
@@ -198,7 +198,9 @@ const houseSprites = [];
 function prerenderHouses() { Object.keys(HOUSES).forEach(k => { const Hh = HOUSES[k]; const oc = document.createElement('canvas'); oc.width = Hh.w + M * 2; oc.height = LH; const o = oc.getContext('2d'); Hh.d(o, M, LH - 6); houseSprites.push({ k, n: '', w: Hh.w, c: oc }); }); }
 const carSprites = [];
 function prerenderCars() {
-  CAR_ORDER.forEach(k => { const C = CARS[k]; const oc = document.createElement('canvas'); oc.width = C.w + 8; oc.height = 70; const o = oc.getContext('2d'); C.d(o, 4, 66); carSprites.push({ w: C.w, c: oc, flip: null }); });
+  // every model in every colour; a model's weight is shared between its colours, so supercars and lorries stay rare
+  VEHICLE_ORDER.forEach(k => { const V = VEHICLES[k]; V.colours.forEach(col => { const oc = document.createElement('canvas'); oc.width = (V.w + 6) * 2; oc.height = 112; const o = oc.getContext('2d'); o.scale(2, 2); V.d(o, 3, 52, col);
+    carSprites.push({ k, w: V.w, c: oc, flip: null, gy: 104, wt: V.weight / V.colours.length, sp: V.speed }); }); });
   carSprites.forEach(s => { const f = document.createElement('canvas'); f.width = s.c.width; f.height = s.c.height; const o = f.getContext('2d'); o.translate(f.width, 0); o.scale(-1, 1); o.drawImage(s.c, 0, 0); s.flip = f; });
 }
 
@@ -248,7 +250,15 @@ function drawPigeon(x, y, rot, frame) {
 }
 
 /* ---------- world ---------- */
-let state = 'menu', t = 0, best = store.get('fk_best', 0), score = 0, speed = 72;
+/* best score: kept in localStorage, a long-life cookie and IndexedDB, so clearing one doesn't lose it; the highest wins */
+const BEST = (() => { const ck = () => { const m = document.cookie.match(/(?:^|; )fk_best=(\d+)/); return m ? +m[1] : 0; };
+  const idb = (mode, val) => new Promise(res => { try { const r = indexedDB.open('flappy-kabootar', 1); r.onupgradeneeded = () => r.result.createObjectStore('kv'); r.onerror = () => res(0);
+    r.onsuccess = () => { try { const tx = r.result.transaction('kv', mode), st = tx.objectStore('kv'); if (mode === 'readwrite') { st.put(val, 'best'); tx.oncomplete = () => res(val); } else { const g = st.get('best'); g.onsuccess = () => res(+g.result || 0); g.onerror = () => res(0); } } catch (e) { res(0); } }; } catch (e) { res(0); } });
+  const save = v => { store.set('fk_best', v); try { document.cookie = 'fk_best=' + v + '; max-age=315360000; path=/; samesite=lax'; } catch (e) {} idb('readwrite', v); };
+  try { navigator.storage && navigator.storage.persist && navigator.storage.persist(); } catch (e) {}
+  return { now: () => Math.max(+store.get('fk_best', 0) || 0, ck()), save, later: () => idb('readonly') }; })();
+let state = 'menu', t = 0, best = BEST.now(), score = 0, speed = 72;
+BEST.later().then(v => { if (v > best) { best = v; $('bestS').textContent = best; } if (best > v) BEST.save(best); });
 let bird, pipes, lmX, lmIdx, lmQueue, cars, clouds, seen, nextPipe, flashT = 0, placeTimer = 0, dieT = 0;
 $('bestS').textContent = best;
 
@@ -266,7 +276,11 @@ function pushLandmark() { const sp = sprites[lmIdx % sprites.length], nx = sprit
   const chain = CHAIN.includes(sp.k) && CHAIN.indexOf(nx.k) === CHAIN.indexOf(sp.k) + 1, tight = chain || sp.k === 'station' || nx.k === 'station'; lmX += sp.w + (chain ? 0 : tight ? 10 : 18 + Math.random() * 16); lmIdx++;
   if (tight) return;
   const n = 1 + Math.floor(Math.random() * 2); for (let i = 0; i < n; i++) { const h = houseSprites[Math.floor(Math.random() * houseSprites.length)]; lmQueue.push({ sp: h, x: lmX, passed: true, house: true }); lmX += h.w + 6 + Math.random() * 10; } lmX += 12; }
-function spawnCar(x) { const i = Math.floor(Math.random() * carSprites.length), dir = Math.random() < .5 ? 1 : -1; cars.push({ sp: carSprites[i], x: x != null ? x : (dir > 0 ? -70 : W + 20), dir, v: 30 + Math.random() * 40, lane: dir > 0 ? 0 : 1 }); }
+let lastCarK = '';
+function pickCar() { const tot = carSprites.reduce((a, s) => a + s.wt, 0); for (let tries = 0; tries < 4; tries++) { let r = Math.random() * tot, s = carSprites[0]; for (const c of carSprites) { r -= c.wt; if (r <= 0) { s = c; break; } } if (s.k !== lastCarK || tries === 3) { lastCarK = s.k; return s; } } }
+function spawnCar(x) { const sp = pickCar(), dir = Math.random() < .5 ? 1 : -1, lane = dir > 0 ? 0 : 1, sx = x != null ? x : (dir > 0 ? -110 : W + 20);
+  if (cars.some(c => c.lane === lane && sx < c.x + c.sp.w + 14 && c.x < sx + sp.w + 14)) return;
+  cars.push({ sp, x: sx, dir, v: sp.sp[0] + Math.random() * (sp.sp[1] - sp.sp[0]), lane }); }
 
 function flap() {
   if (state === 'menu' || state === 'over') return;
@@ -284,7 +298,7 @@ function showPlace(n) { $('placeN').textContent = n; const p = $('place'); p.cla
 
 function die(why) {
   if (state !== 'play') return; deathWhy = why || ''; if (window.__fkLog) window.__fkLog.push({why, y: bird.y, vy: bird.vy, score, pipes: pipes.map(p => [Math.round(p.x), Math.round(p.top)])}); state = 'dead'; dieT = 0; flashT = .15; SFX.hit(); if (why === 'pipe') setTimeout(() => SFX.die(), 260);
-  if (score > best) { best = score; store.set('fk_best', best); }
+  if (score > best) { best = score; BEST.save(best); }
 }
 function goHome() { reset(); state = 'menu'; $('start').classList.remove('hide'); $('over').classList.add('hide'); $('score').classList.add('hide'); $('tap').classList.add('hide'); $('bestS').textContent = best; }
 $('homeB').addEventListener('click', e => { e.stopPropagation(); goHome(); });
@@ -298,12 +312,21 @@ function showOver() {
 
 
 /* ---------- sound effects (made in the browser, no files): flap, point, hit, fall, swoosh ---------- */
-const SFX = (() => { let ac = null, on = store.get('fk_sound', 1) !== 0;
+const SFX = (() => { let ac = null, on = store.get('fk_sound', 0) === 1, amb = null, ambKey = '';
   const ctxA = () => { if (!ac) { try { ac = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { ac = null; } } if (ac && ac.state === 'suspended') ac.resume(); return ac; };
   const tone = (f0, f1, dur, type = 'square', vol = .12, delay = 0) => { const a = on && ctxA(); if (!a) return; const t0 = a.currentTime + delay, o = a.createOscillator(), g = a.createGain(); o.type = type; o.frequency.setValueAtTime(f0, t0); o.frequency.exponentialRampToValueAtTime(Math.max(30, f1), t0 + dur); g.gain.setValueAtTime(vol, t0); g.gain.exponentialRampToValueAtTime(.0008, t0 + dur); o.connect(g).connect(a.destination); o.start(t0); o.stop(t0 + dur + .02); };
   const noise = (dur, f0, f1, vol = .18, delay = 0) => { const a = on && ctxA(); if (!a) return; const t0 = a.currentTime + delay, n = a.createBufferSource(), b = a.createBuffer(1, Math.ceil(a.sampleRate * dur), a.sampleRate), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; n.buffer = b; const fl = a.createBiquadFilter(); fl.type = 'bandpass'; fl.Q.value = 1.2; fl.frequency.setValueAtTime(f0, t0); fl.frequency.exponentialRampToValueAtTime(f1, t0 + dur); const g = a.createGain(); g.gain.setValueAtTime(vol, t0); g.gain.exponentialRampToValueAtTime(.001, t0 + dur); n.connect(fl).connect(g).connect(a.destination); n.start(t0); };
-  const api = { flap: () => noise(.11, 900, 2600, .22), point: () => { tone(988, 988, .09, 'square', .07); tone(1319, 1319, .22, 'square', .07, .08); }, hit: () => { noise(.12, 600, 150, .35); tone(180, 60, .14, 'triangle', .25); }, die: () => tone(720, 140, .45, 'square', .06), swoosh: () => noise(.28, 400, 3000, .1),
-    get on() { return on; }, toggle() { on = !on; store.set('fk_sound', on ? 1 : 0); if (on) { ctxA(); api.point(); } return on; } };
+  const stopAmb = () => { if (!amb) return; const a = ac, g = amb.g; try { g.gain.cancelScheduledValues(a.currentTime); g.gain.setTargetAtTime(0, a.currentTime, .25); } catch (e) {} const st = amb.stop; setTimeout(st, 1200); amb = null; ambKey = ''; };
+  const startAmb = k => { const a = on && ctxA(); if (!a) return; const g = a.createGain(); g.gain.value = 0; g.connect(a.destination); g.gain.setTargetAtTime(.05, a.currentTime, .4); const nodes = [], timers = [];
+    const nz = () => { const n = a.createBufferSource(), b = a.createBuffer(1, a.sampleRate * 2, a.sampleRate), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; n.buffer = b; n.loop = true; return n; };
+    if (k === 'train') { const n = nz(), f = a.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 260; const m = a.createGain(); m.gain.value = .6; const l = a.createOscillator(), lg = a.createGain(); l.frequency.value = 5.2; lg.gain.value = .4; l.connect(lg).connect(m.gain); n.connect(f).connect(m).connect(g); n.start(); l.start(); nodes.push(n, l);
+      timers.push(setTimeout(() => { if (ambKey === 'train') { const o = a.createOscillator(), o2 = a.createOscillator(), hg = a.createGain(); o.type = o2.type = 'sawtooth'; o.frequency.value = 330; o2.frequency.value = 415; hg.gain.setValueAtTime(0, a.currentTime); hg.gain.linearRampToValueAtTime(.35, a.currentTime + .05); hg.gain.setValueAtTime(.35, a.currentTime + .7); hg.gain.linearRampToValueAtTime(0, a.currentTime + .9); const hf = a.createBiquadFilter(); hf.type = 'lowpass'; hf.frequency.value = 1400; o.connect(hf); o2.connect(hf); hf.connect(hg).connect(g); o.start(); o2.start(); o.stop(a.currentTime + 1); o2.stop(a.currentTime + 1); } }, 1200)); }
+    if (k === 'plane') { const n = nz(), f = a.createBiquadFilter(); f.type = 'bandpass'; f.Q.value = .7; f.frequency.setValueAtTime(300, a.currentTime); f.frequency.linearRampToValueAtTime(1500, a.currentTime + 6); const m = a.createGain(); m.gain.value = 1.4; n.connect(f).connect(m).connect(g); n.start(); const o = a.createOscillator(), og = a.createGain(); o.type = 'sine'; o.frequency.setValueAtTime(420, a.currentTime); o.frequency.linearRampToValueAtTime(900, a.currentTime + 6); og.gain.value = .12; o.connect(og).connect(g); o.start(); nodes.push(n, o); }
+    if (k === 'fair') { const tune = [523, 659, 784, 659, 698, 880, 784, 0, 587, 698, 880, 698, 659, 784, 659, 0]; let i = 0; const play = () => { if (ambKey !== 'fair') return; const fq = tune[i++ % tune.length]; if (fq) { const o = a.createOscillator(), og = a.createGain(); o.type = 'triangle'; o.frequency.value = fq; og.gain.setValueAtTime(.5, a.currentTime); og.gain.exponentialRampToValueAtTime(.01, a.currentTime + .24); o.connect(og).connect(g); o.start(); o.stop(a.currentTime + .26); } timers.push(setTimeout(play, 230)); }; play(); }
+    amb = { g, stop: () => { nodes.forEach(n => { try { n.stop(); } catch (e) {} }); timers.forEach(clearTimeout); try { g.disconnect(); } catch (e) {} } }; ambKey = k; };
+  const api = { ambient(k) { if (!on) { if (amb) stopAmb(); return; } if (k === ambKey) return; if (window.__ambLog) window.__ambLog.push(k); stopAmb(); if (k) startAmb(k); },
+    flap: () => noise(.09, 900, 2400, .13), point: () => { tone(988, 988, .09, 'square', .07); tone(1319, 1319, .22, 'square', .07, .08); }, hit: () => { noise(.12, 600, 150, .26); tone(180, 60, .14, 'triangle', .2); }, die: () => tone(720, 140, .45, 'square', .06), swoosh: () => noise(.28, 400, 3000, .1),
+    get on() { return on; }, toggle() { on = !on; store.set('fk_sound', on ? 1 : 0); if (on) { ctxA(); api.point(); } else stopAmb(); return on; } };
   addEventListener('pointerdown', () => ctxA(), { once: true }); return api; })();
 $('mute').textContent = SFX.on ? '\u{1F50A}' : '\u{1F507}';
 $('mute').addEventListener('click', e => { e.stopPropagation(); $('mute').textContent = SFX.toggle() ? '\u{1F50A}' : '\u{1F507}'; });
@@ -324,6 +347,8 @@ const LB = (() => { const api = 'api.php'; let online = null, data = { today: []
       $('nbS').textContent = 'Put your name on the leaderboard'; $('nbI').value = lastName; $('nameBox').classList.remove('hide'); };
     if (online === null) load().then(go); else go(); };
   const save = () => { const name = $('nbI').value.trim().replace(/\s+/g, ' ').slice(0, 14); if (!pending) return; if (!name) { $('nbE').textContent = 'Type your name first.'; return; }
+    if (!/^[\p{L}\p{N} ._'-]+$/u.test(name)) { $('nbE').textContent = 'Letters and numbers only, please.'; return; }
+    if (window.NameCheck && NameCheck.bad(name)) { $('nbE').textContent = "That name isn't allowed. Please use your real name or a nickname."; $('nbI').select(); return; }
     $('nbB').disabled = true; lastName = name; store.set('fk_name', name); myRow = { name, score: pending };
     const done = () => { $('nbB').disabled = false; $('nameBox').classList.add('hide'); pending = 0; tab = data.today.some(r => r.name === name) ? 'today' : 'all'; render(); $('lbM').classList.remove('hide'); };
     if (online) fetch(api + '?a=score', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, score: pending }) }).then(r => r.json()).then(j => { if (j.error) { $('nbE').textContent = j.error; $('nbB').disabled = false; return; } data = j; done(); }).catch(() => { $('nbE').textContent = 'Could not save. Check your signal.'; $('nbB').disabled = false; });
@@ -374,8 +399,11 @@ function update(dt) {
   while (lmX < W + 600) pushLandmark();
   if (state === 'play') lmQueue.forEach(l => { if (!l.passed && l.x + l.sp.w / 2 < bird.x) { l.passed = true; if (!seen.includes(l.sp.n)) seen.push(l.sp.n); showPlace(l.sp.n); } });
   // cars drive both ways on the road
-  cars.forEach(c => c.x += (c.dir * c.v + (moving ? -v * .9 : 0)) * dt);
-  cars = cars.filter(c => c.x > -160 && c.x < W + 160); if (cars.length < 4 && Math.random() < dt * .8) spawnCar();
+  // no driving through each other: a faster car slows to the speed of the one in front
+  cars.forEach(c => { let ahead = null, gap = 1e9; cars.forEach(o => { if (o === c || o.lane !== c.lane) return; const d = c.dir > 0 ? o.x - (c.x + c.sp.w) : c.x - (o.x + o.sp.w); if (d > -4 && d < gap) { gap = d; ahead = o; } });
+    c.cv = ahead && gap < 26 ? Math.min(c.v, ahead.cv != null ? ahead.cv : ahead.v) * (gap < 10 ? .85 : 1) : c.v; });
+  cars.forEach(c => c.x += (c.dir * c.cv + (moving ? -v * .9 : 0)) * dt);
+  cars = cars.filter(c => c.x > -220 && c.x < W + 220); if (cars.length < 4 && Math.random() < dt * .8) spawnCar();
   if (placeTimer > 0) { placeTimer -= dt; if (placeTimer <= 0) $('place').classList.remove('on'); }
   if (flashT > 0) flashT -= dt;
 
@@ -390,12 +418,12 @@ function update(dt) {
   pipes.forEach(p => p.x -= speed * dt);
   pipes = pipes.filter(p => p.x > -PW - 10);
   nextPipe -= speed * dt;
-  if (nextPipe <= W) { const top = 40 + Math.random() * (GY - GAP - 70); pipes.push({ x: W + 10, top, scored: false }); nextPipe = W + 150; }
+  if (nextPipe <= W) { const n = pipes.length + score, gap = GAP + Math.max(0, 6 - score) * 3, top = 40 + Math.random() * (GY - gap - 70) * (score < 3 ? .7 : 1) + (score < 3 ? (GY - gap - 70) * .15 : 0); pipes.push({ x: W + 10, top, gap, scored: false }); nextPipe = W + 150; }
   if (bird.y < -OY + 6) { bird.y = -OY + 6; if (bird.vy < 0) bird.vy = 0; }
   if (bird.y > GY - 7) { bird.y = GY - 7; die('ground'); }
   pipes.forEach(p => {
     if (!p.scored && p.x + PW < bird.x - 8) { p.scored = true; score++; $('score').textContent = score; SFX.point(); }
-    if (bird.x + 6 > p.x && bird.x - 6 < p.x + PW && (bird.y - 4 < p.top || bird.y + 4 > p.top + GAP)) die('pipe');
+    if (bird.x + 6 > p.x && bird.x - 6 < p.x + PW && (bird.y - 4 < p.top || bird.y + 4 > p.top + p.gap)) die('pipe');
   });
 }
 
@@ -408,7 +436,9 @@ function pipe(x, y, h, cap) {
 }
 function cloud(x, y, s) { ctx.fillStyle = 'rgba(255,255,255,.85)'; const r = (a, b, w, h) => ctx.fillRect(Math.round(x + a * s), Math.round(y + b * s), Math.ceil(w * s), Math.ceil(h * s)); r(0, 6, 40, 8); r(6, 2, 18, 12); r(18, 0, 14, 14); }
 
+const AMB = { train: 0, plane: 0, fair: 0 };
 function draw() {
+  AMB.train = AMB.plane = AMB.fair = 0;
   ctx.setTransform(S, 0, 0, S, 0, OY * S); ctx.imageSmoothingEnabled = false;
   const g = ctx.createLinearGradient(0, -OY, 0, GY); g.addColorStop(0, '#3b97d6'); g.addColorStop(1, '#c4e8f7'); ctx.fillStyle = g; ctx.fillRect(0, -OY, W, GY + OY);
   clouds.forEach(cl => cloud(cl.x, cl.y, cl.s));
@@ -420,11 +450,12 @@ function draw() {
     // train progress is tied to the scroll: it leaves from behind the first building as that building comes on screen,
     // is right over the station as the station passes the pigeon, then slips behind the next building
     const k = 504 / (0.4 * W + 270), off = (pv.sp.w - 224) + k * (0.7 * W - st.x);
-    if (off > 0 && off < x1 - x0) { ctx.save(); ctx.beginPath(); ctx.rect(x0, GY - 150, x1 - x0, 70); ctx.clip(); LM_ANIM.train(ctx, Math.round(x0 + 6 + off), GY); ctx.restore(); } }
+    if (off > 0 && off < x1 - x0) { const tx = x0 + 6 + off; if (tx < W && tx + 218 > 0 && Math.max(tx, pv.x + pv.sp.w) < Math.min(tx + 218, nx.x)) AMB.train = 1; ctx.save(); ctx.beginPath(); ctx.rect(x0, GY - 150, x1 - x0, 70); ctx.clip(); LM_ANIM.train(ctx, Math.round(x0 + 6 + off), GY); ctx.restore(); } }
   let planeLate = null;
   lmQueue.forEach(l => { if (l.x > W + 260 || l.x + l.sp.w < -260) return;
     if (l.sp.k === 'airport') { const p = Math.max(0, (W * .9 - l.x) / (l.sp.w + W * .4)); const px = Math.round(l.x + 120 + p * 340), py = Math.round(GY - 70 - p * p * 260);
-      if (p > 0 && py > -OY - 40 && px < W + 60) { const a = Math.max(-0.5, -0.12 - p * .3); if (p < .22) LM_ANIM.plane(ctx, px, py, a); else planeLate = [px, py, a]; } }
+      if (p > 0 && py > -OY - 40 && px < W + 60) { const a = Math.max(-0.5, -0.12 - p * .3); if (p < .22) LM_ANIM.plane(ctx, px, py, a); else planeLate = [px, py, a]; if (px > 0 && px < W) AMB.plane = 1; } }
+    if (l.sp.k === 'funfair' && l.x < W * .9 && l.x + l.sp.w > W * .1) AMB.fair = 1;
     ctx.drawImage(l.sp.c, Math.round(l.x - M), GY - LH + 6); if (ANIM_K[l.sp.k]) LM_ANIM[l.sp.k](ctx, Math.round(l.x), GY, t); });
   if (planeLate) LM_ANIM.plane(ctx, planeLate[0], planeLate[1], planeLate[2]);
   // pavement + road
@@ -434,16 +465,19 @@ function draw() {
   if (BE > 0) { ctx.fillStyle = '#8f8a7e'; ctx.fillRect(0, H, W, 2); ctx.fillStyle = '#c9c4b8'; ctx.fillRect(0, H + 2, W, 12); ctx.fillStyle = '#b3ad9f'; for (let x = -po; x < W; x += 12) ctx.fillRect(Math.round(x), H + 2, 1, 12);
     ctx.fillStyle = '#5f9e44'; ctx.fillRect(0, H + 14, W, BE); ctx.fillStyle = '#4f8a36'; const go = Math.floor((t * speed * .9) % 16); for (let y = H + 18; y < H + BE; y += 8) for (let x = -go + ((y / 8) % 2) * 8; x < W; x += 16) ctx.fillRect(Math.round(x), y, 2, 2);
     ctx.fillStyle = '#3f7d33'; for (let x = -go; x < W; x += 16) ctx.fillRect(Math.round(x), H + 14, 14, 4); }
-  const CS = .5; cars.filter(c => c.lane === 0).forEach(c => ctx.drawImage(c.sp.c, Math.round(c.x), Math.round(ROAD + 14 - 66 * CS), c.sp.c.width * CS, c.sp.c.height * CS));
-  cars.filter(c => c.lane === 1).forEach(c => ctx.drawImage(c.sp.flip, Math.round(c.x), Math.round(H - 3 - 66 * CS), c.sp.flip.width * CS, c.sp.flip.height * CS));
-  pipes.forEach(p => { pipe(p.x, -OY, p.top + OY, 'top'); pipe(p.x, p.top + GAP, GY - p.top - GAP, 'bottom'); });
+  const CS = .5; cars.filter(c => c.lane === 0).forEach(c => ctx.drawImage(c.sp.c, Math.round(c.x), Math.round(ROAD + 14 - c.sp.gy * CS), c.sp.c.width * CS, c.sp.c.height * CS));
+  cars.filter(c => c.lane === 1).forEach(c => ctx.drawImage(c.sp.flip, Math.round(c.x), Math.round(H - 3 - c.sp.gy * CS), c.sp.flip.width * CS, c.sp.flip.height * CS));
+  pipes.forEach(p => { pipe(p.x, -OY, p.top + OY, 'top'); pipe(p.x, p.top + p.gap, GY - p.top - p.gap, 'bottom'); });
   const rot = state === 'menu' || state === 'ready' ? 0 : Math.max(-.45, Math.min(1.3, bird.vy / 320));
   drawPigeon(Math.round(bird.x), Math.round(bird.y), rot, bird.frame);
   if (flashT > 0) { ctx.fillStyle = 'rgba(255,255,255,' + (flashT / .15) * .8 + ')'; ctx.fillRect(0, 0, W, H); }
 }
 
 let last = performance.now();
-function loop(now) { const dt = Math.min(.033, (now - last) / 1000); last = now; update(dt); draw(); requestAnimationFrame(loop); }
+const ambSeen = { train: -9, plane: -9, fair: -9 };
+function ambTick() { ['plane', 'train', 'fair'].forEach(k => { if (AMB[k]) ambSeen[k] = t; }); const live = state === 'play' || state === 'ready' || state === 'menu';
+  const k = !live ? '' : ['plane', 'train', 'fair'].find(k => t - ambSeen[k] < 1.2) || ''; SFX.ambient(k); }
+function loop(now) { const dt = Math.min(.033, (now - last) / 1000); last = now; update(dt); draw(); try { ambTick(); } catch (e) {} requestAnimationFrame(loop); }
 
 Promise.all([document.fonts.load('700 8px Silk'), document.fonts.load('400 8px Silk'), document.fonts.load('24px PS', '&'), document.fonts.load('700 16px Amiri', 'ا')]).catch(() => {}).then(() => {
   prerender(); prerenderHouses(); prerenderCars();

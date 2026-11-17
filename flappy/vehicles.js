@@ -1,0 +1,227 @@
+/* Road vehicles v3, drawn at game size (1 unit = 1 game pixel), facing right, wheels on y = G.
+   VEHICLES[key] = { n, w, h, weight (how often it appears), speed [min,max], colours: [[name, body, extra?]...], d(c, x, G, col) } */
+(function () {
+const OUT = '#1b1a24';
+const path = (c, pts) => { c.beginPath(); pts.forEach((p, i) => { if (p.length === 4) c.quadraticCurveTo(p[0], p[1], p[2], p[3]); else if (i) c.lineTo(p[0], p[1]); else c.moveTo(p[0], p[1]); }); c.closePath(); };
+const fill = (c, col, pts, line = true) => { path(c, pts); c.fillStyle = col; c.fill(); if (line) { c.strokeStyle = OUT; c.lineWidth = 1; c.stroke(); } };
+const R = (c, col, x, y, w, h) => { c.fillStyle = col; c.fillRect(x, y, w, h); };
+const disc = (c, col, x, y, r) => { c.beginPath(); c.arc(x, y, r, 0, 7); c.fillStyle = col; c.fill(); };
+const SH = (hex, k) => { const n = parseInt(hex.slice(1), 16), f = v => Math.max(0, Math.min(255, Math.round(v * k))); return '#' + [f(n >> 16), f(n >> 8 & 255), f(n & 255)].map(v => v.toString(16).padStart(2, '0')).join(''); };
+const wheel = (c, x, G, r, rim, cal, spokes = 5, ring) => { disc(c, 'rgba(0,0,0,.25)', x, G, r * .9); disc(c, OUT, x, G - r, r + .8); disc(c, '#16171a', x, G - r, r); disc(c, rim, x, G - r, r * .64);
+  if (ring) { c.strokeStyle = ring; c.lineWidth = .7; c.beginPath(); c.arc(x, G - r, r * .64, 0, 7); c.stroke(); }
+  c.strokeStyle = SH(rim, .55); c.lineWidth = .8; for (let i = 0; i < spokes; i++) { const a = i * 2 * Math.PI / spokes - .3; c.beginPath(); c.moveTo(x, G - r); c.lineTo(x + Math.cos(a) * r * .6, G - r + Math.sin(a) * r * .6); c.stroke(); }
+  if (cal) { c.fillStyle = cal; c.fillRect(x + r * .15, G - r - r * .42, r * .3, r * .62); } disc(c, '#5a5d66', x, G - r, r * .16); };
+const arch = (c, x, G, r) => { c.beginPath(); c.arc(x, G - r + .5, r + 1.5, Math.PI, 0); c.closePath(); c.fillStyle = '#0d0e10'; c.fill(); };
+const glass = (c, pts, tint = '#26303a') => { fill(c, tint, pts); c.save(); path(c, pts); c.clip(); c.fillStyle = 'rgba(255,255,255,.2)'; const [x0, y0] = pts[0]; c.beginPath(); c.moveTo(x0 + 7, y0 - 20); c.lineTo(x0 + 12, y0 - 20); c.lineTo(x0 + 3, y0 + 10); c.lineTo(x0 - 2, y0 + 10); c.fill(); c.restore(); };
+const shine = (c, x, y, w) => R(c, 'rgba(255,255,255,.28)', x, y, w, 1);
+const person = (c, x, y, top, skin = '#c58c5c', helmet) => { R(c, top, x - 1.5, y, 3, 5); disc(c, helmet || skin, x, y - 1.5, helmet ? 2.2 : 1.6); };
+const V = {};
+const COMMON = [['Black', '#1e2024'], ['White', '#eceef2'], ['Silver', '#b9bec6'], ['Grey', '#6e737b'], ['Blue', '#2c4f8f'], ['Red', '#b8252a']];
+
+/* Rolls-Royce Phantom: very long saloon, two-tone with dark upper body, upright chrome grille, short boot */
+V.phantom = { n: 'Rolls-Royce Phantom', w: 74, h: 22, weight: 2, speed: [24, 40],
+  colours: [['Black over silver', '#d7dade', '#16171a'], ['All black', '#1a1b1f', '#0e0f12'], ['Arctic white', '#f1f2f4', '#f1f2f4'], ['Midnight blue', '#1f2d4f', '#141c33'], ['Silver over black', '#1a1b1f', '#b9bec6']],
+  d(c, x, G, [, low, top]) {
+  arch(c, x + 14, G, 6.4); arch(c, x + 59, G, 6.4);
+  fill(c, top, [[x + 1, G - 12], [x + 2, G - 15], [x + 9, G - 16.5], [x + 20, G - 23.5], [x + 30, G - 25.2], [x + 50, G - 25], [x + 58, G - 17.5], [x + 71.5, G - 16.5], [x + 72.5, G - 13], [x + 1, G - 13]]);
+  fill(c, low, [[x + 1, G - 6], [x + 1, G - 13.5], [x + 72.5, G - 13.5], [x + 73.5, G - 11], [x + 73.5, G - 6], [x + 70, G - 4.5], [x + 3, G - 4.5]]);
+  glass(c, [[x + 18, G - 17], [x + 23, G - 22.6], [x + 31, G - 23.8], [x + 49.5, G - 23.6], [x + 55.5, G - 17]], '#1a1d22'); R(c, top, x + 35.5, G - 24, 1.8, 7); R(c, top, x + 46, G - 24, 1.2, 7);
+  R(c, '#d6dbe0', x + 18, G - 17.2, 37.5, .6); R(c, 'rgba(0,0,0,.3)', x + 35, G - 13, .7, 8); R(c, 'rgba(0,0,0,.25)', x + 21, G - 13, .7, 8); R(c, '#e8ecf0', x + 31, G - 11.8, 6, .8);
+  R(c, '#e8ecf0', x + 1, G - 7, 72, .7); shine(c, x + 25, G - 24.8, 24); R(c, 'rgba(255,255,255,.25)', x + 4, G - 12.6, 66, .6);
+  fill(c, '#eef1f4', [[x + 70.5, G - 15.8], [x + 73.6, G - 15.4], [x + 73.6, G - 8], [x + 70.5, G - 8]]); for (let i = 0; i < 3; i++) R(c, '#9aa2ab', x + 71.1 + i * .9, G - 15, .4, 6.5);
+  R(c, '#fff8d8', x + 69, G - 14.2, 2, 2.4); R(c, '#e8ecf0', x + 71.6, G - 18, .7, 1.6); R(c, '#d42a2a', x + 1, G - 13, 1.6, 4.5);
+  wheel(c, x + 14, G, 6, '#3a3d44', null, 8, '#d6dbe0'); wheel(c, x + 59, G, 6, '#3a3d44', null, 8, '#d6dbe0');
+} };
+
+/* Mercedes-AMG C63 Black Series coupé: low, wide arches, fastback, big carbon wing, red calipers */
+V.c63 = { n: 'Mercedes-AMG C63 Black Series', w: 62, h: 21, weight: 2, speed: [40, 70],
+  colours: [['Matte grey', '#9aa0a8'], ['Black', '#1e2024'], ['White', '#eceef2'], ['Fire red', '#c02028']],
+  d(c, x, G, [, B]) { const D = SH(B, .8);
+  arch(c, x + 12, G, 5.6); arch(c, x + 49, G, 5.6);
+  fill(c, B, [[x + 1, G - 5], [x + 1, G - 13], [x + 4, G - 15.5], [x + 13, G - 16.5], [x + 20, G - 21.5], [x + 31, G - 22.5], [x + 40, G - 17.5], [x + 56, G - 15.5], [x + 60.5, G - 11.5], [x + 61, G - 6], [x + 58, G - 4], [x + 2, G - 4]]);
+  glass(c, [[x + 16.5, G - 16.8], [x + 21, G - 20.8], [x + 30.6, G - 21.2], [x + 37.6, G - 16.8]], '#1a1d22'); R(c, '#141416', x + 25.5, G - 21, 1.4, 4.5);
+  R(c, '#141416', x + 2, G - 21, 1, 5.5); R(c, '#141416', x + 9, G - 21, 1, 5); fill(c, '#202226', [[x - .5, G - 22.5], [x + 12, G - 22.5], [x + 11, G - 21], [x - .5, G - 21]], false);
+  R(c, D, x + 1.5, G - 8, 59, 2.4); R(c, '#141416', x + 17, G - 5.4, 26, 1.2); shine(c, x + 20, G - 22, 10); shine(c, x + 4, G - 15, 52); R(c, 'rgba(0,0,0,.25)', x + 40, G - 14, .7, 8);
+  R(c, '#d42a2a', x + 1, G - 13.5, 2.4, 2.4); R(c, '#e8ecf0', x + 56, G - 13.8, 4, 1.1); R(c, '#141416', x + 58, G - 9.5, 3, 4); R(c, '#141416', x + 59, G - 5, 3.5, 1);
+  wheel(c, x + 12, G, 5.4, '#1b1c20', '#d42a2a', 10); wheel(c, x + 49, G, 5.4, '#1b1c20', '#d42a2a', 10);
+} };
+
+/* Mercedes G-Wagon: a brick on wheels, round headlights, spare wheel on the back */
+V.gwagon = { n: 'Mercedes G-Wagon', w: 62, h: 33, weight: 3, speed: [28, 50],
+  colours: [['Black', '#1e2024'], ['Matte black', '#2a2b2f'], ['White', '#eceef2'], ['Grey', '#7a7f87'], ['Olive', '#4d5a3a']],
+  d(c, x, G, [, B]) {
+  arch(c, x + 13, G, 6.3); arch(c, x + 48, G, 6.3);
+  fill(c, B, [[x + 2, G - 5], [x + 2, G - 29], [x + 3, G - 31], [x + 41, G - 31], [x + 44, G - 21], [x + 59, G - 20.5], [x + 60, G - 18], [x + 60, G - 5]]);
+  R(c, '#3a3d44', x + 3, G - 32.5, 37, 1.2); shine(c, x + 4, G - 30, 36);
+  glass(c, [[x + 5, G - 21.5], [x + 5, G - 29], [x + 39.5, G - 29], [x + 42.5, G - 21.5]], '#2c3540'); R(c, B, x + 16, G - 29, 1.8, 7.5); R(c, B, x + 28, G - 29, 1.8, 7.5);
+  R(c, '#2c2f35', x + 2.5, G - 13, 57, 3); R(c, '#55585f', x + 3, G - 13.5, 56, .7);
+  disc(c, OUT, x + 1, G - 17, 5.4); disc(c, '#25272c', x + 1, G - 17, 4.6); disc(c, '#c9ced4', x + 1, G - 17, 1.6);
+  disc(c, '#e8ecf0', x + 58, G - 17, 2.2); disc(c, '#fff8d8', x + 58, G - 17, 1.4); R(c, '#e8a33c', x + 53, G - 21.5, 3, 1.2); R(c, '#c9ced4', x + 58.5, G - 12, 2, 6);
+  wheel(c, x + 13, G, 6, '#2a2c31', null, 5); wheel(c, x + 48, G, 6, '#2a2c31', null, 5);
+} };
+
+/* VW Golf hatchback */
+V.golf = { n: 'VW Golf', w: 56, h: 20, weight: 8, speed: [30, 55], colours: COMMON.concat([['Lapiz blue', '#1f5fbf']]),
+  d(c, x, G, [, B]) { const D = SH(B, .82);
+  arch(c, x + 11, G, 5.3); arch(c, x + 44, G, 5.3);
+  fill(c, B, [[x + 1, G - 5], [x + 1, G - 14], [x + 3, G - 16.5], [x + 7, G - 19.5], [x + 29, G - 20], [x + 39, G - 15.5], [x + 52, G - 14.2], [x + 54.5, G - 11], [x + 54.5, G - 5]]);
+  glass(c, [[x + 8, G - 16], [x + 9, G - 18.4], [x + 28.4, G - 18.6], [x + 35.6, G - 16]], '#26303a'); R(c, B, x + 20, G - 18.8, 1.6, 2.8); fill(c, B, [[x + 3, G - 16], [x + 8.6, G - 18.8], [x + 8.2, G - 16], [x + 3, G - 16]], false);
+  R(c, D, x + 1.5, G - 8, 53, 3); shine(c, x + 6, G - 19, 22); R(c, 'rgba(0,0,0,.18)', x + 3, G - 13.5, 50, .7);
+  R(c, '#d42a2a', x + 1, G - 15, 2, 3.5); R(c, '#e8ecf0', x + 50, G - 14, 4, 1.6); R(c, '#2a2c31', x + 52, G - 11, 2.5, 3); disc(c, '#cfd4da', x + 47.5, G - 12.5, .9);
+  wheel(c, x + 11, G, 5, '#9aa2ab', null, 5); wheel(c, x + 44, G, 5, '#9aa2ab', null, 5);
+} };
+
+/* Mercedes-AMG A45 hot hatch: black roof, rear spoiler, red calipers */
+V.a45 = { n: 'Mercedes-AMG A45', w: 58, h: 21, weight: 4, speed: [38, 65], colours: [['Sun yellow', '#f6d21a'], ['Mountain grey', '#7a7f87'], ['White', '#eceef2'], ['Black', '#1e2024'], ['Red', '#c02028']],
+  d(c, x, G, [, Y]) { const Yd = SH(Y, .8);
+  arch(c, x + 11, G, 5.5); arch(c, x + 46, G, 5.5);
+  fill(c, Y, [[x + 1, G - 5], [x + 1, G - 13], [x + 4, G - 17], [x + 10, G - 20.5], [x + 29, G - 21], [x + 39, G - 14.5], [x + 54, G - 12.8], [x + 57, G - 9.5], [x + 57, G - 5]]);
+  fill(c, '#141416', [[x + 9, G - 20.7], [x + 29, G - 21.1], [x + 30, G - 19.6], [x + 9, G - 19.4]], false);
+  fill(c, '#141416', [[x + 2, G - 19], [x + 11, G - 20.8], [x + 10, G - 19.2], [x + 4, G - 17.6]]);
+  glass(c, [[x + 8.5, G - 14.5], [x + 11, G - 19.2], [x + 28.6, G - 19.4], [x + 35.6, G - 14.5]], '#1d232b'); R(c, Y, x + 21, G - 19.6, 1.6, 5);
+  R(c, Yd, x + 1.5, G - 7.5, 55, 2.5); R(c, '#141416', x + 16, G - 6, 26, 1.5); shine(c, x + 12, G - 14, 40);
+  R(c, '#d42a2a', x + 1, G - 13, 2, 3); R(c, '#e8ecf0', x + 52, G - 12.2, 4, 1.3); R(c, '#141416', x + 54.5, G - 10, 2.5, 4.5);
+  wheel(c, x + 11, G, 5.3, '#1b1c20', '#d42a2a', 10); wheel(c, x + 46, G, 5.3, '#1b1c20', '#d42a2a', 10);
+} };
+
+/* Audi RS3 saloon */
+V.rs3 = { n: 'Audi RS3 saloon', w: 62, h: 22, weight: 2, speed: [38, 65], colours: [['Kyalami green', '#2f8a4a'], ['Nardo grey', '#8c9096'], ['Black', '#1e2024'], ['Glacier white', '#eceef2'], ['Ascari blue', '#1f4fa8']],
+  d(c, x, G, [, K]) { const Kd = SH(K, .78);
+  arch(c, x + 12, G, 5.5); arch(c, x + 50, G, 5.5);
+  fill(c, K, [[x + 1, G - 5], [x + 1, G - 13], [x + 3, G - 15.5], [x + 11, G - 16], [x + 18, G - 21.5], [x + 35, G - 22], [x + 43, G - 15.5], [x + 58, G - 14], [x + 61, G - 10], [x + 61, G - 5]]);
+  glass(c, [[x + 15, G - 16.2], [x + 19.2, G - 20.6], [x + 34.4, G - 20.8], [x + 39.6, G - 16.2]], '#1d232b'); R(c, '#141416', x + 26.5, G - 21, 1.6, 5);
+  R(c, '#141416', x + 1, G - 16.2, 9, 1); R(c, Kd, x + 1.5, G - 8, 59, 2.6); shine(c, x + 20, G - 21.4, 14); shine(c, x + 4, G - 14.8, 54);
+  R(c, '#d42a2a', x + 1, G - 14, 2.2, 2.5); R(c, '#e8ecf0', x + 56, G - 13.2, 4.2, 1.2); fill(c, '#141416', [[x + 58.5, G - 12], [x + 61.2, G - 11.5], [x + 61.2, G - 6.5], [x + 58.5, G - 6.5]], false);
+  wheel(c, x + 12, G, 5.3, '#2a2c31', '#d42a2a', 5); wheel(c, x + 50, G, 5.3, '#2a2c31', '#d42a2a', 5);
+} };
+
+/* Lamborghini Huracán (rare) */
+V.lambo = { n: 'Lamborghini Huracán', w: 66, h: 19, weight: .7, speed: [60, 90], colours: [['Verde Mantis', '#7fcf12'], ['Arancio orange', '#f07a12'], ['Viola purple', '#7b2fc8'], ['Giallo yellow', '#f6d21a']],
+  d(c, x, G, [, L]) { const Ld = SH(L, .72);
+  arch(c, x + 14, G, 5.6); arch(c, x + 51, G, 5.6);
+  fill(c, L, [[x + 1, G - 5], [x + 1, G - 12], [x + 6, G - 13], [x + 19, G - 17.5], [32 + x, G - 18.5], [x + 40, G - 17], [x + 52, G - 11.5], [x + 64, G - 9], [x + 65.5, G - 6], [x + 63, G - 4], [x + 1, G - 4]]);
+  glass(c, [[x + 19, G - 16.2], [x + 31.5, G - 17.3], [x + 39, G - 16], [x + 46, G - 12.8], [x + 22, G - 12.8]], '#1d232b');
+  fill(c, '#141416', [[x + 21, G - 11], [x + 30, G - 11.5], [x + 26, G - 7]]); R(c, Ld, x + 2, G - 6.5, 61, 1.5); shine(c, x + 20, G - 17.5, 14); R(c, 'rgba(255,255,255,.3)', x + 46, G - 11.6, 12, .8);
+  R(c, '#fff4c8', x + 60, G - 9.5, 4, .9); R(c, '#e02a2a', x + 1, G - 11.5, 2, 1.4); R(c, '#141416', x + 1, G - 8, 4, 2);
+  wheel(c, x + 14, G, 5.2, '#c9a64a', null, 5); wheel(c, x + 51, G, 5.2, '#c9a64a', null, 5);
+} };
+
+/* Ferrari F40 (rare): low wedge, louvred engine cover, big rear wing, 5-spoke silver wheels */
+V.f40 = { n: 'Ferrari F40', w: 64, h: 20, weight: .5, speed: [60, 90], colours: [['Rosso Corsa', '#d01f1f'], ['Giallo Modena', '#f4c20d'], ['Nero black', '#1e2024']],
+  d(c, x, G, [, B]) { const D = SH(B, .72);
+  arch(c, x + 14, G, 5.6); arch(c, x + 50, G, 5.6);
+  fill(c, B, [[x + 1, G - 5], [x + 1, G - 14], [x + 9, G - 14.5], [x + 22, G - 17], [x + 30, G - 18], [x + 38, G - 16.5], [x + 47, G - 11.5], [x + 62.5, G - 8.5], [x + 63.5, G - 5.5], [x + 61, G - 4], [x + 1, G - 4]]);
+  glass(c, [[x + 23, G - 15.6], [x + 29.5, G - 16.8], [x + 37, G - 15.6], [x + 44, G - 12], [x + 25, G - 12]], '#1d232b');
+  for (let i = 0; i < 4; i++) R(c, D, x + 10 + i * 3, G - 14.2, 1.6, .8);
+  fill(c, B, [[x, G - 20.5], [x + 9, G - 20.5], [x + 9, G - 19], [x, G - 19]]); R(c, D, x + 2, G - 19, 1, 5); R(c, D, x + 7, G - 19, 1, 5);
+  fill(c, D, [[x + 32, G - 11], [x + 40, G - 11], [x + 38, G - 8], [x + 33, G - 8]], false); R(c, D, x + 2, G - 7, 60, 1.3); shine(c, x + 24, G - 17.6, 12); R(c, 'rgba(255,255,255,.3)', x + 47, G - 11, 13, .8);
+  R(c, '#e02a2a', x + 1, G - 13, 1.6, 2); R(c, '#fff4c8', x + 58, G - 9, 4, .9); R(c, '#f6d21a', x + 40, G - 10, 1.5, 1.6);
+  wheel(c, x + 14, G, 5.2, '#b9bec6', null, 5); wheel(c, x + 50, G, 5.2, '#b9bec6', null, 5);
+} };
+
+/* Porsche 911 (rare-ish): round frog-eye headlight, sloping rear engine, ducktail */
+V.p911 = { n: 'Porsche 911', w: 58, h: 19, weight: 1.2, speed: [50, 80], colours: [['Guards red', '#c41e24'], ['Racing yellow', '#f4c20d'], ['Shark blue', '#1f6fd0'], ['Chalk', '#d8d6cf'], ['GT silver', '#a9aeb6'], ['Lizard green', '#5ec42a']],
+  d(c, x, G, [, B]) { const D = SH(B, .78);
+  arch(c, x + 12, G, 5.4); arch(c, x + 45, G, 5.4);
+  fill(c, B, [[x + 1, G - 5], [x + 1, G - 11], [x + 3, G - 13], [x + 7, G - 13.5], [x + 15, G - 17], [x + 25, G - 18.6], [x + 33, G - 17], [x + 40, G - 12.5], [x + 54, G - 10.5], [x + 57, G - 7.5], [x + 57, G - 5]]);
+  fill(c, D, [[x + 1.5, G - 13.6], [x + 8, G - 14.4], [x + 7.5, G - 13], [x + 1.5, G - 12.4]], false);
+  glass(c, [[x + 14.5, G - 13.5], [x + 18, G - 16.5], [x + 25, G - 17.5], [x + 32, G - 16], [x + 36.5, G - 13]], '#1d232b'); R(c, B, x + 25, G - 17.6, 1.4, 4.4);
+  R(c, D, x + 1.5, G - 7, 55, 1.6); shine(c, x + 16, G - 17.8, 16); R(c, 'rgba(255,255,255,.3)', x + 41, G - 12, 12, .7);
+  R(c, '#d42a2a', x + 1, G - 11, 3, 1.4); disc(c, '#eef3f6', x + 51.5, G - 10.6, 1.6); R(c, '#141416', x + 54.5, G - 7.5, 2.5, 2);
+  wheel(c, x + 12, G, 5, '#9aa2ab', null, 5); wheel(c, x + 45, G, 5, '#9aa2ab', null, 5);
+} };
+
+/* Ford Transit-style van: tall long body, short bonnet */
+V.van = { n: 'Transit van', w: 74, h: 36, weight: 3, speed: [28, 48], colours: [['White', '#eceef2'], ['Silver', '#b9bec6'], ['Blue', '#1f4fa8'], ['Courier', '#eceef2', '#e8641c'], ['Black', '#1e2024']],
+  d(c, x, G, [, B, stripe]) { const D = SH(B, .82);
+  arch(c, x + 14, G, 6); arch(c, x + 60, G, 6);
+  fill(c, B, [[x + 1, G - 5], [x + 1, G - 33], [x + 3, G - 35], [x + 52, G - 35], [x + 56, G - 33], [x + 61, G - 21], [x + 71, G - 18.5], [x + 72.5, G - 15], [x + 72.5, G - 5]]);
+  glass(c, [[x + 51, G - 21.5], [x + 51, G - 32], [x + 54.6, G - 32], [x + 59.4, G - 21.5]], '#26303a'); R(c, 'rgba(0,0,0,.25)', x + 49.5, G - 33, .8, 26); R(c, 'rgba(0,0,0,.2)', x + 36, G - 31, .7, 24); R(c, '#2a2c31', x + 36.5, G - 21, 4, 2);
+  if (stripe) { R(c, stripe, x + 2, G - 24, 46, 4); R(c, '#ffffff', x + 6, G - 23, 20, 1); }
+  R(c, D, x + 1.5, G - 9, 71, 3); R(c, '#2a2c31', x + 1, G - 6.5, 72, 2); shine(c, x + 3, G - 34, 48);
+  R(c, '#d42a2a', x + 1, G - 30, 1.6, 8); R(c, '#e8ecf0', x + 66, G - 17.5, 5, 2); R(c, '#2a2c31', x + 69, G - 14, 3.5, 5);
+  wheel(c, x + 14, G, 5.6, '#9aa2ab', null, 6); wheel(c, x + 60, G, 5.6, '#9aa2ab', null, 6);
+} };
+
+/* small van (Berlingo / Caddy) */
+V.smallvan = { n: 'Small van', w: 58, h: 26, weight: 3, speed: [30, 50], colours: [['White', '#eceef2'], ['Red', '#c02028'], ['Grey', '#7a7f87'], ['Royal Mail', '#d6281e', '#f4c20d']],
+  d(c, x, G, [, B, stripe]) { const D = SH(B, .82);
+  arch(c, x + 11, G, 5.3); arch(c, x + 46, G, 5.3);
+  fill(c, B, [[x + 1, G - 5], [x + 1, G - 24], [x + 3, G - 26], [x + 37, G - 26], [x + 44, G - 17], [x + 54, G - 15.5], [x + 56.5, G - 12], [x + 56.5, G - 5]]);
+  glass(c, [[x + 33, G - 17.5], [x + 34, G - 24.2], [x + 37, G - 24.2], [x + 42, G - 17.5]], '#26303a'); R(c, 'rgba(0,0,0,.25)', x + 31.5, G - 25, .8, 19);
+  if (stripe) { R(c, stripe, x + 2, G - 12, 54, 2.2); } R(c, D, x + 1.5, G - 8, 55, 2.6); shine(c, x + 3, G - 25, 33);
+  R(c, '#d42a2a', x + 1, G - 22, 1.6, 6); R(c, '#e8ecf0', x + 51, G - 14.5, 4.5, 1.6); R(c, '#2a2c31', x + 54, G - 11, 2.5, 4);
+  wheel(c, x + 11, G, 5, '#9aa2ab', null, 5); wheel(c, x + 46, G, 5, '#9aa2ab', null, 5);
+} };
+
+/* bin lorry (rare): green body with the crusher at the back, white cab */
+V.binlorry = { n: 'Bin lorry', w: 92, h: 42, weight: 1, speed: [18, 30], colours: [['Luton council', '#2f8a4a'], ['Grey', '#6e737b']],
+  d(c, x, G, [, B]) { const D = SH(B, .78);
+  arch(c, x + 20, G, 7); arch(c, x + 47, G, 7); arch(c, x + 78, G, 7);
+  fill(c, B, [[x + 6, G - 9], [x + 6, G - 38], [x + 58, G - 40], [x + 62, G - 38], [x + 62, G - 9]]); for (let i = 0; i < 5; i++) R(c, D, x + 10 + i * 10, G - 37, 1, 26);
+  fill(c, D, [[x + 1, G - 9], [x + 1, G - 30], [x + 8, G - 38], [x + 8, G - 9]]); R(c, '#2a2c31', x + 1, G - 15, 6, 5); R(c, '#f4c20d', x + 1.5, G - 14.5, 5, .8);
+  R(c, '#eef0f2', x + 10, G - 30, 44, 7); R(c, B, x + 13, G - 28.4, 3, 3.6); R(c, '#2a2c31', x + 18, G - 28, 30, 1); R(c, '#2a2c31', x + 18, G - 25.6, 22, 1);
+  fill(c, '#eceef2', [[x + 62, G - 9], [x + 62, G - 38], [x + 80, G - 38], [x + 86, G - 31], [x + 90.5, G - 28], [x + 90.5, G - 9]]);
+  glass(c, [[x + 72, G - 26], [x + 72, G - 36], [x + 79.4, G - 36], [x + 85, G - 30], [x + 85, G - 26]], '#26303a'); R(c, '#2a2c31', x + 64, G - 27, 6, 1); R(c, '#f4c20d', x + 70, G - 40, 6, 2);
+  R(c, '#2a2c31', x + 6, G - 11, 85, 3); R(c, '#f4c20d', x + 6, G - 12, 85, .9); R(c, '#e8ecf0', x + 87, G - 20, 3.5, 2.5);
+  wheel(c, x + 20, G, 6.5, '#9aa2ab', null, 6); wheel(c, x + 47, G, 6.5, '#9aa2ab', null, 6); wheel(c, x + 78, G, 6.5, '#9aa2ab', null, 6);
+} };
+
+/* box lorry (rare) */
+V.lorry = { n: 'Box lorry', w: 100, h: 44, weight: .9, speed: [22, 36], colours: [['White box, blue cab', '#eceef2', '#1f4fa8'], ['White box, red cab', '#eceef2', '#c02028'], ['Grey box, white cab', '#b9bec6', '#eceef2']],
+  d(c, x, G, [, box, cab]) {
+  arch(c, x + 18, G, 7); arch(c, x + 32, G, 7); arch(c, x + 86, G, 7);
+  fill(c, box, [[x + 1, G - 10], [x + 1, G - 43], [x + 72, G - 43], [x + 72, G - 10]]); R(c, 'rgba(0,0,0,.08)', x + 2, G - 20, 69, 9); for (let i = 1; i < 6; i++) R(c, 'rgba(0,0,0,.12)', x + 1 + i * 12, G - 42, .7, 31);
+  R(c, '#2a2c31', x + 1, G - 12, 99, 3);
+  fill(c, cab, [[x + 73, G - 9], [x + 73, G - 38], [x + 90, G - 38], [x + 95, G - 31], [x + 98.5, G - 28], [x + 98.5, G - 9]]); R(c, cab, x + 73, G - 43, 15, 5);
+  glass(c, [[x + 82, G - 26], [x + 82, G - 36], [x + 89.4, G - 36], [x + 94, G - 30], [x + 94, G - 26]], '#26303a'); R(c, '#2a2c31', x + 75, G - 27, 5, 1);
+  R(c, '#e8ecf0', x + 95, G - 18, 3.5, 2.5); R(c, '#d42a2a', x + 1, G - 16, 1.6, 4); R(c, '#2a2c31', x + 96, G - 13, 3, 4);
+  wheel(c, x + 18, G, 6.5, '#9aa2ab', null, 6); wheel(c, x + 32, G, 6.5, '#9aa2ab', null, 6); wheel(c, x + 86, G, 6.5, '#9aa2ab', null, 6);
+} };
+
+/* motorbike with rider */
+V.motorbike = { n: 'Motorbike', w: 26, h: 22, weight: 2, speed: [40, 75], colours: [['Black', '#1e2024'], ['Red', '#c02028'], ['Blue', '#1f4fa8'], ['Green', '#3fae3a'], ['Orange', '#f07a12']],
+  d(c, x, G, [, B]) {
+  wheel(c, x + 5, G, 4.4, '#3a3d44', null, 6); wheel(c, x + 21, G, 4.4, '#3a3d44', null, 6);
+  fill(c, B, [[x + 4, G - 9], [x + 9, G - 13], [x + 18, G - 13.5], [x + 22, G - 10], [x + 16, G - 6.5], [x + 9, G - 7]]); R(c, '#9aa2ab', x + 9, G - 6.5, 7, 2); R(c, '#2a2c31', x + 18, G - 15, 1, 6);
+  R(c, '#3a3d44', x + 9, G - 17, 3, 5); R(c, '#2a2c31', x + 10, G - 20, 5, 4); R(c, '#2a2c31', x + 13, G - 18, 6, 1.5); disc(c, OUT, x + 13, G - 22.5, 2.6); disc(c, B, x + 13, G - 22.5, 2.2); R(c, '#26303a', x + 13.5, G - 23, 2, 1.2);
+  R(c, '#e8ecf0', x + 22, G - 12, 2, 1.4); R(c, '#d42a2a', x + 2.5, G - 10, 1.5, 1);
+} };
+
+/* bicycle with rider (slow) */
+V.bike = { n: 'Bicycle', w: 22, h: 21, weight: 2, speed: [12, 20], colours: [['Hi-vis', '#d4ff2a'], ['Red top', '#c02028'], ['Blue top', '#1f4fa8'], ['Black top', '#1e2024']],
+  d(c, x, G, [, top]) {
+  for (const wx of [x + 4.5, x + 17.5]) { c.strokeStyle = OUT; c.lineWidth = 1.4; c.beginPath(); c.arc(wx, G - 4, 3.8, 0, 7); c.stroke(); }
+  c.strokeStyle = '#2f6fd0'; c.lineWidth = 1; c.beginPath(); c.moveTo(x + 4.5, G - 4); c.lineTo(x + 9, G - 9); c.lineTo(x + 15, G - 9); c.lineTo(x + 17.5, G - 4); c.moveTo(x + 9, G - 9); c.lineTo(x + 11, G - 4); c.lineTo(x + 15, G - 9); c.stroke();
+  R(c, '#2a2c31', x + 8, G - 10.5, 3, 1); R(c, '#2a2c31', x + 15, G - 12, 2, 3);
+  c.strokeStyle = '#2a2c31'; c.lineWidth = 1.2; c.beginPath(); c.moveTo(x + 9.5, G - 11); c.lineTo(x + 11, G - 6); c.lineTo(x + 12, G - 4); c.stroke();
+  fill(c, top, [[x + 8.5, G - 11], [x + 12, G - 18], [x + 14, G - 17], [x + 11, G - 11]], false); R(c, top, x + 12.5, G - 16, 3, 1.2);
+  disc(c, '#c58c5c', x + 13.5, G - 19.5, 1.6); disc(c, '#f4f2ec', x + 13.2, G - 20.5, 1.7);
+} };
+
+/* pickup truck (Ranger-style double cab) */
+V.pickup = { n: 'Pickup truck', w: 70, h: 27, weight: 2.5, speed: [30, 50], colours: [['White', '#eceef2'], ['Black', '#1e2024'], ['Silver', '#b9bec6'], ['Orange', '#e0661c'], ['Blue', '#1f4fa8']],
+  d(c, x, G, [, B]) { const D = SH(B, .8);
+  arch(c, x + 13, G, 6.2); arch(c, x + 56, G, 6.2);
+  fill(c, B, [[x + 1, G - 6], [x + 1, G - 17], [x + 26, G - 17], [x + 28, G - 18], [x + 31, G - 27], [x + 50, G - 27.5], [x + 56, G - 19.5], [x + 67, G - 18], [x + 69, G - 14], [x + 69, G - 6]]);
+  R(c, '#2a2c31', x + 2, G - 18.5, 25, 1.5); R(c, 'rgba(0,0,0,.2)', x + 27, G - 17, .8, 10);
+  glass(c, [[x + 31.5, G - 19.5], [x + 33.5, G - 25.6], [x + 49, G - 25.8], [x + 53.6, G - 19.5]], '#26303a'); R(c, B, x + 41.5, G - 26, 1.4, 6.5);
+  R(c, D, x + 1.5, G - 10, 67, 2.6); R(c, '#2a2c31', x + 1, G - 7, 68, 2); shine(c, x + 32, G - 27, 17);
+  R(c, '#d42a2a', x + 1, G - 16, 1.6, 4); R(c, '#e8ecf0', x + 64, G - 17, 4.5, 1.8); R(c, '#2a2c31', x + 66, G - 14, 3, 5);
+  wheel(c, x + 13, G, 6, '#2a2c31', null, 6); wheel(c, x + 56, G, 6, '#2a2c31', null, 6);
+} };
+
+/* Toyota Prius taxi (Luton private hire) */
+V.taxi = { n: 'Prius taxi', w: 60, h: 24, weight: 4, speed: [30, 50], colours: [['Silver', '#b9bec6'], ['White', '#eceef2'], ['Black', '#1e2024'], ['Grey', '#6e737b']],
+  d(c, x, G, [, B]) { const D = SH(B, .8);
+  arch(c, x + 12, G, 5.3); arch(c, x + 48, G, 5.3);
+  fill(c, B, [[x + 1, G - 5], [x + 1, G - 13], [x + 3, G - 15.5], [x + 10, G - 17], [x + 22, G - 22], [x + 33, G - 22], [x + 43, G - 15], [x + 57, G - 13], [x + 59, G - 10], [x + 59, G - 5]]);
+  glass(c, [[x + 12, G - 16.5], [x + 22.5, G - 20.6], [x + 32.4, G - 20.6], [x + 40, G - 15.4], [x + 12, G - 15.4]], '#26303a'); R(c, B, x + 26, G - 20.8, 1.4, 5.4);
+  fill(c, '#f6d21a', [[x + 24, G - 22], [x + 25, G - 24.5], [x + 31, G - 24.5], [x + 32, G - 22]]); R(c, '#1b1a24', x + 26, G - 23.8, 4, .8);
+  R(c, D, x + 1.5, G - 8, 57, 2.4); shine(c, x + 4, G - 13.6, 52); R(c, '#2a6fd8', x + 20, G - 12.5, 14, 1.4);
+  R(c, '#d42a2a', x + 1, G - 13, 2, 2.6); R(c, '#e8ecf0', x + 54, G - 12.2, 4, 1.3); R(c, '#2a2c31', x + 56.5, G - 9.5, 2.5, 3.5);
+  wheel(c, x + 12, G, 5, '#9aa2ab', null, 5); wheel(c, x + 48, G, 5, '#9aa2ab', null, 5);
+} };
+
+window.VEHICLES = V; window.VEHICLE_ORDER = ['phantom', 'c63', 'gwagon', 'golf', 'a45', 'rs3', 'p911', 'f40', 'lambo', 'taxi', 'pickup', 'van', 'smallvan', 'binlorry', 'lorry', 'motorbike', 'bike'];
+})();

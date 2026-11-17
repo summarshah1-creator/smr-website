@@ -29,9 +29,30 @@ function fk_clean(string $s, int $max): string {
     $s = trim(preg_replace('/\s+/u', ' ', $s));
     return mb_substr($s, 0, $max);
 }
-function fk_rude(string $s): bool {
-    $w = strtolower(preg_replace('/[^a-z]/i', '', strtr($s, '013457@$', 'oleastas')));
-    foreach (['fuck', 'shit', 'cunt', 'bitch', 'nigg', 'paki', 'wank', 'twat', 'dick', 'cock', 'pussy', 'slut', 'whore', 'bastard', 'retard', 'faggot', 'rape', 'nazi'] as $b) if (strpos($w, $b) !== false) return true;
+/* Name check: same rules as namecheck.js. Word list namefilter.json (English + Hindi/Urdu/Punjabi swear words and slurs,
+   with a list of real first names/surnames that only look rude because of a short word inside them). */
+function fk_norm(string $s): string {
+    if (class_exists('Normalizer')) $s = Normalizer::normalize($s, Normalizer::FORM_KD);
+    $s = @iconv('UTF-8', 'ASCII//IGNORE', $s) ?: $s;
+    $s = strtr(strtolower($s), ['0' => 'o', '1' => 'i', '2' => 'z', '3' => 'e', '4' => 'a', '5' => 's', '6' => 'g', '7' => 't', '8' => 'b', '9' => 'g', '@' => 'a', '$' => 's', '!' => 'i', '|' => 'i', '+' => 't']);
+    return preg_replace('/[^a-z ]/', '', $s);
+}
+function fk_sq(string $s): string { return preg_replace('/(.)\1+/', '$1', $s); }
+function fk_rude(string $name): bool {
+    static $L = null;
+    if ($L === null) { $j = json_decode((string) @file_get_contents(__DIR__ . '/namefilter.json'), true) ?: ['block' => [], 'must' => [], 'allow' => []]; $L = ['block' => $j['block'], 'must' => array_flip($j['must']), 'allow' => array_flip($j['allow'])]; }
+    $toks = array_values(array_filter(explode(' ', fk_norm($name)), 'strlen'));
+    $parts = $toks; if (count(array_filter($toks, fn($t) => strlen($t) === 1)) >= 2) $parts[] = implode('', $toks);
+    foreach ($parts as $tok) {
+        if (isset($L['allow'][$tok]) && !isset($L['must'][$tok])) continue;
+        $t = fk_sq($tok);
+        foreach ($L['block'] as $w) {
+            $s0 = fk_sq($w); $s = strlen($s0) >= 4 ? $s0 : $w;
+            if (strlen($s) <= 3) { if ($tok === $w || ($s === $s0 && $t === $s)) return true; }
+            elseif (strlen($s) === 4) { if ($tok === $w || str_starts_with($t, $s) || str_ends_with($t, $s)) return true; }
+            elseif (strpos($t, $s) !== false || strpos($tok, $w) !== false) return true;
+        }
+    }
     return false;
 }
 function fk_ip(): string { return substr(hash('sha256', client_ip() . '|fk'), 0, 16); }
@@ -46,7 +67,7 @@ try {
     if ($a === 'score' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         $name = fk_clean((string) ($in['name'] ?? ''), 14); $score = (int) ($in['score'] ?? 0);
         if ($name === '' || !preg_match("/^[\\p{L}\\p{N} ._'-]+$/u", $name)) json_out(['error' => 'Use letters and numbers only.'], 400);
-        if (fk_rude($name)) json_out(['error' => 'Please pick a different name.'], 400);
+        if (fk_rude($name)) json_out(['error' => "That name isn't allowed. Please use your real name or a nickname.", 'rude' => true], 400);
         if ($score < 1 || $score > 999) json_out(['error' => 'Score not accepted.'], 400);
         $k = 'fk_score:' . fk_ip();
         if (too_many($k, 15, 3600)) json_out(['error' => 'Too many scores this hour. Try again later.'], 429);
