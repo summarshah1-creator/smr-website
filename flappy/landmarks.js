@@ -584,12 +584,18 @@ L.spudkingz = { n: 'Spud Kingz', w: 210, d(c, x, G) {
   T(c, 'Crowned in Flavour', x + 112, G - 37, 8, '#d9b05a', 'center', false); T(c, 'ROOTED IN COMMUNITY', x + 112, G - 28, 8, '#d9b05a', 'center', false);
   R(c, '#2a2a2e', x + 196, G - 9, 3, 9);
   // sign frame bolted to the trailer roof: two posts + black board, text on one line, potato sitting on top
-  const SX = x + 110; R(c, '#141416', SX - 66, G - 112, 3, 24); R(c, '#141416', SX + 63, G - 112, 3, 24);
-  BOX(c, '#141416', SX - 96, G - 118, 192, 30); R(c, '#3a3a40', SX - 94, G - 116, 188, 1); R(c, '#f2c43a', SX - 94, G - 91, 188, 1);
+  const SX = x + 110;   // a thin black rail behind the letters, bolted to the roof with two posts
+  for (const px of [SX - 72, SX + 69]) R(c, '#141416', px, G - 104, 3, 18);
+  { c.font = '700 18px Silk'; const tw = c.measureText('Spud Kingz').width; R(c, '#141416', Math.round(SX - tw / 2) + 4, G - 105, Math.round(tw) - 8, 3); }
   c.font = '700 18px Silk'; const w1 = c.measureText('Spud ').width, w2 = c.measureText('Kingz').width, sx0 = Math.round(SX - (w1 + w2) / 2);
   TS(c, 'Spud', sx0, G - 113, 18, '#5fd36a', '#0a0a0c', 'left'); TS(c, 'Kingz', sx0 + w1, G - 113, 18, '#f6c933', '#0a0a0c', 'left');
-  CIRC(c, OUT, SX, G - 131, 13); CIRC(c, '#c9944a', SX, G - 131, 12); CIRC(c, '#b07c38', SX + 4, G - 127, 5); R(c, '#e2b878', SX - 6, G - 137, 4, 2); R(c, '#7a5230', SX - 3, G - 127, 2, 2); R(c, '#7a5230', SX + 5, G - 134, 2, 2);
-  P(c, '#f2c43a', [[SX - 11, G - 141], [SX - 10, G - 153], [SX - 5, G - 146], [SX, G - 156], [SX + 5, G - 146], [SX + 10, G - 153], [SX + 11, G - 141]], true);
+  // open jacket potato: oval brown skin, split along the top with fluffy filling and butter, crown on top
+  const EL = (col, rx, ry, oy) => { c.fillStyle = col; c.beginPath(); c.ellipse(SX, G - 122 + (oy || 0), rx, ry, 0, 0, 7); c.fill(); };
+  EL(OUT, 20, 11); EL('#b9803c', 19, 10); EL('#9c6a2e', 18, 6, 4); R(c, '#7a5230', SX - 13, G - 118, 2, 2); R(c, '#7a5230', SX + 11, G - 116, 2, 2); R(c, '#d29a52', SX - 15, G - 126, 3, 2);
+  P(c, OUT, [[SX - 14, G - 127], [SX - 8, G - 133], [SX + 8, G - 133], [SX + 14, G - 127], [SX + 8, G - 123], [SX - 8, G - 123]], true);
+  P(c, '#c99a5e', [[SX - 12, G - 127], [SX - 7, G - 132], [SX + 7, G - 132], [SX + 12, G - 127], [SX + 7, G - 124], [SX - 7, G - 124]], true);
+  R(c, '#dcb27a', SX - 6, G - 131, 4, 2); R(c, '#dcb27a', SX + 3, G - 130, 3, 2); R(c, '#9c6a2e', SX - 9, G - 126, 3, 1); R(c, '#9c6a2e', SX + 5, G - 125, 4, 1);
+  P(c, '#f2c43a', [[SX - 11, G - 135], [SX - 10, G - 147], [SX - 5, G - 140], [SX, G - 150], [SX + 5, G - 140], [SX + 10, G - 147], [SX + 11, G - 135]], true);
 } };
 
 L.station = { n: 'Luton Station', w: 270, d(c, x, G) {
@@ -807,7 +813,7 @@ const EX = {
   stmarys(c, x, G) { R(c, '#6fbf4a', x - 10, G - 4, 320, 4); for (const gx of [x + 40, x + 80, x + 130, x + 186, x + 268, x + 278]) { BOX(c, '#8f8b80', gx, G - 14, 6, 14); R(c, '#8f8b80', gx + 1, G - 15, 4, 1); }
     TREE(c, x - 2, G, 1.3, '#4f8a3c', '#3a6b2c'); CIRC(c, OUT, x + 270, G - 12, 13); CIRC(c, '#3f7d33', x + 270, G - 12, 12); R(c, '#5a3d2a', x + 160, G - 24, 2, 24); CIRC(c, '#7fbf4a', x + 154, G - 30, 7); CIRC(c, '#7fbf4a', x + 168, G - 28, 6); },
   chaiikhana(c, x, G) { const CONE = (cx) => { P(c, '#f4c430', [[cx, G], [cx + 4, G - 12], [cx + 8, G]], true); CIRC(c, '#2f4fa8', cx + 4, G - 5, 2); R(c, '#d32f2f', cx + 2, G - 5, 5, 1); BOX(c, '#3a3d44', cx - 1, G - 2, 10, 2); };
-    CONE(x - 14, G); CONE(x + 120, G); CONE(x + 196, G); BIN(c, x + 70, G, '#1a1a1e'); PERSON(c, x + 34, G, '#22252a', '#7f9ab8', '#c58c5c', '#3a3d44'); BOX(c, '#a8aeb4', x - 34, G - 18, 18, 18); },
+    BIN(c, x + 70, G, '#1a1a1e'); PERSON(c, x + 34, G, '#22252a', '#7f9ab8', '#c58c5c', '#3a3d44'); },
   chiltern(c, x, G) { const HEDGE = (hx, w, h) => { BOX(c, '#c5b13a', hx, G - h, w, h); for (let i = 0; i < w * h / 6; i++) R(c, (i % 3) ? '#a99a28' : '#e2cf58', hx + (i * 13) % w, G - h + (i * 7) % h, 2, 2); };
     HEDGE(x - 10, 130, 12); HEDGE(x + 240, 120, 12); BOX(c, '#2a2c33', x + 120, G - 6, 6, 6); BOX(c, '#2a2c33', x + 234, G - 6, 6, 6);
     P(c, '#5f8f2c', [[x + 266, G - 12], [x + 280, G - 70], [x + 294, G - 12]]); for (let i = 0; i < 8; i++) R(c, '#a8b83a', x + 274 + (i * 5) % 14, G - 60 + i * 6, 2, 2);
@@ -917,9 +923,9 @@ Object.keys(WIDEN).forEach(k => { const o = WIDEN[k], d0 = L[k].d; L[k].w = o.w;
 // text drawn after a landmark is scaled, so small lettering stays crisp (sx/sy = original coordinates)
 const SHARP = {
   spudkingz(c, x, G, f) { const X = v => Math.round(x + v * f), Y = v => Math.round(G - v * f);
-    BOX(c, '#141416', X(14), Y(118), Math.round(192 * f), Math.round(30 * f)); R(c, '#f2c43a', X(16), Y(91), Math.round(188 * f), 1);
     c.font = '700 12px Silk'; c.textBaseline = 'middle'; const w1 = c.measureText('Spud ').width, w2 = c.measureText('Kingz').width, sx0 = Math.round(X(110) - (w1 + w2) / 2);
-    c.textAlign = 'left'; c.fillStyle = '#0a0a0c'; c.fillText('Spud', sx0 + 1, Y(103) + 1); c.fillText('Kingz', sx0 + w1 + 1, Y(103) + 1); c.fillStyle = '#5fd36a'; c.fillText('Spud', sx0, Y(103)); c.fillStyle = '#f6c933'; c.fillText('Kingz', sx0 + w1, Y(103));
+    R(c, '#141416', sx0 + 3, Y(105), Math.round(w1 + w2) - 6, 2);
+    c.textAlign = 'left'; c.strokeStyle = '#0a0a0c'; c.lineWidth = 2; c.lineJoin = 'round'; c.strokeText('Spud', sx0, Y(103)); c.strokeText('Kingz', sx0 + w1, Y(103)); c.fillStyle = '#5fd36a'; c.fillText('Spud', sx0, Y(103)); c.fillStyle = '#f6c933'; c.fillText('Kingz', sx0 + w1, Y(103));
     BOX(c, '#141416', X(30), Y(40), Math.round(160 * f), Math.round(22 * f)); c.textAlign = 'center'; c.font = '7px Silk'; c.fillStyle = '#d9b05a'; c.fillText('CROWNED IN FLAVOUR', X(112), Y(34)); c.fillText('ROOTED IN COMMUNITY', X(112), Y(26)); },
   masjid(c, x, G, f) { const X = v => Math.round(x + v * f), Y = v => Math.round(G - v * f);   // v = unscaled coords incl. the 50px widening
     BOX(c, '#1f5a44', X(53), Y(118), Math.round(116 * f), Math.round(16 * f)); c.textAlign = 'center'; c.textBaseline = 'middle';
