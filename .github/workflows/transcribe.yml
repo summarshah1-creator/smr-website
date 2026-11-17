@@ -16,7 +16,8 @@ jobs:
           r = m.transcribe('song.mp3', word_timestamps=True, language='en', initial_prompt="SMR original, Flappy Kabootar, Luton, kabootar on the wing, pipes on the left, pipes on the right, ice-cream van, leaderboard, score card, home screen, recommend the place")
           out = [{'start': s['start'], 'end': s['end'], 'text': s['text'], 'words': [{'w': w['word'], 's': w['start'], 'e': w['end']} for w in s.get('words', [])]} for s in r['segments']]
           json.dump(out, open('words.json', 'w'), indent=1)
-          for s in out: print(round(s['start'],2), round(s['end'],2), s['text'])
+          for s in out:
+            for w in s['words']: print('W', round(w['s'],2), round(w['e'],2), w['w'])
           PY
       - uses: actions/upload-artifact@v4
         with: { name: words, path: words.json }
