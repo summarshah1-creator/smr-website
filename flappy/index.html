@@ -446,7 +446,7 @@ const LB = (() => { const api = 'api.php'; let online = null, data = { today: []
 /* ---------- always the latest version, also when saved to the Home Screen ----------
    version.json is rewritten on every deploy; when it changes the page reloads itself (straight away on the menu,
    or right after the current game ends), with a cache-busting query so the phone fetches the new HTML. */
-(() => { const BUILD = '20261117152221'; let pending = false;
+(() => { const BUILD = '20261117152307'; let pending = false;
   const go = () => { let last = 0; try { last = +sessionStorage.getItem('fk_upd_t') || 0; } catch (e) {} if (Date.now() - last < 60000) return;   // never loop: at most one reload a minute
     try { sessionStorage.setItem('fk_upd_t', String(Date.now())); } catch (e) {} location.replace(location.pathname + '?u=' + Date.now() + location.hash); };
   const check = () => fetch('version.json?ts=' + Date.now(), { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(j => {
@@ -469,7 +469,7 @@ const LB = (() => { const api = 'api.php'; let online = null, data = { today: []
     box(560, 300); x.fillStyle = '#6a5a3a'; x.font = '700 34px Silk'; x.fillText('I SCORED', 530, 590); x.fillStyle = '#1b1a24'; x.font = '120px PS'; x.fillText(String(score), 530, 644);
     x.font = '600 34px -apple-system,Segoe UI,Roboto,sans-serif'; x.fillStyle = '#6a5a3a'; x.fillText(last ? 'and flew past ' + last : 'flying through Luton', 530, 795);
     x.fillStyle = '#1b1a24'; x.fillRect(240, 890, 600, 70); x.fillStyle = '#ffd84a'; x.font = '700 30px Silk'; x.fillText('CAN YOU BEAT ME?', 540, 910);
-    x.fillStyle = '#1b1a24'; x.font = '600 30px -apple-system,Segoe UI,Roboto,sans-serif'; x.fillText('Play free: ' + location.host.replace(/^www\./, '') + location.pathname.replace(/index\.html$/, ''), 540, 1275);
+    x.fillStyle = '#1b1a24'; x.font = '600 30px -apple-system,Segoe UI,Roboto,sans-serif'; x.fillText('Play free: smrgraphics.co.uk/flappykabootar', 540, 1275);
     return c; };
   $('cardB').addEventListener('click', e => { e.stopPropagation(); TRACK.send('card', score); const c = make(); $('cardI').src = c.toDataURL('image/png'); c.toBlob(b => { blob = b; }, 'image/png'); $('cardM').classList.remove('hide'); });
   $('cardS').addEventListener('click', async e => { e.stopPropagation(); if (!blob) return; TRACK.send('card_save', score); const f = new File([blob], 'flappy-kabootar-score.png', { type: 'image/png' });
@@ -667,7 +667,7 @@ Promise.all([document.fonts.load('700 8px Silk'), document.fonts.load('400 8px S
 
 /* ---------- share + home ---------- */
 (() => { const $ = id => document.getElementById(id), toast = m => { const t = $('shT'); t.textContent = m; t.classList.add('on'); setTimeout(() => t.classList.remove('on'), 1800); };
-  const url = () => location.href.split('#')[0];
+  const url = () => /smrgraphics|smrdigital/.test(location.host) ? 'https://smrgraphics.co.uk/flappykabootar' : location.href.split('#')[0];
   document.querySelectorAll('.shr').forEach(b => b.addEventListener('click', async e => { e.stopPropagation(); TRACK.send('share', b.dataset.share === 'app' ? 1 : 0);
     const sc = $('sc') ? $('sc').textContent : '0', text = b.dataset.share === 'app' && +sc > 0 ? '\u{1F426} I just scored ' + sc + ' on Flappy Kabootar, flying through Luton! Think you can beat me? Try it here:' : '\u{1F426} Play Flappy Kabootar: flap your way through Luton and see how many places you can spot! Try it here:';
     try { if (navigator.share) { await navigator.share({ title: 'Flappy Kabootar', text, url: url() }); return; } } catch (x) { if (x && x.name === 'AbortError') return; }
