@@ -446,7 +446,7 @@ const LB = (() => { const api = 'api.php'; let online = null, data = { today: []
 /* ---------- always the latest version, also when saved to the Home Screen ----------
    version.json is rewritten on every deploy; when it changes the page reloads itself (straight away on the menu,
    or right after the current game ends), with a cache-busting query so the phone fetches the new HTML. */
-(() => { const BUILD = '20261117152307'; let pending = false;
+(() => { const BUILD = '20261117152347'; let pending = false;
   const go = () => { let last = 0; try { last = +sessionStorage.getItem('fk_upd_t') || 0; } catch (e) {} if (Date.now() - last < 60000) return;   // never loop: at most one reload a minute
     try { sessionStorage.setItem('fk_upd_t', String(Date.now())); } catch (e) {} location.replace(location.pathname + '?u=' + Date.now() + location.hash); };
   const check = () => fetch('version.json?ts=' + Date.now(), { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(j => {
@@ -473,7 +473,7 @@ const LB = (() => { const api = 'api.php'; let online = null, data = { today: []
     return c; };
   $('cardB').addEventListener('click', e => { e.stopPropagation(); TRACK.send('card', score); const c = make(); $('cardI').src = c.toDataURL('image/png'); c.toBlob(b => { blob = b; }, 'image/png'); $('cardM').classList.remove('hide'); });
   $('cardS').addEventListener('click', async e => { e.stopPropagation(); if (!blob) return; TRACK.send('card_save', score); const f = new File([blob], 'flappy-kabootar-score.png', { type: 'image/png' });
-    try { if (navigator.canShare && navigator.canShare({ files: [f] })) { await navigator.share({ files: [f], title: 'Flappy Kabootar', text: '\u{1F426} I scored ' + score + ' on Flappy Kabootar! Can you beat me? ' + location.href.split('#')[0] }); return; } } catch (x) { if (x && x.name === 'AbortError') return; }
+    try { if (navigator.canShare && navigator.canShare({ files: [f] })) { await navigator.share({ files: [f], title: 'Flappy Kabootar', text: '\u{1F426} I scored ' + score + ' on Flappy Kabootar! Can you beat me? ' + (/smrgraphics|smrdigital/.test(location.host) ? 'https://smrgraphics.co.uk/flappykabootar' : location.href.split('#')[0]) }); return; } } catch (x) { if (x && x.name === 'AbortError') return; }
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = f.name; document.body.appendChild(a); a.click(); a.remove(); });
   $('cardM').querySelector('.x').addEventListener('click', e => { e.stopPropagation(); $('cardM').classList.add('hide'); });
   $('cardM').addEventListener('pointerdown', e => { e.stopPropagation(); if (e.target === $('cardM')) $('cardM').classList.add('hide'); });
