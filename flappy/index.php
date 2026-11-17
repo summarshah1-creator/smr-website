@@ -202,7 +202,7 @@ html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:m
 </div></div>
   <div id="tap" class="hide">TAP TO FLAP</div>
 </div>
-<script src="landmarks.js?v=1117zo"></script>
+<script src="landmarks.js?v=1117zp"></script>
 <script src="vehicles.js?v=1117q"></script>
 <script src="namecheck.js"></script>
 <script>
@@ -218,7 +218,7 @@ function resize() { dpr = Math.min(window.devicePixelRatio || 1, 3); cv.width = 
 addEventListener('resize', resize); resize();
 
 /* ---------- pre-render landmarks and cars once ---------- */
-const M = 90, LH = 300;
+const M = 90, LH = 380;
 const sprites = [];
 function prerender() {
   LM_ORDER.forEach(k => { const L = LANDMARKS[k]; const oc = document.createElement('canvas'); oc.width = L.w + M * 2; oc.height = LH; const o = oc.getContext('2d'); o.imageSmoothingEnabled = false; L.d(o, M, LH - 6); sprites.push({ k, n: L.n, w: L.w, c: oc }); });
@@ -468,7 +468,7 @@ const LB = (() => { const api = 'api.php'; let online = null, data = { today: []
 /* ---------- always the latest version, also when saved to the Home Screen ----------
    version.json is rewritten on every deploy; when it changes the page reloads itself (straight away on the menu,
    or right after the current game ends), with a cache-busting query so the phone fetches the new HTML. */
-(() => { const BUILD = '20261117225619'; let pending = false;
+(() => { const BUILD = '20261117231533'; let pending = false;
   const go = () => { let last = 0; try { last = +sessionStorage.getItem('fk_upd_t') || 0; } catch (e) {} if (Date.now() - last < 60000) return;   // never loop: at most one reload a minute
     try { sessionStorage.setItem('fk_upd_t', String(Date.now())); } catch (e) {} location.replace(location.pathname + '?u=' + Date.now() + location.hash); };
   const check = () => fetch('version.json?ts=' + Date.now(), { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(j => {
@@ -605,10 +605,10 @@ function draw() {
     for (let xx = x0; xx < x1; xx++) { const n = Math.floor((xx - (l.x - 4 * f)) / sw); ctx.fillStyle = n % 2 ? '#6aa848' : '#54903a'; ctx.fillRect(xx, GY - lh, 1, lh); }
     ctx.fillStyle = '#2f5a26'; ctx.fillRect(x0, GY - lh - 1, x1 - x0, 2); });
   lmQueue.forEach(l => { if (l.x > W + 260 || l.x + l.sp.w < -260) return;
-    if (l.sp.k === 'airport') { if (!l.planeGone && !plane && l.x + 300 < W * .6) { plane = { t0: t, x: l.x + 300 }; l.planeGone = 1; }
+    if (l.sp.k === 'airport') { const apf = (typeof SCALE !== 'undefined' && SCALE.airport) || 1; if (!l.planeGone && !plane && l.x + 300 * apf < W * .6) { plane = { t0: t, x: l.x + 300 * apf }; l.planeGone = 1; }
       if (PL && plane && PL.y > GY - 166) { drawPlane(PL); planeDrawn = true; } }   // still below the roofline: draw it first so the terminal hides its lower half
     if (l.sp.k === 'funfair' && l.x < W * .9 && l.x + l.sp.w > W * .1) AMB.fair = 1;
-    ctx.drawImage(l.sp.c, Math.round(l.x - M), GY - LH + 6); if (ANIM_K[l.sp.k]) LM_ANIM[l.sp.k](ctx, Math.round(l.x), GY, t); });
+    ctx.drawImage(l.sp.c, Math.round(l.x - M), GY - LH + 6); if (ANIM_K[l.sp.k]) { const af = l.sp.k !== 'lutonhoo' && typeof SCALE !== 'undefined' && SCALE[l.sp.k]; if (af) { ctx.save(); ctx.translate(Math.round(l.x), GY); ctx.scale(af, af); LM_ANIM[l.sp.k](ctx, 0, 0, t); ctx.restore(); } else LM_ANIM[l.sp.k](ctx, Math.round(l.x), GY, t); } });
   if (PL && plane && !planeDrawn) drawPlane(PL);
   // banner plane over Currys: a little propeller plane towing "@DONNERRUSH · OPEN NOW OUTSIDE CURRYS"
   if (!bplane) { const cu = lmQueue.find(l => l.sp.k === 'currys' && !l.bannerGone && l.x < W * .75 && l.x + l.sp.w > 0); if (cu) { cu.bannerGone = 1; bplane = { t0: t }; } }   // flies in from the left, against the scroll, so it's always clearly moving

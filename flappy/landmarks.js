@@ -57,7 +57,14 @@ L.chaiiwala = { n: 'Chaiiwala and Nando\'s', w: 290, d(c, x, G) {
   GLASS(c, x + 184, G - 72, 108, 72, '#6a8aa6', 6, 2); BOX(c, '#2a2c30', x + 196, G - 40, 16, 40); R(c, '#9fc1d8', x + 198, G - 38, 12, 38);
   R(c, '#5a3d2a', x + 232, G - 24, 2, 24); CIRC(c, '#6f8f4a', x + 233, G - 30, 8);
   BOX(c, '#2a2c30', x + 292, G - 110, 46, 110); for (let j = 0; j < 4; j++) R(c, '#34373c', x + 292, G - 82 + j * 22, 46, 1);
-  CIRC(c, '#e0262a', x + 315, G - 88, 15); CIRC(c, '#2a2c30', x + 315, G - 88, 13); R(c, '#e0262a', x + 313, G - 98, 4, 6); CIRC(c, '#e0262a', x + 315, G - 86, 4); R(c, '#e0262a', x + 313, G - 82, 4, 8); R(c, '#e0262a', x + 310, G - 76, 10, 2);
+  // simple cockerel in a red ring (generic chicken, not a copy of any real logo)
+  { const cx = x + 315, cy = G - 88, RC = '#e0262a'; CIRC(c, RC, cx, cy, 15); CIRC(c, '#2a2c30', cx, cy, 13);
+    CIRC(c, RC, cx + 1, cy + 1, 6); R(c, RC, cx - 5, cy - 2, 4, 5); CIRC(c, RC, cx - 5, cy - 5, 3);
+    R(c, RC, cx - 7, cy - 10, 2, 2); R(c, RC, cx - 5, cy - 11, 2, 3); R(c, RC, cx - 3, cy - 10, 2, 2);
+    R(c, '#f2c43a', cx - 10, cy - 5, 2, 2); R(c, '#2a2c30', cx - 6, cy - 6, 1, 1); R(c, RC, cx - 7, cy - 2, 2, 3);
+    R(c, RC, cx + 6, cy - 7, 2, 7); R(c, RC, cx + 8, cy - 9, 2, 7); R(c, RC, cx + 10, cy - 6, 2, 5);
+    R(c, '#2a2c30', cx - 1, cy + 1, 5, 1); R(c, '#2a2c30', cx, cy - 1, 4, 1);
+    R(c, RC, cx - 1, cy + 7, 1, 4); R(c, RC, cx + 3, cy + 7, 1, 4); R(c, RC, cx - 2, cy + 10, 2, 1); R(c, RC, cx + 2, cy + 10, 2, 1); }
   c.restore();
 } };
 
@@ -134,7 +141,7 @@ L.welcome = { n: 'Welcome to Luton', w: 260, d(c, x, G) {
   for (let i = 0; i < 60; i++) R(c, i % 3 ? '#4f8a36' : '#8cc86a', x + 10 + (i * 37) % 240, G - 80 + (i * 23) % 76, 2, 2);
   P(c, '#55595f', [[x + 20, G - 6], [x + 46, G - 80], [x + 214, G - 80], [x + 240, G - 6]], true);
   for (let i = 0; i < 40; i++) R(c, '#4c5056', x + 40 + (i * 31) % 180, G - 74 + (i * 17) % 66, 2, 1);
-  T(c, 'WELCOME TO', x + 130, G - 72, 16, '#f6f6f2'); T(c, 'LUTON', x + 131, G - 51, 40, '#c9c9c4'); T(c, 'LUTON', x + 130, G - 52, 40, '#ffffff');
+  T(c, 'WELCOME TO', x + 130, G - 72, 16, '#f6f6f2'); T(c, 'LUTON', x + 131, G - 58, 40, '#c9c9c4'); T(c, 'LUTON', x + 130, G - 59, 40, '#ffffff');
 } };
 
 L.kahwa = { n: 'Kahwa Cafe', w: 110, d(c, x, G) {
@@ -346,15 +353,16 @@ L.masjid = { n: 'Luton Central Mosque', w: 270, d(c, x, G) {
     if (i < 10) { BRICK(c, x - 4 + i * 27, G - 12, 21, 12, '#c0503f', '#a8443a'); for (let k = 0; k < 6; k++) R(c, '#2a2a2e', x - 2 + i * 27 + k * 3, G - 22, 1, 10); R(c, '#2a2a2e', x - 4 + i * 27, G - 22, 21, 1); } }
 } };
 
-L.tesco = { n: 'Tesco Extra', w: 240, d(c, x, G) {
+L.tesco = { n: 'Tesco Extra', w: 200, d(c, x, G) {
+  c.save(); c.translate(-20, 0);
   BRICK(c, x + 72, G - 150, 30, 40, '#a8503a', '#94452f'); R(c, OUT, x + 71, G - 151, 32, 41); BRICK(c, x + 72, G - 150, 30, 40, '#a8503a', '#94452f');
   P(c, '#3a3a3e', [[x + 66, G - 150], [x + 108, G - 150], [x + 98, G - 162], [x + 76, G - 162]], true);
   BOX(c, '#f4f2ec', x + 72, G - 148, 30, 7); T(c, 'TESCO', x + 87, G - 148, 8, '#d8262f', 'center', false);
-  for (const cx of [x + 80, x + 94]) { CIRC(c, OUT, cx, G - 128, 5); CIRC(c, '#f4f2ec', cx, G - 128, 4); R(c, OUT, cx, G - 131, 1, 3); R(c, OUT, cx, G - 128, 3, 1); }
-  P(c, '#3d3f45', [[x - 4, G - 66], [x + 244, G - 66], [x + 222, G - 116], [x + 18, G - 116]], true);
-  for (let i = 0; i < 12; i++) R(c, '#34363c', x + 14 + i * 2, G - 112 + i * 4, 212 - i * 4, 1);
-  BRICK(c, x, G - 66, 240, 66, '#a8503a', '#94452f'); R(c, OUT, x - 1, G - 67, 242, 1);
-  BOX(c, '#ecebe7', x - 4, G - 70, 248, 4);
+  { const cx = x + 87; CIRC(c, OUT, cx, G - 128, 7); CIRC(c, '#f4f2ec', cx, G - 128, 6); R(c, OUT, cx, G - 133, 1, 5); R(c, OUT, cx, G - 128, 4, 1); R(c, OUT, cx - 1, G - 129, 2, 2); }
+  P(c, '#3d3f45', [[x + 16, G - 66], [x + 224, G - 66], [x + 206, G - 116], [x + 34, G - 116]], true);
+  for (let i = 0; i < 12; i++) R(c, '#34363c', x + 30 + i * 2, G - 112 + i * 4, 180 - i * 4, 1);
+  BRICK(c, x + 20, G - 66, 200, 66, '#a8503a', '#94452f'); R(c, OUT, x + 19, G - 67, 202, 1);
+  BOX(c, '#ecebe7', x + 16, G - 70, 208, 4);
   c.lineJoin = 'round'; c.lineWidth = 3; c.strokeStyle = '#f4f2ec'; c.font = '700 16px Silk'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.strokeText('TESCO', x + 84, G - 92); c.fillStyle = '#d8262f'; c.fillText('TESCO', x + 84, G - 92);
   c.font = '700 12px Silk'; c.strokeText('Extra', x + 146, G - 91); c.fillStyle = '#1f4fa8'; c.fillText('Extra', x + 146, G - 91);
   BOX(c, '#c8202a', x + 40, G - 60, 70, 8); T(c, 'Welcome', x + 75, G - 60, 8, '#ffffff', 'center', false);
@@ -363,7 +371,8 @@ L.tesco = { n: 'Tesco Extra', w: 240, d(c, x, G) {
   for (let i = 0; i < 9; i++) { R(c, '#9aa3ad', x + 116 + i * 7, G - 14, 6, 1); R(c, '#9aa3ad', x + 116 + i * 7, G - 14, 1, 10); R(c, '#2f4fa8', x + 116 + i * 7, G - 6, 6, 2); }
   BOX(c, '#1f4fa8', x + 160, G - 40, 30, 40); BOX(c, '#3a3d44', x + 166, G - 32, 8, 10); BOX(c, '#3a3d44', x + 178, G - 32, 8, 10);
   BOX(c, '#1a1a1e', x + 200, G - 52, 20, 52); BOX(c, '#cfe6f2', x + 203, G - 48, 14, 26); R(c, '#e8c766', x + 205, G - 30, 10, 6);
-  for (let i = 0; i < 10; i++) R(c, '#cfcac0', x + 4 + i * 4, G - 52, 1, 52);
+  for (let i = 0; i < 4; i++) R(c, '#cfcac0', x + 24 + i * 4, G - 52, 1, 52);
+  c.restore();
 } };
 
 L.currys = { n: 'Currys', w: 360, d(c, x, G) {
@@ -660,13 +669,14 @@ L.jdgyms = { n: 'JD Gyms', w: 360, d(c, x, G) {
   BOX(c, '#d4d8de', x + 112, G - 144, 136, 144);
   P(c, '#cdd1d7', [[x + 96, G - 152], [x + 264, G - 152], [x + 256, G - 162], [x + 104, G - 162]], true); for (const px of [x + 104, x + 252]) BOX(c, '#9aa3ad', px, G - 152, 4, 152);
   BOX(c, '#2f3a4c', x + 112, G - 148, 136, 46); R(c, '#3a4760', x + 112, G - 148, 136, 3);
-  CIRC(c, OUT, x + 140, G - 125, 18); CIRC(c, '#ffffff', x + 140, G - 125, 17); T(c, 'JD', x + 141, G - 133, 16, '#2f3a4c');
-  T(c, 'GYMS', x + 204, G - 133, 16, '#ffffff');
+  CIRC(c, OUT, x + 140, G - 125, 18); CIRC(c, '#ffffff', x + 140, G - 125, 17);
+  c.font = '700 15px Silk'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = '#2f3a4c'; c.fillText('JD', x + 141, G - 124);
+  c.font = '700 18px Silk'; c.fillStyle = '#ffffff'; c.fillText('GYMS', x + 204, G - 124); c.textBaseline = 'top';
   const BR = (bx, by, sx, sy) => { R(c, '#8be03a', bx, by, 9 * sx, 3); R(c, '#8be03a', sx < 0 ? bx - 3 : bx, by, 3, 9 * sy); };
   BR(x + 166, G - 142, 1, 1); BR(x + 242, G - 142, -1, 1); BR(x + 166, G - 109, 1, -1); BR(x + 242, G - 109, -1, -1);
   P(c, '#cdd1d7', [[x + 98, G - 92], [x + 262, G - 92], [x + 254, G - 102], [x + 106, G - 102]], true); R(c, '#9aa3ad', x + 106, G - 92, 148, 2);
   BOX(c, '#26303d', x + 116, G - 90, 128, 90); for (let i = 0; i < 6; i++) R(c, '#33404f', x + 118 + i * 21, G - 88, 19, 40);
-  BOX(c, '#121418', x + 134, G - 52, 92, 10); T(c, 'WELCOME JD GYMS LUTON', x + 180, G - 51, 8, '#ffffff', 'center', false);
+  BOX(c, '#121418', x + 112, G - 53, 136, 12); T(c, 'WELCOME JD GYMS LUTON', x + 180, G - 51, 8, '#ffffff', 'center', false);
   R(c, '#9fc1d8', x + 150, G - 40, 60, 40); R(c, '#26303d', x + 179, G - 40, 2, 40); R(c, 'rgba(255,255,255,.3)', x + 156, G - 38, 3, 30);
 } };
 
@@ -704,21 +714,22 @@ L.lidl = { n: 'Lidl', w: 260, d(c, x, G) {
   for (let i = 0; i < 8; i++) { R(c, '#ecebe7', x + 14 + i * 20, G - 16, 2, 16); R(c, '#9aa3ad', x + 14 + i * 20, G - 12, 20, 1); }
 } };
 
-L.matalan = { n: 'Matalan', w: 440, d(c, x, G) {
-  const RD = '#d2232a';
-  for (const [bx, bw] of [[x, 150], [x + 290, 150]]) {
+L.matalan = { n: 'Matalan', w: 360, d(c, x, G) {
+  const RD = '#d2232a'; c.save(); c.translate(-40, 0);
+  for (const [bx, bw] of [[x + 40, 110], [x + 290, 110]]) {
     BOX(c, '#f1efe9', bx, G - 78, bw, 78); BOX(c, RD, bx - 2, G - 84, bw + 4, 6); R(c, '#a81a20', bx - 2, G - 79, bw + 4, 1);
     for (let i = 0; i < 3; i++) { const px = bx + 6 + i * (bw - 12) / 3; BRICK(c, px, G - 78, 12, 78, '#a8503a', '#94452f'); R(c, OUT, px - 1, G - 78, 1, 78); }
     BRICK(c, bx, G - 30, bw, 30, '#a8503a', '#94452f'); R(c, RD, bx, G - 31, bw, 2);
   }
-  BOX(c, '#26303d', x + 30, G - 74, 36, 44); for (let j = 0; j < 3; j++) R(c, RD, x + 30, G - 74 + j * 15, 36, 2); R(c, RD, x + 47, G - 74, 2, 44);
-  BOX(c, RD, x + 372, G - 44, 30, 44); R(c, '#a81a20', x + 386, G - 44, 2, 44);
-  for (const [px, col] of [[x + 80, '#f4f2ec'], [x + 104, '#2a6fa8'], [x + 320, '#2a6fa8'], [x + 344, '#f4f2ec']]) BOX(c, col, px, G - 28, 14, 20);
+  BOX(c, '#26303d', x + 62, G - 74, 36, 44); for (let j = 0; j < 3; j++) R(c, RD, x + 62, G - 74 + j * 15, 36, 2); R(c, RD, x + 79, G - 74, 2, 44);
+  BOX(c, RD, x + 352, G - 44, 30, 44); R(c, '#a81a20', x + 366, G - 44, 2, 44);
+  for (const [px, col] of [[x + 106, '#f4f2ec'], [x + 126, '#2a6fa8'], [x + 316, '#2a6fa8'], [x + 334, '#f4f2ec']]) BOX(c, col, px, G - 28, 14, 20);
   BRICK(c, x + 150, G - 130, 140, 130, '#a8503a', '#94452f'); R(c, OUT, x + 149, G - 131, 142, 1);
   P(c, RD, [[x + 132, G - 158], [x + 308, G - 158], [x + 298, G - 150], [x + 142, G - 150]], true); BOX(c, RD, x + 154, G - 150, 132, 26); R(c, '#e8424a', x + 154, G - 150, 132, 2);
   T(c, 'MATALAN', x + 220, G - 145, 16, '#ffffff');
   for (const [gx, red] of [[x + 158, false], [x + 224, true]]) { BOX(c, '#26303d', gx, G - 118, 58, 118); for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) R(c, (i + j) % 2 ? '#4a6a86' : '#5d7d98', gx + 2 + i * 14, G - 116 + j * 18, 12, 16); R(c, RD, gx, G - 46, 58, 3); if (red) { BOX(c, RD, gx, G - 44, 58, 44); R(c, '#a81a20', gx + 28, G - 44, 2, 44); } else { R(c, '#9fc1d8', gx + 6, G - 40, 46, 40); R(c, RD, gx + 28, G - 40, 2, 40); R(c, RD, gx + 6, G - 26, 46, 2); } }
-  for (let i = 0; i < 16; i++) { const bx = x + 6 + i * 28; BOX(c, RD, bx, G - 14, 4, 14); R(c, '#f06a70', bx, G - 14, 1, 14); }
+  for (let i = 0; i < 13; i++) { const bx = x + 46 + i * 28; BOX(c, RD, bx, G - 14, 4, 14); R(c, '#f06a70', bx, G - 14, 1, 14); }
+  c.restore();
 } };
 
 L.spudkingz = { n: 'Spud Kingz', w: 210, d(c, x, G) {
@@ -968,7 +979,7 @@ const EX = {
   inspire(c, x, G) { R(c, '#6fbf4a', x, G - 4, 230, 4); for (const tx of [x + 150, x + 196]) { R(c, '#5a3d2a', tx, G - 26, 2, 26); CIRC(c, '#5f8f3c', tx + 1, G - 30, 6); }
     for (const lx of [x + 170, x + 260]) { R(c, '#9aa0a8', lx, G - 120, 3, 120); R(c, '#9aa0a8', lx, G - 120, 12, 2); BOX(c, '#2f6fb5', lx + 4, G - 104, 10, 30); R(c, '#7fc3e8', lx + 6, G - 100, 6, 6); }
     for (let i = 0; i < 8; i++) BOLL(c, x + 340 + i * 12, G); BOX(c, '#f2c43a', x + 238, G - 8, 8, 8); PERSON(c, x + 360, G, '#2f4a8a'); },
-  matalan(c, x, G) { PERSON(c, x + 200, G, '#2f4a8a'); PERSON(c, x + 252, G, '#d84b6a'); },
+  matalan(c, x, G) { PERSON(c, x + 160, G, '#2f4a8a'); PERSON(c, x + 212, G, '#d84b6a'); },
   spudkingz(c, x, G) { PERSON(c, x + 76, G, '#2bb3c8', '#1a1a1e', '#6a4028', '#1a1a1e'); },
   bandq(c, x, G) { TREE(c, x + 40, G, 1.2, '#6faa3e', '#4f8a2c'); TREE(c, x + 410, G, 1.1, '#6faa3e', '#4f8a2c'); CAR(c, x + 300, G, '#f4f4f4'); CAR(c, x + 116, G, '#7a8290'); R(c, '#9aa3ad', x + 136, G - 70, 2, 70); BOX(c, '#ecebe7', x + 128, G - 72, 18, 3); },
   lidl(c, x, G) { TREE(c, x - 10, G, 1.5, '#4f8a3c', '#3a6b2c'); for (const bx of [x + 150, x + 236]) { BOX(c, '#1f52b0', bx, G - 30, 10, 26); R(c, '#ffe23a', bx + 2, G - 24, 6, 6); } },
@@ -997,7 +1008,7 @@ const EX = {
     POT(x + 60, '#2a2a2e', 18, '#a84a3a'); POT(x + 146, '#2a2a2e', 18, '#b2402e'); POT(x + 34, '#f0ede6', 8, '#5f8f3c'); POT(x + 164, '#e8e3d8', 6, '#6faa4e'); BOX(c, '#2a2a2e', x + 180, G - 8, 18, 8); for (let i = 0; i < 5; i++) CIRC(c, i % 2 ? '#f4f2ec' : '#5f8f3c', x + 183 + i * 3, G - 10, 2); PERSON(c, x + 100, G, '#2a2a33', '#1a1a1e', '#c58c5c', '#1a1a1e'); },
   currys(c, x, G) { TREE(c, x + 60, G, 1.1, '#6faa3e', '#4f8a2c'); TREE(c, x + 300, G, 1.4, '#7fb04a', '#5a8a34'); for (let i = 0; i < 6; i++) BOLL(c, x + 6 + i * 10, G);
   },
-  tesco(c, x, G) { for (const cx of [x + 8, x + 30, x + 140, x + 196]) { P(c, '#e8641c', [[cx, G], [cx + 3, G - 12], [cx + 6, G]], true); R(c, '#ffffff', cx + 1, G - 6, 4, 2); } for (const bx of [x + 118, x + 228, x + 234]) BOLL(c, bx, G); BIN(c, x + 104, G, '#2f6fb5'); PERSON(c, x + 92, G, '#5a6e8a'); },
+  tesco(c, x, G) { for (const cx of [x + 4, x + 24, x + 120, x + 176]) { P(c, '#e8641c', [[cx, G], [cx + 3, G - 12], [cx + 6, G]], true); R(c, '#ffffff', cx + 1, G - 6, 4, 2); } for (const bx of [x + 98, x + 188, x + 194]) BOLL(c, bx, G); BIN(c, x + 84, G, '#2f6fb5'); PERSON(c, x + 92, G, '#5a6e8a'); },
   masjid(c, x, G) { TREE(c, x - 26, G, 1.3, '#5f8f3c', '#47702c'); PERSON(c, x + 72, G, '#f4f2ec', '#f4f2ec', '#c58c5c', '#f4f2ec'); PERSON(c, x + 80, G, '#3a6e5a', '#2a2a33', '#c58c5c', '#f4f2ec'); PERSON(c, x + 196, G, '#2a2a33', '#f4f2ec', '#c58c5c', '#1a1a1e'); BIN(c, x + 150, G); },
   galaxy(c, x, G) { R(c, 'rgba(0,0,0,.16)', x + 4, G - 140, 14, 96); R(c, 'rgba(0,0,0,.08)', x + 18, G - 140, 10, 96); R(c, 'rgba(0,0,0,.18)', x + 180, G - 140, 16, 96); R(c, 'rgba(255,255,255,.12)', x + 60, G - 140, 30, 96);
     BOX(c, '#c9ced4', x + 6, G - 140, 188, 8); for (let i = 0; i < 24; i++) R(c, '#a9aeb4', x + 8 + i * 8, G - 139, 1, 6);
@@ -1098,11 +1109,19 @@ Object.keys(WIDEN).forEach(k => { const o = WIDEN[k], d0 = L[k].d; L[k].w = o.w;
 /* ---------- size tweaks: draw at 1x off-screen, then scale with crisp pixels ---------- */
 // text drawn after a landmark is scaled, so small lettering stays crisp (sx/sy = original coordinates)
 const SHARP = {
+  krispy(c, x, G, f) { const X = v => Math.round(x + v * f), Y = v => Math.round(G - v * f);
+    // crisp, slightly taller sign after the 0.82 scale-down
+    const sx = X(4), sw = Math.round(132 * f), top = Y(76), bot = Y(48);
+    BOX(c, '#6e1f33', sx, top, sw, bot - top); R(c, '#f2c96b', sx + 2, bot - 2, sw - 4, 1);
+    T(c, 'KRISPY LEMON', sx + Math.round(sw * .44), top + 2, 8, '#f2c96b'); T(c, 'CHICKEN', sx + Math.round(sw * .44), top + 11, 8, '#f2c96b');
+    const cx = sx + sw - 11, cy = top + 11; CIRC(c, '#ffffff', cx, cy, 4); R(c, '#f2c14e', cx + 3, cy - 1, 3, 2); R(c, '#d84b3c', cx - 1, cy - 6, 3, 2); R(c, '#1b1a24', cx + 1, cy - 1, 1, 1);
+    BOX(c, '#c62828', sx, bot, sw, 9); c.font = '7px Silk'; let fz = 7; while (fz > 5 && (c.font = fz + 'px Silk', c.measureText('BURGERS · PIZZA · CHIPS').width > sw - 6)) fz--;
+    T(c, 'BURGERS · PIZZA · CHIPS', sx + Math.round(sw / 2), bot + 1, fz, '#ffffff', 'center', false); },
   spudkingz(c, x, G, f) { const X = v => Math.round(x + v * f), Y = v => Math.round(G - v * f);
-    c.font = '700 12px Silk'; c.textBaseline = 'middle'; const w1 = c.measureText('Spud ').width, w2 = c.measureText('Kingz').width, sx0 = Math.round(X(110) - (w1 + w2) / 2);
+    const fs = Math.max(8, Math.round(12 * f / .64)); c.font = `700 ${fs}px Silk`; c.textBaseline = 'middle'; const w1 = c.measureText('Spud ').width, w2 = c.measureText('Kingz').width, sx0 = Math.round(X(110) - (w1 + w2) / 2);
     R(c, '#141416', sx0 + 3, Y(105), Math.round(w1 + w2) - 6, 2);
     c.textAlign = 'left'; c.strokeStyle = '#0a0a0c'; c.lineWidth = 2; c.lineJoin = 'round'; c.strokeText('Spud', sx0, Y(103)); c.strokeText('Kingz', sx0 + w1, Y(103)); c.fillStyle = '#5fd36a'; c.fillText('Spud', sx0, Y(103)); c.fillStyle = '#f6c933'; c.fillText('Kingz', sx0 + w1, Y(103));
-    BOX(c, '#141416', X(30), Y(40), Math.round(160 * f), Math.round(22 * f)); c.textAlign = 'center'; c.font = '7px Silk'; c.fillStyle = '#d9b05a'; c.fillText('CROWNED IN FLAVOUR', X(112), Y(34)); c.fillText('ROOTED IN COMMUNITY', X(112), Y(26)); },
+    const ts = Math.max(5, Math.round(7 * f / .64)), lh = Math.max(ts + 1, Math.round(8 * f / .64)); BOX(c, '#141416', X(30), Y(40) - 1, Math.round(160 * f), lh * 2 + 2); c.textAlign = 'center'; c.font = `${ts}px Silk`; c.fillStyle = '#d9b05a'; c.fillText('CROWNED IN FLAVOUR', X(112), Y(40) + Math.round(lh / 2)); c.fillText('ROOTED IN COMMUNITY', X(112), Y(40) + Math.round(lh * 1.5)); },
   masjid(c, x, G, f) { const X = v => Math.round(x + v * f), Y = v => Math.round(G - v * f);   // v = unscaled coords incl. the 50px widening
     BOX(c, '#1f5a44', X(53), Y(118), Math.round(116 * f), Math.round(16 * f)); c.textAlign = 'center'; c.textBaseline = 'middle';
     c.font = '700 8px Amiri'; c.fillStyle = '#f4f2ec'; c.direction = 'rtl'; c.fillText('\u0645\u0631\u06a9\u0632\u06cc \u062c\u0627\u0645\u0639 \u0645\u0633\u062c\u062f \u063a\u0648\u062b\u06cc\u0647', X(111), Y(113)); c.direction = 'ltr';
@@ -1124,10 +1143,8 @@ const SHARP = {
     BOX(c, '#151618', X(-4), Y(88), Math.round(96 * f), 17); T(c, 'CHAIIKHANA', X(44), Y(88) + 4, 8, '#f4f4f2', 'center', true);
     T(c, 'ORDER', X(34), Y(30) + 2, 8, '#e0458a', 'center', true); },
 };
-const SCALE = { cycleking: 1.3, topspizza: .82, alquds: .82, kahwa: .82, gna: .82, toros: .82, krispy: .82, lutonhoo: 1.5, currys: 1.15, masjid: 1.1, suffa: .9, oak: .82, chaiikhana: .85, spudkingz: .64, nadeem: 1.2, chaiiwala: 1.1, frasers: 1.3, stmarys: 1.02, hatfactory: 1.3 };
-Object.keys(SCALE).forEach(k => { const f = SCALE[k], d0 = L[k].d, w0 = L[k].w, M = 80, H = 320; L[k].w = Math.round(w0 * f);
-  L[k].d = (c, x, G) => { const oc = document.createElement('canvas'); oc.width = w0 + M * 2; oc.height = H; const o = oc.getContext('2d'); d0(o, M, H - 10);
-    c.save(); c.imageSmoothingEnabled = k === 'leagrave' || f < 1; c.imageSmoothingQuality = 'high'; c.drawImage(oc, 0, 0, oc.width, H - 10, x - M * f, G - (H - 10) * f, oc.width * f, (H - 10) * f); c.restore(); if (SHARP[k]) SHARP[k](c, x, G, f); }; });
+const SCALE = { letters: .8, townhall: 1.2, masjidali: 1.5, inspire: 1.21, funfair: 1.25, airport: 1.2, sixthform: 1.44, uob: 1.2, chiltern: 1.2, lewsey: 1.2, grandbazar: 1.2, lidl: 1.2, matalan: 1.5, bandq: 1.56, tesco: 1.5, cycleking: .98, topspizza: .82, alquds: .82, kahwa: .82, gna: .82, toros: .82, krispy: .82, lutonhoo: 1.5, currys: 1.15, masjid: 1.32, suffa: 1.08, oak: .82, chaiikhana: .85, spudkingz: .48, nadeem: 1.52, chaiiwala: 1.32, frasers: 1.73, stmarys: 1.02, hatfactory: 1.3 };
+// (SCALE is applied at the end of the file, once every landmark is defined)
 
 /* things drawn after scaling, so they keep their own size */
 const POST = {
@@ -1383,4 +1400,8 @@ window.LM_ANIM.funfair = (c, x, G, t) => {
 };
 
 window.LM_ORDER = ['galaxy', 'townhall', 'stmarys', 'letters', 'frasers', 'station', 'hatfactory', 'chaiiwala', 'chaiikhana', 'spudkingz', 'miamicrispy', 'masjid', 'masjidali', 'suffa', 'gurdwara', 'ldh', 'lutonhoo', 'foodbank', 'inspire', 'nadeem', 'oak', 'periperi', 'toros', 'cycleking', 'gna', 'kahwa', 'leagrave', 'topspizza', 'alquds', 'kaya', 'karwan', 'krispy', 'tesco', 'currys', 'bandq', 'matalan', 'lidl', 'jdgyms', 'bigyellow', 'grandbazar', 'lewsey', 'venue', 'chiltern', 'uob', 'sixthform', 'wardownfield', 'wardown', 'wardownbridge', 'funfair', 'stockwood', 'welcome', 'airport'];
+Object.keys(SCALE).forEach(k => { const f = SCALE[k], d0 = L[k].d, w0 = L[k].w, M = 80, H = 320; L[k].w = Math.round(w0 * f);
+  L[k].d = (c, x, G) => { const oc = document.createElement('canvas'); oc.width = w0 + M * 2; oc.height = H; const o = oc.getContext('2d'); d0(o, M, H - 10);
+    c.save(); c.imageSmoothingEnabled = k === 'leagrave' || f < 1; c.imageSmoothingQuality = 'high'; c.drawImage(oc, 0, 0, oc.width, H - 10, x - M * f, G - (H - 10) * f, oc.width * f, (H - 10) * f); c.restore(); if (SHARP[k]) SHARP[k](c, x, G, f); }; });
+window.SCALE = SCALE;
 })();
