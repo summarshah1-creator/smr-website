@@ -350,19 +350,28 @@ L.stmarys = { n: "St Mary's Church", w: 300, d(c, x, G) {
 } };
 
 L.grandbazar = { n: 'Grand Bazar Supermarket', w: 300, d(c, x, G) {
-  const NV = '#2a3f6e', LM = '#9ccc2a';
-  BOX(c, '#c9ced6', x, G - 96, 300, 96); for (let i = 0; i < 6; i++) R(c, '#b9bec6', x, G - 90 + i * 14, 300, 1);
-  P(c, '#d6dae0', [[x - 2, G - 96], [x + 30, G - 116], [x + 64, G - 96]], true);
-  BOX(c, NV, x + 4, G - 92, 292, 18); R(c, '#34508a', x + 4, G - 92, 292, 2);
-  CIRC(c, OUT, x + 112, G - 90, 13); CIRC(c, NV, x + 112, G - 90, 12); CIRC(c, '#f4f2ec', x + 112, G - 90, 10); T(c, 'GB', x + 112, G - 94, 8, LM);
-  T(c, 'GRAND', x + 150, G - 87, 8, LM); T(c, 'BAZAR', x + 190, G - 87, 8, '#ffffff'); T(c, 'SUPERMARKET', x + 248, G - 87, 8, LM);
-  GLASS(c, x + 6, G - 72, 288, 72, '#5d7d98', 14, 2);
-  const pics = ['#d84b3c', '#e8a33c', '#7fae4e', '#c8402e', '#f2c14e', '#4f8a3c', '#d84b6a'];
-  for (let i = 0; i < 6; i++) { const px = x + 120 + i * 26; BOX(c, pics[i], px, G - 62, 20, 50); CIRC(c, pics[(i + 2) % 7], px + 10, G - 44, 6); CIRC(c, pics[(i + 4) % 7], px + 7, G - 26, 5); }
-  BOX(c, '#f4f2ec', x + 64, G - 66, 50, 66); T(c, 'FRESH', x + 89, G - 63, 8, NV, 'center', false); CIRC(c, OUT, x + 89, G - 44, 10); CIRC(c, NV, x + 89, G - 44, 9); T(c, 'GB', x + 89, G - 48, 8, LM);
-  P(c, LM, [[x + 64, G - 16], [x + 114, G - 26], [x + 114, G], [x + 64, G]]); T(c, 'GRAND', x + 89, G - 31, 8, NV, 'center', false);
-  BOX(c, '#26303d', x + 20, G - 50, 34, 50); R(c, '#5d7d98', x + 22, G - 48, 14, 48); R(c, '#5d7d98', x + 38, G - 48, 14, 48); R(c, '#9ccc2a', x + 22, G - 30, 30, 2);
-  BOX(c, LM, x + 280, G - 66, 14, 54);
+  // long side of the shed: plain rectangle with the roof edge sloping away on top (no gable from this side)
+  const NV = '#243a6a', LM = '#a6cf2a', CL = '#cdd2d9';
+  P(c, '#a3a9b0', [[x - 2, G - 106], [x + 302, G - 106], [x + 296, G - 114], [x + 4, G - 114]], true); for (let i = 8; i < 296; i += 6) R(c, '#8f959c', x + i, G - 113, 1, 7);
+  BOX(c, CL, x, G - 106, 300, 106); for (let i = 0; i < 300; i += 25) R(c, '#bcc2ca', x + i, G - 106, 1, 26);
+  BOX(c, NV, x + 2, G - 102, 296, 22); R(c, '#2f4a82', x + 2, G - 102, 296, 2); R(c, '#1b2c52', x + 2, G - 82, 296, 2);
+  const LOGO = (cx, cy, r) => { CIRC(c, OUT, cx, cy, r + 1); CIRC(c, '#ffffff', cx, cy, r); CIRC(c, NV, cx, cy, r - 2); c.font = `700 ${r > 10 ? 8 : 8}px Silk`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = LM; c.fillText('G', cx - 3.5, cy + .5); c.fillStyle = '#ffffff'; c.fillText('B', cx + 3.5, cy + .5); };
+  LOGO(x + 92, G - 92, 13);
+  T(c, 'GRAND', x + 132, G - 96, 8, LM); T(c, 'BAZAR', x + 172, G - 96, 8, '#ffffff'); T(c, 'SUPERMARKET', x + 230, G - 96, 8, LM);
+  R(c, '#2a2d34', x + 40, G - 78, 3, 3); R(c, '#2a2d34', x + 220, G - 78, 3, 3);                                   // little cameras
+  BOX(c, '#3a4250', x + 2, G - 76, 296, 76); R(c, '#8a929c', x + 2, G - 76, 296, 3);
+  // entrance doors
+  BOX(c, '#2a303a', x + 6, G - 70, 34, 70); R(c, '#86a2b8', x + 8, G - 68, 14, 66); R(c, '#86a2b8', x + 24, G - 68, 14, 66); R(c, '#c9ced4', x + 20, G - 40, 2, 8); R(c, '#c9ced4', x + 24, G - 40, 2, 8); R(c, 'rgba(255,255,255,.3)', x + 10, G - 66, 3, 30);
+  // white poster panel with the logo and the green swoosh
+  BOX(c, '#f6f6f2', x + 44, G - 72, 50, 72); T(c, 'FRESH', x + 69, G - 68, 8, NV, 'center', false); LOGO(x + 69, G - 50, 10);
+  T(c, 'GRAND', x + 69, G - 37, 8, NV, 'center', true); P(c, LM, [[x + 44, G - 14], [x + 94, G - 26], [x + 94, G], [x + 44, G]]); R(c, NV, x + 50, G - 8, 38, 1);
+  // produce window graphics, one picture per pane
+  const pics = [['#e86a2a', '#f2c14e', '#6fae3a'], ['#c8402e', '#e8a33c', '#3f7a2e'], ['#7fae4e', '#d84b3c', '#f4d35e'], ['#d8462e', '#f08a3c', '#a83a2a'], ['#5f9a3a', '#e8c24a', '#c8402e'], ['#e8a33c', '#7a3a8a', '#6fae3a'], ['#c83a3a', '#f2c14e', '#4f8a3c']];
+  for (let i = 0; i < 7; i++) { const px = x + 98 + i * 26, [a1, a2, a3] = pics[i]; R(c, '#2a303a', px - 2, G - 72, 2, 72); R(c, SH(a1, .75), px, G - 70, 24, 68);
+    CIRC(c, a2, px + 7, G - 56, 6); CIRC(c, a3, px + 17, G - 48, 7); CIRC(c, a1, px + 9, G - 34, 6); CIRC(c, a2, px + 18, G - 22, 5); CIRC(c, a3, px + 6, G - 14, 5);
+    R(c, 'rgba(255,255,255,.22)', px + 2, G - 68, 3, 64); R(c, 'rgba(255,255,255,.12)', px, G - 44, 24, 1); }
+  R(c, '#2a303a', x + 280, G - 72, 2, 72);
+  BOX(c, LM, x + 283, G - 70, 13, 68); CIRC(c, '#ffffff', x + 289.5, G - 54, 4); CIRC(c, NV, x + 289.5, G - 54, 3); R(c, '#ffffff', x + 285, G - 40, 9, 1); R(c, '#ffffff', x + 285, G - 36, 7, 1);
 } };
 
 L.lewsey = { n: 'Lewsey Sports Park', w: 280, d(c, x, G) {
