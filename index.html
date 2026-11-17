@@ -20,7 +20,7 @@
 <link rel="icon" href="assets/icon.png?v=2">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Manrope:wght@400;500;600;700&family=Poppins:wght@300;400&family=Oswald:wght@600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Manrope:wght@400;500;600;700&family=Poppins:wght@300;400&family=Oswald:wght@600&family=Anton&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#08080f; --bg2:#0e0e1a; --card:#13131f; --line:rgba(255,255,255,.08); --line2:rgba(255,255,255,.14);
@@ -1030,6 +1030,63 @@ body.splashing{overflow:hidden}
 .fk-go{position:relative;flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;background:#3fb04a;color:#fff;font:800 14px Manrope,sans-serif;padding:11px 16px;border-radius:12px;border:2px solid #1b1a24;box-shadow:0 4px 0 #1b1a24;transition:transform .15s}
 .fk-go svg{width:16px;height:16px}.fk-ban:hover .fk-go{transform:translateY(-2px)}.fk-ban:active .fk-go{transform:translateY(2px);box-shadow:0 2px 0 #1b1a24}
 @media (max-width:620px){.fk-ban{flex-wrap:wrap;gap:12px;padding:14px 14px 22px}.fk-sky{width:64px;height:64px;border-radius:14px}.fk-txt b{font-size:19px}.fk-go{width:100%;justify-content:center;order:3}}
+
+/* ===== Digital theme v2 (draft): bold condensed headings, serif italic accents in the logo gradient, flat surfaces, grain ===== */
+#v-digital{--r:6px;--ink2:#0e0c11;--cream:#f3efe7;--dg:linear-gradient(100deg,#5b5bff,#d63bff)}
+body[data-brand="digital"]{background:#0e0c11}
+body[data-brand="digital"] .blob{display:none}
+body[data-brand="digital"]::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:9;opacity:.06;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+#v-digital h1,#v-digital h2{font-family:Anton,Oswald,sans-serif;font-weight:400;text-transform:uppercase;letter-spacing:.004em;line-height:.95}
+#v-digital h2{font-size:clamp(42px,11vw,92px)}
+#v-digital h2 br+.grad-text,#v-digital h1 .grad-text,#v-digital h2 .grad-text{font-family:"Instrument Serif",Georgia,serif;font-style:italic;text-transform:none;letter-spacing:0;font-size:.86em;background:var(--dg);-webkit-background-clip:text;background-clip:text;color:transparent;padding-right:.08em}
+#v-digital h3{letter-spacing:-.01em}
+#v-digital .eyebrow{background:none;-webkit-background-clip:initial;background-clip:initial;color:#a77bff;font-size:14px;font-weight:800;letter-spacing:.01em}
+#v-digital .lt .eyebrow{color:#5b3fd9}
+#v-digital .light-run{border-radius:0;box-shadow:none;margin-top:0;background:var(--cream)}
+#v-digital .lt,#v-digital .lt.lav{background:var(--cream)}
+#v-digital .lt.lav{background:#ebe5da}
+#v-digital .btn{border-radius:4px;box-shadow:none!important;height:52px}
+#v-digital .btn.primary{background:var(--dg)}
+#v-digital .btn.ghost{background:transparent;border:1.5px solid currentColor}
+#v-digital .sc-glow,#v-digital .work-glow{display:none}
+#v-digital .usp,#v-digital .feat,#v-digital .of-step,#v-digital .of-card,#v-digital .mi,#v-digital .push,#v-digital .loyal,#v-digital .wheel-card,#v-digital .sc-list button,#v-digital .sc-card,#v-digital .sx-main,#v-digital .sx-local,#v-digital .sx-rate,#v-digital .sx-proj,#v-digital .sx-pts>div,#v-digital .refer,#v-digital .xs,#v-digital .contact-card,#v-digital .direct a,#v-digital .compare,#v-digital .fk-ban{border-radius:6px!important;box-shadow:none!important}
+#v-digital .usp,#v-digital .of-step,#v-digital .of-card{background:transparent}
+#v-digital .usp .ic,#v-digital .feat .ic,#v-digital .of-n{border-radius:4px;box-shadow:none}
+#v-digital .refer,#v-digital .contact-card{background:#17141c;border:1px solid rgba(255,255,255,.1)}
+/* hero */
+#v-digital .d-hero{padding-bottom:0}
+#v-digital .d-hero .flow{display:none}
+#v-digital .d-hero h1{font-size:clamp(60px,16vw,128px);margin:12px 0 20px;line-height:.92}
+#v-digital .d-hero h1 .line{line-height:.92;padding-top:.04em}
+#v-digital .d-hero h1 .grad-text{display:inline-block;line-height:.8}
+#v-digital .d-hero h1 .line+.line{margin-top:-.14em}
+#v-digital .d-hero h1 .grad-text{font-size:.78em}
+#v-digital .d-kick{font-size:13px;font-weight:600;color:#cfc8bd;display:flex;gap:8px;align-items:center}
+#v-digital .d-kick i{width:8px;height:8px;border-radius:50%;background:#25d366}
+#v-digital .d-hero .lede{color:#ddd6cb;font-size:18px}
+#v-digital .d-hero .lede strong{color:#fff}
+#v-digital .d-shot{position:relative;margin:40px auto 0;width:min(250px,64vw)}
+#v-digital .d-shot img{width:100%;display:block;border-radius:30px;border:8px solid #000;box-shadow:0 30px 60px rgba(0,0,0,.6);transform:rotate(-3deg)}
+#v-digital .d-note{position:absolute;right:-12px;top:40px;background:#fff36b;color:#1a1a1a;font:italic 400 21px/1.05 "Instrument Serif",Georgia,serif;padding:10px 13px;transform:rotate(5deg);box-shadow:0 8px 18px rgba(0,0,0,.4);max-width:150px}
+#v-digital .d-note small{display:block;font:600 11px Manrope,sans-serif;margin-top:4px;opacity:.7}
+#v-digital .d-nums{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid rgba(255,255,255,.12);margin-top:50px}
+#v-digital .d-nums>div{padding:24px 20px;border-bottom:1px solid rgba(255,255,255,.12)}
+#v-digital .d-nums>div:nth-child(odd){border-right:1px solid rgba(255,255,255,.12)}
+#v-digital .d-nums b{display:block;font:400 56px/1 Anton,Oswald,sans-serif;color:#fff}
+#v-digital .d-nums b.g{background:var(--dg);-webkit-background-clip:text;background-clip:text;color:transparent}
+#v-digital .d-nums span{display:block;font-size:14px;color:#bdb6aa;margin-top:6px}
+#v-digital .usp .ic,#v-digital .feat .ic,#v-digital .of-n,#v-digital #d-features .ic,#v-digital #d-apps .ic{background:#6b4bff!important;box-shadow:none!important}
+#v-digital #d-sectors{background:var(--cream)!important}
+#v-digital .logo-tile{border-radius:4px;background:transparent;border:0;border-left:1px solid rgba(255,255,255,.1)}
+#v-digital .logo-tile img{filter:grayscale(1) brightness(1.5);opacity:.8}
+@media(min-width:1100px){
+ #v-digital .d-hero .hero-grid{grid-template-columns:1.3fr .7fr!important;align-items:end}
+ #v-digital .d-shot{margin:0 0 -30px;width:300px}
+ #v-digital .d-hero h1{font-size:clamp(80px,7.4vw,120px)}
+ #v-digital .d-nums{grid-template-columns:repeat(4,1fr)}
+ #v-digital .d-nums>div{border-bottom:0;border-right:1px solid rgba(255,255,255,.12)!important;padding:32px 40px}
+ #v-digital .d-nums>div:last-child{border-right:0!important}
+}
 </style>
 <style>html{touch-action:manipulation}</style>
 <script>(function(){var p=function(e){e.preventDefault()};document.addEventListener('gesturestart',p,{passive:false});document.addEventListener('gesturechange',p,{passive:false});document.addEventListener('touchmove',function(e){if(e.touches&&e.touches.length>1)e.preventDefault()},{passive:false});var last=0;document.addEventListener('touchend',function(e){var n=Date.now();if(n-last<300&&!(e.target.closest&&e.target.closest('input,textarea,select')))e.preventDefault();last=n},{passive:false});document.addEventListener('wheel',function(e){if(e.ctrlKey)e.preventDefault()},{passive:false});document.addEventListener('keydown',function(e){if((e.ctrlKey||e.metaKey)&&['+','-','=','0'].indexOf(e.key)>-1)e.preventDefault()});})();</script>
@@ -1287,14 +1344,16 @@ setTimeout(done,3700);})();
     <div class="wrap hero-grid">
       <div>
         
-        <h1><span class="line"><span>High-end apps</span></span><span class="line"><span>&amp; websites.</span></span><span class="line"><span class="grad-text">Insanely affordable.</span></span></h1>
-        <p class="lede">Custom-built in your brand, with the back end to run it: orders, bookings, loyalty and your own admin dashboard.</p>
+        <div class="d-kick"><i></i>Luton · Bedford · Milton Keynes</div>
+        <h1><span class="line"><span>Your own app.</span></span><span class="line"><span><span class="grad-text">no more</span> commission.</span></span></h1>
+        <p class="lede">We build ordering apps and websites for takeaways, cafés and local businesses, with the back end to run them. Your customers order straight from you, and <strong>you keep the money Just Eat and Uber Eats would take.</strong></p>
         <div class="btn-row">
           <a class="btn primary" href="#" data-quote>Book a free chat <svg data-i="arrow"></svg></a>
           <a class="btn ghost" href="#d-portfolio" data-scroll>See our apps</a>
         </div>
         <div class="trust"><span><svg data-i="check"></svg>Your own brand</span><span><svg data-i="check"></svg>Back end built in</span><span><svg data-i="check"></svg>No commission</span></div>
       </div>
+      <div class="d-shot"><img src="assets/apps/snw-home.webp" alt="Smash N Wings ordering app" width="540" height="1169"><div class="d-note">Smash N Wings, Bedford<small>Built by SMR Digital</small></div></div>
       <div class="flow" aria-label="Your customers' app, your shop tablet and your own dashboard, all connected">
         <svg class="fl-path" viewBox="0 0 600 560" preserveAspectRatio="none" aria-hidden="true" style="display:none"><defs><linearGradient id="flg" x1="0" x2="1"><stop offset="0" stop-color="var(--a1)"/><stop offset="1" stop-color="var(--a2)"/></linearGradient><path id="flp" d="M478 470 C 430 520, 380 520, 342 480 M 200 270 C 210 220, 240 200, 300 190"/></defs><use href="#flp" fill="none" stroke="url(#flg)" stroke-width="2.5" stroke-dasharray="6 9" class="fl-dash"/></svg>
         <div class="fl-step fl-cust">
@@ -1347,6 +1406,7 @@ setTimeout(done,3700);})();
     </div>
   </section>
 
+  <div class="d-nums"><div><b class="g">0%</b><span>commission on your app orders</span></div><div><b>30+</b><span>apps &amp; websites built</span></div><div><b>£0</b><span>to get your ordering app built</span></div><div><b>£50</b><span>cash for every business you refer</span></div></div>
   <div class="light-run d-light">
   <!-- New game banner: Flappy Kabootar (/flappykabootar → /flappy/) -->
   <section class="lt" id="d-game">
