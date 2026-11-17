@@ -124,6 +124,9 @@ html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:m
 @media (orientation:landscape) and (max-height:500px) and (pointer:coarse){#rot{display:flex}}
 .notice{margin:2px 0 6px;background:#fff3c4;border:2px solid #1b1a24;border-radius:6px;padding:7px 8px;font:700 12px/1.35 -apple-system,'Segoe UI',Roboto,sans-serif;color:#1b1a24}
 .off-lb .lbB,.off-rec .rec{display:none!important}
+#lbM .tops{display:flex;justify-content:center;gap:4px;margin:0 0 6px}#lbM .tops button{border:2px solid #1b1a24;background:#fff;border-radius:99px;padding:4px 12px;font:700 9px Silk;cursor:pointer}#lbM .tops button.on{background:#1b1a24;color:#ffd84a}
+.lbList{max-height:52vh;overflow:auto}#lbL li em{font:700 8px Silk;font-style:normal;background:#e8641c;color:#fff;border-radius:4px;padding:2px 5px;margin-left:6px;vertical-align:2px}
+.nb.saved .nbr{display:none}.nb .nbn{display:inline;margin-left:4px;font:700 12px Silk;color:#c8402a;letter-spacing:.04em}.nb a{font-size:12px}.nb a{color:#c8402a;font-weight:700}
 </style>
 <link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icon-180.png"><link rel="icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Kabootar"><meta name="theme-color" content="#2f8fd8">
 </head>
@@ -166,7 +169,8 @@ html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:m
   </div>
   <div id="lbM" class="hide"><div class="box"><button class="x" type="button" aria-label="Close">&times;</button><h3>&#127942; LEADERBOARD</h3>
     <div class="tabs"><button type="button" data-lb="today" class="on">TODAY</button><button type="button" data-lb="all">ALL TIME</button></div>
-    <ol id="lbL"></ol><p id="lbN" class="lbn"></p></div></div>
+    <div class="tops"><button type="button" data-top="10" class="on">TOP 10</button><button type="button" data-top="50">TOP 50</button></div>
+    <ol id="lbL" class="lbList"></ol><p id="lbN" class="lbn"></p></div></div>
   <div id="cardM" class="hide"><div class="box"><button class="x" type="button" aria-label="Close">&times;</button><img id="cardI" alt="Your score card"><p class="lbn">Screenshot it, or save and share it.</p><button class="send" type="button" id="cardS">SAVE / SHARE</button></div></div>
   <div id="shT"></div>
   <div id="rot"><div>&#128241;<b>TURN YOUR PHONE UPRIGHT</b><span>Flappy Kabootar plays in portrait.</span></div></div>
@@ -196,9 +200,9 @@ html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:m
 </div></div>
   <div id="tap" class="hide">TAP TO FLAP</div>
 </div>
-<script src="landmarks.js?v=20261117l"></script>
-<script src="vehicles.js?v=20261117l"></script>
-<script src="namecheck.js?v=20261117l"></script>
+<script src="landmarks.js"></script>
+<script src="vehicles.js"></script>
+<script src="namecheck.js"></script>
 <script>
 (() => {
 const H = 300, GY = 250, ROAD = 262;            // world: 300 units tall, pavement top at 250
@@ -388,33 +392,51 @@ muteUI(SFX.on);
 document.querySelectorAll('.mute').forEach(m => m.addEventListener('click', e => { e.stopPropagation(); const on = SFX.toggle(); if (on) TRACK.send('sound_on'); muteUI(on); const t = $('shT'); t.textContent = on ? 'SOUND ON' : 'SOUND OFF'; t.classList.add('on'); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('on'), 1300); }));
 
 /* ---------- leaderboard: today + all time (online on the SMR website, this phone only elsewhere) ---------- */
-const LB = (() => { const api = 'api.php'; let online = null, data = { today: [], all: [] }, tab = 'today', lastName = store.get('fk_name', ''), myRow = null;
+const LB = (() => { const api = 'api.php'; let online = null, data = { today: [], all: [] }, tab = 'today', top = 10;
+  // the device remembers the player: name + a random player id (localStorage, with a cookie copy). Forget = asked again.
+  const ck = k => { const m = document.cookie.match(new RegExp('(?:^|; )' + k + '=([^;]*)')); return m ? decodeURIComponent(m[1]) : ''; };
+  const keep = (k, v) => { store.set(k, v); try { document.cookie = k + '=' + encodeURIComponent(v) + '; max-age=315360000; path=/; samesite=lax'; } catch (e) {} };
+  let name = store.get('fk_name', '') || ck('fk_name'), pid = store.get('fk_pid', '') || ck('fk_pid');
+  if (name && !pid) { pid = Math.random().toString(36).slice(2, 14); keep('fk_pid', pid); }
   const day = () => new Date().toLocaleDateString('en-CA', { timeZone: 'Europe/London' });
-  const localLoad = () => { let l = []; try { l = JSON.parse(localStorage.getItem('fk_board') || '[]'); } catch (e) {} const d = day(); data = { today: l.filter(r => r.day === d).sort((a, b) => b.score - a.score).slice(0, 10), all: l.slice().sort((a, b) => b.score - a.score).slice(0, 10) }; return l; };
-  const load = () => fetch(api + '?a=board', { cache: 'no-store' }).then(r => { if (!r.ok) throw 0; return r.json(); }).then(j => { if (!j || !j.today) throw 0; online = true; data = j; render(); }).catch(() => { online = false; localLoad(); render(); });
+  const localLoad = () => { let l = []; try { l = JSON.parse(localStorage.getItem('fk_board') || '[]'); } catch (e) {} const d = day();
+    const best = rows => { const m = new Map(); rows.forEach(r => { const k = r.pid || r.name + r.score; if (!m.has(k) || m.get(k).score < r.score) m.set(k, { name: r.name, score: r.score, mine: !!pid && r.pid === pid }); }); return [...m.values()].sort((a, b) => b.score - a.score).slice(0, 50); };
+    data = { today: best(l.filter(r => r.day === d)), all: best(l) }; return l; };
+  const load = () => fetch(api + '?a=board&pid=' + encodeURIComponent(pid || ''), { cache: 'no-store' }).then(r => { if (!r.ok) throw 0; return r.json(); }).then(j => { if (!j || !j.today) throw 0; online = true; data = j; render(); }).catch(() => { online = false; localLoad(); render(); });
   const esc = t => String(t).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  const render = () => { const rows = data[tab] || []; $('lbL').innerHTML = rows.length ? rows.map((r, i) => '<li' + (myRow && r.name === myRow.name && r.score === myRow.score ? ' class="me"' : '') + '><i>' + (i + 1) + '</i><span>' + esc(r.name) + '</span><b>' + r.score + '</b></li>').join('') : '<li><span style="text-align:center;color:#8a7a5a">No scores yet. Be the first!</span></li>';
-    $('lbN').textContent = online ? (tab === 'today' ? 'Resets at midnight.' : 'Best ever in Luton.') : 'Scores saved on this phone.'; document.querySelectorAll('#lbM .tabs button').forEach(b => b.classList.toggle('on', b.dataset.lb === tab)); };
-  const rankIn = (list, sc) => { if (sc < 1) return 0; let i = list.findIndex(r => sc > r.score); if (i < 0) i = list.length; return i < 10 ? i + 1 : 0; };
-  let pending = 0;
-  const check = sc => { $('nameBox').classList.add('hide'); $('nbE').textContent = ''; pending = 0; if (sc < 1) return;
-    const go = () => { const rt = rankIn(data.today, sc), ra = rankIn(data.all, sc); if (!rt && !ra) return; pending = sc;
-      $('nbT').textContent = ra === 1 ? '\u{1F3C6} NEW ALL-TIME HIGH SCORE!' : ra ? '\u{1F3C6} #' + ra + ' OF ALL TIME!' : rt === 1 ? '\u{1F3C6} TOP SCORE TODAY!' : '\u{1F3C6} #' + rt + ' TODAY!';
-      $('nbS').textContent = 'Put your name on the leaderboard'; $('nbI').value = lastName; $('nameBox').classList.remove('hide'); };
-    if (online === null) load().then(go); else go(); };
-  const save = () => { const name = $('nbI').value.trim().replace(/\s+/g, ' ').slice(0, 14); if (!pending) return; if (!name) { $('nbE').textContent = 'Type your name first.'; return; }
-    if (!/^[\p{L}\p{N} ._'-]+$/u.test(name)) { $('nbE').textContent = 'Letters and numbers only, please.'; return; }
-    if (window.NameCheck && NameCheck.bad(name)) { $('nbE').textContent = "That name isn't allowed. Please use your real name or a nickname."; $('nbI').select(); return; }
-    $('nbB').disabled = true; lastName = name; store.set('fk_name', name); myRow = { name, score: pending };
-    const done = () => { TRACK.send('name', pending); $('nbB').disabled = false; $('nameBox').classList.add('hide'); pending = 0; tab = data.today.some(r => r.name === name) ? 'today' : 'all'; render(); $('lbM').classList.remove('hide'); };
-    if (online) fetch(api + '?a=score', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, score: pending }) }).then(r => r.json()).then(j => { if (j.error) { $('nbE').textContent = j.error; $('nbB').disabled = false; return; } data = j; done(); }).catch(() => { $('nbE').textContent = 'Could not save. Check your signal.'; $('nbB').disabled = false; });
-    else { const l = localLoad(); l.push({ name, score: pending, day: day() }); try { localStorage.setItem('fk_board', JSON.stringify(l.sort((a, b) => b.score - a.score).slice(0, 60))); } catch (e) {} localLoad(); done(); } };
+  const render = () => { const rows = (data[tab] || []).slice(0, top); $('lbL').innerHTML = rows.length ? rows.map((r, i) => '<li' + (r.mine ? ' class="me"' : '') + '><i>' + (i + 1) + '</i><span>' + esc(r.name) + (r.mine ? ' <em>YOU</em>' : '') + '</span><b>' + r.score + '</b></li>').join('') : '<li><span style="text-align:center;color:#8a7a5a">No scores yet. Be the first!</span></li>';
+    const me = (data[tab] || []).findIndex(r => r.mine);
+    $('lbN').textContent = (me >= top ? 'You are #' + (me + 1) + '. ' : '') + (online ? (tab === 'today' ? 'Resets at midnight.' : 'Best ever in Luton.') : 'Scores saved on this phone.');
+    document.querySelectorAll('#lbM .tabs button').forEach(b => b.classList.toggle('on', b.dataset.lb === tab)); document.querySelectorAll('#lbM .tops button').forEach(b => b.classList.toggle('on', +b.dataset.top === top)); };
+  const rankOf = (list, sc) => { if (sc < 1) return 0; const others = list.filter(r => !r.mine); let i = others.findIndex(r => sc > r.score); if (i < 0) i = others.length; return i < 50 ? i + 1 : 0; };
+  const myBest = list => { const r = list.find(r => r.mine); return r ? r.score : 0; };
+  let pending = 0, renaming = false;
+  const submit = (nm, sc, rename) => {
+    if (online) return fetch(api + '?a=score', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: nm, score: sc, pid, rename: rename ? 1 : 0 }) }).then(r => r.json()).then(j => { if (j.error) throw new Error(j.error); data = j; return j; });
+    const l = localLoad(); if (rename) l.forEach(r => { if (r.pid === pid) r.name = nm; }); else l.push({ name: nm, score: sc, day: day(), pid }); try { localStorage.setItem('fk_board', JSON.stringify(l.sort((a, b) => b.score - a.score).slice(0, 200))); } catch (e) {} localLoad(); return Promise.resolve(data); };
+  const title = sc => { const rt = rankOf(data.today, sc), ra = rankOf(data.all, sc); return ra === 1 ? '\u{1F3C6} NEW ALL-TIME HIGH SCORE!' : ra && ra <= 10 ? '\u{1F3C6} #' + ra + ' OF ALL TIME!' : rt === 1 ? '\u{1F3C6} TOP SCORE TODAY!' : rt ? '\u{1F3C6} #' + rt + ' TODAY!' : ra ? '\u{1F3C6} #' + ra + ' OF ALL TIME!' : ''; };
+  const showSaved = sc => { $('nbT').textContent = title(sc) || '\u{1F3C6} ON THE LEADERBOARD!'; $('nbS').innerHTML = 'Saved as <span class="nbn">' + esc(name) + '</span><br><a href="#" id="nbChg">Not you? Change name</a>'; $('nameBox').classList.add('saved'); $('nameBox').classList.remove('hide');
+    $('nbChg').onclick = e => { e.preventDefault(); e.stopPropagation(); renaming = true; $('nbS').textContent = 'Change the name on your scores'; $('nbI').value = name; $('nameBox').classList.remove('saved'); $('nbI').focus(); }; };
+  const check = sc => { $('nameBox').classList.add('hide'); $('nameBox').classList.remove('saved'); $('nbE').textContent = ''; pending = 0; renaming = false; if (sc < 1) return;
+    const go = () => { const rt = rankOf(data.today, sc), ra = rankOf(data.all, sc); if (!rt && !ra) return;
+      if (name) { if (sc <= myBest(data.today) && sc <= myBest(data.all)) return; // nothing new to save
+        const t = title(sc); submit(name, sc).then(() => { TRACK.send('name', sc); $('nbT').textContent = t; render(); showSaved(sc); $('nbT').textContent = t || $('nbT').textContent; }).catch(() => {}); return; }
+      pending = sc; $('nbT').textContent = title(sc); $('nbS').textContent = 'Put your name on the leaderboard. We’ll remember it on this phone.'; $('nbI').value = ''; $('nameBox').classList.remove('hide'); };
+    if (online === null) load().then(go); else load().then(go); };
+  const save = () => { const nm = $('nbI').value.trim().replace(/\s+/g, ' ').slice(0, 14); if (!pending && !renaming) return; if (!nm) { $('nbE').textContent = 'Type your name first.'; return; }
+    if (!/^[\p{L}\p{N} ._'-]+$/u.test(nm)) { $('nbE').textContent = 'Letters and numbers only, please.'; return; }
+    if (window.NameCheck && NameCheck.bad(nm)) { $('nbE').textContent = "That name isn't allowed. Please use your real name or a nickname."; $('nbI').select(); return; }
+    if (!pid) { pid = Math.random().toString(36).slice(2, 14); keep('fk_pid', pid); }
+    $('nbB').disabled = true; const sc = pending, ren = renaming;
+    submit(nm, sc, ren).then(() => { name = nm; keep('fk_name', nm); if (!ren) TRACK.send('name', sc); $('nbB').disabled = false; pending = 0; renaming = false; $('nbE').textContent = ''; tab = data.today.some(r => r.mine) ? 'today' : 'all'; render(); showSaved(sc); if (!ren) $('lbM').classList.remove('hide'); })
+      .catch(err => { $('nbE').textContent = err && err.message && !/fetch/i.test(err.message) ? err.message : 'Could not save. Check your signal.'; $('nbB').disabled = false; }); };
   $('nbB').addEventListener('click', e => { e.stopPropagation(); save(); }); $('nbI').addEventListener('keydown', e => { e.stopPropagation(); if (e.key === 'Enter') save(); });
   document.querySelectorAll('.lbB').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); TRACK.send('lb_open'); load(); render(); $('lbM').classList.remove('hide'); }));
   document.querySelectorAll('#lbM .tabs button').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); tab = b.dataset.lb; render(); }));
+  document.querySelectorAll('#lbM .tops button').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); top = +b.dataset.top; render(); }));
   $('lbM').querySelector('.x').addEventListener('click', e => { e.stopPropagation(); $('lbM').classList.add('hide'); });
   $('lbM').addEventListener('pointerdown', e => { e.stopPropagation(); if (e.target === $('lbM')) $('lbM').classList.add('hide'); });
-  load(); return { check, load, get online() { return online; } }; })();
+  load(); return { check, load, get online() { return online; } }; })(); window.LB = LB;
 
 /* ---------- score card picture ---------- */
 (() => { let blob = null;

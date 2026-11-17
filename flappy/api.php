@@ -14,6 +14,7 @@ function fk_db(): PDO {
         $pdo->exec('CREATE INDEX IF NOT EXISTS fk_scores_all ON fk_scores(score)');
         $pdo->exec("CREATE TABLE IF NOT EXISTS fk_recs (id INTEGER PRIMARY KEY, name TEXT NOT NULL, address TEXT DEFAULT '', note TEXT DEFAULT '', at INTEGER NOT NULL, ip TEXT DEFAULT '', done INTEGER DEFAULT 0)");
         $pdo->exec("CREATE TABLE IF NOT EXISTS fk_meta (k TEXT PRIMARY KEY, v TEXT)");
+        add_col($pdo, 'fk_scores', 'pid', "TEXT DEFAULT ''");
         $pdo->exec("CREATE TABLE IF NOT EXISTS fk_events (id INTEGER PRIMARY KEY, day TEXT NOT NULL, at INTEGER NOT NULL, vid TEXT DEFAULT '', ev TEXT NOT NULL, src TEXT DEFAULT '', dev TEXT DEFAULT '', app INTEGER DEFAULT 0, val INTEGER DEFAULT 0, extra TEXT DEFAULT '')");
         $pdo->exec('CREATE INDEX IF NOT EXISTS fk_events_day ON fk_events(day, ev)');
         // one-off leaderboard entries added by the owner (applied once, then never again)
@@ -26,12 +27,16 @@ function fk_db(): PDO {
     return $pdo;
 }
 function fk_today(): string { return date('Y-m-d'); }
-function fk_board(): array {
-    $p = fk_db();
-    $t = $p->prepare('SELECT name, score FROM fk_scores WHERE day = ? ORDER BY score DESC, at ASC LIMIT 10'); $t->execute([fk_today()]);
-    $a = $p->query('SELECT name, score FROM fk_scores ORDER BY score DESC, at ASC LIMIT 10');
-    return ['today' => $t->fetchAll(), 'all' => $a->fetchAll(), 'day' => fk_today()];
+function fk_board(string $pid = ''): array {
+    // one row per player: a remembered device (pid) keeps a single entry with its best score; older entries without a pid stand alone
+    $p = fk_db(); $g = "GROUP BY CASE WHEN pid != '' THEN pid ELSE 'r' || id END ORDER BY score DESC, MIN(at) ASC LIMIT 50";
+    $sel = "SELECT name, MAX(score) score, MAX(CASE WHEN pid != '' AND pid = ? THEN 1 ELSE 0 END) mine FROM fk_scores";
+    $t = $p->prepare("$sel WHERE day = ? $g"); $t->execute([$pid, fk_today()]);
+    $a = $p->prepare("$sel $g"); $a->execute([$pid]);
+    $fix = fn($rows) => array_map(fn($r) => ['name' => $r['name'], 'score' => (int) $r['score'], 'mine' => (bool) $r['mine']], $rows);
+    return ['today' => $fix($t->fetchAll()), 'all' => $fix($a->fetchAll()), 'day' => fk_today()];
 }
+function fk_pid($v): string { return preg_replace('/[^a-z0-9]/i', '', substr((string) $v, 0, 24)); }
 function fk_clean(string $s, int $max): string {
     $s = preg_replace('/[\x00-\x1F\x7F]/u', ' ', $s);
     $s = trim(preg_replace('/\s+/u', ' ', $s));
@@ -99,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !same_origin()) json_out(['error' =
 $in = $_SERVER['REQUEST_METHOD'] === 'POST' ? (json_decode((string) file_get_contents('php://input'), true) ?: $_POST) : [];
 
 try {
-    if ($a === 'board') json_out(fk_board());
+    if ($a === 'board') json_out(fk_board(fk_pid($_GET['pid'] ?? '')));
     if ($a === 'cfg') { header('Cache-Control: no-store'); json_out(fk_settings()); }
 
     if ($a === 'ev' && $_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -119,12 +124,16 @@ try {
         $name = fk_clean((string) ($in['name'] ?? ''), 14); $score = (int) ($in['score'] ?? 0);
         if ($name === '' || !preg_match("/^[\\p{L}\\p{N} ._'-]+$/u", $name)) json_out(['error' => 'Use letters and numbers only.'], 400);
         if (fk_rude($name)) json_out(['error' => "That name isn't allowed. Please use your real name or a nickname.", 'rude' => true], 400);
+        $rename = !empty($in['rename']) && fk_pid($in['pid'] ?? '') !== '';
+        if ($rename) { $k = 'fk_score:' . fk_ip(); if (too_many($k, 15, 3600)) json_out(['error' => 'Too many changes this hour.'], 429); note_fail($k); $pid = fk_pid($in['pid']); fk_db()->prepare('UPDATE fk_scores SET name = ? WHERE pid = ?')->execute([$name, $pid]); json_out(['ok' => true] + fk_board($pid)); }
         if ($score < 1 || $score > 999) json_out(['error' => 'Score not accepted.'], 400);
         $k = 'fk_score:' . fk_ip();
         if (too_many($k, 15, 3600)) json_out(['error' => 'Too many scores this hour. Try again later.'], 429);
         note_fail($k);
-        fk_db()->prepare('INSERT INTO fk_scores (name, score, day, at, ip) VALUES (?, ?, ?, ?, ?)')->execute([$name, $score, fk_today(), now(), fk_ip()]);
-        json_out(['ok' => true] + fk_board());
+        $pid = fk_pid($in['pid'] ?? '');
+        fk_db()->prepare('INSERT INTO fk_scores (name, score, day, at, ip, pid) VALUES (?, ?, ?, ?, ?, ?)')->execute([$name, $score, fk_today(), now(), fk_ip(), $pid]);
+        if ($pid !== '') fk_db()->prepare('UPDATE fk_scores SET name = ? WHERE pid = ?')->execute([$name, $pid]);
+        json_out(['ok' => true] + fk_board($pid));
     }
 
     if ($a === 'rec' && $_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -145,8 +154,8 @@ try {
         $p = fk_db();
         if ($a === 'admin') {
             $recs = $p->query('SELECT id, name, address, note, at, done FROM fk_recs ORDER BY done ASC, at DESC LIMIT 300')->fetchAll();
-            $t = $p->prepare('SELECT id, name, score, at FROM fk_scores WHERE day = ? ORDER BY score DESC, at ASC LIMIT 20'); $t->execute([fk_today()]);
-            $all = $p->query('SELECT id, name, score, at, day FROM fk_scores ORDER BY score DESC, at ASC LIMIT 20')->fetchAll();
+            $t = $p->prepare("SELECT MAX(id) id, name, MAX(score) score, MIN(at) at FROM fk_scores WHERE day = ? GROUP BY CASE WHEN pid != '' THEN pid ELSE 'r' || id END ORDER BY score DESC, at ASC LIMIT 50"); $t->execute([fk_today()]);
+            $all = $p->query("SELECT MAX(id) id, name, MAX(score) score, MIN(at) at, MAX(day) day FROM fk_scores GROUP BY CASE WHEN pid != '' THEN pid ELSE 'r' || id END ORDER BY score DESC, at ASC LIMIT 50")->fetchAll();
             $n = (int) $p->query('SELECT COUNT(*) FROM fk_recs WHERE done = 0')->fetchColumn();
             $plays = (int) $p->query('SELECT COUNT(*) FROM fk_scores')->fetchColumn();
             json_out(['recs' => $recs, 'today' => $t->fetchAll(), 'all' => $all, 'new' => $n, 'entries' => $plays]);
@@ -164,7 +173,7 @@ try {
         $id = (int) ($in['id'] ?? 0);
         if ($a === 'rec_done') { $p->prepare('UPDATE fk_recs SET done = ? WHERE id = ?')->execute([empty($in['undo']) ? 1 : 0, $id]); json_out(['ok' => true]); }
         if ($a === 'rec_del') { $p->prepare('DELETE FROM fk_recs WHERE id = ?')->execute([$id]); json_out(['ok' => true]); }
-        if ($a === 'score_del') { $p->prepare('DELETE FROM fk_scores WHERE id = ?')->execute([$id]); json_out(['ok' => true]); }
+        if ($a === 'score_del') { $q = $p->prepare('SELECT pid FROM fk_scores WHERE id = ?'); $q->execute([$id]); $pd = (string) $q->fetchColumn(); if ($pd !== '') $p->prepare('DELETE FROM fk_scores WHERE pid = ?')->execute([$pd]); else $p->prepare('DELETE FROM fk_scores WHERE id = ?')->execute([$id]); json_out(['ok' => true]); }
     }
     json_out(['error' => 'Unknown action'], 400);
 } catch (Throwable $e) {
