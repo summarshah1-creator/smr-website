@@ -555,6 +555,61 @@ L.suffa = { n: 'Suffa-Tul-Islam Masjid', w: 300, d(c, x, G) {
   for (const [wx, ww] of [[x - 6, 62], [x + 144, 162]]) { BRICK(c, wx, G - 12, ww, 12, '#b86a4a', '#9a563a'); R(c, OUT, wx, G - 13, ww, 1); R(c, '#d9c9b0', wx, G - 13, ww, 2); }
 } };
 
+L.lutonhoo = { n: 'Luton Hoo Estate', w: 330, lawn: 10, d(c, x, G) {
+  const ST = '#dcc79a', SD = '#c4ad7f', SL = '#ead9b0', RF = '#7c8592', RD = '#5f6874';
+  const stone = (sx, sy, w, h, col = ST) => { BOX(c, col, sx, sy, w, h); for (let yy = sy + 5; yy < sy + h - 1; yy += 6) R(c, SH(col, .94), sx + 1, yy, w - 2, 1); };
+  const win = (wx, wy, w, h) => { BOX(c, '#efe6cf', wx, wy, w, h); R(c, '#4d5d6e', wx + 2, wy + 2, w - 4, h - 4); R(c, '#efe6cf', wx + Math.floor(w / 2), wy + 2, 1, h - 4); R(c, '#efe6cf', wx + 2, wy + Math.floor(h / 2), w - 4, 1); R(c, 'rgba(255,255,255,.35)', wx + 2, wy + 2, 2, h - 4); R(c, SD, wx - 2, wy - 3, w + 4, 2); R(c, SL, wx - 2, wy + h + 1, w + 4, 2); };
+  // chimney stacks behind the roof
+  for (const cx of [x + 58, x + 104, x + 132, x + 214, x + 244, x + 290]) { BOX(c, SD, cx, G - 162, 8, 26); R(c, '#8a7a5c', cx - 1, G - 164, 10, 3); R(c, '#9a5a3c', cx + 1, G - 167, 2, 3); R(c, '#9a5a3c', cx + 5, G - 167, 2, 3); }
+  // grey mansard roof with dormers
+  P(c, RF, [[x + 22, G - 128], [x + 316, G - 128], [x + 308, G - 146], [x + 30, G - 146]], true);
+  for (let i = 0; i < 20; i++) R(c, RD, x + 34 + i * 14, G - 145, 1, 16);
+  for (const dx of [x + 82, x + 116, x + 196, x + 230, x + 268]) { BOX(c, ST, dx, G - 142, 10, 12); R(c, '#4d5d6e', dx + 2, G - 139, 6, 8); P(c, RD, [[dx - 1, G - 142], [dx + 11, G - 142], [dx + 5, G - 147]], true); }
+  // main block, two storeys + parapet
+  stone(x + 26, G - 128, 288, 98);
+  R(c, SL, x + 22, G - 132, 296, 4); R(c, OUT, x + 22, G - 133, 296, 1); for (let i = 0; i < 48; i++) R(c, SD, x + 24 + i * 6, G - 131, 2, 2);
+  R(c, SL, x + 26, G - 84, 288, 3); R(c, SD, x + 26, G - 81, 288, 1);
+  for (let i = 0; i < 10; i++) { const wx = x + 92 + i * 22; if (wx > x + 146 && wx < x + 196) continue; win(wx, G - 118, 10, 22); win(wx, G - 74, 10, 28); }
+  // left rounded bow with grey dome cap
+  stone(x + 6, G - 134, 64, 104, SL);
+  for (let yy = G - 130; yy < G - 32; yy += 6) R(c, SH(SL, .93), x + 7, yy, 62, 1);
+  R(c, SD, x + 6, G - 134, 8, 104); R(c, SD, x + 62, G - 134, 8, 104);
+  P(c, RF, [[x + 6, G - 135], [x + 70, G - 135], [x + 62, G - 148], [x + 48, G - 154], [x + 28, G - 154], [x + 14, G - 148]], true);
+  R(c, RD, x + 36, G - 160, 4, 7); R(c, '#c9a64a', x + 37, G - 163, 2, 3);
+  for (const wx of [x + 18, x + 33, x + 48]) { win(wx, G - 122, 9, 22); win(wx, G - 76, 9, 28); }
+  CIRC(c, '#4d5d6e', x + 38, G - 93, 3);
+  // centre portico: pediment over columns
+  stone(x + 150, G - 136, 46, 106, SL);
+  P(c, SL, [[x + 146, G - 136], [x + 200, G - 136], [x + 173, G - 150]], true); P(c, SD, [[x + 156, G - 138], [x + 190, G - 138], [x + 173, G - 146]]);
+  win(x + 166, G - 122, 14, 24); R(c, '#3a3226', x + 162, G - 74, 22, 44); R(c, '#5a4a34', x + 164, G - 72, 18, 42); R(c, '#c9a64a', x + 172, G - 52, 2, 2);
+  for (const cx of [x + 152, x + 160, x + 186, x + 194]) { R(c, '#f2e6c6', cx, G - 82, 4, 52); R(c, SD, cx + 3, G - 82, 1, 52); R(c, SL, cx - 1, G - 84, 6, 2); }
+  // terrace with white balustrade and central steps
+  stone(x, G - 30, 330, 12, '#e6dcc4');
+  for (let i = 0; i < 54; i++) if (i < 22 || i > 32) R(c, '#cfc3a6', x + 3 + i * 6, G - 27, 3, 7);
+  R(c, '#f4eedd', x, G - 31, 330, 2);
+  // stone plinth under the terrace, then a low striped lawn (it carries on behind the neighbours: L.lutonhoo.lawn)
+  R(c, OUT, x, G - 18, 330, 9); R(c, '#d3c6a4', x, G - 18, 330, 8); for (let i = 0; i < 28; i++) R(c, '#c4b694', x + 4 + i * 12, G - 15, 6, 1);
+  for (let k = 0; k < 3; k++) R(c, k % 2 ? '#d9cfb6' : '#efe8d6', x + 128 - k * 4, G - 18 + k * 6, 90 + k * 8, 6);
+  for (const [lx, lw] of [[x - 4, 124], [x + 222, 112]]) for (let i = 0; i * 11 < lw; i++) R(c, i % 2 ? '#6aa848' : '#54903a', lx + i * 11, G - 10, Math.min(11, lw - i * 11), 10);
+  R(c, '#2f5a26', x - 4, G - 11, 124, 2); R(c, '#2f5a26', x + 222, G - 11, 112, 2);
+  // topiary: cones and balls along the terrace
+  const cone = (tx, h) => { P(c, '#2f6a2c', [[tx - 5, G - 10], [tx + 5, G - 10], [tx, G - 10 - h]], true); R(c, '#3f8436', tx - 2, G - 6 - h * .6, 2, h * .4); };
+  const ball = (tx, r) => { CIRC(c, OUT, tx, G - 10 - r, r + 1); CIRC(c, '#2f6a2c', tx, G - 10 - r, r); R(c, '#3f8436', tx - r + 2, G - 12 - r * 1.4, 3, 2); };
+  cone(x + 112, 22); cone(x + 232, 22); ball(x + 126, 6); ball(x + 218, 6); ball(x + 266, 7); cone(x + 318, 18);
+  // fountain in front of the steps: round stone pool, tiered basin, statue, spray
+  const fx = x + 173;
+  BOX(c, '#2f6a2c', fx - 46, G - 28, 92, 14); for (let i = 0; i < 15; i++) R(c, '#3f8436', fx - 44 + i * 6, G - 27, 3, 2);
+  R(c, OUT, fx - 41, G - 15, 82, 14); R(c, '#e6dcc4', fx - 40, G - 14, 80, 12); R(c, '#cfc3a6', fx - 40, G - 4, 80, 2); R(c, '#3f7fa8', fx - 35, G - 12, 70, 7); R(c, '#5fa0c8', fx - 30, G - 11, 22, 1); R(c, '#5fa0c8', fx + 8, G - 8, 18, 1); R(c, '#2f6a94', fx - 35, G - 6, 70, 1);
+  R(c, OUT, fx - 4, G - 34, 8, 24); R(c, '#cfc3a6', fx - 3, G - 34, 6, 24); R(c, OUT, fx - 15, G - 35, 30, 5); R(c, '#e6dcc4', fx - 14, G - 34, 28, 3); R(c, '#bfe3f5', fx - 13, G - 31, 26, 1);
+  R(c, OUT, fx - 4, G - 46, 8, 11); R(c, '#cfc3a6', fx - 3, G - 46, 6, 11); R(c, OUT, fx - 8, G - 47, 16, 3); R(c, '#e6dcc4', fx - 7, G - 46, 14, 1);
+  R(c, OUT, fx - 5, G - 55, 10, 9); R(c, '#9a9f96', fx - 2, G - 54, 4, 7); R(c, '#9a9f96', fx - 4, G - 52, 2, 3); R(c, '#9a9f96', fx + 2, G - 52, 2, 3);
+  // spray + falling water are animated in LM_ANIM.lutonhoo
+  // bench on the lawn
+  R(c, '#3a2a20', x + 286, G - 10, 18, 2); R(c, '#3a2a20', x + 286, G - 14, 18, 2); R(c, '#2a2f38', x + 287, G - 8, 2, 8); R(c, '#2a2f38', x + 301, G - 8, 2, 8);
+  // helicopter is drawn (and takes off) in LM_ANIM.lutonhoo
+
+} };
+
 L.ldh = { n: 'Luton and Dunstable Hospital', w: 344, d(c, x, G) {
   x += 44;   // room for the longer left wing
   // tall grey hospital block behind
@@ -627,7 +682,7 @@ L.bigyellow = { n: 'Big Yellow Self Storage', w: 300, d(c, x, G) {
   BOX(c, '#f4f2ec', x + 250, G - 34, 16, 12); R(c, '#c8202a', x + 252, G - 32, 12, 3); R(c, '#9aa3ad', x + 257, G - 22, 2, 22);
 } };
 
-L.bandq = { n: 'B and Q', w: 440, d(c, x, G) {
+L.bandq = { n: 'B&Q', w: 440, d(c, x, G) {
   const CL = '#c9ced6';
   BOX(c, CL, x, G - 76, 440, 76); for (let i = 0; i < 6; i++) R(c, '#b6bcc5', x, G - 66 + i * 12, 440, 1); BOX(c, '#e8641c', x - 2, G - 82, 444, 6); R(c, '#c94e10', x - 2, G - 78, 444, 2);
   for (const bx of [x + 10, x + 330]) { BOX(c, '#3a3f4a', bx, G - 30, 100, 30); for (let i = 0; i < 8; i++) R(c, '#2e333c', bx + 4 + i * 12, G - 28, 10, 28); }
@@ -794,12 +849,47 @@ L.gurdwara = { n: 'Guru Nanak Gurdwara', w: 440, d(c, x, G) {
   for (const [sx, dir] of [[x + 120, 1], [x + 290, -1]]) for (let i = 0; i < 10; i++) R(c, i % 2 ? '#b9bcc0' : '#a8abb0', sx + (dir > 0 ? i * 3 : 30 - i * 3), G - 44 + i * 4.4, 30, 4);
 } };
 
+L.cycleking = { n: 'Cycle King', w: 344, d(c, x, G) {
+  const B = '#9a4a34', BL = '#86402c', Y = '#f7d21e', RD = '#d8262f', WF = '#f2f0ea';
+  // three brick blocks over the shops: tall left, low middle, tall right, each with a stepped parapet
+  const block = (bx, bw, top) => { BRICK(c, bx, G - top, bw, top - 44, B, BL); R(c, OUT, bx - 1, G - top - 1, bw + 2, 1); R(c, OUT, bx - 1, G - top, 1, top - 44); R(c, OUT, bx + bw, G - top, 1, top - 44); R(c, '#7a3a28', bx, G - top, bw, 2); };
+  block(x, 130, 160); block(x + 130, 104, 124); block(x + 234, 110, 150);
+  for (const [px, pw, top] of [[x + 6, 24, 160], [x + 52, 26, 160], [x + 100, 24, 160], [x + 240, 26, 150], [x + 304, 34, 150]]) { BRICK(c, px, G - top - 8, pw, 8, B, BL); R(c, OUT, px - 1, G - top - 9, pw + 2, 1); R(c, OUT, px - 1, G - top - 8, 1, 8); R(c, OUT, px + pw, G - top - 8, 1, 8); }
+  const win = (wx, wy, w, h) => { BOX(c, WF, wx, wy, w, h); R(c, '#6f8aa0', wx + 2, wy + 2, w - 4, h - 4); R(c, WF, wx + Math.floor(w / 2), wy + 2, 1, h - 4); R(c, WF, wx + 2, wy + 5, w - 4, 1); R(c, 'rgba(255,255,255,.4)', wx + 2, wy + 7, 2, h - 9); };
+  win(x + 22, G - 150, 28, 18); R(c, '#e8e4dc', x + 22, G - 154, 28, 3); win(x + 84, G - 150, 22, 18);
+  win(x + 16, G - 108, 26, 18); win(x + 56, G - 108, 22, 18); win(x + 96, G - 108, 16, 18);
+  BOX(c, WF, x + 144, G - 120, 26, 10); R(c, '#6f8aa0', x + 146, G - 118, 22, 6); BOX(c, WF, x + 180, G - 120, 26, 10); R(c, '#6f8aa0', x + 182, G - 118, 22, 6); R(c, WF, x + 138, G - 108, 3, 40); R(c, WF, x + 220, G - 108, 3, 40);
+  win(x + 244, G - 136, 14, 18); win(x + 274, G - 118, 18, 18); win(x + 308, G - 118, 22, 18); win(x + 274, G - 140, 18, 12);
+  // yellow fascias with red frames, level with the other shop signs
+  const sign = (sx, sw) => { BOX(c, RD, sx, G - 68, sw, 22); R(c, Y, sx + 2, G - 66, sw - 4, 18); };
+  sign(x - 2, 132); sign(x + 130, 104); sign(x + 234, 112);
+  const burst = (bx, by) => { for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4; R(c, RD, Math.round(bx + Math.cos(a) * 5) - 1, Math.round(by + Math.sin(a) * 3) - 1, 3, 2); } R(c, RD, bx - 5, by - 2, 11, 5); R(c, Y, bx - 3, by - 1, 7, 2); };
+  const bike = (bx, by, col) => { c.strokeStyle = col; c.lineWidth = 1; for (const wx of [bx, bx + 9]) { c.beginPath(); c.arc(wx + .5, by + .5, 3, 0, 7); c.stroke(); } R(c, col, bx + 2, by - 3, 6, 1); R(c, col, bx + 4, by - 3, 1, 3); R(c, col, bx + 7, by - 5, 1, 3); R(c, col, bx + 6, by - 6, 3, 1); };
+  burst(x + 9, G - 57); burst(x + 119, G - 57);
+  T(c, 'CYCLE KING', x + 64, G - 63, 10, RD);
+  R(c, RD, x + 132, G - 66, 100, 4); for (let i = 0; i < 14; i++) R(c, '#ffffff', x + 140 + i * 6, G - 65, 3, 1);
+  T(c, 'CYCLE KING', x + 174, G - 59, 8, RD); bike(x + 214, G - 54, '#1b1a24');
+  T(c, '7 DAYS A WEEK', x + 290, G - 60, 8, RD);
+  // shopfronts: red pilasters, big windows full of bikes
+  BOX(c, '#e9e6e0', x - 2, G - 46, 348, 46);
+  for (const [wx, ww] of [[x + 4, 56], [x + 68, 56], [x + 140, 40], [x + 240, 46], [x + 292, 46]]) {
+    BOX(c, '#3a4048', wx, G - 42, ww, 38); R(c, '#c8d4dc', wx + 2, G - 40, ww - 4, 4); for (let i = 0; i < 4; i++) R(c, '#f4f6e6', wx + 6 + i * (ww / 4), G - 39, ww / 8, 1);
+    const cols = ['#e0302a', '#2a6fd8', '#f2c43a', '#3fae5a', '#e8641c', '#b23ad8', '#f4f2ec'];
+    for (let row = 0; row < 2; row++) for (let i = 0; i * 13 < ww - 14; i++) bike(wx + 3 + i * 13 + row * 5, G - 24 + row * 13, cols[(i * 3 + row * 2 + wx) % cols.length]);
+  }
+  for (const px of [x - 2, x + 62, x + 128, x + 232, x + 286, x + 342]) BOX(c, RD, px, G - 46, 4, 46);
+  BOX(c, '#2a2f38', x + 184, G - 42, 40, 42); R(c, '#9fb7c9', x + 187, G - 39, 15, 34); R(c, '#9fb7c9', x + 206, G - 39, 15, 34); R(c, '#2a2f38', x + 203, G - 39, 2, 34);
+  BOX(c, '#f4f2ec', x + 170, G - 18, 10, 14); R(c, RD, x + 172, G - 16, 6, 4); R(c, '#2a2f38', x + 174, G - 4, 2, 4);
+  // bench outside on the right
+  R(c, '#a0703a', x + 316, G - 10, 24, 3); R(c, '#a0703a', x + 316, G - 15, 24, 3); R(c, '#3a3d44', x + 318, G - 7, 2, 7); R(c, '#3a3d44', x + 336, G - 7, 2, 7);
+} };
+
 L.toros = { n: "Toro's Steakhouse", w: 220, d(c, x, G) {
   const B = '#6a4234', BL = '#5a382c', WH = '#efece4';
   c.save(); c.translate(0, -18);
-  BRICK(c, x, G - 160, 200, 112, B, BL); R(c, OUT, x - 1, G - 161, 202, 1); R(c, OUT, x - 1, G - 160, 1, 112); BOX(c, WH, x - 2, G - 166, 204, 8); R(c, '#d8d4ca', x - 2, G - 160, 204, 2);
-  for (const [px, pw] of [[x + 20, 40], [x + 120, 44]]) { BOX(c, WH, px, G - 108, pw, 60); P(c, WH, [[px - 4, G - 108], [px + pw / 2, G - 120], [px + pw + 4, G - 108]], true); R(c, '#d8d4ca', px, G - 106, pw, 2); }
-  for (let r = 0; r < 2; r++) for (let i = 0; i < 5; i++) { const wx = x + 10 + i * 40, wy = r ? G - 102 : G - 150; WIN(c, wx, wy, 16, r ? 40 : 30, '#f4f2ec', '#9fb7c9'); R(c, WH, wx - 2, wy + (r ? 40 : 30), 20, 3); }
+  BRICK(c, x, G - 136, 200, 88, B, BL); R(c, OUT, x - 1, G - 137, 202, 1); R(c, OUT, x - 1, G - 136, 1, 88); BOX(c, WH, x - 2, G - 142, 204, 8); R(c, '#d8d4ca', x - 2, G - 136, 204, 2);
+  for (const [px, pw] of [[x + 20, 40], [x + 120, 44]]) { BOX(c, WH, px, G - 90, pw, 42); P(c, WH, [[px - 4, G - 90], [px + pw / 2, G - 100], [px + pw + 4, G - 90]], true); R(c, '#d8d4ca', px, G - 88, pw, 2); }
+  for (let r = 0; r < 2; r++) for (let i = 0; i < 5; i++) { const wx = x + 10 + i * 40, wy = r ? G - 85 : G - 129; WIN(c, wx, wy, 16, r ? 31 : 22, '#f4f2ec', '#9fb7c9'); R(c, WH, wx - 2, wy + (r ? 31 : 22), 20, 3); }
   for (let i = 0; i < 25; i++) R(c, WH, x + 2 + i * 8, G - 52, 4, 2);
   // shopfront sign: black fascia with a thin gold frame, bull head, TORO'S in red with a white edge, STEAKHOUSE in white
   BOX(c, '#1f1d1e', x - 2, G - 50, 204, 24); R(c, '#c9a64a', x, G - 48, 200, 1); R(c, '#c9a64a', x, G - 29, 200, 1);
@@ -823,15 +913,9 @@ L.gna = { n: 'G and A Fast Food', w: 150, d(c, x, G) {
   P(c, '#e0391e', [[x + 82, G - 52], [x + 84, G - 56], [x + 88, G - 53], [x + 92, G - 57], [x + 96, G - 53], [x + 100, G - 56], [x + 102, G - 52]], true);
   T(c, 'G', x + 78, G - 52, 16, '#e0391e'); T(c, 'A', x + 106, G - 52, 16, '#e0391e'); c.font = '16px PS'; c.textAlign = 'center'; c.textBaseline = 'top'; c.fillStyle = '#e0391e'; c.fillText('&', x + 92, G - 51); R(c, '#e0391e', x + 74, G - 36, 36, 1); T(c, 'FAST FOOD', x + 92, G - 35, 8, '#e0391e', 'center', false);
   R(c, '#e0391e', x + 124, G - 50, 1, 8); R(c, '#e0391e', x + 128, G - 50, 1, 8); R(c, '#e0391e', x + 132, G - 50, 1, 8); R(c, '#e0391e', x + 136, G - 50, 1, 8); T(c, '01582', x + 132, G - 40, 8, '#ffffff', 'center', false);
-  // thin figure on the white panel next to the sign
-  { const px = x + 2, py = G - 50; for (let i = 0; i < 22; i++) R(c, SH('#bdbdbd', 1.12 - i * .012), px, py + i, 30, 1); R(c, '#e8e8e8', px + 2, py + 2, 4, 8);
-    P(c, '#1c1c1e', [[px + 5, py + 22], [px + 8, py + 15], [px + 12, py + 13], [px + 20, py + 13], [px + 24, py + 15], [px + 27, py + 22]], true);
-    P(c, '#f2f2f2', [[px + 14, py + 13], [px + 16, py + 19], [px + 18, py + 13]], true); R(c, '#1c1c1e', px + 15, py + 14, 2, 4); R(c, '#3a3a3e', px + 11, py + 15, 1, 6); R(c, '#3a3a3e', px + 21, py + 15, 1, 6);
-    R(c, '#6a6a6e', px + 14, py + 10, 4, 4); CIRC(c, '#7a7a7e', px + 16, py + 7, 5); R(c, '#4a4a4e', px + 13, py + 6, 2, 5); R(c, '#9a9a9e', px + 18, py + 5, 2, 3);
-    P(c, '#111113', [[px + 10, py + 6], [px + 12, py + 1], [px + 17, py], [px + 21, py + 2], [px + 22, py + 5], [px + 18, py + 3], [px + 13, py + 4], [px + 12, py + 8]], true);
-    R(c, '#2a2a2c', px + 15, py + 9, 4, 1); R(c, '#3a3a3c', px + 16, py + 11, 3, 1);
-    R(c, '#5a4a3a', px + 19, py + 10, 6, 2); R(c, '#e8e8e8', px + 25, py + 10, 1, 2);
-    for (const [a, b] of [[26, 8], [27, 6], [26, 4], [27, 2]]) R(c, 'rgba(255,255,255,.75)', px + a, py + b, 1, 1);
+  // stencil portrait on the white slatted panel next to the sign: smiling bald man, beard, dark suit, open white collar
+  { const px = x + 2, py = G - 50, PIC = ['..............................','........kkkk..................','......kk....kk................','.....k........k...............','....kg.........k..............','....kg..kk..kk..k.............','....kgg.gkg.gk..k.............','....kgg......k..k.............','....kkg.....kk..k.............','....kkgk.......k..............','....kkg.kkkkkk.k..............','.....kkk......kk..............','.....kkkkkkkkkkk..............','......kkkkkkkkk...............','.....kk.gkkkkk.kk.............','...kkkk.s.kkk.s.kkkk..........','..kkkkkk.s.k.s.kkkkkkk........','.kkkkkkkk.s.s.kkkkkkkkkk......','kkkkkkkkkk.s.kkkkkkkkkkkkk....','kkkkkkkkkk.s.kkkkkkkkkkkkkk...','kkkkkkkkkkk.kkkkkkkkkkks.kkk..','kkkkkkkkkkk.kkkkkkkkkkkkkkkkk.'];
+    for (let j = 0; j < 22; j++) for (let i = 0; i < 30; i++) { const ch = PIC[j][i] || '.'; c.fillStyle = ch === 'k' ? '#1b1b1d' : ch === 'g' ? '#78787c' : ch === 's' ? '#f6f6f6' : (j % 3 === 2 ? '#d4d4d4' : '#ececec'); c.fillRect(px + i, py + j, 1, 1); }
     R(c, OUT, px - 1, py - 1, 32, 1); R(c, OUT, px - 1, py + 22, 32, 1); R(c, OUT, px - 1, py - 1, 1, 24); R(c, OUT, px + 30, py - 1, 1, 24); }
   c.restore();
   BOX(c, '#121214', x, G - 42, 150, 42); R(c, '#e8c89a', x + 10, G - 40, 40, 38); R(c, '#e8c89a', x + 98, G - 40, 42, 38); R(c, '#f2e2c4', x + 54, G - 40, 40, 40); R(c, '#121214', x + 73, G - 40, 2, 40); R(c, '#d8cbb4', x + 10, G - 24, 40, 1); R(c, '#d8cbb4', x + 98, G - 24, 42, 1);
@@ -1040,7 +1124,7 @@ const SHARP = {
     BOX(c, '#151618', X(-4), Y(88), Math.round(96 * f), 17); T(c, 'CHAIIKHANA', X(44), Y(88) + 4, 8, '#f4f4f2', 'center', true);
     T(c, 'ORDER', X(34), Y(30) + 2, 8, '#e0458a', 'center', true); },
 };
-const SCALE = { leagrave: .64, currys: 1.15, masjid: 1.1, suffa: .9, oak: .82, chaiikhana: .85, spudkingz: .64, nadeem: 1.2, chaiiwala: 1.1, frasers: 1.3, stmarys: 1.02, hatfactory: 1.3 };
+const SCALE = { lutonhoo: 1.5, leagrave: .64, currys: 1.15, masjid: 1.1, suffa: .9, oak: .82, chaiikhana: .85, spudkingz: .64, nadeem: 1.2, chaiiwala: 1.1, frasers: 1.3, stmarys: 1.02, hatfactory: 1.3 };
 Object.keys(SCALE).forEach(k => { const f = SCALE[k], d0 = L[k].d, w0 = L[k].w, M = 80, H = 320; L[k].w = Math.round(w0 * f);
   L[k].d = (c, x, G) => { const oc = document.createElement('canvas'); oc.width = w0 + M * 2; oc.height = H; const o = oc.getContext('2d'); d0(o, M, H - 10);
     c.save(); c.imageSmoothingEnabled = k === 'leagrave'; c.imageSmoothingQuality = 'high'; c.drawImage(oc, 0, 0, oc.width, H - 10, x - M * f, G - (H - 10) * f, oc.width * f, (H - 10) * f); c.restore(); if (SHARP[k]) SHARP[k](c, x, G, f); }; });
@@ -1132,6 +1216,42 @@ const WATER = (c, x, G, w, t) => {
   R(c, '#46798a', x, G - 16, w, 3); R(c, '#356170', x, G - 4, w, 4);
   [[G - 13, 26, 14, '#7fb0bb'], [G - 9, 18, 22, '#6c9ba6'], [G - 5, 32, 9, '#5d8e9a']].forEach(([y, gap, sp, col], r) => { const o = (t * sp) % gap; for (let i = -1; i < w / gap + 1; i++) { const rx = x + i * gap + o + r * 7; R(c, col, rx, y + Math.round(Math.sin(t * 2 + i + r) * 0.6), 8 + (i % 2) * 4, 1); } });
   for (let i = 0; i < Math.ceil(w / 50); i++) { const ph = (t * 1.3 + i * .37) % 1; if (ph < .35) R(c, '#e8f4f6', x + ((i * 53 + Math.floor(t * 9)) % (w - 10)), G - 12 + (i % 3) * 3, 2, 1); }
+  c.restore(); };
+// Luton Hoo: working fountain + helicopter that spools up and takes off as you fly towards it
+window.LM_ANIM.lutonhoo = (c, x, G, t) => {
+  const k = 1.5, SW = (typeof W !== 'undefined' ? W : 300);
+  c.save(); c.translate(x, G); c.scale(k, k);
+  // fountain (local coords of the unscaled drawing, ground = 0)
+  const fx = 173;
+  for (let i = 0; i < 6; i++) { const ph = (t * .5 + i / 6) % 1; R(c, '#9fd0ea', fx - 32 + ((i * 23 + Math.floor(t * 6)) % 60), -11 + (i % 3) * 2, 3, 1); if (ph < .5) R(c, '#ffffff', fx - 30 + ((i * 37 + Math.floor(t * 4)) % 56), -10 + (i % 2) * 3, 1, 1); }
+  for (let j = 0; j < 28; j++) { const ph = (t * .85 + j / 28) % 1, sd = j % 2 ? 1 : -1, outer = j % 4 > 1;
+    const xe = outer ? 30 : 13, ye = outer ? -12 : -33, px = fx + sd * xe * ph, py = -63 - 9 * ph + (ye + 72) * ph * ph;
+    R(c, ph < .15 ? '#ffffff' : '#bfe3f5', px, py, 1, 2); }
+  for (let j = 0; j < 8; j++) { const ph = (t * 1.4 + j / 8) % 1, sd = j % 2 ? 1 : -1; R(c, '#bfe3f5', fx + sd * (14 + (j % 3)), -34 + ph * 22, 1, 2); }
+  R(c, '#ffffff', fx, -66 - Math.round(Math.abs(Math.sin(t * 6)) * 2), 1, 3);
+  // helicopter: parked on the lawn, takes off once the estate is ahead of you, climbs and flies off
+  const lift = Math.max(0, Math.min(1, (SW * .34 - x) / (SW * 1.1))), spin = .35 + Math.min(1, Math.max(0, (SW * .75 - x) / (SW * .35)));
+  const hx = 34 - lift * lift * 150, hy = -6 - lift * 150 - lift * lift * 40, tilt = -lift * .16;
+  if (hx > -120 && hy > -320) {
+    c.save(); c.translate(hx + 20, hy - 14); c.rotate(tilt); c.translate(-20, 14);
+    if (lift === 0) { c.fillStyle = 'rgba(0,0,0,.18)'; c.fillRect(-4, 1, 52, 2); }
+    // skids
+    R(c, '#2a2f38', -2, 0, 46, 2); R(c, '#2a2f38', 44, -1, 2, 2); R(c, '#2a2f38', 6, -6, 2, 6); R(c, '#2a2f38', 30, -6, 2, 6);
+    // thick tail boom, fin and tail rotor
+    P(c, '#1e2740', [[34, -20], [66, -19], [68, -15], [34, -11]], true); R(c, '#2b3550', 36, -14, 30, 1);
+    P(c, '#1e2740', [[62, -19], [70, -31], [74, -31], [70, -15]], true); R(c, '#c9a64a', 66, -22, 3, 1);
+    const ta = t * 30 * spin, tl = 7; c.strokeStyle = '#9aa3b0'; c.lineWidth = 1.5; for (const a of [ta, ta + Math.PI / 2]) { c.beginPath(); c.moveTo(71 - Math.cos(a) * tl, -24 - Math.sin(a) * tl); c.lineTo(71 + Math.cos(a) * tl, -24 + Math.sin(a) * tl); c.stroke(); }
+    CIRC(c, '#2a2f38', 71, -24, 1);
+    // cabin + glass
+    P(c, '#1e2740', [[0, -10], [4, -22], [14, -27], [30, -27], [38, -20], [38, -8], [4, -6]], true);
+    P(c, '#5e7894', [[2, -12], [6, -21], [15, -25], [20, -25], [20, -12]]); R(c, 'rgba(255,255,255,.45)', 8, -22, 6, 1); R(c, '#2b3550', 20, -25, 1, 13); R(c, '#9aa3b0', 24, -16, 10, 1); R(c, '#e23a3a', 37, -12, 1, 2);
+    // mast + main rotor (blur disc + spinning blade)
+    R(c, '#2a2f38', 18, -31, 3, 4); c.fillStyle = 'rgba(70,80,96,' + (.08 + spin * .12) + ')'; c.fillRect(-18, -34, 78, 3);
+    const ma = t * 22 * spin, L = 39; for (const o of [0, Math.PI]) { const len = Math.round(L * Math.cos(ma + o)); R(c, '#2a2f38', Math.min(20, 20 + len), -33, Math.abs(len) || 1, 2); }
+    CIRC(c, '#3a4250', 20, -32, 2);
+    c.restore();
+    if (lift > 0 && lift < .35) { c.fillStyle = 'rgba(220,230,210,' + (.35 - lift) + ')'; for (let i = 0; i < 6; i++) { const d = 10 + ((t * 40 + i * 9) % 30); c.fillRect(54 + d, -3 - (i % 2), 3, 1); c.fillRect(-14 - d, -3 - (i % 2), 3, 1); } }
+  }
   c.restore(); };
 // green flag on the Masjid-e-Ali alam pole, black writing on it, waving as you fly past
 window.LM_ANIM.masjidali = (c, x, G, t) => { const fx = x + 63, N = 32;
@@ -1262,5 +1382,5 @@ window.LM_ANIM.funfair = (c, x, G, t) => {
   CIRC(c, OUT, px, py, 5); CIRC(c, '#9aa3ad', px, py, 4); BOX(c, '#d32f2f', px - 4, py - 10, 8, 6);
 };
 
-window.LM_ORDER = ['galaxy', 'townhall', 'stmarys', 'letters', 'frasers', 'station', 'hatfactory', 'chaiiwala', 'chaiikhana', 'spudkingz', 'miamicrispy', 'masjid', 'masjidali', 'suffa', 'gurdwara', 'ldh', 'foodbank', 'inspire', 'nadeem', 'oak', 'periperi', 'toros', 'gna', 'kahwa', 'leagrave', 'topspizza', 'alquds', 'kaya', 'karwan', 'krispy', 'tesco', 'currys', 'bandq', 'matalan', 'lidl', 'jdgyms', 'bigyellow', 'grandbazar', 'lewsey', 'venue', 'chiltern', 'uob', 'sixthform', 'wardownfield', 'wardown', 'wardownbridge', 'funfair', 'stockwood', 'welcome', 'airport'];
+window.LM_ORDER = ['galaxy', 'townhall', 'stmarys', 'letters', 'frasers', 'station', 'hatfactory', 'chaiiwala', 'chaiikhana', 'spudkingz', 'miamicrispy', 'masjid', 'masjidali', 'suffa', 'gurdwara', 'ldh', 'lutonhoo', 'foodbank', 'inspire', 'nadeem', 'oak', 'periperi', 'toros', 'cycleking', 'gna', 'kahwa', 'leagrave', 'topspizza', 'alquds', 'kaya', 'karwan', 'krispy', 'tesco', 'currys', 'bandq', 'matalan', 'lidl', 'jdgyms', 'bigyellow', 'grandbazar', 'lewsey', 'venue', 'chiltern', 'uob', 'sixthform', 'wardownfield', 'wardown', 'wardownbridge', 'funfair', 'stockwood', 'welcome', 'airport'];
 })();

@@ -202,7 +202,7 @@ html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:m
 </div></div>
   <div id="tap" class="hide">TAP TO FLAP</div>
 </div>
-<script src="landmarks.js?v=1117zm"></script>
+<script src="landmarks.js?v=1117zn"></script>
 <script src="vehicles.js?v=1117q"></script>
 <script src="namecheck.js"></script>
 <script>
@@ -305,7 +305,7 @@ function reset() {
   cars = []; vanT = 0; vanNext = 12; plane = null; bplane = null; for (let i = 0; i < 3; i++) spawnCar(Math.random() * W);
   clouds = []; for (let i = 0; i < 6; i++) clouds.push({ x: Math.random() * (W + 200), y: -OY + 20 + Math.random() * (90 + OY), s: .6 + Math.random() * .8 });
 }
-const ANIM_K = { masjidali: 1, wardown: 1, wardownbridge: 1, funfair: 1 }, CHAIN = ['wardownfield', 'wardown', 'wardownbridge', 'funfair'];
+const ANIM_K = { lutonhoo: 1, masjidali: 1, wardown: 1, wardownbridge: 1, funfair: 1 }, CHAIN = ['wardownfield', 'wardown', 'wardownbridge', 'funfair'];
 /* ---------- landmark playlist: shuffled every lap, with a few rules so it feels like a real town ----------
    - set pieces stay together: Frasers → Station → Hat Factory (train), Wardown field → lake → bridge → funfair, Welcome sign → Airport
    - never more than 2 big buildings in a row, never two retail-park sheds back to back
@@ -468,7 +468,7 @@ const LB = (() => { const api = 'api.php'; let online = null, data = { today: []
 /* ---------- always the latest version, also when saved to the Home Screen ----------
    version.json is rewritten on every deploy; when it changes the page reloads itself (straight away on the menu,
    or right after the current game ends), with a cache-busting query so the phone fetches the new HTML. */
-(() => { const BUILD = '20261117184456'; let pending = false;
+(() => { const BUILD = '20261117224508'; let pending = false;
   const go = () => { let last = 0; try { last = +sessionStorage.getItem('fk_upd_t') || 0; } catch (e) {} if (Date.now() - last < 60000) return;   // never loop: at most one reload a minute
     try { sessionStorage.setItem('fk_upd_t', String(Date.now())); } catch (e) {} location.replace(location.pathname + '?u=' + Date.now() + location.hash); };
   const check = () => fetch('version.json?ts=' + Date.now(), { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(j => {
@@ -598,6 +598,12 @@ function draw() {
   const drawPlane = P => { ctx.save(); ctx.translate(P.x, P.y); ctx.scale(P.sc, P.sc); LM_ANIM.plane(ctx, 0, 0, P.a); ctx.restore(); };
   let planeDrawn = false;
   if (PL && (PL.y < -OY - 60 || PL.x > W + 80)) plane = null; else if (PL && PL.x > 0 && PL.x < W) AMB.plane = 1;
+  // lawns that carry on behind the neighbouring buildings (drawn first so the neighbours sit in front)
+  lmQueue.forEach((l, i) => { const LL = LANDMARKS[l.sp.k]; if (!LL || !LL.lawn || l.x > W + 260 || l.x + l.sp.w < -260) return;
+    const f = (typeof SCALE !== 'undefined' && SCALE[l.sp.k]) || 1, lh = Math.round(LL.lawn * f), sw = 11 * f, pv = lmQueue[i - 1], nx = lmQueue[i + 1];
+    const x0 = Math.round(pv ? pv.x + pv.sp.w - 12 : l.x - 60), x1 = Math.round(nx ? nx.x + 12 : l.x + l.sp.w + 60);
+    for (let xx = x0; xx < x1; xx++) { const n = Math.floor((xx - (l.x - 4 * f)) / sw); ctx.fillStyle = n % 2 ? '#6aa848' : '#54903a'; ctx.fillRect(xx, GY - lh, 1, lh); }
+    ctx.fillStyle = '#2f5a26'; ctx.fillRect(x0, GY - lh - 1, x1 - x0, 2); });
   lmQueue.forEach(l => { if (l.x > W + 260 || l.x + l.sp.w < -260) return;
     if (l.sp.k === 'airport') { if (!l.planeGone && !plane && l.x + 300 < W * .6) { plane = { t0: t, x: l.x + 300 }; l.planeGone = 1; }
       if (PL && plane && PL.y > GY - 166) { drawPlane(PL); planeDrawn = true; } }   // still below the roofline: draw it first so the terminal hides its lower half
