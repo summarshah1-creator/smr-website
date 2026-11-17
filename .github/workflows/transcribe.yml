@@ -1,0 +1,22 @@
+name: Transcribe song (scratch)
+on:
+  push:
+    branches: [scratch/transcribe]
+jobs:
+  t:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+      - run: pip install -q openai-whisper
+      - run: |
+          python - <<'PY'
+          import whisper, json
+          m = whisper.load_model('small.en')
+          r = m.transcribe('song.mp3', word_timestamps=True, language='en', initial_prompt="SMR original, Flappy Kabootar, Luton, kabootar on the wing, pipes on the left, pipes on the right, ice-cream van, leaderboard, score card, home screen, recommend the place")
+          out = [{'start': s['start'], 'end': s['end'], 'text': s['text'], 'words': [{'w': w['word'], 's': w['start'], 'e': w['end']} for w in s.get('words', [])]} for s in r['segments']]
+          json.dump(out, open('words.json', 'w'), indent=1)
+          for s in out: print(round(s['start'],2), round(s['end'],2), s['text'])
+          PY
+      - uses: actions/upload-artifact@v4
+        with: { name: words, path: words.json }
