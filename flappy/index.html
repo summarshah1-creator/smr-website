@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>Flappy Kabootar</title>
+<style>
+@font-face{font-family:Silk;src:url(silk.woff2)}
+@font-face{font-family:Silk;font-weight:700;src:url(silkb.woff2)}@font-face{font-family:PS;src:url(ps2p.woff2)}
+@font-face{font-family:Amiri;font-weight:700;src:url(amiri.woff2)}
+html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+#c{position:fixed;inset:0;width:100%;height:100%;image-rendering:pixelated;display:block}
+.ui{position:fixed;inset:0;pointer-events:none;font-family:Silk,monospace;color:#fff;text-align:center}
+#score{position:absolute;top:calc(env(safe-area-inset-top) + 18px);left:0;right:0;font:700 44px Silk;text-shadow:0 3px 0 #1b1a24,3px 0 0 #1b1a24,-3px 0 0 #1b1a24,0 -3px 0 #1b1a24}
+#place{position:absolute;top:calc(env(safe-area-inset-top) + 76px);left:50%;transform:translateX(-50%);background:#1b1a24;color:#ffd84a;font:700 13px Silk;padding:7px 12px;border-radius:4px;white-space:nowrap;opacity:0;transition:opacity .3s,transform .3s}
+#place.on{opacity:1;transform:translateX(-50%) translateY(4px)}
+#place small{display:block;color:#cfd8e3;font:400 10px Silk;margin-bottom:2px;letter-spacing:.08em}
+.panel{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(320px,86vw);background:#f6efd8;color:#1b1a24;border:4px solid #1b1a24;box-shadow:0 6px 0 #1b1a24;border-radius:6px;padding:18px 16px 16px;pointer-events:auto}
+.panel h1{margin:0 0 4px;font:700 26px/1.05 Silk;color:#e8641c;text-shadow:2px 2px 0 #1b1a24;letter-spacing:.02em}
+.panel h1 span{display:block;color:#3f8fd0}
+.panel p{margin:8px 0;font:400 12px/1.5 Silk}
+.panel .row{display:flex;justify-content:space-around;margin:12px 0}
+.hs{text-align:center;margin:8px 0 2px}.hs small{display:block;font:700 11px Silk;letter-spacing:.16em;color:#6a5a3a}.hs b{display:block;font:34px/1.3 PS;color:#1b1a24;text-shadow:3px 3px 0 #ffd84a;margin-top:4px}
+.panel .row b{display:block;font:22px/1.3 PS}
+.panel .row small{font:400 10px Silk;letter-spacing:.1em;color:#6a5a3a}
+.btn{display:inline-block;margin-top:6px;background:#3fb04a;color:#fff;border:3px solid #1b1a24;box-shadow:0 4px 0 #1b1a24;border-radius:5px;padding:10px 22px;font:700 15px Silk;cursor:pointer}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #1b1a24}
+.seen{font:400 10px/1.6 Silk;color:#4a4030;max-height:84px;overflow:auto;margin:6px 0 4px}
+.hide{display:none}
+#tap{position:absolute;bottom:calc(env(safe-area-inset-bottom) + 70px);left:0;right:0;font:700 14px Silk;text-shadow:0 2px 0 #1b1a24,2px 0 0 #1b1a24,-2px 0 0 #1b1a24;animation:bl 1s steps(2) infinite}
+@keyframes bl{50%{opacity:.25}}
+
+.wsign{position:absolute;left:50%;top:0;width:196px;height:96px;transform:translate(-50%,-78px);z-index:-1;animation:pop .9s cubic-bezier(.3,1.6,.5,1) .2s both;pointer-events:none}
+@keyframes pop{0%{transform:translate(-50%,0)}100%{transform:translate(-50%,-78px)}}
+.wsign .p{position:absolute;bottom:0;width:9px;height:96px;background:#4a3326;border:2px solid #1b1a24}.wsign .p.l{left:6px}.wsign .p.r{right:6px;height:90px}
+.wsign .fr{position:absolute;left:4px;right:4px;top:6px;height:72px;background:#4a3326;clip-path:polygon(0 14%,58% 0,100% 10%,100% 100%,0 100%);padding:4px}
+.wsign .wb{position:relative;height:100%;background:#fbfbfd;clip-path:polygon(0 12%,58% 0,100% 9%,100% 100%,0 100%);font-family:-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#5b2a86;padding:9px 0 0 9px;box-sizing:border-box;text-align:left}
+.wsign .wt{font-weight:600;font-size:11px;line-height:1}.wsign .wl{font-weight:800;font-size:27px;line-height:1;letter-spacing:-.01em;margin-top:1px}
+.wsign .wu{width:104px;height:1.5px;background:#5b2a86;margin:3px 0 3px}.wsign .wv{font-size:7px;font-weight:600;letter-spacing:.01em;white-space:nowrap}
+.wsign svg{position:absolute;right:8px;top:7px;width:44px;height:52px}
+.logo{position:relative;margin:-4px -4px 6px;padding:14px 8px 10px;border-radius:4px;background:linear-gradient(180deg,#2f8fd8 0%,#7cc6ef 62%,#f3c46a 100%);border:3px solid #1b1a24;overflow:hidden}
+.logo:before{content:"";position:absolute;left:0;right:0;bottom:0;height:22px;background:#1b1a24;clip-path:polygon(0 100%,0 55%,6% 55%,6% 30%,12% 30%,12% 60%,17% 60%,17% 10%,21% 0,25% 10%,25% 60%,32% 60%,32% 35%,40% 35%,40% 60%,46% 60%,46% 20%,49% 5%,52% 20%,52% 60%,60% 60%,60% 40%,68% 40%,68% 15%,74% 15%,74% 55%,82% 55%,82% 30%,90% 30%,90% 50%,100% 50%,100% 100%);opacity:.85}
+#logoBird{position:absolute;right:14px;top:10px;width:51px;height:39px;image-rendering:pixelated;animation:fl 1.2s ease-in-out infinite}
+@keyframes fl{50%{transform:translateY(-6px) rotate(-6deg)}}
+.lt1{position:relative;font:700 18px Silk;letter-spacing:.35em;color:#fff;text-shadow:2px 2px 0 #1b1a24;text-align:left;padding-left:6px}
+.lt2{position:relative;font:700 33px/1 Silk;letter-spacing:.02em;margin:2px 0 4px;white-space:nowrap}
+.lt2 span{display:inline-block;color:#ffd84a;text-shadow:0 3px 0 #e8641c,0 6px 0 #1b1a24,3px 3px 0 #1b1a24,-2px 0 0 #1b1a24,2px 0 0 #1b1a24,0 -2px 0 #1b1a24;animation:wv 1.6s ease-in-out infinite}
+.lt2 span:nth-child(2){animation-delay:.1s}.lt2 span:nth-child(3){animation-delay:.2s}.lt2 span:nth-child(4){animation-delay:.3s}.lt2 span:nth-child(5){animation-delay:.4s}.lt2 span:nth-child(6){animation-delay:.5s}.lt2 span:nth-child(7){animation-delay:.6s}.lt2 span:nth-child(8){animation-delay:.7s}
+@keyframes wv{50%{transform:translateY(-4px)}}
+.lt3{position:relative;display:inline-block;font:700 13px Silk;letter-spacing:.1em;color:#1b1a24;background:#ffd84a;padding:5px 10px 4px;margin:4px 0 12px;box-shadow:0 0 0 2px #1b1a24,3px 3px 0 2px #e8641c;transform:rotate(-2deg);animation:fl 2.4s ease-in-out infinite}
+@keyframes fl{0%,100%{transform:rotate(-2deg) translateY(0)}50%{transform:rotate(-2deg) translateY(-2px)}}
+.pw{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:12px;padding-top:10px;border-top:2px dashed #cbbd94;font:500 11px/1 -apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;letter-spacing:.02em;color:#6a5a3a;text-decoration:none;-webkit-tap-highlight-color:transparent}
+.rec{display:block;cursor:pointer;width:100%;margin:10px auto 0;font:700 9px Silk;letter-spacing:.06em;color:#1b1a24;background:#fff3c4;border:2px dashed #e8641c;border-radius:6px;padding:7px 8px;text-decoration:none}
+.rec:active{background:#ffe08a}
+.pw img{height:17px;width:auto;image-rendering:auto;display:block}
+.pw i{font-style:normal;color:#5b4fd1;font-size:12px}
+.pw:hover span,.pw:active span{text-decoration:underline}
+#recM{position:fixed;inset:0;z-index:50;background:rgba(15,14,22,.6);display:flex;align-items:center;justify-content:center;pointer-events:auto}
+#recM.hide{display:none}
+#recM .box{position:relative;width:min(320px,88vw);background:#f6efd8;border:4px solid #1b1a24;box-shadow:0 6px 0 #1b1a24;border-radius:6px;padding:16px 16px 14px;font:500 13px -apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#1b1a24;text-align:left}
+#recM h3{margin:0 26px 4px 0;font:700 12px/1.4 Silk;letter-spacing:.04em}
+#recM p{margin:0 0 10px;font-size:12px;color:#6a5a3a}
+#recM label{display:block;font-weight:700;font-size:11px;margin:8px 0 3px;text-transform:uppercase;letter-spacing:.06em}
+#recM input,#recM textarea{width:100%;box-sizing:border-box;border:2px solid #1b1a24;border-radius:4px;padding:8px;font:500 14px -apple-system,'Segoe UI',Roboto,sans-serif;background:#fff}
+#recM textarea{height:64px;resize:none}
+#recM .x{position:absolute;right:8px;top:8px;width:28px;height:28px;border:2px solid #1b1a24;border-radius:4px;background:#fff;font:700 16px/1 sans-serif;cursor:pointer}
+#recM .send{display:block;width:100%;margin-top:12px;background:#3fb04a;color:#fff;border:3px solid #1b1a24;box-shadow:0 4px 0 #1b1a24;border-radius:5px;padding:10px;font:700 14px Silk;cursor:pointer}
+#recM .send:disabled{opacity:.6}
+#recM .err{color:#c8402a;font-size:12px;margin-top:6px;min-height:14px}
+#recM .ok{text-align:center;padding:18px 4px 6px}#recM .ok b{display:block;font:700 15px Silk;color:#2f8a3a;margin-bottom:6px}
+.shr,.hm{display:block;width:100%;margin:8px 0 0;cursor:pointer;background:#2a6fd8;color:#fff;border:2px solid #1b1a24;box-shadow:0 3px 0 #1b1a24;border-radius:6px;padding:9px 8px;font:700 10px Silk;letter-spacing:.06em}.hm{background:#fff;color:#1b1a24}
+.orow{display:flex;gap:8px}.orow button{flex:1}
+#shT{position:fixed;left:50%;bottom:22%;transform:translateX(-50%);z-index:60;background:#1b1a24;color:#fff;font:700 10px Silk;padding:9px 12px;border-radius:6px;opacity:0;transition:opacity .25s;pointer-events:none}#shT.on{opacity:1}
+#hsBtn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin:8px 0 0;cursor:pointer;background:#1b1a24;color:#fff;border:0;border-radius:6px;padding:9px 8px;font:700 9px Silk;letter-spacing:.06em}
+#hsBtn img{width:22px;height:22px;border-radius:5px;image-rendering:pixelated}
+#hsM{position:fixed;inset:0;z-index:50;background:rgba(15,14,22,.6);display:flex;align-items:center;justify-content:center;pointer-events:auto}#hsM.hide{display:none}
+#hsM .box{position:relative;width:min(330px,90vw);max-height:88vh;overflow:auto;background:#f6efd8;border:4px solid #1b1a24;box-shadow:0 6px 0 #1b1a24;border-radius:6px;padding:16px;font:500 13px/1.45 -apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#1b1a24;text-align:left}
+#hsM .x{position:absolute;right:8px;top:8px;width:28px;height:28px;border:2px solid #1b1a24;border-radius:4px;background:#fff;font:700 16px/1 sans-serif;cursor:pointer}
+#hsM .hd{display:flex;align-items:center;gap:10px;margin:0 30px 10px 0}#hsM .hd img{width:46px;height:46px;border-radius:10px;border:2px solid #1b1a24;image-rendering:pixelated}#hsM .hd b{font:700 11px/1.4 Silk}
+#hsM .tabs{display:flex;gap:4px;margin-bottom:10px}#hsM .tabs button{flex:1;border:2px solid #1b1a24;background:#fff;border-radius:5px;padding:6px 2px;font:700 9px Silk;cursor:pointer}#hsM .tabs button.on{background:#ffd84a}
+#hsM ol{margin:0;padding-left:20px}#hsM li{margin:4px 0}#hsM .hide{display:none}
+#hsM .k{display:inline-flex;vertical-align:-4px;width:20px;height:20px;align-items:center;justify-content:center;background:#fff;border:1px solid #cbbd94;border-radius:4px}#hsM .k svg{width:14px;height:14px}
+#hsM .tip{background:#fff;border:2px dashed #e8641c;border-radius:6px;padding:8px;margin:10px 0 0;font-size:12px}
+#hsM .go{display:block;text-align:center;margin:8px 0;background:#3fb04a;color:#fff;border:3px solid #1b1a24;box-shadow:0 3px 0 #1b1a24;border-radius:5px;padding:9px;font:700 11px Silk;text-decoration:none;cursor:pointer;width:100%}
+#hsM .pp{display:flex;gap:8px;align-items:center;margin-top:10px;background:#fff;border-radius:6px;padding:8px;border:1px solid #cbbd94;font-size:12px}#hsM .ppm{flex:0 0 96px;background:#eef2f6;border-radius:6px;padding:6px;font-size:9px;line-height:1.3;text-align:center}#hsM .ppm i{display:block;font-style:normal;color:#4285f4;font-weight:700}#hsM .ppm u{display:block;text-decoration:none;color:#1a73e8;font-weight:700;margin-top:3px}
+#hsM .rs{font-size:11px;color:#6a5a3a;margin:10px 0 0}
+.nb{background:#fff3c4;border:2px solid #1b1a24;border-radius:6px;padding:9px;margin:8px 0 2px}.nb b{display:block;font:700 11px Silk;color:#c8402a}.nb span{display:block;font:500 12px -apple-system,'Segoe UI',Roboto,sans-serif;margin:2px 0 6px}
+.nbr{display:flex;gap:6px}.nbr input{flex:1;min-width:0;border:2px solid #1b1a24;border-radius:4px;padding:7px;font:600 15px -apple-system,'Segoe UI',Roboto,sans-serif}.nbr button{background:#3fb04a;color:#fff;border:2px solid #1b1a24;border-radius:4px;padding:0 12px;font:700 11px Silk;cursor:pointer}.nb em{display:block;font:500 12px sans-serif;color:#c8402a;font-style:normal;min-height:0}
+.lbB{display:block;width:100%;margin:8px 0 0;cursor:pointer;background:#ffd84a;color:#1b1a24;border:2px solid #1b1a24;box-shadow:0 3px 0 #1b1a24;border-radius:6px;padding:8px;font:700 10px Silk;letter-spacing:.06em}
+.top1{width:auto;display:inline-block;margin:8px auto 0;padding:5px 10px;font-size:9px}
+.orow .hm,.orow .shr{font-size:9px;padding:9px 4px}
+#mute{position:absolute;left:-10px;top:-10px;z-index:3;width:34px;height:34px;border-radius:50%;border:3px solid #1b1a24;background:#fff;font-size:15px;line-height:1;cursor:pointer;box-shadow:0 3px 0 #1b1a24}
+#lbM,#cardM{position:fixed;inset:0;z-index:50;background:rgba(15,14,22,.6);display:flex;align-items:center;justify-content:center;pointer-events:auto}#lbM.hide,#cardM.hide{display:none}
+#lbM .box,#cardM .box{position:relative;width:min(330px,90vw);max-height:88vh;overflow:auto;background:#f6efd8;border:4px solid #1b1a24;box-shadow:0 6px 0 #1b1a24;border-radius:6px;padding:16px;color:#1b1a24;text-align:left}
+#lbM .x,#cardM .x{position:absolute;right:8px;top:8px;width:28px;height:28px;border:2px solid #1b1a24;border-radius:4px;background:#fff;font:700 16px/1 sans-serif;cursor:pointer}
+#lbM h3{font:700 13px Silk;margin:2px 0 10px}#lbM .tabs{display:flex;gap:4px;margin-bottom:8px}#lbM .tabs button{flex:1;border:2px solid #1b1a24;background:#fff;border-radius:5px;padding:6px;font:700 10px Silk;cursor:pointer}#lbM .tabs button.on{background:#ffd84a}
+#lbL{list-style:none;margin:0;padding:0}#lbL li{display:flex;align-items:center;gap:8px;padding:7px 4px;border-bottom:1px dashed #cbbd94;font:600 15px -apple-system,'Segoe UI',Roboto,sans-serif}#lbL li i{font:11px PS;font-style:normal;width:26px;color:#8a7a5a}#lbL li span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#lbL li b{font:13px PS}#lbL li.me{background:#fff3c4}
+#lbL li:nth-child(1) i{color:#d9a400}#lbL li:nth-child(2) i{color:#8a9aa8}#lbL li:nth-child(3) i{color:#b0703a}
+.lbn{font:500 12px -apple-system,'Segoe UI',Roboto,sans-serif;color:#6a5a3a;margin:8px 0 0;text-align:center}
+#cardI{display:block;width:100%;border-radius:6px;border:2px solid #1b1a24;margin-top:22px}#cardM .send{display:block;width:100%;margin-top:10px;background:#3fb04a;color:#fff;border:3px solid #1b1a24;box-shadow:0 4px 0 #1b1a24;border-radius:5px;padding:10px;font:700 13px Silk;cursor:pointer}
+</style>
+<link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icon-180.png"><link rel="icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Kabootar"><meta name="theme-color" content="#2f8fd8">
+</head>
+<body>
+<canvas id="c"></canvas>
+<div class="ui">
+  <div id="score" class="hide">0</div>
+  <div id="place"><small>FLYING PAST</small><span id="placeN"></span></div>
+  <div id="start" class="panel">
+    <div class="wsign"><i class="p l"></i><i class="p r"></i><div class="fr"><div class="wb"><div class="wt">Welcome to</div><div class="wl">Luton</div><div class="wu"></div><div class="wv">Proud &nbsp;Vibrant &nbsp;Ambitious &nbsp;Innovative</div>
+      <svg viewBox="0 0 30 36"><path d="M15 2l2 3h-4z M8 6c2-2 5-2 7 0 2-2 5-2 7 0l-1 3H9z" fill="#5b2a86"/><path d="M6 10h18v11c0 6-4 10-9 12-5-2-9-6-9-12z" fill="#5b2a86"/><path d="M13.5 12h3v7h6v3h-6v8h-3v-8h-6v-3h6z" fill="#fff"/><path d="M3 30c4 3 8 4 12 4s8-1 12-4" stroke="#5b2a86" stroke-width="2" fill="none"/></svg></div></div></div>
+    <button id="mute" type="button" aria-label="Sound on or off">&#128266;</button>
+    <div class="logo">
+      <canvas id="logoBird" width="34" height="26"></canvas>
+      <div class="lt1">FLAPPY</div>
+      <div class="lt2"><span>K</span><span>A</span><span>B</span><span>O</span><span>O</span><span>T</span><span>A</span><span>R</span></div>
+      <div class="lt3">FLYING THROUGH LUTON</div>
+    </div>
+    <p>Fly your kabootar across Luton. Dodge the pipes and spot the places you know.</p>
+    <div class="hs"><small>YOUR HIGH SCORE</small><b id="bestS">0</b><button class="top1 lbB" type="button" id="top1">&#127942; Leaderboard</button></div>
+    <div class="btn" id="go">PLAY</div>
+    <p style="margin-bottom:0;font-size:10px;color:#6a5a3a">Tap, click or press space to flap</p>
+    <button class="shr" type="button" data-share="home">&#128279; SHARE THE GAME</button>
+    <button id="hsBtn" type="button"><img src="icon-192.png" alt="">SAVE TO YOUR HOME SCREEN</button>
+    <button class="rec" type="button">&#128205; Recommend a Luton place to feature</button>
+    <a class="pw" href="https://smrgraphics.co.uk" target="_blank" rel="noopener"><span>Powered by</span><img src="smr.png" alt="SMR Digital"><i>&#8599;</i></a>
+  </div>
+  <div id="over" class="panel hide">
+    <h1>GAME<span>OVER</span></h1>
+    <p id="why" style="margin:-2px 0 8px;font:700 10px Silk;color:#c8402a"></p>
+    <div class="row"><div><b id="sc">0</b><small>SCORE</small></div><div><b id="be">0</b><small>BEST</small></div></div>
+    <div id="nameBox" class="nb hide"><b id="nbT">NEW HIGH SCORE!</b><span id="nbS">Put your name on the leaderboard</span><div class="nbr"><input id="nbI" maxlength="14" placeholder="Your name" autocomplete="nickname"><button type="button" id="nbB">SAVE</button></div><em id="nbE"></em></div>
+    <div class="btn" id="again">FLY AGAIN</div>
+    <div class="orow"><button class="shr" type="button" data-share="app">&#128279; SHARE APP</button><button class="hm" type="button" id="cardB">&#128248; CARD</button><button class="hm" type="button" id="homeB">&#8962; HOME</button></div>
+    <button class="lbB" type="button">&#127942; LEADERBOARD</button>
+    <p id="seenH" style="margin:8px 0 0;font-weight:700">Places you flew past</p>
+    <div class="seen" id="seen"></div>
+    <button class="rec" type="button">&#128205; Recommend a Luton place to feature</button>
+  </div>
+  <div id="lbM" class="hide"><div class="box"><button class="x" type="button" aria-label="Close">&times;</button><h3>&#127942; LEADERBOARD</h3>
+    <div class="tabs"><button type="button" data-lb="today" class="on">TODAY</button><button type="button" data-lb="all">ALL TIME</button></div>
+    <ol id="lbL"></ol><p id="lbN" class="lbn"></p></div></div>
+  <div id="cardM" class="hide"><div class="box"><button class="x" type="button" aria-label="Close">&times;</button><img id="cardI" alt="Your score card"><p class="lbn">Screenshot it, or save and share it.</p><button class="send" type="button" id="cardS">SAVE / SHARE</button></div></div>
+  <div id="shT"></div>
+<div id="hsM" class="hide"><div class="box" role="dialog" aria-modal="true" aria-label="Save to your Home Screen">
+  <button class="x" type="button" aria-label="Close">&times;</button>
+  <div class="hd"><img src="icon-192.png" alt=""><b>SAVE FLAPPY KABOOTAR TO YOUR HOME SCREEN</b></div>
+  <button type="button" class="go hide" id="hsInst">INSTALL NOW</button>
+  <div class="tabs"><button type="button" data-os="ios">IPHONE</button><button type="button" data-os="and">ANDROID</button><button type="button" data-os="sam">SAMSUNG</button></div>
+  <div data-os="ios"><ol><li>Open this page in <b>Safari</b> and tap <b>Share</b> <span class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M8 7l4-4 4 4"/><path d="M6 11H5v10h14V11h-1"/></svg></span></li><li>Scroll down and tap <b>Add to Home Screen</b>.</li><li>Tap <b>Add</b>. Flappy Kabootar is now with your apps.</li></ol></div>
+  <div data-os="and"><ol><li>In <b>Chrome</b>, tap the menu <span class="k"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg></span> at the top right.</li><li>Tap <b>Add to Home screen</b> or <b>Install app</b>.</li><li>Tap <b>Install</b>.</li></ol></div>
+  <div data-os="sam">
+   <div class="tip"><b>Easiest way: add it from Chrome.</b> On Samsung phones, Chrome is the smoothest way.<a class="go" id="hsChrome" href="#">OPEN IN CHROME</a><ol><li>Tap the menu <span class="k"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg></span> at the top right of Chrome.</li><li>Tap <b>Add to Home screen</b>, then <b>Install</b>.</li></ol></div>
+   <p style="margin:10px 0 4px"><b>Staying in Samsung Internet?</b></p>
+   <ol><li>Tap the menu <span class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 7h14M5 12h14M5 17h14"/></svg></span> at the bottom right.</li><li>Tap <b>Add page to</b>, then <b>Home screen</b>, then <b>Add</b>.</li></ol>
+   <div class="pp"><div class="ppm"><i>Google Play Protect</i>Unsafe app blocked<u>Install anyway</u></div><div><b>See a "Play Protect" message?</b> Tap <b>Install anyway</b>. It's safe: Samsung shows this for lots of websites added to the Home Screen.</div></div>
+  </div>
+  <p class="rs">Flappy Kabootar is just this web page saved to your phone. It can't see your photos, messages or contacts, and you can remove it any time like any other app.</p>
+</div></div>
+<div id="recM" class="hide"><div class="box">
+  <button class="x" type="button" aria-label="Close">&times;</button>
+  <div id="recF"><h3>RECOMMEND A PLACE</h3><p>Know a Luton spot that should be in the game? Tell us about it.</p>
+  <label for="rN">Place name</label><input id="rN" maxlength="80" placeholder="e.g. KFC Dunstable Road">
+  <label for="rA">Address</label><input id="rA" maxlength="140" placeholder="Street, area or postcode">
+  <label for="rT">Note</label><textarea id="rT" maxlength="400" placeholder="Why should it be featured?"></textarea>
+  <div class="err" id="rE"></div><button class="send" type="button" id="rS">SEND</button></div>
+  <div id="recOk" class="ok hide"><b>SENT!</b>Thanks, your recommendation is in our inbox.<button class="send" type="button" id="rC">CLOSE</button></div>
+</div></div>
+  <div id="tap" class="hide">TAP TO FLAP</div>
+</div>
+<script src="landmarks.js?v=20261117b"></script>
+<script src="cars.js?v=20261117b"></script>
+<script>
+(() => {
+const H = 300, GY = 250, ROAD = 262;            // world: 300 units tall, pavement top at 250
+const cv = document.getElementById('c'); let ctx = cv.getContext('2d');
+let S = 1, W = 200, dpr = 1;
+const $ = id => document.getElementById(id);
+const store = { get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} } };
+
+let OY = 0, BE = 0;
+function resize() { dpr = Math.min(window.devicePixelRatio || 1, 3); cv.width = Math.round(innerWidth * dpr); cv.height = Math.round(innerHeight * dpr); S = Math.min(cv.height / H, cv.width / 250); W = cv.width / S; const extra = cv.height / S - H; BE = Math.min(Math.round(extra * .6), 190); OY = extra - BE; ctx.imageSmoothingEnabled = false; }
+addEventListener('resize', resize); resize();
+
+/* ---------- pre-render landmarks and cars once ---------- */
+const M = 90, LH = 300;
+const sprites = [];
+function prerender() {
+  LM_ORDER.forEach(k => { const L = LANDMARKS[k]; const oc = document.createElement('canvas'); oc.width = L.w + M * 2; oc.height = LH; const o = oc.getContext('2d'); o.imageSmoothingEnabled = false; L.d(o, M, LH - 6); sprites.push({ k, n: L.n, w: L.w, c: oc }); });
+}
+const houseSprites = [];
+function prerenderHouses() { Object.keys(HOUSES).forEach(k => { const Hh = HOUSES[k]; const oc = document.createElement('canvas'); oc.width = Hh.w + M * 2; oc.height = LH; const o = oc.getContext('2d'); Hh.d(o, M, LH - 6); houseSprites.push({ k, n: '', w: Hh.w, c: oc }); }); }
+const carSprites = [];
+function prerenderCars() {
+  CAR_ORDER.forEach(k => { const C = CARS[k]; const oc = document.createElement('canvas'); oc.width = C.w + 8; oc.height = 70; const o = oc.getContext('2d'); C.d(o, 4, 66); carSprites.push({ w: C.w, c: oc, flip: null }); });
+  carSprites.forEach(s => { const f = document.createElement('canvas'); f.width = s.c.width; f.height = s.c.height; const o = f.getContext('2d'); o.translate(f.width, 0); o.scale(-1, 1); o.drawImage(s.c, 0, 0); s.flip = f; });
+}
+
+/* ---------- the kabootar (pigeon) ---------- */
+const OUT = '#1b1a24';
+const PIG_COL = { o: '#1b1a24', h: '#7f899e', e: '#f08a2a', k: '#1b1a24', c: '#eef0f4', b: '#3a3d44', n: '#4fa36a', p: '#8a5fb0', l: '#c3cad8', g: '#9aa3b5', d: '#7d8698', t: '#5a6476', f: '#e88a7a', w: '#d4dae4', K: '#2e3442' };
+const PIG_BODY = [
+  '...................ooo...',
+  '..................ohhhoo.',
+  '..................ohekhho',
+  '.................oohhhhcbb',
+  '...ooooooooooooonnhhhooo.',
+  '..otlllllllllllnnnhho....',
+  '.ottgglllllllllppnno.....',
+  'oKttggggggggggppnnno.....',
+  'oKttgggggggggggppgo......',
+  '.ooKdgggggggggggggo......',
+  '...odddgggggggggggo......',
+  '....oodddddddddddo.......',
+  '......ooooffoffoo........'];
+const PIG_WINGS = [[
+  '.oooo.......',
+  'owwwwoo.....',
+  '.oggwwwoo...',
+  '..oKgggwwo..',
+  '...ogKKggwo.',
+  '....oggKKggo'], [
+  'oooooooooo..',
+  'owwwwwwwwwoo',
+  'oggggggggggo',
+  'oKKKgKKKgggo',
+  '.ogggggggoo.',
+  '..ooooooo...'], [
+  'oooooooooo..',
+  'owwwwwwwwwoo',
+  '.oggggggggo.',
+  '..oKKgKKgo..',
+  '...oggggo...',
+  '....oggo....',
+  '.....oo.....']];
+function drawPigeon(x, y, rot, frame) {
+  ctx.save(); ctx.translate(x, y); ctx.rotate(rot);
+  const paint = (rows, ox, oy) => rows.forEach((r, j) => { for (let i = 0; i < r.length; i++) { const ch = r[i]; if (ch === '.') continue; ctx.fillStyle = PIG_COL[ch]; ctx.fillRect(ox + i, oy + j, 1, 1); } });
+  paint(PIG_BODY, -13, -7);
+  paint(PIG_WINGS[frame], -8, [-9, -4, -3][frame]);
+  ctx.restore();
+}
+
+/* ---------- world ---------- */
+let state = 'menu', t = 0, best = store.get('fk_best', 0), score = 0, speed = 72;
+let bird, pipes, lmX, lmIdx, lmQueue, cars, clouds, seen, nextPipe, flashT = 0, placeTimer = 0, dieT = 0;
+$('bestS').textContent = best;
+
+function reset() {
+  bird = { x: Math.min(W * .32, 90), y: 130, vy: 0, frame: 0, ft: 0 };
+  pipes = []; nextPipe = W + 40; score = 0; speed = 72; seen = [];
+  lmQueue = []; lmX = 20; lmIdx = Math.floor(Math.random() * sprites.length); const at = location.hash.match(/^#at-(\w+)/); if (at) { const i = sprites.findIndex(s => s.k === at[1]); if (i >= 0) { lmIdx = i; lmX = W * .6; } }
+  while (lmX < W + 600) pushLandmark();
+  cars = []; for (let i = 0; i < 3; i++) spawnCar(Math.random() * W);
+  clouds = []; for (let i = 0; i < 6; i++) clouds.push({ x: Math.random() * (W + 200), y: -OY + 20 + Math.random() * (90 + OY), s: .6 + Math.random() * .8 });
+}
+const ANIM_K = { wardown: 1, wardownbridge: 1, funfair: 1 }, CHAIN = ['wardownfield', 'wardown', 'wardownbridge', 'funfair'];
+function pushLandmark() { const sp = sprites[lmIdx % sprites.length], nx = sprites[(lmIdx + 1) % sprites.length]; lmQueue.push({ sp, x: lmX, passed: false });
+  // the station always sits snug between two tall buildings (no houses either side) so the train can hide behind them
+  const chain = CHAIN.includes(sp.k) && CHAIN.indexOf(nx.k) === CHAIN.indexOf(sp.k) + 1, tight = chain || sp.k === 'station' || nx.k === 'station'; lmX += sp.w + (chain ? 0 : tight ? 10 : 18 + Math.random() * 16); lmIdx++;
+  if (tight) return;
+  const n = 1 + Math.floor(Math.random() * 2); for (let i = 0; i < n; i++) { const h = houseSprites[Math.floor(Math.random() * houseSprites.length)]; lmQueue.push({ sp: h, x: lmX, passed: true, house: true }); lmX += h.w + 6 + Math.random() * 10; } lmX += 12; }
+function spawnCar(x) { const i = Math.floor(Math.random() * carSprites.length), dir = Math.random() < .5 ? 1 : -1; cars.push({ sp: carSprites[i], x: x != null ? x : (dir > 0 ? -70 : W + 20), dir, v: 30 + Math.random() * 40, lane: dir > 0 ? 0 : 1 }); }
+
+function flap() {
+  if (state === 'menu' || state === 'over') return;
+  if (state === 'ready') { state = 'play'; $('tap').classList.add('hide'); }
+  if (state === 'play') { bird.vy = -175; bird.frame = 0; bird.ft = 0; SFX.flap(); }
+}
+function start() { reset(); state = 'ready'; $('start').classList.add('hide'); $('over').classList.add('hide'); $('score').classList.remove('hide'); $('score').textContent = '0'; $('tap').classList.remove('hide'); }
+$('go').addEventListener('click', e => { e.stopPropagation(); start(); });
+$('again').addEventListener('click', e => { e.stopPropagation(); start(); });
+const down = e => { if (e.target.closest && e.target.closest(".btn,a,button,input,#hsM,#recM,#lbM,#cardM")) return; e.preventDefault(); flap(); };
+addEventListener('pointerdown', down, { passive: false });
+addEventListener('keydown', e => { if (e.code === 'Space' || e.code === 'ArrowUp') { e.preventDefault(); if (state === 'menu' || (state === 'over' && dieT > .6)) start(); else flap(); } });
+
+function showPlace(n) { $('placeN').textContent = n; const p = $('place'); p.classList.add('on'); placeTimer = 2.2; }
+
+function die(why) {
+  if (state !== 'play') return; deathWhy = why || ''; if (window.__fkLog) window.__fkLog.push({why, y: bird.y, vy: bird.vy, score, pipes: pipes.map(p => [Math.round(p.x), Math.round(p.top)])}); state = 'dead'; dieT = 0; flashT = .15; SFX.hit(); if (why === 'pipe') setTimeout(() => SFX.die(), 260);
+  if (score > best) { best = score; store.set('fk_best', best); }
+}
+function goHome() { reset(); state = 'menu'; $('start').classList.remove('hide'); $('over').classList.add('hide'); $('score').classList.add('hide'); $('tap').classList.add('hide'); $('bestS').textContent = best; }
+$('homeB').addEventListener('click', e => { e.stopPropagation(); goHome(); });
+addEventListener('pageshow', e => { if (e.persisted) goHome(); });
+document.addEventListener('visibilitychange', () => { if (document.hidden && (state === 'over' || state === 'dead')) goHome(); });
+function showOver() {
+  state = 'over'; $('why').textContent = deathWhy === 'ground' ? 'You landed on the pavement!' : 'You clipped a pipe!'; $('sc').textContent = score; $('be').textContent = best; $('bestS').textContent = best;
+  $('seen').textContent = seen.length ? seen.join('  ·  ') : 'Fly further to see Luton!'; $('over').classList.remove('hide'); $('tap').classList.add('hide');
+  SFX.swoosh(); LB.check(score);
+}
+
+
+/* ---------- sound effects (made in the browser, no files): flap, point, hit, fall, swoosh ---------- */
+const SFX = (() => { let ac = null, on = store.get('fk_sound', 1) !== 0;
+  const ctxA = () => { if (!ac) { try { ac = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { ac = null; } } if (ac && ac.state === 'suspended') ac.resume(); return ac; };
+  const tone = (f0, f1, dur, type = 'square', vol = .12, delay = 0) => { const a = on && ctxA(); if (!a) return; const t0 = a.currentTime + delay, o = a.createOscillator(), g = a.createGain(); o.type = type; o.frequency.setValueAtTime(f0, t0); o.frequency.exponentialRampToValueAtTime(Math.max(30, f1), t0 + dur); g.gain.setValueAtTime(vol, t0); g.gain.exponentialRampToValueAtTime(.0008, t0 + dur); o.connect(g).connect(a.destination); o.start(t0); o.stop(t0 + dur + .02); };
+  const noise = (dur, f0, f1, vol = .18, delay = 0) => { const a = on && ctxA(); if (!a) return; const t0 = a.currentTime + delay, n = a.createBufferSource(), b = a.createBuffer(1, Math.ceil(a.sampleRate * dur), a.sampleRate), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; n.buffer = b; const fl = a.createBiquadFilter(); fl.type = 'bandpass'; fl.Q.value = 1.2; fl.frequency.setValueAtTime(f0, t0); fl.frequency.exponentialRampToValueAtTime(f1, t0 + dur); const g = a.createGain(); g.gain.setValueAtTime(vol, t0); g.gain.exponentialRampToValueAtTime(.001, t0 + dur); n.connect(fl).connect(g).connect(a.destination); n.start(t0); };
+  const api = { flap: () => noise(.11, 900, 2600, .22), point: () => { tone(988, 988, .09, 'square', .07); tone(1319, 1319, .22, 'square', .07, .08); }, hit: () => { noise(.12, 600, 150, .35); tone(180, 60, .14, 'triangle', .25); }, die: () => tone(720, 140, .45, 'square', .06), swoosh: () => noise(.28, 400, 3000, .1),
+    get on() { return on; }, toggle() { on = !on; store.set('fk_sound', on ? 1 : 0); if (on) { ctxA(); api.point(); } return on; } };
+  addEventListener('pointerdown', () => ctxA(), { once: true }); return api; })();
+$('mute').textContent = SFX.on ? '\u{1F50A}' : '\u{1F507}';
+$('mute').addEventListener('click', e => { e.stopPropagation(); $('mute').textContent = SFX.toggle() ? '\u{1F50A}' : '\u{1F507}'; });
+
+/* ---------- leaderboard: today + all time (online on the SMR website, this phone only elsewhere) ---------- */
+const LB = (() => { const api = 'api.php'; let online = null, data = { today: [], all: [] }, tab = 'today', lastName = store.get('fk_name', ''), myRow = null;
+  const day = () => new Date().toLocaleDateString('en-CA', { timeZone: 'Europe/London' });
+  const localLoad = () => { let l = []; try { l = JSON.parse(localStorage.getItem('fk_board') || '[]'); } catch (e) {} const d = day(); data = { today: l.filter(r => r.day === d).sort((a, b) => b.score - a.score).slice(0, 10), all: l.slice().sort((a, b) => b.score - a.score).slice(0, 10) }; return l; };
+  const load = () => fetch(api + '?a=board', { cache: 'no-store' }).then(r => { if (!r.ok) throw 0; return r.json(); }).then(j => { if (!j || !j.today) throw 0; online = true; data = j; render(); }).catch(() => { online = false; localLoad(); render(); });
+  const esc = t => String(t).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const render = () => { const rows = data[tab] || []; $('lbL').innerHTML = rows.length ? rows.map((r, i) => '<li' + (myRow && r.name === myRow.name && r.score === myRow.score ? ' class="me"' : '') + '><i>' + (i + 1) + '</i><span>' + esc(r.name) + '</span><b>' + r.score + '</b></li>').join('') : '<li><span style="text-align:center;color:#8a7a5a">No scores yet. Be the first!</span></li>';
+    $('lbN').textContent = online ? (tab === 'today' ? 'Resets at midnight.' : 'Best ever in Luton.') : 'Scores saved on this phone.'; document.querySelectorAll('#lbM .tabs button').forEach(b => b.classList.toggle('on', b.dataset.lb === tab)); };
+  const rankIn = (list, sc) => { if (sc < 1) return 0; let i = list.findIndex(r => sc > r.score); if (i < 0) i = list.length; return i < 10 ? i + 1 : 0; };
+  let pending = 0;
+  const check = sc => { $('nameBox').classList.add('hide'); $('nbE').textContent = ''; pending = 0; if (sc < 1) return;
+    const go = () => { const rt = rankIn(data.today, sc), ra = rankIn(data.all, sc); if (!rt && !ra) return; pending = sc;
+      $('nbT').textContent = ra === 1 ? '\u{1F3C6} NEW ALL-TIME HIGH SCORE!' : ra ? '\u{1F3C6} #' + ra + ' OF ALL TIME!' : rt === 1 ? '\u{1F3C6} TOP SCORE TODAY!' : '\u{1F3C6} #' + rt + ' TODAY!';
+      $('nbS').textContent = 'Put your name on the leaderboard'; $('nbI').value = lastName; $('nameBox').classList.remove('hide'); };
+    if (online === null) load().then(go); else go(); };
+  const save = () => { const name = $('nbI').value.trim().replace(/\s+/g, ' ').slice(0, 14); if (!pending) return; if (!name) { $('nbE').textContent = 'Type your name first.'; return; }
+    $('nbB').disabled = true; lastName = name; store.set('fk_name', name); myRow = { name, score: pending };
+    const done = () => { $('nbB').disabled = false; $('nameBox').classList.add('hide'); pending = 0; tab = data.today.some(r => r.name === name) ? 'today' : 'all'; render(); $('lbM').classList.remove('hide'); };
+    if (online) fetch(api + '?a=score', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, score: pending }) }).then(r => r.json()).then(j => { if (j.error) { $('nbE').textContent = j.error; $('nbB').disabled = false; return; } data = j; done(); }).catch(() => { $('nbE').textContent = 'Could not save. Check your signal.'; $('nbB').disabled = false; });
+    else { const l = localLoad(); l.push({ name, score: pending, day: day() }); try { localStorage.setItem('fk_board', JSON.stringify(l.sort((a, b) => b.score - a.score).slice(0, 60))); } catch (e) {} localLoad(); done(); } };
+  $('nbB').addEventListener('click', e => { e.stopPropagation(); save(); }); $('nbI').addEventListener('keydown', e => { e.stopPropagation(); if (e.key === 'Enter') save(); });
+  document.querySelectorAll('.lbB').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); load(); render(); $('lbM').classList.remove('hide'); }));
+  document.querySelectorAll('#lbM .tabs button').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); tab = b.dataset.lb; render(); }));
+  $('lbM').querySelector('.x').addEventListener('click', e => { e.stopPropagation(); $('lbM').classList.add('hide'); });
+  $('lbM').addEventListener('pointerdown', e => { e.stopPropagation(); if (e.target === $('lbM')) $('lbM').classList.add('hide'); });
+  load(); return { check, load, get online() { return online; } }; })();
+
+/* ---------- score card picture ---------- */
+(() => { let blob = null;
+  const make = () => { const c = document.createElement('canvas'); c.width = 1080; c.height = 1350; const x = c.getContext('2d'); x.imageSmoothingEnabled = false;
+    const g = x.createLinearGradient(0, 0, 0, 1350); g.addColorStop(0, '#2f8fd8'); g.addColorStop(.62, '#8fd0f2'); g.addColorStop(1, '#f3c46a'); x.fillStyle = g; x.fillRect(0, 0, 1080, 1350);
+    x.fillStyle = 'rgba(255,255,255,.9)'; [[90, 160, 1.6], [760, 120, 1.2], [600, 300, .9]].forEach(([cx, cy, s]) => { x.fillRect(cx, cy + 18 * s * 3, 120 * s * 3 / 3 * 3 / 3, 24 * s); x.fillRect(cx + 18 * s, cy + 6 * s, 54 * s, 36 * s); x.fillRect(cx + 54 * s, cy, 42 * s, 42 * s); });
+    const last = seen.length ? seen[seen.length - 1] : '', sp = sprites.find(p => p.n === last) || sprites[0], k = Math.min(2.6, 1040 / (sp.w + 20));
+    x.drawImage(sp.c, 540 - (sp.w / 2 + M) * k, 1350 - 120 - (LH - 6) * k, sp.c.width * k, LH * k);
+    x.fillStyle = '#c9c4b8'; x.fillRect(0, 1230, 1080, 120); x.fillStyle = '#1b1a24'; x.fillRect(0, 1226, 1080, 6);
+    const sv = ctx; ctx = x; x.save(); x.translate(540, 420); x.scale(11, 11); drawPigeon(0, 0, -0.18, 0); x.restore(); ctx = sv;
+    const box = (y, h) => { x.fillStyle = '#1b1a24'; x.fillRect(110, y + 10, 860, h); x.fillStyle = '#f6efd8'; x.fillRect(100, y, 860, h); x.strokeStyle = '#1b1a24'; x.lineWidth = 8; x.strokeRect(100, y, 860, h); };
+    x.textAlign = 'center'; x.textBaseline = 'top';
+    x.font = '700 64px Silk'; x.fillStyle = '#1b1a24'; x.fillText('FLAPPY', 543, 63); x.fillStyle = '#fff'; x.fillText('FLAPPY', 540, 60);
+    x.font = '700 104px Silk'; x.fillStyle = '#1b1a24'; x.fillText('KABOOTAR', 546, 136); x.fillStyle = '#e8641c'; x.fillText('KABOOTAR', 543, 133); x.fillStyle = '#ffd84a'; x.fillText('KABOOTAR', 540, 130);
+    box(560, 300); x.fillStyle = '#6a5a3a'; x.font = '700 34px Silk'; x.fillText('I SCORED', 530, 590); x.fillStyle = '#1b1a24'; x.font = '120px PS'; x.fillText(String(score), 530, 644);
+    x.font = '600 34px -apple-system,Segoe UI,Roboto,sans-serif'; x.fillStyle = '#6a5a3a'; x.fillText(last ? 'and flew past ' + last : 'flying through Luton', 530, 795);
+    x.fillStyle = '#1b1a24'; x.fillRect(240, 890, 600, 70); x.fillStyle = '#ffd84a'; x.font = '700 30px Silk'; x.fillText('CAN YOU BEAT ME?', 540, 910);
+    x.fillStyle = '#1b1a24'; x.font = '600 30px -apple-system,Segoe UI,Roboto,sans-serif'; x.fillText('Play free: ' + location.host.replace(/^www\./, '') + location.pathname.replace(/index\.html$/, ''), 540, 1275);
+    return c; };
+  $('cardB').addEventListener('click', e => { e.stopPropagation(); const c = make(); $('cardI').src = c.toDataURL('image/png'); c.toBlob(b => { blob = b; }, 'image/png'); $('cardM').classList.remove('hide'); });
+  $('cardS').addEventListener('click', async e => { e.stopPropagation(); if (!blob) return; const f = new File([blob], 'flappy-kabootar-score.png', { type: 'image/png' });
+    try { if (navigator.canShare && navigator.canShare({ files: [f] })) { await navigator.share({ files: [f], title: 'Flappy Kabootar' }); return; } } catch (x) { if (x && x.name === 'AbortError') return; }
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = f.name; document.body.appendChild(a); a.click(); a.remove(); });
+  $('cardM').querySelector('.x').addEventListener('click', e => { e.stopPropagation(); $('cardM').classList.add('hide'); });
+  $('cardM').addEventListener('pointerdown', e => { e.stopPropagation(); if (e.target === $('cardM')) $('cardM').classList.add('hide'); });
+})();
+
+/* ---------- update ---------- */
+const GAP = 84, PW = 30; let deathWhy = ''; window.__fk = () => ({ flap, sprites, state, score, bird, pipes, W, OY, lm: lmQueue.map(l => l.sp.k) });
+function update(dt) {
+  t += dt;
+  const moving = state === 'play' || state === 'ready' || state === 'menu';
+  const v = moving ? speed : 0;
+  clouds.forEach(cl => { cl.x -= v * .12 * cl.s * dt + (moving ? 0 : 0); if (cl.x < -60) { cl.x = W + 20 + Math.random() * 60; cl.y = -OY + 20 + Math.random() * (90 + OY); } });
+  // landmarks scroll at 45% speed (parallax)
+  const lv = v * .45 * dt; lmQueue.forEach(l => l.x -= lv); lmX -= lv;
+  while (lmQueue.length && lmQueue[0].x + lmQueue[0].sp.w < -420) lmQueue.shift();
+  while (lmX < W + 600) pushLandmark();
+  if (state === 'play') lmQueue.forEach(l => { if (!l.passed && l.x + l.sp.w / 2 < bird.x) { l.passed = true; if (!seen.includes(l.sp.n)) seen.push(l.sp.n); showPlace(l.sp.n); } });
+  // cars drive both ways on the road
+  cars.forEach(c => c.x += (c.dir * c.v + (moving ? -v * .9 : 0)) * dt);
+  cars = cars.filter(c => c.x > -160 && c.x < W + 160); if (cars.length < 4 && Math.random() < dt * .8) spawnCar();
+  if (placeTimer > 0) { placeTimer -= dt; if (placeTimer <= 0) $('place').classList.remove('on'); }
+  if (flashT > 0) flashT -= dt;
+
+  if (state === 'menu' || state === 'ready') { bird.y = 130 + Math.sin(t * 4) * 6; bird.ft += dt; if (bird.ft > .12) { bird.ft = 0; bird.frame = (bird.frame + 1) % 3; } return; }
+  if (state === 'over') return;
+
+  bird.vy += 560 * dt; bird.y += bird.vy * dt;
+  bird.ft += dt; if (bird.ft > (bird.vy < 0 ? .07 : .14)) { bird.ft = 0; bird.frame = (bird.frame + 1) % 3; }
+  if (state === 'dead') { dieT += dt; if (bird.y > GY - 6) { bird.y = GY - 6; bird.vy = 0; } if (dieT > .8) showOver(); return; }
+
+  speed = Math.min(108, 72 + score * 1.1);
+  pipes.forEach(p => p.x -= speed * dt);
+  pipes = pipes.filter(p => p.x > -PW - 10);
+  nextPipe -= speed * dt;
+  if (nextPipe <= W) { const top = 40 + Math.random() * (GY - GAP - 70); pipes.push({ x: W + 10, top, scored: false }); nextPipe = W + 150; }
+  if (bird.y < -OY + 6) { bird.y = -OY + 6; if (bird.vy < 0) bird.vy = 0; }
+  if (bird.y > GY - 7) { bird.y = GY - 7; die('ground'); }
+  pipes.forEach(p => {
+    if (!p.scored && p.x + PW < bird.x - 8) { p.scored = true; score++; $('score').textContent = score; SFX.point(); }
+    if (bird.x + 6 > p.x && bird.x - 6 < p.x + PW && (bird.y - 4 < p.top || bird.y + 4 > p.top + GAP)) die('pipe');
+  });
+}
+
+/* ---------- draw ---------- */
+function pipe(x, y, h, cap) {
+  const P = (c, a, b, w, hh) => { ctx.fillStyle = c; ctx.fillRect(Math.round(a), Math.round(b), w, hh); };
+  P(OUT, x - 1, y, PW + 2, h); P('#5bbf3a', x, y, PW, h); P('#86dc5a', x + 3, y, 4, h); P('#3f9a28', x + PW - 6, y, 4, h); P('#2f7a1e', x + PW - 2, y, 2, h);
+  const cy = cap === 'top' ? y + h - 12 : y;
+  P(OUT, x - 4, cy - 1, PW + 8, 14); P('#5bbf3a', x - 3, cy, PW + 6, 12); P('#86dc5a', x, cy + 1, 4, 10); P('#3f9a28', x + PW - 3, cy + 1, 4, 10); P('#9be86a', x - 3, cy, PW + 6, 2);
+}
+function cloud(x, y, s) { ctx.fillStyle = 'rgba(255,255,255,.85)'; const r = (a, b, w, h) => ctx.fillRect(Math.round(x + a * s), Math.round(y + b * s), Math.ceil(w * s), Math.ceil(h * s)); r(0, 6, 40, 8); r(6, 2, 18, 12); r(18, 0, 14, 14); }
+
+function draw() {
+  ctx.setTransform(S, 0, 0, S, 0, OY * S); ctx.imageSmoothingEnabled = false;
+  const g = ctx.createLinearGradient(0, -OY, 0, GY); g.addColorStop(0, '#3b97d6'); g.addColorStop(1, '#c4e8f7'); ctx.fillStyle = g; ctx.fillRect(0, -OY, W, GY + OY);
+  clouds.forEach(cl => cloud(cl.x, cl.y, cl.s));
+  // railway: viaduct runs behind the building before the station, the station and the building after; train emerges from behind one and vanishes behind the other
+  const si = lmQueue.findIndex(l => l.sp.k === 'station' && l.x < W + 400 && l.x + l.sp.w > -400);
+  if (si > 0 && lmQueue[si + 1]) { const st = lmQueue[si], pv = lmQueue[si - 1], nx = lmQueue[si + 1], x0 = pv.x + 4, x1 = nx.x + nx.sp.w - 4;
+    ctx.fillStyle = OUT; ctx.fillRect(Math.round(x0), GY - 95, Math.round(x1 - x0), 12); ctx.fillStyle = '#b3b8be'; ctx.fillRect(Math.round(x0), GY - 94, Math.round(x1 - x0), 8); ctx.fillStyle = '#8a9098'; ctx.fillRect(Math.round(x0), GY - 86, Math.round(x1 - x0), 2);
+    for (let px = x0 + 30; px < x1; px += 60) { ctx.fillStyle = '#9aa0a6'; ctx.fillRect(Math.round(px), GY - 84, 8, 84); }
+    // train progress is tied to the scroll: it leaves from behind the first building as that building comes on screen,
+    // is right over the station as the station passes the pigeon, then slips behind the next building
+    const k = 504 / (0.4 * W + 270), off = (pv.sp.w - 224) + k * (0.7 * W - st.x);
+    if (off > 0 && off < x1 - x0) { ctx.save(); ctx.beginPath(); ctx.rect(x0, GY - 150, x1 - x0, 70); ctx.clip(); LM_ANIM.train(ctx, Math.round(x0 + 6 + off), GY); ctx.restore(); } }
+  let planeLate = null;
+  lmQueue.forEach(l => { if (l.x > W + 260 || l.x + l.sp.w < -260) return;
+    if (l.sp.k === 'airport') { const p = Math.max(0, (W * .9 - l.x) / (l.sp.w + W * .4)); const px = Math.round(l.x + 120 + p * 340), py = Math.round(GY - 70 - p * p * 260);
+      if (p > 0 && py > -OY - 40 && px < W + 60) { const a = Math.max(-0.5, -0.12 - p * .3); if (p < .22) LM_ANIM.plane(ctx, px, py, a); else planeLate = [px, py, a]; } }
+    ctx.drawImage(l.sp.c, Math.round(l.x - M), GY - LH + 6); if (ANIM_K[l.sp.k]) LM_ANIM[l.sp.k](ctx, Math.round(l.x), GY, t); });
+  if (planeLate) LM_ANIM.plane(ctx, planeLate[0], planeLate[1], planeLate[2]);
+  // pavement + road
+  ctx.fillStyle = '#c9c4b8'; ctx.fillRect(0, GY, W, ROAD - GY); ctx.fillStyle = '#b3ad9f'; const po = Math.floor((t * speed * .45) % 12); for (let x = -po; x < W; x += 12) ctx.fillRect(Math.round(x), GY, 1, ROAD - GY); ctx.fillRect(0, GY + 6, W, 1);
+  ctx.fillStyle = '#8f8a7e'; ctx.fillRect(0, ROAD - 2, W, 2);
+  ctx.fillStyle = '#4a4e55'; ctx.fillRect(0, ROAD, W, H - ROAD); ctx.fillStyle = '#e8e6df'; const ro = Math.floor((t * speed * .9) % 24); for (let x = -ro; x < W; x += 24) ctx.fillRect(Math.round(x), ROAD + 17, 12, 2);
+  if (BE > 0) { ctx.fillStyle = '#8f8a7e'; ctx.fillRect(0, H, W, 2); ctx.fillStyle = '#c9c4b8'; ctx.fillRect(0, H + 2, W, 12); ctx.fillStyle = '#b3ad9f'; for (let x = -po; x < W; x += 12) ctx.fillRect(Math.round(x), H + 2, 1, 12);
+    ctx.fillStyle = '#5f9e44'; ctx.fillRect(0, H + 14, W, BE); ctx.fillStyle = '#4f8a36'; const go = Math.floor((t * speed * .9) % 16); for (let y = H + 18; y < H + BE; y += 8) for (let x = -go + ((y / 8) % 2) * 8; x < W; x += 16) ctx.fillRect(Math.round(x), y, 2, 2);
+    ctx.fillStyle = '#3f7d33'; for (let x = -go; x < W; x += 16) ctx.fillRect(Math.round(x), H + 14, 14, 4); }
+  const CS = .5; cars.filter(c => c.lane === 0).forEach(c => ctx.drawImage(c.sp.c, Math.round(c.x), Math.round(ROAD + 14 - 66 * CS), c.sp.c.width * CS, c.sp.c.height * CS));
+  cars.filter(c => c.lane === 1).forEach(c => ctx.drawImage(c.sp.flip, Math.round(c.x), Math.round(H - 3 - 66 * CS), c.sp.flip.width * CS, c.sp.flip.height * CS));
+  pipes.forEach(p => { pipe(p.x, -OY, p.top + OY, 'top'); pipe(p.x, p.top + GAP, GY - p.top - GAP, 'bottom'); });
+  const rot = state === 'menu' || state === 'ready' ? 0 : Math.max(-.45, Math.min(1.3, bird.vy / 320));
+  drawPigeon(Math.round(bird.x), Math.round(bird.y), rot, bird.frame);
+  if (flashT > 0) { ctx.fillStyle = 'rgba(255,255,255,' + (flashT / .15) * .8 + ')'; ctx.fillRect(0, 0, W, H); }
+}
+
+let last = performance.now();
+function loop(now) { const dt = Math.min(.033, (now - last) / 1000); last = now; update(dt); draw(); requestAnimationFrame(loop); }
+
+Promise.all([document.fonts.load('700 8px Silk'), document.fonts.load('400 8px Silk'), document.fonts.load('24px PS', '&'), document.fonts.load('700 16px Amiri', 'ا')]).catch(() => {}).then(() => {
+  prerender(); prerenderHouses(); prerenderCars();
+  (() => { const lc = $('logoBird').getContext('2d'); const sv = ctx; ctx = lc; lc.imageSmoothingEnabled = false; drawPigeon(17, 14, -0.15, 0); ctx = sv; })(); reset(); requestAnimationFrame(loop);
+});
+})();
+
+/* ---------- recommend-a-place pop-up: saves to the game's inbox (falls back to email) ---------- */
+(() => { const $ = id => document.getElementById(id); const m = $('recM'), f = $('recF'), ok = $('recOk'), err = $('rE'), btn = $('rS'); let db = null;
+  if (window.claude && claude.use) claude.use('db').then(d => { db = d; }).catch(() => {});
+  const open = e => { e.stopPropagation(); err.textContent = ''; f.classList.remove('hide'); ok.classList.add('hide'); m.classList.remove('hide'); setTimeout(() => $('rN').focus(), 50); };
+  const close = e => { if (e) e.stopPropagation(); m.classList.add('hide'); };
+  document.querySelectorAll('.rec').forEach(b => b.addEventListener('click', open));
+  m.querySelector('.x').addEventListener('click', close); $('rC').addEventListener('click', close);
+  m.addEventListener('pointerdown', e => { e.stopPropagation(); if (e.target === m) close(); });
+  m.addEventListener('keydown', e => e.stopPropagation());
+  btn.addEventListener('click', async e => { e.stopPropagation(); const name = $('rN').value.trim(), addr = $('rA').value.trim(), note = $('rT').value.trim();
+    if (!name) { err.textContent = 'Please add the place name.'; return; }
+    btn.disabled = true; btn.textContent = 'SENDING...'; let saved = false;
+    try { const r = await fetch('api.php?a=rec', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, address: addr, note }) }); const j = await r.json(); if (j.ok) saved = true; else if (j.error && r.status === 429) { err.textContent = j.error; btn.disabled = false; btn.textContent = 'SEND'; return; } } catch (x) {}
+    if (!saved) {
+    try { if (db) { const u = await claude.use('user'), id = u && await u.id(); if (id) { const ref = db.doc('recommendations/' + id); let cur = null; try { cur = await ref.get(); } catch (x) {} const d = cur && (cur.data ? (typeof cur.data === 'function' ? cur.data() : cur.data) : cur) || {}; const list = Array.isArray(d.items) ? d.items.slice(-49) : []; list.push({ name, address: addr, note, at: new Date().toISOString() }); await ref.set({ items: list, updated: new Date().toISOString() }); saved = true; } } } catch (x) { saved = false; }
+    if (!saved) { const a = document.createElement('a'); a.href = 'mailto:summar@smrgraphics.co.uk?subject=' + encodeURIComponent('Flappy Kabootar - place to feature: ' + name) + '&body=' + encodeURIComponent('Place name: ' + name + '\nAddress: ' + addr + '\nNote: ' + note); a.target = '_blank'; a.rel = 'noopener'; document.body.appendChild(a); a.click(); a.remove(); }
+    }
+    btn.disabled = false; btn.textContent = 'SEND'; $('rN').value = $('rA').value = $('rT').value = ''; f.classList.add('hide'); ok.classList.remove('hide'); });
+})();
+
+/* ---------- save to home screen ---------- */
+(() => { const $ = id => document.getElementById(id), m = $('hsM'), b = $('hsBtn'); if (!m || !b) return;
+  if (matchMedia('(display-mode: standalone)').matches || navigator.standalone) { b.remove(); return; }
+  const ua = navigator.userAgent, ios = /iP(hone|ad|od)/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1), sam = /SamsungBrowser/i.test(ua) || /SM-[A-Z0-9]/.test(ua);
+  const os = k => { m.querySelectorAll('div[data-os]').forEach(d => d.classList.toggle('hide', d.dataset.os !== k)); m.querySelectorAll('.tabs button').forEach(t => t.classList.toggle('on', t.dataset.os === k)); };
+  os(ios ? 'ios' : sam ? 'sam' : 'and'); m.querySelectorAll('.tabs button').forEach(t => t.addEventListener('click', e => { e.stopPropagation(); os(t.dataset.os); }));
+  $('hsChrome').href = 'intent://' + location.host + location.pathname + '#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=' + encodeURIComponent('https://play.google.com/store/apps/details?id=com.android.chrome') + ';end';
+  let dp = null; addEventListener('beforeinstallprompt', e => { e.preventDefault(); dp = e; $('hsInst').classList.remove('hide'); });
+  $('hsInst').addEventListener('click', async e => { e.stopPropagation(); if (!dp) return; dp.prompt(); try { await dp.userChoice; } catch (x) {} dp = null; $('hsInst').classList.add('hide'); m.classList.add('hide'); });
+  b.addEventListener('click', e => { e.stopPropagation(); m.classList.remove('hide'); });
+  m.querySelector('.x').addEventListener('click', e => { e.stopPropagation(); m.classList.add('hide'); });
+  m.addEventListener('pointerdown', e => { e.stopPropagation(); if (e.target === m) m.classList.add('hide'); }); m.addEventListener('keydown', e => e.stopPropagation());
+})();
+
+/* ---------- share + home ---------- */
+(() => { const $ = id => document.getElementById(id), toast = m => { const t = $('shT'); t.textContent = m; t.classList.add('on'); setTimeout(() => t.classList.remove('on'), 1800); };
+  const url = () => location.href.split('#')[0];
+  document.querySelectorAll('.shr').forEach(b => b.addEventListener('click', async e => { e.stopPropagation();
+    const sc = $('sc') ? $('sc').textContent : '0', text = 'Play Flappy Kabootar: fly a pigeon through Luton and spot the places you know!';
+    try { if (navigator.share) { await navigator.share({ title: 'Flappy Kabootar', text, url: url() }); return; } } catch (x) { if (x && x.name === 'AbortError') return; }
+    try { await navigator.clipboard.writeText(text + ' ' + url()); toast('LINK COPIED!'); } catch (x) { window.open('https://wa.me/?text=' + encodeURIComponent(text + ' ' + url()), '_blank'); } }));
+})();
+</script>
+</body>
+</html>

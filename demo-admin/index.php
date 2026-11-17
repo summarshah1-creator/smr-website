@@ -314,6 +314,7 @@ document.addEventListener('keydown',function(e){if(/^\d$/.test(e.key))press(e.ke
       <button data-tab="send" role="tab">Send</button>
       <button data-tab="live" role="tab">Live<span class="cnt" id="livecnt"></span></button>
       <button data-tab="designs" role="tab">Designs</button>
+      <button data-tab="flappy" role="tab">Flappy<span class="cnt" id="fkcnt"></span></button>
       <button data-tab="mail" role="tab">Email<span class="cnt" id="mailcnt"></span></button>
     </nav>
   </div>
@@ -380,6 +381,12 @@ document.addEventListener('keydown',function(e){if(/^\d$/.test(e.key))press(e.ke
     <div id="dpurge"></div>
     <div class="filt" id="dfilt"><button class="on" data-f="live">Active</button><button data-f="arch">Archive</button></div>
     <div class="list" id="dlist"><p class="empty">Loading…</p></div>
+  </section>
+
+  <!-- FLAPPY KABOOTAR: place recommendations + leaderboard (flappy/admin.php) -->
+  <section id="tab-flappy" class="tab hidden">
+    <div class="bar"><div><h1>Flappy Kabootar</h1><p class="sub">Places people want in the game, and the leaderboard.</p></div></div>
+    <iframe id="fkframe" title="Flappy Kabootar inbox" style="width:100%;height:calc(100vh - 210px);min-height:480px;border:0;background:transparent" loading="lazy"></iframe>
   </section>
 
   <!-- EMAIL -->
@@ -498,11 +505,13 @@ var copy=function(t,msg){(navigator.clipboard&&navigator.clipboard.writeText?nav
 var ICON={dots:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>'};
 
 /* ---------- tabs (hash) ---------- */
-var showTab=function(t){if(['demos','send','live','designs','mail'].indexOf(t)<0)t='demos';
+var showTab=function(t){if(['demos','send','live','designs','flappy','mail'].indexOf(t)<0)t='demos';if(t==='flappy'){var ff=document.getElementById('fkframe');if(ff&&!ff.src)ff.src='/flappy/admin.php'}
   document.querySelectorAll('[data-tab]').forEach(function(b){b.classList.toggle('on',b.dataset.tab===t)});
   document.querySelectorAll('.tab').forEach(function(s){s.classList.toggle('hidden',s.id!=='tab-'+t)});window.scrollTo(0,0);if(t==='live'&&typeof load==='function'&&D.length)load();if(t!=='send'&&$('created').dataset.used&&typeof resetSend==='function')resetSend();if(t==='mail'&&typeof mailOpen==='function')mailOpen();if(t==='designs'&&typeof dLoad==='function')dLoad()};
 document.querySelectorAll('[data-tab]').forEach(function(b){b.addEventListener('click',function(){if(location.hash!=='#'+b.dataset.tab)history.replaceState(null,'','#'+b.dataset.tab);showTab(b.dataset.tab)})});
 window.addEventListener('hashchange',function(){showTab(location.hash.slice(1))});
+window.addEventListener('message',function(e){if(e.origin===location.origin&&e.data&&typeof e.data.fkNew==='number'){var c=document.getElementById('fkcnt');if(c)c.textContent=e.data.fkNew?e.data.fkNew:''}});
+fetch('/flappy/api.php?a=admin',{credentials:'same-origin'}).then(function(r){return r.json()}).then(function(j){var c=document.getElementById('fkcnt');if(c&&j&&j.new)c.textContent=j.new}).catch(function(){});
 showTab(location.hash.slice(1));
 
 /* ---------- sheet ---------- */
