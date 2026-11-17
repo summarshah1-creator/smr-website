@@ -101,7 +101,7 @@ html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:m
 #lbM .box,#cardM .box{position:relative;width:min(330px,90vw);max-height:88vh;overflow:auto;background:#f6efd8;border:4px solid #1b1a24;box-shadow:0 6px 0 #1b1a24;border-radius:6px;padding:16px;color:#1b1a24;text-align:left}
 #lbM .x,#cardM .x{position:absolute;right:8px;top:8px;width:28px;height:28px;border:2px solid #1b1a24;border-radius:4px;background:#fff;font:700 16px/1 sans-serif;cursor:pointer}
 #lbM h3{font:700 13px Silk;margin:2px 0 10px}#lbM .tabs{display:flex;gap:4px;margin-bottom:8px}#lbM .tabs button{flex:1;border:2px solid #1b1a24;background:#fff;border-radius:5px;padding:6px;font:700 10px Silk;cursor:pointer}#lbM .tabs button.on{background:#ffd84a}
-#lbL{list-style:none;margin:0;padding:0}#lbL li{display:flex;align-items:center;gap:8px;padding:7px 4px;border-bottom:1px dashed #cbbd94;font:600 15px -apple-system,'Segoe UI',Roboto,sans-serif}#lbL li i{font:11px PS;font-style:normal;width:26px;color:#8a7a5a}#lbL li span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#lbL li b{font:13px PS}#lbL li.me{background:#fff3c4}
+#lbL{list-style:none;margin:0;padding:0}#lbL li{display:flex;align-items:center;gap:8px;padding:9px 4px;border-bottom:1px dashed #cbbd94;font:700 13px/1.2 Silk;letter-spacing:.04em;text-transform:uppercase;color:#1b1a24}#lbL li i{font:11px PS;font-style:normal;width:28px;color:#8a7a5a}#lbL li span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#lbL li b{font:13px PS;color:#1b1a24}#lbL li.me{background:#fff3c4}
 #lbL li:nth-child(1) i{color:#d9a400}#lbL li:nth-child(2) i{color:#8a9aa8}#lbL li:nth-child(3) i{color:#b0703a}
 .lbn{font:500 12px -apple-system,'Segoe UI',Roboto,sans-serif;color:#6a5a3a;margin:8px 0 0;text-align:center}
 #cardI{display:block;width:100%;border-radius:6px;border:2px solid #1b1a24;margin-top:22px}#cardM .send{display:block;width:100%;margin-top:10px;background:#3fb04a;color:#fff;border:3px solid #1b1a24;box-shadow:0 4px 0 #1b1a24;border-radius:5px;padding:10px;font:700 13px Silk;cursor:pointer}
@@ -196,9 +196,9 @@ html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:m
 </div></div>
   <div id="tap" class="hide">TAP TO FLAP</div>
 </div>
-<script src="landmarks.js?v=20261117k"></script>
-<script src="vehicles.js?v=20261117k"></script>
-<script src="namecheck.js?v=20261117k"></script>
+<script src="landmarks.js?v=20261117l"></script>
+<script src="vehicles.js?v=20261117l"></script>
+<script src="namecheck.js?v=20261117l"></script>
 <script>
 (() => {
 const H = 300, GY = 250, ROAD = 262;            // world: 300 units tall, pavement top at 250
@@ -292,17 +292,46 @@ $('bestS').textContent = best;
 function reset() {
   bird = { x: Math.min(W * .32, 90), y: 130, vy: 0, frame: 0, ft: 0 };
   pipes = []; nextPipe = W + 40; score = 0; speed = 72; seen = [];
-  lmQueue = []; lmX = 20; lmIdx = Math.floor(Math.random() * sprites.length); const at = location.hash.match(/^#at-(\w+)/); if (at) { const i = sprites.findIndex(s => s.k === at[1]); if (i >= 0) { lmIdx = i; lmX = W * .6; } }
+  lmQueue = []; lmX = 20; lmIdx = 0; prevHouses = 0; const at = location.hash.match(/^#at-(\w+)/); playlist = buildPlaylist(at ? at[1] : null); if (at) lmX = W * .6;
   while (lmX < W + 600) pushLandmark();
   cars = []; for (let i = 0; i < 3; i++) spawnCar(Math.random() * W);
   clouds = []; for (let i = 0; i < 6; i++) clouds.push({ x: Math.random() * (W + 200), y: -OY + 20 + Math.random() * (90 + OY), s: .6 + Math.random() * .8 });
 }
 const ANIM_K = { wardown: 1, wardownbridge: 1, funfair: 1 }, CHAIN = ['wardownfield', 'wardown', 'wardownbridge', 'funfair'];
-function pushLandmark() { const sp = sprites[lmIdx % sprites.length], nx = sprites[(lmIdx + 1) % sprites.length]; lmQueue.push({ sp, x: lmX, passed: false });
-  // the station always sits snug between two tall buildings (no houses either side) so the train can hide behind them
-  const chain = CHAIN.includes(sp.k) && CHAIN.indexOf(nx.k) === CHAIN.indexOf(sp.k) + 1, tight = chain || sp.k === 'station' || nx.k === 'station'; lmX += sp.w + (chain ? 0 : tight ? 10 : 18 + Math.random() * 16); lmIdx++;
+/* ---------- landmark playlist: shuffled every lap, with a few rules so it feels like a real town ----------
+   - set pieces stay together: Frasers → Station → Hat Factory (train), Wardown field → lake → bridge → funfair, Welcome sign → Airport
+   - never more than 2 big buildings in a row, never two retail-park sheds back to back
+   - houses only sometimes (none / one / two), never inside a set piece */
+const BIG = new Set(['galaxy', 'townhall', 'stmarys', 'frasers', 'hatfactory', 'chaiiwala', 'masjid', 'masjidali', 'gurdwara', 'inspire', 'tesco', 'currys', 'bandq', 'matalan', 'lidl', 'jdgyms', 'bigyellow', 'grandbazar', 'lewsey', 'venue', 'chiltern', 'uob', 'sixthform', 'stockwood', 'foodbank', 'airport', 'funfair']);
+const SHED = new Set(['tesco', 'currys', 'bandq', 'matalan', 'lidl', 'jdgyms', 'bigyellow', 'grandbazar']);
+const SETS = [['frasers', 'station', 'hatfactory'], ['wardownfield', 'wardown', 'wardownbridge', 'funfair'], ['welcome', 'airport']];
+let playlist = [], lastUnit = null;
+function buildPlaylist(startKey) {
+  const inSet = new Set(SETS.flat()), units = SETS.map(u => u.slice()).concat(sprites.map(s => s.k).filter(k => !inSet.has(k)).map(k => [k]));
+  for (let i = units.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [units[i], units[j]] = [units[j], units[i]]; }
+  if (startKey) { const i = units.findIndex(u => u.includes(startKey)); if (i > 0) units.unshift(units.splice(i, 1)[0]); }
+  const out = []; let prev = lastUnit, bigRun = 0;
+  const ok = u => { const first = u[0], last = prev ? prev[prev.length - 1] : null;
+    if (last && SHED.has(last) && SHED.has(first)) return false;
+    if (BIG.has(first) && bigRun >= 2) return false;
+    if (prev && prev === lastUnit && out.length === 0 && u.join() === (lastUnit || []).join()) return false; return true; };
+  while (units.length) { let i = units.findIndex(ok); if (i < 0) i = 0; const u = units.splice(i, 1)[0]; out.push(u);
+    const endBig = BIG.has(u[u.length - 1]); bigRun = endBig ? (u.length > 1 ? 1 : bigRun + 1) : 0; prev = u; }
+  lastUnit = out[out.length - 1]; return out.flat().map(k => sprites.find(s => s.k === k)).filter(Boolean);
+}
+const nextSprite = () => { if (!playlist.length) playlist = buildPlaylist(); return playlist.shift(); };
+const peekSprite = () => { if (!playlist.length) playlist = buildPlaylist(); return playlist[0]; };
+const inSameSet = (a, b) => SETS.some(u => { const i = u.indexOf(a); return i >= 0 && u[i + 1] === b; });
+let prevHouses = 0;
+function pushLandmark() { const sp = nextSprite(), nx = peekSprite(); lmQueue.push({ sp, x: lmX, passed: false });
+  const chain = inSameSet(sp.k, nx.k) && CHAIN.includes(sp.k), tight = inSameSet(sp.k, nx.k) || sp.k === 'station' || nx.k === 'station';
+  lmX += sp.w + (chain ? 0 : tight ? 10 : 18 + Math.random() * 16); lmIdx++;
   if (tight) return;
-  const n = 1 + Math.floor(Math.random() * 2); for (let i = 0; i < n; i++) { const h = houseSprites[Math.floor(Math.random() * houseSprites.length)]; lmQueue.push({ sp: h, x: lmX, passed: true, house: true }); lmX += h.w + 6 + Math.random() * 10; } lmX += 12; }
+  // houses now and then: none 40%, one 40%, two 20% (never three gaps of nothing in a row, never houses twice in a row more than twice)
+  let r = Math.random(), n = r < .4 ? 0 : r < .8 ? 1 : 2; if (prevHouses >= 2 && n) n = 0;
+  prevHouses = n ? prevHouses + 1 : 0;
+  for (let i = 0; i < n; i++) { const h = houseSprites[Math.floor(Math.random() * houseSprites.length)]; lmQueue.push({ sp: h, x: lmX, passed: true, house: true }); lmX += h.w + 6 + Math.random() * 10; }
+  if (n) lmX += 12; }
 let lastCarK = '';
 function pickCar() { const tot = carSprites.reduce((a, s) => a + s.wt, 0); for (let tries = 0; tries < 4; tries++) { let r = Math.random() * tot, s = carSprites[0]; for (const c of carSprites) { r -= c.wt; if (r <= 0) { s = c; break; } } if (s.k !== lastCarK || tries === 3) { lastCarK = s.k; return s; } } }
 function spawnCar(x) { const sp = pickCar(), far = ROAD + 14 - GY - 1, dir = sp.ht > far ? -1 : Math.random() < .5 ? 1 : -1, lane = dir > 0 ? 0 : 1, sx = x != null ? x : (dir > 0 ? -110 : W + 20);
@@ -437,7 +466,7 @@ const TRACK = (() => {
 window.TRACK = TRACK;
 
 /* ---------- update ---------- */
-let GAP = 84; const PW = 30; let deathWhy = ''; window.__fk = () => ({ flap, sprites, cars, carSprites, state, score, bird, pipes, W, OY, lm: lmQueue.map(l => l.sp.k) });
+let GAP = 84; const PW = 30; let deathWhy = ''; window.__fk = () => ({ flap, sprites, cars, carSprites, buildPlaylist, lmQueue, state, score, bird, pipes, W, OY, lm: lmQueue.map(l => l.sp.k) });
 function update(dt) {
   t += dt;
   const moving = state === 'play' || state === 'ready' || state === 'menu';
@@ -515,7 +544,7 @@ function draw() {
   if (BE > 0) { ctx.fillStyle = '#8f8a7e'; ctx.fillRect(0, H, W, 2); ctx.fillStyle = '#c9c4b8'; ctx.fillRect(0, H + 2, W, 12); ctx.fillStyle = '#b3ad9f'; for (let x = -po; x < W; x += 12) ctx.fillRect(Math.round(x), H + 2, 1, 12);
     ctx.fillStyle = '#5f9e44'; ctx.fillRect(0, H + 14, W, BE); ctx.fillStyle = '#4f8a36'; const go = Math.floor((t * speed * .9) % 16); for (let y = H + 18; y < H + BE; y += 8) for (let x = -go + ((y / 8) % 2) * 8; x < W; x += 16) ctx.fillRect(Math.round(x), y, 2, 2);
     ctx.fillStyle = '#3f7d33'; for (let x = -go; x < W; x += 16) ctx.fillRect(Math.round(x), H + 14, 14, 4); }
-  pipes.forEach(p => { pipe(p.x, -OY, p.top + OY, 'top'); pipe(p.x, p.top + p.gap, ROAD - p.top - p.gap, 'bottom'); ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.fillRect(Math.round(p.x) - 2, ROAD, PW + 4, 2); });
+  pipes.forEach(p => { pipe(p.x, -OY, p.top + OY, 'top'); pipe(p.x, p.top + p.gap, ROAD - 4 - p.top - p.gap, 'bottom'); ctx.fillStyle = 'rgba(0,0,0,.22)'; ctx.fillRect(Math.round(p.x) - 2, ROAD - 4, PW + 4, 2); });
   // vehicles go in front of the pipes
   const CS = .5; cars.filter(c => c.lane === 0).forEach(c => ctx.drawImage(c.sp.c, Math.round(c.x), Math.round(ROAD + 14 - c.sp.gy * CS), c.sp.c.width * CS, c.sp.c.height * CS));
   cars.filter(c => c.lane === 1).forEach(c => ctx.drawImage(c.sp.flip, Math.round(c.x), Math.round(H - 3 - c.sp.gy * CS), c.sp.flip.width * CS, c.sp.flip.height * CS));
