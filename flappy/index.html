@@ -122,6 +122,8 @@ html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:m
 #rot{display:none;position:fixed;inset:0;z-index:90;background:#2f8fd8;color:#fff;align-items:center;justify-content:center;text-align:center;font:600 14px -apple-system,'Segoe UI',Roboto,sans-serif;pointer-events:auto}
 #rot div{font-size:46px;line-height:1.2}#rot b{display:block;font:700 15px Silk;margin:10px 0 6px;color:#ffd84a;text-shadow:2px 2px 0 #1b1a24}#rot span{display:block;font-size:14px}
 @media (orientation:landscape) and (max-height:500px) and (pointer:coarse){#rot{display:flex}}
+.notice{margin:2px 0 6px;background:#fff3c4;border:2px solid #1b1a24;border-radius:6px;padding:7px 8px;font:700 12px/1.35 -apple-system,'Segoe UI',Roboto,sans-serif;color:#1b1a24}
+.off-lb .lbB,.off-rec .rec{display:none!important}
 </style>
 <link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icon-180.png"><link rel="icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Kabootar"><meta name="theme-color" content="#2f8fd8">
 </head>
@@ -140,6 +142,7 @@ html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:m
       <div class="lt2"><span>K</span><span>A</span><span>B</span><span>O</span><span>O</span><span>T</span><span>A</span><span>R</span></div>
       <div class="lt3">FLYING THROUGH LUTON</div>
     </div>
+    <p id="notice" class="notice" hidden></p>
     <div class="hs"><small>YOUR HIGH SCORE</small><b id="bestS">0</b></div>
     <div class="prow"><div class="btn" id="go"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M3 1h2v1h2v1h2v1h2v1h2v1h1v2h-1v1h-2v1H9v1H7v1H5v1H3z"/></svg> PLAY</div><button class="lbB" type="button" id="top1"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M3 1h10v2h3v4h-1v1h-2v1h-1v1h-1v1H9v2h2v2H5v-2h2v-2H6v-1H5V9H4V8H2V7H1V3h2zM2 4v2h1V4zm11 0v2h1V4z" fill-rule="evenodd"/></svg> LEADERBOARD</button></div>
     <p style="margin-bottom:0;font-size:10px;color:#6a5a3a">Tap, click or press space to flap</p>
@@ -193,9 +196,9 @@ html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:m
 </div></div>
   <div id="tap" class="hide">TAP TO FLAP</div>
 </div>
-<script src="landmarks.js?v=20261117j"></script>
-<script src="vehicles.js?v=20261117g"></script>
-<script src="namecheck.js?v=20261117g"></script>
+<script src="landmarks.js?v=20261117k"></script>
+<script src="vehicles.js?v=20261117k"></script>
+<script src="namecheck.js?v=20261117k"></script>
 <script>
 (() => {
 const H = 300, GY = 250, ROAD = 262;            // world: 300 units tall, pavement top at 250
@@ -311,7 +314,7 @@ function flap() {
   if (state === 'ready') { state = 'play'; $('tap').classList.add('hide'); }
   if (state === 'play') { bird.vy = -175; bird.frame = 0; bird.ft = 0; SFX.flap(); }
 }
-function start() { reset(); state = 'ready'; $('place').classList.remove('on'); placeTimer = 0; $('start').classList.add('hide'); $('over').classList.add('hide'); $('score').classList.remove('hide'); $('score').textContent = '0'; $('tap').classList.remove('hide'); }
+function start() { reset(); state = 'ready'; TRACK.send('play'); $('place').classList.remove('on'); placeTimer = 0; $('start').classList.add('hide'); $('over').classList.add('hide'); $('score').classList.remove('hide'); $('score').textContent = '0'; $('tap').classList.remove('hide'); }
 $('go').addEventListener('click', e => { e.stopPropagation(); start(); });
 $('again').addEventListener('click', e => { e.stopPropagation(); start(); });
 const modalOpen = () => ['lbM', 'cardM', 'hsM', 'recM'].some(id => { const m = document.getElementById(id); return m && !m.classList.contains('hide'); });
@@ -330,7 +333,7 @@ $('homeB').addEventListener('click', e => { e.stopPropagation(); goHome(); });
 function showOver() {
   state = 'over'; $('why').textContent = deathWhy === 'ground' ? 'You landed on the pavement!' : 'You clipped a pipe!'; $('sc').textContent = score; $('be').textContent = best; $('bestS').textContent = best;
   $('seen').textContent = seen.length ? seen.join('  ·  ') : 'Fly further to see Luton!'; $('over').classList.remove('hide'); $('tap').classList.add('hide');
-  SFX.swoosh(); LB.check(score);
+  SFX.swoosh(); if (!window.__fkNoBoard) LB.check(score); TRACK.send('over', score, seen.length ? seen[seen.length - 1] : '');
 }
 
 
@@ -353,7 +356,7 @@ const SFX = (() => { let ac = null, on = store.get('fk_sound', 0) === 1 || /(?:^
   addEventListener('pointerdown', () => ctxA(), { once: true }); return api; })();
 const muteUI = on => document.querySelectorAll('.mute').forEach(m => { m.classList.toggle('on', on); m.querySelector('.muteT').textContent = on ? 'SOUND ON' : 'SOUND OFF'; });
 muteUI(SFX.on);
-document.querySelectorAll('.mute').forEach(m => m.addEventListener('click', e => { e.stopPropagation(); const on = SFX.toggle(); muteUI(on); const t = $('shT'); t.textContent = on ? 'SOUND ON' : 'SOUND OFF'; t.classList.add('on'); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('on'), 1300); }));
+document.querySelectorAll('.mute').forEach(m => m.addEventListener('click', e => { e.stopPropagation(); const on = SFX.toggle(); if (on) TRACK.send('sound_on'); muteUI(on); const t = $('shT'); t.textContent = on ? 'SOUND ON' : 'SOUND OFF'; t.classList.add('on'); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('on'), 1300); }));
 
 /* ---------- leaderboard: today + all time (online on the SMR website, this phone only elsewhere) ---------- */
 const LB = (() => { const api = 'api.php'; let online = null, data = { today: [], all: [] }, tab = 'today', lastName = store.get('fk_name', ''), myRow = null;
@@ -374,11 +377,11 @@ const LB = (() => { const api = 'api.php'; let online = null, data = { today: []
     if (!/^[\p{L}\p{N} ._'-]+$/u.test(name)) { $('nbE').textContent = 'Letters and numbers only, please.'; return; }
     if (window.NameCheck && NameCheck.bad(name)) { $('nbE').textContent = "That name isn't allowed. Please use your real name or a nickname."; $('nbI').select(); return; }
     $('nbB').disabled = true; lastName = name; store.set('fk_name', name); myRow = { name, score: pending };
-    const done = () => { $('nbB').disabled = false; $('nameBox').classList.add('hide'); pending = 0; tab = data.today.some(r => r.name === name) ? 'today' : 'all'; render(); $('lbM').classList.remove('hide'); };
+    const done = () => { TRACK.send('name', pending); $('nbB').disabled = false; $('nameBox').classList.add('hide'); pending = 0; tab = data.today.some(r => r.name === name) ? 'today' : 'all'; render(); $('lbM').classList.remove('hide'); };
     if (online) fetch(api + '?a=score', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, score: pending }) }).then(r => r.json()).then(j => { if (j.error) { $('nbE').textContent = j.error; $('nbB').disabled = false; return; } data = j; done(); }).catch(() => { $('nbE').textContent = 'Could not save. Check your signal.'; $('nbB').disabled = false; });
     else { const l = localLoad(); l.push({ name, score: pending, day: day() }); try { localStorage.setItem('fk_board', JSON.stringify(l.sort((a, b) => b.score - a.score).slice(0, 60))); } catch (e) {} localLoad(); done(); } };
   $('nbB').addEventListener('click', e => { e.stopPropagation(); save(); }); $('nbI').addEventListener('keydown', e => { e.stopPropagation(); if (e.key === 'Enter') save(); });
-  document.querySelectorAll('.lbB').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); load(); render(); $('lbM').classList.remove('hide'); }));
+  document.querySelectorAll('.lbB').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); TRACK.send('lb_open'); load(); render(); $('lbM').classList.remove('hide'); }));
   document.querySelectorAll('#lbM .tabs button').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); tab = b.dataset.lb; render(); }));
   $('lbM').querySelector('.x').addEventListener('click', e => { e.stopPropagation(); $('lbM').classList.add('hide'); });
   $('lbM').addEventListener('pointerdown', e => { e.stopPropagation(); if (e.target === $('lbM')) $('lbM').classList.add('hide'); });
@@ -402,16 +405,39 @@ const LB = (() => { const api = 'api.php'; let online = null, data = { today: []
     x.fillStyle = '#1b1a24'; x.fillRect(240, 890, 600, 70); x.fillStyle = '#ffd84a'; x.font = '700 30px Silk'; x.fillText('CAN YOU BEAT ME?', 540, 910);
     x.fillStyle = '#1b1a24'; x.font = '600 30px -apple-system,Segoe UI,Roboto,sans-serif'; x.fillText('Play free: ' + location.host.replace(/^www\./, '') + location.pathname.replace(/index\.html$/, ''), 540, 1275);
     return c; };
-  $('cardB').addEventListener('click', e => { e.stopPropagation(); const c = make(); $('cardI').src = c.toDataURL('image/png'); c.toBlob(b => { blob = b; }, 'image/png'); $('cardM').classList.remove('hide'); });
-  $('cardS').addEventListener('click', async e => { e.stopPropagation(); if (!blob) return; const f = new File([blob], 'flappy-kabootar-score.png', { type: 'image/png' });
+  $('cardB').addEventListener('click', e => { e.stopPropagation(); TRACK.send('card', score); const c = make(); $('cardI').src = c.toDataURL('image/png'); c.toBlob(b => { blob = b; }, 'image/png'); $('cardM').classList.remove('hide'); });
+  $('cardS').addEventListener('click', async e => { e.stopPropagation(); if (!blob) return; TRACK.send('card_save', score); const f = new File([blob], 'flappy-kabootar-score.png', { type: 'image/png' });
     try { if (navigator.canShare && navigator.canShare({ files: [f] })) { await navigator.share({ files: [f], title: 'Flappy Kabootar', text: '\u{1F426} I scored ' + score + ' on Flappy Kabootar! Can you beat me? ' + location.href.split('#')[0] }); return; } } catch (x) { if (x && x.name === 'AbortError') return; }
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = f.name; document.body.appendChild(a); a.click(); a.remove(); });
   $('cardM').querySelector('.x').addEventListener('click', e => { e.stopPropagation(); $('cardM').classList.add('hide'); });
   $('cardM').addEventListener('pointerdown', e => { e.stopPropagation(); if (e.target === $('cardM')) $('cardM').classList.add('hide'); });
 })();
 
+
+/* ---------- analytics (first-party, sent to api.php on the SMR site) + owner settings ---------- */
+const TRACK = (() => {
+  let vid = store.get('fk_vid', ''); if (!vid) { vid = Math.random().toString(36).slice(2, 12); store.set('fk_vid', vid); }
+  const ua = navigator.userAgent, app = !!(matchMedia('(display-mode: standalone)').matches || navigator.standalone);
+  const dev = /iPad/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1) ? 'ipad' : /iPhone|iPod/.test(ua) ? 'iphone' : /Android/.test(ua) ? 'android' : /Windows|Macintosh|Linux|CrOS/.test(ua) ? 'desktop' : 'other';
+  let src = ''; try { src = sessionStorage.getItem('fk_src') || ''; } catch (e) {}
+  if (!src) { const q = new URLSearchParams(location.search), tag = (q.get('s') || q.get('src') || q.get('utm_source') || '').toLowerCase().replace(/[^a-z0-9_-]/g, '').slice(0, 20);
+    const ref = document.referrer ? (() => { try { return new URL(document.referrer).hostname; } catch (e) { return ''; } })() : '';
+    src = tag || (/Instagram/.test(ua) ? 'ig' : /FBAN|FBAV|FB_IAB/.test(ua) ? 'fb' : /musical_ly|TikTok|Bytedance/i.test(ua) ? 'tt' : /Snapchat/.test(ua) ? 'sc' : /WhatsApp/i.test(ua) ? 'wa'
+      : /smrgraphics|smrdigital/.test(ref) && ref !== location.hostname ? 'site' : /smrgraphics|smrdigital/.test(ref) ? 'site' : /google\./.test(ref) ? 'google' : /instagram/.test(ref) ? 'ig' : /facebook|fb\.com/.test(ref) ? 'fb' : /t\.co|twitter|x\.com/.test(ref) ? 'x' : /tiktok/.test(ref) ? 'tt' : ref ? 'other' : 'direct');
+    if (ref && ref === location.hostname && !tag) src = 'site'; try { sessionStorage.setItem('fk_src', src); } catch (e) {} }
+  const send = (ev, val, extra) => { try { const body = JSON.stringify({ ev, vid, src, dev, app: app ? 1 : 0, val: val || 0, extra: extra || '' });
+    if (navigator.sendBeacon) navigator.sendBeacon('api.php?a=ev', new Blob([body], { type: 'application/json' })); else fetch('api.php?a=ev', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body, keepalive: true }).catch(() => {}); } catch (e) {} };
+  send('visit'); window.TRACK_SEND = send; document.querySelectorAll('.pw').forEach(a => a.addEventListener('click', () => send('smr')));
+  fetch('api.php?a=cfg', { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(c => { if (!c || typeof c !== 'object') return;
+    if (c.notice) { $('notice').textContent = c.notice; $('notice').hidden = false; }
+    document.body.classList.toggle('off-lb', c.show_leaderboard === false); document.body.classList.toggle('off-rec', c.show_recommend === false);
+    GAP = c.difficulty === 'easy' ? 96 : c.difficulty === 'hard' ? 74 : 84; window.__fkNoBoard = c.show_leaderboard === false; }).catch(() => {});
+  return { send };
+})();
+window.TRACK = TRACK;
+
 /* ---------- update ---------- */
-const GAP = 84, PW = 30; let deathWhy = ''; window.__fk = () => ({ flap, sprites, cars, carSprites, state, score, bird, pipes, W, OY, lm: lmQueue.map(l => l.sp.k) });
+let GAP = 84; const PW = 30; let deathWhy = ''; window.__fk = () => ({ flap, sprites, cars, carSprites, state, score, bird, pipes, W, OY, lm: lmQueue.map(l => l.sp.k) });
 function update(dt) {
   t += dt;
   const moving = state === 'play' || state === 'ready' || state === 'menu';
@@ -527,7 +553,7 @@ Promise.all([document.fonts.load('700 8px Silk'), document.fonts.load('400 8px S
     try { if (db) { const u = await claude.use('user'), id = u && await u.id(); if (id) { const ref = db.doc('recommendations/' + id); let cur = null; try { cur = await ref.get(); } catch (x) {} const d = cur && (cur.data ? (typeof cur.data === 'function' ? cur.data() : cur.data) : cur) || {}; const list = Array.isArray(d.items) ? d.items.slice(-49) : []; list.push({ name, address: addr, note, at: new Date().toISOString() }); await ref.set({ items: list, updated: new Date().toISOString() }); saved = true; } } } catch (x) { saved = false; }
     if (!saved) { const a = document.createElement('a'); a.href = 'mailto:summar@smrgraphics.co.uk?subject=' + encodeURIComponent('Flappy Kabootar - place to feature: ' + name) + '&body=' + encodeURIComponent('Place name: ' + name + '\nAddress: ' + addr + '\nNote: ' + note); a.target = '_blank'; a.rel = 'noopener'; document.body.appendChild(a); a.click(); a.remove(); }
     }
-    btn.disabled = false; btn.textContent = 'SEND'; $('rN').value = $('rA').value = $('rT').value = ''; f.classList.add('hide'); ok.classList.remove('hide'); });
+    if (window.TRACK_SEND) window.TRACK_SEND('rec'); btn.disabled = false; btn.textContent = 'SEND'; $('rN').value = $('rA').value = $('rT').value = ''; f.classList.add('hide'); ok.classList.remove('hide'); });
 })();
 
 /* ---------- save to home screen ---------- */
@@ -538,8 +564,8 @@ Promise.all([document.fonts.load('700 8px Silk'), document.fonts.load('400 8px S
   os(ios ? 'ios' : sam ? 'sam' : 'and'); m.querySelectorAll('.tabs button').forEach(t => t.addEventListener('click', e => { e.stopPropagation(); os(t.dataset.os); }));
   $('hsChrome').href = 'intent://' + location.host + location.pathname + '#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=' + encodeURIComponent('https://play.google.com/store/apps/details?id=com.android.chrome') + ';end';
   let dp = null; addEventListener('beforeinstallprompt', e => { e.preventDefault(); dp = e; $('hsInst').classList.remove('hide'); });
-  $('hsInst').addEventListener('click', async e => { e.stopPropagation(); if (!dp) return; dp.prompt(); try { await dp.userChoice; } catch (x) {} dp = null; $('hsInst').classList.add('hide'); m.classList.add('hide'); });
-  bs.forEach(b => b.addEventListener('click', e => { e.stopPropagation(); m.classList.remove('hide'); }));
+  $('hsInst').addEventListener('click', async e => { e.stopPropagation(); if (!dp) return; dp.prompt(); try { const ch = await dp.userChoice; if (ch && ch.outcome === 'accepted') TRACK.send('install'); } catch (x) {} dp = null; $('hsInst').classList.add('hide'); m.classList.add('hide'); });
+  bs.forEach(b => b.addEventListener('click', e => { e.stopPropagation(); m.classList.remove('hide'); TRACK.send('hs_open'); }));
   m.querySelector('.x').addEventListener('click', e => { e.stopPropagation(); m.classList.add('hide'); });
   m.addEventListener('pointerdown', e => { e.stopPropagation(); if (e.target === m) m.classList.add('hide'); }); m.addEventListener('keydown', e => e.stopPropagation());
 })();
@@ -553,7 +579,7 @@ Promise.all([document.fonts.load('700 8px Silk'), document.fonts.load('400 8px S
 /* ---------- share + home ---------- */
 (() => { const $ = id => document.getElementById(id), toast = m => { const t = $('shT'); t.textContent = m; t.classList.add('on'); setTimeout(() => t.classList.remove('on'), 1800); };
   const url = () => location.href.split('#')[0];
-  document.querySelectorAll('.shr').forEach(b => b.addEventListener('click', async e => { e.stopPropagation();
+  document.querySelectorAll('.shr').forEach(b => b.addEventListener('click', async e => { e.stopPropagation(); TRACK.send('share', b.dataset.share === 'app' ? 1 : 0);
     const sc = $('sc') ? $('sc').textContent : '0', text = b.dataset.share === 'app' && +sc > 0 ? '\u{1F426} I just scored ' + sc + ' on Flappy Kabootar, flying through Luton! Think you can beat me? Try it here:' : '\u{1F426} Play Flappy Kabootar: flap your way through Luton and see how many places you can spot! Try it here:';
     try { if (navigator.share) { await navigator.share({ title: 'Flappy Kabootar', text, url: url() }); return; } } catch (x) { if (x && x.name === 'AbortError') return; }
     try { await navigator.clipboard.writeText(text + ' ' + url()); toast('LINK COPIED!'); } catch (x) { window.open('https://wa.me/?text=' + encodeURIComponent(text + ' ' + url()), '_blank'); } }));

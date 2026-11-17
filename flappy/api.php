@@ -14,6 +14,8 @@ function fk_db(): PDO {
         $pdo->exec('CREATE INDEX IF NOT EXISTS fk_scores_all ON fk_scores(score)');
         $pdo->exec("CREATE TABLE IF NOT EXISTS fk_recs (id INTEGER PRIMARY KEY, name TEXT NOT NULL, address TEXT DEFAULT '', note TEXT DEFAULT '', at INTEGER NOT NULL, ip TEXT DEFAULT '', done INTEGER DEFAULT 0)");
         $pdo->exec("CREATE TABLE IF NOT EXISTS fk_meta (k TEXT PRIMARY KEY, v TEXT)");
+        $pdo->exec("CREATE TABLE IF NOT EXISTS fk_events (id INTEGER PRIMARY KEY, day TEXT NOT NULL, at INTEGER NOT NULL, vid TEXT DEFAULT '', ev TEXT NOT NULL, src TEXT DEFAULT '', dev TEXT DEFAULT '', app INTEGER DEFAULT 0, val INTEGER DEFAULT 0, extra TEXT DEFAULT '')");
+        $pdo->exec('CREATE INDEX IF NOT EXISTS fk_events_day ON fk_events(day, ev)');
         // one-off leaderboard entries added by the owner (applied once, then never again)
         foreach ([['seed-summar-68', 'SUMMAR', 68]] as [$key, $name, $score]) {
             $st = $pdo->prepare('SELECT 1 FROM fk_meta WHERE k = ?'); $st->execute([$key]);
@@ -63,12 +65,51 @@ function fk_rude(string $name): bool {
 }
 function fk_ip(): string { return substr(hash('sha256', client_ip() . '|fk'), 0, 16); }
 
+
+/* ---- settings the owner can change in SMR Admin → Flappy → Settings ---- */
+const FK_DEFAULTS = ['notice' => '', 'show_leaderboard' => true, 'show_recommend' => true, 'difficulty' => 'normal'];
+function fk_settings(): array {
+    $st = fk_db()->prepare('SELECT v FROM fk_meta WHERE k = ?'); $st->execute(['settings']);
+    $v = json_decode((string) $st->fetchColumn(), true);
+    return array_merge(FK_DEFAULTS, is_array($v) ? array_intersect_key($v, FK_DEFAULTS) : []);
+}
+/* ---- analytics: small first-party events, no outside services ---- */
+const FK_EVENTS = ['visit', 'play', 'over', 'share', 'card', 'card_save', 'hs_open', 'install', 'lb_open', 'name', 'rec', 'smr', 'sound_on'];
+function fk_stats(int $days): array {
+    $p = fk_db(); $from = $days > 0 ? date('Y-m-d', strtotime('-' . ($days - 1) . ' days')) : '0000-00-00';
+    $q = function (string $sql, array $a = []) use ($p) { $st = $p->prepare($sql); $st->execute($a); return $st; };
+    $tot = []; foreach ($q('SELECT ev, COUNT(*) n, COUNT(DISTINCT vid) u FROM fk_events WHERE day >= ? GROUP BY ev', [$from])->fetchAll() as $r) $tot[$r['ev']] = ['n' => (int) $r['n'], 'u' => (int) $r['u']];
+    $visitors = (int) $q("SELECT COUNT(DISTINCT vid) FROM fk_events WHERE day >= ?", [$from])->fetchColumn();
+    $sc = $q("SELECT COUNT(*) n, AVG(val) a, MAX(val) m FROM fk_events WHERE ev = 'over' AND day >= ?", [$from])->fetch();
+    $src = $q("SELECT src, COUNT(DISTINCT vid) u, COUNT(*) n FROM fk_events WHERE ev = 'visit' AND day >= ? GROUP BY src ORDER BY u DESC", [$from])->fetchAll();
+    $dev = $q("SELECT dev, COUNT(DISTINCT vid) u FROM fk_events WHERE ev = 'visit' AND day >= ? GROUP BY dev ORDER BY u DESC", [$from])->fetchAll();
+    $appv = (int) $q("SELECT COUNT(DISTINCT vid) FROM fk_events WHERE ev = 'visit' AND app = 1 AND day >= ?", [$from])->fetchColumn();
+    $back = (int) $q("SELECT COUNT(*) FROM (SELECT vid FROM fk_events WHERE ev = 'visit' AND day >= ? GROUP BY vid HAVING COUNT(DISTINCT day) > 1)", [$from])->fetchColumn();
+    $places = $q("SELECT extra place, COUNT(*) n FROM fk_events WHERE ev = 'over' AND extra != '' AND day >= ? GROUP BY extra ORDER BY n DESC LIMIT 10", [$from])->fetchAll();
+    $daily = $q("SELECT day, COUNT(DISTINCT vid) v, SUM(ev = 'play') g FROM fk_events WHERE day >= ? GROUP BY day ORDER BY day", [date('Y-m-d', strtotime('-29 days'))])->fetchAll();
+    return ['days' => $days, 'visitors' => $visitors, 'returning' => $back, 'app_users' => $appv, 'events' => $tot, 'games' => (int) $sc['n'], 'avg' => round((float) $sc['a'], 1), 'best' => (int) $sc['m'], 'sources' => $src, 'devices' => $dev, 'places' => $places, 'daily' => $daily];
+}
+
 $a = $_GET['a'] ?? $_POST['a'] ?? '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !same_origin()) json_out(['error' => 'Bad origin'], 403);
 $in = $_SERVER['REQUEST_METHOD'] === 'POST' ? (json_decode((string) file_get_contents('php://input'), true) ?: $_POST) : [];
 
 try {
     if ($a === 'board') json_out(fk_board());
+    if ($a === 'cfg') { header('Cache-Control: no-store'); json_out(fk_settings()); }
+
+    if ($a === 'ev' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+        $ev = (string) ($in['ev'] ?? '');
+        if (!in_array($ev, FK_EVENTS, true)) json_out(['ok' => false], 400);
+        $k = 'fk_ev:' . fk_ip(); if (too_many($k, 400, 3600)) json_out(['ok' => false], 429); note_fail($k);
+        $vid = preg_replace('/[^a-z0-9]/i', '', substr((string) ($in['vid'] ?? ''), 0, 20));
+        $src = preg_replace('/[^a-z0-9_-]/i', '', substr((string) ($in['src'] ?? ''), 0, 24));
+        $dev = preg_replace('/[^a-z]/i', '', substr((string) ($in['dev'] ?? ''), 0, 12));
+        fk_db()->prepare('INSERT INTO fk_events (day, at, vid, ev, src, dev, app, val, extra) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)')
+            ->execute([fk_today(), now(), $vid, $ev, $src, $dev, empty($in['app']) ? 0 : 1, max(0, min(9999, (int) ($in['val'] ?? 0))), fk_clean((string) ($in['extra'] ?? ''), 60)]);
+        if (random_int(1, 200) === 1) fk_db()->prepare('DELETE FROM fk_events WHERE at < ?')->execute([now() - 400 * 86400]);
+        json_out(['ok' => true]);
+    }
 
     if ($a === 'score' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         $name = fk_clean((string) ($in['name'] ?? ''), 14); $score = (int) ($in['score'] ?? 0);
@@ -95,7 +136,7 @@ try {
     }
 
     /* ---- owner only ---- */
-    if (in_array($a, ['admin', 'rec_done', 'rec_del', 'score_del'], true)) {
+    if (in_array($a, ['admin', 'rec_done', 'rec_del', 'score_del', 'stats', 'settings_save'], true)) {
         if (!admin_token()) json_out(['error' => 'Log in to SMR Admin first.'], 401);
         $p = fk_db();
         if ($a === 'admin') {
@@ -106,7 +147,16 @@ try {
             $plays = (int) $p->query('SELECT COUNT(*) FROM fk_scores')->fetchColumn();
             json_out(['recs' => $recs, 'today' => $t->fetchAll(), 'all' => $all, 'new' => $n, 'entries' => $plays]);
         }
+        if ($a === 'stats') json_out(fk_stats(max(0, min(400, (int) ($_GET['days'] ?? 7)))) + ['settings' => fk_settings()]);
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') json_out(['error' => 'POST only'], 405);
+        if ($a === 'settings_save') {
+            $cur = fk_settings(); $new = [
+                'notice' => fk_clean((string) ($in['notice'] ?? $cur['notice']), 90),
+                'show_leaderboard' => !empty($in['show_leaderboard']), 'show_recommend' => !empty($in['show_recommend']),
+                'difficulty' => in_array($in['difficulty'] ?? '', ['easy', 'normal', 'hard'], true) ? $in['difficulty'] : 'normal'];
+            $p->prepare('INSERT INTO fk_meta (k, v) VALUES (?, ?) ON CONFLICT(k) DO UPDATE SET v = excluded.v')->execute(['settings', json_encode($new)]);
+            json_out(['ok' => true, 'settings' => $new]);
+        }
         $id = (int) ($in['id'] ?? 0);
         if ($a === 'rec_done') { $p->prepare('UPDATE fk_recs SET done = ? WHERE id = ?')->execute([empty($in['undo']) ? 1 : 0, $id]); json_out(['ok' => true]); }
         if ($a === 'rec_del') { $p->prepare('DELETE FROM fk_recs WHERE id = ?')->execute([$id]); json_out(['ok' => true]); }
