@@ -283,19 +283,19 @@ L.oak = { n: 'Kenilworth Road, Oak Stand', w: 210, d(c, x, G) {
   for (const dx of [x + 10, x + 186]) { BOX(c, '#f4f2ec', dx, G - 38, 14, 38); CIRC(c, '#9fb7c9', dx + 7, G - 32, 3); }
 } };
 
-L.krispy = { n: 'Krispy Lemon Chicken', w: 170, d(c, x, G) {
-  // flats over the shop: same height as Toro's, sign level with Toro's sign
-  BRICK(c, x, G - 184, 170, 184, '#a8503a', '#94452f'); R(c, OUT, x - 1, G - 185, 172, 1); R(c, OUT, x - 1, G - 184, 1, 184); R(c, OUT, x + 170, G - 184, 1, 184); BOX(c, '#3a3a3e', x - 4, G - 190, 178, 6);
-  for (const wy of [G - 174, G - 124]) for (let i = 0; i < 3; i++) { const wx = x + 20 + i * 52; WIN(c, wx, wy, 26, 30); R(c, '#e6ddd0', wx - 2, wy + 30, 30, 3); R(c, '#c9bfb0', wx - 2, wy + 33, 30, 1); }
-  R(c, '#f4f6c8', x + 10, G - 80, 8, 4); R(c, '#f4f6c8', x + 152, G - 80, 8, 4); R(c, '#3a3a3e', x + 13, G - 76, 2, 4); R(c, '#3a3a3e', x + 155, G - 76, 2, 4);
-  BOX(c, '#6e1f33', x + 6, G - 70, 160, 22); R(c, '#f2c96b', x + 8, G - 68, 156, 1); R(c, '#f2c96b', x + 8, G - 51, 156, 1);
-  T(c, 'KRISPY LEMON CHICKEN', x + 78, G - 63, 8, '#f2c96b');
-  CIRC(c, '#ffffff', x + 152, G - 59, 5); R(c, '#f2c14e', x + 156, G - 61, 4, 2); R(c, '#d84b3c', x + 151, G - 66, 3, 3); R(c, '#1b1a24', x + 153, G - 60, 1, 1);
-  BOX(c, '#c62828', x + 6, G - 48, 160, 8); T(c, 'BURGERS . PIZZA . CHIPS', x + 86, G - 48, 8, '#ffffff', 'center', false);
-  BOX(c, '#d9d7d1', x + 10, G - 40, 154, 40); for (let i = 0; i < 8; i++) R(c, '#c6c3bb', x + 10, G - 38 + i * 5, 154, 1);
-  BOX(c, '#c62828', x + 10, G - 40, 3, 40); BOX(c, '#c62828', x + 161, G - 40, 3, 40);
-  BOX(c, '#2b2b30', x + 20, G - 36, 26, 36); R(c, '#e7c35a', x + 23, G - 30, 20, 2); R(c, '#e7c35a', x + 23, G - 24, 20, 2);
-  BOX(c, '#46505a', x + 52, G - 36, 104, 26); R(c, '#e7c35a', x + 76, G - 30, 56, 2); R(c, '#e7c35a', x + 72, G - 24, 64, 3);
+L.krispy = { n: 'Krispy Lemon Chicken', w: 140, d(c, x, G) {
+  // flats over the shop: about Toro's height, sign level with Toro's sign
+  BRICK(c, x, G - 196, 140, 196, '#a8503a', '#94452f'); R(c, OUT, x - 1, G - 197, 142, 1); R(c, OUT, x - 1, G - 196, 1, 196); R(c, OUT, x + 140, G - 196, 1, 196); BOX(c, '#3a3a3e', x - 4, G - 202, 148, 6);
+  for (const wy of [G - 186, G - 124]) for (let i = 0; i < 3; i++) { const wx = x + 15 + i * 42; WIN(c, wx, wy, 24, 36); R(c, '#e6ddd0', wx - 2, wy + 36, 28, 3); R(c, '#c9bfb0', wx - 2, wy + 39, 28, 1); }
+  R(c, '#f4f6c8', x + 8, G - 80, 8, 4); R(c, '#f4f6c8', x + 124, G - 80, 8, 4); R(c, '#3a3a3e', x + 11, G - 76, 2, 4); R(c, '#3a3a3e', x + 127, G - 76, 2, 4);
+  BOX(c, '#6e1f33', x + 4, G - 70, 132, 22); R(c, '#f2c96b', x + 6, G - 51, 128, 1);
+  T(c, 'KRISPY LEMON', x + 60, G - 67, 8, '#f2c96b'); T(c, 'CHICKEN', x + 60, G - 58, 8, '#f2c96b');
+  CIRC(c, '#ffffff', x + 125, G - 59, 5); R(c, '#f2c14e', x + 129, G - 61, 4, 2); R(c, '#d84b3c', x + 124, G - 66, 3, 3); R(c, '#1b1a24', x + 126, G - 60, 1, 1);
+  BOX(c, '#c62828', x + 4, G - 48, 132, 8); T(c, 'BURGERS . PIZZA . CHIPS', x + 70, G - 48, 8, '#ffffff', 'center', false);
+  BOX(c, '#d9d7d1', x + 8, G - 40, 126, 40); for (let i = 0; i < 8; i++) R(c, '#c6c3bb', x + 8, G - 38 + i * 5, 126, 1);
+  BOX(c, '#c62828', x + 8, G - 40, 3, 40); BOX(c, '#c62828', x + 131, G - 40, 3, 40);
+  BOX(c, '#2b2b30', x + 16, G - 36, 24, 36); R(c, '#e7c35a', x + 19, G - 30, 18, 2); R(c, '#e7c35a', x + 19, G - 24, 18, 2);
+  BOX(c, '#46505a', x + 46, G - 36, 80, 26); R(c, '#e7c35a', x + 62, G - 30, 48, 2); R(c, '#e7c35a', x + 58, G - 24, 56, 3);
 } };
 
 L.sixthform = { n: 'Luton Sixth Form College', w: 244, d(c, x, G) {
@@ -887,9 +887,9 @@ L.cycleking = { n: 'Cycle King', w: 344, d(c, x, G) {
 L.toros = { n: "Toro's Steakhouse", w: 220, d(c, x, G) {
   const B = '#6a4234', BL = '#5a382c', WH = '#efece4';
   c.save(); c.translate(0, -18);
-  BRICK(c, x, G - 136, 200, 88, B, BL); R(c, OUT, x - 1, G - 137, 202, 1); R(c, OUT, x - 1, G - 136, 1, 88); BOX(c, WH, x - 2, G - 142, 204, 8); R(c, '#d8d4ca', x - 2, G - 136, 204, 2);
-  for (const [px, pw] of [[x + 20, 40], [x + 120, 44]]) { BOX(c, WH, px, G - 90, pw, 42); P(c, WH, [[px - 4, G - 90], [px + pw / 2, G - 100], [px + pw + 4, G - 90]], true); R(c, '#d8d4ca', px, G - 88, pw, 2); }
-  for (let r = 0; r < 2; r++) for (let i = 0; i < 5; i++) { const wx = x + 10 + i * 40, wy = r ? G - 85 : G - 129; WIN(c, wx, wy, 16, r ? 31 : 22, '#f4f2ec', '#9fb7c9'); R(c, WH, wx - 2, wy + (r ? 31 : 22), 20, 3); }
+  BRICK(c, x, G - 178, 200, 130, B, BL); R(c, OUT, x - 1, G - 179, 202, 1); R(c, OUT, x - 1, G - 178, 1, 130); BOX(c, WH, x - 2, G - 184, 204, 8); R(c, '#d8d4ca', x - 2, G - 178, 204, 2);
+  for (const [px, pw] of [[x + 20, 40], [x + 120, 44]]) { BOX(c, WH, px, G - 108, pw, 60); P(c, WH, [[px - 4, G - 108], [px + pw / 2, G - 120], [px + pw + 4, G - 108]], true); R(c, '#d8d4ca', px, G - 106, pw, 2); }
+  for (let r = 0; r < 2; r++) for (let i = 0; i < 5; i++) { const wx = x + 10 + i * 40, wy = r ? G - 102 : G - 166; WIN(c, wx, wy, 16, r ? 40 : 36, '#f4f2ec', '#9fb7c9'); R(c, WH, wx - 2, wy + (r ? 40 : 36), 20, 3); }
   for (let i = 0; i < 25; i++) R(c, WH, x + 2 + i * 8, G - 52, 4, 2);
   // shopfront sign: black fascia with a thin gold frame, bull head, TORO'S in red with a white edge, STEAKHOUSE in white
   BOX(c, '#1f1d1e', x - 2, G - 50, 204, 24); R(c, '#c9a64a', x, G - 48, 200, 1); R(c, '#c9a64a', x, G - 29, 200, 1);
@@ -1021,7 +1021,7 @@ const EX = {
   periperi(c, x, G) { for (let i = 0; i < 6; i++) CIRC(c, '#fff4cc', x + 74 + i * 18, G - 47, 1); for (let i = 0; i < 5; i++) { BOX(c, '#22252b', x + 76 + i * 20, G - 44, 16, 6); R(c, i % 2 ? '#e0281a' : '#f2c14e', x + 78 + i * 20, G - 42, 12, 2); }
     R(c, '#f4f6c8', x + 178, G - 56, 3, 3); BOX(c, '#e8e8e8', x + 66, G - 124, 6, 6); R(c, '#e0a020', x + 152, G - 124, 6, 8); CAR(c, x + 168, G, '#1f2430'); R(c, 'rgba(255,60,40,.25)', x + 64, G - 82, 116, 18); },
   krispy(c, x, G) {
-    for (let i = 0; i < 6; i++) R(c, '#e7c35a', x + 56 + i * 16, G - 34, 10, 1); R(c, '#4caf50', x + 96, G - 20, 6, 6); },
+    for (let i = 0; i < 5; i++) R(c, '#e7c35a', x + 50 + i * 15, G - 34, 9, 1); R(c, '#4caf50', x + 84, G - 20, 6, 6); },
   uob(c, x, G) { R(c, '#5f9e3c', x + 80, G - 6, 110, 6); R(c, '#4f8a33', x + 84, G - 2, 100, 2); for (let i = 0; i < 9; i++) BOLL(c, x + 86 + i * 12, G); BIRCH(c, x + 30, G); BIRCH(c, x + 96, G); PERSON(c, x + 150, G - 6, '#1a1a1e'); },
   sixthform(c, x, G) { LAMP(c, x - 6, G, 80); for (let i = 0; i < 6; i++) R(c, '#2e8b57', x + 2 + i * 4, G - 26, 2, 26); R(c, '#2e8b57', x + 2, G - 26, 24, 2); P(c, '#e8e8e8', [[x - 2, G - 64], [x + 46, G - 64], [x + 40, G - 58], [x + 4, G - 58]], true);
     PERSON(c, x + 40, G, '#9aa3ad', '#2a2a33'); PERSON(c, x + 74, G, '#3a6ea5'); PERSON(c, x + 120, G, '#5a3a2e', '#1a1a1e', '#c58c5c', '#1f6f6a'); PERSON(c, x + 166, G, '#2f4a8a'); BIN(c, x + 128, G, '#8a9098'); BIN(c, x + 98, G, '#8a9098'); for (let i = 0; i < 3; i++) P(c, i === 1 ? '#d8262f' : '#f4f2ec', [[x + 174 + i * 7, G - 64], [x + 180 + i * 7, G - 72], [x + 183 + i * 7, G - 72], [x + 177 + i * 7, G - 64]]); },
@@ -1124,10 +1124,10 @@ const SHARP = {
     BOX(c, '#151618', X(-4), Y(88), Math.round(96 * f), 17); T(c, 'CHAIIKHANA', X(44), Y(88) + 4, 8, '#f4f4f2', 'center', true);
     T(c, 'ORDER', X(34), Y(30) + 2, 8, '#e0458a', 'center', true); },
 };
-const SCALE = { lutonhoo: 1.5, leagrave: .64, currys: 1.15, masjid: 1.1, suffa: .9, oak: .82, chaiikhana: .85, spudkingz: .64, nadeem: 1.2, chaiiwala: 1.1, frasers: 1.3, stmarys: 1.02, hatfactory: 1.3 };
+const SCALE = { cycleking: 1.3, topspizza: .82, alquds: .82, kahwa: .82, gna: .82, toros: .82, krispy: .82, lutonhoo: 1.5, currys: 1.15, masjid: 1.1, suffa: .9, oak: .82, chaiikhana: .85, spudkingz: .64, nadeem: 1.2, chaiiwala: 1.1, frasers: 1.3, stmarys: 1.02, hatfactory: 1.3 };
 Object.keys(SCALE).forEach(k => { const f = SCALE[k], d0 = L[k].d, w0 = L[k].w, M = 80, H = 320; L[k].w = Math.round(w0 * f);
   L[k].d = (c, x, G) => { const oc = document.createElement('canvas'); oc.width = w0 + M * 2; oc.height = H; const o = oc.getContext('2d'); d0(o, M, H - 10);
-    c.save(); c.imageSmoothingEnabled = k === 'leagrave'; c.imageSmoothingQuality = 'high'; c.drawImage(oc, 0, 0, oc.width, H - 10, x - M * f, G - (H - 10) * f, oc.width * f, (H - 10) * f); c.restore(); if (SHARP[k]) SHARP[k](c, x, G, f); }; });
+    c.save(); c.imageSmoothingEnabled = k === 'leagrave' || f < 1; c.imageSmoothingQuality = 'high'; c.drawImage(oc, 0, 0, oc.width, H - 10, x - M * f, G - (H - 10) * f, oc.width * f, (H - 10) * f); c.restore(); if (SHARP[k]) SHARP[k](c, x, G, f); }; });
 
 /* things drawn after scaling, so they keep their own size */
 const POST = {
@@ -1175,8 +1175,8 @@ const TERR = (wall, roof, door, n = 4, painted) => ({ w: n * 58, d(c, x, G) {
     if (painted) { BOX(c, col, hx, G - 66, 58, 66); R(c, SH(col, .9), hx + 56, G - 66, 2, 66); } else BRICK(c, hx, G - 66, 58, 66, col, SH(col, .86)); R(c, OUT, hx - 1, G - 67, 60, 1); R(c, '#e8e0cf', hx, G - 40, 58, 2);
     WIN(c, hx + 7, G - 60, 16, 16); WIN(c, hx + 33, G - 60, 16, 16); BAY(c, hx + 5, G, 26, 22); DOOR(c, hx + 38, G, door[k % door.length]); R(c, '#e8e0cf', hx + 36, G - 28, 16, 2); WALL(c, hx, G, 26); }
   ROOF(c, x, G, n * 58, 66, 16, roof);
-  for (let k = 0; k < n; k += 2) CHIM(c, x + k * 58 + 50, G - 98);
-  R(c, '#3a3d44', x + 56, G - 120, 1, 24); R(c, '#3a3d44', x + 50, G - 118, 13, 1); R(c, '#3a3d44', x + 52, G - 114, 9, 1);
+  for (let k = 1; k < n; k++) if (n < 4 || k % 2) CHIM(c, x + k * 58 - 5, G - 98);
+  R(c, '#3a3d44', x + 63, G - 120, 1, 24); R(c, '#3a3d44', x + 57, G - 118, 13, 1); R(c, '#3a3d44', x + 59, G - 114, 9, 1);
   BIN(c, x + n * 58 - 12, G, '#2f6f3a');
 } });
 HOUSES.rowGrey = TERR('#9a9a96', '#3e4248', ['#2f4fa8', '#f4f2ec', '#8a1d2a']);
