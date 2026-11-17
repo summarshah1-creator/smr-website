@@ -212,21 +212,21 @@ L.sixthform = { n: 'Luton Sixth Form College', w: 220, d(c, x, G) {
 } };
 
 
-L.masjid = { n: 'Luton Central Mosque', w: 230, d(c, x, G) {
+L.masjid = { n: 'Luton Central Mosque', w: 270, d(c, x, G) {
   const B = '#b8483a', BL = '#a33d31';
   BRICK(c, x, G - 120, 100, 120, B, BL); R(c, OUT, x - 1, G - 121, 102, 1); R(c, OUT, x - 1, G - 120, 1, 120);
   for (let i = 0; i < 8; i++) { R(c, SH(B, .88), x + 6 + i * 12, G - 112, 6, 60); CIRC(c, SH(B, .88), x + 9 + i * 12, G - 112, 3); }
   R(c, SH(B, 1.12), x, G - 120, 100, 3); for (let i = 0; i < 10; i++) R(c, SH(B, .8), x + 4 + i * 10, G - 117, 6, 2);
   BOX(c, '#c9a36a', x + 40, G - 26, 20, 26); CIRC(c, B, x + 50, G - 30, 13); CIRC(c, SH(B, .8), x + 50, G - 30, 11); R(c, '#c9a36a', x + 40, G - 30, 20, 4); R(c, '#3a2a20', x + 44, G - 22, 12, 22);
   for (const wx of [x + 10, x + 76]) { R(c, OUT, wx - 1, G - 45, 14, 24); R(c, '#a7b9a8', wx, G - 44, 12, 23); CIRC(c, OUT, wx + 6, G - 44, 7); CIRC(c, '#a7b9a8', wx + 6, G - 44, 6); R(c, '#e8e0cf', wx + 5, G - 50, 1, 28); }
-  CIRC(c, OUT, x + 152, G - 96, 33); CIRC(c, '#5d7a4a', x + 152, G - 96, 32); CIRC(c, '#6f8f58', x + 144, G - 104, 16); R(c, '#e8e0cf', x + 151, G - 140, 2, 12); CIRC(c, '#d9b44a', x + 152, G - 140, 3); CIRC(c, '#e8e0cf', x + 153, G - 141, 2);
-  BRICK(c, x + 100, G - 92, 110, 92, B, BL); R(c, OUT, x + 99, G - 93, 112, 1);
-  BOX(c, '#ecebe7', x + 100, G - 102, 110, 12); c.font = '700 10px Amiri'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = '#1f5a34'; c.direction = 'rtl'; c.fillText('\u0644\u0627 \u0625\u0644\u0647 \u0625\u0644\u0627 \u0627\u0644\u0644\u0647 \u0645\u062d\u0645\u062f \u0631\u0633\u0648\u0644 \u0627\u0644\u0644\u0647', x + 155, G - 96); c.direction = 'ltr'; 
-  for (let i = 0; i < 5; i++) { const wx = x + 106 + i * 20; R(c, OUT, wx - 1, G - 80, 14, 22); R(c, '#a7b9a8', wx, G - 79, 12, 21); CIRC(c, OUT, wx + 6, G - 79, 7); CIRC(c, '#a7b9a8', wx + 6, G - 79, 6); R(c, '#e8e0cf', wx, G - 70, 12, 1); R(c, '#e8e0cf', wx + 5, G - 85, 1, 26); R(c, SH(B, .8), wx - 2, G - 88, 16, 2); }
-  R(c, SH(B, .85), x + 100, G - 52, 110, 3);
-  R(c, OUT, x + 209, G - 177, 16, 177); BRICK(c, x + 210, G - 176, 14, 176, '#b04536', '#9a3b2e');
-  BOX(c, '#9a3b2e', x + 206, G - 160, 22, 6); BOX(c, '#9a3b2e', x + 208, G - 182, 18, 6); BOX(c, '#b04536', x + 212, G - 194, 10, 12); R(c, '#3a3d44', x + 216, G - 204, 2, 10); CIRC(c, '#d9b44a', x + 217, G - 207, 2);
-  for (let i = 0; i < 9; i++) { BRICK(c, x - 10 + i * 27, G - 22, 6, 22, '#c0503f', '#a8443a'); R(c, OUT, x - 10 + i * 27, G - 23, 6, 1); R(c, '#e8d8c0', x - 11 + i * 27, G - 24, 8, 2); if (i < 8) { BRICK(c, x - 4 + i * 27, G - 12, 21, 12, '#c0503f', '#a8443a'); for (let k = 0; k < 6; k++) R(c, '#2a2a2e', x - 2 + i * 27 + k * 3, G - 22, 1, 10); R(c, '#2a2a2e', x - 4 + i * 27, G - 22, 21, 1); } }
+  CIRC(c, OUT, x + 175, G - 96, 33); CIRC(c, '#5d7a4a', x + 175, G - 96, 32); CIRC(c, '#6f8f58', x + 167, G - 104, 16); R(c, '#e8e0cf', x + 174, G - 140, 2, 12); CIRC(c, '#d9b44a', x + 175, G - 140, 3); CIRC(c, '#e8e0cf', x + 176, G - 141, 2);
+  BRICK(c, x + 100, G - 92, 150, 92, B, BL); R(c, OUT, x + 99, G - 93, 152, 1);
+  BOX(c, '#ecebe7', x + 100, G - 102, 150, 12); c.font = '700 10px Amiri'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = '#1f5a34'; c.direction = 'rtl'; c.fillText('\u0644\u0627 \u0625\u0644\u0647 \u0625\u0644\u0627 \u0627\u0644\u0644\u0647 \u0645\u062d\u0645\u062f \u0631\u0633\u0648\u0644 \u0627\u0644\u0644\u0647', x + 175, G - 96); c.direction = 'ltr'; 
+  for (let i = 0; i < 7; i++) { const wx = x + 106 + i * 20; R(c, OUT, wx - 1, G - 80, 14, 22); R(c, '#a7b9a8', wx, G - 79, 12, 21); CIRC(c, OUT, wx + 6, G - 79, 7); CIRC(c, '#a7b9a8', wx + 6, G - 79, 6); R(c, '#e8e0cf', wx, G - 70, 12, 1); R(c, '#e8e0cf', wx + 5, G - 85, 1, 26); R(c, SH(B, .8), wx - 2, G - 88, 16, 2); }
+  R(c, SH(B, .85), x + 100, G - 52, 150, 3);
+  R(c, OUT, x + 249, G - 231, 16, 231); BRICK(c, x + 250, G - 230, 14, 230, '#b04536', '#9a3b2e');
+  BOX(c, '#9a3b2e', x + 246, G - 200, 22, 6); BOX(c, '#9a3b2e', x + 246, G - 140, 22, 5); BOX(c, '#9a3b2e', x + 248, G - 236, 18, 6); BOX(c, '#b04536', x + 252, G - 248, 10, 12); R(c, '#3a3d44', x + 256, G - 258, 2, 10); CIRC(c, '#d9b44a', x + 257, G - 261, 2);
+  for (let i = 0; i < 11; i++) { BRICK(c, x - 10 + i * 27, G - 22, 6, 22, '#c0503f', '#a8443a'); R(c, OUT, x - 10 + i * 27, G - 23, 6, 1); R(c, '#e8d8c0', x - 11 + i * 27, G - 24, 8, 2); if (i < 10) { BRICK(c, x - 4 + i * 27, G - 12, 21, 12, '#c0503f', '#a8443a'); for (let k = 0; k < 6; k++) R(c, '#2a2a2e', x - 2 + i * 27 + k * 3, G - 22, 1, 10); R(c, '#2a2a2e', x - 4 + i * 27, G - 22, 21, 1); } }
 } };
 
 L.tesco = { n: 'Tesco Extra', w: 240, d(c, x, G) {
