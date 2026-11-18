@@ -1080,7 +1080,10 @@ body[data-brand="digital"]::after{content:"";position:fixed;inset:0;pointer-even
 #v-digital .logo-tile{border-radius:4px;background:transparent;border:0;border-left:1px solid rgba(255,255,255,.1)}
 #v-digital .logo-tile img{filter:grayscale(1) brightness(1.5);opacity:.8}
 @media(min-width:1100px){
- #v-digital .d-hero .hero-grid{grid-template-columns:1.3fr .7fr!important;align-items:end}
+ #v-digital .d-hero .hero-grid{grid-template-columns:1fr!important}
+ #v-digital .d-hero h1 .line+.line{margin-top:.02em}
+ #v-digital .d-hero{min-height:0!important;padding-top:90px;padding-bottom:20px}
+ #v-digital .d-hero .hero-copy,#v-digital .d-hero .hero-grid>div:first-child{max-width:980px}
  #v-digital .d-shot{margin:0 0 -30px;width:300px}
  #v-digital .d-hero h1{font-size:clamp(80px,7.4vw,120px)}
  #v-digital .d-nums{grid-template-columns:repeat(4,1fr)}
@@ -1353,7 +1356,6 @@ setTimeout(done,3700);})();
         </div>
         <div class="trust"><span><svg data-i="check"></svg>Your own brand</span><span><svg data-i="check"></svg>Back end built in</span><span><svg data-i="check"></svg>No commission</span></div>
       </div>
-      <div class="d-shot"><img src="assets/apps/snw-home.webp" alt="Smash N Wings ordering app" width="540" height="1169"><div class="d-note">Smash N Wings, Bedford<small>Built by SMR Digital</small></div></div>
       <div class="flow" aria-label="Your customers' app, your shop tablet and your own dashboard, all connected">
         <svg class="fl-path" viewBox="0 0 600 560" preserveAspectRatio="none" aria-hidden="true" style="display:none"><defs><linearGradient id="flg" x1="0" x2="1"><stop offset="0" stop-color="var(--a1)"/><stop offset="1" stop-color="var(--a2)"/></linearGradient><path id="flp" d="M478 470 C 430 520, 380 520, 342 480 M 200 270 C 210 220, 240 200, 300 190"/></defs><use href="#flp" fill="none" stroke="url(#flg)" stroke-width="2.5" stroke-dasharray="6 9" class="fl-dash"/></svg>
         <div class="fl-step fl-cust">
