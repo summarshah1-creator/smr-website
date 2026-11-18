@@ -126,7 +126,7 @@ try {
         if (fk_rude($name)) json_out(['error' => "That name isn't allowed. Please use your real name or a nickname.", 'rude' => true], 400);
         $rename = !empty($in['rename']) && fk_pid($in['pid'] ?? '') !== '';
         if ($rename) { $k = 'fk_score:' . fk_ip(); if (too_many($k, 15, 3600)) json_out(['error' => 'Too many changes this hour.'], 429); note_fail($k); $pid = fk_pid($in['pid']); fk_db()->prepare('UPDATE fk_scores SET name = ? WHERE pid = ?')->execute([$name, $pid]); json_out(['ok' => true] + fk_board($pid)); }
-        if ($score < 1 || $score > 999) json_out(['error' => 'Score not accepted.'], 400);
+        if ($score < 1 || $score > 9999) json_out(['error' => 'Score not accepted.'], 400);
         $k = 'fk_score:' . fk_ip();
         if (too_many($k, 15, 3600)) json_out(['error' => 'Too many scores this hour. Try again later.'], 429);
         note_fail($k);
