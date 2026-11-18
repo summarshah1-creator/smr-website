@@ -26,6 +26,7 @@ h3{font:700 14px Sora,Manrope,sans-serif;margin:14px 0 8px}
 .opts{display:flex;gap:6px}.opts button{flex:1;background:#12121e;color:#c9c9e0;border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:9px;font:700 13px Manrope,sans-serif}.opts button.on{background:#f2f2fa;color:#08080f}
 .save{width:100%;margin-top:6px;background:linear-gradient(110deg,#5b5bff,#d63bff);color:#fff;border:0;border-radius:12px;padding:12px;font:800 14px Manrope,sans-serif}.ok{color:#3ddc97;font-size:13px;text-align:center;margin-top:8px;min-height:16px}
 .tip{background:#12121e;border:1px dashed rgba(255,255,255,.18);border-radius:12px;padding:10px 12px;font-size:12.5px;color:#c9c9e0;margin-top:12px}.tip code{color:#d9b3ff}
+.addsc{display:flex;flex-wrap:wrap;gap:8px}.addsc input,.addsc select{flex:1 1 120px;background:#0d0d16;color:#fff;border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:10px;font:inherit}.addsc button{flex:1 1 100%}.addsc .tm{flex:1 1 100%;color:#ff8a8a}
 </style></head><body>
 <div class="seg"><button data-v="stats" class="on">Stats</button><button data-v="inbox">Inbox<span id="nb"></span></button><button data-v="board">Leaderboard</button><button data-v="set">Settings</button></div>
 <div id="v"></div>
@@ -66,9 +67,16 @@ function draw(){var h='';if(V==='stats'){$('v').innerHTML=drawStats();return}if(
   if(!D.recs.length)h+='<p class="empty">No recommendations yet.</p>';
   D.recs.forEach(function(r){var q=encodeURIComponent(r.name+' '+(r.address||'')+' Luton');h+='<div class="card'+(r.done?' done':'')+'"><b>'+esc(r.name)+'</b>'+(r.address?'<div class="ad">'+esc(r.address)+'</div>':'')+(r.note?'<div class="nt">'+esc(r.note)+'</div>':'')+'<div class="tm">'+when(r.at)+'</div><div class="row"><a href="https://www.google.com/maps/search/?api=1&query='+q+'" target="_blank" rel="noopener">Map</a><button data-done="'+r.id+'" data-u="'+(r.done?1:0)+'">'+(r.done?'Mark new':'Done')+'</button><button data-del="'+r.id+'">Delete</button></div></div>'});}
  else{var tb=function(rows,t){var s='<h2>'+t+'</h2><div class="card"><table class="lb">';if(!rows.length)s+='<tr><td colspan="3" class="empty">No scores yet.</td></tr>';rows.forEach(function(r,i){s+='<tr><td>'+(i+1)+'</td><td>'+esc(r.name)+'<div class="tm" style="margin:0">'+when(r.at)+'</div></td><td class="s">'+r.score+'</td><td style="width:26px"><button title="Remove" data-sd="'+r.id+'">&times;</button></td></tr>'});return s+'</table></div>'};
-  h=tb(D.today,'Today')+tb(D.all,'All time')+'<p class="mut">'+D.entries+' names entered so far. Tap &times; to remove a rude name or a fake score.</p><p class="mut"><a class="lk" href="/flappy/" target="_blank">Open the game</a></p>';}
+  var fl=D.flags||[],fh='';if(fl.length){fh='<h2>Scores to check ('+fl.length+')</h2><p class="mut">These came in faster than the game allows. Add them if you know they are real.</p>';fl.forEach(function(f){var mm=function(x){return x<0?'not timed':Math.floor(x/60)+'m '+(x%60)+'s'};fh+='<div class="card"><b>'+esc(f.name)+' &middot; '+f.score+'</b><div class="tm">'+when(f.at)+' &middot; played '+mm(f.took)+', needs at least '+mm(f.need)+'</div><div class="row"><button data-fok="'+f.id+'">Add to leaderboard</button><button data-fdel="'+f.id+'">Ignore</button></div></div>'})}
+  var add='<h2>Add a score</h2><div class="card addsc"><input id="asN" maxlength="14" placeholder="Name"><input id="asS" type="number" min="1" max="9999" placeholder="Score"><select id="asD"><option value="">Today</option><option value="old">Earlier (all-time only)</option></select><button id="asB">Add</button><div id="asE" class="tm"></div></div>';
+  h=fh+tb(D.today,'Today')+tb(D.all,'All time')+add+'<p class="mut">'+D.entries+' names entered so far. Tap &times; to remove a rude name or a fake score.</p><p class="mut"><a class="lk" href="/flappy/" target="_blank">Open the game</a></p>';}
  $('v').innerHTML=h}
 document.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
+ if(b.dataset.fok){api('flag_ok',{id:+b.dataset.fok}).then(load);return}
+ if(b.dataset.fdel){api('flag_del',{id:+b.dataset.fdel}).then(load);return}
+ if(b.id==='asB'){var nm=$('asN').value.trim(),sc=+$('asS').value,d=$('asD').value;if(!nm||!(sc>=1&&sc<=9999)){$('asE').textContent='Add a name and a score from 1 to 9999.';return}
+  var dy='';if(d==='old'){var x=new Date(Date.now()-86400000*2);dy=x.toISOString().slice(0,10)}
+  b.disabled=true;api('score_add',{name:nm,score:sc,day:dy}).then(function(j){b.disabled=false;if(j&&j.error){$('asE').textContent=j.error;return}load()});return}
  if(b.dataset.v){V=b.dataset.v;document.querySelectorAll('.seg button').forEach(function(x){x.classList.toggle('on',x===b)});draw();return}
  if(b.dataset.r!=null){RANGE=+b.dataset.r;ST=null;draw();loadStats();return}
  if(b.dataset.d){document.querySelectorAll('#sDiff button').forEach(function(x){x.classList.toggle('on',x===b)});return}

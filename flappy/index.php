@@ -370,7 +370,7 @@ function spawnCar(x, key) { const sp = key ? carSprites.find(s => s.k === key) :
 
 function flap() {
   if (state === 'menu' || state === 'over') return;
-  if (state === 'ready') { state = 'play'; $('tap').classList.add('hide'); }
+  if (state === 'ready') { state = 'play'; $('tap').classList.add('hide'); if (window.LB && LB.startRun) LB.startRun(); }
   if (state === 'play') { bird.vy = -175; bird.frame = 0; bird.ft = 0; SFX.flap(); }
 }
 function start() { reset(); state = 'ready'; TRACK.send('play'); $('place').classList.remove('on'); placeTimer = 0; $('start').classList.add('hide'); $('over').classList.add('hide'); $('score').classList.remove('hide'); $('score').textContent = '0'; $('tap').classList.remove('hide'); }
@@ -418,7 +418,7 @@ muteUI(SFX.on);
 document.querySelectorAll('.mute').forEach(m => m.addEventListener('click', e => { e.stopPropagation(); const on = SFX.toggle(); if (on) TRACK.send('sound_on'); muteUI(on); const t = $('shT'); t.textContent = on ? 'SOUND ON' : 'SOUND OFF'; t.classList.add('on'); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('on'), 1300); }));
 
 /* ---------- leaderboard: today + all time (online on the SMR website, this phone only elsewhere) ---------- */
-const LB = (() => { const api = 'api.php'; let online = null, data = { today: [], all: [] }, tab = 'today', top = 10;
+const LB = (() => { const api = 'api.php'; let run = '', runFor = ''; const startRun = () => { run = ''; fetch(api + '?a=run', { method: 'POST' }).then(r => r.json()).then(j => { if (j && j.run) run = j.run; }).catch(() => {}); }; let online = null, data = { today: [], all: [] }, tab = 'today', top = 10;
   // the device remembers the player: name + a random player id (localStorage, with a cookie copy). Forget = asked again.
   const ck = k => { const m = document.cookie.match(new RegExp('(?:^|; )' + k + '=([^;]*)')); return m ? decodeURIComponent(m[1]) : ''; };
   const keep = (k, v) => { store.set(k, v); try { document.cookie = k + '=' + encodeURIComponent(v) + '; max-age=315360000; path=/; samesite=lax'; } catch (e) {} };
@@ -438,12 +438,12 @@ const LB = (() => { const api = 'api.php'; let online = null, data = { today: []
   const myBest = list => { const r = list.find(r => r.mine); return r ? r.score : 0; };
   let pending = 0, renaming = false;
   const submit = (nm, sc, rename) => {
-    if (online) return fetch(api + '?a=score', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: nm, score: sc, pid, rename: rename ? 1 : 0 }) }).then(r => r.json()).then(j => { if (j.error) throw new Error(j.error); data = j; return j; });
+    if (online) return fetch(api + '?a=score', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: nm, score: sc, pid, rename: rename ? 1 : 0, run: runFor }) }).then(r => r.json()).then(j => { if (j.error) throw new Error(j.error); data = j; return j; });
     const l = localLoad(); if (rename) l.forEach(r => { if (r.pid === pid) r.name = nm; }); else l.push({ name: nm, score: sc, day: day(), pid }); try { localStorage.setItem('fk_board', JSON.stringify(l.sort((a, b) => b.score - a.score).slice(0, 200))); } catch (e) {} localLoad(); return Promise.resolve(data); };
   const title = sc => { const rt = rankOf(data.today, sc), ra = rankOf(data.all, sc); return ra === 1 ? '\u{1F3C6} NEW ALL-TIME HIGH SCORE!' : ra && ra <= 10 ? '\u{1F3C6} #' + ra + ' OF ALL TIME!' : rt === 1 ? '\u{1F3C6} TOP SCORE TODAY!' : rt ? '\u{1F3C6} #' + rt + ' TODAY!' : ra ? '\u{1F3C6} #' + ra + ' OF ALL TIME!' : ''; };
   const showSaved = sc => { $('nbT').textContent = title(sc) || '\u{1F3C6} ON THE LEADERBOARD!'; $('nbS').innerHTML = 'Saved as <span class="nbn">' + esc(name) + '</span><br><a href="#" id="nbChg">Not you? Change name</a>'; $('nameBox').classList.add('saved'); $('nameBox').classList.remove('hide');
     $('nbChg').onclick = e => { e.preventDefault(); e.stopPropagation(); renaming = true; $('nbS').textContent = 'Change the name on your scores'; $('nbI').value = name; $('nameBox').classList.remove('saved'); $('nbI').focus(); }; };
-  const check = sc => { $('nameBox').classList.add('hide'); $('nameBox').classList.remove('saved'); $('nbE').textContent = ''; pending = 0; renaming = false; if (sc < 1) return;
+  const check = sc => { runFor = run; $('nameBox').classList.add('hide'); $('nameBox').classList.remove('saved'); $('nbE').textContent = ''; pending = 0; renaming = false; if (sc < 1) return;
     const go = () => { const rt = rankOf(data.today, sc), ra = rankOf(data.all, sc); if (!rt && !ra) return;
       if (name) { if (sc <= myBest(data.today) && sc <= myBest(data.all)) return; // nothing new to save
         const t = title(sc); submit(name, sc).then(() => { TRACK.send('name', sc); $('nbT').textContent = t; render(); showSaved(sc); $('nbT').textContent = t || $('nbT').textContent; }).catch(() => {}); return; }
@@ -462,13 +462,13 @@ const LB = (() => { const api = 'api.php'; let online = null, data = { today: []
   document.querySelectorAll('#lbM .tops button').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); top = +b.dataset.top; render(); }));
   $('lbM').querySelector('.x').addEventListener('click', e => { e.stopPropagation(); $('lbM').classList.add('hide'); });
   $('lbM').addEventListener('pointerdown', e => { e.stopPropagation(); if (e.target === $('lbM')) $('lbM').classList.add('hide'); });
-  load(); return { check, load, get online() { return online; } }; })(); window.LB = LB;
+  load(); return { check, load, startRun, get online() { return online; } }; })(); window.LB = LB;
 
 
 /* ---------- always the latest version, also when saved to the Home Screen ----------
    version.json is rewritten on every deploy; when it changes the page reloads itself (straight away on the menu,
    or right after the current game ends), with a cache-busting query so the phone fetches the new HTML. */
-(() => { const BUILD = '20261117233804'; let pending = false;
+(() => { const BUILD = '20261118121125'; let pending = false;
   const go = () => { let last = 0; try { last = +sessionStorage.getItem('fk_upd_t') || 0; } catch (e) {} if (Date.now() - last < 60000) return;   // never loop: at most one reload a minute
     try { sessionStorage.setItem('fk_upd_t', String(Date.now())); } catch (e) {} location.replace(location.pathname + '?u=' + Date.now() + location.hash); };
   const check = () => fetch('version.json?ts=' + Date.now(), { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(j => {
