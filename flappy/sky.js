@@ -124,6 +124,23 @@
     if (cut) { const sw = Math.round(Math.sqrt(Math.max(0, r * r - dy * dy))) ; const sx0 = cx + cut - sw, sx1 = cx + cut + sw; if (cut > 0) x1 = Math.min(x1, sx0); else x0 = Math.max(x0, sx1); }
     if (x1 > x0) c.fillRect(x0, cy + dy, x1 - x0, 1); } }
 
+  // the moon drawn in detail at 8x (seas, craters, soft edge, the real phase with a soft line between day and night) and shrunk onto the sky
+  let moonC = null, moonP = -1;
+  function moonArt(p) { const q = Math.round(p * 120) / 120; if (moonC && q === moonP) return moonC; moonP = q; const R = 80, D = R * 2 + 4; if (!moonC) { moonC = document.createElement('canvas'); moonC.width = moonC.height = D; }
+    const g = moonC.getContext('2d'), im = g.createImageData(D, D), d = im.data, k = Math.cos(q * 2 * Math.PI), wax = q < .5;
+    const seas = [[-.32, -.36, .3, .24], [.08, -.3, .2, .17], [.3, -.05, .22, .2], [.62, -.22, .13, .15], [-.55, .02, .3, .42], [.1, .2, .16, .12], [-.2, .42, .22, .12], [.36, .36, .12, .1]];
+    const craters = [[-.15, .68, .07], [.55, .5, .05], [-.62, -.5, .05], [.2, -.62, .04], [-.4, .3, .035], [.68, .15, .035], [-.05, -.05, .03]];
+    const hash = (x, y) => { const v = Math.sin(x * 12.9898 + y * 78.233) * 43758.5453; return v - Math.floor(v); };
+    for (let py = 0; py < D; py++) for (let px = 0; px < D; px++) { const x = (px - D / 2 + .5) / R, y = (py - D / 2 + .5) / R, rr = x * x + y * y; if (rr > 1.02) continue;
+      const edge = Math.max(0, Math.min(1, (1 - Math.sqrt(rr)) * R / 1.4 + .5));
+      let v = 1; for (const [sx, sy, ax, ay] of seas) { const e = ((x - sx) / ax) ** 2 + ((y - sy) / ay) ** 2; if (e < 1) v -= .17 * (1 - e * e); }
+      for (const [cx, cy, cr] of craters) { const dd = Math.hypot(x - cx, y - cy) / cr; if (dd < 1.25) v += dd < .8 ? -.09 : dd < 1.05 ? .1 : 0; }
+      v += (hash(px >> 2, py >> 2) - .5) * .05; v *= 1 - .18 * rr;                      // a little grain, darker towards the edge
+      const h = Math.sqrt(Math.max(0, 1 - y * y)), side = wax ? x : -x, t2 = (side - k * h) / .09, litK = Math.max(0, Math.min(1, t2 * .5 + .5));
+      const b = .16 + .84 * litK, o = (py * D + px) * 4;                                 // the dark part keeps a faint earthshine
+      d[o] = Math.min(255, 245 * v * b + 18 * (1 - litK)); d[o + 1] = Math.min(255, 240 * v * b + 22 * (1 - litK)); d[o + 2] = Math.min(255, 222 * v * b + 38 * (1 - litK)); d[o + 3] = 255 * edge * (.35 + .65 * Math.max(litK, .0)); }
+    g.putImageData(im, 0, 0); return moonC; }
+
   S.drawSky = (c, W, OY, GY, t, SC) => {
     const g = c.createLinearGradient(0, -OY, 0, GY); g.addColorStop(0, css(S.top)); g.addColorStop(1, css(S.bot)); c.fillStyle = g; c.fillRect(0, -OY, W, GY + OY);
     const clear = 1 - clamp((cur.cover - .35) / .5);
@@ -133,9 +150,7 @@
     // moon (real phase)
     const ma = clamp((S.n - .4) / .4) * clamp(1 - (cur.cover - .6) / .35); if (ma > .02) { const mx = Math.round(W * .26), my = Math.round(-OY + Math.max(36, OY * .5 + 20)), r = 9;
       c.globalAlpha = ma; const glow = c.createRadialGradient(mx, my, 4, mx, my, 34); glow.addColorStop(0, 'rgba(220,230,255,.25)'); glow.addColorStop(1, 'rgba(220,230,255,0)'); c.fillStyle = glow; c.fillRect(mx - 34, my - 34, 68, 68);
-      const p = S.phase == null ? .45 : S.phase, lit = (1 - Math.cos(p * 2 * Math.PI)) / 2;
-      if (lit > .04) { disc(c, mx, my, r, '#f3efdc'); c.fillStyle = '#d9d3bc'; c.fillRect(mx - 3, my - 3, 3, 2); c.fillRect(mx + 2, my + 2, 2, 2); c.fillRect(mx - 1, my + 4, 2, 1);
-        if (lit < .96) { const off = Math.round(2 * r * lit) * (p < .5 ? -1 : 1); disc(c, mx, my, r, css(mix(S.top, S.bot, .15)), 0); disc(c, mx, my, r, '#f3efdc', off); } }
+      const p = S.phase == null ? .45 : S.phase; c.imageSmoothingEnabled = true; c.drawImage(moonArt(p), mx - r - 1, my - r - 1, 2 * r + 2, 2 * r + 2); c.imageSmoothingEnabled = false;
       c.globalAlpha = 1; }
     // sun
     const su = clamp((S.alt + 3) / 3) * clamp(1 - (cur.cover - .55) / .35); if (su > .02) { const sx = Math.round(W * clamp(.5 + ((S.az == null ? 220 : S.az) - 180) / 200, .06, .94)), sy = Math.round(Math.max(-OY + 30, GY - 34 - S.alt * 7)), low = clamp(1 - S.alt / 12);
@@ -172,11 +187,11 @@
     frasers: { win: 'whole', winX: [0, .43], wholeA: 95, letters: false }, station: { win: 'whole' }, hatfactory: { win: 'none', letters: false, up: 3, upH: .8, upA: .3 },
     chaiiwala: { win: 'whole', whiteText: [[5, 72, 125, 106]], glow: [[140, 80, 235, 102], [248, 72, 282, 104]] }, chaiikhana: { board: 1 }, spudkingz: {}, miamicrispy: { board: 1, win: 'whole' }, masjid: { up: 4, upA: .45, upCol: [225, 240, 255], relight: .12 }, masjidali: { up: 3, upA: .3, upCol: [225, 240, 255], win: 'whole', wholeA: 120, letters: false },
     suffa: { up: 2, upA: .18, upCol: [225, 240, 255] }, gurdwara: { up: 4, upA: .4, upCol: [255, 205, 110], relight: .12 }, ldh: {}, lutonhoo: { up: 5, upA: .5, upCol: [255, 210, 150], relight: .1 }, foodbank: { win: 'whole' }, inspire: { win: 'whole', letters: false },
-    nadeem: { relight: .3, board: 1, glow: [[0, 118, 150, 152]], curtains: 1 }, oak: { letters: false }, periperi: { board: 1, win: 'whole' }, toros: {}, cycleking: { board: 1 }, gna: { board: 1 }, kahwa: { enclosed: 1 }, leagrave: { letters: false },
-    topspizza: { board: 1 }, alquds: { board: 1 }, kaya: {}, karwan: { board: 1 }, krispy: { board: 1, onlyTop: true },
+    nadeem: { relight: .3, winMinY: 56, board: 1, glow: [[0, 118, 150, 152]], curtains: 1 }, oak: { letters: false }, periperi: { board: 1, win: 'whole' }, toros: {}, cycleking: { board: 1 }, gna: { board: 1 }, kahwa: { enclosed: 1 }, leagrave: { letters: false },
+    topspizza: { board: 1, lit: [[0, 46, 180, 68]], whiteText: [[56, 56, 180, 68]] }, alquds: { board: 1 }, kaya: {}, karwan: { board: 1 }, krispy: { board: 1, onlyTop: true },
     tesco: { win: 'whole', board: 1 }, smr: { win: 'rooms', letters: false, maxBoardH: 1 }, currys: { win: 'whole', board: 1, boardMinH: 75, warm: [[110, 22, 135, 39, 0], [160, 29, 176, 39, 110], [221, 35, 247, 54, 0], [288, 41, 301, 52, 110]] }, bandq: { win: 'whole', board: 1, lit: [[166, 96, 274, 140]], whiteText: [[166, 96, 274, 140]] }, matalan: { win: 'whole', board: 1 }, lidl: { win: 'whole', board: 1 },
-    jdgyms: { win: 'whole' }, bigyellow: {}, grandbazar: { win: 'whole', board: 1 }, lewsey: { win: 'whole' }, venue: { up: 4, upA: .45, upCol: [255, 200, 150], relight: .1 }, chiltern: { board: 1, curtains: 1, whiteText: [[98, 43, 268, 69]] },
-    uob: { up: 2, upA: .18, upCol: [220, 230, 255] }, sixthform: { win: 'whole' }, wardown: { up: 1, upX: [.4, .75], upH: .6, upA: .15 }, stockwood: { up: 3, upA: .25 }, welcome: { up: 2, upA: .3 }, airport: { win: 'whole', winMaxY: 62 } };
+    jdgyms: { win: 'whole' }, bigyellow: {}, grandbazar: { win: 'whole', board: 1, wholeA: 120 }, lewsey: { win: 'whole' }, venue: { up: 4, upA: .45, upCol: [255, 200, 150], relight: .1 }, chiltern: { board: 1, curtains: 1, whiteText: [[98, 43, 268, 69]] },
+    uob: { up: 2, upA: .18, upCol: [220, 230, 255] }, sixthform: { win: 'whole', letters: false }, marshfarm: { letters: false, minWin: 6, warmOnly: 1 }, orbital: { win: 'whole', winMinY: 70 }, wardown: { up: 1, upX: [.4, .75], upH: .6, upA: .15 }, stockwood: { up: 3, upA: .25 }, welcome: { up: 2, upA: .3 }, airport: { win: 'whole', winMaxY: 62 } };
   const LANDMARKS_KEYS = window.LANDMARKS || {};
   const isGlass = (r, g, b) => { const mx = Math.max(r, g, b), mn = Math.min(r, g, b); return b > r + 18 && b >= g - 8 && mx > 85 && mx < 236 && (mx - mn) / mx < .52; };
 
@@ -214,11 +229,11 @@
       let y0 = 1e9, y1 = 0, x0 = 1e9, x1 = 0; comp.forEach(p => { const y = (p / W0) | 0, x = p % W0; if (y < y0) y0 = y; if (y > y1) y1 = y; if (x < x0) x0 = x; if (x > x1) x1 = x; });
       if (x1 - x0 < 2 || y1 - y0 < 2 || comp.length / ((x1 - x0 + 1) * (y1 - y0 + 1)) < .55) continue;
       // real glass is mostly one flat colour; soft-edged lettering (blue-grey blends) isn't a window
-      { const cnt = new Map(); let best = 0; comp.forEach(p => { const j = p * 4, k = (src[j] << 16) | (src[j + 1] << 8) | src[j + 2], v = (cnt.get(k) || 0) + 1; cnt.set(k, v); if (v > best) best = v; }); if (comp.length < 26 || x1 - x0 < 3 || y1 - y0 < 3 || best < comp.length * .45) continue; }
-      if (!inX((x0 + x1) / 2, cfg.winX) || (cfg.winMaxY && gy - y0 > cfg.winMaxY)) continue;
+      { const cnt = new Map(); let best = 0; comp.forEach(p => { const j = p * 4, k = (src[j] << 16) | (src[j + 1] << 8) | src[j + 2], v = (cnt.get(k) || 0) + 1; cnt.set(k, v); if (v > best) best = v; }); if (comp.length < (cfg.minWin || 26) || x1 - x0 < (cfg.minWin ? 1 : 3) || y1 - y0 < (cfg.minWin ? 2 : 3) || best < comp.length * .45) continue; }
+      if (!inX((x0 + x1) / 2, cfg.winX) || (cfg.winMaxY && gy - y0 > cfg.winMaxY) || (cfg.winMinY && gy - y0 < cfg.winMinY)) continue;   // winMinY: leave the shop floor to the shop's own lighting
       let col, a;
       if (mode === 'whole') { col = cfg.winCol || [255, 226, 168]; a = cfg.wholeA || 150; }      // one big lit space behind panels of glass: all on, all the same
-      else { if (rnd() > .62) continue; const pick = rnd(); col = pick < .55 ? [255, 214, 130] : pick < .85 ? [255, 228, 170] : [236, 240, 255]; a = 235; }
+      else { if (rnd() > .62) continue; const pick = rnd(); col = house || cfg.warmOnly ? [255, 214, 130] : pick < .55 ? [255, 214, 130] : pick < .85 ? [255, 228, 170] : [236, 240, 255]; a = 235; }   // houses: every lit room the same warm yellow
       comp.forEach(p => { const y = (p / W0) | 0, sh = 1 - .16 * (y - y0) / Math.max(1, y1 - y0); setp(p, [col[0] * sh, col[1] * sh, col[2] * sh], a); used[p] = 1; }); }
     let use = boards.filter(b => !b.pale && !(cfg.boardMinH && gy - b.y1 < cfg.boardMinH * ((window.SCALE && window.SCALE[sp.k]) || 1))); if (cfg.onlyTop && boards.length) { const t = Math.min(...boards.map(b => b.y0)); use = boards.filter(b => b.y0 === t); }
     if (cfg.noBoardX) use = use.filter(b => !inX((b.x0 + b.x1) / 2, cfg.noBoardX));
@@ -240,7 +255,7 @@
       for (let y = Y0; y <= Y1; y++) for (let x = X0; x <= X1; x++) { const q = y * W0 + x, j = q * 4; if (src[j + 3] < 200) continue; const r = src[j], g = src[j + 1], bb = src[j + 2], mx = Math.max(r, g, bb), mn = Math.min(r, g, bb);
         if (mx > 150 && (mx - mn) / mx > .55) setp(q, [r + (255 - r) * .22, g + (255 - g) * .22, bb + (255 - bb) * .22], 255); } });
     (cfg.whiteText || []).forEach(([a, b, c2, d2]) => { const X0 = Math.round(bx0 + a * SC), X1 = Math.round(bx0 + c2 * SC), Y0 = Math.round(gy - d2 * SC), Y1 = Math.round(gy - b * SC);
-      for (let y = Y0; y <= Y1; y++) for (let x = X0; x <= X1; x++) { const q = y * W0 + x, j = q * 4; if (src[j + 3] < 200) continue; const mn = Math.min(src[j], src[j + 1], src[j + 2]); if (mn > 120) { const k = Math.min(1, (mn - 120) / 100); setp(q, [255, 255, 255], Math.round(255 * k)); } } });
+      for (let y = Y0; y <= Y1; y++) for (let x = X0; x <= X1; x++) { const q = y * W0 + x, j = q * 4; if (src[j + 3] < 200) continue; const mn = Math.min(src[j], src[j + 1], src[j + 2]); if (mn > 120) { const k = Math.min(1, (mn - 120) / 60); setp(q, [255, 255, 255], Math.round(255 * k)); } } });
     // curtained windows (hotels, flats): some lit through the curtains, some just a glow at the edges and the gap, the rest closed and dark
     if (cfg.curtains) { const cv = new Uint8Array(N); rs = seedOf((sp.k || 'c') + 'cur');
       const isC = q => { const j = q * 4; if (src[j + 3] < 200 || o[j + 3]) return false; const r = src[j], g = src[j + 1], b = src[j + 2], mx = Math.max(r, g, b), mn = Math.min(r, g, b); return mx > 165 && (mx - mn) / mx < .09; };
@@ -348,18 +363,26 @@
   function makeSeason(sp, sea) { const W0 = sp.c.width, H0 = sp.c.height, cx = sp.c.getContext('2d'), im = cx.getImageData(0, 0, W0, H0), d = im.data, N = W0 * H0;
     const green = new Uint8Array(N); for (let i = 0; i < N; i++) { const j = i * 4; if (d[j + 3] < 200) continue; const r = d[j], g = d[j + 1], b = d[j + 2], mx = Math.max(r, g, b), mn = Math.min(r, g, b); if (mx < 40 || mx > 235) continue;
       const sat = (mx - mn) / mx; if (sat < .22 || g < r || g < b - 10) continue; let h; { const dd = mx - mn; h = mx === g ? 60 * ((b - r) / dd + 2) : mx === b ? 60 * ((r - g) / dd + 4) : 60 * (((g - b) / dd) % 6); } if (h > 68 && h < 165) green[i] = 1; }
-    const seen = new Uint8Array(N), st = []; rs = seedOf((sp.k || 't') + sea); let any = false; const branches = [];
+    const seen = new Uint8Array(N), st = []; rs = seedOf((sp.k || 't') + sea); let any = false; const branches = [], canopies = [];
     for (let i = 0; i < N; i++) { if (!green[i] || seen[i]) continue; const comp = []; st.push(i); seen[i] = 1;
       while (st.length) { const p = st.pop(); comp.push(p); const x = p % W0; for (const nb of [p - 1, p + 1, p - W0, p + W0]) if (nb >= 0 && nb < N && !seen[nb] && green[nb] && Math.abs((nb % W0) - x) <= 1) { seen[nb] = 1; st.push(nb); } }
-      if (comp.length < 110) continue; let y0 = 1e9, y1 = 0, x0 = 1e9, x1 = 0; comp.forEach(p => { const y = (p / W0) | 0, x = p % W0; if (y < y0) y0 = y; if (y > y1) y1 = y; if (x < x0) x0 = x; if (x > x1) x1 = x; });
-      const w = x1 - x0 + 1, h = y1 - y0 + 1, fill = comp.length / (w * h); if (w < 8 || h < 8 || fill > .86 || fill < .4 || w > h * 2.6) continue;     // round-ish canopies only (no hedges, lawns, signs)
-      const conifer = fill < .62 && h > w * 1.15; if (conifer) continue;
-      { let top = 0; for (let x = x0; x <= x1; x++) if (green[y0 * W0 + x]) top++; if (top > w * .6) continue; }
-      // only real trees: a brown trunk just under (or inside the bottom of) the crown — produce, signs and green domes stay as they are
-      { let trunk = false; const cx = (x0 + x1) >> 1, rx = Math.max(2, w / 3 | 0); for (let y = y1 - 3; y <= y1 + 5 && !trunk; y++) for (let x = cx - rx; x <= cx + rx; x++) { if (x < 0 || x >= W0 || y < 0 || y >= H0) continue; const j = (y * W0 + x) * 4; if (d[j + 3] < 200) continue;
-          const r = d[j], g = d[j + 1], b = d[j + 2]; if (r > g + 12 && g > b + 4 && r > 55 && r < 150 && g < 110) { trunk = true; break; } } if (!trunk) continue; }       // flat top edge = a sign or hedge, not a tree
+      const tiny = comp.length < 20; if (tiny && TRUNKLESS[sp.k] !== 1) continue; let y0 = 1e9, y1 = 0, x0 = 1e9, x1 = 0; comp.forEach(p => { const y = (p / W0) | 0, x = p % W0; if (y < y0) y0 = y; if (y > y1) y1 = y; if (x < x0) x0 = x; if (x > x1) x1 = x; });
+      const w = x1 - x0 + 1, h = y1 - y0 + 1, fill = comp.length / (w * h);
+      const isTree = () => { if (comp.length < 110) return false; if (w < 8 || h < 8 || fill > .86 || fill < .4 || w > h * 2.6) return false;     // round-ish canopies only (no hedges, lawns, signs)
+        if (fill < .62 && h > w * 1.15) return false;                                                                                           // conifers stay green
+        { let top = 0; for (let x = x0; x <= x1; x++) if (green[y0 * W0 + x]) top++; if (top > w * .6) return false; }                          // flat top edge = a sign or hedge
+        if (TRUNKLESS[sp.k]) return true;
+        // only real trees: a brown trunk just under (or inside the bottom of) the crown; produce, signs and green domes stay as they are
+        const cx = (x0 + x1) >> 1, rx = Math.max(2, w / 3 | 0); for (let y = y1 - 3; y <= y1 + 5; y++) for (let x = cx - rx; x <= cx + rx; x++) { if (x < 0 || x >= W0 || y < 0 || y >= H0) continue; const j = (y * W0 + x) * 4; if (d[j + 3] < 200) continue;
+          const r = d[j], g = d[j + 1], b = d[j + 2]; if (r > g + 12 && g > b + 4 && r > 55 && r < 150 && g < 110) return true; } return false; };
+      // pieces of a park tree cut off by things in front of it (a swing frame, pillars) change with the rest of that tree
+      let forced = null; if (!isTree()) { const TL = TRUNKLESS[sp.k]; if (!TL) continue;
+        if (TL === 2 && y1 < H0 - 12) forced = canopies[0] ? canopies[0].pal : [214, 120, 40];
+        else if (TL === 1) { const rect = green[y0 * W0 + x0] + green[y0 * W0 + x1] + green[y1 * W0 + x0] + green[y1 * W0 + x1] >= 3 && w >= 20 && h >= 10;   /* a sign board or a wall, not part of a crown */
+          const m = tiny ? 0 : 6, hit = !rect && canopies.find(c => x0 <= c.x1 + m && x1 >= c.x0 - m && y0 <= c.y1 + m && y1 >= c.y0 - m); if (hit) forced = hit.pal; }
+        if (!forced) continue; }
       let ml = 0; comp.forEach(p => { const j = p * 4; ml += d[j] + d[j + 1] + d[j + 2]; }); ml /= comp.length;                                                                   // evergreens stay green
-      any = true; const pick = rnd(), pal = pick < .4 ? [214, 120, 40] : pick < .7 ? [196, 72, 38] : pick < .9 ? [222, 170, 52] : [150, 96, 52];
+      any = true; const pick = rnd(), pal = forced || (pick < .4 ? [214, 120, 40] : pick < .7 ? [196, 72, 38] : pick < .9 ? [222, 170, 52] : [150, 96, 52]); if (!forced) canopies.push({ x0, x1, y0, y1, pal });
       comp.forEach(p => { const j = p * 4, r = d[j], g = d[j + 1], b = d[j + 2], rel = Math.min(1.45, (r + g + b) / ml), x = p % W0, y = (p / W0) | 0;
         const nz = n2(x / 3, y / 3, 7) * .65 + n2(x / 8, y / 8, 3) * .35;          // clumpy, not stripy
         if (sea === 'spring') { d[j] = Math.min(255, r * .92 + 22); d[j + 1] = Math.min(255, g * 1.06 + 14); d[j + 2] = b * .9 + 6;
@@ -368,7 +391,7 @@
           d[j] = Math.min(255, r + (tr - r) * k); d[j + 1] = Math.min(255, g + (tg - g) * k); d[j + 2] = Math.min(255, b + (tb - b) * k);
           if (sea === 'lateautumn' && nz < .36) d[j + 3] = 0; }
         else if (sea === 'winter') { if (nz < .9) d[j + 3] = 0; else { d[j] = 150 * rel; d[j + 1] = 110 * rel; d[j + 2] = 70 * rel; } } });
-      if (sea === 'winter' || sea === 'lateautumn') { branches.push([x0, x1, y0, y1]);
+      if ((sea === 'winter' || sea === 'lateautumn') && !forced) { branches.push([x0, x1, y0, y1]);
         // the dark outline round the crown goes where the leaves have gone
         for (let pass = 0; pass < 2; pass++) for (let y = y0 - 2; y <= y1 + 1; y++) for (let x = x0 - 2; x <= x1 + 2; x++) { if (x < 1 || y < 1 || x >= W0 - 1 || y >= H0 - 1) continue; const j = (y * W0 + x) * 4;
           if (d[j + 3] < 200 || Math.max(d[j], d[j + 1], d[j + 2]) > 50 || y > y1 - 2) continue; let holes = 0; for (const o2 of [-4, 4, -W0 * 4, W0 * 4]) if (d[j + o2 + 3] < 30) holes++; if (holes >= 2) d[j + 3] = 0; } } }
@@ -383,7 +406,9 @@
         line(mx, sy, ex, ey, BR); line(ex, ey, ex + side * 3, ey - 4, TW); line((mx + ex) / 2, (sy + ey) / 2, (mx + ex) / 2 - side * 2, (sy + ey) / 2 - 5, TW); line(ex, ey, ex - side * 1, ey - 5, TW); }
       line(mx, top, mx - 3, top - 4, TW); line(mx, top, mx + 3, top - 5, TW); });
     return c; }
-  const NOSEASON = { masjid: 1 };   // green domes etc. are not trees
+  const NOSEASON = {};
+  // park trees drawn as plain round crowns (no trunk showing): change them with the seasons too
+  const TRUNKLESS = { wardownfield: 1, wardownbridge: 1, stockwood: 1, gurdwara: 2, kaya: 3, chiltern: 1, wardown: 1 };
   S.seasonal = (sp, on) => { const sea = S.season(); if (sea === 'summer' || NOSEASON[sp.k]) return sp.c; const key = sp; const v = seasonC.get(key, () => ({}));
     if (v[sea]) return v[sea]; if (on || !S.__warm) { v[sea] = makeSeason(sp, sea); return v[sea]; } return sp.c; };
   S.carNight = cnv => carN.get(cnv, cc => { const c = document.createElement('canvas'); c.width = cc.width; c.height = cc.height; const x = c.getContext('2d'); x.drawImage(cc, 0, 0); x.globalCompositeOperation = 'source-atop'; x.fillStyle = 'rgba(8,12,34,.6)'; x.fillRect(0, 0, c.width, c.height); return c; });

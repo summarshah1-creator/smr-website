@@ -217,10 +217,10 @@ html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:m
 </div></div>
   <div id="tap" class="hide">TAP TO FLAP</div>
 </div>
-<script src="landmarks.js?v=11185219"></script>
-<script src="vehicles.js?v=11185219"></script>
+<script src="landmarks.js?v=11181930"></script>
+<script src="vehicles.js?v=11181930"></script>
 <script src="namecheck.js"></script>
-<script src="sky.js?v=11185219"></script>
+<script src="sky.js?v=11181930"></script>
 <script>
 (() => {
 const H = 300, GY = 250, ROAD = 262;            // world: 300 units tall, pavement top at 250
@@ -335,7 +335,7 @@ $('bestS').textContent = best;
 
 function reset() { critters.length = 0; flags.length = 0; flagT = 2; flagDue = false;
   bird = { x: Math.min(W * .32, 90), y: 130, vy: 0, frame: 0, ft: 0 };
-  pipes = []; nextPipe = W + 40; score = 0; speed = 72; seen = []; smrDue = t + 40 + Math.random() * 80;
+  pipes = []; nextPipe = W + 40; score = 0; speed = 72; seen = []; smrDue = t + 30 + Math.random() * 40;
   lmQueue = []; lmX = 20; lmIdx = 0; prevHouses = 0; const at = location.hash.match(/^#at-(\w+)/); playlist = buildPlaylist(at ? at[1] : null); if (at) lmX = Math.round(W * .6);
   while (lmX < W + 600) pushLandmark();
   cars = []; vanT = 0; vanNext = 12; plane = null; bplane = null; for (let i = 0; i < 3; i++) spawnCar(Math.random() * W);
@@ -346,8 +346,8 @@ const ANIM_K = { townhall: 1, lutonhoo: 1, masjidali: 1, wardown: 1, wardownbrid
    - set pieces stay together: Frasers → Station → Hat Factory (train), Wardown field → lake → bridge → funfair, Welcome sign → Airport
    - never more than 2 big buildings in a row, never two retail-park sheds back to back
    - houses only sometimes (none / one / two), never inside a set piece */
-const BIG = new Set(['galaxy', 'townhall', 'stmarys', 'frasers', 'hatfactory', 'chaiiwala', 'masjid', 'masjidali', 'gurdwara', 'inspire', 'tesco', 'currys', 'bandq', 'matalan', 'lidl', 'jdgyms', 'bigyellow', 'grandbazar', 'lewsey', 'venue', 'chiltern', 'uob', 'sixthform', 'stockwood', 'foodbank', 'airport', 'funfair']);
-const SHED = new Set(['tesco', 'currys', 'bandq', 'matalan', 'lidl', 'jdgyms', 'bigyellow', 'grandbazar']);
+const BIG = new Set(['orbital', 'marshfarm', 'galaxy', 'townhall', 'stmarys', 'frasers', 'hatfactory', 'chaiiwala', 'masjid', 'masjidali', 'gurdwara', 'inspire', 'tesco', 'currys', 'bandq', 'matalan', 'lidl', 'jdgyms', 'bigyellow', 'grandbazar', 'lewsey', 'venue', 'chiltern', 'uob', 'sixthform', 'stockwood', 'foodbank', 'airport', 'funfair']);
+const SHED = new Set(['orbital', 'tesco', 'currys', 'bandq', 'matalan', 'lidl', 'jdgyms', 'bigyellow', 'grandbazar']);
 const SETS = [['frasers', 'station', 'hatfactory'], ['wardownfield', 'wardown', 'wardownbridge', 'funfair'], ['welcome', 'airport']];
 let playlist = [], lastUnit = null;
 function buildPlaylist(startKey) {
@@ -374,7 +374,7 @@ const LTFC = 'H:2026-11-28,2026-12-12,2026-12-26,2027-01-09,2027-01-16,2027-01-3
 const MATCH = (() => { const f = new URLSearchParams(location.search).get('match'); if (f) return f.toUpperCase() === 'A' ? 'A' : 'H';
   const d = new Date(), ds = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
   for (const part of LTFC.split(';')) { const [k, list] = part.split(':'); if (list.split(',').includes(ds)) return k; } return ''; })();
-function pushLandmark() { let sp; if (state === 'play' && t >= smrDue && (sp = sprites.find(s => s.k === 'smr'))) smrDue = t + 105 + Math.random() * 30; else sp = nextSprite(); const nx = peekSprite(); lmQueue.push({ sp, x: lmX, passed: false });
+function pushLandmark() { let sp; if (state === 'play' && t >= smrDue && (sp = sprites.find(s => s.k === 'smr'))) smrDue = t + 70; else sp = nextSprite(); const nx = peekSprite(); lmQueue.push({ sp, x: lmX, passed: false });
   const chain = inSameSet(sp.k, nx.k) && CHAIN.includes(sp.k), tight = inSameSet(sp.k, nx.k) || sp.k === 'station' || nx.k === 'station';
   lmX += Math.round(sp.w + (chain ? 0 : tight ? 10 : 18 + Math.random() * 16)); lmIdx++;
   if (tight) return;
@@ -413,7 +413,8 @@ function spawnCar(x, key, zoom) { const sp = key ? carSprites.find(s => s.k === 
   const quick = !zoom && Math.random() < .15;   // some drivers are just a bit quicker than the rest
   cars.push({ sp, x: sx, dir, v: zoom ? 130 + Math.random() * 110 : (sp.sp[0] + Math.random() * (sp.sp[1] - sp.sp[0])) * (quick ? 1.35 : 1), lane, zoom: !!zoom, yo: 0 }); if (zoom) SFX.zoom(sp.k === 'motorbike');
   const nc = cars[cars.length - 1]; if (EMK[sp.k] && !zoom) { nc.emerg = 1; nc.rolled = 1; nc.headRolled = 1; nc.otRolled = 1;
-    if (jamT <= 0 && Math.random() < .35) { nc.run = 1; nc.v = EMK[sp.k]; if (sp.k === 'fire') { SFX.neenaw(); SFX.airhorn(1.2); } else if (sp.k === 'ambulance') SFX.wail(); else SFX.siren(); } }
+    if (jamT <= 0 && sp.k !== 'police' && Math.random() < .35) { nc.run = 1;   // police lights and siren only in a chase; ambulances and fire engines still go on blue-light runs
+ nc.v = EMK[sp.k]; if (sp.k === 'fire') { SFX.neenaw(); SFX.airhorn(1.2); } else if (sp.k === 'ambulance') SFX.wail(); else SFX.siren(); } }
   return true; }
 const EMK = { police: 108, ambulance: 96, fire: 82 };
 // now and then a supercar or a motorbike flies past, flat out, with a roar and a puff of exhaust
@@ -652,7 +653,7 @@ const LB = (() => { const api = 'api.php'; let run = '', runFor = ''; const star
 /* ---------- always the latest version, also when saved to the Home Screen ----------
    version.json is rewritten on every deploy; when it changes the page reloads itself (straight away on the menu,
    or right after the current game ends), with a cache-busting query so the phone fetches the new HTML. */
-(() => { const BUILD = '20261118185219'; let pending = false;
+(() => { const BUILD = '11181930'; let pending = false;
   const go = () => { let last = 0; try { last = +sessionStorage.getItem('fk_upd_t') || 0; } catch (e) {} if (Date.now() - last < 60000) return;   // never loop: at most one reload a minute
     try { sessionStorage.setItem('fk_upd_t', String(Date.now())); } catch (e) {} location.replace(location.pathname + '?u=' + Date.now() + location.hash); };
   const check = () => fetch('version.json?ts=' + Date.now(), { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(j => {
@@ -758,8 +759,13 @@ function update(dt) {
   cars.forEach(c => { let ahead = null, gap = 1e9; cars.forEach(o => { if (o === c || (o.crash && !o.crash.road) || (o.lane !== c.lane && !(o.crash && o.crash.road)) || (o.ot && o.ot.out > .5)) return; const d = c.dir > 0 ? o.x - (c.x + c.sp.w) : c.x - (o.x + o.sp.w); if (d > -4 && d < gap) { gap = d; ahead = o; } });
     if (!c.ot && !c.emerg && jamT <= 0 && ahead && gap < 40 && ((c.zoom && !(c.police && ahead.flee)) || (c.v > (ahead.cv || ahead.v) + 6 && !c.otRolled && (c.otRolled = 1) && otCD <= 0 && Math.random() < .3)) && c.sp.w < 90) {
       // only if the other lane is clear for a good way ahead
-      const x0 = c.dir > 0 ? c.x : c.x - 160, x1 = c.dir > 0 ? c.x + c.sp.w + 160 : c.x + c.sp.w;
-      if (!c.crash && !cars.some(o => o !== c && !o.crash && o.lane !== c.lane && o.x + o.sp.w > x0 && o.x < x1)) { c.ot = { out: 0, past: ahead }; if (!c.zoom) otCD = 18 + Math.random() * 25; if (!c.zoom && c.x > -40 && c.x < W + 40) SFX.rev(c.sp.k === 'motorbike'); }
+      // time to get past = distance to cover / how much faster we go; anything coming the other way closes in at both speeds
+      const vo = c.zoom ? c.v : Math.max(c.v, (ahead.cv || ahead.v) + 34) * 1.35, rel = Math.max(20, vo - (ahead.cv || ahead.v)), Tp = (gap + ahead.sp.w + c.sp.w + 30) / rel + .9;
+      const need = vo * Tp + 40, x0 = c.dir > 0 ? c.x - 10 : c.x - need, x1 = c.dir > 0 ? c.x + c.sp.w + need : c.x + c.sp.w + 10;
+      const clear = !cars.some(o => { if (o === c || o.crash) return false; if (o.lane === c.lane && !(o.ot && o.ot.out > .2)) return false;
+        const reach = o.dir === c.dir ? 0 : (o.cv || o.v) * Tp;    // how far an oncoming car travels while we're out there
+        return c.dir > 0 ? o.x < x1 + reach && o.x + o.sp.w > c.x - 10 : o.x + o.sp.w > x0 - reach && o.x < c.x + c.sp.w + 10; });
+      if (!c.crash && clear) { c.ot = { out: 0, past: ahead }; if (!c.zoom) otCD = 18 + Math.random() * 25; if (!c.zoom && c.x > -40 && c.x < W + 40) SFX.rev(c.sp.k === 'motorbike'); }
     }
     if (c.crash) return;
     if (c.ot) { const o = c.ot; if (!o.abort && o.out > .2) { const fx = c.dir > 0 ? c.x + c.sp.w : c.x; if (cars.some(q => q !== c && !q.crash && q.lane !== c.lane && (c.dir > 0 ? q.x > fx - 4 && q.x < fx + 70 : q.x + q.sp.w < fx + 4 && q.x + q.sp.w > fx - 70))) o.abort = true; }
@@ -794,7 +800,7 @@ function update(dt) {
   // the pole gets its own space: the first gap between two buildings just off screen is widened and the flag stands in the middle of it, never over a building
   if (flagDue) for (let i = 0; i < lmQueue.length - 1; i++) { const a = lmQueue[i], b = lmQueue[i + 1], gs = a.x + a.sp.w; if (gs < W + 10) continue;
     if (inSameSet(a.sp.k, b.sp.k) || (LANDMARKS[a.sp.k] && LANDMARKS[a.sp.k].lawn) || (LANDMARKS[b.sp.k] && LANDMARKS[b.sp.k].lawn)) continue;
-    const g = b.x - gs, add = 100; for (let j = i + 1; j < lmQueue.length; j++) lmQueue[j].x += add; lmX += add; flags.push({ x: Math.round(gs + (g + add - 78) / 2) }); flagDue = false; break; }
+    const g = b.x - gs, add = 80; for (let j = i + 1; j < lmQueue.length; j++) lmQueue[j].x += add; lmX += add; flags.push({ x: Math.round(gs + (g + add - 60) / 2) }); flagDue = false; break; }
   for (let i = flags.length - 1; i >= 0; i--) { flags[i].x -= moving ? step : 0; if (flags[i].x < -120) flags.splice(i, 1); }
   otCD -= dt; crashCD -= dt; headCD -= dt; if (jamT > 0) { jamT -= dt; if (jamT <= 0) cars.forEach(c => c.free = 0); }
   if (moving && headCD <= 0 && jamT <= 0) cars.forEach(c => { if (headCD > 0 || c.headRolled || c.crash || c.ot || c.drift || c.sp.k === 'bike' || c.sp.k === 'motorbike') return;
@@ -860,8 +866,8 @@ function drawFlag(f) { const X = Math.round(f.x), top = GY - 158, nk = 1 - .45 *
   ctx.fillStyle = C(40, 42, 50, 1); ctx.beginPath(); ctx.arc(X + .5, top - 3, 3.4, 0, 7); ctx.fill(); ctx.fillStyle = C(232, 192, 70, 1); ctx.beginPath(); ctx.arc(X + .5, top - 3, 2.5, 0, 7); ctx.fill(); ctx.fillStyle = C(255, 236, 160, 1); ctx.fillRect(X - 1, top - 5, 1, 1);
   ctx.fillStyle = C(40, 42, 50, 1); ctx.fillRect(X - 5, GY - 4, 11, 4); ctx.fillStyle = C(178, 176, 168, 1); ctx.fillRect(X - 4, GY - 3, 9, 3);
   // flag: 72 x 36, black / white / green with the red triangle at the hoist; each column ripples, with light and shade on the folds
-  const FW = 72, FH = 36, fy = top + 2;
-  for (let i = 0; i < FW; i++) { const k = i / FW, ph = t * 5.2 * wind - i * .17, dy = Math.sin(ph) * 3.2 * k + Math.sin(ph * .55 + 1) * 1.4 * k, sh = 1 + Math.cos(ph) * .16 * Math.min(1, k * 3), x = X + 2 + i - Math.round(k * k * 2), y = fy + dy, s3 = FH / 3, droop = k * 1.5;
+  const FW = 54, FH = 27, fy = top + 2;   // 25% smaller flag, same pole
+  for (let i = 0; i < FW; i++) { const k = i / FW, ph = t * 5.2 * wind - i * .227, dy = Math.sin(ph) * 2.4 * k + Math.sin(ph * .55 + 1) * 1.05 * k, sh = 1 + Math.cos(ph) * .16 * Math.min(1, k * 3), x = X + 2 + i - Math.round(k * k * 2), y = fy + dy, s3 = FH / 3, droop = k * 1.5;
     ctx.fillStyle = C(20, 20, 22, sh); ctx.fillRect(x, y, 1, s3 + .5); ctx.fillStyle = C(250, 250, 250, sh); ctx.fillRect(x, y + s3, 1, s3 + .5); ctx.fillStyle = C(0, 122, 61, sh); ctx.fillRect(x, y + s3 * 2, 1, s3 + droop);
     if (k < 1 / 3) { const half = FH / 2 * (1 - k * 3); ctx.fillStyle = C(206, 17, 38, sh); ctx.fillRect(x, y + FH / 2 - half, 1, half * 2); } }
   ctx.fillStyle = C(60, 62, 70, 1); ctx.fillRect(X + 1, fy - 1, 2, 2); ctx.fillRect(X + 1, fy + FH - 1, 2, 2); }
@@ -939,16 +945,21 @@ function drawShutters(lmq, gy) { lmq.forEach(l => { if (!SHUT_K[l.sp.k] || l.x >
 window.__shut = () => ({ shutNow, shutterArt, hour: SKY.hour });
 /* shop fronts glow softly from inside at night while the shop is open (dimmer than the big lit signs) */
 const GLOW_R = Object.assign({}, SHUT_R, { grandbazar: [[97, 137, 86], [207, 427, 86]], karwan: [[95, 310, 48, 4]],
+  nadeem: [[127, 283, 50, 5]], orbital: [[558, 662, 62, 0]],   // Coffee Pot: the whole ground floor is one cafe, lit together
   barak: [[112, 192, 50, 20], [213, 239, 40, 18]], toros: [[98, 123, 35, 3], [128, 152, 35, 3], [157, 180, 35, 3], [187, 210, 35, 3], [223, 240, 33, 0]], spudkingz: [[115, 177, 35, 20]], chaiiwala: [[95, 255, 87, 0]], kaya: [[110, 153, 50, 0]] });
+// shops whose front is lit only while open (no shutter): [closes, opens]
+const GLOW_STR = { orbital: .3, nadeem: .42, grandbazar: .3 };   // how warm the inside glow is (default .16)
+const GLOW_HOURS = { orbital: [21, 9] /* estimate */, nadeem: [21, 8] /* Coffee Pot, estimate */ };
+const glowShut = k => { const h = GLOW_HOURS[k]; if (!h) return false; const now = window.SKY && SKY.hour != null ? SKY.hour : new Date().getHours(); return h[0] < h[1] ? now >= h[0] && now < h[1] : now >= h[0] || now < h[1]; };
 function drawShopGlow(lmq, gy) { const n = window.SKY ? SKY.n : 0; if (n < .2) return; lmq.forEach(l => { const r = GLOW_R[l.sp.k]; if (!r || l.x > W + 20 || l.x + l.sp.w < -20) return;
-    if ((SHUT_K[l.sp.k] && shutNow(l.sp.k)) || isClosed(l.sp.k)) return; const ox = Math.round(l.x - M);
+    if ((SHUT_K[l.sp.k] && shutNow(l.sp.k)) || isClosed(l.sp.k) || glowShut(l.sp.k)) return; const ox = Math.round(l.x - M);
     r.forEach(([a, b, h, lo]) => { const w = b - a + 1, hh = h - (lo || 0), sy = l.sp.c.height - 6 - h;
       ctx.globalAlpha = .55 * n; ctx.drawImage(l.sp.c, a, sy, w, hh, ox + a, gy - h, w, hh);   // the inside shows through again
-      ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 1; ctx.fillStyle = 'rgba(255,196,120,' + (.16 * n).toFixed(3) + ')'; ctx.fillRect(ox + a, gy - h, w, hh); ctx.globalCompositeOperation = 'source-over'; }); });
+      ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 1; ctx.fillStyle = 'rgba(255,196,120,' + ((GLOW_STR[l.sp.k] || .16) * n).toFixed(3) + ')'; ctx.fillRect(ox + a, gy - h, w, hh); ctx.globalCompositeOperation = 'source-over'; }); });
   ctx.globalAlpha = 1; }
 /* Galaxy: a row of bulbs round the GALAXY sign band that chase along at night */
-function drawGalaxyLights(lmq, gy) { const n = window.SKY ? SKY.n : 0; if (n < .25) return; lmq.forEach(l => { if (l.sp.k !== 'galaxy' || l.x > W + 10 || l.x + l.sp.w < -10) return; const x0 = Math.round(l.x) + 124 - 2, ph = Math.floor(t * 9);   // main block sits 124 in from the left wing
-    for (let i = 0; i < 40; i++) { const on = ((i + ph) % 5) < 2, bx = x0 + 3 + i * 5; for (const by of [gy - 149, gy - 142]) { ctx.fillStyle = on ? 'rgba(255,236,170,' + (.95 * n).toFixed(2) + ')' : 'rgba(150,120,70,' + (.6 * n).toFixed(2) + ')'; ctx.fillRect(bx, by, 2, 1);
+function drawGalaxyLights(lmq, gy) { const n = window.SKY ? SKY.n : 0; if (n < .25) return; const f = (window.SCALE && SCALE.galaxy) || 1; lmq.forEach(l => { if (l.sp.k !== 'galaxy' || l.x > W + 10 || l.x + l.sp.w < -10) return; const ph = Math.floor(t * 9);
+    for (let i = 0; i < 40; i++) { const on = ((i + ph) % 5) < 2, bx = Math.round(l.x + (124 - 2 + 3 + i * 5) * f); for (const hh of [149, 142]) { const by = Math.round(gy - hh * f); ctx.fillStyle = on ? 'rgba(255,236,170,' + (.95 * n).toFixed(2) + ')' : 'rgba(150,120,70,' + (.6 * n).toFixed(2) + ')'; ctx.fillRect(bx, by, 2, 1);
       if (on) { ctx.fillStyle = 'rgba(255,220,140,' + (.18 * n).toFixed(2) + ')'; ctx.fillRect(bx - 1, by - 1, 4, 3); } } } }); }
 /* chimney smoke from the houses on cold months */
 function drawSmoke(l, gy) { if (!l.sp.ch || !l.sp.ch.length || !window.SKY) return; const sea = SKY.season(); if (sea !== 'winter' && sea !== 'lateautumn' && SKY.snowAcc < .2) return;
@@ -1011,7 +1022,7 @@ function draw() {
     ctx.fillStyle = '#5f9e44'; ctx.fillRect(0, H + 14, W, BE); ctx.fillStyle = '#4f8a36'; const go = SCi % 16; for (let y = H + 18; y < H + BE; y += 8) for (let x = -go + ((y / 8) % 2) * 8; x < W; x += 16) ctx.fillRect(Math.round(x), y, 2, 2);
     ctx.fillStyle = '#3f7d33'; for (let x = -go; x < W; x += 16) ctx.fillRect(Math.round(x), H + 14, 14, 4); }
   SKY.drawGround(ctx, W, GY, ROAD, H, BE, SCi, () => critters.forEach(c => { if (c.k === 'fox') drawFox(c); else drawSnowman(c); }));
-  critters.forEach(c => { if (c.k === 'fox' && SKY.n > .5) foxEyes(c); });
+
   SKY.drawPrecip(ctx, S);
   pipes.forEach(p => SKY.pipeShadow(ctx, p.x, PW, ROAD, GY)); pipes.forEach(p => { pipe(p.x, -OY, p.top + OY, 'top'); pipe(p.x, p.top + p.gap, ROAD - 4 - p.top - p.gap, 'bottom'); });
   // vehicles go in front of the pipes
@@ -1032,13 +1043,16 @@ function draw() {
   const carN = (cnv, x0, y0, sp, flip) => { if (SKY.n > .02) { ctx.globalAlpha = Math.min(1, SKY.n); ctx.drawImage(SKY.carNight(cnv), x0, y0, cnv.width * CS, cnv.height * CS); if (SKY.lightA > .02) { ctx.globalAlpha = SKY.lightA; ctx.drawImage(SKY.carWin(cnv, sp, flip), x0, y0, cnv.width * CS, cnv.height * CS); } ctx.globalAlpha = 1; } };
   smoke.forEach(p => { ctx.fillStyle = (p.dark ? 'rgba(60,58,62,' : 'rgba(190,192,198,') + Math.max(0, p.a).toFixed(2) + ')'; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 6.3); ctx.fill(); });
   cars.sort((a, b) => (a.zoom ? 1 : 0) - (b.zoom ? 1 : 0));
-  cars.filter(c => c.lane === 0 && !c.crash).forEach(c => { const x0 = Math.round(c.x), y0 = Math.round(ROAD + 14 + (c.yo || 0) - c.sp.gy * CS); SKY.carShadow(ctx, x0 + 3, c.sp.w, ROAD + 14 + (c.yo || 0)); ctx.drawImage(c.sp.c, x0, y0, c.sp.c.width * CS, c.sp.c.height * CS); spin(c, x0, y0, false); carN(c.sp.c, x0, y0, c.sp, false); SKY.carLights(ctx, x0, y0, c.sp.c.width * CS, ROAD + 14 + (c.yo || 0), c.sp.ht, c.dir); if (c.run) blues(c, x0, ROAD + 14 + (c.yo || 0), false); });
+  const drawC0 = c => { const x0 = Math.round(c.x), y0 = Math.round(ROAD + 14 + (c.yo || 0) - c.sp.gy * CS); SKY.carShadow(ctx, x0 + 3, c.sp.w, ROAD + 14 + (c.yo || 0)); ctx.drawImage(c.sp.c, x0, y0, c.sp.c.width * CS, c.sp.c.height * CS); spin(c, x0, y0, false); carN(c.sp.c, x0, y0, c.sp, false); SKY.carLights(ctx, x0, y0, c.sp.c.width * CS, ROAD + 14 + (c.yo || 0), c.sp.ht, c.dir); if (c.run) blues(c, x0, ROAD + 14 + (c.yo || 0), false); }, drawC1 = c => { const x0 = Math.round(c.x), y0 = Math.round(H - 3 + (c.yo || 0) - c.sp.gy * CS); SKY.carShadow(ctx, x0 + 3, c.sp.w, H - 3 + (c.yo || 0)); ctx.drawImage(c.sp.flip, x0, y0, c.sp.flip.width * CS, c.sp.flip.height * CS); spin(c, x0, y0, true); carN(c.sp.flip, x0, y0, c.sp, true); SKY.carLights(ctx, x0, y0, c.sp.flip.width * CS, H - 3 + (c.yo || 0), c.sp.ht, c.dir); if (c.run) blues(c, x0, H - 3 + (c.yo || 0), true); };
+  // an overtaking car is drawn at the depth of the lane it has pulled into: going into the far lane it slips behind the car it passes
+  const across = c => c.ot && c.ot.out > .5;
+  cars.filter(c => !c.crash && c.lane === 0 && !across(c)).forEach(drawC0); cars.filter(c => !c.crash && c.lane === 1 && across(c)).forEach(drawC1);
   cars.filter(c => c.crash).forEach(c => { const cnv = c.lane === 0 ? c.sp.c : c.sp.flip, w = cnv.width * CS, hgt = cnv.height * CS, gy = (c.lane === 0 ? ROAD + 14 : H - 3) + c.yo, cx = c.x + w / 2, cy = gy - c.sp.ht / 2;
     SKY.carShadow(ctx, Math.round(c.x) + 3, c.sp.w, gy); ctx.save(); ctx.translate(cx, cy); ctx.rotate(c.crash.rot); ctx.drawImage(cnv, -w / 2, -(c.sp.gy * CS - c.sp.ht / 2), w, hgt); if (SKY.n > .02) { ctx.globalAlpha = Math.min(1, SKY.n); ctx.drawImage(SKY.carNight(cnv), -w / 2, -(c.sp.gy * CS - c.sp.ht / 2), w, hgt); ctx.globalAlpha = 1; } ctx.restore();
     if (c.crash.fire && c.crash.done && c.crash.t < 9) { const fx = cx + (c.dir < 0 ? -w * .22 : w * .22), fy = gy - c.sp.ht * .55, fade = Math.min(1, (9 - c.crash.t) / 2);
       for (let i = 0; i < 7; i++) { const ph = t * 11 + i * 1.7, hh = (5 + 4 * Math.sin(ph) + i % 3 * 2) * fade, xx = Math.round(fx + (i - 3) * 2 + Math.sin(ph * .7)), yy = Math.round(fy);
         ctx.fillStyle = 'rgba(232,80,30,.9)'; ctx.fillRect(xx, yy - hh, 2, hh); ctx.fillStyle = 'rgba(255,200,60,.95)'; ctx.fillRect(xx, yy - hh * .55, 2, hh * .55); } } });
-  cars.filter(c => c.lane === 1 && !c.crash).forEach(c => { const x0 = Math.round(c.x), y0 = Math.round(H - 3 + (c.yo || 0) - c.sp.gy * CS); SKY.carShadow(ctx, x0 + 3, c.sp.w, H - 3 + (c.yo || 0)); ctx.drawImage(c.sp.flip, x0, y0, c.sp.flip.width * CS, c.sp.flip.height * CS); spin(c, x0, y0, true); carN(c.sp.flip, x0, y0, c.sp, true); SKY.carLights(ctx, x0, y0, c.sp.flip.width * CS, H - 3 + (c.yo || 0), c.sp.ht, c.dir); if (c.run) blues(c, x0, H - 3 + (c.yo || 0), true); });
+  cars.filter(c => !c.crash && c.lane === 1 && !across(c)).forEach(drawC1); cars.filter(c => !c.crash && c.lane === 0 && across(c)).forEach(drawC0);
   const rot = state === 'menu' || state === 'ready' ? 0 : Math.max(-.45, Math.min(1.3, bird.vy / 320));
   if (golden) { for (let i = 0; i < 6; i++) { const a = (t * 2.3 + i * 1.05) % 1, sx = Math.round(bird.x - 10 - a * 34 + Math.sin(t * 5 + i) * 2), sy = Math.round(bird.y + Math.sin(t * 7 + i * 2) * 5); ctx.fillStyle = 'rgba(255,' + (220 + i * 5) + ',120,' + (1 - a).toFixed(2) + ')'; ctx.fillRect(sx, sy, 1, 1); if ((i + Math.floor(t * 6)) % 3 === 0) { ctx.fillRect(sx - 1, sy, 3, 1); ctx.fillRect(sx, sy - 1, 1, 3); } }
     const gl = ctx.createRadialGradient(bird.x, bird.y, 2, bird.x, bird.y, 22); gl.addColorStop(0, 'rgba(255,220,90,.35)'); gl.addColorStop(1, 'rgba(255,220,90,0)'); ctx.fillStyle = gl; ctx.fillRect(bird.x - 22, bird.y - 22, 44, 44); }

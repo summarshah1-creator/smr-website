@@ -91,8 +91,8 @@ L.periperi = { n: 'Peri-Peri Original', w: 180, d(c, x, G) {
     for (let k = 0; k < 3; k++) { const tx = wx + 6 + k * 15; R(c, '#ffffff', tx, G - 16, 10, 2); R(c, '#4a4e55', tx + 4, G - 14, 2, 10); R(c, k % 2 ? '#4caf50' : '#e0281a', tx - 3, G - 18, 3, 14); R(c, k % 2 ? '#4caf50' : '#e0281a', tx + 10, G - 18, 3, 14); }
     R(c, 'rgba(255,255,255,.3)', wx + 4, G - 44, 2, 38); R(c, '#3d4047', wx + 24, G - 44, 1, 40); }
   BOX(c, '#3d4047', x + 118, G - 46, 8, 46);
-  T(c, 'Peri-Peri', x + 122, G - 80, 16, '#ff9d8c'); T(c, 'Peri-Peri', x + 121, G - 81, 16, '#ff2e1f');
   BOX(c, '#f4f2ec', x + 92, G - 64, 60, 12); T(c, 'ORIGINAL', x + 122, G - 62, 8, '#e0281a', 'center', true);
+  T(c, 'Peri-Peri', x + 122, G - 79, 16, '#ff9d8c'); T(c, 'Peri-Peri', x + 121, G - 80, 16, '#ff2e1f');
 } };
 
 L.frasers = { n: 'Frasers Plus Luton', w: 292, d(c, x, G) {
@@ -473,7 +473,7 @@ L.chiltern = { n: 'The Chiltern Hotel', w: 350, d(c, x, G) {
   BOX(c, '#3a3d44', x + 260, G - 24, 60, 24); for (let i = 0; i < 12; i++) R(c, '#4a4e56', x + 262 + i * 5, G - 22, 2, 20);
   BOX(c, '#2a2f3a', x + 110, G - 24, 150, 24); for (let i = 0; i < 6; i++) R(c, '#f2d79a', x + 114 + i * 24, G - 20, 18, 14);
   P(c, '#1f5fb8', [[x + 116, G - 18], [x + 120, G - 26], [x + 146, G - 26], [x + 150, G - 18]], true); P(c, '#1f5fb8', [[x + 216, G - 18], [x + 220, G - 26], [x + 246, G - 26], [x + 250, G - 18]], true);
-  BOX(c, '#ecebe7', x + 160, G - 26, 46, 26); T(c, 'WELCOME', x + 183, G - 24, 8, '#4a4d54', 'center', false); BOX(c, '#3a3d44', x + 174, G - 16, 18, 16); R(c, '#8a1d2a', x + 179, G - 14, 8, 14);
+  BOX(c, '#ecebe7', x + 151, G - 26, 64, 26); T(c, 'WELCOME', x + 183, G - 23, 8, '#4a4d54', 'center', false); BOX(c, '#3a3d44', x + 174, G - 16, 18, 16); R(c, '#8a1d2a', x + 179, G - 14, 8, 14);
   BOX(c, '#e8e6e0', x + 104, G - 44, 158, 6); R(c, '#e8e6e0', x + 168, G - 38, 3, 12); R(c, '#e8e6e0', x + 195, G - 38, 3, 12);
   BOX(c, '#1f5fb8', x + 96, G - 70, 174, 28); R(c, '#2f72cc', x + 96, G - 70, 174, 3);
   CIRC(c, OUT, x + 183, G - 70, 13); CIRC(c, '#1f5fb8', x + 183, G - 70, 12); R(c, '#1f5fb8', x + 170, G - 70, 27, 3); T(c, 'C', x + 183, G - 81, 8, '#ffffff', 'center', false);
@@ -915,8 +915,8 @@ L.gurdwara = { n: 'Guru Nanak Gurdwara', w: 440, d(c, x, G) {
   // corner towers
   for (const tx of [x + 26, x + 404]) { BOX(c, WH, tx, G - 176, 12, 176); R(c, GD, tx, G - 150, 12, 2); CIRC(c, OUT, tx + 6, G - 180, 8); CIRC(c, WH, tx + 6, G - 180, 7); R(c, '#3a3d44', tx + 5, G - 194, 2, 8); }
   // sign
-  BOX(c, WH, x + 158, G - 50, 124, 23); R(c, '#1f2f6a', x + 160, G - 48, 120, 1); R(c, '#1f2f6a', x + 160, G - 30, 120, 1);
-  T(c, 'GURU NANAK GURDWARA', x + 220, G - 46, 8, '#1f2f6a', 'center', false); T(c, 'LUTON', x + 220, G - 38, 8, '#1f2f6a', 'center', false);
+  BOX(c, WH, x + 158, G - 51, 124, 26); R(c, '#1f2f6a', x + 160, G - 49, 120, 1); R(c, '#1f2f6a', x + 160, G - 27, 120, 1);   // room under LUTON so nothing looks cut off
+  T(c, 'GURU NANAK GURDWARA', x + 220, G - 46, 8, '#1f2f6a', 'center', false); T(c, 'LUTON', x + 220, G - 37, 8, '#1f2f6a', 'center', false);
   for (const kx of [x + 152, x + 284]) { CIRC(c, '#1f3f8a', kx + 2, G - 37, 3); R(c, '#1f3f8a', kx + 1, G - 45, 2, 13); }
   // stairs
   for (const [sx, dir] of [[x + 120, 1], [x + 290, -1]]) for (let i = 0; i < 10; i++) R(c, i % 2 ? '#b9bcc0' : '#a8abb0', sx + (dir > 0 ? i * 3 : 30 - i * 3), G - 44 + i * 4.4, 30, 4);
@@ -1147,7 +1147,7 @@ const WIDEN = {
     R(c, '#2a2f3a', x + 4, G - 50, 60, 50); for (let i = 0; i < 5; i++) BOX(c, '#ecebe7', x + 6 + i * 13, G - 50, 3, 50);
     for (let i = 0; i < 12; i++) { R(c, '#9aa3ad', x + 8 + i * 4.5, G - 12, 4, 1); R(c, '#9aa3ad', x + 8 + i * 4.5, G - 12, 1, 9); }
     BOX(c, '#c8202a', x + 20, G - 62, 10, 8); P(c, '#d64545', [[x + 20, G - 84], [x + 30, G - 84], [x + 25, G - 76]], true);
-    BOX(c, '#9aa3ad', x + 320, G - 54, 40, 54); for (let i = 0; i < 12; i++) R(c, '#868e98', x + 320, G - 52 + i * 4, 40, 1); R(c, '#c9ced4', x + 368, G - 120, 3, 120); BOX(c, '#d64545', x + 300, G - 50, 6, 10);
+    BOX(c, '#9aa3ad', x + 320, G - 54, 40, 54); for (let i = 0; i < 12; i++) R(c, '#868e98', x + 320, G - 52 + i * 4, 40, 1); BOX(c, '#d64545', x + 300, G - 50, 6, 10);
   } },
   suffa: { w: 344, dx: 44, post(c, x, G) { TREE(c, x - 18, G - 2, 2.1, '#5f9a3e', '#47702c'); } },   // big tree in front of the left corner
   masjid: { w: 320, dx: 50, pre(c, x, G) {
@@ -1193,6 +1193,18 @@ Object.keys(WIDEN).forEach(k => { const o = WIDEN[k], d0 = L[k].d; L[k].w = o.w;
 /* ---------- size tweaks: draw at 1x off-screen, then scale with crisp pixels ---------- */
 // text drawn after a landmark is scaled, so small lettering stays crisp (sx/sy = original coordinates)
 const SHARP = {
+  frasers(c, x, G, f) { const X = v => Math.round(x + v * f), Y = v => Math.round(G - v * f);   // the blue sign over the doors redrawn crisp, text kept inside the box
+    const x0 = X(6), x1 = X(122), y0 = Y(36), y1 = Y(27); R(c, OUT, x0 - 1, y0 - 1, x1 - x0 + 2, y1 - y0 + 2); R(c, '#1f4fa8', x0, y0, x1 - x0, y1 - y0); R(c, '#2a62c4', x0, y0, x1 - x0, 1);
+    let fz = 8; c.font = fz + 'px Silk'; while (c.measureText('FRASERSPLUS LUTON').width > x1 - x0 - 8 && fz > 6) { fz--; c.font = fz + 'px Silk'; }
+    c.textAlign = 'center'; c.textBaseline = 'top'; c.fillStyle = '#ffffff'; c.fillText('FRASERSPLUS LUTON', Math.round((x0 + x1) / 2), Math.round((y0 + y1) / 2 - fz / 2)); },
+  grandbazar(c, x, G, f) {   // the GB badges redrawn crisp at screen size: navy disc, white ring, pixel G (lime) and B (white)
+    const NV = '#243a6a', LM = '#a6cf2a', GL = ['.####', '#....', '#....', '#..##', '#...#', '#...#', '.###.'], BL = ['####.', '#...#', '#...#', '####.', '#...#', '#...#', '####.'];
+    for (const [cx0, cy0, r0] of [[92, 92, 13], [69, 50, 10]]) { const cx = Math.round(x + cx0 * f), cy = Math.round(G - cy0 * f), r = Math.round(r0 * f);
+      CIRC(c, OUT, cx, cy, r + 1); CIRC(c, '#ffffff', cx, cy, r); CIRC(c, NV, cx, cy, r - 2);
+      const put = (gl, ox, col) => gl.forEach((row, j) => [...row].forEach((ch, i) => { if (ch === '#') R(c, col, ox + i, cy - 3 + j, 2, 1); }));   // bold strokes
+      put(GL, cx - 7, LM); put(BL, cx + 1, '#ffffff'); } },
+  chiltern(c, x, G, f) { const X = v => Math.round(x + v * f), Y = v => Math.round(G - v * f);   // crisp WELCOME over the door
+    R(c, '#ecebe7', X(152), Y(25), X(214) - X(152), Y(17) - Y(25)); T(c, 'WELCOME', X(183), Y(22.5), 8, '#3e4148', 'center', false); },
   krispy(c, x, G, f) { const X = v => Math.round(x + v * f), Y = v => Math.round(G - v * f);
     // crisp, slightly taller sign after the 0.82 scale-down
     const sx = X(4), sw = Math.round(132 * f), top = Y(76), bot = Y(48);
@@ -1226,7 +1238,7 @@ const SHARP = {
     BOX(c, '#151618', X(-4), Y(88), Math.round(96 * f), 17); T(c, 'CHAIIKHANA', X(44), Y(88) + 4, 8, '#f4f4f2', 'center', true);
     T(c, 'ORDER', X(34), Y(30) + 2, 8, '#e0458a', 'center', true); },
 };
-const SCALE = { letters: .8, townhall: 1.2, masjidali: 1.5, inspire: 1.21, funfair: 1.25, airport: 1.2, sixthform: 1.44, uob: 1.2, chiltern: 1.2, lewsey: 1.2, grandbazar: 1.2, lidl: 1.2, matalan: 1.5, bandq: 1.56, tesco: 1.5, cycleking: .98, topspizza: .82, alquds: .82, kahwa: .82, gna: .82, toros: .82, krispy: .82, lutonhoo: 1.5, currys: 1.15, masjid: 1.32, suffa: 1.08, oak: .82, chaiikhana: .85, spudkingz: .48, nadeem: 1.52, chaiiwala: 1.32, frasers: 1.6, stmarys: 1.02, hatfactory: 1.3 };
+const SCALE = { galaxy: 1.25, leagrave: .9, letters: .8, townhall: 1.2, masjidali: 1.5, inspire: 1.21, funfair: 1.25, airport: 1.2, sixthform: 1.44, uob: 1.2, chiltern: 1.2, lewsey: 1.2, grandbazar: 1.2, lidl: 1.2, matalan: 1.5, bandq: 1.56, tesco: 1.5, cycleking: .98, topspizza: .82, alquds: .82, kahwa: .82, gna: .82, toros: .82, krispy: .82, lutonhoo: 1.5, currys: 1.15, masjid: 1.32, suffa: 1.08, oak: .82, chaiikhana: .85, spudkingz: .48, nadeem: 1.52, chaiiwala: 1.32, frasers: 1.6, stmarys: 1.02, hatfactory: 1.3 };
 // (SCALE is applied at the end of the file, once every landmark is defined)
 
 /* things drawn after scaling, so they keep their own size */
@@ -1360,8 +1372,8 @@ window.LM_ANIM.townhall = (c, x, G) => { const d = new Date(), m = d.getMinutes(
   const hand = (a, len) => { c.beginPath(); c.moveTo(cx, cy); c.lineTo(cx + Math.sin(a) * len, cy - Math.cos(a) * len); c.stroke(); };
   hand(h / 12 * 2 * Math.PI, 2.6); c.lineWidth = .7; hand(m / 60 * 2 * Math.PI, 4.1); c.fillStyle = '#c9a64a'; c.fillRect(cx - .5, cy - .5, 1, 1); c.restore(); };
 window.LM_ANIM.masjidali = (c, x, G, t) => { const fx = x + 63, N = 32;
-  for (let i = 0; i < N; i++) { const k = i / (N - 1), dy = Math.sin(t * 4.5 - i * .32) * 2.4 * k, top = G - 104 + i * .2 + dy, h = 24 - i * .12;
-    c.fillStyle = OUT; c.fillRect(fx + i, top - 1, 1, h + 2); c.fillStyle = (i >> 2) % 2 ? '#1f8f3a' : '#23994a'; c.fillRect(fx + i, top, 1, h);
+  for (let i = 0; i < N; i++) { const k = i / (N - 1), dy = Math.sin(t * 4.5 - i * .32) * 2.4 * k, top = Math.round(G - 104 + i * .2 + dy), h = Math.round(24 - i * .12);   // whole pixels, columns overlapping: a solid flag, nothing showing through
+    c.fillStyle = OUT; c.fillRect(fx + i, top - 1, 1.7, h + 2); c.fillStyle = (i >> 2) % 2 ? '#1f8f3a' : '#23994a'; c.fillRect(fx + i, top, 1.7, h);
     c.fillStyle = '#101012'; if (i > 3 && i < N - 3) { if ((i * 5) % 7 < 4) c.fillRect(fx + i, top + 6 + ((i * 3) % 3), 1, 1); if ((i * 7) % 9 < 5) c.fillRect(fx + i, top + 11 + ((i * 2) % 3), 1, 1); if (i % 6 === 2) c.fillRect(fx + i, top + 5, 1, 9); if ((i * 11) % 13 < 5) c.fillRect(fx + i, top + 16 + (i % 2), 1, 1); } }
   c.fillStyle = '#e8eaee'; c.fillRect(fx - 2, G - 105, 2, 26); };
 window.LM_ANIM.wardown = (c, x, G, t) => {
@@ -1407,6 +1419,63 @@ L.smr = { n: 'SMR Digital', w: 210, d(c, x, G) {
   // shop sign-ish name plate at the bottom of the wall
   BOX(c, '#1b1d24', x + 40, G - 30, 96, 10); T(c, 'SMR STUDIO', x + 88, G - 29, 8, '#e9e4d6', 'center', false); BOX(c, '#3a3d44', x + 70, G - 18, 36, 18); R(c, '#9fb7c9', x + 72, G - 16, 15, 16); R(c, '#9fb7c9', x + 89, G - 16, 15, 16);
 }, board: { x: 14, y: 140, w: 148, h: 82 } };
+L.marshfarm = { n: 'Marsh Farm Estate', w: 290, d(c, x, G) {
+  // Lea Bank, Five Springs and Penhill: three 15-storey blocks in blue patchwork cladding, the far ones smaller
+  const PAL = ['#4b88c8', '#3a76bf', '#2c66b4', '#22529e', '#1b4288', '#163672'];   // lightest panels kept darker than the sky
+  const hash = (a, b, cc) => { const v = Math.sin(a * 91.7 + b * 47.3 + cc * 13.1) * 43758.5; return v - Math.floor(v); };
+  const tower = (tx, w, h, sd, bal, strip) => { const top = G - h, FL = Math.floor(h / 15);
+    BOX(c, PAL[2], tx, top, w, h);
+    const cw = 6, cols = Math.ceil(w / cw); const base = []; for (let i = 0; i < cols; i++) base.push(Math.floor(hash(sd, i, 0) * 4));
+    for (let f = 0; f < 15; f++) for (let i = 0; i < cols; i++) { const n = hash(sd, i, f + 1), k = Math.max(0, Math.min(5, base[i] + (n < .25 ? -1 : n > .8 ? 2 : n > .6 ? 1 : 0)));
+      R(c, PAL[k], tx + i * cw, top + f * FL, Math.min(cw, w - i * cw), FL); }
+    // balconies: a recessed dark column with white rails on every floor
+    if (bal) { const [bx, bw] = bal; R(c, '#132548', tx + bx, top + 2, bw, h - 2); for (let f = 0; f < 15; f++) { R(c, '#eef2f6', tx + bx, top + f * FL + FL - 3, bw, 1); R(c, '#2a4f86', tx + bx, top + f * FL + FL - 2, bw, 2); } }
+    // windows: white frames, grey-blue glass
+    for (let f = 0; f < 15; f++) for (let i = 0; i < cols; i++) { if (bal && i * cw >= bal[0] - 4 && i * cw < bal[0] + bal[1]) continue; if (strip && i * cw >= strip[0] - 3 && i * cw < strip[0] + strip[1]) continue; if (i % 2) continue;   // a regular grid of windows, every floor
+      const wx = tx + i * cw, wy = top + f * FL + 2; R(c, '#f2f4f6', wx, wy, 5, FL - 4); R(c, '#6f8fa8', wx + 1, wy + 1, 3, FL - 6 > 0 ? FL - 6 : 1); }
+    // stairwell: a column of tall windows all the way up
+    if (strip) { const [sx, sw] = strip; R(c, '#e9edf2', tx + sx, top + 3, sw, h - 3); for (let f = 0; f < 15; f++) { R(c, '#7d97ad', tx + sx + 1, top + f * FL + 2, sw - 2, FL - 3); R(c, '#e9edf2', tx + sx + (sw >> 1), top + f * FL + 2, 1, FL - 3); } }
+    R(c, '#a9c3dc', tx, top, w, 2); R(c, OUT, tx - 1, top - 1, w + 2, 1); R(c, 'rgba(10,20,50,.14)', tx + w - 4, top, 4, h); };
+  // three tall blocks of about the same size side by side: the middle one a little shorter, the right one a little thinner
+  tower(x + 4, 80, 300, 1, [6, 13], [44, 10]);
+  tower(x + 108, 80, 282, 2, [6, 13], [44, 10]);
+  tower(x + 212, 68, 300, 3, [5, 11], [38, 9]);
+  for (const [ax, top] of [[x + 20, 300], [x + 58, 300], [x + 124, 282], [x + 162, 282], [x + 228, 300], [x + 262, 300]]) { R(c, '#7a8088', ax, G - top - 9, 1, 9); R(c, '#9aa0a8', ax - 2, G - top - 6, 5, 1); }   // aerials
+  // trees along the front
+  TREE(c, x + 14, G, 1.5); TREE(c, x + 96, G, 1.7); TREE(c, x + 200, G, 1.6); TREE(c, x + 266, G, 1.8);
+} };
+
+L.orbital = { n: 'Orbital Trampoline Park', w: 620, d(c, x, G) {
+  // long grey shed: a ribbon of windows under the roof, ORBITAL / TRAMPOLINE PARK boards, lime-green ground floor; deep dark canopy over the entrance on the right
+  const CL = '#8c949e', RB = '#7b838d', LM = '#a9c935', LMD = '#93b12a', DK = '#3b4048', GN = '#8cc63f', GL = '#6f8fa8', MW = 450, E = x + MW;
+  P(c, '#9aa2ac', [[x - 2, G - 150], [x + 622, G - 150], [x + 616, G - 156], [x + 4, G - 156]], true);
+  BOX(c, CL, x, G - 150, MW, 150); for (let i = 2; i < MW; i += 3) R(c, RB, x + i, G - 150, 1, 106);   // the grey cladding makes up most of the height
+  R(c, '#a4abb4', x, G - 150, MW, 2); R(c, '#6c737c', x, G - 122, MW, 1); R(c, '#6c737c', x, G - 76, MW, 1); R(c, '#6c737c', x, G - 46, MW, 2);
+  // ribbon of windows under the roof
+  BOX(c, '#c9ced4', x + 6, G - 142, MW - 12, 16); for (let i = 0; i < 28; i++) { R(c, GL, x + 8 + i * 15.6, G - 140, 13, 12); R(c, 'rgba(255,255,255,.22)', x + 9 + i * 15.6, G - 139, 3, 10); }
+  // the boards: ORBITAL in green slanted letters, TRAMPOLINE PARK in white
+  BOX(c, DK, x + 10, G - 112, 190, 32); BOX(c, DK, x + 212, G - 108, 228, 24);
+  c.save(); c.translate(x + 108, G - 110); c.transform(1, 0, -.28, 1, 0, 0); c.font = '700 24px Silk'; c.textAlign = 'center'; c.textBaseline = 'top'; c.fillStyle = '#4f7a1c'; c.fillText('ORBITAL', 1, 4); c.fillStyle = GN; c.fillText('ORBITAL', 0, 2); c.beginPath(); c.rect(-140, 2, 280, 10); c.clip(); c.fillStyle = '#b8e05c'; c.fillText('ORBITAL', 0, 2); c.restore();   // two-tone lime like the real sign
+  { c.font = '700 16px Silk'; let fz = 16; if (c.measureText('TRAMPOLINE PARK').width > 220) fz = 8; T(c, 'TRAMPOLINE PARK', x + 326, G - 104 + (16 - fz) / 2, fz, '#f2f4f6', 'center', true); }
+  // lime ground floor with windows (blinds) and a side door
+  BOX(c, LM, x, G - 44, MW, 44); for (let i = 0; i < MW; i += 30) R(c, LMD, x + i, G - 44, 1, 44);   // the lime band is low, just the ground floor
+  for (let k = 0; k < 7; k++) { const wx = x + 14 + k * 56; BOX(c, '#2a2d34', wx, G - 36, 34, 18); for (let n = 0; n < 4; n++) R(c, '#e9ecef', wx + 2, G - 34 + n * 4, 30, 2); R(c, '#9aa3ad', wx + 16, G - 36, 1, 18); }
+  // Costa corner: red board over the door
+  BOX(c, '#b0182a', E - 46, G - 62, 40, 14); T(c, 'COSTA', E - 26, G - 59, 8, '#f6efe4', 'center', false);
+  BOX(c, '#1f2228', E - 38, G - 40, 22, 40); R(c, '#9aa3ad', E - 20, G - 24, 1, 6); R(c, '#2a6fd8', E - 34, G - 40, 6, 4);
+  // entrance block: deep dark canopy, glass front, BOUNCE THIS WAY panel, brick pillar
+  BOX(c, '#4a5058', E, G - 150, 170, 20); R(c, '#5d646d', E, G - 150, 170, 2); R(c, '#2b2f36', E, G - 132, 170, 2);
+  R(c, '#24272d', E + 1, G - 130, 168, 130); for (let i = 0; i < 168; i += 3) R(c, '#2b2f36', E + 1 + i, G - 130, 1, 70);
+  for (const lx of [E + 44, E + 104]) { R(c, '#55595f', lx, G - 128, 1, 10); BOX(c, '#6d737b', lx - 3, G - 119, 7, 3); }
+  BOX(c, DK, E + 4, G - 62, 12, 62); for (let k = 0; k < 6; k++) R(c, '#c9ced4', E + 9, G - 58 + k * 9, 2, 6);   // tall TRAMPOLINE PARK fin
+  BOX(c, '#2c3138', E + 18, G - 62, 104, 62);
+  for (let i = 0; i < 4; i++) { R(c, '#7f99ad', E + 20 + i * 15, G - 60, 13, 60); R(c, 'rgba(255,255,255,.2)', E + 21 + i * 15, G - 58, 2, 40); }
+  BOX(c, GN, E + 82, G - 60, 38, 60); T(c, 'BOUNCE', E + 101, G - 56, 8, '#ffffff', 'center', false); T(c, 'THIS', E + 101, G - 47, 8, '#ffffff', 'center', false); T(c, 'WAY', E + 101, G - 38, 8, '#ffffff', 'center', false);
+  for (let k = 0; k < 2; k++) P(c, '#d8f08a', [[E + 87 + k * 12, G - 22], [E + 93 + k * 12, G - 16], [E + 87 + k * 12, G - 10], [E + 91 + k * 12, G - 10], [E + 97 + k * 12, G - 16], [E + 91 + k * 12, G - 22]]);
+  BRICK(c, E + 136, G - 130, 22, 130, '#8a6a52', '#755842'); R(c, OUT, E + 135, G - 130, 1, 130); R(c, OUT, E + 158, G - 130, 1, 130);
+  BOX(c, '#f2f4f6', E + 126, G - 50, 8, 8); R(c, '#1f5fb0', E + 128, G - 48, 4, 4);   // little blue sign
+} };
+
 L.barak = { n: 'The Barak Steakhouse', w: 220, d(c, x, G) {
   // single-storey brick restaurant up on a raised brick platform, with a ramp (white handrail) and steps up to the door
   const PL = G - 18, GD = '#d9a35e', NV = '#1f252d', BR = '#8f4a36', BL = '#7a3e2e';
@@ -1422,10 +1491,10 @@ L.barak = { n: 'The Barak Steakhouse', w: 220, d(c, x, G) {
   { const cx = x + 90, cy = PL - 18;   // crossed fork and knife in a gold ring
     CIRC(c, GD, cx, cy, 8); CIRC(c, NV, cx, cy, 7); for (let i = -5; i <= 5; i++) { R(c, GD, cx + i, cy + i, 1, 1); R(c, '#e8dccb', cx - i, cy + i, 1, 1); } R(c, GD, cx - 6, cy - 6, 1, 2); R(c, GD, cx - 4, cy - 6, 1, 2); R(c, '#e8dccb', cx + 4, cy - 6, 2, 3); }
   // main sign over the door: black board, gold frame, THE BARAK
-  BOX(c, '#121418', x + 106, PL - 35, 70, 12); R(c, GD, x + 107, PL - 34, 68, 1); R(c, GD, x + 107, PL - 25, 68, 1); R(c, GD, x + 107, PL - 34, 1, 10); R(c, GD, x + 174, PL - 34, 1, 10);
-  T(c, 'THE BARAK', x + 141, PL - 33, 8, GD, 'center', true); R(c, GD, x + 109, PL - 30, 2, 2); R(c, GD, x + 171, PL - 30, 2, 2);
+  BOX(c, '#121418', x + 104, PL - 35, 74, 14); R(c, GD, x + 105, PL - 34, 72, 1); R(c, GD, x + 105, PL - 23, 72, 1); R(c, GD, x + 105, PL - 34, 1, 12); R(c, GD, x + 176, PL - 34, 1, 12);   // taller board
+  T(c, 'THE BARAK', x + 141, PL - 32, 8, GD, 'center', false); R(c, GD, x + 108, PL - 29, 2, 2); R(c, GD, x + 172, PL - 29, 2, 2);   // clean letters, centred both ways
   // glass double door, small window, notice board
-  BOX(c, '#3a3d44', x + 124, PL - 22, 26, 22); R(c, '#9fb7c9', x + 126, PL - 20, 10, 20); R(c, '#9fb7c9', x + 138, PL - 20, 10, 20); R(c, '#c9ced4', x + 134, PL - 12, 1, 4); R(c, '#c9ced4', x + 139, PL - 12, 1, 4);
+  BOX(c, '#3a3d44', x + 124, PL - 20, 26, 20); R(c, '#9fb7c9', x + 126, PL - 18, 10, 18); R(c, '#9fb7c9', x + 138, PL - 18, 10, 18); R(c, '#c9ced4', x + 134, PL - 12, 1, 4); R(c, '#c9ced4', x + 139, PL - 12, 1, 4);
   BOX(c, '#3a3d44', x + 182, PL - 26, 10, 12); R(c, '#f4f2ec', x + 183, PL - 25, 8, 10); R(c, '#c9ced4', x + 184, PL - 23, 6, 1); R(c, '#c9ced4', x + 184, PL - 20, 5, 1);
   // big hipped tiled roof with a white fascia
   P(c, '#4a4b52', [[x + 6, PL - 37], [x + 216, PL - 37], [x + 190, PL - 68], [x + 32, PL - 68]], true);
@@ -1556,7 +1625,7 @@ window.LM_ANIM.funfair = (c, x, G, t) => {
   CIRC(c, OUT, px, py, 5); CIRC(c, '#9aa3ad', px, py, 4); BOX(c, '#d32f2f', px - 4, py - 10, 8, 6);
 };
 
-window.LM_ORDER = ['galaxy', 'townhall', 'stmarys', 'letters', 'frasers', 'station', 'smr', 'hatfactory', 'chaiiwala', 'chaiikhana', 'spudkingz', 'miamicrispy', 'barak', 'masjid', 'masjidali', 'suffa', 'gurdwara', 'ldh', 'lutonhoo', 'foodbank', 'inspire', 'nadeem', 'oak', 'periperi', 'toros', 'cycleking', 'gna', 'kahwa', 'leagrave', 'topspizza', 'alquds', 'kaya', 'karwan', 'krispy', 'tesco', 'currys', 'bandq', 'matalan', 'lidl', 'jdgyms', 'bigyellow', 'grandbazar', 'lewsey', 'venue', 'chiltern', 'uob', 'sixthform', 'wardownfield', 'wardown', 'wardownbridge', 'funfair', 'stockwood', 'welcome', 'airport'];
+window.LM_ORDER = ['galaxy', 'townhall', 'stmarys', 'letters', 'frasers', 'station', 'smr', 'hatfactory', 'chaiiwala', 'chaiikhana', 'spudkingz', 'miamicrispy', 'barak', 'masjid', 'masjidali', 'suffa', 'gurdwara', 'ldh', 'lutonhoo', 'foodbank', 'inspire', 'nadeem', 'oak', 'periperi', 'toros', 'cycleking', 'gna', 'kahwa', 'leagrave', 'topspizza', 'alquds', 'kaya', 'karwan', 'krispy', 'tesco', 'currys', 'bandq', 'matalan', 'lidl', 'jdgyms', 'bigyellow', 'orbital', 'grandbazar', 'lewsey', 'marshfarm', 'venue', 'chiltern', 'uob', 'sixthform', 'wardownfield', 'wardown', 'wardownbridge', 'funfair', 'stockwood', 'welcome', 'airport'];
 Object.keys(SCALE).forEach(k => { const f = SCALE[k], d0 = L[k].d, w0 = L[k].w, M = 80, H = 320; L[k].w = Math.round(w0 * f);
   // drawn natively at the new size (not a stretched picture), so edges, lines and text stay sharp
   L[k].d = (c, x, G) => { const pk = RK; c.save(); c.translate(Math.round(x), Math.round(G)); c.scale(f, f); c.beginPath(); c.rect(-M, -H, w0 + M * 2, H); c.clip(); RK = f; try { d0(c, 0, 0); } finally { RK = pk; c.restore(); } if (SHARP[k]) SHARP[k](c, x, G, f); }; });
