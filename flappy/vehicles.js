@@ -237,27 +237,78 @@ V.lorry = { n: 'Box lorry', w: 100, h: 44, weight: .9, speed: [22, 36], colours:
 } };
 
 /* motorbike with rider */
-V.motorbike = { n: 'Motorbike', w: 26, h: 22, weight: 2, speed: [40, 75], colours: [['Black', '#1e2024'], ['Red', '#c02028'], ['Blue', '#1f4fa8'], ['Green', '#3fae3a'], ['Orange', '#f07a12']],
+/* motorbike: sports bike with tank, fairing, exhaust, forks and a rider in leathers */
+V.motorbike = { n: 'Motorbike', w: 32, h: 24, weight: 1.6, speed: [40, 75], colours: [['Black', '#1e2024'], ['Black', '#1e2024'], ['Deep red', '#a8202a']],
   d(c, x, G, [, B]) {
-  wheel(c, x + 5, G, 4.4, '#3a3d44', null, 6); wheel(c, x + 21, G, 4.4, '#3a3d44', null, 6);
-  fill(c, B, [[x + 4, G - 9], [x + 9, G - 13], [x + 18, G - 13.5], [x + 22, G - 10], [x + 16, G - 6.5], [x + 9, G - 7]]); R(c, '#9aa2ab', x + 9, G - 6.5, 7, 2); R(c, '#2a2c31', x + 18, G - 15, 1, 6);
-  R(c, '#3a3d44', x + 9, G - 17, 3, 5); R(c, '#2a2c31', x + 10, G - 20, 5, 4); R(c, '#2a2c31', x + 13, G - 18, 6, 1.5); disc(c, OUT, x + 13, G - 22.5, 2.6); disc(c, B, x + 13, G - 22.5, 2.2); R(c, '#26303a', x + 13.5, G - 23, 2, 1.2);
-  R(c, '#e8ecf0', x + 22, G - 12, 2, 1.4); R(c, '#d42a2a', x + 2.5, G - 10, 1.5, 1);
+  wheel(c, x + 6, G, 5, '#3a3d44', null, 6, '#9aa3ad'); wheel(c, x + 26, G, 5, '#3a3d44', null, 6, '#9aa3ad');
+  c.strokeStyle = '#2a2c31'; c.lineWidth = 1.4; c.beginPath(); c.moveTo(x + 6, G - 5); c.lineTo(x + 13, G - 9); c.stroke();   // swing arm
+  c.strokeStyle = '#b9bec6'; c.lineWidth = 1.2; c.beginPath(); c.moveTo(x + 26, G - 5); c.lineTo(x + 23, G - 15); c.stroke();  // forks
+  R(c, '#6a6f77', x + 2, G - 9, 9, 2); R(c, '#9aa3ad', x + 2, G - 9, 3, 2);                                                        // exhaust
+  R(c, '#2a2c31', x + 11, G - 10, 8, 4); R(c, '#4a4d54', x + 12, G - 9, 3, 2);                                                       // engine
+  fill(c, B, [[x + 5, G - 12], [x + 11, G - 13], [x + 16, G - 16], [x + 22, G - 16], [x + 27, G - 13], [x + 25, G - 9], [x + 19, G - 9], [x + 15, G - 11], [x + 8, G - 10]]);   // tank + fairing
+  R(c, SH(B, 1.3), x + 17, G - 15.5, 4, 1); R(c, '#26303a', x + 23, G - 17, 3, 2); R(c, '#e8ecf0', x + 26.5, G - 13, 2, 1.6); R(c, '#d42a2a', x + 3.5, G - 12.5, 1.6, 1.2);
+  // rider in leathers, tucked in
+  R(c, '#1b1b1f', x + 9, G - 14, 6, 2); R(c, '#1b1b1f', x + 13, G - 14, 2, 6); R(c, '#2a2a30', x + 12, G - 9, 3, 3);                 // leg
+  fill(c, '#22232a', [[x + 9, G - 14], [x + 11, G - 21], [x + 17, G - 22], [x + 19, G - 19], [x + 15, G - 14]]); R(c, B, x + 12, G - 20, 4, 1);
+  c.strokeStyle = '#22232a'; c.lineWidth = 1.6; c.beginPath(); c.moveTo(x + 17, G - 20); c.lineTo(x + 22, G - 16.5); c.stroke();
+  disc(c, OUT, x + 18, G - 24, 3.1); disc(c, B, x + 18, G - 24, 2.6); R(c, '#26303a', x + 18.6, G - 25, 2.6, 1.6); R(c, 'rgba(255,255,255,.5)', x + 16.6, G - 25.8, 1.4, .6);
 } };
 
-/* bicycle with rider (slow) */
-V.bike = { n: 'Bicycle', w: 22, h: 21, weight: 2, speed: [12, 20], colours: [['Hi-vis', '#d4ff2a'], ['Red top', '#c02028'], ['Blue top', '#1f4fa8'], ['Black top', '#1e2024']],
-  d(c, x, G, [, top]) {
-  for (const wx of [x + 4.5, x + 17.5]) { c.strokeStyle = OUT; c.lineWidth = 1.4; c.beginPath(); c.arc(wx, G - 4, 3.8, 0, 7); c.stroke(); }
-  c.strokeStyle = '#2f6fd0'; c.lineWidth = 1; c.beginPath(); c.moveTo(x + 4.5, G - 4); c.lineTo(x + 9, G - 9); c.lineTo(x + 15, G - 9); c.lineTo(x + 17.5, G - 4); c.moveTo(x + 9, G - 9); c.lineTo(x + 11, G - 4); c.lineTo(x + 15, G - 9); c.stroke();
-  R(c, '#2a2c31', x + 8, G - 10.5, 3, 1); R(c, '#2a2c31', x + 15, G - 12, 2, 3);
-  c.strokeStyle = '#2a2c31'; c.lineWidth = 1.2; c.beginPath(); c.moveTo(x + 9.5, G - 11); c.lineTo(x + 11, G - 6); c.lineTo(x + 12, G - 4); c.stroke();
-  fill(c, top, [[x + 8.5, G - 11], [x + 12, G - 18], [x + 14, G - 17], [x + 11, G - 11]], false); R(c, top, x + 12.5, G - 16, 3, 1.2);
-  disc(c, '#c58c5c', x + 13.5, G - 19.5, 1.6); disc(c, '#f4f2ec', x + 13.2, G - 20.5, 1.7);
+/* delivery moped: step-through scooter, rider in a branded-colour jacket, big insulated box on the back */
+V.moped = { n: 'Delivery moped', w: 30, h: 27, weight: 3, speed: [28, 48], colours: [['Teal delivery', '#00c2b3', '#f4f2ec'], ['Orange delivery', '#ff7a12', '#f4f2ec'], ['Black delivery', '#1e2024', '#39d353'], ['Teal delivery', '#00c2b3', '#f4f2ec'], ['Orange delivery', '#ff7a12', '#f4f2ec']],
+  d(c, x, G, [, B, A]) {
+  wheel(c, x + 6, G, 3.6, '#4a4d54', null, 5); wheel(c, x + 24, G, 3.6, '#4a4d54', null, 5);
+  fill(c, '#e9ecf0', [[x + 3, G - 6], [x + 4, G - 11], [x + 12, G - 11], [x + 14, G - 6], [x + 20, G - 6], [x + 22, G - 15], [x + 24, G - 15], [x + 25, G - 6], [x + 22, G - 4], [x + 6, G - 4]]);   // body + leg shield
+  R(c, '#b9bec6', x + 5, G - 7, 8, 1); R(c, '#2a2c31', x + 22, G - 19, 2, 5); R(c, '#2a2c31', x + 20, G - 20, 6, 1.4); R(c, '#f4f2ec', x + 25, G - 13, 1.6, 1.6); R(c, '#d42a2a', x + 2.6, G - 9, 1.4, 1.2);
+  R(c, '#1b1b1f', x + 4, G - 12.5, 9, 2);                                                                                         // seat
+  // the box: insulated, rider's colour, a white stripe (no logos)
+  R(c, OUT, x, G - 25, 11, 12); R(c, B, x + .5, G - 24.5, 10, 11); R(c, SH(B, .8), x + .5, G - 15, 10, 1.5); R(c, A, x + 1.5, G - 21, 8, 1.2); R(c, SH(B, 1.2), x + 1, G - 24, 9, 1);
+  // rider: jacket in the same colour, dark trousers, white helmet
+  R(c, '#1e2024', x + 11, G - 14, 6, 2.4); R(c, '#1e2024', x + 15, G - 13, 2.4, 6); R(c, '#f4f2ec', x + 15, G - 7.5, 3.6, 1.4);
+  fill(c, B, [[x + 10.5, G - 13], [x + 11, G - 21], [x + 15, G - 23], [x + 17.5, G - 20], [x + 16.5, G - 13]]); R(c, A, x + 11.5, G - 17, 5, .8);
+  c.strokeStyle = B; c.lineWidth = 1.5; c.beginPath(); c.moveTo(x + 15.5, G - 20); c.lineTo(x + 21, G - 19.5); c.stroke(); R(c, '#1b1b1f', x + 20.4, G - 20.2, 1.4, 1.4);
+  disc(c, OUT, x + 14.6, G - 25.4, 3); disc(c, '#f4f2ec', x + 14.6, G - 25.4, 2.5); R(c, '#26303a', x + 15.4, G - 26.2, 2.4, 1.6); R(c, B, x + 12.6, G - 27.6, 3, .8);
+} };
+
+/* bicycle: spoked wheels, proper diamond frame, rider pedalling; some are delivery riders with a backpack box */
+V.bike = { n: 'Bicycle', w: 26, h: 26, weight: 2, speed: [12, 22], colours: [['Hi-vis', '#d4ff2a'], ['Red top', '#c02028'], ['Blue top', '#1f4fa8'], ['Black top', '#1e2024'], ['Teal delivery', '#00c2b3', '#00c2b3'], ['Orange delivery', '#ff7a12', '#ff7a12']],
+  d(c, x, G, [, top, box]) {
+  wheel(c, x + 5, G, 4.4, '#cfd4da', null, 8); wheel(c, x + 21, G, 4.4, '#cfd4da', null, 8);
+  const F = '#2f6fd0'; c.strokeStyle = OUT; c.lineWidth = 2; const frame = () => { c.beginPath(); c.moveTo(x + 5, G - 4.4); c.lineTo(x + 10, G - 4.4); c.lineTo(x + 17.5, G - 11); c.lineTo(x + 9, G - 11); c.lineTo(x + 5, G - 4.4); c.moveTo(x + 9, G - 11); c.lineTo(x + 10, G - 4.4); c.moveTo(x + 17.5, G - 11); c.lineTo(x + 21, G - 4.4); c.moveTo(x + 17.5, G - 11); c.lineTo(x + 18.5, G - 14); c.moveTo(x + 9, G - 11); c.lineTo(x + 8.5, G - 13); c.stroke(); };
+  frame(); c.strokeStyle = F; c.lineWidth = 1; frame(); R(c, '#1b1b1f', x + 6.8, G - 14, 4, 1.4); R(c, '#2a2c31', x + 17.5, G - 15, 3.4, 1.2);
+  disc(c, '#2a2c31', x + 10, G - 4.4, 1.6); R(c, '#9aa3ad', x + 5, G - 4.8, 5, .6);                                          // crank + chain
+  // rider: one leg down, one up, leaning to the bars
+  c.strokeStyle = '#22232a'; c.lineWidth = 1.8; c.beginPath(); c.moveTo(x + 9, G - 15); c.lineTo(x + 12, G - 9); c.lineTo(x + 11, G - 2.8); c.moveTo(x + 9, G - 15); c.lineTo(x + 13, G - 12); c.lineTo(x + 9, G - 6); c.stroke();
+  R(c, '#f4f2ec', x + 10, G - 3.2, 3, 1.2); R(c, '#f4f2ec', x + 8, G - 6.6, 3, 1.2);
+  fill(c, top, [[x + 7.5, G - 15], [x + 10, G - 22], [x + 14, G - 22], [x + 12, G - 15]]); c.strokeStyle = top; c.lineWidth = 1.4; c.beginPath(); c.moveTo(x + 12.5, G - 20.5); c.lineTo(x + 18.5, G - 15.5); c.stroke();
+  if (box) { R(c, OUT, x + 4.5, G - 25, 7, 8); R(c, box, x + 5, G - 24.5, 6, 7); R(c, '#f4f2ec', x + 5.5, G - 21.5, 5, .8); }
+  disc(c, OUT, x + 13, G - 24.6, 2.4); disc(c, '#c58c5c', x + 13, G - 24.6, 1.9); disc(c, '#f4f2ec', x + 12.6, G - 25.6, 2); R(c, '#f4f2ec', x + 11, G - 25.6, 4, 1);
+} };
+
+/* e-scooter with two lads on it: the rider in front with his hood up, his mate behind in a grey tracksuit, hood up, holding on */
+V.escooter = { n: 'E-scooter', w: 28, h: 30, weight: 1.6, speed: [18, 28], colours: [['Black hoodie', '#1c1c21'], ['Navy hoodie', '#1f2a44'], ['Khaki hoodie', '#5a5a3c'], ['Black North Face', '#18181c', '#f4f2ec']],
+  d(c, x, G, [, top, logo]) {
+  const LEG = '#141418', TR = '#7f848c', TRD = '#6a6f77', SKIN = '#8a5a3a', SKIN2 = '#c58c5c';
+  // wheels, low deck, stem and bars
+  wheel(c, x + 4.5, G, 2.7, '#4a4d54', null, 4); wheel(c, x + 22.5, G, 2.7, '#4a4d54', null, 4);
+  R(c, OUT, x + 3, G - 6, 19, 3); R(c, '#2a2c31', x + 3.5, G - 5.5, 18, 2); R(c, '#3e8be0', x + 6, G - 4, 12, .6);
+  c.strokeStyle = OUT; c.lineWidth = 2.2; c.beginPath(); c.moveTo(x + 21.5, G - 4.5); c.lineTo(x + 24, G - 24); c.stroke(); c.strokeStyle = '#4a4d54'; c.lineWidth = 1; c.stroke();
+  R(c, OUT, x + 21.5, G - 25.5, 6, 2); R(c, '#2a2c31', x + 22, G - 25, 5, 1); R(c, '#f4f2ec', x + 24.6, G - 18, 1.6, 1.4); R(c, '#e02a2a', x + 2.6, G - 6, 1, 1.2);
+  // the mate behind: grey tracksuit, hood up, arms round the rider
+  R(c, OUT, x + 5, G - 15, 7, 10); R(c, TRD, x + 5.5, G - 14.5, 2.4, 9); R(c, TR, x + 8.6, G - 14.5, 2.6, 9); R(c, '#f4f2ec', x + 5, G - 6.8, 3, 1.4); R(c, '#f4f2ec', x + 8.4, G - 6.8, 3, 1.4);
+  fill(c, TR, [[x + 4.5, G - 14.5], [x + 5, G - 23], [x + 8, G - 25], [x + 12, G - 23], [x + 12.5, G - 14.5]]); R(c, TRD, x + 5.5, G - 16, 7, 1); R(c, '#f4f2ec', x + 8, G - 22, .8, 4);
+  disc(c, OUT, x + 8.4, G - 26.2, 3.2); disc(c, TR, x + 8.4, G - 26.2, 2.6); R(c, SKIN, x + 9.6, G - 26.6, 1.6, 2.2); R(c, TRD, x + 9.4, G - 28.2, 2, 1);
+  // the rider: hood up, dark joggers, white trainers, leaning on the bars
+  R(c, OUT, x + 12, G - 15, 7, 10); R(c, LEG, x + 12.5, G - 14.5, 2.6, 9); R(c, '#22222a', x + 15.6, G - 14.5, 2.6, 9); R(c, '#f4f2ec', x + 12, G - 6.8, 3.4, 1.4); R(c, '#f4f2ec', x + 15.4, G - 6.8, 3.6, 1.4);
+  fill(c, top, [[x + 11.5, G - 14.5], [x + 12, G - 23.5], [x + 15.5, G - 25.5], [x + 19, G - 23], [x + 19.5, G - 14.5]]); R(c, SH(top, .75), x + 12, G - 16, 7.5, 1.2);
+  if (logo) { R(c, logo, x + 13.2, G - 21.5, 2.2, 1); R(c, logo, x + 13.6, G - 20.5, 1.4, .8); }
+  c.strokeStyle = OUT; c.lineWidth = 2; c.beginPath(); c.moveTo(x + 17, G - 21.5); c.lineTo(x + 23, G - 24.5); c.stroke(); c.strokeStyle = top; c.lineWidth = 1.1; c.stroke(); R(c, SKIN2, x + 22.6, G - 25.3, 1.4, 1.2);
+  c.strokeStyle = OUT; c.lineWidth = 1.8; c.beginPath(); c.moveTo(x + 10.5, G - 20); c.lineTo(x + 15, G - 19.5); c.stroke(); c.strokeStyle = TR; c.lineWidth = .9; c.stroke();   // mate's arm round him
+  disc(c, OUT, x + 15.6, G - 27.6, 3.3); disc(c, top, x + 15.6, G - 27.6, 2.7); R(c, SKIN, x + 16.8, G - 28, 1.7, 2.4); R(c, SH(top, .7), x + 16.6, G - 29.8, 2.2, 1); R(c, '#f4f2ec', x + 15.2, G - 24.6, .6, 2.2);
 } };
 
 /* pickup truck (Ranger-style double cab) */
-V.pickup = { n: 'Pickup truck', w: 70, h: 27, weight: 2.5, speed: [30, 50], colours: [['White', '#eceef2'], ['Black', '#1e2024'], ['Silver', '#b9bec6'], ['Orange', '#e0661c'], ['Blue', '#1f4fa8']],
+V.pickup = { n: 'Pickup truck', w: 70, h: 27, weight: 0.25, speed: [30, 50], colours: [['White', '#eceef2'], ['Black', '#1e2024'], ['Silver', '#b9bec6'], ['Orange', '#e0661c'], ['Blue', '#1f4fa8']],
   d(c, x, G, [, B]) { const D = SH(B, .8);
   arch(c, x + 13, G, 6.2); arch(c, x + 56, G, 6.2);
   fill(c, B, [[x + 1, G - 6], [x + 1, G - 17], [x + 26, G - 17], [x + 28, G - 18], [x + 31, G - 27], [x + 50, G - 27.5], [x + 56, G - 19.5], [x + 67, G - 18], [x + 69, G - 14], [x + 69, G - 6]]);
@@ -414,5 +465,5 @@ V.donner = { n: 'Donner Rush food truck', w: 100, h: 66, weight: 0, speed: [16, 
     c.font = '700 8px Silk'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.lineJoin = 'round'; c.lineWidth = 2.4; c.strokeStyle = '#1b1a24';
     c.strokeText('DONNER', X(52), Y(-36)); c.fillStyle = '#ffd56a'; c.fillText('DONNER', X(52), Y(-36)); c.fillStyle = '#e8308c'; c.fillRect(X(52) - 15, Y(-36) + 4, 30, 1);
     c.strokeText('RUSH', X(52), Y(-36) + 9); c.fillStyle = '#ffd56a'; c.fillText('RUSH', X(52), Y(-36) + 9); }; }
-window.VEHICLES = V; window.VEHICLE_ORDER = ['police', 'ambulance', 'fire', 'phantom', 'c63', 'gwagon', 'golf', 'a45', 'rs3', 'p911', 'f40', 'lambo', 'taxi', 'pickup', 'van', 'smallvan', 'binlorry', 'lorry', 'bus', 'coach', 'mrrushed', 'motorbike', 'bike'];
+window.VEHICLES = V; window.VEHICLE_ORDER = ['police', 'ambulance', 'fire', 'phantom', 'c63', 'gwagon', 'golf', 'a45', 'rs3', 'p911', 'f40', 'lambo', 'taxi', 'pickup', 'van', 'smallvan', 'binlorry', 'lorry', 'bus', 'coach', 'mrrushed', 'motorbike', 'moped', 'bike', 'escooter'];
 })();

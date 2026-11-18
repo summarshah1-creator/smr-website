@@ -188,7 +188,7 @@
     chaiiwala: { win: 'whole', whiteText: [[5, 72, 125, 106]], glow: [[140, 80, 235, 102], [248, 72, 282, 104]] }, chaiikhana: { board: 1 }, spudkingz: {}, miamicrispy: { board: 1, win: 'whole' }, masjid: { up: 4, upA: .45, upCol: [225, 240, 255], relight: .12 }, masjidali: { up: 3, upA: .3, upCol: [225, 240, 255], win: 'whole', wholeA: 120, letters: false },
     suffa: { up: 2, upA: .18, upCol: [225, 240, 255] }, gurdwara: { up: 4, upA: .4, upCol: [255, 205, 110], relight: .12 }, ldh: {}, lutonhoo: { up: 5, upA: .5, upCol: [255, 210, 150], relight: .1 }, foodbank: { win: 'whole' }, inspire: { win: 'whole', letters: false },
     nadeem: { relight: .3, winMinY: 56, board: 1, glow: [[0, 118, 150, 152]], curtains: 1 }, oak: { letters: false }, periperi: { board: 1, win: 'whole' }, toros: {}, cycleking: { board: 1 }, gna: { board: 1 }, kahwa: { enclosed: 1 }, leagrave: { letters: false },
-    topspizza: { board: 1, lit: [[0, 46, 180, 68]], whiteText: [[56, 56, 180, 68]] }, alquds: { board: 1 }, kaya: {}, karwan: { board: 1 }, krispy: { board: 1, onlyTop: true },
+    topspizza: { board: 1, lit: [[0, 46, 180, 68]], whiteText: [[56, 56, 180, 68]] }, alquds: { board: 1 }, kaya: { lit: [[4, 64, 124, 96]], whiteText: [[4, 64, 124, 96]] }, karwan: { board: 1 }, krispy: { board: 1, onlyTop: true },
     tesco: { win: 'whole', board: 1 }, smr: { win: 'rooms', letters: false, maxBoardH: 1 }, currys: { win: 'whole', board: 1, boardMinH: 75, warm: [[110, 22, 135, 39, 0], [160, 29, 176, 39, 110], [221, 35, 247, 54, 0], [288, 41, 301, 52, 110]] }, bandq: { win: 'whole', board: 1, lit: [[166, 96, 274, 140]], whiteText: [[166, 96, 274, 140]] }, matalan: { win: 'whole', board: 1 }, lidl: { win: 'whole', board: 1 },
     jdgyms: { win: 'whole' }, bigyellow: {}, grandbazar: { win: 'whole', board: 1, wholeA: 120 }, lewsey: { win: 'whole' }, venue: { up: 4, upA: .45, upCol: [255, 200, 150], relight: .1 }, chiltern: { board: 1, curtains: 1, whiteText: [[98, 43, 268, 69]] },
     uob: { up: 2, upA: .18, upCol: [220, 230, 255] }, sixthform: { win: 'whole', letters: false }, marshfarm: { letters: false, minWin: 6, warmOnly: 1 }, orbital: { win: 'whole', winMinY: 70 }, wardown: { up: 1, upX: [.4, .75], upH: .6, upA: .15 }, stockwood: { up: 3, upA: .25 }, welcome: { up: 2, upA: .3 }, airport: { win: 'whole', winMaxY: 62 } };
@@ -362,7 +362,7 @@
   // how far the trees have turned (0 = all green, 1 = fully orange), stepping up once a week from 20 Sep to the end of Nov (?turn=.5 to preview)
   const dayOf = (d, m, dd) => (Date.UTC(d.getFullYear(), m - 1, dd));
   S.turn = (date) => { const f = parseFloat(q.get('turn')); if (f >= 0) return f; const d = date || new Date(), t0 = dayOf(d, 9, 20), t1 = dayOf(d, 11, 30), now = Date.UTC(d.getFullYear(), d.getMonth(), d.getDate());
-    if (now < t0) return .1; if (now > t1) return .9; const wk = Math.floor((now - t0) / 6048e5), W = (t1 - t0) / 6048e5, p = Math.min(1, wk / W); return .1 + .75 * p * p; };
+    if (now < t0) return .1; if (now > t1) return .9; const wk = Math.floor((now - t0) / 6048e5), W = (t1 - t0) / 6048e5, p = Math.min(1, wk / W); return .08 + .62 * p * p; };
   // grass, hedges and shrubs drying out through the winter: nothing until 25 Nov, then a little more straw/brown each week, greening up again Mar-Apr (?dry=.3 to preview)
   S.dry = (date) => { const f = parseFloat(q.get('dry')); if (f >= 0) return f; const d = date || new Date(), y = d.getFullYear(), now = Date.UTC(y, d.getMonth(), d.getDate()), m = d.getMonth() + 1;
     const start = m >= 6 ? Date.UTC(y, 10, 25) : Date.UTC(y - 1, 10, 25); if (now < start) return 0; const wk = Math.floor((now - start) / 6048e5);
@@ -402,15 +402,17 @@
           const m = tiny ? 0 : 6, hit = !rect && canopies.find(c => x0 <= c.x1 + m && x1 >= c.x0 - m && y0 <= c.y1 + m && y1 >= c.y0 - m); if (hit) forced = hit; }
         if (!forced) { dryIt(); continue; } }
       let ml = 0; comp.forEach(p => { const j = p * 4; ml += d[j] + d[j + 1] + d[j + 2]; }); ml /= comp.length;                                                                   // evergreens stay green
-      any = true; const pick = rnd(), pal = forced ? forced.pal : (pick < .4 ? [214, 120, 40] : pick < .7 ? [196, 72, 38] : pick < .9 ? [222, 170, 52] : [150, 96, 52]), tt = forced ? forced.tt : Math.max(.05, Math.min(1, TURN + (rnd() - .5) * .55)), thin = .36 * Math.max(0, Math.min(1, (tt - .6) / .3)); if (!forced) canopies.push({ x0, x1, y0, y1, pal, tt });
+      any = true; const pick = rnd(), pal = forced ? forced.pal : (pick < .5 ? [214, 112, 38] : pick < .8 ? [192, 70, 36] : pick < .9 ? [222, 136, 44] : [156, 92, 48]), tt = forced ? forced.tt : Math.max(.05, Math.min(1, TURN + (rnd() - .5) * .5)), thin = .3 * Math.max(0, Math.min(1, (tt - .82) / .15)); if (!forced) canopies.push({ x0, x1, y0, y1, pal, tt });
       comp.forEach(p => { const j = p * 4, r = d[j], g = d[j + 1], b = d[j + 2], rel = Math.min(1.45, (r + g + b) / ml), x = p % W0, y = (p / W0) | 0;
         const nz = n2(x / 3, y / 3, 7) * .65 + n2(x / 8, y / 8, 3) * .35;          // clumpy, not stripy
         if (sea === 'spring') { d[j] = Math.min(255, r * .92 + 22); d[j + 1] = Math.min(255, g * 1.06 + 14); d[j + 2] = b * .9 + 6;
           const bl = n2(x / 2.2, y / 2.2, 11); if (bl > .74) { const w2 = bl > .86; d[j] = 252; d[j + 1] = w2 ? 246 : 198; d[j + 2] = w2 ? 248 : 214; } }
         else if (sea === 'autumn' || sea === 'lateautumn') { const tr = pal[0] * rel, tg = pal[1] * rel, tb = pal[2] * rel;
-          // each tree has turned by its own amount, in clumps: some still mostly green, some well on the way to orange
-          const nt = n2(x / 9 + 3, y / 9, 9) * .75 + n2(x / 3.5, y / 3.5, 4) * .25, k = .92 * Math.max(0, Math.min(1, (tt - nt) / .22 + .5)), ky = k > .05 && k < .7 ? .25 : 0;   // the edge of a turned clump goes a little yellow first
-          d[j] = Math.min(255, r + (tr - r) * k + (226 * rel - r) * ky * (1 - k)); d[j + 1] = Math.min(255, g + (tg - g) * k + (190 * rel - g) * ky * (1 - k)); d[j + 2] = Math.min(255, b + (tb - b) * k);
+          // each tree has turned by its own amount, leaf by leaf: first a scattering of orange leaves in the green, then more, then the whole crown
+          const lx = Math.floor((x + (y % 2)) / 3), ly = Math.floor(y / 2), hl = Math.sin(lx * 12.9898 + ly * 78.233 + (sp.k || '').length * 3.1) * 43758.5453, leaf = (hl - Math.floor(hl)) * .45 + n2(x / 7, y / 7, 9) * .55;
+          const on = leaf < tt ? 1 : 0, k = on * .95, warm = Math.max(0, Math.min(1, tt * 1.2)) * .14;   // the green left over warms up a touch as the tree turns
+          const gr = r + (196 * rel - r) * warm * (1 - on), gg = g + (176 * rel - g) * warm * (1 - on) * .4;
+          d[j] = Math.min(255, gr + (tr - gr) * k); d[j + 1] = Math.min(255, gg + (tg - gg) * k); d[j + 2] = Math.min(255, b + (tb - b) * k);
           if (sea === 'lateautumn' && nz < thin) d[j + 3] = 0; }
         else if (sea === 'winter') { if (nz < .9) d[j + 3] = 0; else { d[j] = 150 * rel; d[j + 1] = 110 * rel; d[j + 2] = 70 * rel; } } });
       if ((sea === 'winter' || sea === 'lateautumn' && thin > .08) && !forced) { branches.push([x0, x1, y0, y1]);

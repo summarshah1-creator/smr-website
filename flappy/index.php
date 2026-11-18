@@ -217,10 +217,10 @@ html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:m
 </div></div>
   <div id="tap" class="hide">TAP TO FLAP</div>
 </div>
-<script src="landmarks.js?v=11181955"></script>
-<script src="vehicles.js?v=11181955"></script>
+<script src="landmarks.js?v=11182056"></script>
+<script src="vehicles.js?v=11182056"></script>
 <script src="namecheck.js"></script>
-<script src="sky.js?v=11181955"></script>
+<script src="sky.js?v=11182056"></script>
 <script>
 (() => {
 const H = 300, GY = 250, ROAD = 262;            // world: 300 units tall, pavement top at 250
@@ -419,9 +419,9 @@ function spawnCar(x, key, zoom) { const sp = key ? carSprites.find(s => s.k === 
   return true; }
 const EMK = { police: 108, ambulance: 96, fire: 82 };
 // now and then a supercar or a motorbike flies past, flat out, with a roar and a puff of exhaust
-const critters = [], flags = []; let foxCD = 25, snowmanCD = 3, flagT = 2, flagDue = false;
+const critters = [], flags = []; let kidCD = 8 + Math.random() * 30, foxCD = 25, snowmanCD = 3, flagT = 2, flagDue = false;
 window.__flag = () => { flags.push({ x: W * .7 }); }; window.__fl = () => ({ f: flags.map(f => Math.round(f.x)), flagDue, flagT: Math.round(flagT) });
-window.__crit = (k, o) => { if (o) { critters.push(o); return; } if (k === 'fox') foxCD = 0; else snowmanCD = 0; };
+window.__crit = (k, o) => { if (o) { critters.push(o); return; } if (k === 'fox') foxCD = 0; else if (k === 'kid') kidCD = 0; else snowmanCD = 0; };
 let zoomCD = 20, crashCD = 60, otCD = 6, headCD = 120, jamT = 0, chaseCD = 90, hornT = 2;
 function startChase() { const ks = ['lambo', 'f40', 'p911', 'c63', 'a45', 'rs3', 'golf', 'gwagon'], k = ks[Math.random() * ks.length | 0];
     if (spawnCar(null, k, true)) { const f = cars[cars.length - 1]; f.v = 150 + Math.random() * 50; f.flee = 1; const ps = carSprites.find(s => s.k === 'police');
@@ -654,7 +654,7 @@ const LB = (() => { const api = 'api.php'; let run = '', runFor = ''; const star
 /* ---------- always the latest version, also when saved to the Home Screen ----------
    version.json is rewritten on every deploy; when it changes the page reloads itself (straight away on the menu,
    or right after the current game ends), with a cache-busting query so the phone fetches the new HTML. */
-(() => { const BUILD = '11181955'; let pending = false;
+(() => { const BUILD = '11182056'; let pending = false;
   const go = () => { let last = 0; try { last = +sessionStorage.getItem('fk_upd_t') || 0; } catch (e) {} if (Date.now() - last < 60000) return;   // never loop: at most one reload a minute
     try { sessionStorage.setItem('fk_upd_t', String(Date.now())); } catch (e) {} location.replace(location.pathname + '?u=' + Date.now() + location.hash); };
   const check = () => fetch('version.json?ts=' + Date.now(), { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(j => {
@@ -793,9 +793,19 @@ function update(dt) {
   // every one is a bit different: flat spin, roll onto the roof, onto its side or a sideways slide; where it stops; the sounds; sometimes a small fire
   // a fox trots along the pavement now and then at night; snowmen appear on the verge once snow has settled
   foxCD -= dt; if (moving && foxCD <= 0) { foxCD = 60 + Math.random() * 90; if (SKY.n > .6 && !critters.some(c => c.k === 'fox')) { const d = Math.random() < .5 ? -1 : 1; critters.push({ k: 'fox', x: d < 0 ? W + 20 : -24, d, v: 14 + Math.random() * 8, y: GY + 4 + Math.random() * 3, ph: 0, stop: Math.random() < .5 ? 1.5 + Math.random() * 2 : 0, stopAt: W * (.3 + Math.random() * .4) }); } }
+  // kids whizzing along the pavement on kick scooters, either way, on their own or in a little group: at random, but at least once a minute (not late at night)
+  kidCD -= dt; if (moving && kidCD <= 0) { kidCD = 12 + Math.random() * 46; if (SKY.n < .85 && !critters.some(c => c.k === 'kid')) { const d = Math.random() < .5 ? -1 : 1, n = Math.random() < .45 ? 1 : Math.random() < .7 ? 2 : 3, v = 46 + Math.random() * 30;
+    const TOPS = ['#d42a2a', '#2a6fd8', '#f2c43a', '#1e2024', '#3fae3a', '#e85ca8', '#7a7f87', '#f07a12'], DECK = ['#2fb8e8', '#e8302a', '#9bd832', '#f4f2ec', '#b05ae0', '#1e2024'], SK = ['#8a5a3a', '#c58c5c', '#e8c4a0', '#5a3a24'];
+    const faller = Math.random() < 1 / 30 || window.__kidFall ? Math.random() * n | 0 : -1; window.__kidFall = 0; for (let i = 0; i < n; i++) critters.push({ k: 'kid', fallAt: i === faller ? W * (.3 + Math.random() * .35) : null, d, x: (d < 0 ? W + 20 : -30) - d * i * (22 + Math.random() * 18), v: v * (.9 + Math.random() * .22), y: GY + 6 + (i % 2) * 3 + Math.random() * 2, ph: Math.random() * 6, top: TOPS[Math.random() * TOPS.length | 0], deck: DECK[Math.random() * DECK.length | 0], skin: SK[Math.random() * SK.length | 0], hel: Math.random() < .55 ? TOPS[Math.random() * TOPS.length | 0] : null, leg: Math.random() < .5 ? '#2a3a5a' : '#1e2024', s: .85 + Math.random() * .25 }); } }
   snowmanCD -= dt; if (moving && snowmanCD <= 0) { snowmanCD = 14 + Math.random() * 20; if (SKY.snowAcc > .6 && BE > 30) critters.push({ k: 'snowman', x: W + 30, y: H + 14 + BE * (.3 + Math.random() * .3), s: .8 + Math.random() * .4, hat: Math.random() < .5, scarf: ['#e8641c', '#d42a2a', '#2a6fd8'][Math.random() * 3 | 0] }); }
-  for (let i = critters.length - 1; i >= 0; i--) { const c = critters[i]; if (c.k === 'fox') { const stopping = c.stop > 0 && Math.abs(c.x - c.stopAt) < 3; if (stopping) { c.stop -= dt; c.ph = 0; } else { c.x += c.d * c.v * dt; c.ph += dt * c.v * .35; } }
-    c.x -= moving ? step : 0; if (c.x < -60 || c.x > W + 80) critters.splice(i, 1); }
+  for (let i = critters.length - 1; i >= 0; i--) { const c = critters[i]; if (c.k === 'kid') { const f = c.f;
+      if (!f && c.fallAt != null && (c.d > 0 ? c.x > c.fallAt : c.x < c.fallAt)) { c.f = { t: 0, v0: c.v, sx: 0, sv: c.v * .8 }; SFX.bump(); }   // clips the kerb and goes over
+      if (c.f) { const F = c.f; F.t += dt;
+        if (F.t < 3.4) { c.v = Math.max(0, F.v0 * (1 - F.t / .45)); F.sv = Math.max(0, F.sv - dt * 70); F.sx += c.d * F.sv * dt; if (!F.th && F.t > .3) { F.th = 1; SFX.thud(.2); } }
+        else { if (!F.up) { F.up = 1; c.x += F.sx; F.sx = 0; } c.v = 16; c.walk = 1; }   // picks the scooter up and walks it off
+      }
+      c.x += c.d * c.v * dt; c.ph += dt * (c.walk ? 1.4 : 2.2); c.dist = (c.dist || 0) + (c.walk ? 0 : c.v * dt / 1.7); } else if (c.k === 'fox') { const stopping = c.stop > 0 && Math.abs(c.x - c.stopAt) < 3; if (stopping) { c.stop -= dt; c.ph = 0; } else { c.x += c.d * c.v * dt; c.ph += dt * c.v * .35; } }
+    c.x -= moving ? step : 0; if (c.x < (c.k === 'kid' ? -140 : -60) || c.x > W + (c.k === 'kid' ? 140 : 80)) critters.splice(i, 1); }
   // a tall flagpole with the Palestine flag comes past about every 30 seconds
   if (moving) { flagT -= dt; if (flagT <= 0) { flagT = 30; flagDue = true; } }
   // the pole gets its own space: the first gap between two buildings just off screen is widened and the flag stands in the middle of it, never over a building
@@ -804,7 +814,7 @@ function update(dt) {
     const g = b.x - gs, add = 80; for (let j = i + 1; j < lmQueue.length; j++) lmQueue[j].x += add; lmX += add; flags.push({ x: Math.round(gs + (g + add - 60) / 2) }); flagDue = false; break; }
   for (let i = flags.length - 1; i >= 0; i--) { flags[i].x -= moving ? step : 0; if (flags[i].x < -120) flags.splice(i, 1); }
   otCD -= dt; crashCD -= dt; headCD -= dt; if (jamT > 0) { jamT -= dt; if (jamT <= 0) cars.forEach(c => c.free = 0); }
-  if (moving && headCD <= 0 && jamT <= 0) cars.forEach(c => { if (headCD > 0 || c.headRolled || c.crash || c.ot || c.drift || c.sp.k === 'bike' || c.sp.k === 'motorbike') return;
+  if (moving && headCD <= 0 && jamT <= 0) cars.forEach(c => { if (headCD > 0 || c.headRolled || c.crash || c.ot || c.drift || c.sp.k === 'bike' || c.sp.k === 'moped' || c.sp.k === 'escooter' || c.sp.k === 'motorbike') return;
     const q = cars.find(o => o.lane !== c.lane && !o.crash && !o.ot && (c.dir > 0 ? o.x - (c.x + c.sp.w) : c.x - (o.x + o.sp.w)) > 50 && (c.dir > 0 ? o.x - (c.x + c.sp.w) : c.x - (o.x + o.sp.w)) < 150);
     if (!q || c.x < 0 || c.x + c.sp.w > W) return; c.headRolled = 1; if (Math.random() < .005) { c.drift = { q, out: 0 }; headCD = 300; } });
   cars.forEach(c => { const d = c.drift; if (!d) return; const q = d.q; if (!cars.includes(q) || q.crash) { c.drift = null; c.yo = 0; return; }
@@ -814,12 +824,15 @@ function update(dt) {
       hit(c, (Math.random() < .5 ? 1 : -1) * (1 + Math.random() * 1.5)); hit(q, (Math.random() < .5 ? 1 : -1) * (.8 + Math.random() * 1.2)); q.crash.fire = false;
       SFX.thud(1); SFX.bump(); jamT = 45 + Math.random() * 30; const cx = c.x + c.sp.w / 2; cars.forEach(o => { if (!o.crash) o.free = o.dir > 0 ? o.x > cx : o.x + o.sp.w < cx; });
       for (let i = 0; i < 10; i++) smoke.push({ x: cx + (Math.random() - .5) * 20, y: ROAD + 14 + LD * .5 - 6, r: 2, a: .5, vx: (Math.random() - .5) * 14 }); } });
-  cars.forEach(c => { if (c.rolled || c.police || c.crash || c.drift || c.ot || c.sp.w > 90 || c.sp.k === 'motorbike' || c.sp.k === 'bike' || !(c.zoom || c.v > 62) || c.x < W * .35 || c.x > W * .8 || !moving) return; c.rolled = 1;
+  cars.forEach(c => { if (c.rolled || c.police || c.crash || c.drift || c.ot || c.sp.w > 90 || c.sp.k === 'motorbike' || c.sp.k === 'bike' || c.sp.k === 'moped' || c.sp.k === 'escooter' || !(c.zoom || c.v > 62) || c.x < W * .35 || c.x > W * .8 || !moving) return; c.rolled = 1;
     if (crashCD > 0 || Math.random() > .017) return;
     const st = ['spin', 'roll', 'roll', 'side', 'slide'][Math.random() * 5 | 0], bike = c.sp.k === 'motorbike';
     c.crash = { t: 0, rot: 0, st: bike && st === 'roll' ? 'side' : st, spin: (Math.random() < .5 ? 1 : -1) * (st === 'slide' ? 1.6 : st === 'spin' ? 4 : 6 + Math.random() * 5), v0: c.cv || c.v, len: 1 + Math.random() * .7,
       ty: c.lane === 1 ? (BE > 26 ? 14 + BE * (.12 + Math.random() * .6) : 9) + 3 : LD * (.3 + Math.random() * .35), road: c.lane === 0, fire: Math.random() < .3, snd: Math.random() };
     crashCD = 240; SFX.skid(c.crash.snd); if (c.lane === 0) { jamT = 25 + Math.random() * 25; const cx = c.x + c.sp.w / 2; cars.forEach(o => { if (!o.crash && o !== c) o.free = o.dir > 0 ? o.x > cx : o.x + o.sp.w < cx; }); } });
+  // about 1 in 30 e-scooters: the two lads lose it and go over
+  cars.forEach(c => { if (c.sp.k !== 'escooter' || c.lane !== 1 || c.escRolled || c.crash || c.ot || !moving || c.x < W * .3 || c.x > W * .7) return; c.escRolled = 1; if (Math.random() > 1 / 30 && !window.__escFall) return; window.__escFall = 0;
+    c.crash = { t: 0, rot: 0, st: 'side', spin: (c.dir > 0 ? 1 : -1) * 6, v0: c.cv || c.v, len: .8, ty: (BE > 26 ? 12 + BE * .2 : 8) + 3, road: false, fire: false, snd: Math.random() }; SFX.skid(c.crash.snd); });
   cars.forEach(c => { const k = c.crash; if (k) { k.t += dt; const sl = Math.max(0, 1 - k.t / k.len); c.cv = k.v0 * sl * sl; c.yo += (k.ty - c.yo) * Math.min(1, dt * 2.2); if (k.st === 'hit') k.rot = k.spin * .12 * Math.min(1, k.t / k.len);
       if (sl > 0) k.rot += k.spin * dt * sl; else if (!k.done) { k.done = true; SFX.thud(k.snd); }
       if (k.st !== 'slide' && k.st !== 'spin' && k.st !== 'hit') { if (!k.b1 && k.t > k.len * .35) { k.b1 = 1; SFX.bump(); } if (!k.b2 && k.t > k.len * .65) { k.b2 = 1; SFX.bump(); } }
@@ -874,6 +887,30 @@ function drawFlag(f) { const X = Math.round(f.x), top = GY - 158, nk = 1 - .45 *
   ctx.fillStyle = C(60, 62, 70, 1); ctx.fillRect(X + 1, fy - 1, 2, 2); ctx.fillRect(X + 1, fy + FH - 1, 2, 2); }
 
 /* ---------- little street life ---------- */
+// a kid on a kick scooter: one foot on the deck, the other kicking now and then, hands on the bar, hoodie, sometimes a helmet
+function drawKid(k) { const d = k.d, X = Math.round(k.x), Y = Math.round(k.y), s = k.s, F = k.f && !k.f.up ? k.f : null;
+  if (F) {   // fallen: the scooter skids off on its side, the kid goes over the bars, lies there a moment, then gets up
+    ctx.save(); ctx.translate(Math.round(X + F.sx + d * 14 * s), Y); ctx.scale(d * s, s); const Q = (cl, a, b, w, h) => { ctx.fillStyle = cl; ctx.fillRect(a, b, w, h); };
+    Q('rgba(0,0,0,.18)', -6, 0, 22, 1); Q('#1b1a24', -6, -3, 15, 2); Q(k.deck, -5, -3, 13, 1); Q('#1b1a24', 8, -3, 12, 1.6); Q(k.deck, 9, -2.6, 10, .8); Q('#1b1a24', 19, -6, 1.6, 6); ctx.restore();
+    const a = F.t < .35 ? F.t / .35 : F.t < 2.9 ? 1 : Math.max(0, 1 - (F.t - 2.9) / .5); ctx.save(); ctx.translate(X + d * (6 + a * 6) * s, Y); ctx.scale(d * s, s); ctx.rotate(a * Math.PI / 2 * .96); ctx.translate(-2, 0);
+    const P = (cl, a2, b2, w, h) => { ctx.fillStyle = cl; ctx.fillRect(a2, b2, w, h); };
+    P(k.leg, 1, -10, 2.4, 9); P(k.leg, -1.5, -10, 2.2, 8 + a * 2); P('#f4f2ec', 0.6, -1.4, 3.4, 1.2);
+    P('#1b1a24', -.5, -17.5, 6, 8.5); P(k.top, 0, -17, 5, 7.6); P(k.top, 4, -16 + a * 3, 4, 1.6);
+    P('#1b1a24', 0.6, -22.5, 5.6, 5.4); P(k.skin, 1.2, -21.8, 4.4, 4.4); if (k.hel) { P('#1b1a24', 0.2, -23.6, 6.4, 3); P(k.hel, 0.8, -23, 5.2, 2.2); } else P('#2a1a12', 0.8, -23, 5, 2);
+    ctx.restore(); return; }
+  ctx.save(); ctx.translate(X, Y); ctx.scale(d * s, s);
+  const P = (cl, a, b, w, h) => { ctx.fillStyle = cl; ctx.fillRect(a, b, w, h); }, kick = (Math.sin(k.ph * 3) + 1) / 2, push = !k.walk && Math.floor(k.ph * 1.2) % 3 === 0;
+  ctx.fillStyle = 'rgba(0,0,0,.18)'; ctx.fillRect(-6, 0, 16, 1);
+  const wa = k.dist || 0; for (const wx of [-4.5, 8.5]) { ctx.fillStyle = '#1b1a24'; ctx.beginPath(); ctx.arc(wx, -1.5, 1.7, 0, 7); ctx.fill(); for (const o of [0, Math.PI]) P('#c9ced4', wx + Math.cos(wa + o) * .9 - .4, -1.9 + Math.sin(wa + o) * .9, .8, .8); }   // little wheels, turning
+  P('#1b1a24', -6, -4, 15, 2); P(k.deck, -5, -4, 13, 1);                                                         // deck
+  P('#1b1a24', 8, -17, 1.6, 14); P(k.deck, 8.2, -16, 1, 12); P('#1b1a24', 6, -18, 6, 1.6);                     // stem + T-bar
+  P(k.leg, 1, -10, 2.4, 6); P('#f4f2ec', 0.6, -5, 3.4, 1);                                                     // standing leg on the deck
+  if (push) { const fx = -1 - kick * 5; P(k.leg, fx + 1, -9, 2.2, 5 + kick * 2); P('#f4f2ec', fx, -3 + kick * 1.5, 3, 1); } else { P(k.leg, -1, -10, 2.2, 4); P('#f4f2ec', -2, -7, 3, 1); }
+  P('#1b1a24', -.5, -17.5, 6, 8.5); P(k.top, 0, -17, 5, 7.6);                                                // hoodie, leaning forward
+  P(k.top, 4, -15.5, 3.4, 1.6); P(k.skin, 7, -16, 1.6, 1.4);                                                   // arm to the bar
+  P('#1b1a24', 0.6, -22.5, 5.6, 5.4); P(k.skin, 1.2, -21.8, 4.4, 4.4); P('#1b1a24', 4.4, -20.6, .9, .9);      // head
+  if (k.hel) { P('#1b1a24', 0.2, -23.6, 6.4, 3); P(k.hel, 0.8, -23, 5.2, 2.2); P('rgba(255,255,255,.45)', 1.6, -22.8, 2, .6); } else { P('#2a1a12', 0.8, -23, 5, 2); P('#2a1a12', 0.8, -21, 1.4, 2); }
+  ctx.restore(); }
 function drawFox(f) { const X = Math.round(f.x), Y = Math.round(f.y), d = f.d, dim = 1, col = h => { const v = parseInt(h.slice(1), 16), r = (v >> 16) * dim | 0, g = (v >> 8 & 255) * dim | 0, b = (v & 255) * dim | 0; return 'rgb(' + r + ',' + g + ',' + b + ')'; };
   const P = (cl, a, b, w, h) => { ctx.fillStyle = col(cl); ctx.fillRect(d > 0 ? X + a : X + 16 - a - w, Y + b, w, h); }, st = Math.floor(f.ph) % 2;
   P('#1b1a24', 1, -7, 14, 1); P('#c8601a', 2, -6, 10, 4); P('#e07a2a', 3, -6, 8, 1); P('#f4ead8', 5, -3, 5, 1);                 // body
@@ -949,15 +986,18 @@ const GLOW_R = Object.assign({}, SHUT_R, { grandbazar: [[97, 137, 86], [207, 427
   nadeem: [[127, 283, 50, 5]], orbital: [[558, 662, 62, 0]],   // Coffee Pot: the whole ground floor is one cafe, lit together
   barak: [[112, 192, 50, 20], [213, 239, 40, 18]], toros: [[98, 123, 35, 3], [128, 152, 35, 3], [157, 180, 35, 3], [187, 210, 35, 3], [223, 240, 33, 0]], spudkingz: [[115, 177, 35, 20]], chaiiwala: [[95, 255, 87, 0]], kaya: [[110, 153, 50, 0]] });
 // shops whose front is lit only while open (no shutter): [closes, opens]
-const GLOW_STR = { orbital: .3, nadeem: .42, grandbazar: .3 };   // how warm the inside glow is (default .16)
+const GLOW_STR = { kaya: .34,  orbital: .3, nadeem: .42, grandbazar: .3 };   // how warm the inside glow is (default .16)
 const GLOW_HOURS = { orbital: [21, 9] /* estimate */, nadeem: [21, 8] /* Coffee Pot, estimate */ };
 const glowShut = k => { const h = GLOW_HOURS[k]; if (!h) return false; const now = window.SKY && SKY.hour != null ? SKY.hour : new Date().getHours(); return h[0] < h[1] ? now >= h[0] && now < h[1] : now >= h[0] || now < h[1]; };
 function drawShopGlow(lmq, gy) { const n = window.SKY ? SKY.n : 0; if (n < .2) return; lmq.forEach(l => { const r = GLOW_R[l.sp.k]; if (!r || l.x > W + 20 || l.x + l.sp.w < -20) return;
     if ((SHUT_K[l.sp.k] && shutNow(l.sp.k)) || isClosed(l.sp.k) || glowShut(l.sp.k)) return; const ox = Math.round(l.x - M);
     r.forEach(([a, b, h, lo]) => { const w = b - a + 1, hh = h - (lo || 0), sy = l.sp.c.height - 6 - h;
       ctx.globalAlpha = .55 * n; ctx.drawImage(l.sp.c, a, sy, w, hh, ox + a, gy - h, w, hh);   // the inside shows through again
-      ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 1; ctx.fillStyle = 'rgba(255,196,120,' + ((GLOW_STR[l.sp.k] || .16) * n).toFixed(3) + ')'; ctx.fillRect(ox + a, gy - h, w, hh); ctx.globalCompositeOperation = 'source-over'; }); });
+      ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 1; ctx.fillStyle = 'rgba(255,196,120,' + ((GLOW_STR[l.sp.k] || .16) * n).toFixed(3) + ')'; ctx.fillRect(ox + a, gy - h, w, hh); ctx.globalCompositeOperation = 'source-over';
+      if (GLOW_SPILL[l.sp.k]) { const cx = ox + (a + b) / 2, R0 = Math.max(26, w * 1.2), g = ctx.createRadialGradient(cx, gy - h * .45, 0, cx, gy - h * .45, R0); g.addColorStop(0, 'rgba(255,200,130,' + (.34 * n).toFixed(3) + ')'); g.addColorStop(1, 'rgba(255,200,130,0)');   // light pouring out of the open door onto the pavement
+        ctx.globalCompositeOperation = 'lighter'; ctx.fillStyle = g; ctx.fillRect(cx - R0, gy - h - 6, R0 * 2, h + 18); ctx.globalCompositeOperation = 'source-over'; } }); });
   ctx.globalAlpha = 1; }
+const GLOW_SPILL = { kaya: 1 };
 /* Galaxy: a row of bulbs round the GALAXY sign band that chase along at night */
 function drawGalaxyLights(lmq, gy) { const n = window.SKY ? SKY.n : 0; if (n < .25) return; const f = (window.SCALE && SCALE.galaxy) || 1; lmq.forEach(l => { if (l.sp.k !== 'galaxy' || l.x > W + 10 || l.x + l.sp.w < -10) return; const ph = Math.floor(t * 9);
     for (let i = 0; i < 40; i++) { const on = ((i + ph) % 5) < 2, bx = Math.round(l.x + (124 - 2 + 3 + i * 5) * f); for (const hh of [149, 142]) { const by = Math.round(gy - hh * f); ctx.fillStyle = on ? 'rgba(255,236,170,' + (.95 * n).toFixed(2) + ')' : 'rgba(150,120,70,' + (.6 * n).toFixed(2) + ')'; ctx.fillRect(bx, by, 2, 1);
@@ -1022,7 +1062,7 @@ function draw() {
   if (BE > 0) { ctx.fillStyle = '#8f8a7e'; ctx.fillRect(0, H, W, 2); ctx.fillStyle = '#c9c4b8'; ctx.fillRect(0, H + 2, W, 12); ctx.fillStyle = '#b3ad9f'; for (let x = -po; x < W; x += 12) ctx.fillRect(Math.round(x), H + 2, 1, 12);
     ctx.fillStyle = DRYC('#5f9e44', .2); ctx.fillRect(0, H + 14, W, BE); ctx.fillStyle = DRYC('#4f8a36', .75); const go = SCi % 16; for (let y = H + 18; y < H + BE; y += 8) for (let x = -go + ((y / 8) % 2) * 8; x < W; x += 16) ctx.fillRect(Math.round(x), y, 2, 2);
     ctx.fillStyle = DRYC('#3f7d33', .5); for (let x = -go; x < W; x += 16) ctx.fillRect(Math.round(x), H + 14, 14, 4); }
-  SKY.drawGround(ctx, W, GY, ROAD, H, BE, SCi, () => critters.forEach(c => { if (c.k === 'fox') drawFox(c); else drawSnowman(c); }));
+  SKY.drawGround(ctx, W, GY, ROAD, H, BE, SCi, () => critters.forEach(c => { if (c.k === 'fox') drawFox(c); else if (c.k === 'kid') drawKid(c); else drawSnowman(c); }));
 
   SKY.drawPrecip(ctx, S);
   pipes.forEach(p => SKY.pipeShadow(ctx, p.x, PW, ROAD, GY)); pipes.forEach(p => { pipe(p.x, -OY, p.top + OY, 'top'); pipe(p.x, p.top + p.gap, ROAD - 4 - p.top - p.gap, 'bottom'); });

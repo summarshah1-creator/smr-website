@@ -22,7 +22,18 @@ const BOLL = (c, x, G) => { BOX(c, '#c9cdd2', x, G - 8, 3, 8); };
 const BIN = (c, x, G, col = '#3a3d44') => { BOX(c, col, x, G - 10, 8, 10); R(c, SH(col, 1.3), x, G - 10, 8, 2); };
 const CAR = (c, x, G, col = '#2b3a5a') => { BOX(c, col, x, G - 10, 34, 7); P(c, col, [[x + 6, G - 10], [x + 10, G - 16], [x + 24, G - 16], [x + 29, G - 10]], true); R(c, '#9fc1d8', x + 11, G - 15, 6, 4); R(c, '#9fc1d8', x + 19, G - 15, 6, 4); CIRC(c, OUT, x + 8, G - 3, 3); CIRC(c, OUT, x + 26, G - 3, 3); CIRC(c, '#888', x + 8, G - 3, 1); CIRC(c, '#888', x + 26, G - 3, 1); };
 const FLOWERS = (c, x, G, w) => { BOX(c, '#4a4a4f', x, G - 5, w, 5); for (let i = 0; i < w; i += 3) { R(c, '#3f7d33', x + i, G - 8, 2, 3); R(c, i % 2 ? '#e03a3a' : '#f2c14e', x + i, G - 9, 2, 2); } };
-const TREE = (c, x, G, s = 1, col = '#4f8a3c', dk = '#3a6b2c') => { R(c, '#5a3d2a', x - 2, G - 22 * s, 4, 22 * s); CIRC(c, OUT, x, G - 34 * s, 17 * s + 1); CIRC(c, dk, x, G - 34 * s, 17 * s); CIRC(c, col, x - 3, G - 37 * s, 13 * s); CIRC(c, '#6fae4e', x - 7, G - 41 * s, 6 * s); };
+// a tree crown made of overlapping lumps (not a perfect ball): the shape is picked from the position, so neighbouring trees differ (round, tall, spreading, uneven)
+const CROWN_K = [
+  [[0, .05, .78], [-.48, .22, .5], [.48, .22, .5], [-.32, -.4, .5], [.32, -.4, .5], [0, -.58, .42]],
+  [[0, .3, .58], [0, -.15, .62], [0, -.62, .42], [-.32, .12, .44], [.32, -.02, .44]],
+  [[-.52, .14, .52], [.52, .14, .52], [0, -.06, .66], [-.26, -.48, .44], [.3, -.44, .46], [.78, .3, .3], [-.78, .3, .3]],
+  [[0, 0, .72], [-.56, .16, .48], [.5, -.12, .52], [-.16, -.6, .44], [.36, .42, .42]]];
+const CROWN = (c, cx, cy, r, dk, col, seed, outline = true) => { const B = CROWN_K[Math.abs(Math.round(seed)) % 4], rr = v => Math.max(2, Math.round(v * r));
+  if (outline) B.forEach(([dx, dy, k]) => CIRC(c, OUT, Math.round(cx + dx * r), Math.round(cy + dy * r), rr(k) + 1));
+  B.forEach(([dx, dy, k]) => CIRC(c, dk, Math.round(cx + dx * r), Math.round(cy + dy * r), rr(k)));
+  B.forEach(([dx, dy, k], i) => { if (dy > .25) return; CIRC(c, col, Math.round(cx + dx * r - r * .12), Math.round(cy + dy * r - r * .14), rr(k * .72)); });
+  const hi = SH(col, 1.18); B.slice(0, 3).forEach(([dx, dy, k]) => { if (dy > .2) return; CIRC(c, hi, Math.round(cx + dx * r - r * .26), Math.round(cy + dy * r - r * .3), rr(k * .3)); }); };
+const TREE = (c, x, G, s = 1, col = '#4f8a3c', dk = '#3a6b2c') => { R(c, '#5a3d2a', x - 2, G - 22 * s, 4, 22 * s); CROWN(c, x, G - 34 * s, 17 * s, dk, col, Math.round(x / 7)); };
 const PLANE = (c, x, y, s = 1) => { const g = '#e9edf2', d = '#9aa3ad'; R(c, OUT, x - 1, y - 1, 46 * s + 2, 8 * s + 2); R(c, g, x, y, 46 * s, 8 * s); R(c, d, x, y + 6 * s, 46 * s, 2 * s); P(c, g, [[x + 46 * s, y], [x + 54 * s, y + 4 * s], [x + 46 * s, y + 8 * s]], true); P(c, '#d64545', [[x, y], [x - 4 * s, y - 12 * s], [x + 8 * s, y - 12 * s], [x + 12 * s, y]], true); P(c, d, [[x + 18 * s, y + 4 * s], [x + 30 * s, y + 4 * s], [x + 20 * s, y + 18 * s], [x + 14 * s, y + 18 * s]], true); for (let i = 0; i < 6; i++) R(c, '#3d6584', x + 16 * s + i * 5 * s, y + 2 * s, 2 * s, 2 * s); };
 
 const L = {};
@@ -193,7 +204,7 @@ L.kahwa = { n: 'Kahwa Cafe', w: 110, d(c, x, G) {
     BOX(c, '#f4f2ec', wx, G - 110, 30, 44); R(c, '#9db3c4', wx + 3, G - 107, 24, 18); R(c, '#9db3c4', wx + 3, G - 86, 24, 17); R(c, '#f4f2ec', wx + 3, G - 89, 24, 3); R(c, '#e6e2da', wx + 4, G - 106, 7, 16); R(c, '#e6e2da', wx + 19, G - 106, 7, 16); R(c, '#d8d4cc', wx - 2, G - 66, 34, 3); }
   // dark brown fascia with the name (8px = the font's own crisp size)
   BOX(c, BR, x - 3, G - 62, 116, 20); R(c, BH, x - 2, G - 61, 114, 2); R(c, '#3a2016', x - 2, G - 44, 114, 2);
-  c.font = '700 8px Silk'; c.textAlign = 'center'; c.textBaseline = 'top'; c.fillStyle = '#1e100a'; c.fillText('KAHWA CAFE', x + 67, G - 55); c.fillStyle = CR; c.fillText('KAHWA CAFE', x + 66, G - 56);
+  c.font = '700 8px Silk'; c.textAlign = 'center'; c.textBaseline = 'top'; c.fillStyle = '#1e100a'; c.fillText('KAHWA CAFE', x + 71, G - 55); c.fillStyle = CR; c.fillText('KAHWA CAFE', x + 70, G - 56);
   // round hanging sign: sun, coffee bean, mountains, water lines
   { const sx = x + 14, sy = G - 66; CIRC(c, OUT, sx, sy, 13); CIRC(c, '#5a3424', sx, sy, 12); CIRC(c, BR, sx, sy, 10);
     for (const [a, b] of [[-5, -8], [-2, -9], [1, -9], [4, -8]]) R(c, CR, sx + a, sy + b, 1, 2);
@@ -276,7 +287,7 @@ L.uob = { n: 'University of Bedfordshire', w: 200, d(c, x, G) {
 } };
 
 L.wardown = { n: 'Wardown Park', w: 210, d(c, x, G) {
-  CIRC(c, '#2f5f3a', x + 170, G - 60, 30); CIRC(c, '#356b40', x + 196, G - 50, 22);
+  CROWN(c, x + 170, G - 60, 30, '#2f5f3a', '#356b40', 3, false); CROWN(c, x + 196, G - 50, 22, '#356b40', '#3d7848', 2, false);
   BRICK(c, x + 96, G - 58, 80, 42, '#a8553f', '#93492f'); R(c, OUT, x + 95, G - 59, 82, 1); R(c, OUT, x + 95, G - 58, 1, 42); R(c, OUT, x + 176, G - 58, 1, 42);
   P(c, '#b5503a', [[x + 88, G - 58], [x + 184, G - 58], [x + 168, G - 78], [x + 104, G - 78]], true); for (let i = 0; i < 4; i++) R(c, '#9e4532', x + 96 + i * 3, G - 74 + i * 4, 80 - i * 6, 1);
   for (const dx of [x + 106, x + 146]) { BOX(c, '#5b3a2c', dx, G - 50, 20, 34); R(c, '#e8dccb', dx + 3, G - 47, 14, 10); R(c, '#5b3a2c', dx + 9, G - 47, 2, 10); }
@@ -548,7 +559,7 @@ L.lewsey = { n: 'Lewsey Sports Park', w: 280, d(c, x, G) {
   BOX(c, '#f4f2ec', x + 40, G - 100, 60, 13); c.font = '700 8px Silk'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = '#e8641c'; c.fillText('active', x + 70, G - 93); R(c, '#2fa84a', x + 44, G - 97, 3, 3);
   for (const vx of [x + 40, x + 82]) { BOX(c, '#ecebe7', vx, G - 84, 14, 10); for (let i = 0; i < 4; i++) R(c, '#9a9a9a', vx, G - 82 + i * 2, 14, 1); }
   for (let i = 0; i < 6; i++) R(c, '#b9744e', x + 30 + i * 16, G - 20, 5, 4);
-  BOX(c, '#e9ecef', x + 120, G - 60, 160, 11); BOX(c, '#ffffff', x + 184, G - 59, 78, 9); T(c, 'ENTRANCE', x + 223, G - 58, 8, '#22408a', 'center', false);
+  BOX(c, '#e9ecef', x + 120, G - 62, 160, 13); BOX(c, '#ffffff', x + 184, G - 61, 78, 11); T(c, 'ENTRANCE', x + 223, G - 59, 8, '#22408a', 'center', false);
   BOX(c, '#f4f4f4', x + 124, G - 50, 152, 50); BOX(c, '#ffffff', x + 126, G - 46, 18, 46);
   for (let i = 0; i < 6; i++) R(c, i < 2 ? '#7a8590' : '#3a4250', x + 148 + i * 21, G - 46, 18, 44); R(c, '#e9ecef', x + 148, G - 40, 126, 1); BOX(c, '#2f6fb5', x + 158, G - 32, 4, 4);
   CLAD(x, G - 70, 22, 70); BOX(c, '#ecebe7', x - 2, G - 54, 24, 4); BOX(c, '#3a4250', x + 4, G - 46, 12, 46); R(c, '#c8202a', x + 16, G - 46, 2, 46);
@@ -699,8 +710,8 @@ L.ldh = { n: 'Luton and Dunstable Hospital', w: 344, d(c, x, G) {
   BOX(c, '#1c1f24', x + 90, G - 42, 56, 42); for (let i = 0; i < 4; i++) R(c, '#7a96ae', x + 92 + i * 13.5, G - 40, 12, 40); R(c, '#1c1f24', x + 117, G - 40, 2, 40);
   BOX(c, '#1c1f24', x + 168, G - 42, 70, 42); for (let i = 0; i < 3; i++) R(c, '#7a96ae', x + 170 + i * 22, G - 40, 20, 40); R(c, '#d8262f', x + 196, G - 34, 18, 18);
   // signage canopy: black MAIN ENTRANCE, red EMERGENCY DEPT with the red leg
-  BOX(c, '#121418', x - 44, G - 58, 208, 14); T(c, 'MAIN ENTRANCE', x + 104, G - 56, 8, '#ffffff', 'center', true);
-  BOX(c, '#e3171f', x + 162, G - 60, 100, 16); T(c, 'EMERGENCY DEPT', x + 212, G - 57, 8, '#ffffff', 'center', true);
+  BOX(c, '#121418', x - 44, G - 58, 208, 14); T(c, 'MAIN ENTRANCE', x + 104, G - 55, 8, '#ffffff', 'center', true);
+  BOX(c, '#e3171f', x + 162, G - 60, 100, 16); T(c, 'EMERGENCY DEPT', x + 212, G - 56, 8, '#ffffff', 'center', true);
   P(c, '#e3171f', [[x + 248, G - 44], [x + 262, G - 44], [x + 262, G], [x + 254, G], [x + 254, G - 30]], true);
   // low curved planter wall with stone coping and a rail
   c.fillStyle = '#3a3e44'; c.beginPath(); c.moveTo(x - 46, G); c.lineTo(x - 46, G - 8); c.quadraticCurveTo(x + 129, G - 16, x + 304, G - 8); c.lineTo(x + 304, G); c.closePath(); c.fill();
@@ -858,7 +869,7 @@ L.inspire = { n: 'Inspire Luton Sports Village', w: 440, d(c, x, G) {
 
 L.stockwood = { n: 'Stockwood Discovery Centre', w: 380, d(c, x, G) {
   // trees behind
-  for (const [tx, r] of [[x + 20, 30], [x + 120, 36], [x + 250, 34], [x + 340, 30]]) { CIRC(c, OUT, tx, G - 90, r + 1); CIRC(c, '#3f6f34', tx, G - 90, r); CIRC(c, '#4f8a3c', tx - 6, G - 96, r * .6); }
+  for (const [tx, r, kd] of [[x + 20, 30, 3], [x + 120, 36, 0], [x + 250, 34, 2], [x + 340, 30, 1]]) CROWN(c, tx, G - 90, r, '#3f6f34', '#4f8a3c', kd);
   // one-storey building: grey brick wall + timber cafe front
   BRICK(c, x, G - 52, 160, 52, '#a8a49c', '#96928a'); R(c, OUT, x - 1, G - 53, 162, 1); BOX(c, '#e8e3d6', x - 2, G - 56, 164, 4);
   BOX(c, '#c9a36a', x + 70, G - 52, 90, 52); for (let i = 0; i < 5; i++) { BOX(c, '#b08a52', x + 72 + i * 17, G - 46, 15, 46); R(c, '#2a2f38', x + 74 + i * 17, G - 44, 11, 42); R(c, 'rgba(255,255,255,.18)', x + 75 + i * 17, G - 42, 2, 30); }
@@ -968,11 +979,33 @@ L.toros = { n: "Toro's Steakhouse", w: 220, d(c, x, G) {
   T(c, 'STEAKHOUSE', x + 162, G - 42, 8, '#f4f2ec', 'center', false); R(c, '#c9a64a', x + 132, G - 33, 60, 1);
   c.restore();
   BOX(c, '#2f6a2e', x, G - 46, 200, 46); for (let i = 0; i < 180; i++) R(c, i % 2 ? '#24561f' : '#3e8238', x + (i * 37) % 198, G - 45 + (i * 13) % 44, 2, 2);
-  for (let i = 0; i < 4; i++) { const wx = x + 10 + i * 36; BOX(c, '#1f1d1e', wx, G - 42, 30, 38);
-    // reflective glass: sky, the brick and white buildings opposite, pavement
-    R(c, '#c9d6de', wx + 1, G - 41, 28, 36); R(c, '#9a6252', wx + 1, G - 36, 13, 12); R(c, '#e9e6df', wx + 15, G - 38, 14, 16); for (let k = 0; k < 3; k++) { R(c, '#5d6a74', wx + 3 + k * 4, G - 33, 2, 3); R(c, '#7d8a94', wx + 17 + k * 4, G - 34, 2, 4); }
-    R(c, '#8a9298', wx + 1, G - 20, 28, 15); R(c, '#a2aab0', wx + 1, G - 20, 28, 2); R(c, 'rgba(255,255,255,.35)', wx + 4, G - 40, 2, 34);
-    CIRC(c, '#1f1d1e', wx + 15, G - 27, 3); R(c, '#f4f2ec', wx + 13, G - 28, 4, 1); }
+  // four windows, each looking into a different part of the restaurant (warm dark wood inside, a soft glare on the glass)
+  const HEAD = (hx, hy, skin, hair, top) => { R(c, top, hx - 3, hy + 4, 7, 6); R(c, skin, hx - 2, hy, 5, 4); R(c, hair, hx - 2, hy - 1, 5, 2); };
+  const CHAIR = (cx2, cy2, col) => { R(c, col, cx2, cy2 - 6, 2, 9); R(c, col, cx2, cy2 + 1, 6, 2); R(c, col, cx2 + 5, cy2 + 1, 1, 4); };
+  for (let i = 0; i < 4; i++) { const wx = x + 10 + i * 36, wy = G - 41; BOX(c, '#1f1d1e', wx, G - 42, 30, 38);
+    R(c, '#4a3026', wx + 1, wy, 28, 36); R(c, '#5a3a2c', wx + 1, wy, 28, 2); R(c, '#2e1e18', wx + 1, wy + 28, 28, 8); for (let k = 0; k < 4; k++) R(c, '#3a261e', wx + 1 + k * 8, wy + 29, 1, 7);   // wall, floor boards
+    if (i === 0) {   // a table for two by the window, pendant lamp
+      R(c, '#1a1210', wx + 14, wy, 1, 7); R(c, '#e8b84a', wx + 12, wy + 7, 5, 2); R(c, 'rgba(255,214,140,.25)', wx + 8, wy + 9, 13, 10);
+      HEAD(wx + 8, wy + 14, '#c58c5c', '#1b1b1d', '#2f4a8a'); HEAD(wx + 21, wy + 14, '#e0b48a', '#5a3a1e', '#a83a32');
+      R(c, '#7a4e32', wx + 6, wy + 22, 18, 2); R(c, '#5a3a24', wx + 14, wy + 24, 2, 6); R(c, '#f4f2ec', wx + 9, wy + 21, 4, 1); R(c, '#f4f2ec', wx + 17, wy + 21, 4, 1); R(c, '#b02a22', wx + 14, wy + 19, 1, 3);
+    } else if (i === 1) {   // red leather booth with a family, framed bull picture on the wall
+      BOX(c, '#c9a64a', wx + 9, wy + 3, 12, 8); R(c, '#2a1a14', wx + 11, wy + 5, 8, 4); R(c, '#f4f2ec', wx + 13, wy + 6, 4, 2);
+      R(c, '#8a1e1e', wx + 2, wy + 15, 26, 10); R(c, '#a82a26', wx + 2, wy + 15, 26, 2);
+      HEAD(wx + 7, wy + 13, '#8a5a3a', '#1b1b1d', '#e8e4dc'); HEAD(wx + 15, wy + 15, '#c58c5c', '#2a1a14', '#3e7a4a'); HEAD(wx + 23, wy + 13, '#c58c5c', '#1b1b1d', '#5a5f6e');
+      R(c, '#7a4e32', wx + 3, wy + 24, 24, 2); R(c, '#f2c43a', wx + 8, wy + 23, 3, 1); R(c, '#e0703a', wx + 17, wy + 23, 4, 1);
+    } else if (i === 2) {   // the counter: grill glow, a chef in whites, menu boards
+      R(c, '#1f1d1e', wx + 2, wy + 3, 26, 7); for (let k = 0; k < 3; k++) { R(c, '#f4f2ec', wx + 4 + k * 8, wy + 5, 6, 1); R(c, '#f4f2ec', wx + 4 + k * 8, wy + 7, 4, 1); }
+      R(c, '#e06a2a', wx + 2, wy + 12, 26, 3); R(c, 'rgba(255,150,60,.35)', wx + 2, wy + 11, 26, 6);
+      HEAD(wx + 15, wy + 12, '#e0b48a', '#f4f2ec', '#f4f2ec'); R(c, '#f4f2ec', wx + 12, wy + 9, 7, 3);
+      R(c, '#6a4a3a', wx + 1, wy + 20, 28, 9); R(c, '#8a6450', wx + 1, wy + 20, 28, 2); R(c, '#c9a64a', wx + 4, wy + 18, 3, 2); R(c, '#9aa3ad', wx + 22, wy + 17, 4, 3);
+    } else {   // tall table with stools and a big plant in the corner
+      R(c, '#e8b84a', wx + 20, wy + 6, 4, 2); R(c, '#1a1210', wx + 21, wy, 1, 6);
+      R(c, '#7a4e32', wx + 10, wy + 17, 16, 2); R(c, '#5a3a24', wx + 17, wy + 19, 2, 10); CHAIR(wx + 8, wy + 20, '#2a1a14'); R(c, '#2a1a14', wx + 25, wy + 21, 2, 8);
+      HEAD(wx + 21, wy + 9, '#8a5a3a', '#1b1b1d', '#c8202a'); R(c, '#f4f2ec', wx + 13, wy + 15, 3, 2); R(c, '#b07a3a', wx + 18, wy + 15, 2, 2);
+      R(c, '#7a5a3a', wx + 2, wy + 22, 5, 7); CIRC(c, '#2f6a2e', wx + 5, wy + 16, 5); CIRC(c, '#3e8238', wx + 4, wy + 14, 3);
+    }
+    R(c, 'rgba(255,255,255,.1)', wx + 1, wy, 28, 36); P(c, 'rgba(255,255,255,.14)', [[wx + 3, wy + 36], [wx + 9, wy + 36], [wx + 21, wy], [wx + 15, wy]]);   // glass glare
+  }
   BOX(c, '#3a2a20', x + 164, G - 40, 18, 40); R(c, '#9fc1d8', x + 167, G - 37, 12, 16); CIRC(c, '#f2c43a', x + 173, G - 14, 2);
   // neighbours
 } };
@@ -1039,7 +1072,7 @@ L.topspizza = { n: 'Tops Pizza', w: 180, d(c, x, G) {
 } };
 
 L.kaya = { n: 'Kaya Lounge', w: 230, d(c, x, G) {
-  CIRC(c, OUT, x + 160, G - 82, 44); CIRC(c, '#3f6f34', x + 160, G - 82, 43); CIRC(c, '#4f8a3c', x + 150, G - 92, 26); CIRC(c, '#2f5f2c', x + 210, G - 70, 26);
+  CROWN(c, x + 160, G - 82, 43, '#3f6f34', '#4f8a3c', 0); CROWN(c, x + 210, G - 70, 26, '#2f5f2c', '#3a6b33', 1);
   BOX(c, '#2a2826', x - 2, G - 66, 226, 8);
   BOX(c, '#2f5a2a', x, G - 58, 222, 58); for (let i = 0; i < 300; i++) R(c, ['#3e7a34', '#5a9a44', '#244a20', '#9ad06a', '#e8eedc'][i % 5], x + (i * 37) % 220, G - 56 + (i * 23) % 54, 2 + (i % 2), 2);
   BOX(c, '#0e1014', x + 20, G - 50, 44, 50); R(c, '#2a2e36', x + 26, G - 46, 32, 46); CIRC(c, '#eef4ff', x + 22, G - 52, 2); CIRC(c, '#eef4ff', x + 70, G - 52, 2);
@@ -1203,6 +1236,10 @@ const SHARP = {
       CIRC(c, OUT, cx, cy, r + 1); CIRC(c, '#ffffff', cx, cy, r); CIRC(c, NV, cx, cy, r - 2);
       const put = (gl, ox, col) => gl.forEach((row, j) => [...row].forEach((ch, i) => { if (ch === '#') R(c, col, ox + i, cy - 3 + j, 2, 1); }));   // bold strokes
       put(GL, cx - 7, LM); put(BL, cx + 1, '#ffffff'); } },
+  kahwa(c, x, G, f) { const X = v => Math.round(x + v * f), Y = v => Math.round(G - v * f);   // crisp KAHWA CAFE, centred on the board right of the round sign
+    R(c, '#4a2a1e', X(29), Y(58), X(112) - X(29), Y(45) - Y(58)); c.font = '700 8px Silk'; c.textAlign = 'center'; c.textBaseline = 'top'; const cx = X(70.5), ty = Math.round((Y(60) + Y(44)) / 2) - 4; c.fillStyle = '#1e100a'; c.fillText('KAHWA CAFE', cx + 1, ty + 1); c.fillStyle = '#f3e9d6'; c.fillText('KAHWA CAFE', cx, ty); },
+  lewsey(c, x, G, f) { const X = v => Math.round(x + v * f), Y = v => Math.round(G - v * f);   // crisp ENTRANCE inside its white panel
+    R(c, '#ffffff', X(185), Y(60), X(261) - X(185), Y(51) - Y(60)); T(c, 'ENTRANCE', X(223), Math.round((Y(61) + Y(50)) / 2) - 4, 8, '#22408a', 'center', false); },
   tesco(c, x, G, f) { const X = v => Math.round(x + 77 + v * f), Y = v => Math.round(G - v * f);   // crisp Welcome inside its red box over the door
     T(c, 'Welcome', X(75), Y(60.6), Math.round(8 * f), '#ffffff', 'center', false); },
   chiltern(c, x, G, f) { const X = v => Math.round(x + v * f), Y = v => Math.round(G - v * f);   // crisp WELCOME over the door
@@ -1561,7 +1598,7 @@ L.foodbank = { n: 'Luton Foodbank', w: 300, d(c, x, G) {
 
 // ---- Wardown Park chain: field + play area | lake | bridge over the stream | funfair ----
 L.wardownfield = { n: 'Wardown Park', w: 200, d(c, x, G) {
-  CIRC(c, '#356b40', x + 30, G - 52, 26); CIRC(c, '#2f5f3a', x + 168, G - 58, 30); TREE(c, x + 100, G - 4, 1.5, '#5f9a3e', '#4a7f30');
+  CROWN(c, x + 30, G - 52, 26, '#356b40', '#3d7848', 1, false); CROWN(c, x + 168, G - 58, 30, '#2f5f3a', '#356b40', 2, false); TREE(c, x + 100, G - 4, 1.5, '#5f9a3e', '#4a7f30');
   BOX(c, '#5fae4a', x - 2, G - 16, 204, 16); for (let i = 0; i < 90; i++) R(c, i % 2 ? '#4f9a3c' : '#78c25a', x + (i * 37) % 200, G - 15 + (i * 7) % 14, 2, 2);
   BOX(c, '#2f6a3a', x + 6, G - 36, 44, 18); T(c, 'WARDOWN', x + 28, G - 34, 8, '#ffffff', 'center', false); T(c, 'PARK', x + 28, G - 26, 8, '#f2c43a'); R(c, '#4a3326', x + 12, G - 18, 3, 10); R(c, '#4a3326', x + 42, G - 18, 3, 10);
   // play area: soft surface, swings, slide, climbing frame
@@ -1574,7 +1611,7 @@ L.wardownfield = { n: 'Wardown Park', w: 200, d(c, x, G) {
   PERSON(c, x + 50, G - 8, '#5a6e8a'); PERSON(c, x + 190, G - 8, '#3a8a5a', '#2a2a33', '#7a4a2a');
 } };
 L.wardownbridge = { n: 'Wardown Park Bridge', w: 170, d(c, x, G) {
-  CIRC(c, '#2f5f3a', x + 150, G - 56, 30); CIRC(c, '#356b40', x + 14, G - 50, 26);
+  CROWN(c, x + 150, G - 56, 30, '#2f5f3a', '#356b40', 0, false); CROWN(c, x + 14, G - 50, 26, '#356b40', '#3d7848', 3, false);
   R(c, '#5a3d2a', x + 74, G - 64, 6, 48); CIRC(c, OUT, x + 77, G - 78, 37); CIRC(c, '#7da443', x + 77, G - 78, 36); CIRC(c, '#94bb52', x + 68, G - 88, 20);
   for (let i = 0; i < 16; i++) R(c, i % 2 ? '#6e9638' : '#86b049', x + 44 + i * 4.3, G - 70, 3, 20 + (i % 3) * 9);
 } };
