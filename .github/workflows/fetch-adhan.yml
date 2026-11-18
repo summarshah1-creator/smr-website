@@ -13,14 +13,14 @@ jobs:
       - name: Find freely licensed adhan recordings on Wikimedia Commons
         run: |
           sudo apt-get -qq update >/dev/null && sudo apt-get -qq install -y ffmpeg >/dev/null
-          mkdir -p adhan-fetch && cd adhan-fetch
+          mkdir -p adhan-fetch && cd adhan-fetch && rm -f *
           python3 - <<'P'
           import json,urllib.request,urllib.parse,subprocess,re
           UA={'User-Agent':'SMR-flappy/1.0 (summar@smrgraphics.co.uk)'}
           get=lambda u: urllib.request.urlopen(urllib.request.Request(u,headers=UA),timeout=90).read()
           seen={}; out=[]
-          for term in ['adhan','azan','athan call to prayer','adhan recording','call to prayer muezzin']:
-              q={'action':'query','format':'json','generator':'search','gsrsearch':term+' filetype:audio','gsrnamespace':'6','gsrlimit':'30','prop':'imageinfo','iiprop':'url|mime|size|extmetadata'}
+          for term in ['File:Beautiful adhan.ogg|File:The Adhan - Muslim Call to Prayer - Aaqib Azeez.mp3|File:Azan.ogg|File:Adhan.ogg']:
+              q={'action':'query','format':'json','titles':term,'prop':'imageinfo','iiprop':'url|mime|size|extmetadata'}
               try: j=json.loads(get('https://commons.wikimedia.org/w/api.php?'+urllib.parse.urlencode(q)))
               except Exception as e: print('fail',term,e); continue
               for p in (j.get('query') or {}).get('pages',{}).values():
