@@ -217,10 +217,10 @@ html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:m
 </div></div>
   <div id="tap" class="hide">TAP TO FLAP</div>
 </div>
-<script src="landmarks.js?v=11182057"></script>
-<script src="vehicles.js?v=11182057"></script>
+<script src="landmarks.js?v=11182059"></script>
+<script src="vehicles.js?v=11182059"></script>
 <script src="namecheck.js"></script>
-<script src="sky.js?v=11182057"></script>
+<script src="sky.js?v=11182059"></script>
 <script>
 (() => {
 const H = 300, GY = 250, ROAD = 262;            // world: 300 units tall, pavement top at 250
@@ -576,7 +576,7 @@ const SFX = (() => { let ac = null, on = store.get('fk_sound', 0) === 1 || /(?:^
       const o = a.createOscillator(), vib = a.createOscillator(), vg = a.createGain(); o.type = 'sawtooth'; o.frequency.setValueAtTime(f0 * 1.15, t0); o.frequency.linearRampToValueAtTime(f0 * 1.3, t0 + .06); o.frequency.exponentialRampToValueAtTime(f0 * .7, t0 + D);
       vib.frequency.value = 7; vg.gain.value = f0 * .03; vib.connect(vg); vg.connect(o.frequency);
       const mk = (fa, fb, q, gv) => { const f = a.createBiquadFilter(); f.type = 'bandpass'; f.Q.value = q; f.frequency.setValueAtTime(fa, t0); f.frequency.linearRampToValueAtTime(fb, t0 + D); const g = a.createGain(); g.gain.value = gv; o.connect(f); f.connect(g); return g; };
-      const env = a.createGain(); env.gain.setValueAtTime(0, t0); env.gain.linearRampToValueAtTime(.16, t0 + .04); env.gain.setValueAtTime(.15, t0 + D * .55); env.gain.exponentialRampToValueAtTime(.001, t0 + D);
+      const env = a.createGain(); env.gain.setValueAtTime(0, t0); env.gain.linearRampToValueAtTime(.07, t0 + .04); env.gain.setValueAtTime(.065, t0 + D * .55); env.gain.exponentialRampToValueAtTime(.001, t0 + D);
       mk(f0 > 330 ? 850 : 700, f0 > 330 ? 520 : 430, 5, 1).connect(env); mk(f0 > 330 ? 1350 : 1150, f0 > 330 ? 950 : 800, 7, .55).connect(env); env.connect(a.destination);
       o.start(t0); vib.start(t0); o.stop(t0 + D + .05); vib.stop(t0 + D + .05); },
     thud(v) { v = v == null ? .5 : v; if (v > .6) { noise(.6, 6000, 3500, .04, .12); tone(880, 700, .3, 'square', .015, .1); } noise(.3 + v * .25, 1200 + v * 500, 160, .22); tone(120, 45, .3, 'triangle', .16); tone(420, 300, .25, 'square', .03, .02); tone(610, 520, .35, 'square', .02, .05); noise(.5, 5000, 3000, .03, .08); },
@@ -662,7 +662,7 @@ const LB = (() => { const api = 'api.php'; let run = '', runFor = ''; const star
 /* ---------- always the latest version, also when saved to the Home Screen ----------
    version.json is rewritten on every deploy; when it changes the page reloads itself (straight away on the menu,
    or right after the current game ends), with a cache-busting query so the phone fetches the new HTML. */
-(() => { const BUILD = '11182057'; let pending = false;
+(() => { const BUILD = '11182059'; let pending = false;
   const go = () => { let last = 0; try { last = +sessionStorage.getItem('fk_upd_t') || 0; } catch (e) {} if (Date.now() - last < 60000) return;   // never loop: at most one reload a minute
     try { sessionStorage.setItem('fk_upd_t', String(Date.now())); } catch (e) {} location.replace(location.pathname + '?u=' + Date.now() + location.hash); };
   const check = () => fetch('version.json?ts=' + Date.now(), { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(j => {
