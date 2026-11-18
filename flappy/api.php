@@ -180,7 +180,9 @@ try {
             $n = (int) $p->query('SELECT COUNT(*) FROM fk_recs WHERE done = 0')->fetchColumn();
             $plays = (int) $p->query('SELECT COUNT(*) FROM fk_scores')->fetchColumn();
             $fl = $p->query('SELECT id, name, score, need, took, at FROM fk_flags WHERE done = 0 ORDER BY at DESC LIMIT 50')->fetchAll(PDO::FETCH_ASSOC);
-            json_out(['recs' => $recs, 'today' => $t->fetchAll(), 'all' => $all, 'new' => $n, 'entries' => $plays, 'flags' => $fl]);
+            // best games actually played (from the game-over events), whether or not a name was saved
+            $runs = $p->query("SELECT e.at, e.day, e.dev, e.src, e.val AS score, e.extra AS place, e.app, (SELECT COUNT(*) FROM fk_scores s WHERE s.score = e.val) AS saved FROM fk_events e WHERE e.ev = 'over' AND e.val > 0 ORDER BY e.val DESC, e.at DESC LIMIT 20")->fetchAll(PDO::FETCH_ASSOC);
+            json_out(['recs' => $recs, 'today' => $t->fetchAll(), 'all' => $all, 'new' => $n, 'entries' => $plays, 'flags' => $fl, 'runs' => $runs]);
         }
         if ($a === 'stats') json_out(fk_stats(max(0, min(400, (int) ($_GET['days'] ?? 7)))) + ['settings' => fk_settings()]);
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') json_out(['error' => 'POST only'], 405);
