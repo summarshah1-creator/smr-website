@@ -28,14 +28,14 @@ html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:m
 .panel .row small{font:400 10px Silk;letter-spacing:.1em;color:#6a5a3a}
 .btn{display:inline-block;margin-top:6px;background:#3fb04a;color:#fff;border:3px solid #1b1a24;box-shadow:0 4px 0 #1b1a24;border-radius:5px;padding:10px 22px;font:700 15px Silk;cursor:pointer}
 .btn:active{transform:translateY(3px);box-shadow:0 1px 0 #1b1a24}
-.seen{font:400 10px/1.6 Silk;color:#4a4030;max-height:84px;overflow:auto;margin:6px 0 4px}
+.seen{position:relative;overflow:hidden;margin:6px 0 4px;height:40px}.seen .tr{display:flex;height:100%;transition:transform .45s cubic-bezier(.4,0,.2,1)}.seen .it{flex:0 0 100%;min-width:0;white-space:normal;box-sizing:border-box;display:flex;align-items:center;justify-content:center;font:700 13px/1.25 Silk;padding-bottom:6px!important;color:#3a3020;text-align:center;padding:0 6px}.seen .dots{position:absolute;left:0;right:0;bottom:-1px;display:flex;justify-content:center;gap:3px}.seen .dots i{width:4px;height:4px;background:#d8cbb0}.seen .dots i.on{background:#e8641c}.seen.one{height:32px}
 .hide{display:none}
 #tap{position:absolute;bottom:calc(env(safe-area-inset-bottom) + 70px);left:0;right:0;font:700 14px Silk;text-shadow:0 2px 0 #1b1a24,2px 0 0 #1b1a24,-2px 0 0 #1b1a24;animation:bl 1s steps(2) infinite}
 @keyframes bl{50%{opacity:.25}}
 
-.wsign{position:absolute;left:50%;top:0;width:196px;height:96px;transform:translate(-50%,-78px);z-index:-1;animation:pop .9s cubic-bezier(.3,1.6,.5,1) .2s both;pointer-events:none}
+.wsign{position:absolute;left:50%;top:0;width:240px;height:108px;transform:translate(-50%,-88px);z-index:-1;animation:pop .9s cubic-bezier(.3,1.6,.5,1) .2s both;pointer-events:none}
 @keyframes pop{0%{transform:translate(-50%,0)}100%{transform:translate(-50%,-78px)}}
-.wsign .p{position:absolute;bottom:0;width:9px;height:96px;background:#4a3326;border:2px solid #1b1a24}.wsign .p.l{left:6px}.wsign .p.r{right:6px}
+.wsign canvas{display:block;width:240px;height:108px;image-rendering:pixelated}.wsign .p{position:absolute;bottom:0;width:9px;height:96px;background:#4a3326;border:2px solid #1b1a24}.wsign .p.l{left:6px}.wsign .p.r{right:6px}
 .wsign .fr{position:absolute;left:4px;right:4px;top:6px;height:72px;background:#4a3326;clip-path:polygon(0 16%,50% 0,100% 16%,100% 100%,0 100%);padding:4px}
 .wsign .wb{position:relative;height:100%;background:#fbfbfd;clip-path:polygon(0 14%,50% 0,100% 14%,100% 100%,0 100%);font-family:-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#5b2a86;padding:9px 0 0 9px;box-sizing:border-box;text-align:left}
 .wsign .wt{font-weight:600;font-size:11px;line-height:1}.wsign .wl{font-weight:800;font-size:27px;line-height:1;letter-spacing:-.01em;margin-top:1px}
@@ -58,19 +58,19 @@ html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:m
 .pw img{height:17px;width:auto;image-rendering:auto;display:block}
 .pw i{font-style:normal;color:#5b4fd1;font-size:12px}
 .pw:hover span,.pw:active span{text-decoration:underline}
-#recM{position:fixed;inset:0;z-index:50;background:rgba(15,14,22,.6);display:flex;align-items:center;justify-content:center;pointer-events:auto}
-#recM.hide{display:none}
-#recM .box{position:relative;width:min(320px,88vw);background:#f6efd8;border:4px solid #1b1a24;box-shadow:0 6px 0 #1b1a24;border-radius:6px;padding:16px 16px 14px;font:500 13px -apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#1b1a24;text-align:left}
-#recM h3{margin:0 26px 4px 0;font:700 12px/1.4 Silk;letter-spacing:.04em}
-#recM p{margin:0 0 10px;font-size:12px;color:#6a5a3a}
-#recM label{display:block;font-weight:700;font-size:11px;margin:8px 0 3px;text-transform:uppercase;letter-spacing:.06em}
-#recM input,#recM textarea{width:100%;box-sizing:border-box;border:2px solid #1b1a24;border-radius:4px;padding:8px;font:500 14px -apple-system,'Segoe UI',Roboto,sans-serif;background:#fff}
-#recM textarea{height:64px;resize:none}
-#recM .x{position:absolute;right:8px;top:8px;width:28px;height:28px;border:2px solid #1b1a24;border-radius:4px;background:#fff;font:700 16px/1 sans-serif;cursor:pointer}
-#recM .send{display:block;width:100%;margin-top:12px;background:#3fb04a;color:#fff;border:3px solid #1b1a24;box-shadow:0 4px 0 #1b1a24;border-radius:5px;padding:10px;font:700 14px Silk;cursor:pointer}
-#recM .send:disabled{opacity:.6}
-#recM .err{color:#c8402a;font-size:12px;margin-top:6px;min-height:14px}
-#recM .ok{text-align:center;padding:18px 4px 6px}#recM .ok b{display:block;font:700 15px Silk;color:#2f8a3a;margin-bottom:6px}
+#recM,#przM{position:fixed;inset:0;z-index:50;background:rgba(15,14,22,.6);display:flex;align-items:center;justify-content:center;pointer-events:auto}
+#recM.hide,#przM.hide{display:none}
+#recM .box,#przM .box{position:relative;width:min(320px,88vw);background:#f6efd8;border:4px solid #1b1a24;box-shadow:0 6px 0 #1b1a24;border-radius:6px;padding:16px 16px 14px;font:500 13px -apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#1b1a24;text-align:left}
+#recM h3,#przM h3{margin:0 26px 4px 0;font:700 12px/1.4 Silk;letter-spacing:.04em}
+#recM p,#przM p{margin:0 0 10px;font-size:12px;color:#6a5a3a}
+#recM label,#przM label{display:block;font-weight:700;font-size:11px;margin:8px 0 3px;text-transform:uppercase;letter-spacing:.06em}
+#recM input,#recM textarea,#przM input,#przM textarea{width:100%;box-sizing:border-box;border:2px solid #1b1a24;border-radius:4px;padding:8px;font:500 14px -apple-system,'Segoe UI',Roboto,sans-serif;background:#fff}
+#recM textarea,#przM textarea{height:64px;resize:none}
+#recM .x,#przM .x{position:absolute;right:8px;top:8px;width:28px;height:28px;border:2px solid #1b1a24;border-radius:4px;background:#fff;font:700 16px/1 sans-serif;cursor:pointer}
+#recM .send,#przM .send{display:block;width:100%;margin-top:12px;background:#3fb04a;color:#fff;border:3px solid #1b1a24;box-shadow:0 4px 0 #1b1a24;border-radius:5px;padding:10px;font:700 14px Silk;cursor:pointer}
+#recM .send:disabled,#przM .send:disabled{opacity:.6}
+#recM .err,#przM .err{color:#c8402a;font-size:12px;margin-top:6px;min-height:14px}
+#recM .ok,#przM .ok{text-align:center;padding:18px 4px 6px}#recM .ok b,#przM .ok b{display:block;font:700 15px Silk;color:#2f8a3a;margin-bottom:6px}
 .shr,.hm{display:block;width:100%;margin:8px 0 0;cursor:pointer;background:#2a6fd8;color:#fff;border:2px solid #1b1a24;box-shadow:0 3px 0 #1b1a24;border-radius:6px;padding:9px 8px;font:700 10px Silk;letter-spacing:.06em}.hm{background:#fff;color:#1b1a24}
 .orow{display:flex;gap:8px}.orow button{flex:1}
 #shT{position:fixed;left:50%;bottom:22%;transform:translateX(-50%);z-index:60;background:#1b1a24;color:#fff;font:700 10px Silk;padding:9px 12px;border-radius:6px;opacity:0;transition:opacity .25s;pointer-events:none}#shT.on{opacity:1}
@@ -121,15 +121,16 @@ html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:m
 #over .prow .btn{animation:go 1.1s ease-in-out infinite}
 .orow{margin-top:10px}.orow button{display:flex;align-items:center;justify-content:center;flex:1;font-size:8px!important;padding:9px 3px!important;margin:0!important;line-height:1.2;min-height:40px}
 .orow .ic{margin-right:4px}.shr,.lbB{display:flex;align-items:center;justify-content:center}
-.seen{max-height:46px}
+.seen{height:40px}
 #rot{display:none;position:fixed;inset:0;z-index:90;background:#2f8fd8;color:#fff;align-items:center;justify-content:center;text-align:center;font:600 14px -apple-system,'Segoe UI',Roboto,sans-serif;pointer-events:auto}
 #rot div{font-size:46px;line-height:1.2}#rot b{display:block;font:700 15px Silk;margin:10px 0 6px;color:#ffd84a;text-shadow:2px 2px 0 #1b1a24}#rot span{display:block;font-size:14px}
 @media (orientation:landscape) and (max-height:500px) and (pointer:coarse){#rot{display:flex}}
+.fkban{margin:8px 0 6px}.fkban a{display:block;text-decoration:none;color:inherit}.fkban .bt{background:#fff;border:2px solid #1b1a24;box-shadow:0 3px 0 #1b1a24;border-radius:8px;padding:10px 12px;font:650 15px/1.38 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#1b1a24;text-align:center;letter-spacing:-.005em;-webkit-font-smoothing:antialiased;white-space:pre-line}.fkban .bt.lk{border-color:#1b1a24;background:#fffaf0}.fkban .bt.lk:after{content:' \203A';color:#e8641c;font-weight:800}.fkban img{display:block;width:100%;height:auto;border:2px solid #1b1a24;box-shadow:0 3px 0 #1b1a24;border-radius:8px;background:#fff}
 .notice{margin:2px 0 6px;background:#fff3c4;border:2px solid #1b1a24;border-radius:6px;padding:7px 8px;font:700 12px/1.35 -apple-system,'Segoe UI',Roboto,sans-serif;color:#1b1a24}
 .off-lb .lbB,.off-rec .rec{display:none!important}
 #lbM .tops{display:flex;justify-content:center;gap:4px;margin:0 0 6px}#lbM .tops button{border:2px solid #1b1a24;background:#fff;border-radius:99px;padding:4px 12px;font:700 9px Silk;cursor:pointer}#lbM .tops button.on{background:#1b1a24;color:#ffd84a}
 .lbList{max-height:52vh;overflow:auto}#lbL li em{font:700 8px Silk;font-style:normal;background:#e8641c;color:#fff;border-radius:4px;padding:2px 5px;margin-left:6px;vertical-align:2px}
-.nb.saved .nbr{display:none}.nb .nbn{display:inline;margin-left:4px;font:700 12px Silk;color:#c8402a;letter-spacing:.04em}.nb a{font-size:12px}.nb a{color:#c8402a;font-weight:700}
+.nbp{display:block;width:100%;box-sizing:border-box;margin-top:6px;border:2px solid #1b1a24;border-radius:4px;padding:7px;font:500 14px -apple-system,'Segoe UI',Roboto,sans-serif}.nb.saved .nbp,.nb.ren .nbp{display:none}.nb.saved .nbr{display:none}.nb .nbn{display:inline;margin-left:4px;font:700 12px Silk;color:#c8402a;letter-spacing:.04em}.nb a{font-size:12px}.nb a{color:#c8402a;font-weight:700}
 </style>
 <link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icon-180.png"><link rel="icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Kabootar"><meta name="theme-color" content="#2f8fd8">
 </head>
@@ -140,15 +141,14 @@ html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:m
   <div id="place"><small>FLYING PAST</small><span id="placeN"></span></div>
   <div id="start" class="panel">
     <button class="mute" id="mute" type="button" aria-label="Sound on or off"><svg viewBox="0 0 24 20" aria-hidden="true"><rect x="1" y="7" width="4" height="6" fill="#1b1a24"/><rect x="5" y="5" width="2" height="10" fill="#1b1a24"/><rect x="7" y="3" width="2" height="14" fill="#1b1a24"/><rect x="9" y="1" width="2" height="18" fill="#1b1a24"/><rect x="2" y="8" width="2" height="2" fill="#ffd84a"/><g class="w w1" fill="#e8641c"><rect x="13" y="8" width="2" height="4"/></g><g class="w w2" fill="#e8641c"><rect x="16" y="5" width="2" height="2"/><rect x="17" y="7" width="2" height="6"/><rect x="16" y="13" width="2" height="2"/></g><g class="w w3" fill="#e8641c"><rect x="19" y="2" width="2" height="2"/><rect x="20" y="4" width="2" height="2"/><rect x="21" y="6" width="2" height="8"/><rect x="20" y="14" width="2" height="2"/><rect x="19" y="16" width="2" height="2"/></g><g class="x" fill="#c8402a"><rect x="14" y="6" width="2" height="2"/><rect x="16" y="8" width="2" height="2"/><rect x="18" y="10" width="2" height="2"/><rect x="18" y="6" width="2" height="2"/><rect x="14" y="10" width="2" height="2"/><rect x="20" y="12" width="2" height="2"/><rect x="12" y="12" width="2" height="2"/><rect x="20" y="4" width="2" height="2"/><rect x="12" y="4" width="2" height="2"/></g></svg><span class="muteT">SOUND OFF</span></button>
-    <div class="wsign"><i class="p l"></i><i class="p r"></i><div class="fr"><div class="wb"><div class="wt">Welcome to</div><div class="wl">Luton</div><div class="wu"></div><div class="wv">Proud &nbsp;Vibrant &nbsp;Ambitious &nbsp;Innovative</div>
-      <svg viewBox="0 0 30 36"><path d="M15 2l2 3h-4z M8 6c2-2 5-2 7 0 2-2 5-2 7 0l-1 3H9z" fill="#5b2a86"/><path d="M6 10h18v11c0 6-4 10-9 12-5-2-9-6-9-12z" fill="#5b2a86"/><path d="M13.5 12h3v7h6v3h-6v8h-3v-8h-6v-3h6z" fill="#fff"/><path d="M3 30c4 3 8 4 12 4s8-1 12-4" stroke="#5b2a86" stroke-width="2" fill="none"/></svg></div></div></div>
+    <div class="wsign"><canvas id="wsc" width="240" height="108"></canvas></div>
     <div class="logo">
       <canvas id="logoBird" width="64" height="48"></canvas>
       <div class="lt1">FLAPPY</div>
       <div class="lt2"><span>K</span><span>A</span><span>B</span><span>O</span><span>O</span><span>T</span><span>A</span><span>R</span></div>
       <div class="lt3">FLYING THROUGH LUTON</div>
     </div>
-    <p id="notice" class="notice" hidden></p>
+    <div id="ban1" class="fkban" hidden></div>
     <div class="hs"><small>YOUR HIGH SCORE</small><b id="bestS">0</b></div>
     <div class="prow"><div class="btn" id="go"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M3 1h2v1h2v1h2v1h2v1h2v1h1v2h-1v1h-2v1H9v1H7v1H5v1H3z"/></svg> PLAY</div><button class="lbB" type="button" id="top1"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M3 1h10v2h3v4h-1v1h-2v1h-1v1h-1v1H9v2h2v2H5v-2h2v-2H6v-1H5V9H4V8H2V7H1V3h2zM2 4v2h1V4zm11 0v2h1V4z" fill-rule="evenodd"/></svg> LEADERBOARD</button></div>
     <p style="margin-bottom:0;font-size:10px;color:#6a5a3a">Tap, click or press space to flap</p>
@@ -162,11 +162,12 @@ html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:m
     <h1>GAME<span>OVER</span></h1>
     <p id="why" style="margin:-2px 0 8px;font:700 10px Silk;color:#c8402a"></p>
     <div class="row"><div><b id="sc">0</b><small>SCORE</small></div><div><b id="be">0</b><small>BEST</small></div></div>
-    <div id="nameBox" class="nb hide"><b id="nbT">NEW HIGH SCORE!</b><span id="nbS">Put your name on the leaderboard</span><div class="nbr"><input id="nbI" maxlength="14" placeholder="Your name" autocomplete="nickname"><button type="button" id="nbB">SAVE</button></div><em id="nbE"></em></div>
+    <div id="nameBox" class="nb hide"><b id="nbT">NEW HIGH SCORE!</b><span id="nbS">Put your name on the leaderboard</span><div class="nbr"><input id="nbI" maxlength="14" placeholder="Your name" autocomplete="nickname"><button type="button" id="nbB">SAVE</button></div><input id="nbP" class="nbp" type="tel" inputmode="tel" maxlength="13" autocomplete="tel" placeholder="Mobile 07… (optional, for prizes)"><em id="nbE"></em></div>
     <div class="prow"><div class="btn" id="again"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M3 1h2v1h2v1h2v1h2v1h2v1h1v2h-1v1h-2v1H9v1H7v1H5v1H3z"/></svg> FLY AGAIN</div><button class="homeB" type="button" id="homeB"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M7 1h2v1h1v1h1v1h1v1h1v1h1v1h1v2h-2v6H9v-4H7v4H3V9H1V7h1V6h1V5h1V4h1V3h1V2h1z"/></svg> HOME</button></div>
     <div class="orow"><button class="shr" type="button" data-share="app"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M7 0h2v1h1v1h1v1h1v2H9v6H7V5H4V3h1V2h1V1h1zM1 7h4v2H3v5h10V9h-2V7h4v9H1z"/></svg> SHARE</button><button class="hm" type="button" id="cardB"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M5 2h6v2h4v10H1V4h4zM8 6a3 3 0 1 0 .01 0zM8 8a1 1 0 1 1-.01 0z" fill-rule="evenodd"/></svg> SCORE CARD</button><button class="lbB" type="button"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M3 1h10v2h3v4h-1v1h-2v1h-1v1h-1v1H9v2h2v2H5v-2h2v-2H6v-1H5V9H4V8H2V7H1V3h2zM2 4v2h1V4zm11 0v2h1V4z" fill-rule="evenodd"/></svg> TOP 10</button></div>
     <p id="seenH" style="margin:8px 0 0;font-weight:700">Places you flew past</p>
     <div class="seen" id="seen"></div>
+    <div id="ban2" class="fkban" hidden></div>
     <button class="hsB" type="button"><img src="icon-192.png" alt="">SAVE TO YOUR HOME SCREEN</button>
     <button class="rec" type="button">&#128205; Recommend a Luton place to feature</button>
   </div>
@@ -192,6 +193,14 @@ html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:m
   </div>
   <p class="rs">Flappy Kabootar is just this web page saved to your phone. It can't see your photos, messages or contacts, and you can remove it any time like any other app.</p>
 </div></div>
+<div id="przM" class="hide"><div class="box">
+  <button class="x" type="button" aria-label="Close">&times;</button>
+  <div id="przF"><h3>&#127942; PLAY TO WIN PRIZES</h3><p>Top players can win prizes! Check your name and add your mobile so we can get in touch if you win. Your number is optional and private: it never shows on the leaderboard.</p>
+  <label for="pzN">Your name</label><input id="pzN" maxlength="14" autocomplete="nickname">
+  <label for="pzP">Mobile number (optional)</label><input id="pzP" type="tel" inputmode="tel" maxlength="13" autocomplete="tel" placeholder="07123 456789">
+  <div class="err" id="pzE"></div><button class="send" type="button" id="pzS">SAVE</button><button class="hm" type="button" id="pzX" style="margin-top:8px">NO THANKS</button></div>
+  <div id="przOk" class="ok hide"><b>YOU'RE IN!</b>We'll be in touch if you win.<button class="send" type="button" id="pzC">CLOSE</button></div>
+</div></div>
 <div id="recM" class="hide"><div class="box">
   <button class="x" type="button" aria-label="Close">&times;</button>
   <div id="recF"><h3>RECOMMEND A PLACE</h3><p>Know a Luton spot that should be in the game? Tell us about it.</p>
@@ -203,8 +212,8 @@ html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:m
 </div></div>
   <div id="tap" class="hide">TAP TO FLAP</div>
 </div>
-<script src="landmarks.js?v=1117x"></script>
-<script src="vehicles.js?v=1117j"></script>
+<script src="landmarks.js?v=1117zq"></script>
+<script src="vehicles.js?v=1117q"></script>
 <script src="namecheck.js"></script>
 <script>
 (() => {
@@ -219,22 +228,22 @@ function resize() { dpr = Math.min(window.devicePixelRatio || 1, 3); cv.width = 
 addEventListener('resize', resize); resize();
 
 /* ---------- pre-render landmarks and cars once ---------- */
-const M = 90, LH = 300;
+const M = 90, LH = 380;
 const sprites = [];
 function prerender() {
   LM_ORDER.forEach(k => { const L = LANDMARKS[k]; const oc = document.createElement('canvas'); oc.width = L.w + M * 2; oc.height = LH; const o = oc.getContext('2d'); o.imageSmoothingEnabled = false; L.d(o, M, LH - 6); sprites.push({ k, n: L.n, w: L.w, c: oc }); });
 }
 const houseSprites = [];
-const HOUSE_SCALE = .8; // houses a bit smaller than the landmarks
-function prerenderHouses() { Object.keys(HOUSES).forEach(k => { const Hh = HOUSES[k]; const t = document.createElement('canvas'); t.width = Hh.w + M * 2; t.height = LH; Hh.d(t.getContext('2d'), M, LH - 6);
-  const oc = document.createElement('canvas'), w = Math.round(Hh.w * HOUSE_SCALE); oc.width = w + M * 2; oc.height = LH; const o = oc.getContext('2d'); o.imageSmoothingEnabled = false;
-  const sw = t.width * HOUSE_SCALE, sh = LH * HOUSE_SCALE; o.drawImage(t, Math.round(M - M * HOUSE_SCALE), Math.round(LH - 6 - (LH - 6) * HOUSE_SCALE), Math.round(sw), Math.round(sh)); houseSprites.push({ k, n: '', w, c: oc }); }); }
+const HOUSE_SCALE = 1.35; // houses sized so their ground floor matches the shops built into houses
+function prerenderHouses() { Object.keys(HOUSES).forEach(k => { const Hh = HOUSES[k], w = Math.round(Hh.w * HOUSE_SCALE);
+  const oc = document.createElement('canvas'); oc.width = w + M * 2; oc.height = LH; const o = oc.getContext('2d'); o.imageSmoothingEnabled = false;
+  window.drawScaled(o, Hh.d.bind(Hh), M, LH - 6, HOUSE_SCALE); houseSprites.push({ k, n: '', w, c: oc }); }); }
 const carSprites = [];
 function prerenderCars() {
   // every model in every colour; a model's weight is shared between its colours, so supercars and lorries stay rare
-  VEHICLE_ORDER.forEach(k => { const V = VEHICLES[k]; V.colours.forEach(col => { const oc = document.createElement('canvas'); oc.width = (V.w + 6) * 2; oc.height = 180; const o = oc.getContext('2d'); o.scale(2, 2); V.d(o, 3, 86, col);
+  VEHICLE_ORDER.forEach(k => { const V = VEHICLES[k]; V.colours.forEach(col => { const oc = document.createElement('canvas'); oc.width = (V.w + 6) * 2; oc.height = 180; const o = oc.getContext('2d'); o.scale(2, 2); window.__WREC = []; V.d(o, 3, 86, col); const wh = window.__WREC; window.__WREC = null;
     const d = o.getImageData(0, 0, oc.width, oc.height).data; let top = oc.height; for (let y = 0; y < oc.height && top === oc.height; y++) for (let x = 0; x < oc.width; x++) if (d[(y * oc.width + x) * 4 + 3] > 40) { top = y; break; }
-    carSprites.push({ k, w: V.w, c: oc, flip: null, gy: 172, ht: (172 - top) / 2, wt: V.weight / V.colours.length, sp: V.speed }); }); });
+    carSprites.push({ k, wh, w: V.w, c: oc, flip: null, gy: 172, ht: (172 - top) / 2, wt: V.weight / V.colours.length, sp: V.speed }); }); });
   carSprites.forEach(s => { const f = document.createElement('canvas'); f.width = s.c.width; f.height = s.c.height; const o = f.getContext('2d'); o.translate(f.width, 0); o.scale(-1, 1); o.drawImage(s.c, 0, 0); o.setTransform(1, 0, 0, 1, 0, 0);
     if (VEHICLES[s.k].fixMirror) { o.scale(2, 2); VEHICLES[s.k].fixMirror(o, 3, 86, f.width / 2); } s.flip = f; });
 }
@@ -294,18 +303,19 @@ const BEST = (() => { const ck = () => { const m = document.cookie.match(/(?:^|;
   return { now: () => Math.max(+store.get('fk_best', 0) || 0, ck()), save, later: () => idb('readonly') }; })();
 let state = 'menu', t = 0, best = BEST.now(), score = 0, speed = 72;
 BEST.later().then(v => { if (v > best) { best = v; $('bestS').textContent = best; } if (best > v) BEST.save(best); });
+let SC = 0, SCi = 0;   // shared ground scroll (float + whole pixels)
 let bird, pipes, lmX, lmIdx, lmQueue, cars, clouds, seen, nextPipe, flashT = 0, placeTimer = 0, dieT = 0;
 $('bestS').textContent = best;
 
 function reset() {
   bird = { x: Math.min(W * .32, 90), y: 130, vy: 0, frame: 0, ft: 0 };
   pipes = []; nextPipe = W + 40; score = 0; speed = 72; seen = [];
-  lmQueue = []; lmX = 20; lmIdx = 0; prevHouses = 0; const at = location.hash.match(/^#at-(\w+)/); playlist = buildPlaylist(at ? at[1] : null); if (at) lmX = W * .6;
+  lmQueue = []; lmX = 20; lmIdx = 0; prevHouses = 0; const at = location.hash.match(/^#at-(\w+)/); playlist = buildPlaylist(at ? at[1] : null); if (at) lmX = Math.round(W * .6);
   while (lmX < W + 600) pushLandmark();
-  cars = []; vanT = 0; vanNext = 12; plane = null; for (let i = 0; i < 3; i++) spawnCar(Math.random() * W);
+  cars = []; vanT = 0; vanNext = 12; plane = null; bplane = null; for (let i = 0; i < 3; i++) spawnCar(Math.random() * W);
   clouds = []; for (let i = 0; i < 6; i++) clouds.push({ x: Math.random() * (W + 200), y: -OY + 20 + Math.random() * (90 + OY), s: .6 + Math.random() * .8 });
 }
-const ANIM_K = { masjidali: 1, wardown: 1, wardownbridge: 1, funfair: 1 }, CHAIN = ['wardownfield', 'wardown', 'wardownbridge', 'funfair'];
+const ANIM_K = { lutonhoo: 1, masjidali: 1, wardown: 1, wardownbridge: 1, funfair: 1 }, CHAIN = ['wardownfield', 'wardown', 'wardownbridge', 'funfair'];
 /* ---------- landmark playlist: shuffled every lap, with a few rules so it feels like a real town ----------
    - set pieces stay together: Frasers → Station → Hat Factory (train), Wardown field → lake → bridge → funfair, Welcome sign → Airport
    - never more than 2 big buildings in a row, never two retail-park sheds back to back
@@ -333,16 +343,36 @@ const inSameSet = (a, b) => SETS.some(u => { const i = u.indexOf(a); return i >=
 let prevHouses = 0;
 function pushLandmark() { const sp = nextSprite(), nx = peekSprite(); lmQueue.push({ sp, x: lmX, passed: false });
   const chain = inSameSet(sp.k, nx.k) && CHAIN.includes(sp.k), tight = inSameSet(sp.k, nx.k) || sp.k === 'station' || nx.k === 'station';
-  lmX += sp.w + (chain ? 0 : tight ? 10 : 18 + Math.random() * 16); lmIdx++;
+  lmX += Math.round(sp.w + (chain ? 0 : tight ? 10 : 18 + Math.random() * 16)); lmIdx++;
   if (tight) return;
   // houses now and then: none 40%, one 40%, two 20% (never three gaps of nothing in a row, never houses twice in a row more than twice)
   let r = Math.random(), n = r < .4 ? 0 : r < .8 ? 1 : 2; if (prevHouses >= 2 && n) n = 0;
   if (sp.k === 'oak' || nx.k === 'oak') n = 0;   // the Oak Stand house is bigger than the terraces, so never put houses next to it
   prevHouses = n ? prevHouses + 1 : 0;
-  for (let i = 0; i < n; i++) { const h = houseSprites[Math.floor(Math.random() * houseSprites.length)]; lmQueue.push({ sp: h, x: lmX, passed: true, house: true }); lmX += h.w + 6 + Math.random() * 10; }
+  for (let i = 0; i < n; i++) { const h = houseSprites[Math.floor(Math.random() * houseSprites.length)]; lmQueue.push({ sp: h, x: lmX, passed: true, house: true }); lmX += Math.round(h.w + 6 + Math.random() * 10); }
   if (n) lmX += 12; }
 let lastCarK = '';
-let vanT = 0, vanNext = 12, plane = null;
+let vanT = 0, vanNext = 12, plane = null, bplane = null;
+/* banner plane: text drawn once at 4x, then waved slice by slice behind a small propeller plane */
+const BANNER = (() => { const txt = 'DONNER RUSH \u00b7 NOW AT CURRYS', k = 4, o = document.createElement('canvas'), g = o.getContext('2d'), B = { c: o, w: 10, h: 15, k };
+  // size it from the real font each time it's drawn (Silk may load after the first draw)
+  const draw = () => { g.font = '700 34px Silk'; B.w = Math.ceil(g.measureText(txt).width / k) + 18; o.width = B.w * k; o.height = B.h * k; g.imageSmoothingEnabled = false;
+    g.fillStyle = '#1b1a24'; g.fillRect(0, 0, o.width, o.height); g.fillStyle = '#fff6e0'; g.fillRect(k, k, o.width - 2 * k, o.height - 2 * k);
+    g.fillStyle = '#e3261c'; g.fillRect(k, k, o.width - 2 * k, k); g.fillRect(k, o.height - 2 * k, o.width - 2 * k, k);
+    g.font = '700 34px Silk'; g.textBaseline = 'middle'; g.textAlign = 'center'; g.fillStyle = '#1b1a24'; g.fillText(txt, o.width / 2, o.height / 2 + k * .5); };
+  draw(); if (document.fonts) { document.fonts.ready.then(draw); document.fonts.load('700 8px Silk').then(draw).catch(() => {}); } return B; })();
+function drawBannerPlane(px, py, d) { const c = ctx, B = BANNER;
+  // tow rope then the waving banner behind (to the right of) the plane
+  const bx = px - 46 - B.w; c.strokeStyle = '#3a3a40'; c.lineWidth = .6; c.beginPath(); c.moveTo(px - 34, py + 1); c.lineTo(bx + B.w, py + 1 + Math.sin(t * 7) * .6); c.stroke();
+  for (let i = 0; i < B.w; i += 2) { const fromRope = B.w - i, oy = Math.sin(t * 6 + i * .07) * 2 * Math.min(1, fromRope / 30); c.drawImage(B.c, i * B.k, 0, 2 * B.k, B.h * B.k, bx + i, py - B.h / 2 + 1 + oy, 2, B.h); }
+  // the plane, facing right: red and white with a spinning propeller
+  const R2 = (col, x, y, w, h) => { c.fillStyle = col; c.fillRect(px - (x + w) * 1.4, py + y * 1.4, w * 1.4, h * 1.4); };   // drawn mirrored: nose to the right
+  R2('#1b1a24', -1, -3, 26, 7); R2('#f4f2ec', 0, -2, 25, 5); R2('#e3261c', 0, 0, 25, 1.4); R2('#e3261c', 0, -2, 4, 5);
+  R2('#1b1a24', 6, -6, 4, 4); R2('#7fb4d8', 7, -5, 2, 2);
+  R2('#1b1a24', 8, 1, 10, 3); R2('#e3261c', 9, 1.5, 8, 1.6);
+  R2('#1b1a24', 20, -7, 6, 6); R2('#e3261c', 21, -6, 4, 4); R2('#1b1a24', 19, 1, 7, 2); R2('#f4f2ec', 20, 1.4, 5, 1);
+  R2('#1b1a24', -3, -1, 3, 2); const sp = Math.floor(t * 30) % 2; R2('rgba(60,60,70,.7)', -4, sp ? -5 : -3, 1, sp ? 10 : 6);
+}
 function pickCar() { const tot = carSprites.reduce((a, s) => a + s.wt, 0); for (let tries = 0; tries < 4; tries++) { let r = Math.random() * tot, s = carSprites[0]; for (const c of carSprites) { r -= c.wt; if (r <= 0) { s = c; break; } } if (s.k !== lastCarK || tries === 3) { lastCarK = s.k; return s; } } }
 function spawnCar(x, key) { const sp = key ? carSprites.find(s => s.k === key) : pickCar(), far = ROAD + 14 - GY - 1, dir = sp.ht > far ? -1 : Math.random() < .5 ? 1 : -1, lane = dir > 0 ? 0 : 1, sx = x != null ? x : (dir > 0 ? -110 : W + 20);
   if (cars.some(c => c.lane === lane && sx < c.x + c.sp.w + 14 && c.x < sx + sp.w + 14)) return;
@@ -350,7 +380,7 @@ function spawnCar(x, key) { const sp = key ? carSprites.find(s => s.k === key) :
 
 function flap() {
   if (state === 'menu' || state === 'over') return;
-  if (state === 'ready') { state = 'play'; $('tap').classList.add('hide'); }
+  if (state === 'ready') { state = 'play'; $('tap').classList.add('hide'); if (window.LB && LB.startRun) LB.startRun(); }
   if (state === 'play') { bird.vy = -175; bird.frame = 0; bird.ft = 0; SFX.flap(); }
 }
 function start() { reset(); state = 'ready'; TRACK.send('play'); $('place').classList.remove('on'); placeTimer = 0; $('start').classList.add('hide'); $('over').classList.add('hide'); $('score').classList.remove('hide'); $('score').textContent = '0'; $('tap').classList.remove('hide'); }
@@ -363,6 +393,15 @@ addEventListener('keydown', e => { if (e.key === 'Escape') { ['lbM', 'cardM', 'h
 
 function showPlace(n) { $('placeN').textContent = n; const p = $('place'); p.classList.add('on'); placeTimer = 2.2; }
 
+// "Places you flew past": one place at a time, sliding along on its own
+const SEENC = (() => { let tm = 0, i = 0, n = 0;
+  const show = list => { const el = $('seen'); clearInterval(tm); i = 0; n = list.length;
+    if (!n) { el.className = 'seen one'; el.innerHTML = '<div class="tr"><div class="it">Fly further to see Luton!</div></div>'; return; }
+    const items = list.map(p => '<div class="it"><span>' + p.replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c]) + '</span></div>').join('');
+    const dots = n > 1 && n <= 24 ? '<div class="dots">' + list.map((_, k) => '<i' + (k ? '' : ' class="on"') + '></i>').join('') + '</div>' : '';
+    el.className = 'seen' + (n > 1 && n <= 24 ? '' : ' one'); el.innerHTML = '<div class="tr">' + items + '</div>' + dots;
+    if (n > 1) tm = setInterval(() => { if ($('over').classList.contains('hide')) { clearInterval(tm); return; } i = (i + 1) % n; el.firstChild.style.transform = 'translateX(' + (-i * 100) + '%)'; el.querySelectorAll('.dots i').forEach((d, k) => d.classList.toggle('on', k === i)); }, 1700); };
+  return { show }; })(); window.SEENC = SEENC;
 function die(why) {
   if (state !== 'play') return; deathWhy = why || ''; if (window.__fkLog) window.__fkLog.push({why, y: bird.y, vy: bird.vy, score, pipes: pipes.map(p => [Math.round(p.x), Math.round(p.top)])}); state = 'dead'; dieT = 0; flashT = .15; SFX.hit(); if (why === 'pipe') setTimeout(() => SFX.die(), 260);
   if (score > best) { best = score; BEST.save(best); }
@@ -371,7 +410,7 @@ function goHome() { reset(); state = 'menu'; $('place').classList.remove('on'); 
 $('homeB').addEventListener('click', e => { e.stopPropagation(); goHome(); });
 function showOver() {
   state = 'over'; $('why').textContent = deathWhy === 'ground' ? 'You landed on the pavement!' : 'You clipped a pipe!'; $('sc').textContent = score; $('be').textContent = best; $('bestS').textContent = best;
-  $('seen').textContent = seen.length ? seen.join('  ·  ') : 'Fly further to see Luton!'; $('over').classList.remove('hide'); $('tap').classList.add('hide');
+  SEENC.show(seen); $('over').classList.remove('hide'); $('tap').classList.add('hide');
   SFX.swoosh(); if (!window.__fkNoBoard) LB.check(score); TRACK.send('over', score, seen.length ? seen[seen.length - 1] : '');
 }
 
@@ -398,7 +437,7 @@ muteUI(SFX.on);
 document.querySelectorAll('.mute').forEach(m => m.addEventListener('click', e => { e.stopPropagation(); const on = SFX.toggle(); if (on) TRACK.send('sound_on'); muteUI(on); const t = $('shT'); t.textContent = on ? 'SOUND ON' : 'SOUND OFF'; t.classList.add('on'); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('on'), 1300); }));
 
 /* ---------- leaderboard: today + all time (online on the SMR website, this phone only elsewhere) ---------- */
-const LB = (() => { const api = 'api.php'; let online = null, data = { today: [], all: [] }, tab = 'today', top = 10;
+const LB = (() => { const api = 'api.php'; let run = '', runFor = ''; const startRun = () => { run = ''; fetch(api + '?a=run', { method: 'POST' }).then(r => r.json()).then(j => { if (j && j.run) run = j.run; }).catch(() => {}); }; let online = null, data = { today: [], all: [] }, tab = 'today', top = 10;
   // the device remembers the player: name + a random player id (localStorage, with a cookie copy). Forget = asked again.
   const ck = k => { const m = document.cookie.match(new RegExp('(?:^|; )' + k + '=([^;]*)')); return m ? decodeURIComponent(m[1]) : ''; };
   const keep = (k, v) => { store.set(k, v); try { document.cookie = k + '=' + encodeURIComponent(v) + '; max-age=315360000; path=/; samesite=lax'; } catch (e) {} };
@@ -416,25 +455,46 @@ const LB = (() => { const api = 'api.php'; let online = null, data = { today: []
     document.querySelectorAll('#lbM .tabs button').forEach(b => b.classList.toggle('on', b.dataset.lb === tab)); document.querySelectorAll('#lbM .tops button').forEach(b => b.classList.toggle('on', +b.dataset.top === top)); };
   const rankOf = (list, sc) => { if (sc < 1) return 0; const others = list.filter(r => !r.mine); let i = others.findIndex(r => sc > r.score); if (i < 0) i = others.length; return i < 50 ? i + 1 : 0; };
   const myBest = list => { const r = list.find(r => r.mine); return r ? r.score : 0; };
+  // optional UK mobile for prizes: 07 + 9 more digits, spaces allowed
+  const ukMob = v => { const d = String(v || '').replace(/[\s-]/g, ''); return d === '' ? '' : /^07\d{9}$/.test(d) ? d : null; };
+  let phoneSet = !!(store.get('fk_phone', '') || ck('fk_phone')), prizeAsked = false;
+  const snoozed = () => { const t = +(store.get('fk_przno', '') || ck('fk_przno') || 0); return t && Date.now() - t < 14 * 864e5; };
+  const contact = (nm, ph) => fetch(api + '?a=contact', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ pid, name: nm, phone: ph }) }).then(r => r.json()).then(j => { if (j.error) throw new Error(j.error); return j; });
+  const prizeAsk = () => { if (prizeAsked || phoneSet || !name || !pid || snoozed() || online === false) return; prizeAsked = true;
+    $('pzN').value = name; $('pzP').value = ''; $('pzE').textContent = ''; $('przF').classList.remove('hide'); $('przOk').classList.add('hide'); setTimeout(() => $('przM').classList.remove('hide'), 900); };
+  const prizeSave = () => { const nm = $('pzN').value.trim().replace(/\s+/g, ' ').slice(0, 14), ph = ukMob($('pzP').value);
+    if (!nm) { $('pzE').textContent = 'Type your name first.'; return; } if (!/^[\p{L}\p{N} ._'-]+$/u.test(nm)) { $('pzE').textContent = 'Letters and numbers only, please.'; return; }
+    if (window.NameCheck && NameCheck.bad(nm)) { $('pzE').textContent = "That name isn't allowed."; return; }
+    if (ph === null) { $('pzE').textContent = 'Use a UK mobile: 11 digits starting 07, e.g. 07123 456789.'; return; }
+    $('pzS').disabled = true; const chg = nm !== name;
+    (chg ? submit(nm, 0, true) : Promise.resolve()).then(() => contact(nm, ph)).then(() => { if (chg) { name = nm; keep('fk_name', nm); render(); } if (ph) { phoneSet = true; keep('fk_phone', '1'); } else keep('fk_przno', String(Date.now()));
+      $('pzS').disabled = false; $('przF').classList.add('hide'); $('przOk').classList.remove('hide'); })
+      .catch(err => { $('pzS').disabled = false; $('pzE').textContent = err && err.message && !/fetch/i.test(err.message) ? err.message : 'Could not save. Check your signal.'; }); };
+  $('pzS').addEventListener('click', e => { e.stopPropagation(); prizeSave(); });
+  const prizeClose = e => { e.stopPropagation(); $('przM').classList.add('hide'); if (!phoneSet) keep('fk_przno', String(Date.now())); };
+  $('pzX').addEventListener('click', prizeClose); $('pzC').addEventListener('click', e => { e.stopPropagation(); $('przM').classList.add('hide'); }); $('przM').querySelector('.x').addEventListener('click', prizeClose);
+  ['pzN', 'pzP'].forEach(i => $(i).addEventListener('keydown', e => e.stopPropagation())); $('przM').addEventListener('click', e => e.stopPropagation());
   let pending = 0, renaming = false;
   const submit = (nm, sc, rename) => {
-    if (online) return fetch(api + '?a=score', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: nm, score: sc, pid, rename: rename ? 1 : 0 }) }).then(r => r.json()).then(j => { if (j.error) throw new Error(j.error); data = j; return j; });
+    if (online) return fetch(api + '?a=score', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: nm, score: sc, pid, rename: rename ? 1 : 0, run: runFor, phone: rename ? '' : (ukMob($('nbP').value) || '') }) }).then(r => r.json()).then(j => { if (j.error) throw new Error(j.error); data = j; return j; });
     const l = localLoad(); if (rename) l.forEach(r => { if (r.pid === pid) r.name = nm; }); else l.push({ name: nm, score: sc, day: day(), pid }); try { localStorage.setItem('fk_board', JSON.stringify(l.sort((a, b) => b.score - a.score).slice(0, 200))); } catch (e) {} localLoad(); return Promise.resolve(data); };
   const title = sc => { const rt = rankOf(data.today, sc), ra = rankOf(data.all, sc); return ra === 1 ? '\u{1F3C6} NEW ALL-TIME HIGH SCORE!' : ra && ra <= 10 ? '\u{1F3C6} #' + ra + ' OF ALL TIME!' : rt === 1 ? '\u{1F3C6} TOP SCORE TODAY!' : rt ? '\u{1F3C6} #' + rt + ' TODAY!' : ra ? '\u{1F3C6} #' + ra + ' OF ALL TIME!' : ''; };
   const showSaved = sc => { $('nbT').textContent = title(sc) || '\u{1F3C6} ON THE LEADERBOARD!'; $('nbS').innerHTML = 'Saved as <span class="nbn">' + esc(name) + '</span><br><a href="#" id="nbChg">Not you? Change name</a>'; $('nameBox').classList.add('saved'); $('nameBox').classList.remove('hide');
-    $('nbChg').onclick = e => { e.preventDefault(); e.stopPropagation(); renaming = true; $('nbS').textContent = 'Change the name on your scores'; $('nbI').value = name; $('nameBox').classList.remove('saved'); $('nbI').focus(); }; };
-  const check = sc => { $('nameBox').classList.add('hide'); $('nameBox').classList.remove('saved'); $('nbE').textContent = ''; pending = 0; renaming = false; if (sc < 1) return;
+    $('nbChg').onclick = e => { e.preventDefault(); e.stopPropagation(); renaming = true; $('nbS').textContent = 'Change the name on your scores'; $('nbI').value = name; $('nameBox').classList.remove('saved'); $('nameBox').classList.add('ren'); $('nbI').focus(); }; };
+  const check = sc => { runFor = run; $('nameBox').classList.add('hide'); $('nameBox').classList.remove('saved', 'ren'); $('nbE').textContent = ''; pending = 0; renaming = false; if (sc < 1) return;
     const go = () => { const rt = rankOf(data.today, sc), ra = rankOf(data.all, sc); if (!rt && !ra) return;
       if (name) { if (sc <= myBest(data.today) && sc <= myBest(data.all)) return; // nothing new to save
         const t = title(sc); submit(name, sc).then(() => { TRACK.send('name', sc); $('nbT').textContent = t; render(); showSaved(sc); $('nbT').textContent = t || $('nbT').textContent; }).catch(() => {}); return; }
       pending = sc; $('nbT').textContent = title(sc); $('nbS').textContent = 'Put your name on the leaderboard. We’ll remember it on this phone.'; $('nbI').value = ''; $('nameBox').classList.remove('hide'); };
-    if (online === null) load().then(go); else load().then(go); };
+    load().then(go).then(() => { if (name) prizeAsk(); }); };
+  const ren0 = () => renaming;
   const save = () => { const nm = $('nbI').value.trim().replace(/\s+/g, ' ').slice(0, 14); if (!pending && !renaming) return; if (!nm) { $('nbE').textContent = 'Type your name first.'; return; }
     if (!/^[\p{L}\p{N} ._'-]+$/u.test(nm)) { $('nbE').textContent = 'Letters and numbers only, please.'; return; }
     if (window.NameCheck && NameCheck.bad(nm)) { $('nbE').textContent = "That name isn't allowed. Please use your real name or a nickname."; $('nbI').select(); return; }
+    if (!ren0() && ukMob($('nbP').value) === null) { $('nbE').textContent = 'Mobile is optional, but use a UK one: 11 digits starting 07.'; return; }
     if (!pid) { pid = Math.random().toString(36).slice(2, 14); keep('fk_pid', pid); }
     $('nbB').disabled = true; const sc = pending, ren = renaming;
-    submit(nm, sc, ren).then(() => { name = nm; keep('fk_name', nm); if (!ren) TRACK.send('name', sc); $('nbB').disabled = false; pending = 0; renaming = false; $('nbE').textContent = ''; tab = data.today.some(r => r.mine) ? 'today' : 'all'; render(); showSaved(sc); if (!ren) $('lbM').classList.remove('hide'); })
+    submit(nm, sc, ren).then(() => { name = nm; keep('fk_name', nm); if (!ren && ukMob($('nbP').value)) { phoneSet = true; keep('fk_phone', '1'); } $('nbP').value = ''; if (!ren) TRACK.send('name', sc); $('nbB').disabled = false; pending = 0; renaming = false; $('nbE').textContent = ''; tab = data.today.some(r => r.mine) ? 'today' : 'all'; render(); showSaved(sc); if (!ren) $('lbM').classList.remove('hide'); })
       .catch(err => { $('nbE').textContent = err && err.message && !/fetch/i.test(err.message) ? err.message : 'Could not save. Check your signal.'; $('nbB').disabled = false; }); };
   $('nbB').addEventListener('click', e => { e.stopPropagation(); save(); }); $('nbI').addEventListener('keydown', e => { e.stopPropagation(); if (e.key === 'Enter') save(); });
   document.querySelectorAll('.lbB').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); TRACK.send('lb_open'); load(); render(); $('lbM').classList.remove('hide'); }));
@@ -442,13 +502,13 @@ const LB = (() => { const api = 'api.php'; let online = null, data = { today: []
   document.querySelectorAll('#lbM .tops button').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); top = +b.dataset.top; render(); }));
   $('lbM').querySelector('.x').addEventListener('click', e => { e.stopPropagation(); $('lbM').classList.add('hide'); });
   $('lbM').addEventListener('pointerdown', e => { e.stopPropagation(); if (e.target === $('lbM')) $('lbM').classList.add('hide'); });
-  load(); return { check, load, get online() { return online; } }; })(); window.LB = LB;
+  load(); return { check, load, startRun, get online() { return online; } }; })(); window.LB = LB;
 
 
 /* ---------- always the latest version, also when saved to the Home Screen ----------
    version.json is rewritten on every deploy; when it changes the page reloads itself (straight away on the menu,
    or right after the current game ends), with a cache-busting query so the phone fetches the new HTML. */
-(() => { const BUILD = '20261117152840'; let pending = false;
+(() => { const BUILD = '20261118141913'; let pending = false;
   const go = () => { let last = 0; try { last = +sessionStorage.getItem('fk_upd_t') || 0; } catch (e) {} if (Date.now() - last < 60000) return;   // never loop: at most one reload a minute
     try { sessionStorage.setItem('fk_upd_t', String(Date.now())); } catch (e) {} location.replace(location.pathname + '?u=' + Date.now() + location.hash); };
   const check = () => fetch('version.json?ts=' + Date.now(), { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(j => {
@@ -497,7 +557,16 @@ const TRACK = (() => {
     if (navigator.sendBeacon) navigator.sendBeacon('api.php?a=ev', new Blob([body], { type: 'application/json' })); else fetch('api.php?a=ev', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body, keepalive: true }).catch(() => {}); } catch (e) {} };
   send('visit'); window.TRACK_SEND = send; document.querySelectorAll('.pw').forEach(a => a.addEventListener('click', () => send('smr')));
   fetch('api.php?a=cfg', { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(c => { if (!c || typeof c !== 'object') return;
-    if (c.notice) { $('notice').textContent = c.notice; $('notice').hidden = false; }
+    // owner's banner: a written notice or an uploaded picture, on the home screen and/or the end screen
+    { const mode = c.banner_mode || (c.notice ? 'text' : 'off'), txt = c.banner_text || c.notice || '', lk = c.banner_link || '', wh = c.banner_where || 'both';
+      const fill = el => { el.innerHTML = ''; let inner;
+        if (mode === 'image' && c.banner_v) { inner = document.createElement('img'); inner.src = 'api.php?a=banner&v=' + c.banner_v; inner.alt = txt || 'Banner'; inner.decoding = 'async'; if (c.banner_ratio) inner.style.aspectRatio = c.banner_ratio; }
+        else if (mode === 'text' && txt) { inner = document.createElement('div'); inner.className = 'bt' + (lk ? ' lk' : ''); inner.textContent = txt; }
+        else { el.hidden = true; return; }
+        if (lk) { const a = document.createElement('a'); a.href = lk; a.target = '_blank'; a.rel = 'noopener'; a.addEventListener('click', e => { e.stopPropagation(); send('ban', 0, el.id); }); a.appendChild(inner); el.appendChild(a); } else el.appendChild(inner);
+        el.hidden = false; el.addEventListener('click', e => e.stopPropagation()); };
+      if (wh !== 'over') fill($('ban1')); else $('ban1').hidden = true;
+      if (wh !== 'home') fill($('ban2')); else $('ban2').hidden = true; }
     document.body.classList.toggle('off-lb', c.show_leaderboard === false); document.body.classList.toggle('off-rec', c.show_recommend === false);
     GAP = c.difficulty === 'easy' ? 96 : c.difficulty === 'hard' ? 74 : 84; window.__fkNoBoard = c.show_leaderboard === false; }).catch(() => {});
   return { send };
@@ -505,25 +574,26 @@ const TRACK = (() => {
 window.TRACK = TRACK;
 
 /* ---------- update ---------- */
-let GAP = 84; const PW = 30; let deathWhy = ''; window.__fk = () => ({ flap, sprites, cars, carSprites, buildPlaylist, lmQueue, state, score, bird, pipes, W, OY, lm: lmQueue.map(l => l.sp.k) });
+let GAP = 84; const PW = 30; let deathWhy = ''; window.__fk = () => ({ flap, spawnCar, setScore: v => { score = v; }, sprites, cars, carSprites, buildPlaylist, lmQueue, state, score, bird, pipes, W, OY, lm: lmQueue.map(l => l.sp.k) });
 function update(dt) {
   t += dt;
   const moving = state === 'play' || state === 'ready' || state === 'menu';
   const v = moving ? speed : 0;
   clouds.forEach(cl => { cl.x -= v * .12 * cl.s * dt + (moving ? 0 : 0); if (cl.x < -60) { cl.x = W + 20 + Math.random() * 60; cl.y = -OY + 20 + Math.random() * (90 + OY); } });
   // landmarks scroll at 45% speed (parallax)
-  const lv = v * .45 * dt; lmQueue.forEach(l => l.x -= lv); lmX -= lv;
+  // one shared scroll for buildings, pavement, road markings, grass and cars: whole pixels only, so they all move together
+  SC += v * .45 * dt; const step = Math.floor(SC) - SCi; SCi += step; lmQueue.forEach(l => l.x -= step); lmX -= step;
   while (lmQueue.length && lmQueue[0].x + lmQueue[0].sp.w < -420) lmQueue.shift();
   while (lmX < W + 600) pushLandmark();
-  if (state === 'play') lmQueue.forEach(l => { if (!l.passed && l.x + l.sp.w / 2 < bird.x) { l.passed = true; if (!seen.includes(l.sp.n)) seen.push(l.sp.n); showPlace(l.sp.n); } });
+  if (state === 'play') lmQueue.forEach(l => { if (!l.passed && l.sp.n && l.x + l.sp.w / 2 < bird.x) { l.passed = true; if (!seen.includes(l.sp.n)) seen.push(l.sp.n); showPlace(l.sp.n); } });
   // cars drive both ways on the road
   // no driving through each other: a faster car slows to the speed of the one in front
   cars.forEach(c => { let ahead = null, gap = 1e9; cars.forEach(o => { if (o === c || o.lane !== c.lane) return; const d = c.dir > 0 ? o.x - (c.x + c.sp.w) : c.x - (o.x + o.sp.w); if (d > -4 && d < gap) { gap = d; ahead = o; } });
     c.cv = ahead && gap < 26 ? Math.min(c.v, ahead.cv != null ? ahead.cv : ahead.v) * (gap < 10 ? .85 : 1) : c.v; });
-  cars.forEach(c => c.x += (c.dir * c.cv + (moving ? -v * .9 : 0)) * dt);
+  cars.forEach(c => { c.x += c.dir * c.cv * dt - (moving ? step : 0); c.dist = (c.dist || 0) + c.dir * c.cv * dt; });
   cars = cars.filter(c => c.x > -220 && c.x < W + 220); if (cars.length < 4 && Math.random() < dt * .8) spawnCar();
   // Mr Rushed ice cream van: its own timer, roughly every 30 seconds (first one a bit sooner)
-  vanT += dt; if (vanT >= vanNext && !cars.some(c => c.sp.k === 'mrrushed') && spawnCar(null, 'mrrushed')) { vanT = 0; vanNext = 26 + Math.random() * 8; }
+  // Mr Rushed is parked outside Currys now, so his van never drives on the road
   if (placeTimer > 0) { placeTimer -= dt; if (placeTimer <= 0) $('place').classList.remove('on'); }
   if (flashT > 0) flashT -= dt;
 
@@ -577,23 +647,39 @@ function draw() {
   const drawPlane = P => { ctx.save(); ctx.translate(P.x, P.y); ctx.scale(P.sc, P.sc); LM_ANIM.plane(ctx, 0, 0, P.a); ctx.restore(); };
   let planeDrawn = false;
   if (PL && (PL.y < -OY - 60 || PL.x > W + 80)) plane = null; else if (PL && PL.x > 0 && PL.x < W) AMB.plane = 1;
+  // lawns that carry on behind the neighbouring buildings (drawn first so the neighbours sit in front)
+  lmQueue.forEach((l, i) => { const LL = LANDMARKS[l.sp.k]; if (!LL || !LL.lawn || l.x > W + 260 || l.x + l.sp.w < -260) return;
+    const f = (typeof SCALE !== 'undefined' && SCALE[l.sp.k]) || 1, lh = Math.round(LL.lawn * f), sw = 11 * f, pv = lmQueue[i - 1], nx = lmQueue[i + 1];
+    const x0 = Math.round(pv ? pv.x + pv.sp.w - 12 : l.x - 60), x1 = Math.round(nx ? nx.x + 12 : l.x + l.sp.w + 60);
+    for (let xx = x0; xx < x1; xx++) { const n = Math.floor((xx - (l.x - 4 * f)) / sw); ctx.fillStyle = n % 2 ? '#6aa848' : '#54903a'; ctx.fillRect(xx, GY - lh, 1, lh); }
+    ctx.fillStyle = '#2f5a26'; ctx.fillRect(x0, GY - lh - 1, x1 - x0, 2); });
   lmQueue.forEach(l => { if (l.x > W + 260 || l.x + l.sp.w < -260) return;
-    if (l.sp.k === 'airport') { if (!l.planeGone && !plane && l.x + 300 < W * .6) { plane = { t0: t, x: l.x + 300 }; l.planeGone = 1; }
+    if (l.sp.k === 'airport') { const apf = (typeof SCALE !== 'undefined' && SCALE.airport) || 1; if (!l.planeGone && !plane && l.x + 300 * apf < W * .6) { plane = { t0: t, x: l.x + 300 * apf }; l.planeGone = 1; }
       if (PL && plane && PL.y > GY - 166) { drawPlane(PL); planeDrawn = true; } }   // still below the roofline: draw it first so the terminal hides its lower half
     if (l.sp.k === 'funfair' && l.x < W * .9 && l.x + l.sp.w > W * .1) AMB.fair = 1;
-    ctx.drawImage(l.sp.c, Math.round(l.x - M), GY - LH + 6); if (ANIM_K[l.sp.k]) LM_ANIM[l.sp.k](ctx, Math.round(l.x), GY, t); });
+    ctx.drawImage(l.sp.c, Math.round(l.x - M), GY - LH + 6); if (ANIM_K[l.sp.k]) { const af = l.sp.k !== 'lutonhoo' && typeof SCALE !== 'undefined' && SCALE[l.sp.k]; if (af) { ctx.save(); ctx.translate(Math.round(l.x), GY); ctx.scale(af, af); LM_ANIM[l.sp.k](ctx, 0, 0, t); ctx.restore(); } else LM_ANIM[l.sp.k](ctx, Math.round(l.x), GY, t); } });
   if (PL && plane && !planeDrawn) drawPlane(PL);
+  // banner plane over Currys: a little propeller plane towing "@DONNERRUSH · OPEN NOW OUTSIDE CURRYS"
+  if (!bplane) { const cu = lmQueue.find(l => l.sp.k === 'currys' && !l.bannerGone && l.x < W * .75 && l.x + l.sp.w > 0); if (cu) { cu.bannerGone = 1; bplane = { t0: t }; } }   // flies in from the left, against the scroll, so it's always clearly moving
+  if (bplane) { const d = t - bplane.t0, px = Math.round(-20 + d * 42), py = Math.round(GY - 238 + Math.sin(d * 1.4) * 3); drawBannerPlane(px, py, d); if (px - 46 - BANNER.w > W + 10) bplane = null; }
   // pavement + road
-  ctx.fillStyle = '#c9c4b8'; ctx.fillRect(0, GY, W, ROAD - GY); ctx.fillStyle = '#b3ad9f'; const po = Math.floor((t * speed * .45) % 12); for (let x = -po; x < W; x += 12) ctx.fillRect(Math.round(x), GY, 1, ROAD - GY); ctx.fillRect(0, GY + 6, W, 1);
+  ctx.fillStyle = '#c9c4b8'; ctx.fillRect(0, GY, W, ROAD - GY); ctx.fillStyle = '#b3ad9f'; const po = SCi % 12; for (let x = -po; x < W; x += 12) ctx.fillRect(Math.round(x), GY, 1, ROAD - GY); ctx.fillRect(0, GY + 6, W, 1);
   ctx.fillStyle = '#8f8a7e'; ctx.fillRect(0, ROAD - 2, W, 2);
-  ctx.fillStyle = '#4a4e55'; ctx.fillRect(0, ROAD, W, H - ROAD); ctx.fillStyle = '#e8e6df'; const ro = Math.floor((t * speed * .9) % 24); for (let x = -ro; x < W; x += 24) ctx.fillRect(Math.round(x), ROAD + 17, 12, 2);
+  ctx.fillStyle = '#4a4e55'; ctx.fillRect(0, ROAD, W, H - ROAD); ctx.fillStyle = '#e8e6df'; const ro = SCi % 24; for (let x = -ro; x < W; x += 24) ctx.fillRect(Math.round(x), ROAD + 17, 12, 2);
   if (BE > 0) { ctx.fillStyle = '#8f8a7e'; ctx.fillRect(0, H, W, 2); ctx.fillStyle = '#c9c4b8'; ctx.fillRect(0, H + 2, W, 12); ctx.fillStyle = '#b3ad9f'; for (let x = -po; x < W; x += 12) ctx.fillRect(Math.round(x), H + 2, 1, 12);
-    ctx.fillStyle = '#5f9e44'; ctx.fillRect(0, H + 14, W, BE); ctx.fillStyle = '#4f8a36'; const go = Math.floor((t * speed * .9) % 16); for (let y = H + 18; y < H + BE; y += 8) for (let x = -go + ((y / 8) % 2) * 8; x < W; x += 16) ctx.fillRect(Math.round(x), y, 2, 2);
+    ctx.fillStyle = '#5f9e44'; ctx.fillRect(0, H + 14, W, BE); ctx.fillStyle = '#4f8a36'; const go = SCi % 16; for (let y = H + 18; y < H + BE; y += 8) for (let x = -go + ((y / 8) % 2) * 8; x < W; x += 16) ctx.fillRect(Math.round(x), y, 2, 2);
     ctx.fillStyle = '#3f7d33'; for (let x = -go; x < W; x += 16) ctx.fillRect(Math.round(x), H + 14, 14, 4); }
   pipes.forEach(p => { pipe(p.x, -OY, p.top + OY, 'top'); pipe(p.x, p.top + p.gap, ROAD - 4 - p.top - p.gap, 'bottom'); ctx.fillStyle = 'rgba(0,0,0,.22)'; ctx.fillRect(Math.round(p.x) - 2, ROAD - 4, PW + 4, 2); });
   // vehicles go in front of the pipes
-  const CS = .5; cars.filter(c => c.lane === 0).forEach(c => ctx.drawImage(c.sp.c, Math.round(c.x), Math.round(ROAD + 14 - c.sp.gy * CS), c.sp.c.width * CS, c.sp.c.height * CS));
-  cars.filter(c => c.lane === 1).forEach(c => ctx.drawImage(c.sp.flip, Math.round(c.x), Math.round(H - 3 - c.sp.gy * CS), c.sp.flip.width * CS, c.sp.flip.height * CS));
+  const CS = .5;
+  // turning wheels: repaint each rim with its spokes rotated by how far the car has driven
+  const spin = (c, x0, y0, flip) => { (c.sp.wh || []).forEach(w => { const rr = w.r * CS, cx = x0 + (flip ? c.sp.c.width - w.x : w.x) * CS, cy = y0 + w.y * CS, rim = w.rim || '#c9ced4';
+    ctx.save(); ctx.translate(cx, cy); ctx.rotate((c.dist || 0) / Math.max(1, rr)); ctx.beginPath(); ctx.arc(0, 0, rr * .64, 0, 7); ctx.fillStyle = rim; ctx.fill();
+    if (w.ring) { ctx.strokeStyle = w.ring; ctx.lineWidth = .7 * CS * 2; ctx.stroke(); }
+    ctx.strokeStyle = 'rgba(20,20,26,.55)'; ctx.lineWidth = .8; for (let i = 0; i < (w.spokes || 5); i++) { const a = i * 2 * Math.PI / (w.spokes || 5); ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(Math.cos(a) * rr * .6, Math.sin(a) * rr * .6); ctx.stroke(); }
+    ctx.beginPath(); ctx.arc(0, 0, rr * .16, 0, 7); ctx.fillStyle = '#5a5d66'; ctx.fill(); ctx.restore(); }); };
+  cars.filter(c => c.lane === 0).forEach(c => { const x0 = Math.round(c.x), y0 = Math.round(ROAD + 14 - c.sp.gy * CS); ctx.drawImage(c.sp.c, x0, y0, c.sp.c.width * CS, c.sp.c.height * CS); spin(c, x0, y0, false); });
+  cars.filter(c => c.lane === 1).forEach(c => { const x0 = Math.round(c.x), y0 = Math.round(H - 3 - c.sp.gy * CS); ctx.drawImage(c.sp.flip, x0, y0, c.sp.flip.width * CS, c.sp.flip.height * CS); spin(c, x0, y0, true); });
   const rot = state === 'menu' || state === 'ready' ? 0 : Math.max(-.45, Math.min(1.3, bird.vy / 320));
   drawPigeon(Math.round(bird.x), Math.round(bird.y), rot, bird.frame);
   if (flashT > 0) { ctx.fillStyle = 'rgba(255,255,255,' + (flashT / .15) * .8 + ')'; ctx.fillRect(0, 0, W, H); }
@@ -608,6 +694,26 @@ function loop(now) { const dt = Math.min(.033, (now - last) / 1000); last = now;
 Promise.all([document.fonts.load('700 8px Silk'), document.fonts.load('400 8px Silk'), document.fonts.load('24px PS', '&'), document.fonts.load('700 16px Amiri', 'ا')]).catch(() => {}).then(() => {
   prerender(); prerenderHouses(); prerenderCars();
   /* home-screen pigeon: drawn at double size with extra feather detail, and it keeps flapping */
+  /* Welcome to Luton road sign, drawn as pixel art in the game's own style */
+  (() => { const cv = $('wsc'); if (!cv) return; const k = 3; cv.width = 240 * k; cv.height = 108 * k; const g = cv.getContext('2d'); g.scale(k, k); g.imageSmoothingEnabled = false;
+    const O = '#1b1a24', PU = '#5b2a86', PL = '#7a45ab', R = (c, x, y, w, h) => { g.fillStyle = c; g.fillRect(x, y, w, h); };
+    const draw = () => { g.clearRect(0, 0, 240, 108);
+      // wooden posts with grain, bolted on, a little grass at the feet
+      for (const px of [26, 206]) { R(O, px - 1, 6, 10, 102); R('#6b4a33', px, 7, 8, 101); R('#8a6244', px + 1, 7, 2, 101); R('#4e3524', px + 6, 7, 2, 101); for (let y = 14; y < 104; y += 9) R('#5a3e2b', px + 3, y, 2, 3); }
+      // sign board: outline, shadow, white panel with a pointed top
+      const shape = (dx, dy, w, h, peak, col) => { g.beginPath(); g.moveTo(dx, dy + peak); g.lineTo(dx + w / 2, dy); g.lineTo(dx + w, dy + peak); g.lineTo(dx + w, dy + h); g.lineTo(dx, dy + h); g.closePath(); g.fillStyle = col; g.fill(); };
+      shape(14, 16, 216, 74, 10, 'rgba(0,0,0,.25)'); shape(10, 12, 216, 74, 10, O); shape(12, 14, 212, 70, 9, '#f6f2ea'); shape(16, 18, 204, 62, 8, '#ffffff');
+      R('#e8e2d6', 16, 76, 204, 4); for (const [bx, by] of [[20, 26], [216, 26], [20, 72], [216, 72]]) { R('#9aa0a8', bx, by, 3, 3); R('#c9ced4', bx, by, 2, 2); }
+      // lettering
+      g.textAlign = 'left'; g.textBaseline = 'top'; g.font = '700 8px Silk'; g.fillStyle = PU; g.fillText('WELCOME TO', 26, 28);
+      g.font = '700 24px Silk'; g.fillStyle = '#c9b6dc'; g.fillText('LUTON', 27, 38); g.fillStyle = PU; g.fillText('LUTON', 26, 37);
+      R(PU, 26, 63, 138, 2); g.font = '8px Silk'; g.fillStyle = PL; g.fillText('PROUD VIBRANT AMBITIOUS INNOVATIVE', 26, 68);
+      // crest: crown over a purple shield with a white cross, ribbon underneath
+      const cx = 192, cy = 24; R(O, cx - 9, cy - 1, 18, 7); R('#e8b84a', cx - 8, cy, 16, 5); for (const tx of [cx - 8, cx - 2, cx + 4]) { R(O, tx - 1, cy - 4, 6, 4); R('#e8b84a', tx, cy - 3, 4, 3); } R('#c0392b', cx - 1, cy + 1, 2, 2);
+      g.beginPath(); g.moveTo(cx - 13, cy + 7); g.lineTo(cx + 13, cy + 7); g.lineTo(cx + 13, cy + 22); g.quadraticCurveTo(cx + 12, cy + 33, cx, cy + 39); g.quadraticCurveTo(cx - 12, cy + 33, cx - 13, cy + 22); g.closePath(); g.fillStyle = O; g.fill();
+      g.beginPath(); g.moveTo(cx - 11, cy + 9); g.lineTo(cx + 11, cy + 9); g.lineTo(cx + 11, cy + 22); g.quadraticCurveTo(cx + 10, cy + 31, cx, cy + 36); g.quadraticCurveTo(cx - 10, cy + 31, cx - 11, cy + 22); g.closePath(); g.fillStyle = PU; g.fill();
+      R(PL, cx - 11, cy + 9, 4, 14); R('#ffffff', cx - 2, cy + 12, 4, 20); R('#ffffff', cx - 8, cy + 18, 16, 4); };
+    draw(); if (document.fonts) { document.fonts.load('700 24px Silk').then(draw).catch(() => {}); document.fonts.ready.then(draw); } })();
   (() => { const lc = $('logoBird').getContext('2d'); lc.imageSmoothingEnabled = false;
     const TX = { g: ['#aab3c4', '#8e97aa'], l: ['#d3d9e5', '#b1b9c9'], d: ['#8a93a5', '#6c7587'], t: ['#6a7488', '#4b5466'], n: ['#7fd39a', '#3d8a57'], p: ['#b58ad9', '#6f4895'], h: ['#97a1b5', '#6c768b'], w: ['#ffffff', '#b9c1cf'], K: ['#465063', '#22283a'] };
     const paint = (rows, ox, oy, wing) => rows.forEach((r, j) => { for (let i = 0; i < r.length; i++) { const ch = r[i]; if (ch === '.') continue; const X = (ox + i) * 2, Y = (oy + j) * 2;

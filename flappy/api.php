@@ -17,8 +17,11 @@ function fk_db(): PDO {
         add_col($pdo, 'fk_scores', 'pid', "TEXT DEFAULT ''");
         $pdo->exec("CREATE TABLE IF NOT EXISTS fk_events (id INTEGER PRIMARY KEY, day TEXT NOT NULL, at INTEGER NOT NULL, vid TEXT DEFAULT '', ev TEXT NOT NULL, src TEXT DEFAULT '', dev TEXT DEFAULT '', app INTEGER DEFAULT 0, val INTEGER DEFAULT 0, extra TEXT DEFAULT '')");
         $pdo->exec('CREATE INDEX IF NOT EXISTS fk_events_day ON fk_events(day, ev)');
+        $pdo->exec("CREATE TABLE IF NOT EXISTS fk_runs (id TEXT PRIMARY KEY, at INTEGER NOT NULL, ip TEXT DEFAULT '', used INTEGER DEFAULT 0)");
+        $pdo->exec("CREATE TABLE IF NOT EXISTS fk_players (pid TEXT PRIMARY KEY, name TEXT, phone TEXT DEFAULT '', at INTEGER NOT NULL)");
+        $pdo->exec("CREATE TABLE IF NOT EXISTS fk_flags (id INTEGER PRIMARY KEY, name TEXT, score INTEGER, need INTEGER, took INTEGER, pid TEXT DEFAULT '', ip TEXT DEFAULT '', at INTEGER NOT NULL, done INTEGER DEFAULT 0)");
         // one-off leaderboard entries added by the owner (applied once, then never again)
-        foreach ([['seed-summar-68', 'SUMMAR', 68]] as [$key, $name, $score]) {
+        foreach ([['seed-summar-68', 'SUMMAR', 68], ['seed-kashai-1000', 'Kashai', 1000]] as [$key, $name, $score]) {
             $st = $pdo->prepare('SELECT 1 FROM fk_meta WHERE k = ?'); $st->execute([$key]);
             if (!$st->fetchColumn()) { $pdo->prepare('INSERT INTO fk_scores (name, score, day, at, ip) VALUES (?, ?, ?, ?, ?)')->execute([$name, $score, date('Y-m-d'), time(), 'owner']); $pdo->prepare('INSERT INTO fk_meta (k, v) VALUES (?, ?)')->execute([$key, (string) time()]); }
         }
@@ -27,6 +30,13 @@ function fk_db(): PDO {
     return $pdo;
 }
 function fk_today(): string { return date('Y-m-d'); }
+// Fastest possible time (seconds) to pass $n pipes: a pipe every 150 game units, speed 72 rising 1.1 per point to 108 units/s.
+// 15% slack for timing differences between phones, minus a few seconds for the start.
+// optional UK mobile for prize contact: 07 + 9 digits (spaces/dashes ignored). '' = none, null = not valid
+function fk_phone($v): ?string { $d = preg_replace('/[\s-]/', '', (string) $v); if ($d === '') return ''; return preg_match('/^07\d{9}$/', $d) ? $d : null; }
+function fk_player(string $pid, string $name, string $phone): void { if ($pid === '') return; $p = fk_db();
+    $p->prepare("INSERT INTO fk_players (pid, name, phone, at) VALUES (?, ?, ?, ?) ON CONFLICT(pid) DO UPDATE SET name = excluded.name, phone = CASE WHEN excluded.phone != '' THEN excluded.phone ELSE fk_players.phone END, at = excluded.at")->execute([$pid, $name, $phone, time()]); }
+function fk_min_secs(int $n): int { $t = 0.0; for ($k = 0; $k < $n; $k++) $t += 150 / min(108, 72 + $k * 1.1); return max(0, (int) floor($t * 0.85) - 4); }
 function fk_board(string $pid = ''): array {
     // one row per player: a remembered device (pid) keeps a single entry with its best score; older entries without a pid stand alone
     $p = fk_db(); $g = "GROUP BY CASE WHEN pid != '' THEN pid ELSE 'r' || id END ORDER BY score DESC, MIN(at) ASC LIMIT 50";
@@ -72,14 +82,17 @@ function fk_ip(): string { return substr(hash('sha256', client_ip() . '|fk'), 0,
 
 
 /* ---- settings the owner can change in SMR Admin → Flappy → Settings ---- */
-const FK_DEFAULTS = ['notice' => '', 'show_leaderboard' => true, 'show_recommend' => true, 'difficulty' => 'normal'];
+const FK_DEFAULTS = ['notice' => '', 'show_leaderboard' => true, 'show_recommend' => true, 'difficulty' => 'normal', 'banner_mode' => '', 'banner_text' => '', 'banner_link' => '', 'banner_where' => 'both', 'banner_v' => 0, 'banner_ratio' => 0];
 function fk_settings(): array {
     $st = fk_db()->prepare('SELECT v FROM fk_meta WHERE k = ?'); $st->execute(['settings']);
     $v = json_decode((string) $st->fetchColumn(), true);
-    return array_merge(FK_DEFAULTS, is_array($v) ? array_intersect_key($v, FK_DEFAULTS) : []);
+    $o = array_merge(FK_DEFAULTS, is_array($v) ? array_intersect_key($v, FK_DEFAULTS) : []);
+    if ($o['banner_mode'] === '') { $o['banner_mode'] = $o['notice'] !== '' ? 'text' : 'off'; if ($o['banner_text'] === '') $o['banner_text'] = $o['notice']; } // older saves only had the home-screen message
+    return $o;
 }
+function fk_banner_file(): string { return private_dir() . '/fk-banner.img'; }
 /* ---- analytics: small first-party events, no outside services ---- */
-const FK_EVENTS = ['visit', 'play', 'over', 'share', 'card', 'card_save', 'hs_open', 'install', 'lb_open', 'name', 'rec', 'smr', 'sound_on'];
+const FK_EVENTS = ['ban', 'visit', 'play', 'over', 'share', 'card', 'card_save', 'hs_open', 'install', 'lb_open', 'name', 'rec', 'smr', 'sound_on'];
 function fk_stats(int $days): array {
     $p = fk_db(); $from = $days > 0 ? date('Y-m-d', strtotime('-' . ($days - 1) . ' days')) : '0000-00-00';
     $q = function (string $sql, array $a = []) use ($p) { $st = $p->prepare($sql); $st->execute($a); return $st; };
@@ -106,6 +119,8 @@ $in = $_SERVER['REQUEST_METHOD'] === 'POST' ? (json_decode((string) file_get_con
 try {
     if ($a === 'board') json_out(fk_board(fk_pid($_GET['pid'] ?? '')));
     if ($a === 'cfg') { header('Cache-Control: no-store'); json_out(fk_settings()); }
+    if ($a === 'banner') { $f = fk_banner_file(); if (!is_file($f)) { http_response_code(404); exit; } $i = @getimagesize($f);
+        header('Content-Type: ' . ($i['mime'] ?? 'image/jpeg')); header('Cache-Control: public, max-age=604800'); header('Content-Length: ' . filesize($f)); readfile($f); exit; }
 
     if ($a === 'ev' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         $ev = (string) ($in['ev'] ?? '');
@@ -120,20 +135,47 @@ try {
         json_out(['ok' => true]);
     }
 
+    if ($a === 'run' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+        $k = 'fk_run:' . fk_ip(); if (too_many($k, 240, 3600)) json_out(['error' => 'Slow down.'], 429); note_fail($k);
+        $id = bin2hex(random_bytes(9)); $p = fk_db(); $p->prepare('INSERT INTO fk_runs (id, at, ip) VALUES (?, ?, ?)')->execute([$id, time(), fk_ip()]);
+        if (random_int(1, 50) === 1) $p->prepare('DELETE FROM fk_runs WHERE at < ?')->execute([time() - 86400 * 2]);
+        json_out(['run' => $id]);
+    }
+
     if ($a === 'score' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         $name = fk_clean((string) ($in['name'] ?? ''), 14); $score = (int) ($in['score'] ?? 0);
         if ($name === '' || !preg_match("/^[\\p{L}\\p{N} ._'-]+$/u", $name)) json_out(['error' => 'Use letters and numbers only.'], 400);
         if (fk_rude($name)) json_out(['error' => "That name isn't allowed. Please use your real name or a nickname.", 'rude' => true], 400);
         $rename = !empty($in['rename']) && fk_pid($in['pid'] ?? '') !== '';
         if ($rename) { $k = 'fk_score:' . fk_ip(); if (too_many($k, 15, 3600)) json_out(['error' => 'Too many changes this hour.'], 429); note_fail($k); $pid = fk_pid($in['pid']); fk_db()->prepare('UPDATE fk_scores SET name = ? WHERE pid = ?')->execute([$name, $pid]); json_out(['ok' => true] + fk_board($pid)); }
-        if ($score < 1 || $score > 999) json_out(['error' => 'Score not accepted.'], 400);
+        if ($score < 1 || $score > 9999) json_out(['error' => 'Score not accepted.'], 400);
+        // time check: the game asks the server for a run id when play starts, so the server knows how long the run really took
+        $need = fk_min_secs($score); $took = -1;
+        $rid = preg_replace('/[^a-f0-9]/', '', (string) ($in['run'] ?? ''));
+        if ($rid !== '') { $q = fk_db()->prepare('SELECT at FROM fk_runs WHERE id = ? AND used = 0'); $q->execute([$rid]); $at = $q->fetchColumn(); if ($at !== false) $took = time() - (int) $at; }
+        if ($score > 15 && $took < $need) {
+            fk_db()->prepare('INSERT INTO fk_flags (name, score, need, took, pid, ip, at) VALUES (?, ?, ?, ?, ?, ?, ?)')->execute([$name, $score, $need, $took, fk_pid($in['pid'] ?? ''), fk_ip(), time()]);
+            json_out(['error' => "We couldn't check that score, so it's been sent for review."], 400);
+        }
+        if ($rid !== '') fk_db()->prepare('UPDATE fk_runs SET used = 1 WHERE id = ?')->execute([$rid]);
         $k = 'fk_score:' . fk_ip();
         if (too_many($k, 15, 3600)) json_out(['error' => 'Too many scores this hour. Try again later.'], 429);
         note_fail($k);
         $pid = fk_pid($in['pid'] ?? '');
         fk_db()->prepare('INSERT INTO fk_scores (name, score, day, at, ip, pid) VALUES (?, ?, ?, ?, ?, ?)')->execute([$name, $score, fk_today(), now(), fk_ip(), $pid]);
         if ($pid !== '') fk_db()->prepare('UPDATE fk_scores SET name = ? WHERE pid = ?')->execute([$name, $pid]);
+        $ph = fk_phone($in['phone'] ?? ''); if ($pid !== '') fk_player($pid, $name, $ph ?? '');
         json_out(['ok' => true] + fk_board($pid));
+    }
+
+    if ($a === 'contact' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+        $pid = fk_pid($in['pid'] ?? ''); $name = fk_clean((string) ($in['name'] ?? ''), 14); $ph = fk_phone($in['phone'] ?? '');
+        if ($pid === '') json_out(['error' => 'Play a game first.'], 400);
+        if ($name === '' || !preg_match("/^[\\p{L}\\p{N} ._'-]+$/u", $name)) json_out(['error' => 'Use letters and numbers only.'], 400);
+        if (fk_rude($name)) json_out(['error' => "That name isn't allowed."], 400);
+        if ($ph === null) json_out(['error' => 'Use a UK mobile: 11 digits starting 07, e.g. 07123 456789.'], 400);
+        $k = 'fk_contact:' . fk_ip(); if (too_many($k, 10, 3600)) json_out(['error' => 'Too many changes this hour.'], 429); note_fail($k);
+        fk_player($pid, $name, $ph); json_out(['ok' => true]);
     }
 
     if ($a === 'rec' && $_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -149,28 +191,52 @@ try {
     }
 
     /* ---- owner only ---- */
-    if (in_array($a, ['admin', 'rec_done', 'rec_del', 'score_del', 'stats', 'settings_save'], true)) {
+    if (in_array($a, ['admin', 'rec_done', 'rec_del', 'score_del', 'score_add', 'banner_up', 'flag_ok', 'flag_del', 'stats', 'settings_save'], true)) {
         if (!admin_token()) json_out(['error' => 'Log in to SMR Admin first.'], 401);
         $p = fk_db();
         if ($a === 'admin') {
             $recs = $p->query('SELECT id, name, address, note, at, done FROM fk_recs ORDER BY done ASC, at DESC LIMIT 300')->fetchAll();
-            $t = $p->prepare("SELECT MAX(id) id, name, MAX(score) score, MIN(at) at FROM fk_scores WHERE day = ? GROUP BY CASE WHEN pid != '' THEN pid ELSE 'r' || id END ORDER BY score DESC, at ASC LIMIT 50"); $t->execute([fk_today()]);
-            $all = $p->query("SELECT MAX(id) id, name, MAX(score) score, MIN(at) at, MAX(day) day FROM fk_scores GROUP BY CASE WHEN pid != '' THEN pid ELSE 'r' || id END ORDER BY score DESC, at ASC LIMIT 50")->fetchAll();
+            $t = $p->prepare("SELECT MAX(id) id, name, MAX(score) score, MIN(at) at, (SELECT phone FROM fk_players pl WHERE pl.pid = fk_scores.pid AND fk_scores.pid != '') phone FROM fk_scores WHERE day = ? GROUP BY CASE WHEN pid != '' THEN pid ELSE 'r' || id END ORDER BY score DESC, at ASC LIMIT 50"); $t->execute([fk_today()]);
+            $all = $p->query("SELECT MAX(id) id, name, MAX(score) score, MIN(at) at, MAX(day) day, (SELECT phone FROM fk_players pl WHERE pl.pid = fk_scores.pid AND fk_scores.pid != '') phone FROM fk_scores GROUP BY CASE WHEN pid != '' THEN pid ELSE 'r' || id END ORDER BY score DESC, at ASC LIMIT 50")->fetchAll();
             $n = (int) $p->query('SELECT COUNT(*) FROM fk_recs WHERE done = 0')->fetchColumn();
             $plays = (int) $p->query('SELECT COUNT(*) FROM fk_scores')->fetchColumn();
-            json_out(['recs' => $recs, 'today' => $t->fetchAll(), 'all' => $all, 'new' => $n, 'entries' => $plays]);
+            $fl = $p->query('SELECT id, name, score, need, took, at FROM fk_flags WHERE done = 0 ORDER BY at DESC LIMIT 50')->fetchAll(PDO::FETCH_ASSOC);
+            // best games actually played (from the game-over events), whether or not a name was saved
+            $runs = $p->query("SELECT e.at, e.day, e.dev, e.src, e.val AS score, e.extra AS place, e.app, (SELECT COUNT(*) FROM fk_scores s WHERE s.score = e.val) AS saved FROM fk_events e WHERE e.ev = 'over' AND e.val > 0 ORDER BY e.val DESC, e.at DESC LIMIT 20")->fetchAll(PDO::FETCH_ASSOC);
+            json_out(['recs' => $recs, 'today' => $t->fetchAll(), 'all' => $all, 'new' => $n, 'entries' => $plays, 'flags' => $fl, 'runs' => $runs]);
         }
         if ($a === 'stats') json_out(fk_stats(max(0, min(400, (int) ($_GET['days'] ?? 7)))) + ['settings' => fk_settings()]);
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') json_out(['error' => 'POST only'], 405);
+        if ($a === 'banner_up') {
+            $d = (string) ($in['data'] ?? ''); if (!preg_match('~^data:image/(png|jpeg|webp|gif);base64,~', $d, $m)) json_out(['error' => 'Use a JPG, PNG, WebP or GIF picture.'], 400);
+            $bin = base64_decode(substr($d, strpos($d, ',') + 1), true); if ($bin === false || strlen($bin) > 3000000) json_out(['error' => 'That picture is too big (3 MB max).'], 400);
+            $i = @getimagesizefromstring($bin); if (!$i || $i[0] < 50 || $i[1] < 20) json_out(['error' => "That file isn't a picture we can use."], 400);
+            file_put_contents(fk_banner_file(), $bin, LOCK_EX);
+            $cur = fk_settings(); $cur['banner_v'] = time(); $cur['banner_ratio'] = round($i[0] / $i[1], 3); $cur['banner_mode'] = 'image';
+            $p->prepare('INSERT INTO fk_meta (k, v) VALUES (?, ?) ON CONFLICT(k) DO UPDATE SET v = excluded.v')->execute(['settings', json_encode($cur)]);
+            json_out(['ok' => true, 'settings' => $cur]);
+        }
         if ($a === 'settings_save') {
             $cur = fk_settings(); $new = [
                 'notice' => fk_clean((string) ($in['notice'] ?? $cur['notice']), 90),
                 'show_leaderboard' => !empty($in['show_leaderboard']), 'show_recommend' => !empty($in['show_recommend']),
-                'difficulty' => in_array($in['difficulty'] ?? '', ['easy', 'normal', 'hard'], true) ? $in['difficulty'] : 'normal'];
+                'difficulty' => in_array($in['difficulty'] ?? '', ['easy', 'normal', 'hard'], true) ? $in['difficulty'] : 'normal',
+                'banner_mode' => in_array($in['banner_mode'] ?? '', ['off', 'text', 'image'], true) ? $in['banner_mode'] : $cur['banner_mode'],
+                'banner_text' => fk_clean((string) ($in['banner_text'] ?? $cur['banner_text']), 180),
+                'banner_link' => preg_match('~^https?://[^\s"<>]{3,300}$~i', trim((string) ($in['banner_link'] ?? ''))) ? trim((string) $in['banner_link']) : '',
+                'banner_where' => in_array($in['banner_where'] ?? '', ['both', 'home', 'over'], true) ? $in['banner_where'] : 'both',
+                'banner_v' => $cur['banner_v'], 'banner_ratio' => $cur['banner_ratio']];
+            $new['notice'] = $new['banner_mode'] === 'text' ? mb_substr($new['banner_text'], 0, 90) : '';
             $p->prepare('INSERT INTO fk_meta (k, v) VALUES (?, ?) ON CONFLICT(k) DO UPDATE SET v = excluded.v')->execute(['settings', json_encode($new)]);
             json_out(['ok' => true, 'settings' => $new]);
         }
         $id = (int) ($in['id'] ?? 0);
+        if ($a === 'score_add') { $nm = fk_clean((string) ($in['name'] ?? ''), 14); $sc = (int) ($in['score'] ?? 0); $dy = preg_match('/^\d{4}-\d{2}-\d{2}$/', (string) ($in['day'] ?? '')) ? $in['day'] : fk_today();
+            if ($nm === '' || $sc < 1 || $sc > 9999) json_out(['error' => 'Add a name and a score from 1 to 9999.'], 400);
+            $p->prepare('INSERT INTO fk_scores (name, score, day, at, ip) VALUES (?, ?, ?, ?, ?)')->execute([$nm, $sc, $dy, $dy === fk_today() ? time() : strtotime($dy . ' 12:00'), 'owner']); json_out(['ok' => true]); }
+        if ($a === 'flag_ok') { $q = $p->prepare('SELECT * FROM fk_flags WHERE id = ?'); $q->execute([$id]); $f = $q->fetch(PDO::FETCH_ASSOC);
+            if ($f) { $p->prepare('INSERT INTO fk_scores (name, score, day, at, ip, pid) VALUES (?, ?, ?, ?, ?, ?)')->execute([$f['name'], $f['score'], date('Y-m-d', (int) $f['at']), (int) $f['at'], $f['ip'], $f['pid']]); $p->prepare('UPDATE fk_flags SET done = 1 WHERE id = ?')->execute([$id]); } json_out(['ok' => true]); }
+        if ($a === 'flag_del') { $p->prepare('UPDATE fk_flags SET done = 2 WHERE id = ?')->execute([$id]); json_out(['ok' => true]); }
         if ($a === 'rec_done') { $p->prepare('UPDATE fk_recs SET done = ? WHERE id = ?')->execute([empty($in['undo']) ? 1 : 0, $id]); json_out(['ok' => true]); }
         if ($a === 'rec_del') { $p->prepare('DELETE FROM fk_recs WHERE id = ?')->execute([$id]); json_out(['ok' => true]); }
         if ($a === 'score_del') { $q = $p->prepare('SELECT pid FROM fk_scores WHERE id = ?'); $q->execute([$id]); $pd = (string) $q->fetchColumn(); if ($pd !== '') $p->prepare('DELETE FROM fk_scores WHERE pid = ?')->execute([$pd]); else $p->prepare('DELETE FROM fk_scores WHERE id = ?')->execute([$id]); json_out(['ok' => true]); }
