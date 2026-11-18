@@ -1,0 +1,50 @@
+name: Fetch adhan audio (scratch)
+on:
+  push:
+    branches: [fetch/adhan]
+permissions:
+  contents: write
+jobs:
+  run:
+    if: "!contains(github.event.head_commit.message, '[result]')"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Find freely licensed adhan recordings on Wikimedia Commons
+        run: |
+          sudo apt-get -qq update >/dev/null && sudo apt-get -qq install -y ffmpeg >/dev/null
+          mkdir -p adhan-fetch && cd adhan-fetch
+          python3 - <<'P'
+          import json,urllib.request,urllib.parse,subprocess,re
+          UA={'User-Agent':'SMR-flappy/1.0 (summar@smrgraphics.co.uk)'}
+          get=lambda u: urllib.request.urlopen(urllib.request.Request(u,headers=UA),timeout=90).read()
+          seen={}; out=[]
+          for term in ['adhan','azan','athan call to prayer','adhan recording','call to prayer muezzin']:
+              q={'action':'query','format':'json','generator':'search','gsrsearch':term+' filetype:audio','gsrnamespace':'6','gsrlimit':'30','prop':'imageinfo','iiprop':'url|mime|size|extmetadata'}
+              try: j=json.loads(get('https://commons.wikimedia.org/w/api.php?'+urllib.parse.urlencode(q)))
+              except Exception as e: print('fail',term,e); continue
+              for p in (j.get('query') or {}).get('pages',{}).values():
+                  t=p['title']
+                  if t in seen: continue
+                  ii=(p.get('imageinfo') or [{}])[0]; m=ii.get('extmetadata',{})
+                  lic=(m.get('LicenseShortName',{}) or {}).get('value',''); art=re.sub('<[^>]+>','',(m.get('Artist',{}) or {}).get('value',''))
+                  seen[t]=1; out.append({'title':t,'url':ii.get('url'),'mime':ii.get('mime'),'size':ii.get('size'),'license':lic,'artist':art.strip(),'desc':re.sub('<[^>]+>','',(m.get('ImageDescription',{}) or {}).get('value',''))[:200]})
+          n=0
+          for i,o in enumerate(out):
+              if n>=8 or not o['url']: continue
+              if not re.search(r'CC0|Public domain|CC BY', o['license'], re.I): continue
+              try:
+                  raw=get(o['url']); ext=o['url'].rsplit('.',1)[-1].lower(); fn=f'c{n}.{ext}'; open(fn,'wb').write(raw)
+                  subprocess.run(['ffmpeg','-y','-loglevel','error','-i',fn,'-ac','1','-ar','44100','-b:a','96k',f'c{n}.mp3'],check=True)
+                  d=subprocess.run(['ffprobe','-v','error','-show_entries','format=duration','-of','csv=p=0',f'c{n}.mp3'],capture_output=True,text=True).stdout.strip()
+                  o['file']=f'c{n}.mp3'; o['duration']=d
+                  if ext!='mp3': __import__('os').remove(fn)
+                  n+=1
+              except Exception as e: o['error']=str(e)
+          json.dump(out,open('list.json','w'),indent=1); print('candidates',len(out),'downloaded',n)
+          P
+          ls -la
+      - name: Save to this scratch branch
+        run: |
+          git config user.name "github-actions"; git config user.email "actions@github.com"
+          git add adhan-fetch && git commit -m "adhan candidates [result]" && git push
