@@ -28,7 +28,7 @@ html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:m
 .panel .row small{font:400 10px Silk;letter-spacing:.1em;color:#6a5a3a}
 .btn{display:inline-block;margin-top:6px;background:#3fb04a;color:#fff;border:3px solid #1b1a24;box-shadow:0 4px 0 #1b1a24;border-radius:5px;padding:10px 22px;font:700 15px Silk;cursor:pointer}
 .btn:active{transform:translateY(3px);box-shadow:0 1px 0 #1b1a24}
-.seen{font:400 10px/1.6 Silk;color:#4a4030;max-height:84px;overflow:auto;margin:6px 0 4px}
+.seen{position:relative;overflow:hidden;margin:6px 0 4px;height:40px}.seen .tr{display:flex;height:100%;transition:transform .45s cubic-bezier(.4,0,.2,1)}.seen .it{flex:0 0 100%;min-width:0;white-space:normal;box-sizing:border-box;display:flex;align-items:center;justify-content:center;font:700 13px/1.25 Silk;padding-bottom:6px!important;color:#3a3020;text-align:center;padding:0 6px}.seen .dots{position:absolute;left:0;right:0;bottom:-1px;display:flex;justify-content:center;gap:3px}.seen .dots i{width:4px;height:4px;background:#d8cbb0}.seen .dots i.on{background:#e8641c}.seen.one{height:32px}
 .hide{display:none}
 #tap{position:absolute;bottom:calc(env(safe-area-inset-bottom) + 70px);left:0;right:0;font:700 14px Silk;text-shadow:0 2px 0 #1b1a24,2px 0 0 #1b1a24,-2px 0 0 #1b1a24;animation:bl 1s steps(2) infinite}
 @keyframes bl{50%{opacity:.25}}
@@ -121,7 +121,7 @@ html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:m
 #over .prow .btn{animation:go 1.1s ease-in-out infinite}
 .orow{margin-top:10px}.orow button{display:flex;align-items:center;justify-content:center;flex:1;font-size:8px!important;padding:9px 3px!important;margin:0!important;line-height:1.2;min-height:40px}
 .orow .ic{margin-right:4px}.shr,.lbB{display:flex;align-items:center;justify-content:center}
-.seen{max-height:46px}
+.seen{height:40px}
 #rot{display:none;position:fixed;inset:0;z-index:90;background:#2f8fd8;color:#fff;align-items:center;justify-content:center;text-align:center;font:600 14px -apple-system,'Segoe UI',Roboto,sans-serif;pointer-events:auto}
 #rot div{font-size:46px;line-height:1.2}#rot b{display:block;font:700 15px Silk;margin:10px 0 6px;color:#ffd84a;text-shadow:2px 2px 0 #1b1a24}#rot span{display:block;font-size:14px}
 @media (orientation:landscape) and (max-height:500px) and (pointer:coarse){#rot{display:flex}}
@@ -383,6 +383,15 @@ addEventListener('keydown', e => { if (e.key === 'Escape') { ['lbM', 'cardM', 'h
 
 function showPlace(n) { $('placeN').textContent = n; const p = $('place'); p.classList.add('on'); placeTimer = 2.2; }
 
+// "Places you flew past": one place at a time, sliding along on its own
+const SEENC = (() => { let tm = 0, i = 0, n = 0;
+  const show = list => { const el = $('seen'); clearInterval(tm); i = 0; n = list.length;
+    if (!n) { el.className = 'seen one'; el.innerHTML = '<div class="tr"><div class="it">Fly further to see Luton!</div></div>'; return; }
+    const items = list.map(p => '<div class="it"><span>' + p.replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c]) + '</span></div>').join('');
+    const dots = n > 1 && n <= 24 ? '<div class="dots">' + list.map((_, k) => '<i' + (k ? '' : ' class="on"') + '></i>').join('') + '</div>' : '';
+    el.className = 'seen' + (n > 1 && n <= 24 ? '' : ' one'); el.innerHTML = '<div class="tr">' + items + '</div>' + dots;
+    if (n > 1) tm = setInterval(() => { if ($('over').classList.contains('hide')) { clearInterval(tm); return; } i = (i + 1) % n; el.firstChild.style.transform = 'translateX(' + (-i * 100) + '%)'; el.querySelectorAll('.dots i').forEach((d, k) => d.classList.toggle('on', k === i)); }, 1700); };
+  return { show }; })(); window.SEENC = SEENC;
 function die(why) {
   if (state !== 'play') return; deathWhy = why || ''; if (window.__fkLog) window.__fkLog.push({why, y: bird.y, vy: bird.vy, score, pipes: pipes.map(p => [Math.round(p.x), Math.round(p.top)])}); state = 'dead'; dieT = 0; flashT = .15; SFX.hit(); if (why === 'pipe') setTimeout(() => SFX.die(), 260);
   if (score > best) { best = score; BEST.save(best); }
@@ -391,7 +400,7 @@ function goHome() { reset(); state = 'menu'; $('place').classList.remove('on'); 
 $('homeB').addEventListener('click', e => { e.stopPropagation(); goHome(); });
 function showOver() {
   state = 'over'; $('why').textContent = deathWhy === 'ground' ? 'You landed on the pavement!' : 'You clipped a pipe!'; $('sc').textContent = score; $('be').textContent = best; $('bestS').textContent = best;
-  $('seen').textContent = seen.length ? seen.join('  ·  ') : 'Fly further to see Luton!'; $('over').classList.remove('hide'); $('tap').classList.add('hide');
+  SEENC.show(seen); $('over').classList.remove('hide'); $('tap').classList.add('hide');
   SFX.swoosh(); if (!window.__fkNoBoard) LB.check(score); TRACK.send('over', score, seen.length ? seen[seen.length - 1] : '');
 }
 
@@ -468,7 +477,7 @@ const LB = (() => { const api = 'api.php'; let run = '', runFor = ''; const star
 /* ---------- always the latest version, also when saved to the Home Screen ----------
    version.json is rewritten on every deploy; when it changes the page reloads itself (straight away on the menu,
    or right after the current game ends), with a cache-busting query so the phone fetches the new HTML. */
-(() => { const BUILD = '20261118121125'; let pending = false;
+(() => { const BUILD = '20261118121515'; let pending = false;
   const go = () => { let last = 0; try { last = +sessionStorage.getItem('fk_upd_t') || 0; } catch (e) {} if (Date.now() - last < 60000) return;   // never loop: at most one reload a minute
     try { sessionStorage.setItem('fk_upd_t', String(Date.now())); } catch (e) {} location.replace(location.pathname + '?u=' + Date.now() + location.hash); };
   const check = () => fetch('version.json?ts=' + Date.now(), { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(j => {
