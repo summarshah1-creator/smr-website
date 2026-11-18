@@ -359,11 +359,26 @@
     if (m === 12 || m <= 2) return 'winter'; if (m === 3 && d < 15) return 'winter'; if (m === 3 || m === 4) return 'spring'; if (m >= 5 && m <= 8) return 'summer';
     if (m === 9 && d < 20) return 'summer'; if (m === 9 || m === 10) return 'autumn'; return 'lateautumn'; };
   S.season = () => S.forceSeason || (q.get('season')) || S.seasonOf(new Date());
+  // how far the trees have turned (0 = all green, 1 = fully orange), stepping up once a week from 20 Sep to the end of Nov (?turn=.5 to preview)
+  const dayOf = (d, m, dd) => (Date.UTC(d.getFullYear(), m - 1, dd));
+  S.turn = (date) => { const f = parseFloat(q.get('turn')); if (f >= 0) return f; const d = date || new Date(), t0 = dayOf(d, 9, 20), t1 = dayOf(d, 11, 30), now = Date.UTC(d.getFullYear(), d.getMonth(), d.getDate());
+    if (now < t0) return .1; if (now > t1) return .9; const wk = Math.floor((now - t0) / 6048e5), W = (t1 - t0) / 6048e5, p = Math.min(1, wk / W); return .1 + .75 * p * p; };
+  // grass, hedges and shrubs drying out through the winter: nothing until 25 Nov, then a little more straw/brown each week, greening up again Mar-Apr (?dry=.3 to preview)
+  S.dry = (date) => { const f = parseFloat(q.get('dry')); if (f >= 0) return f; const d = date || new Date(), y = d.getFullYear(), now = Date.UTC(y, d.getMonth(), d.getDate()), m = d.getMonth() + 1;
+    const start = m >= 6 ? Date.UTC(y, 10, 25) : Date.UTC(y - 1, 10, 25); if (now < start) return 0; const wk = Math.floor((now - start) / 6048e5);
+    const peak = Math.min(.5, wk * .045); const mar1 = Date.UTC(m >= 6 ? y + 1 : y, 2, 1), apr30 = Date.UTC(m >= 6 ? y + 1 : y, 3, 30);
+    if (now < mar1) return peak; if (now > apr30) return 0; const left = Math.max(0, Math.ceil((apr30 - now) / 6048e5)), tot = Math.ceil((apr30 - mar1) / 6048e5); return Math.min(.5, Math.floor((mar1 - start) / 6048e5) * .045) * left / tot; };
+  const DRY_STRAW = [184, 166, 92], DRY_BROWN = [146, 114, 64], dryC = {};
+  // a ground colour (grass, lawn stripes) dried by today's amount; brown = 0..1 how much of the mix is brown rather than straw
+  S.dryCol = (hex, brown) => { const k = hex + (brown || 0); if (dryC[k]) return dryC[k]; const dr = S.dry(); if (!dr) return (dryC[k] = hex);
+    const r = parseInt(hex.slice(1, 3), 16), g = parseInt(hex.slice(3, 5), 16), bb = parseInt(hex.slice(5, 7), 16), rel = (r + g + bb) / 330, bw = brown || .3;
+    const tr = (DRY_STRAW[0] * (1 - bw) + DRY_BROWN[0] * bw) * rel, tg = (DRY_STRAW[1] * (1 - bw) + DRY_BROWN[1] * bw) * rel, tb = (DRY_STRAW[2] * (1 - bw) + DRY_BROWN[2] * bw) * rel;
+    const h2 = v => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, '0'); return (dryC[k] = '#' + h2(r + (tr - r) * dr) + h2(g + (tg - g) * dr) + h2(bb + (tb - bb) * dr)); };
   const seasonC = LRU(24);
   function makeSeason(sp, sea) { const W0 = sp.c.width, H0 = sp.c.height, cx = sp.c.getContext('2d'), im = cx.getImageData(0, 0, W0, H0), d = im.data, N = W0 * H0;
     const green = new Uint8Array(N); for (let i = 0; i < N; i++) { const j = i * 4; if (d[j + 3] < 200) continue; const r = d[j], g = d[j + 1], b = d[j + 2], mx = Math.max(r, g, b), mn = Math.min(r, g, b); if (mx < 40 || mx > 235) continue;
       const sat = (mx - mn) / mx; if (sat < .22 || g < r || g < b - 10) continue; let h; { const dd = mx - mn; h = mx === g ? 60 * ((b - r) / dd + 2) : mx === b ? 60 * ((r - g) / dd + 4) : 60 * (((g - b) / dd) % 6); } if (h > 68 && h < 165) green[i] = 1; }
-    const seen = new Uint8Array(N), st = []; rs = seedOf((sp.k || 't') + sea); let any = false; const branches = [], canopies = [];
+    const seen = new Uint8Array(N), st = []; rs = seedOf((sp.k || 't') + sea); let any = false; const branches = [], canopies = []; const DRY = S.dry(), TURN = S.turn();
     for (let i = 0; i < N; i++) { if (!green[i] || seen[i]) continue; const comp = []; st.push(i); seen[i] = 1;
       while (st.length) { const p = st.pop(); comp.push(p); const x = p % W0; for (const nb of [p - 1, p + 1, p - W0, p + W0]) if (nb >= 0 && nb < N && !seen[nb] && green[nb] && Math.abs((nb % W0) - x) <= 1) { seen[nb] = 1; st.push(nb); } }
       const tiny = comp.length < 20; if (tiny && TRUNKLESS[sp.k] !== 1) continue; let y0 = 1e9, y1 = 0, x0 = 1e9, x1 = 0; comp.forEach(p => { const y = (p / W0) | 0, x = p % W0; if (y < y0) y0 = y; if (y > y1) y1 = y; if (x < x0) x0 = x; if (x > x1) x1 = x; });
@@ -376,22 +391,29 @@
         const cx = (x0 + x1) >> 1, rx = Math.max(2, w / 3 | 0); for (let y = y1 - 3; y <= y1 + 5; y++) for (let x = cx - rx; x <= cx + rx; x++) { if (x < 0 || x >= W0 || y < 0 || y >= H0) continue; const j = (y * W0 + x) * 4; if (d[j + 3] < 200) continue;
           const r = d[j], g = d[j + 1], b = d[j + 2]; if (r > g + 12 && g > b + 4 && r > 55 && r < 150 && g < 110) return true; } return false; };
       // pieces of a park tree cut off by things in front of it (a swing frame, pillars) change with the rest of that tree
-      let forced = null; if (!isTree()) { const TL = TRUNKLESS[sp.k]; if (!TL) continue;
-        if (TL === 2 && y1 < H0 - 12) forced = canopies[0] ? canopies[0].pal : [214, 120, 40];
+      const dryIt = () => { if (!DRY || NODRY[sp.k] || tiny) return; const cols = new Map(); comp.forEach(p => { const j = p * 4, key = (d[j] >> 3) << 10 | (d[j + 1] >> 3) << 5 | (d[j + 2] >> 3); cols.set(key, (cols.get(key) || 0) + 1); });
+        const sorted = [...cols.values()].sort((a, b) => b - a), textured = sorted.length > 1 && sorted[1] > comp.length * .08, ground = y1 >= H0 - 14; if (!textured && !ground) return;
+        let ml = 0; comp.forEach(p => { const j = p * 4; ml += d[j] + d[j + 1] + d[j + 2]; }); ml /= comp.length; any = true;
+        comp.forEach(p => { const j = p * 4, x = p % W0, y = (p / W0) | 0, rel = Math.min(1.4, (d[j] + d[j + 1] + d[j + 2]) / ml) * ml / 330, bw = .15 + n2(x / 4, y / 4, 5) * .6;
+          for (let c = 0; c < 3; c++) { const tgt = (DRY_STRAW[c] * (1 - bw) + DRY_BROWN[c] * bw) * rel; d[j + c] = Math.max(0, Math.min(255, d[j + c] + (tgt - d[j + c]) * DRY)); } }); };
+      let forced = null; if (!isTree()) { const TL = TRUNKLESS[sp.k]; if (!TL) { dryIt(); continue; }
+        if (TL === 2 && y1 < H0 - 12) forced = canopies[0] || { pal: [214, 120, 40], tt: TURN };
         else if (TL === 1) { const rect = green[y0 * W0 + x0] + green[y0 * W0 + x1] + green[y1 * W0 + x0] + green[y1 * W0 + x1] >= 3 && w >= 20 && h >= 10 || fill > .75 && w >= h * 4 && w >= 12;   /* or a flat strip of grass: lawns stay green until the grass itself turns */   /* a sign board or a wall, not part of a crown */
-          const m = tiny ? 0 : 6, hit = !rect && canopies.find(c => x0 <= c.x1 + m && x1 >= c.x0 - m && y0 <= c.y1 + m && y1 >= c.y0 - m); if (hit) forced = hit.pal; }
-        if (!forced) continue; }
+          const m = tiny ? 0 : 6, hit = !rect && canopies.find(c => x0 <= c.x1 + m && x1 >= c.x0 - m && y0 <= c.y1 + m && y1 >= c.y0 - m); if (hit) forced = hit; }
+        if (!forced) { dryIt(); continue; } }
       let ml = 0; comp.forEach(p => { const j = p * 4; ml += d[j] + d[j + 1] + d[j + 2]; }); ml /= comp.length;                                                                   // evergreens stay green
-      any = true; const pick = rnd(), pal = forced || (pick < .4 ? [214, 120, 40] : pick < .7 ? [196, 72, 38] : pick < .9 ? [222, 170, 52] : [150, 96, 52]); if (!forced) canopies.push({ x0, x1, y0, y1, pal });
+      any = true; const pick = rnd(), pal = forced ? forced.pal : (pick < .4 ? [214, 120, 40] : pick < .7 ? [196, 72, 38] : pick < .9 ? [222, 170, 52] : [150, 96, 52]), tt = forced ? forced.tt : Math.max(.05, Math.min(1, TURN + (rnd() - .5) * .55)), thin = .36 * Math.max(0, Math.min(1, (tt - .6) / .3)); if (!forced) canopies.push({ x0, x1, y0, y1, pal, tt });
       comp.forEach(p => { const j = p * 4, r = d[j], g = d[j + 1], b = d[j + 2], rel = Math.min(1.45, (r + g + b) / ml), x = p % W0, y = (p / W0) | 0;
         const nz = n2(x / 3, y / 3, 7) * .65 + n2(x / 8, y / 8, 3) * .35;          // clumpy, not stripy
         if (sea === 'spring') { d[j] = Math.min(255, r * .92 + 22); d[j + 1] = Math.min(255, g * 1.06 + 14); d[j + 2] = b * .9 + 6;
           const bl = n2(x / 2.2, y / 2.2, 11); if (bl > .74) { const w2 = bl > .86; d[j] = 252; d[j + 1] = w2 ? 246 : 198; d[j + 2] = w2 ? 248 : 214; } }
-        else if (sea === 'autumn' || sea === 'lateautumn') { const k = sea === 'autumn' ? .6 : .9, tr = pal[0] * rel, tg = pal[1] * rel, tb = pal[2] * rel;
-          d[j] = Math.min(255, r + (tr - r) * k); d[j + 1] = Math.min(255, g + (tg - g) * k); d[j + 2] = Math.min(255, b + (tb - b) * k);
-          if (sea === 'lateautumn' && nz < .36) d[j + 3] = 0; }
+        else if (sea === 'autumn' || sea === 'lateautumn') { const tr = pal[0] * rel, tg = pal[1] * rel, tb = pal[2] * rel;
+          // each tree has turned by its own amount, in clumps: some still mostly green, some well on the way to orange
+          const nt = n2(x / 9 + 3, y / 9, 9) * .75 + n2(x / 3.5, y / 3.5, 4) * .25, k = .92 * Math.max(0, Math.min(1, (tt - nt) / .22 + .5)), ky = k > .05 && k < .7 ? .25 : 0;   // the edge of a turned clump goes a little yellow first
+          d[j] = Math.min(255, r + (tr - r) * k + (226 * rel - r) * ky * (1 - k)); d[j + 1] = Math.min(255, g + (tg - g) * k + (190 * rel - g) * ky * (1 - k)); d[j + 2] = Math.min(255, b + (tb - b) * k);
+          if (sea === 'lateautumn' && nz < thin) d[j + 3] = 0; }
         else if (sea === 'winter') { if (nz < .9) d[j + 3] = 0; else { d[j] = 150 * rel; d[j + 1] = 110 * rel; d[j + 2] = 70 * rel; } } });
-      if ((sea === 'winter' || sea === 'lateautumn') && !forced) { branches.push([x0, x1, y0, y1]);
+      if ((sea === 'winter' || sea === 'lateautumn' && thin > .08) && !forced) { branches.push([x0, x1, y0, y1]);
         // the dark outline round the crown goes where the leaves have gone
         for (let pass = 0; pass < 2; pass++) for (let y = y0 - 2; y <= y1 + 1; y++) for (let x = x0 - 2; x <= x1 + 2; x++) { if (x < 1 || y < 1 || x >= W0 - 1 || y >= H0 - 1) continue; const j = (y * W0 + x) * 4;
           if (d[j + 3] < 200 || Math.max(d[j], d[j + 1], d[j + 2]) > 50 || y > y1 - 2) continue; let holes = 0; for (const o2 of [-4, 4, -W0 * 4, W0 * 4]) if (d[j + o2 + 3] < 30) holes++; if (holes >= 2) d[j + 3] = 0; } } }
@@ -407,9 +429,11 @@
       line(mx, top, mx - 3, top - 4, TW); line(mx, top, mx + 3, top - 5, TW); });
     return c; }
   const NOSEASON = {};
+  // greenery that never dries out: Kaya's living wall is artificial
+  const NODRY = { kaya: 1 };
   // park trees drawn as plain round crowns (no trunk showing): change them with the seasons too
   const TRUNKLESS = { wardownfield: 1, wardownbridge: 1, stockwood: 1, gurdwara: 2, kaya: 3, chiltern: 1, wardown: 1 };
-  S.seasonal = (sp, on) => { const sea = S.season(); if (sea === 'summer' || NOSEASON[sp.k]) return sp.c; const key = sp; const v = seasonC.get(key, () => ({}));
+  S.seasonal = (sp, on) => { const sea = S.season(); if ((sea === 'summer' && !S.dry()) || NOSEASON[sp.k]) return sp.c; const key = sp; const v = seasonC.get(key, () => ({}));
     if (v[sea]) return v[sea]; if (on || !S.__warm) { v[sea] = makeSeason(sp, sea); return v[sea]; } return sp.c; };
   S.carNight = cnv => carN.get(cnv, cc => { const c = document.createElement('canvas'); c.width = cc.width; c.height = cc.height; const x = c.getContext('2d'); x.drawImage(cc, 0, 0); x.globalCompositeOperation = 'source-atop'; x.fillStyle = 'rgba(8,12,34,.6)'; x.fillRect(0, 0, c.width, c.height); return c; });
 

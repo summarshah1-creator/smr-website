@@ -217,10 +217,10 @@ html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:m
 </div></div>
   <div id="tap" class="hide">TAP TO FLAP</div>
 </div>
-<script src="landmarks.js?v=11181946"></script>
-<script src="vehicles.js?v=11181946"></script>
+<script src="landmarks.js?v=11181955"></script>
+<script src="vehicles.js?v=11181955"></script>
 <script src="namecheck.js"></script>
-<script src="sky.js?v=11181946"></script>
+<script src="sky.js?v=11181955"></script>
 <script>
 (() => {
 const H = 300, GY = 250, ROAD = 262;            // world: 300 units tall, pavement top at 250
@@ -369,6 +369,7 @@ const inSameSet = (a, b) => SETS.some(u => { const i = u.indexOf(a); return i >=
 let prevHouses = 0;
 // the SMR billboard building isn't in the shuffle: it turns up on its own, roughly every 2 minutes of play
 var smrDue = 0;
+const DRYC = (h, b) => window.SKY && SKY.dryCol ? SKY.dryCol(h, b) : h;   // grass dries out a little more each week through the winter (sky.js S.dry)
 /* Luton Town match days (League One 2026/27, H = Kenilworth Road). Dates can move for TV; cup ties aren't listed. ?match=H / ?match=A to preview */
 const LTFC = 'H:2026-11-28,2026-12-12,2026-12-26,2027-01-09,2027-01-16,2027-01-30,2027-02-06,2027-02-20,2027-03-06,2027-03-20,2027-03-26,2027-04-03,2027-04-13,2027-04-24,2027-05-08;A:2026-11-21,2026-12-01,2026-12-19,2026-12-29,2027-01-01,2027-01-19,2027-01-23,2027-02-09,2027-02-13,2027-02-27,2027-03-13,2027-03-29,2027-04-10,2027-04-17,2027-04-27,2027-05-01';
 const MATCH = (() => { const f = new URLSearchParams(location.search).get('match'); if (f) return f.toUpperCase() === 'A' ? 'A' : 'H';
@@ -653,7 +654,7 @@ const LB = (() => { const api = 'api.php'; let run = '', runFor = ''; const star
 /* ---------- always the latest version, also when saved to the Home Screen ----------
    version.json is rewritten on every deploy; when it changes the page reloads itself (straight away on the menu,
    or right after the current game ends), with a cache-busting query so the phone fetches the new HTML. */
-(() => { const BUILD = '11181946'; let pending = false;
+(() => { const BUILD = '11181955'; let pending = false;
   const go = () => { let last = 0; try { last = +sessionStorage.getItem('fk_upd_t') || 0; } catch (e) {} if (Date.now() - last < 60000) return;   // never loop: at most one reload a minute
     try { sessionStorage.setItem('fk_upd_t', String(Date.now())); } catch (e) {} location.replace(location.pathname + '?u=' + Date.now() + location.hash); };
   const check = () => fetch('version.json?ts=' + Date.now(), { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(j => {
@@ -999,8 +1000,8 @@ function draw() {
   lmQueue.forEach((l, i) => { const LL = LANDMARKS[l.sp.k]; if (!LL || !LL.lawn || l.x > W + 260 || l.x + l.sp.w < -260) return;
     const f = (typeof SCALE !== 'undefined' && SCALE[l.sp.k]) || 1, lh = Math.round(LL.lawn * f), sw = 11 * f, pv = lmQueue[i - 1], nx = lmQueue[i + 1];
     const x0 = Math.round(pv ? pv.x + pv.sp.w - 12 : l.x - 60), x1 = Math.round(nx ? nx.x + 12 : l.x + l.sp.w + 60);
-    for (let xx = x0; xx < x1; xx++) { const n = Math.floor((xx - (l.x - 4 * f)) / sw); ctx.fillStyle = n % 2 ? '#6aa848' : '#54903a'; ctx.fillRect(xx, GY - lh, 1, lh); }
-    ctx.fillStyle = '#2f5a26'; ctx.fillRect(x0, GY - lh - 1, x1 - x0, 2); });
+    for (let xx = x0; xx < x1; xx++) { const n = Math.floor((xx - (l.x - 4 * f)) / sw); ctx.fillStyle = n % 2 ? DRYC('#6aa848') : DRYC('#54903a'); ctx.fillRect(xx, GY - lh, 1, lh); }
+    ctx.fillStyle = DRYC('#2f5a26', .5); ctx.fillRect(x0, GY - lh - 1, x1 - x0, 2); });
   lmQueue.forEach(l => { if (l.x > W + 260 || l.x + l.sp.w < -260) return;
     if (l.sp.k === 'airport') { const apf = (typeof SCALE !== 'undefined' && SCALE.airport) || 1; if (!l.planeGone && !plane && l.x + 300 * apf < W * .6) { plane = { t0: t, x: l.x + 300 * apf }; l.planeGone = 1; }
       if (PL && plane && PL.y > GY - 166) { drawPlane(PL); planeDrawn = true; } }   // still below the roofline: draw it first so the terminal hides its lower half
@@ -1019,8 +1020,8 @@ function draw() {
   ctx.fillStyle = '#8f8a7e'; ctx.fillRect(0, ROAD - 2, W, 2);
   ctx.fillStyle = '#4a4e55'; ctx.fillRect(0, ROAD, W, H - ROAD); ctx.fillStyle = '#e8e6df'; const ro = SCi % 24; for (let x = -ro; x < W; x += 24) ctx.fillRect(Math.round(x), ROAD + 17, 12, 2);
   if (BE > 0) { ctx.fillStyle = '#8f8a7e'; ctx.fillRect(0, H, W, 2); ctx.fillStyle = '#c9c4b8'; ctx.fillRect(0, H + 2, W, 12); ctx.fillStyle = '#b3ad9f'; for (let x = -po; x < W; x += 12) ctx.fillRect(Math.round(x), H + 2, 1, 12);
-    ctx.fillStyle = '#5f9e44'; ctx.fillRect(0, H + 14, W, BE); ctx.fillStyle = '#4f8a36'; const go = SCi % 16; for (let y = H + 18; y < H + BE; y += 8) for (let x = -go + ((y / 8) % 2) * 8; x < W; x += 16) ctx.fillRect(Math.round(x), y, 2, 2);
-    ctx.fillStyle = '#3f7d33'; for (let x = -go; x < W; x += 16) ctx.fillRect(Math.round(x), H + 14, 14, 4); }
+    ctx.fillStyle = DRYC('#5f9e44', .2); ctx.fillRect(0, H + 14, W, BE); ctx.fillStyle = DRYC('#4f8a36', .75); const go = SCi % 16; for (let y = H + 18; y < H + BE; y += 8) for (let x = -go + ((y / 8) % 2) * 8; x < W; x += 16) ctx.fillRect(Math.round(x), y, 2, 2);
+    ctx.fillStyle = DRYC('#3f7d33', .5); for (let x = -go; x < W; x += 16) ctx.fillRect(Math.round(x), H + 14, 14, 4); }
   SKY.drawGround(ctx, W, GY, ROAD, H, BE, SCi, () => critters.forEach(c => { if (c.k === 'fox') drawFox(c); else drawSnowman(c); }));
 
   SKY.drawPrecip(ctx, S);
