@@ -378,7 +378,7 @@
       // pieces of a park tree cut off by things in front of it (a swing frame, pillars) change with the rest of that tree
       let forced = null; if (!isTree()) { const TL = TRUNKLESS[sp.k]; if (!TL) continue;
         if (TL === 2 && y1 < H0 - 12) forced = canopies[0] ? canopies[0].pal : [214, 120, 40];
-        else if (TL === 1) { const rect = green[y0 * W0 + x0] + green[y0 * W0 + x1] + green[y1 * W0 + x0] + green[y1 * W0 + x1] >= 3 && w >= 20 && h >= 10;   /* a sign board or a wall, not part of a crown */
+        else if (TL === 1) { const rect = green[y0 * W0 + x0] + green[y0 * W0 + x1] + green[y1 * W0 + x0] + green[y1 * W0 + x1] >= 3 && w >= 20 && h >= 10 || fill > .75 && w >= h * 4 && w >= 12;   /* or a flat strip of grass: lawns stay green until the grass itself turns */   /* a sign board or a wall, not part of a crown */
           const m = tiny ? 0 : 6, hit = !rect && canopies.find(c => x0 <= c.x1 + m && x1 >= c.x0 - m && y0 <= c.y1 + m && y1 >= c.y0 - m); if (hit) forced = hit.pal; }
         if (!forced) continue; }
       let ml = 0; comp.forEach(p => { const j = p * 4; ml += d[j] + d[j + 1] + d[j + 2]; }); ml /= comp.length;                                                                   // evergreens stay green

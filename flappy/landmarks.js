@@ -416,7 +416,7 @@ L.tesco = { n: 'Tesco Extra', w: 200, d(c, x, G) {
   BOX(c, '#ecebe7', x + 16, G - 70, 208, 4);
   c.lineJoin = 'round'; c.lineWidth = 3; c.strokeStyle = '#f4f2ec'; c.font = '700 16px Silk'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.strokeText('TESCO', x + 84, G - 92); c.fillStyle = '#d8262f'; c.fillText('TESCO', x + 84, G - 92);
   c.font = '700 12px Silk'; c.strokeText('Extra', x + 146, G - 91); c.fillStyle = '#1f4fa8'; c.fillText('Extra', x + 146, G - 91);
-  BOX(c, '#c8202a', x + 40, G - 60, 70, 8); T(c, 'Welcome', x + 75, G - 60, 8, '#ffffff', 'center', false);
+  BOX(c, '#c8202a', x + 40, G - 62, 70, 11);
   GLASS(c, x + 40, G - 52, 70, 52, '#7d8f9a', 5, 2); for (let i = 0; i < 4; i++) CIRC(c, ['#d84b3c', '#e8a33c', '#7fae4e', '#d84b3c'][i], x + 52 + i * 15, G - 32, 5);
   BOX(c, '#2a2f3a', x + 112, G - 52, 80, 52); for (let i = 0; i < 4; i++) CIRC(c, '#f7e7a1', x + 122 + i * 20, G - 50, 1);
   for (let i = 0; i < 9; i++) { R(c, '#9aa3ad', x + 116 + i * 7, G - 14, 6, 1); R(c, '#9aa3ad', x + 116 + i * 7, G - 14, 1, 10); R(c, '#2f4fa8', x + 116 + i * 7, G - 6, 6, 2); }
@@ -1203,6 +1203,8 @@ const SHARP = {
       CIRC(c, OUT, cx, cy, r + 1); CIRC(c, '#ffffff', cx, cy, r); CIRC(c, NV, cx, cy, r - 2);
       const put = (gl, ox, col) => gl.forEach((row, j) => [...row].forEach((ch, i) => { if (ch === '#') R(c, col, ox + i, cy - 3 + j, 2, 1); }));   // bold strokes
       put(GL, cx - 7, LM); put(BL, cx + 1, '#ffffff'); } },
+  tesco(c, x, G, f) { const X = v => Math.round(x + 77 + v * f), Y = v => Math.round(G - v * f);   // crisp Welcome inside its red box over the door
+    T(c, 'Welcome', X(75), Y(60.6), Math.round(8 * f), '#ffffff', 'center', false); },
   chiltern(c, x, G, f) { const X = v => Math.round(x + v * f), Y = v => Math.round(G - v * f);   // crisp WELCOME over the door
     R(c, '#ecebe7', X(152), Y(25), X(214) - X(152), Y(17) - Y(25)); T(c, 'WELCOME', X(183), Y(22.5), 8, '#3e4148', 'center', false); },
   krispy(c, x, G, f) { const X = v => Math.round(x + v * f), Y = v => Math.round(G - v * f);
@@ -1371,10 +1373,14 @@ window.LM_ANIM.townhall = (c, x, G) => { const d = new Date(), m = d.getMinutes(
   c.save(); c.lineCap = 'round'; c.strokeStyle = '#3e3018'; c.lineWidth = 1;
   const hand = (a, len) => { c.beginPath(); c.moveTo(cx, cy); c.lineTo(cx + Math.sin(a) * len, cy - Math.cos(a) * len); c.stroke(); };
   hand(h / 12 * 2 * Math.PI, 2.6); c.lineWidth = .7; hand(m / 60 * 2 * Math.PI, 4.1); c.fillStyle = '#c9a64a'; c.fillRect(cx - .5, cy - .5, 1, 1); c.restore(); };
-window.LM_ANIM.masjidali = (c, x, G, t) => { const fx = x + 63, N = 32;
-  for (let i = 0; i < N; i++) { const k = i / (N - 1), dy = Math.sin(t * 4.5 - i * .32) * 2.4 * k, top = Math.round(G - 104 + i * .2 + dy), h = Math.round(24 - i * .12);   // whole pixels, columns overlapping: a solid flag, nothing showing through
-    c.fillStyle = OUT; c.fillRect(fx + i, top - 1, 1.7, h + 2); c.fillStyle = (i >> 2) % 2 ? '#1f8f3a' : '#23994a'; c.fillRect(fx + i, top, 1.7, h);
-    c.fillStyle = '#101012'; if (i > 3 && i < N - 3) { if ((i * 5) % 7 < 4) c.fillRect(fx + i, top + 6 + ((i * 3) % 3), 1, 1); if ((i * 7) % 9 < 5) c.fillRect(fx + i, top + 11 + ((i * 2) % 3), 1, 1); if (i % 6 === 2) c.fillRect(fx + i, top + 5, 1, 9); if ((i * 11) % 13 < 5) c.fillRect(fx + i, top + 16 + (i % 2), 1, 1); } }
+window.LM_ANIM.masjidali = (c, x, G, t) => { const fx = x + 63, N = 32, Y0 = G - 112;
+  // drawn on its own small canvas at whole pixels, then stamped on without smoothing: a solid flag, nothing see-through at any scale
+  const F = window.__mflag || (window.__mflag = document.createElement('canvas')); F.width = N + 2; F.height = 40; const g = F.getContext('2d'); g.clearRect(0, 0, F.width, F.height);
+  const col = []; for (let i = 0; i < N; i++) { const k = i / (N - 1), dy = Math.sin(t * 4.5 - i * .32) * 2.4 * k; col.push([Math.round(8 + i * .2 + dy), Math.round(24 - i * .12)]); }
+  g.fillStyle = OUT; col.forEach(([tp, h], i) => g.fillRect(i + 1, tp - 1, 1, h + 2)); g.fillRect(N + 1, col[N - 1][0], 1, col[N - 1][1]);
+  col.forEach(([tp, h], i) => { g.fillStyle = (i >> 2) % 2 ? '#1f8f3a' : '#23994a'; g.fillRect(i + 1, tp, 1, h);
+    g.fillStyle = '#101012'; if (i > 3 && i < N - 3) { if ((i * 5) % 7 < 4) g.fillRect(i + 1, tp + 6 + ((i * 3) % 3), 1, 1); if ((i * 7) % 9 < 5) g.fillRect(i + 1, tp + 11 + ((i * 2) % 3), 1, 1); if (i % 6 === 2) g.fillRect(i + 1, tp + 5, 1, 9); if ((i * 11) % 13 < 5) g.fillRect(i + 1, tp + 16 + (i % 2), 1, 1); } });
+  const sm = c.imageSmoothingEnabled; c.imageSmoothingEnabled = false; c.drawImage(F, fx - 1, Y0); c.imageSmoothingEnabled = sm;
   c.fillStyle = '#e8eaee'; c.fillRect(fx - 2, G - 105, 2, 26); };
 window.LM_ANIM.wardown = (c, x, G, t) => {
   WATER(c, x, G, 210, t);
