@@ -13,7 +13,7 @@ const wheel = (c, x, G, r, rim, cal, spokes = 5, ring) => { if (window.__WREC) {
   c.strokeStyle = SH(rim, .55); c.lineWidth = .8; for (let i = 0; i < spokes; i++) { const a = i * 2 * Math.PI / spokes - .3; c.beginPath(); c.moveTo(x, G - r); c.lineTo(x + Math.cos(a) * r * .6, G - r + Math.sin(a) * r * .6); c.stroke(); }
   if (cal) { c.fillStyle = cal; c.fillRect(x + r * .15, G - r - r * .42, r * .3, r * .62); } disc(c, '#5a5d66', x, G - r, r * .16); };
 const arch = (c, x, G, r) => { c.beginPath(); c.arc(x, G - r + .5, r + 1.5, Math.PI, 0); c.closePath(); c.fillStyle = '#0d0e10'; c.fill(); };
-const glass = (c, pts, tint = '#26303a') => { fill(c, tint, pts); c.save(); path(c, pts); c.clip(); c.fillStyle = 'rgba(255,255,255,.2)'; const [x0, y0] = pts[0]; c.beginPath(); c.moveTo(x0 + 7, y0 - 20); c.lineTo(x0 + 12, y0 - 20); c.lineTo(x0 + 3, y0 + 10); c.lineTo(x0 - 2, y0 + 10); c.fill(); c.restore(); };
+const glass = (c, pts, tint = '#26303a') => { if (window.__GREC) { const T = c.getTransform(); window.__GREC.push(pts.map(([px, py]) => { const q = T.transformPoint(new DOMPoint(px, py)); return [q.x, q.y]; })); } fill(c, tint, pts); c.save(); path(c, pts); c.clip(); c.fillStyle = 'rgba(255,255,255,.2)'; const [x0, y0] = pts[0]; c.beginPath(); c.moveTo(x0 + 7, y0 - 20); c.lineTo(x0 + 12, y0 - 20); c.lineTo(x0 + 3, y0 + 10); c.lineTo(x0 - 2, y0 + 10); c.fill(); c.restore(); };
 const shine = (c, x, y, w) => R(c, 'rgba(255,255,255,.28)', x, y, w, 1);
 const person = (c, x, y, top, skin = '#c58c5c', helmet) => { R(c, top, x - 1.5, y, 3, 5); disc(c, helmet || skin, x, y - 1.5, helmet ? 2.2 : 1.6); };
 const RS = (c, cx, cy, px, txt = 'MR RUSHED') => { c.font = `700 ${px}px Silk`; c.textAlign = 'center'; c.textBaseline = 'middle'; const w = c.measureText(txt).width;
@@ -99,6 +99,58 @@ V.rs3 = { n: 'Audi RS3 saloon', w: 62, h: 22, weight: 2, speed: [38, 65], colour
   R(c, '#d42a2a', x + 1, G - 14, 2.2, 2.5); R(c, '#e8ecf0', x + 56, G - 13.2, 4.2, 1.2); fill(c, '#141416', [[x + 58.5, G - 12], [x + 61.2, G - 11.5], [x + 61.2, G - 6.5], [x + 58.5, G - 6.5]], false);
   wheel(c, x + 12, G, 5.3, '#2a2c31', '#d42a2a', 5); wheel(c, x + 50, G, 5.3, '#2a2c31', '#d42a2a', 5);
 } };
+
+/* UK emergency vehicles (from the owner's photos). lb = blue lamp positions (x from the back, y above the ground) for the flashing lights */
+const TXT = (c, t, x, y, px, col) => { c.font = '700 ' + px + 'px Arial, Helvetica, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = col; c.fillText(t, x, y); };
+// Police: white Toyota Corolla estate, half-Battenburg (fluorescent yellow / blue blocks), POLICE in blue, red/yellow chevrons at the back, blue light bar
+V.police = { n: 'Police car', w: 64, h: 26, weight: .5, speed: [30, 48], colours: [['Police', '#f4f5f7']], lb: [[21, -24.6], [29, -24.6]],
+  d(c, x, G) { const W0 = '#f4f5f7', YL = '#d4ef1c', BL = '#1f4fc8';
+  arch(c, x + 12, G, 5.5); arch(c, x + 51, G, 5.5);
+  fill(c, W0, [[x + 1, G - 5], [x + 1, G - 15], [x + 3, G - 21], [x + 8, G - 22.6], [x + 40, G - 22.6], [x + 46, G - 16.6], [x + 58, G - 14.6], [x + 62.5, G - 11], [x + 62.5, G - 5]]);
+  glass(c, [[x + 5, G - 16.6], [x + 8.5, G - 21.3], [x + 39, G - 21.3], [x + 44.5, G - 16.6]], '#1d232b'); R(c, W0, x + 18, G - 21.4, 1.4, 4.8); R(c, W0, x + 31, G - 21.4, 1.4, 4.8);
+  for (let i = 0; i < 11; i++) { const bx = x + 2 + i * 5.2; if (bx > x + 57) break; R(c, i % 2 ? BL : YL, bx, G - 15.6, Math.min(5.2, x + 58 - bx), 5); }
+  R(c, YL, x + 58, G - 14.4, 3.6, 2.4); R(c, BL, x + 1, G - 15.6, 1, 5);
+  TXT(c, 'POLICE', x + 32, G - 7.6, 4.6, BL);
+  for (let i = 0; i < 3; i++) { R(c, i % 2 ? '#f2d21a' : '#e8402a', x + 1, G - 10.4 + i * 1.6, 3, 1.6); }
+  R(c, '#c8202a', x + 1.2, G - 19.5, 1.6, 4); R(c, '#e8ecf0', x + 58.5, G - 13, 3.6, 1.4); R(c, '#2a2c31', x + 1, G - 5.6, 61.5, 1.2);
+  R(c, OUT, x + 17, G - 25.4, 16, 2.8); R(c, '#2f5ad8', x + 17.5, G - 24.9, 15, 1.8); R(c, '#e8ecf0', x + 24.4, G - 24.9, 1.2, 1.8);
+  shine(c, x + 9, G - 22.2, 30); wheel(c, x + 12, G, 5.3, '#c9ced4', null, 5); wheel(c, x + 51, G, 5.3, '#c9ced4', null, 5);
+},
+  fixMirror(c, x, G, w) { const cx = w - (x + 32); R(c, '#f4f5f7', cx - 11, G - 9.8, 22, 4.4); TXT(c, 'POLICE', cx, G - 7.6, 4.6, '#1f4fc8'); } };
+// Ambulance: Ford Transit box body in fluorescent yellow, green/yellow Battenburg, AMBULANCE along the top, blue lights at the corners
+V.ambulance = { n: 'Ambulance', w: 78, h: 42, weight: .45, speed: [26, 42], colours: [['NHS', '#e2ee22']], lb: [[3, -40], [49, -40], [59, -32]],
+  d(c, x, G) { const Y = '#e2ee22', Y2 = '#f0f86a', GR = '#1c8a3c';
+  arch(c, x + 14, G, 6); arch(c, x + 63, G, 6);
+  fill(c, Y, [[x + 1, G - 6], [x + 1, G - 39], [x + 52, G - 39], [x + 52, G - 6]]);
+  fill(c, Y, [[x + 52, G - 6], [x + 52, G - 30], [x + 58, G - 30.5], [x + 67, G - 19], [x + 75, G - 16.5], [x + 77, G - 12.5], [x + 77, G - 6]]);
+  for (let r = 0; r < 2; r++) for (let i = 0; i < 9; i++) { const bx = x + 2 + i * 5.6; if (bx > x + 51) break; R(c, (i + r) % 2 ? GR : Y2, bx, G - 23 + r * 5.6, Math.min(5.6, x + 51.5 - bx), 5.6); }
+  R(c, GR, x + 52.5, G - 17.5, 23, 3.2); R(c, Y2, x + 60, G - 17.5, 6, 3.2);
+  TXT(c, 'AMBULANCE', x + 26.5, G - 34.6, 5.2, GR);
+  glass(c, [[x + 18, G - 30], [x + 18, G - 25.5], [x + 26, G - 25.5], [x + 26, G - 30]], '#1d232b');
+  glass(c, [[x + 54, G - 20], [x + 54, G - 29], [x + 58, G - 29], [x + 65.5, G - 20]], '#1d232b');
+  R(c, '#1e2024', x + 52, G - 8.6, 25, 2.6); R(c, '#1e2024', x + 1, G - 7, 51, 1.4); R(c, '#e8ecf0', x + 72, G - 15, 4.5, 1.8); R(c, '#c8202a', x + 1.2, G - 30, 1.4, 6);
+  R(c, OUT, x + 1, G - 40.4, 4, 1.6); R(c, OUT, x + 47, G - 40.4, 4, 1.6); R(c, '#2f5ad8', x + 1.5, G - 40.2, 3, 1.2); R(c, '#2f5ad8', x + 47.5, G - 40.2, 3, 1.2);
+  shine(c, x + 3, G - 38.4, 47); wheel(c, x + 14, G, 5.6, '#2a2c31', null, 6); wheel(c, x + 63, G, 5.6, '#2a2c31', null, 6);
+},
+  fixMirror(c, x, G, w) { const cx = w - (x + 26.5); R(c, '#e2ee22', cx - 17, G - 37, 34, 4.8); TXT(c, 'AMBULANCE', cx, G - 34.6, 5.2, '#1c8a3c'); } };
+// Fire engine: red, silver roller shutters with red/yellow checks, crew cab with yellow checks, ladder on the roof, blue light bar
+V.fire = { n: 'Fire engine', w: 100, h: 48, weight: .15, speed: [22, 36], colours: [['Fire', '#d01e1e']], lb: [[82, -45], [92, -45], [3, -40.5]],
+  d(c, x, G) { const RD = '#d01e1e', RD2 = '#a81616', YL = '#d4ef1c', SV = '#c9ced4';
+  arch(c, x + 22, G, 7); arch(c, x + 84, G, 7);
+  fill(c, RD, [[x + 1, G - 7], [x + 1, G - 39], [x + 70, G - 39], [x + 70, G - 7]]);
+  fill(c, RD, [[x + 70, G - 7], [x + 70, G - 42], [x + 92, G - 42], [x + 96, G - 36], [x + 98.5, G - 22], [x + 98.5, G - 7]]);
+  R(c, YL, x + 2, G - 38, 67, 2);
+  for (let i = 0; i < 3; i++) { const sx = x + 4 + i * 22; R(c, OUT, sx - .5, G - 34.5, 20, 23); R(c, SV, sx, G - 34, 19, 22); for (let k = 0; k < 10; k++) R(c, '#aeb4bc', sx, G - 33 + k * 2.2, 19, .6); }
+  for (let i = 0; i < 12; i++) { const bx = x + 4 + i * 5.5; if (bx > x + 66) break; R(c, i % 2 ? YL : RD, bx, G - 25, Math.min(5.5, x + 66 - bx), 5); }
+  glass(c, [[x + 72, G - 26], [x + 72, G - 38], [x + 80, G - 38], [x + 80, G - 26]], '#1d232b'); glass(c, [[x + 82, G - 26], [x + 82, G - 38], [x + 91, G - 38], [x + 95, G - 26]], '#1d232b');
+  for (let i = 0; i < 5; i++) { const bx = x + 71 + i * 5.4; R(c, i % 2 ? RD : YL, bx, G - 20, Math.min(5.4, x + 98 - bx), 5); }
+  TXT(c, 'FIRE', x + 85, G - 11.5, 4.6, '#ffffff');
+  R(c, '#2a2c31', x + 1, G - 9, 97.5, 2.4); R(c, '#2a2c31', x + 93, G - 12, 5.5, 5); R(c, '#e8ecf0', x + 95, G - 15, 3.5, 2); R(c, '#c8202a', x + 1.2, G - 32, 1.4, 6);
+  R(c, '#8a9098', x + 8, G - 43, 60, 1.2); R(c, '#8a9098', x + 8, G - 40.4, 60, 1.2); for (let i = 0; i < 13; i++) R(c, '#b9bec6', x + 9 + i * 4.6, G - 43, .8, 3.8); R(c, '#6a7078', x + 14, G - 40, 1, 1.5); R(c, '#6a7078', x + 60, G - 40, 1, 1.5);
+  R(c, OUT, x + 80, G - 45.6, 15, 3); R(c, '#2f5ad8', x + 80.5, G - 45.1, 14, 2); R(c, OUT, x + 1, G - 41, 4, 1.8); R(c, '#2f5ad8', x + 1.5, G - 40.8, 3, 1.2);
+  shine(c, x + 72, G - 41.4, 18); wheel(c, x + 22, G, 6.6, '#c9ced4', null, 8); wheel(c, x + 84, G, 6.6, '#c9ced4', null, 8);
+},
+  fixMirror(c, x, G, w) { const cx = w - (x + 85); R(c, '#d01e1e', cx - 6, G - 13.8, 12, 4.6); TXT(c, 'FIRE', cx, G - 11.5, 4.6, '#ffffff'); } };
 
 /* Lamborghini Huracán (rare) */
 V.lambo = { n: 'Lamborghini Huracán', w: 66, h: 19, weight: .7, speed: [60, 90], colours: [['Verde Mantis', '#7fcf12'], ['Arancio orange', '#f07a12'], ['Viola purple', '#7b2fc8'], ['Giallo yellow', '#f6d21a']],
@@ -362,5 +414,5 @@ V.donner = { n: 'Donner Rush food truck', w: 100, h: 66, weight: 0, speed: [16, 
     c.font = '700 8px Silk'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.lineJoin = 'round'; c.lineWidth = 2.4; c.strokeStyle = '#1b1a24';
     c.strokeText('DONNER', X(52), Y(-36)); c.fillStyle = '#ffd56a'; c.fillText('DONNER', X(52), Y(-36)); c.fillStyle = '#e8308c'; c.fillRect(X(52) - 15, Y(-36) + 4, 30, 1);
     c.strokeText('RUSH', X(52), Y(-36) + 9); c.fillStyle = '#ffd56a'; c.fillText('RUSH', X(52), Y(-36) + 9); }; }
-window.VEHICLES = V; window.VEHICLE_ORDER = ['phantom', 'c63', 'gwagon', 'golf', 'a45', 'rs3', 'p911', 'f40', 'lambo', 'taxi', 'pickup', 'van', 'smallvan', 'binlorry', 'lorry', 'bus', 'coach', 'mrrushed', 'motorbike', 'bike'];
+window.VEHICLES = V; window.VEHICLE_ORDER = ['police', 'ambulance', 'fire', 'phantom', 'c63', 'gwagon', 'golf', 'a45', 'rs3', 'p911', 'f40', 'lambo', 'taxi', 'pickup', 'van', 'smallvan', 'binlorry', 'lorry', 'bus', 'coach', 'mrrushed', 'motorbike', 'bike'];
 })();

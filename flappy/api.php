@@ -82,7 +82,7 @@ function fk_ip(): string { return substr(hash('sha256', client_ip() . '|fk'), 0,
 
 
 /* ---- settings the owner can change in SMR Admin → Flappy → Settings ---- */
-const FK_DEFAULTS = ['notice' => '', 'show_leaderboard' => true, 'show_recommend' => true, 'difficulty' => 'normal', 'banner_mode' => '', 'banner_text' => '', 'banner_link' => '', 'banner_where' => 'both', 'banner_v' => 0, 'banner_ratio' => 0];
+const FK_DEFAULTS = ['notice' => '', 'show_leaderboard' => true, 'show_recommend' => true, 'difficulty' => 'normal', 'banner_mode' => '', 'banner_text' => '', 'banner_link' => '', 'banner_where' => 'both', 'banner_v' => 0, 'banner_ratio' => 0, 'sky_live' => true, 'wx_live' => true];
 function fk_settings(): array {
     $st = fk_db()->prepare('SELECT v FROM fk_meta WHERE k = ?'); $st->execute(['settings']);
     $v = json_decode((string) $st->fetchColumn(), true);
@@ -90,9 +90,56 @@ function fk_settings(): array {
     if ($o['banner_mode'] === '') { $o['banner_mode'] = $o['notice'] !== '' ? 'text' : 'off'; if ($o['banner_text'] === '') $o['banner_text'] = $o['notice']; } // older saves only had the home-screen message
     return $o;
 }
+/* ---- live Luton weather (Open-Meteo, free, no key): fetched at most every 15 minutes and shared by every player ---- */
+function fk_weather(): array {
+    $p = fk_db(); $st = $p->prepare('SELECT v FROM fk_meta WHERE k = ?'); $st->execute(['wx']); $w = json_decode((string) $st->fetchColumn(), true);
+    if (!is_array($w)) $w = ['at' => 0, 'code' => 0, 'cloud' => 0, 'snowd' => 0, 'wind' => 0, 'ok' => 0];
+    if (time() - (int) $w['at'] > 600) {   // refreshed at most every 10 minutes
+        $url = 'https://api.open-meteo.com/v1/forecast?latitude=51.879&longitude=-0.417&current=weather_code,cloud_cover,snow_depth,wind_speed_10m,precipitation&timezone=Europe%2FLondon';
+        $ctx = stream_context_create(['http' => ['timeout' => 3, 'header' => "User-Agent: FlappyKabootar/1.0\r\n"], 'ssl' => ['verify_peer' => true]]);
+        $raw = @file_get_contents($url, false, $ctx); $j = $raw ? json_decode($raw, true) : null;
+        if (is_array($j) && isset($j['current']['weather_code'])) { $c = $j['current'];
+            $w = ['at' => time(), 'code' => (int) $c['weather_code'], 'cloud' => (int) ($c['cloud_cover'] ?? 0), 'snowd' => (float) ($c['snow_depth'] ?? 0), 'wind' => (float) ($c['wind_speed_10m'] ?? 0), 'rain' => (float) ($c['precipitation'] ?? 0), 'ok' => 1]; }
+        else $w['at'] = time() - 600;   // try again in 5 minutes; players keep the last known weather (or clear sky)
+        $p->prepare('INSERT INTO fk_meta (k, v) VALUES (?, ?) ON CONFLICT(k) DO UPDATE SET v = excluded.v')->execute(['wx', json_encode($w)]);
+    }
+    return $w;
+}
+/* ---- seasons: the trees in the game follow the date; tell the owner's phone when they change ---- */
+const FK_SEASONS = ['winter' => 'Winter: bare trees', 'spring' => 'Spring: blossom on the trees', 'summer' => 'Summer: full green trees', 'autumn' => 'Autumn: leaves turning yellow and orange', 'lateautumn' => 'Late autumn: orange and red leaves, starting to fall'];
+function fk_season(int $ts): string { $m = (int) date('n', $ts); $d = (int) date('j', $ts);
+    if ($m === 12 || $m <= 2 || ($m === 3 && $d < 15)) return 'winter'; if ($m <= 4) return 'spring'; if ($m <= 8 || ($m === 9 && $d < 20)) return 'summer'; if ($m <= 10) return 'autumn'; return 'lateautumn'; }
+function fk_season_info(): array { $now = time(); $cur = fk_season($now); $next = null; $at = null;
+    for ($i = 1; $i <= 120; $i++) { $t = strtotime("+$i days", $now); if (fk_season($t) !== $cur) { $next = fk_season($t); $at = date('j M', $t); break; } }
+    return ['now' => $cur, 'now_text' => FK_SEASONS[$cur], 'next' => $next, 'next_text' => $next ? FK_SEASONS[$next] : '', 'next_at' => $at]; }
+function fk_season_check(): void { try { $p = fk_db(); $cur = fk_season(time()); $st = $p->prepare('SELECT v FROM fk_meta WHERE k = ?'); $st->execute(['season']); $old = $st->fetchColumn();
+    if ($old === $cur) return; $p->prepare('INSERT INTO fk_meta (k, v) VALUES (?, ?) ON CONFLICT(k) DO UPDATE SET v = excluded.v')->execute(['season', $cur]);
+    if ($old && is_file(dirname(__DIR__) . '/demo-lib/push.php')) { require_once dirname(__DIR__) . '/demo-lib/push.php'; if (function_exists('push_all')) push_all('Flappy Kabootar: the season changed', FK_SEASONS[$cur] . ' in the game now.', '/demo-admin/#flappy', 'fk-season'); } } catch (Throwable $e) {} }
+/* ---- festivals and special days: the owner is reminded 2 weeks and 3 days before, so the game can be decorated in time (nothing changes in the game by itself) ---- */
+const FK_FESTS = [
+    ['christmas', 'Christmas', '2026-12-25', false, 'Christmas lights along the shops, a tree outside the Mall, Santa and his sleigh flying across the night sky, snow-capped roofs.'],
+    ['nye', "New Year's Eve", '2026-12-31', false, 'Fireworks over Wardown at midnight, a countdown on the home screen.'],
+    ['newyear', "New Year's Day", '2027-01-01', false, 'A "Happy New Year, Luton!" banner plane and a few leftover fireworks.'],
+    ['ramadan', 'Ramadan begins', '2027-02-08', true, 'Crescent moon in the night sky, lanterns and lights on the shops, a quiet iftar-time glow.'],
+    ['eidfitr', 'Eid al-Fitr', '2027-03-10', true, 'Eid lights strung along the shops, fireworks at night, an "Eid Mubarak" banner plane.'],
+    ['eidadha', 'Eid al-Adha', '2027-05-17', true, 'Eid lights and fireworks, an "Eid Mubarak" banner plane.'],
+    ['carnival', 'Luton International Carnival', '2027-05-30', true, 'The carnival parade coming down the road for 10 to 20 seconds: floats, costumes, music.'],
+    ['diwali', 'Diwali', '2027-10-29', true, 'Diya lamps along the shops and fireworks at night.'],
+    ['halloween', 'Halloween', '2027-10-31', false, 'Pumpkins on doorsteps and a few bats at dusk.'],
+    ['bonfire', 'Bonfire Night', '2027-11-05', false, 'Fireworks over Wardown and Stockwood all evening.'],
+    ['christmas27', 'Christmas', '2027-12-25', false, 'Christmas lights, the tree outside the Mall, Santa flying across the sky.'],
+];
+function fk_fests(int $n = 5): array { $today = strtotime(date('Y-m-d')); $out = [];
+    foreach (FK_FESTS as [$k, $name, $d, $moon, $idea]) { $t = strtotime($d); $days = (int) round(($t - $today) / 86400); if ($days < -1) continue;
+        $out[] = ['key' => $k, 'name' => $name, 'date' => date('D j M Y', $t), 'days' => $days, 'moon' => $moon, 'idea' => $idea]; if (count($out) >= $n) break; }
+    return $out; }
+function fk_fest_check(): void { try { $p = fk_db(); foreach (fk_fests(3) as $f) foreach ([14, 3] as $before) { if ($f['days'] !== $before && !($before === 3 && $f['days'] < 3 && $f['days'] >= 0)) continue;
+        $key = 'fest-' . $f['key'] . '-' . $before; $st = $p->prepare('SELECT 1 FROM fk_meta WHERE k = ?'); $st->execute([$key]); if ($st->fetchColumn()) continue;
+        $p->prepare('INSERT INTO fk_meta (k, v) VALUES (?, ?)')->execute([$key, (string) time()]);
+        if (is_file(dirname(__DIR__) . '/demo-lib/push.php')) { require_once dirname(__DIR__) . '/demo-lib/push.php'; if (function_exists('push_all')) push_all('Flappy Kabootar: ' . $f['name'] . ' is coming', $f['name'] . ' is on ' . $f['date'] . ' (in ' . $f['days'] . ' days)' . ($f['moon'] ? ', date depends on the moon' : '') . '. Want the game decorated? Check the ideas in Flappy → Inbox.', '/demo-admin/#flappy', 'fk-fest'); } } } catch (Throwable $e) {} }
 function fk_banner_file(): string { return private_dir() . '/fk-banner.img'; }
 /* ---- analytics: small first-party events, no outside services ---- */
-const FK_EVENTS = ['ban', 'visit', 'play', 'over', 'share', 'card', 'card_save', 'hs_open', 'install', 'lb_open', 'name', 'rec', 'smr', 'sound_on'];
+const FK_EVENTS = ['ban', 'visit', 'play', 'over', 'share', 'card', 'card_save', 'hs_open', 'install', 'lb_open', 'name', 'rec', 'smr', 'sound_on', 'golden', 'moment'];
 function fk_stats(int $days): array {
     $p = fk_db(); $from = $days > 0 ? date('Y-m-d', strtotime('-' . ($days - 1) . ' days')) : '0000-00-00';
     $q = function (string $sql, array $a = []) use ($p) { $st = $p->prepare($sql); $st->execute($a); return $st; };
@@ -118,7 +165,7 @@ $in = $_SERVER['REQUEST_METHOD'] === 'POST' ? (json_decode((string) file_get_con
 
 try {
     if ($a === 'board') json_out(fk_board(fk_pid($_GET['pid'] ?? '')));
-    if ($a === 'cfg') { header('Cache-Control: no-store'); json_out(fk_settings()); }
+    if ($a === 'cfg') { header('Cache-Control: no-store'); fk_season_check(); fk_fest_check(); $o = fk_settings(); if ($o['wx_live']) { try { $o['wx'] = fk_weather(); } catch (Throwable $e) {} } json_out($o); }
     if ($a === 'banner') { $f = fk_banner_file(); if (!is_file($f)) { http_response_code(404); exit; } $i = @getimagesize($f);
         header('Content-Type: ' . ($i['mime'] ?? 'image/jpeg')); header('Cache-Control: public, max-age=604800'); header('Content-Length: ' . filesize($f)); readfile($f); exit; }
 
@@ -191,7 +238,7 @@ try {
     }
 
     /* ---- owner only ---- */
-    if (in_array($a, ['admin', 'rec_done', 'rec_del', 'score_del', 'score_add', 'banner_up', 'flag_ok', 'flag_del', 'stats', 'settings_save'], true)) {
+    if (in_array($a, ['admin', 'rec_done', 'rec_del', 'score_del', 'score_add', 'banner_up', 'flag_ok', 'flag_del', 'stats', 'since', 'settings_save'], true)) {
         if (!admin_token()) json_out(['error' => 'Log in to SMR Admin first.'], 401);
         $p = fk_db();
         if ($a === 'admin') {
@@ -203,9 +250,12 @@ try {
             $fl = $p->query('SELECT id, name, score, need, took, at FROM fk_flags WHERE done = 0 ORDER BY at DESC LIMIT 50')->fetchAll(PDO::FETCH_ASSOC);
             // best games actually played (from the game-over events), whether or not a name was saved
             $runs = $p->query("SELECT e.at, e.day, e.dev, e.src, e.val AS score, e.extra AS place, e.app, (SELECT COUNT(*) FROM fk_scores s WHERE s.score = e.val) AS saved FROM fk_events e WHERE e.ev = 'over' AND e.val > 0 ORDER BY e.val DESC, e.at DESC LIMIT 20")->fetchAll(PDO::FETCH_ASSOC);
-            json_out(['recs' => $recs, 'today' => $t->fetchAll(), 'all' => $all, 'new' => $n, 'entries' => $plays, 'flags' => $fl, 'runs' => $runs]);
+            json_out(['fests' => fk_fests(5), 'recs' => $recs, 'today' => $t->fetchAll(), 'all' => $all, 'new' => $n, 'entries' => $plays, 'flags' => $fl, 'runs' => $runs]);
         }
-        if ($a === 'stats') json_out(fk_stats(max(0, min(400, (int) ($_GET['days'] ?? 7)))) + ['settings' => fk_settings()]);
+        if ($a === 'since') { $t = max(0, (int) ($_GET['t'] ?? 0)); $q = function (string $ev) use ($p, $t) { $st = $p->prepare('SELECT COUNT(*) FROM fk_events WHERE ev = ? AND at > ?'); $st->execute([$ev, $t]); return (int) $st->fetchColumn(); };
+            $pl = $p->prepare("SELECT COUNT(DISTINCT vid) FROM fk_events WHERE ev = 'play' AND at > ?"); $pl->execute([$t]); $bs = $p->prepare('SELECT MAX(val) FROM fk_events WHERE ev = ? AND at > ?'); $bs->execute(['over', $t]);
+            json_out(['games' => $q('play'), 'people' => (int) $pl->fetchColumn(), 'best' => (int) $bs->fetchColumn(), 'now' => time()]); }
+        if ($a === 'stats') json_out(fk_stats(max(0, min(400, (int) ($_GET['days'] ?? 7)))) + ['settings' => fk_settings(), 'season' => fk_season_info()]);
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') json_out(['error' => 'POST only'], 405);
         if ($a === 'banner_up') {
             $d = (string) ($in['data'] ?? ''); if (!preg_match('~^data:image/(png|jpeg|webp|gif);base64,~', $d, $m)) json_out(['error' => 'Use a JPG, PNG, WebP or GIF picture.'], 400);
@@ -225,7 +275,8 @@ try {
                 'banner_text' => fk_clean((string) ($in['banner_text'] ?? $cur['banner_text']), 180),
                 'banner_link' => preg_match('~^https?://[^\s"<>]{3,300}$~i', trim((string) ($in['banner_link'] ?? ''))) ? trim((string) $in['banner_link']) : '',
                 'banner_where' => in_array($in['banner_where'] ?? '', ['both', 'home', 'over'], true) ? $in['banner_where'] : 'both',
-                'banner_v' => $cur['banner_v'], 'banner_ratio' => $cur['banner_ratio']];
+                'banner_v' => $cur['banner_v'], 'banner_ratio' => $cur['banner_ratio'],
+                'sky_live' => array_key_exists('sky_live', $in) ? !empty($in['sky_live']) : $cur['sky_live'], 'wx_live' => array_key_exists('wx_live', $in) ? !empty($in['wx_live']) : $cur['wx_live']];
             $new['notice'] = $new['banner_mode'] === 'text' ? mb_substr($new['banner_text'], 0, 90) : '';
             $p->prepare('INSERT INTO fk_meta (k, v) VALUES (?, ?) ON CONFLICT(k) DO UPDATE SET v = excluded.v')->execute(['settings', json_encode($new)]);
             json_out(['ok' => true, 'settings' => $new]);

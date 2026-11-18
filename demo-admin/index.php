@@ -228,6 +228,7 @@ html.cpopen,body.cpopen{overscroll-behavior:none}
 .btn.icon{width:38px;padding:0}
 .top{flex-wrap:wrap}
 .top .tabs{order:3;width:100%}.top .tabs button{flex:1;position:relative}
+.subtabs{order:4;width:100%;display:flex;gap:4px;margin-top:2px}.subtabs.hidden{display:none}.subtabs button{flex:1;position:relative;padding:7px 4px;border-radius:9px;font-weight:700;font-size:12.5px;color:var(--muted);border:1px solid var(--line);background:rgba(255,255,255,.02);white-space:nowrap}.subtabs button.on{color:#fff;border-color:rgba(214,59,255,.55);background:rgba(214,59,255,.14)}
 .cnt{display:inline-grid;place-items:center;min-width:18px;height:18px;padding:0 5px;margin-left:6px;border-radius:9px;background:#3ddc97;color:#062b14;font-size:11px;font-weight:800;vertical-align:1px}.cnt:empty{display:none}
 .rows{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:18px;overflow:hidden;background:rgba(255,255,255,.02)}
 .rw{display:flex;align-items:center;gap:6px;padding:0 6px 0 0;border-top:1px solid var(--line)}
@@ -310,12 +311,15 @@ document.addEventListener('keydown',function(e){if(/^\d$/.test(e.key))press(e.ke
     <button class="btn sm icon" id="refresh" aria-label="Refresh" title="Refresh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg></button>
     <button class="btn sm icon" id="acct" aria-label="Settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></button>
     <nav class="tabs" role="tablist">
+      <button data-grp="mail" role="tab">Email<span class="cnt" id="mailcnt"></span></button>
+      <button data-grp="flappy" role="tab">Flappy<span class="cnt" id="fkcnt"></span></button>
+      <button data-grp="demos" role="tab">Demos</button>
+    </nav>
+    <nav class="subtabs" id="subtabs" role="tablist">
       <button data-tab="demos" role="tab">My demos</button>
       <button data-tab="send" role="tab">Send</button>
       <button data-tab="live" role="tab">Live<span class="cnt" id="livecnt"></span></button>
       <button data-tab="designs" role="tab">Designs</button>
-      <button data-tab="flappy" role="tab">Flappy<span class="cnt" id="fkcnt"></span></button>
-      <button data-tab="mail" role="tab">Email<span class="cnt" id="mailcnt"></span></button>
     </nav>
   </div>
 
@@ -505,10 +509,13 @@ var copy=function(t,msg){(navigator.clipboard&&navigator.clipboard.writeText?nav
 var ICON={dots:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>'};
 
 /* ---------- tabs (hash) ---------- */
+var lastDemoTab='demos';
 var showTab=function(t){if(['demos','send','live','designs','flappy','mail'].indexOf(t)<0)t='demos';if(t==='flappy'){var ff=document.getElementById('fkframe');if(ff&&!ff.src)ff.src='/flappy/admin.php'}
-  document.querySelectorAll('[data-tab]').forEach(function(b){b.classList.toggle('on',b.dataset.tab===t)});
+  var grp=(t==='mail'||t==='flappy')?t:'demos';if(grp==='demos')lastDemoTab=t;
+  document.querySelectorAll('[data-tab]').forEach(function(b){b.classList.toggle('on',b.dataset.tab===t)});document.querySelectorAll('[data-grp]').forEach(function(b){b.classList.toggle('on',b.dataset.grp===grp)});document.getElementById('subtabs').classList.toggle('hidden',grp!=='demos');
   document.querySelectorAll('.tab').forEach(function(s){s.classList.toggle('hidden',s.id!=='tab-'+t)});window.scrollTo(0,0);if(t==='live'&&typeof load==='function'&&D.length)load();if(t!=='send'&&$('created').dataset.used&&typeof resetSend==='function')resetSend();if(t==='mail'&&typeof mailOpen==='function')mailOpen();if(t==='designs'&&typeof dLoad==='function')dLoad()};
 document.querySelectorAll('[data-tab]').forEach(function(b){b.addEventListener('click',function(){if(location.hash!=='#'+b.dataset.tab)history.replaceState(null,'','#'+b.dataset.tab);showTab(b.dataset.tab)})});
+document.querySelectorAll('[data-grp]').forEach(function(b){b.addEventListener('click',function(){var t=b.dataset.grp==='demos'?lastDemoTab:b.dataset.grp;if(location.hash!=='#'+t)history.replaceState(null,'','#'+t);showTab(t)})});
 window.addEventListener('hashchange',function(){showTab(location.hash.slice(1))});
 window.addEventListener('message',function(e){if(e.origin===location.origin&&e.data&&typeof e.data.fkNew==='number'){var c=document.getElementById('fkcnt');if(c)c.textContent=e.data.fkNew?e.data.fkNew:''}});
 fetch('/flappy/api.php?a=admin',{credentials:'same-origin'}).then(function(r){return r.json()}).then(function(j){var c=document.getElementById('fkcnt');if(c&&j&&j.new)c.textContent=j.new}).catch(function(){});
