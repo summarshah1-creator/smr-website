@@ -416,3 +416,4 @@ M['brass']=('charities','BRASS (Bedfordshire Refugee and Asylum Seeker Support)'
 M['harpur-trust']=('charities','Harpur Trust',['The Harpur Trust'],[('hand/harpur-trust-logo.svg','logo')])
 
 M['empowering'][3].extend([('hand/empowering-two-tone-on-dark.svg','two-tone-on-dark'),('hand/empowering-icon.svg','icon'),('hand/empowering-icon-white.svg','icon-white'),('hand/empowering-icon-pink.svg','icon-brand-colour'),('hand/empowering-icon-square.svg','icon-square')])  # HD vector redraws from the Empowering Education site remake
+M['empowering'][3].extend([('hand/empowering-logo-on-pink.svg','logo-on-pink'),('hand/empowering-icon-on-pink.svg','icon-on-pink')])  # owner rule: on pink backgrounds the icon is a white circle with the pink graphic

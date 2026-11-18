@@ -10760,8 +10760,39 @@
      "style": "icon",
      "w": 1024,
      "h": 1024
+    },
+    {
+     "file": "empowering-logo-on-pink.svg",
+     "variant": "logo-on-pink",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true,
+     "note": "Use on brand-pink backgrounds: white circle, pink icon"
+    },
+    {
+     "file": "empowering-logo-on-pink.png",
+     "variant": "logo-on-pink",
+     "style": "logo",
+     "w": 1842,
+     "h": 337
+    },
+    {
+     "file": "empowering-icon-on-pink.svg",
+     "variant": "icon-on-pink",
+     "style": "icon",
+     "vector": true,
+     "redrawn": true,
+     "note": "Use on brand-pink backgrounds"
+    },
+    {
+     "file": "empowering-icon-on-pink.png",
+     "variant": "icon-on-pink",
+     "style": "icon",
+     "w": 1024,
+     "h": 1024
     }
-   ]
+   ],
+   "notes": "Owner rule: on pink backgrounds use the on-pink versions (white circle, pink icon). Brand A has no crossbar (like EDUCATION): use the EE A font (Montserrat with crossbar removed) in headings and text."
   },
   {
    "slug": "ethar-relief",
