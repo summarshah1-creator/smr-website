@@ -10613,7 +10613,10 @@
    "path": "charities/empowering/",
    "styles": [
     "logo",
-    "logo-white"
+    "logo-white",
+    "icon",
+    "icon-white",
+    "two-tone-on-dark"
    ],
    "original_vector": true,
    "quality": "redrawn",
@@ -10687,6 +10690,76 @@
      "w": 1590,
      "h": 295,
      "made": true
+    },
+    {
+     "file": "empowering-two-tone-on-dark.svg",
+     "variant": "two-tone-on-dark",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true
+    },
+    {
+     "file": "empowering-two-tone-on-dark.png",
+     "variant": "two-tone-on-dark",
+     "style": "logo",
+     "w": 1842,
+     "h": 337
+    },
+    {
+     "file": "empowering-icon.svg",
+     "variant": "icon",
+     "style": "icon",
+     "vector": true,
+     "redrawn": true
+    },
+    {
+     "file": "empowering-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 1024,
+     "h": 1024
+    },
+    {
+     "file": "empowering-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
+     "vector": true,
+     "redrawn": true
+    },
+    {
+     "file": "empowering-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 1024,
+     "h": 1024
+    },
+    {
+     "file": "empowering-icon-pink.svg",
+     "variant": "icon-brand-colour",
+     "style": "icon",
+     "vector": true,
+     "redrawn": true
+    },
+    {
+     "file": "empowering-icon-pink.png",
+     "variant": "icon-brand-colour",
+     "style": "icon",
+     "w": 1024,
+     "h": 1024
+    },
+    {
+     "file": "empowering-icon-square.svg",
+     "variant": "icon-square",
+     "style": "icon",
+     "vector": true,
+     "redrawn": true
+    },
+    {
+     "file": "empowering-icon-square.png",
+     "variant": "icon-square",
+     "style": "icon",
+     "w": 1024,
+     "h": 1024
     }
    ]
   },

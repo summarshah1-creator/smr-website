@@ -414,3 +414,5 @@ M['st-christophers-luton']=('community',"St Andrew & St Christopher's Church, Lu
 M['love-for-the-family']=('charities','Love for the Family',['Love Baby Essential','Love for the Family Luton'],[('hand/love-for-the-family-logo.svg','logo')])
 M['brass']=('charities','BRASS (Bedfordshire Refugee and Asylum Seeker Support)',['BRASS','Bedfordshire Refugee and Asylum Seeker Support','BRASS Bedford'],[('hand/brass-logo.svg','logo')])
 M['harpur-trust']=('charities','Harpur Trust',['The Harpur Trust'],[('hand/harpur-trust-logo.svg','logo')])
+
+M['empowering'][3].extend([('hand/empowering-two-tone-on-dark.svg','two-tone-on-dark'),('hand/empowering-icon.svg','icon'),('hand/empowering-icon-white.svg','icon-white'),('hand/empowering-icon-pink.svg','icon-brand-colour'),('hand/empowering-icon-square.svg','icon-square')])  # HD vector redraws from the Empowering Education site remake
