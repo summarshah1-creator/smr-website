@@ -544,6 +544,23 @@ return json_decode(<<<'JSON'
    "Delivery addresses are checked by postcode, so customers only see what their branch can deliver.",
    "Every order comes straight to the shop with 0% commission, instead of paying Just Eat, Uber Eats or Deliveroo."
   ]
+ },
+ {
+  "slug": "empowering",
+  "version": "2026-11-18a",
+  "ver": "1.0",
+  "name": "Empowering Education",
+  "accent": "#D4125B",
+  "tagline": "Charity website remake · Luton",
+  "description": "A new website for Empowering Education in Luton: tuition for children, English and digital skills for adults, help into work, immigration services and the weekly food kitchen, all easy to find and in the visitor's own language.",
+  "tips": [
+   "Visitors can switch the whole site into their own language from the flag button at the top.",
+   "Every service has its own clear page: tuition, Eleven Plus, Homework Club, ESOL, digital skills, employability and immigration services.",
+   "A free Life in the UK practice test and a 'Which English test do I need?' helper bring people to the site and then to your services.",
+   "News and events show the charity's real work, from the Food Club launch to the community awards.",
+   "Book a free assessment and get in touch straight from any page, on WhatsApp or by phone.",
+   "Accessibility tools and a proper cookie banner are built in."
+  ]
  }
 ]
 JSON
