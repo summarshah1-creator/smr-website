@@ -217,10 +217,10 @@ html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:m
 </div></div>
   <div id="tap" class="hide">TAP TO FLAP</div>
 </div>
-<script src="landmarks.js?v=11182056"></script>
-<script src="vehicles.js?v=11182056"></script>
+<script src="landmarks.js?v=11182057"></script>
+<script src="vehicles.js?v=11182057"></script>
 <script src="namecheck.js"></script>
-<script src="sky.js?v=11182056"></script>
+<script src="sky.js?v=11182057"></script>
 <script>
 (() => {
 const H = 300, GY = 250, ROAD = 262;            // world: 300 units tall, pavement top at 250
@@ -419,7 +419,7 @@ function spawnCar(x, key, zoom) { const sp = key ? carSprites.find(s => s.k === 
   return true; }
 const EMK = { police: 108, ambulance: 96, fire: 82 };
 // now and then a supercar or a motorbike flies past, flat out, with a roar and a puff of exhaust
-const critters = [], flags = []; let kidCD = 8 + Math.random() * 30, foxCD = 25, snowmanCD = 3, flagT = 2, flagDue = false;
+const critters = [], flags = []; let fallCD = 0, kidCD = 8 + Math.random() * 30, foxCD = 25, snowmanCD = 3, flagT = 2, flagDue = false;
 window.__flag = () => { flags.push({ x: W * .7 }); }; window.__fl = () => ({ f: flags.map(f => Math.round(f.x)), flagDue, flagT: Math.round(flagT) });
 window.__crit = (k, o) => { if (o) { critters.push(o); return; } if (k === 'fox') foxCD = 0; else if (k === 'kid') kidCD = 0; else snowmanCD = 0; };
 let zoomCD = 20, crashCD = 60, otCD = 6, headCD = 120, jamT = 0, chaseCD = 90, hornT = 2;
@@ -571,6 +571,14 @@ const SFX = (() => { let ac = null, on = store.get('fk_sound', 0) === 1 || /(?:^
       const o = a.createOscillator(), og = a.createGain(), lf = a.createOscillator(), lg = a.createGain(); o.type = 'sine'; o.frequency.setValueAtTime(820 + v * 400, t0); o.frequency.linearRampToValueAtTime(640 + v * 260, t0 + D); lf.frequency.value = 23; lg.gain.value = 35; lf.connect(lg); lg.connect(o.frequency);
       og.gain.setValueAtTime(0, t0); og.gain.linearRampToValueAtTime(.045, t0 + .05); og.gain.exponentialRampToValueAtTime(.001, t0 + D); o.connect(og); og.connect(a.destination); o.start(t0); lf.start(t0); o.stop(t0 + D); lf.stop(t0 + D); },
     bump() { noise(.12, 900, 300, .14); tone(160, 70, .12, 'square', .05); },
+    // a voice going "ow!" (a kid higher, a lad lower): a buzzy voice through two moving formant filters, pitch falling, a little wobble
+    ow(p, at, long) { const a = on && ctxA(); if (!a) return; const t0 = a.currentTime + SFXT + (at || 0), D = long ? .75 : .42, f0 = p || 420;
+      const o = a.createOscillator(), vib = a.createOscillator(), vg = a.createGain(); o.type = 'sawtooth'; o.frequency.setValueAtTime(f0 * 1.15, t0); o.frequency.linearRampToValueAtTime(f0 * 1.3, t0 + .06); o.frequency.exponentialRampToValueAtTime(f0 * .7, t0 + D);
+      vib.frequency.value = 7; vg.gain.value = f0 * .03; vib.connect(vg); vg.connect(o.frequency);
+      const mk = (fa, fb, q, gv) => { const f = a.createBiquadFilter(); f.type = 'bandpass'; f.Q.value = q; f.frequency.setValueAtTime(fa, t0); f.frequency.linearRampToValueAtTime(fb, t0 + D); const g = a.createGain(); g.gain.value = gv; o.connect(f); f.connect(g); return g; };
+      const env = a.createGain(); env.gain.setValueAtTime(0, t0); env.gain.linearRampToValueAtTime(.16, t0 + .04); env.gain.setValueAtTime(.15, t0 + D * .55); env.gain.exponentialRampToValueAtTime(.001, t0 + D);
+      mk(f0 > 330 ? 850 : 700, f0 > 330 ? 520 : 430, 5, 1).connect(env); mk(f0 > 330 ? 1350 : 1150, f0 > 330 ? 950 : 800, 7, .55).connect(env); env.connect(a.destination);
+      o.start(t0); vib.start(t0); o.stop(t0 + D + .05); vib.stop(t0 + D + .05); },
     thud(v) { v = v == null ? .5 : v; if (v > .6) { noise(.6, 6000, 3500, .04, .12); tone(880, 700, .3, 'square', .015, .1); } noise(.3 + v * .25, 1200 + v * 500, 160, .22); tone(120, 45, .3, 'triangle', .16); tone(420, 300, .25, 'square', .03, .02); tone(610, 520, .35, 'square', .02, .05); noise(.5, 5000, 3000, .03, .08); },
     flap: () => noise(.09, 900, 2400, .13), point: () => { tone(988, 988, .09, 'square', .07); tone(1319, 1319, .22, 'square', .07, .08); }, hit: () => { noise(.12, 600, 150, .26); tone(180, 60, .14, 'triangle', .2); }, die: () => tone(720, 140, .45, 'square', .06), swoosh: () => noise(.28, 400, 3000, .1),
     render(seq, secs) { const pa = ac, po = on, A = new OfflineAudioContext(1, Math.ceil(44100 * secs), 44100); ac = A; on = true;
@@ -654,7 +662,7 @@ const LB = (() => { const api = 'api.php'; let run = '', runFor = ''; const star
 /* ---------- always the latest version, also when saved to the Home Screen ----------
    version.json is rewritten on every deploy; when it changes the page reloads itself (straight away on the menu,
    or right after the current game ends), with a cache-busting query so the phone fetches the new HTML. */
-(() => { const BUILD = '11182056'; let pending = false;
+(() => { const BUILD = '11182057'; let pending = false;
   const go = () => { let last = 0; try { last = +sessionStorage.getItem('fk_upd_t') || 0; } catch (e) {} if (Date.now() - last < 60000) return;   // never loop: at most one reload a minute
     try { sessionStorage.setItem('fk_upd_t', String(Date.now())); } catch (e) {} location.replace(location.pathname + '?u=' + Date.now() + location.hash); };
   const check = () => fetch('version.json?ts=' + Date.now(), { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(j => {
@@ -794,12 +802,12 @@ function update(dt) {
   // a fox trots along the pavement now and then at night; snowmen appear on the verge once snow has settled
   foxCD -= dt; if (moving && foxCD <= 0) { foxCD = 60 + Math.random() * 90; if (SKY.n > .6 && !critters.some(c => c.k === 'fox')) { const d = Math.random() < .5 ? -1 : 1; critters.push({ k: 'fox', x: d < 0 ? W + 20 : -24, d, v: 14 + Math.random() * 8, y: GY + 4 + Math.random() * 3, ph: 0, stop: Math.random() < .5 ? 1.5 + Math.random() * 2 : 0, stopAt: W * (.3 + Math.random() * .4) }); } }
   // kids whizzing along the pavement on kick scooters, either way, on their own or in a little group: at random, but at least once a minute (not late at night)
-  kidCD -= dt; if (moving && kidCD <= 0) { kidCD = 12 + Math.random() * 46; if (SKY.n < .85 && !critters.some(c => c.k === 'kid')) { const d = Math.random() < .5 ? -1 : 1, n = Math.random() < .45 ? 1 : Math.random() < .7 ? 2 : 3, v = 46 + Math.random() * 30;
+  fallCD -= dt; kidCD -= dt; if (moving && kidCD <= 0) { kidCD = 12 + Math.random() * 46; if (SKY.n < .85 && !critters.some(c => c.k === 'kid')) { const d = Math.random() < .5 ? -1 : 1, n = Math.random() < .45 ? 1 : Math.random() < .7 ? 2 : 3, v = 46 + Math.random() * 30;
     const TOPS = ['#d42a2a', '#2a6fd8', '#f2c43a', '#1e2024', '#3fae3a', '#e85ca8', '#7a7f87', '#f07a12'], DECK = ['#2fb8e8', '#e8302a', '#9bd832', '#f4f2ec', '#b05ae0', '#1e2024'], SK = ['#8a5a3a', '#c58c5c', '#e8c4a0', '#5a3a24'];
     const faller = Math.random() < 1 / 30 || window.__kidFall ? Math.random() * n | 0 : -1; window.__kidFall = 0; for (let i = 0; i < n; i++) critters.push({ k: 'kid', fallAt: i === faller ? W * (.3 + Math.random() * .35) : null, d, x: (d < 0 ? W + 20 : -30) - d * i * (22 + Math.random() * 18), v: v * (.9 + Math.random() * .22), y: GY + 6 + (i % 2) * 3 + Math.random() * 2, ph: Math.random() * 6, top: TOPS[Math.random() * TOPS.length | 0], deck: DECK[Math.random() * DECK.length | 0], skin: SK[Math.random() * SK.length | 0], hel: Math.random() < .55 ? TOPS[Math.random() * TOPS.length | 0] : null, leg: Math.random() < .5 ? '#2a3a5a' : '#1e2024', s: .85 + Math.random() * .25 }); } }
   snowmanCD -= dt; if (moving && snowmanCD <= 0) { snowmanCD = 14 + Math.random() * 20; if (SKY.snowAcc > .6 && BE > 30) critters.push({ k: 'snowman', x: W + 30, y: H + 14 + BE * (.3 + Math.random() * .3), s: .8 + Math.random() * .4, hat: Math.random() < .5, scarf: ['#e8641c', '#d42a2a', '#2a6fd8'][Math.random() * 3 | 0] }); }
   for (let i = critters.length - 1; i >= 0; i--) { const c = critters[i]; if (c.k === 'kid') { const f = c.f;
-      if (!f && c.fallAt != null && (c.d > 0 ? c.x > c.fallAt : c.x < c.fallAt)) { c.f = { t: 0, v0: c.v, sx: 0, sv: c.v * .8 }; SFX.bump(); }   // clips the kerb and goes over
+      if (!f && c.fallAt != null && (c.d > 0 ? c.x > c.fallAt : c.x < c.fallAt)) { if (fallCD > 0) c.fallAt = null; else { fallCD = 150; c.f = { t: 0, v0: c.v, sx: 0, sv: c.v * .8 }; SFX.bump(); SFX.ow(440 + Math.random() * 120, .35, Math.random() < .4); } }   // clips the kerb and goes over
       if (c.f) { const F = c.f; F.t += dt;
         if (F.t < 3.4) { c.v = Math.max(0, F.v0 * (1 - F.t / .45)); F.sv = Math.max(0, F.sv - dt * 70); F.sx += c.d * F.sv * dt; if (!F.th && F.t > .3) { F.th = 1; SFX.thud(.2); } }
         else { if (!F.up) { F.up = 1; c.x += F.sx; F.sx = 0; } c.v = 16; c.walk = 1; }   // picks the scooter up and walks it off
@@ -831,7 +839,7 @@ function update(dt) {
       ty: c.lane === 1 ? (BE > 26 ? 14 + BE * (.12 + Math.random() * .6) : 9) + 3 : LD * (.3 + Math.random() * .35), road: c.lane === 0, fire: Math.random() < .3, snd: Math.random() };
     crashCD = 240; SFX.skid(c.crash.snd); if (c.lane === 0) { jamT = 25 + Math.random() * 25; const cx = c.x + c.sp.w / 2; cars.forEach(o => { if (!o.crash && o !== c) o.free = o.dir > 0 ? o.x > cx : o.x + o.sp.w < cx; }); } });
   // about 1 in 30 e-scooters: the two lads lose it and go over
-  cars.forEach(c => { if (c.sp.k !== 'escooter' || c.lane !== 1 || c.escRolled || c.crash || c.ot || !moving || c.x < W * .3 || c.x > W * .7) return; c.escRolled = 1; if (Math.random() > 1 / 30 && !window.__escFall) return; window.__escFall = 0;
+  cars.forEach(c => { if (c.sp.k !== 'escooter' || c.lane !== 1 || c.escRolled || c.crash || c.ot || !moving || c.x < W * .3 || c.x > W * .7) return; c.escRolled = 1; if ((Math.random() > 1 / 30 || fallCD > 0) && !window.__escFall) return; window.__escFall = 0; fallCD = 150; SFX.ow(210 + Math.random() * 40, .55, true); SFX.ow(250 + Math.random() * 40, .8, false);
     c.crash = { t: 0, rot: 0, st: 'side', spin: (c.dir > 0 ? 1 : -1) * 6, v0: c.cv || c.v, len: .8, ty: (BE > 26 ? 12 + BE * .2 : 8) + 3, road: false, fire: false, snd: Math.random() }; SFX.skid(c.crash.snd); });
   cars.forEach(c => { const k = c.crash; if (k) { k.t += dt; const sl = Math.max(0, 1 - k.t / k.len); c.cv = k.v0 * sl * sl; c.yo += (k.ty - c.yo) * Math.min(1, dt * 2.2); if (k.st === 'hit') k.rot = k.spin * .12 * Math.min(1, k.t / k.len);
       if (sl > 0) k.rot += k.spin * dt * sl; else if (!k.done) { k.done = true; SFX.thud(k.snd); }
