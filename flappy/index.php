@@ -58,19 +58,19 @@ html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:m
 .pw img{height:17px;width:auto;image-rendering:auto;display:block}
 .pw i{font-style:normal;color:#5b4fd1;font-size:12px}
 .pw:hover span,.pw:active span{text-decoration:underline}
-#recM{position:fixed;inset:0;z-index:50;background:rgba(15,14,22,.6);display:flex;align-items:center;justify-content:center;pointer-events:auto}
-#recM.hide{display:none}
-#recM .box{position:relative;width:min(320px,88vw);background:#f6efd8;border:4px solid #1b1a24;box-shadow:0 6px 0 #1b1a24;border-radius:6px;padding:16px 16px 14px;font:500 13px -apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#1b1a24;text-align:left}
-#recM h3{margin:0 26px 4px 0;font:700 12px/1.4 Silk;letter-spacing:.04em}
-#recM p{margin:0 0 10px;font-size:12px;color:#6a5a3a}
-#recM label{display:block;font-weight:700;font-size:11px;margin:8px 0 3px;text-transform:uppercase;letter-spacing:.06em}
-#recM input,#recM textarea{width:100%;box-sizing:border-box;border:2px solid #1b1a24;border-radius:4px;padding:8px;font:500 14px -apple-system,'Segoe UI',Roboto,sans-serif;background:#fff}
-#recM textarea{height:64px;resize:none}
-#recM .x{position:absolute;right:8px;top:8px;width:28px;height:28px;border:2px solid #1b1a24;border-radius:4px;background:#fff;font:700 16px/1 sans-serif;cursor:pointer}
-#recM .send{display:block;width:100%;margin-top:12px;background:#3fb04a;color:#fff;border:3px solid #1b1a24;box-shadow:0 4px 0 #1b1a24;border-radius:5px;padding:10px;font:700 14px Silk;cursor:pointer}
-#recM .send:disabled{opacity:.6}
-#recM .err{color:#c8402a;font-size:12px;margin-top:6px;min-height:14px}
-#recM .ok{text-align:center;padding:18px 4px 6px}#recM .ok b{display:block;font:700 15px Silk;color:#2f8a3a;margin-bottom:6px}
+#recM,#przM{position:fixed;inset:0;z-index:50;background:rgba(15,14,22,.6);display:flex;align-items:center;justify-content:center;pointer-events:auto}
+#recM.hide,#przM.hide{display:none}
+#recM .box,#przM .box{position:relative;width:min(320px,88vw);background:#f6efd8;border:4px solid #1b1a24;box-shadow:0 6px 0 #1b1a24;border-radius:6px;padding:16px 16px 14px;font:500 13px -apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#1b1a24;text-align:left}
+#recM h3,#przM h3{margin:0 26px 4px 0;font:700 12px/1.4 Silk;letter-spacing:.04em}
+#recM p,#przM p{margin:0 0 10px;font-size:12px;color:#6a5a3a}
+#recM label,#przM label{display:block;font-weight:700;font-size:11px;margin:8px 0 3px;text-transform:uppercase;letter-spacing:.06em}
+#recM input,#recM textarea,#przM input,#przM textarea{width:100%;box-sizing:border-box;border:2px solid #1b1a24;border-radius:4px;padding:8px;font:500 14px -apple-system,'Segoe UI',Roboto,sans-serif;background:#fff}
+#recM textarea,#przM textarea{height:64px;resize:none}
+#recM .x,#przM .x{position:absolute;right:8px;top:8px;width:28px;height:28px;border:2px solid #1b1a24;border-radius:4px;background:#fff;font:700 16px/1 sans-serif;cursor:pointer}
+#recM .send,#przM .send{display:block;width:100%;margin-top:12px;background:#3fb04a;color:#fff;border:3px solid #1b1a24;box-shadow:0 4px 0 #1b1a24;border-radius:5px;padding:10px;font:700 14px Silk;cursor:pointer}
+#recM .send:disabled,#przM .send:disabled{opacity:.6}
+#recM .err,#przM .err{color:#c8402a;font-size:12px;margin-top:6px;min-height:14px}
+#recM .ok,#przM .ok{text-align:center;padding:18px 4px 6px}#recM .ok b,#przM .ok b{display:block;font:700 15px Silk;color:#2f8a3a;margin-bottom:6px}
 .shr,.hm{display:block;width:100%;margin:8px 0 0;cursor:pointer;background:#2a6fd8;color:#fff;border:2px solid #1b1a24;box-shadow:0 3px 0 #1b1a24;border-radius:6px;padding:9px 8px;font:700 10px Silk;letter-spacing:.06em}.hm{background:#fff;color:#1b1a24}
 .orow{display:flex;gap:8px}.orow button{flex:1}
 #shT{position:fixed;left:50%;bottom:22%;transform:translateX(-50%);z-index:60;background:#1b1a24;color:#fff;font:700 10px Silk;padding:9px 12px;border-radius:6px;opacity:0;transition:opacity .25s;pointer-events:none}#shT.on{opacity:1}
@@ -125,11 +125,12 @@ html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:m
 #rot{display:none;position:fixed;inset:0;z-index:90;background:#2f8fd8;color:#fff;align-items:center;justify-content:center;text-align:center;font:600 14px -apple-system,'Segoe UI',Roboto,sans-serif;pointer-events:auto}
 #rot div{font-size:46px;line-height:1.2}#rot b{display:block;font:700 15px Silk;margin:10px 0 6px;color:#ffd84a;text-shadow:2px 2px 0 #1b1a24}#rot span{display:block;font-size:14px}
 @media (orientation:landscape) and (max-height:500px) and (pointer:coarse){#rot{display:flex}}
+.fkban{margin:8px 0 6px}.fkban a{display:block;text-decoration:none;color:inherit}.fkban .bt{background:#fff;border:2px solid #1b1a24;box-shadow:0 3px 0 #1b1a24;border-radius:8px;padding:10px 12px;font:650 15px/1.38 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#1b1a24;text-align:center;letter-spacing:-.005em;-webkit-font-smoothing:antialiased;white-space:pre-line}.fkban .bt.lk{border-color:#1b1a24;background:#fffaf0}.fkban .bt.lk:after{content:' \203A';color:#e8641c;font-weight:800}.fkban img{display:block;width:100%;height:auto;border:2px solid #1b1a24;box-shadow:0 3px 0 #1b1a24;border-radius:8px;background:#fff}
 .notice{margin:2px 0 6px;background:#fff3c4;border:2px solid #1b1a24;border-radius:6px;padding:7px 8px;font:700 12px/1.35 -apple-system,'Segoe UI',Roboto,sans-serif;color:#1b1a24}
 .off-lb .lbB,.off-rec .rec{display:none!important}
 #lbM .tops{display:flex;justify-content:center;gap:4px;margin:0 0 6px}#lbM .tops button{border:2px solid #1b1a24;background:#fff;border-radius:99px;padding:4px 12px;font:700 9px Silk;cursor:pointer}#lbM .tops button.on{background:#1b1a24;color:#ffd84a}
 .lbList{max-height:52vh;overflow:auto}#lbL li em{font:700 8px Silk;font-style:normal;background:#e8641c;color:#fff;border-radius:4px;padding:2px 5px;margin-left:6px;vertical-align:2px}
-.nb.saved .nbr{display:none}.nb .nbn{display:inline;margin-left:4px;font:700 12px Silk;color:#c8402a;letter-spacing:.04em}.nb a{font-size:12px}.nb a{color:#c8402a;font-weight:700}
+.nbp{display:block;width:100%;box-sizing:border-box;margin-top:6px;border:2px solid #1b1a24;border-radius:4px;padding:7px;font:500 14px -apple-system,'Segoe UI',Roboto,sans-serif}.nb.saved .nbp,.nb.ren .nbp{display:none}.nb.saved .nbr{display:none}.nb .nbn{display:inline;margin-left:4px;font:700 12px Silk;color:#c8402a;letter-spacing:.04em}.nb a{font-size:12px}.nb a{color:#c8402a;font-weight:700}
 </style>
 <link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icon-180.png"><link rel="icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Kabootar"><meta name="theme-color" content="#2f8fd8">
 </head>
@@ -147,7 +148,7 @@ html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:m
       <div class="lt2"><span>K</span><span>A</span><span>B</span><span>O</span><span>O</span><span>T</span><span>A</span><span>R</span></div>
       <div class="lt3">FLYING THROUGH LUTON</div>
     </div>
-    <p id="notice" class="notice" hidden></p>
+    <div id="ban1" class="fkban" hidden></div>
     <div class="hs"><small>YOUR HIGH SCORE</small><b id="bestS">0</b></div>
     <div class="prow"><div class="btn" id="go"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M3 1h2v1h2v1h2v1h2v1h2v1h1v2h-1v1h-2v1H9v1H7v1H5v1H3z"/></svg> PLAY</div><button class="lbB" type="button" id="top1"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M3 1h10v2h3v4h-1v1h-2v1h-1v1h-1v1H9v2h2v2H5v-2h2v-2H6v-1H5V9H4V8H2V7H1V3h2zM2 4v2h1V4zm11 0v2h1V4z" fill-rule="evenodd"/></svg> LEADERBOARD</button></div>
     <p style="margin-bottom:0;font-size:10px;color:#6a5a3a">Tap, click or press space to flap</p>
@@ -161,11 +162,12 @@ html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:m
     <h1>GAME<span>OVER</span></h1>
     <p id="why" style="margin:-2px 0 8px;font:700 10px Silk;color:#c8402a"></p>
     <div class="row"><div><b id="sc">0</b><small>SCORE</small></div><div><b id="be">0</b><small>BEST</small></div></div>
-    <div id="nameBox" class="nb hide"><b id="nbT">NEW HIGH SCORE!</b><span id="nbS">Put your name on the leaderboard</span><div class="nbr"><input id="nbI" maxlength="14" placeholder="Your name" autocomplete="nickname"><button type="button" id="nbB">SAVE</button></div><em id="nbE"></em></div>
+    <div id="nameBox" class="nb hide"><b id="nbT">NEW HIGH SCORE!</b><span id="nbS">Put your name on the leaderboard</span><div class="nbr"><input id="nbI" maxlength="14" placeholder="Your name" autocomplete="nickname"><button type="button" id="nbB">SAVE</button></div><input id="nbP" class="nbp" type="tel" inputmode="tel" maxlength="13" autocomplete="tel" placeholder="Mobile 07… (optional, for prizes)"><em id="nbE"></em></div>
     <div class="prow"><div class="btn" id="again"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M3 1h2v1h2v1h2v1h2v1h2v1h1v2h-1v1h-2v1H9v1H7v1H5v1H3z"/></svg> FLY AGAIN</div><button class="homeB" type="button" id="homeB"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M7 1h2v1h1v1h1v1h1v1h1v1h1v1h1v2h-2v6H9v-4H7v4H3V9H1V7h1V6h1V5h1V4h1V3h1V2h1z"/></svg> HOME</button></div>
     <div class="orow"><button class="shr" type="button" data-share="app"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M7 0h2v1h1v1h1v1h1v2H9v6H7V5H4V3h1V2h1V1h1zM1 7h4v2H3v5h10V9h-2V7h4v9H1z"/></svg> SHARE</button><button class="hm" type="button" id="cardB"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M5 2h6v2h4v10H1V4h4zM8 6a3 3 0 1 0 .01 0zM8 8a1 1 0 1 1-.01 0z" fill-rule="evenodd"/></svg> SCORE CARD</button><button class="lbB" type="button"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M3 1h10v2h3v4h-1v1h-2v1h-1v1h-1v1H9v2h2v2H5v-2h2v-2H6v-1H5V9H4V8H2V7H1V3h2zM2 4v2h1V4zm11 0v2h1V4z" fill-rule="evenodd"/></svg> TOP 10</button></div>
     <p id="seenH" style="margin:8px 0 0;font-weight:700">Places you flew past</p>
     <div class="seen" id="seen"></div>
+    <div id="ban2" class="fkban" hidden></div>
     <button class="hsB" type="button"><img src="icon-192.png" alt="">SAVE TO YOUR HOME SCREEN</button>
     <button class="rec" type="button">&#128205; Recommend a Luton place to feature</button>
   </div>
@@ -190,6 +192,14 @@ html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:m
    <div class="pp"><div class="ppm"><i>Google Play Protect</i>Unsafe app blocked<u>Install anyway</u></div><div><b>See a "Play Protect" message?</b> Tap <b>Install anyway</b>. It's safe: Samsung shows this for lots of websites added to the Home Screen.</div></div>
   </div>
   <p class="rs">Flappy Kabootar is just this web page saved to your phone. It can't see your photos, messages or contacts, and you can remove it any time like any other app.</p>
+</div></div>
+<div id="przM" class="hide"><div class="box">
+  <button class="x" type="button" aria-label="Close">&times;</button>
+  <div id="przF"><h3>&#127942; PLAY TO WIN PRIZES</h3><p>Top players can win prizes! Check your name and add your mobile so we can get in touch if you win. Your number is optional and private: it never shows on the leaderboard.</p>
+  <label for="pzN">Your name</label><input id="pzN" maxlength="14" autocomplete="nickname">
+  <label for="pzP">Mobile number (optional)</label><input id="pzP" type="tel" inputmode="tel" maxlength="13" autocomplete="tel" placeholder="07123 456789">
+  <div class="err" id="pzE"></div><button class="send" type="button" id="pzS">SAVE</button><button class="hm" type="button" id="pzX" style="margin-top:8px">NO THANKS</button></div>
+  <div id="przOk" class="ok hide"><b>YOU'RE IN!</b>We'll be in touch if you win.<button class="send" type="button" id="pzC">CLOSE</button></div>
 </div></div>
 <div id="recM" class="hide"><div class="box">
   <button class="x" type="button" aria-label="Close">&times;</button>
@@ -445,25 +455,46 @@ const LB = (() => { const api = 'api.php'; let run = '', runFor = ''; const star
     document.querySelectorAll('#lbM .tabs button').forEach(b => b.classList.toggle('on', b.dataset.lb === tab)); document.querySelectorAll('#lbM .tops button').forEach(b => b.classList.toggle('on', +b.dataset.top === top)); };
   const rankOf = (list, sc) => { if (sc < 1) return 0; const others = list.filter(r => !r.mine); let i = others.findIndex(r => sc > r.score); if (i < 0) i = others.length; return i < 50 ? i + 1 : 0; };
   const myBest = list => { const r = list.find(r => r.mine); return r ? r.score : 0; };
+  // optional UK mobile for prizes: 07 + 9 more digits, spaces allowed
+  const ukMob = v => { const d = String(v || '').replace(/[\s-]/g, ''); return d === '' ? '' : /^07\d{9}$/.test(d) ? d : null; };
+  let phoneSet = !!(store.get('fk_phone', '') || ck('fk_phone')), prizeAsked = false;
+  const snoozed = () => { const t = +(store.get('fk_przno', '') || ck('fk_przno') || 0); return t && Date.now() - t < 14 * 864e5; };
+  const contact = (nm, ph) => fetch(api + '?a=contact', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ pid, name: nm, phone: ph }) }).then(r => r.json()).then(j => { if (j.error) throw new Error(j.error); return j; });
+  const prizeAsk = () => { if (prizeAsked || phoneSet || !name || !pid || snoozed() || online === false) return; prizeAsked = true;
+    $('pzN').value = name; $('pzP').value = ''; $('pzE').textContent = ''; $('przF').classList.remove('hide'); $('przOk').classList.add('hide'); setTimeout(() => $('przM').classList.remove('hide'), 900); };
+  const prizeSave = () => { const nm = $('pzN').value.trim().replace(/\s+/g, ' ').slice(0, 14), ph = ukMob($('pzP').value);
+    if (!nm) { $('pzE').textContent = 'Type your name first.'; return; } if (!/^[\p{L}\p{N} ._'-]+$/u.test(nm)) { $('pzE').textContent = 'Letters and numbers only, please.'; return; }
+    if (window.NameCheck && NameCheck.bad(nm)) { $('pzE').textContent = "That name isn't allowed."; return; }
+    if (ph === null) { $('pzE').textContent = 'Use a UK mobile: 11 digits starting 07, e.g. 07123 456789.'; return; }
+    $('pzS').disabled = true; const chg = nm !== name;
+    (chg ? submit(nm, 0, true) : Promise.resolve()).then(() => contact(nm, ph)).then(() => { if (chg) { name = nm; keep('fk_name', nm); render(); } if (ph) { phoneSet = true; keep('fk_phone', '1'); } else keep('fk_przno', String(Date.now()));
+      $('pzS').disabled = false; $('przF').classList.add('hide'); $('przOk').classList.remove('hide'); })
+      .catch(err => { $('pzS').disabled = false; $('pzE').textContent = err && err.message && !/fetch/i.test(err.message) ? err.message : 'Could not save. Check your signal.'; }); };
+  $('pzS').addEventListener('click', e => { e.stopPropagation(); prizeSave(); });
+  const prizeClose = e => { e.stopPropagation(); $('przM').classList.add('hide'); if (!phoneSet) keep('fk_przno', String(Date.now())); };
+  $('pzX').addEventListener('click', prizeClose); $('pzC').addEventListener('click', e => { e.stopPropagation(); $('przM').classList.add('hide'); }); $('przM').querySelector('.x').addEventListener('click', prizeClose);
+  ['pzN', 'pzP'].forEach(i => $(i).addEventListener('keydown', e => e.stopPropagation())); $('przM').addEventListener('click', e => e.stopPropagation());
   let pending = 0, renaming = false;
   const submit = (nm, sc, rename) => {
-    if (online) return fetch(api + '?a=score', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: nm, score: sc, pid, rename: rename ? 1 : 0, run: runFor }) }).then(r => r.json()).then(j => { if (j.error) throw new Error(j.error); data = j; return j; });
+    if (online) return fetch(api + '?a=score', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: nm, score: sc, pid, rename: rename ? 1 : 0, run: runFor, phone: rename ? '' : (ukMob($('nbP').value) || '') }) }).then(r => r.json()).then(j => { if (j.error) throw new Error(j.error); data = j; return j; });
     const l = localLoad(); if (rename) l.forEach(r => { if (r.pid === pid) r.name = nm; }); else l.push({ name: nm, score: sc, day: day(), pid }); try { localStorage.setItem('fk_board', JSON.stringify(l.sort((a, b) => b.score - a.score).slice(0, 200))); } catch (e) {} localLoad(); return Promise.resolve(data); };
   const title = sc => { const rt = rankOf(data.today, sc), ra = rankOf(data.all, sc); return ra === 1 ? '\u{1F3C6} NEW ALL-TIME HIGH SCORE!' : ra && ra <= 10 ? '\u{1F3C6} #' + ra + ' OF ALL TIME!' : rt === 1 ? '\u{1F3C6} TOP SCORE TODAY!' : rt ? '\u{1F3C6} #' + rt + ' TODAY!' : ra ? '\u{1F3C6} #' + ra + ' OF ALL TIME!' : ''; };
   const showSaved = sc => { $('nbT').textContent = title(sc) || '\u{1F3C6} ON THE LEADERBOARD!'; $('nbS').innerHTML = 'Saved as <span class="nbn">' + esc(name) + '</span><br><a href="#" id="nbChg">Not you? Change name</a>'; $('nameBox').classList.add('saved'); $('nameBox').classList.remove('hide');
-    $('nbChg').onclick = e => { e.preventDefault(); e.stopPropagation(); renaming = true; $('nbS').textContent = 'Change the name on your scores'; $('nbI').value = name; $('nameBox').classList.remove('saved'); $('nbI').focus(); }; };
-  const check = sc => { runFor = run; $('nameBox').classList.add('hide'); $('nameBox').classList.remove('saved'); $('nbE').textContent = ''; pending = 0; renaming = false; if (sc < 1) return;
+    $('nbChg').onclick = e => { e.preventDefault(); e.stopPropagation(); renaming = true; $('nbS').textContent = 'Change the name on your scores'; $('nbI').value = name; $('nameBox').classList.remove('saved'); $('nameBox').classList.add('ren'); $('nbI').focus(); }; };
+  const check = sc => { runFor = run; $('nameBox').classList.add('hide'); $('nameBox').classList.remove('saved', 'ren'); $('nbE').textContent = ''; pending = 0; renaming = false; if (sc < 1) return;
     const go = () => { const rt = rankOf(data.today, sc), ra = rankOf(data.all, sc); if (!rt && !ra) return;
       if (name) { if (sc <= myBest(data.today) && sc <= myBest(data.all)) return; // nothing new to save
         const t = title(sc); submit(name, sc).then(() => { TRACK.send('name', sc); $('nbT').textContent = t; render(); showSaved(sc); $('nbT').textContent = t || $('nbT').textContent; }).catch(() => {}); return; }
       pending = sc; $('nbT').textContent = title(sc); $('nbS').textContent = 'Put your name on the leaderboard. We’ll remember it on this phone.'; $('nbI').value = ''; $('nameBox').classList.remove('hide'); };
-    if (online === null) load().then(go); else load().then(go); };
+    load().then(go).then(() => { if (name) prizeAsk(); }); };
+  const ren0 = () => renaming;
   const save = () => { const nm = $('nbI').value.trim().replace(/\s+/g, ' ').slice(0, 14); if (!pending && !renaming) return; if (!nm) { $('nbE').textContent = 'Type your name first.'; return; }
     if (!/^[\p{L}\p{N} ._'-]+$/u.test(nm)) { $('nbE').textContent = 'Letters and numbers only, please.'; return; }
     if (window.NameCheck && NameCheck.bad(nm)) { $('nbE').textContent = "That name isn't allowed. Please use your real name or a nickname."; $('nbI').select(); return; }
+    if (!ren0() && ukMob($('nbP').value) === null) { $('nbE').textContent = 'Mobile is optional, but use a UK one: 11 digits starting 07.'; return; }
     if (!pid) { pid = Math.random().toString(36).slice(2, 14); keep('fk_pid', pid); }
     $('nbB').disabled = true; const sc = pending, ren = renaming;
-    submit(nm, sc, ren).then(() => { name = nm; keep('fk_name', nm); if (!ren) TRACK.send('name', sc); $('nbB').disabled = false; pending = 0; renaming = false; $('nbE').textContent = ''; tab = data.today.some(r => r.mine) ? 'today' : 'all'; render(); showSaved(sc); if (!ren) $('lbM').classList.remove('hide'); })
+    submit(nm, sc, ren).then(() => { name = nm; keep('fk_name', nm); if (!ren && ukMob($('nbP').value)) { phoneSet = true; keep('fk_phone', '1'); } $('nbP').value = ''; if (!ren) TRACK.send('name', sc); $('nbB').disabled = false; pending = 0; renaming = false; $('nbE').textContent = ''; tab = data.today.some(r => r.mine) ? 'today' : 'all'; render(); showSaved(sc); if (!ren) $('lbM').classList.remove('hide'); })
       .catch(err => { $('nbE').textContent = err && err.message && !/fetch/i.test(err.message) ? err.message : 'Could not save. Check your signal.'; $('nbB').disabled = false; }); };
   $('nbB').addEventListener('click', e => { e.stopPropagation(); save(); }); $('nbI').addEventListener('keydown', e => { e.stopPropagation(); if (e.key === 'Enter') save(); });
   document.querySelectorAll('.lbB').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); TRACK.send('lb_open'); load(); render(); $('lbM').classList.remove('hide'); }));
@@ -477,7 +508,7 @@ const LB = (() => { const api = 'api.php'; let run = '', runFor = ''; const star
 /* ---------- always the latest version, also when saved to the Home Screen ----------
    version.json is rewritten on every deploy; when it changes the page reloads itself (straight away on the menu,
    or right after the current game ends), with a cache-busting query so the phone fetches the new HTML. */
-(() => { const BUILD = '20261118121515'; let pending = false;
+(() => { const BUILD = '20261118141913'; let pending = false;
   const go = () => { let last = 0; try { last = +sessionStorage.getItem('fk_upd_t') || 0; } catch (e) {} if (Date.now() - last < 60000) return;   // never loop: at most one reload a minute
     try { sessionStorage.setItem('fk_upd_t', String(Date.now())); } catch (e) {} location.replace(location.pathname + '?u=' + Date.now() + location.hash); };
   const check = () => fetch('version.json?ts=' + Date.now(), { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(j => {
@@ -526,7 +557,16 @@ const TRACK = (() => {
     if (navigator.sendBeacon) navigator.sendBeacon('api.php?a=ev', new Blob([body], { type: 'application/json' })); else fetch('api.php?a=ev', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body, keepalive: true }).catch(() => {}); } catch (e) {} };
   send('visit'); window.TRACK_SEND = send; document.querySelectorAll('.pw').forEach(a => a.addEventListener('click', () => send('smr')));
   fetch('api.php?a=cfg', { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(c => { if (!c || typeof c !== 'object') return;
-    if (c.notice) { $('notice').textContent = c.notice; $('notice').hidden = false; }
+    // owner's banner: a written notice or an uploaded picture, on the home screen and/or the end screen
+    { const mode = c.banner_mode || (c.notice ? 'text' : 'off'), txt = c.banner_text || c.notice || '', lk = c.banner_link || '', wh = c.banner_where || 'both';
+      const fill = el => { el.innerHTML = ''; let inner;
+        if (mode === 'image' && c.banner_v) { inner = document.createElement('img'); inner.src = 'api.php?a=banner&v=' + c.banner_v; inner.alt = txt || 'Banner'; inner.decoding = 'async'; if (c.banner_ratio) inner.style.aspectRatio = c.banner_ratio; }
+        else if (mode === 'text' && txt) { inner = document.createElement('div'); inner.className = 'bt' + (lk ? ' lk' : ''); inner.textContent = txt; }
+        else { el.hidden = true; return; }
+        if (lk) { const a = document.createElement('a'); a.href = lk; a.target = '_blank'; a.rel = 'noopener'; a.addEventListener('click', e => { e.stopPropagation(); send('ban', 0, el.id); }); a.appendChild(inner); el.appendChild(a); } else el.appendChild(inner);
+        el.hidden = false; el.addEventListener('click', e => e.stopPropagation()); };
+      if (wh !== 'over') fill($('ban1')); else $('ban1').hidden = true;
+      if (wh !== 'home') fill($('ban2')); else $('ban2').hidden = true; }
     document.body.classList.toggle('off-lb', c.show_leaderboard === false); document.body.classList.toggle('off-rec', c.show_recommend === false);
     GAP = c.difficulty === 'easy' ? 96 : c.difficulty === 'hard' ? 74 : 84; window.__fkNoBoard = c.show_leaderboard === false; }).catch(() => {});
   return { send };
