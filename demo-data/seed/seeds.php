@@ -547,8 +547,8 @@ return json_decode(<<<'JSON'
  },
  {
   "slug": "empowering",
-  "version": "2026-11-18a",
-  "ver": "1.0",
+  "version": "2026-11-18b",
+  "ver": "1.1",
   "name": "Empowering Education",
   "accent": "#D4125B",
   "tagline": "Charity website remake · Luton",
