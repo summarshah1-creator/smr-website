@@ -692,7 +692,7 @@ const LB = (() => { const api = 'api.php'; let run = '', runFor = ''; const star
 /* ---------- always the latest version, also when saved to the Home Screen ----------
    version.json is rewritten on every deploy; when it changes the page reloads itself (straight away on the menu,
    or right after the current game ends), with a cache-busting query so the phone fetches the new HTML. */
-(() => { const BUILD = '11190130'; let pending = false;
+(() => { const BUILD = '11190920'; let pending = false;
   const go = () => { let last = 0; try { last = +sessionStorage.getItem('fk_upd_t') || 0; } catch (e) {} if (Date.now() - last < 60000) return;   // never loop: at most one reload a minute
     try { sessionStorage.setItem('fk_upd_t', String(Date.now())); } catch (e) {} location.replace(location.pathname + '?u=' + Date.now() + location.hash); };
   const check = () => fetch('version.json?ts=' + Date.now(), { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(j => {
@@ -1030,8 +1030,8 @@ const SMRB = (() => { const K = 3, B = LANDMARKS.smr.board, cv2 = document.creat
 /* roller shutters on the small shops when they're shut (closing, opening hour; from their listed opening times, estimates marked) */
 window.SHUT_K = { periperi: [22, 11], miamicrispy: [1, 11], chaiikhana: [2, 12], grandbazar: [22, 8] };
 // some shops keep different hours on certain days: [day 0 = Sunday] -> [shut from, open at]
-const SHUT_DAY = { grandbazar: { 0: [18, 11] } };
-Object.assign(SHUT_K, { krispy: [1, 11], kahwa: [23, 18], gna: [1, 11], alquds: [0, 11.5], topspizza: [0, 11], cycleking: [18, 9] });
+const SHUT_DAY = { grandbazar: { 0: [18, 11] }, kahwa: { 5: [22, 16], 6: [22, 10], 0: [22, 10] } };   // Kahwa: Mon-Thu 7am-6pm, Fri 4-10pm, Sat-Sun 10am-10pm
+Object.assign(SHUT_K, { krispy: [1, 11], kahwa: [18, 7], gna: [1, 11], alquds: [0, 11.5], topspizza: [0, 11], cycleking: [18, 9] });
 const shutC = new Map();
 // shop fronts in sprite pixels: [left, right, height above the pavement]
 const SHUT_R = { krispy: [[97, 198, 29]], kahwa: [[99, 175, 34]], gna: [[96, 212, 32]], alquds: [[97, 216, 30]], topspizza: [[91, 237, 36, 0, 1]],
