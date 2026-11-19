@@ -114,7 +114,7 @@
     if (flakes.length > wf) flakes.length = wf;
     flakes.forEach(f => { f.y += f.v * dt; f.x += (Math.sin(t * 1.3 + f.p) * (4 + f.s * 6) - wind * .4 - v * .3) * dt; if (f.y > bottom) { f.y = -OY - 5; f.x = Math.random() * (W + 40); } if (f.x < -10) f.x += W + 30; });
     // lightning, far away and soft
-    if (cur.storm > .5) { boltT -= dt; if (boltT <= 0) { boltT = 7 + Math.random() * 9; S.flash = 1; const bx = W * (.15 + Math.random() * .7), pts = [[bx, -OY]]; let y = -OY, x = bx;
+    if (cur.storm > .5) { boltT -= dt; if (boltT <= 0) { boltT = 7 + Math.random() * 9; S.flash = 1; S.boom = { d: .4 + Math.random() * 2, near: Math.random() < .35 }; const bx = W * (.15 + Math.random() * .7), pts = [[bx, -OY]]; let y = -OY, x = bx;
       while (y < GY - 150) { y += 8 + Math.random() * 10; x += (Math.random() - .5) * 14; pts.push([x, y]); } bolt = { pts, t: 0 }; } }
     if (S.flash > 0) S.flash = Math.max(0, S.flash - dt * 2.8); if (bolt) { bolt.t += dt; if (bolt.t > .25) bolt = null; }
   };
@@ -148,9 +148,9 @@
     const sa = clamp((S.n - .55) / .35) * clear; if (sa > .02) stars.forEach(s => { const a = sa * (.55 + .45 * Math.sin(t * s.k + s.p)); const x = Math.round(((s.x * (W + 40) - SC * .02) % (W + 40) + W + 40) % (W + 40) - 20), y = Math.round(-OY + 6 + s.y * (OY + GY - 110));
       c.fillStyle = 'rgba(255,250,235,' + a.toFixed(2) + ')'; c.fillRect(x, y, 1, 1); if (s.s > 1) { c.fillStyle = 'rgba(255,250,235,' + (a * .45).toFixed(2) + ')'; c.fillRect(x - 1, y, 3, 1); c.fillRect(x, y - 1, 1, 3); } });
     // moon (real phase)
-    const ma = clamp((S.n - .4) / .4) * clamp(1 - (cur.cover - .6) / .35); if (ma > .02) { const mx = Math.round(W * .26), my = Math.round(-OY + Math.max(36, OY * .5 + 20)), r = 9;
+    const ma = clamp((S.n - .4) / .4) * clamp(1 - (cur.cover - .6) / .35); if (ma > .02) { const mx = Math.round(W * .26), my = Math.round(-OY + Math.max(36, OY * .5 + 20)), r = window.FEST && FEST.kind && FEST.kind() === 'ramadan' ? 12 : 9;
       c.globalAlpha = ma; const glow = c.createRadialGradient(mx, my, 4, mx, my, 34); glow.addColorStop(0, 'rgba(220,230,255,.25)'); glow.addColorStop(1, 'rgba(220,230,255,0)'); c.fillStyle = glow; c.fillRect(mx - 34, my - 34, 68, 68);
-      const p = S.phase == null ? .45 : S.phase; c.imageSmoothingEnabled = true; c.drawImage(moonArt(p), mx - r - 1, my - r - 1, 2 * r + 2, 2 * r + 2); c.imageSmoothingEnabled = false;
+      const p = window.FEST && FEST.kind && FEST.kind() === "ramadan" ? .13 : S.phase == null ? .45 : S.phase; /* Ramadan: a thin new crescent */ c.imageSmoothingEnabled = true; c.drawImage(moonArt(p), mx - r - 1, my - r - 1, 2 * r + 2, 2 * r + 2); c.imageSmoothingEnabled = false;
       c.globalAlpha = 1; }
     // sun
     const su = clamp((S.alt + 3) / 3) * clamp(1 - (cur.cover - .55) / .35); if (su > .02) { const sx = Math.round(W * clamp(.5 + ((S.az == null ? 220 : S.az) - 180) / 200, .06, .94)), sy = Math.round(Math.max(-OY + 30, GY - 34 - S.alt * 7)), low = clamp(1 - S.alt / 12);
@@ -185,13 +185,13 @@
   const NIGHT = {
     galaxy: { win: 'whole', up: 3, upA: .12, upCol: [200, 220, 255] }, townhall: { up: 4, upA: .42, relight: .15 }, stmarys: { win: 'whole', wholeA: 110, winCol: [255, 200, 120], up: 3, upA: .3, upCol: [255, 185, 110] }, letters: { up: 2, upA: .25, relight: .25 },
     frasers: { win: 'whole', winX: [0, .43], wholeA: 95, letters: false }, station: { win: 'whole' }, hatfactory: { win: 'none', letters: false, up: 3, upH: .8, upA: .3 },
-    chaiiwala: { win: 'whole', whiteText: [[5, 72, 125, 106]], glow: [[140, 80, 235, 102], [248, 72, 282, 104]] }, chaiikhana: { board: 1 }, spudkingz: {}, miamicrispy: { board: 1, win: 'whole' }, masjid: { up: 4, upA: .45, upCol: [225, 240, 255], relight: .12 }, masjidali: { up: 3, upA: .3, upCol: [225, 240, 255], win: 'whole', wholeA: 120, letters: false },
+    chaiiwala: { win: 'whole', whiteText: [[5, 72, 125, 106]], glow: [[140, 80, 235, 102], [248, 72, 282, 104]] }, chaiikhana: { board: 1 }, spudkingz: {}, miamicrispy: { board: 1, win: 'whole' }, masjid: { up: 7, upA: .42, upY: 24, upCol: [225, 240, 255], relight: .04 }, masjidali: { up: 3, upA: .3, upCol: [225, 240, 255], win: 'whole', wholeA: 120, letters: false },
     suffa: { up: 2, upA: .18, upCol: [225, 240, 255] }, gurdwara: { up: 4, upA: .4, upCol: [255, 205, 110], relight: .12 }, ldh: {}, lutonhoo: { up: 5, upA: .5, upCol: [255, 210, 150], relight: .1 }, foodbank: { win: 'whole' }, inspire: { win: 'whole', letters: false },
     nadeem: { relight: .3, winMinY: 56, board: 1, glow: [[0, 118, 150, 152]], curtains: 1 }, oak: { letters: false }, periperi: { board: 1, win: 'whole' }, toros: {}, cycleking: { board: 1 }, gna: { board: 1 }, kahwa: { enclosed: 1 }, leagrave: { letters: false },
     topspizza: { board: 1, lit: [[0, 46, 180, 68]], whiteText: [[56, 56, 180, 68]] }, alquds: { board: 1 }, kaya: { lit: [[4, 64, 124, 96]], whiteText: [[4, 64, 124, 96]] }, karwan: { board: 1 }, krispy: { board: 1, onlyTop: true },
-    tesco: { win: 'whole', board: 1 }, smr: { win: 'rooms', letters: false, maxBoardH: 1 }, currys: { win: 'whole', board: 1, boardMinH: 75, warm: [[110, 22, 135, 39, 0], [160, 29, 176, 39, 110], [221, 35, 247, 54, 0], [288, 41, 301, 52, 110]] }, bandq: { win: 'whole', board: 1, lit: [[166, 96, 274, 140]], whiteText: [[166, 96, 274, 140]] }, matalan: { win: 'whole', board: 1 }, lidl: { win: 'whole', board: 1 },
+    tesco: { win: 'whole', board: 1 }, smr: { win: 'rooms', letters: false, maxBoardH: 1 }, currys: { win: 'whole', board: 1, boardMinH: 75, warm: [[114, 17, 132, 29, 0], [151, 22, 163, 29, 110], [233, 26, 252, 41, 0], [283, 31, 293, 39, 110]] }, bandq: { win: 'whole', board: 1, lit: [[166, 96, 274, 140]], whiteText: [[166, 96, 274, 140]] }, matalan: { win: 'whole', board: 1 }, lidl: { win: 'whole', board: 1 },
     jdgyms: { win: 'whole' }, bigyellow: {}, grandbazar: { win: 'whole', board: 1, wholeA: 120 }, lewsey: { win: 'whole' }, venue: { up: 4, upA: .45, upCol: [255, 200, 150], relight: .1 }, chiltern: { board: 1, curtains: 1, whiteText: [[98, 43, 268, 69]] },
-    uob: { up: 2, upA: .18, upCol: [220, 230, 255] }, sixthform: { win: 'whole', letters: false }, marshfarm: { letters: false, minWin: 6, warmOnly: 1 }, orbital: { win: 'whole', winMinY: 70 }, wardown: { up: 1, upX: [.4, .75], upH: .6, upA: .15 }, stockwood: { up: 3, upA: .25 }, welcome: { up: 2, upA: .3 }, airport: { win: 'whole', winMaxY: 62 } };
+    vauxhall: { win: 'rooms', letters: false, winMaxY: 124 }, uob: { up: 2, upA: .18, upCol: [220, 230, 255] }, sixthform: { win: 'whole', letters: false }, marshfarm: { letters: false, minWin: 6, warmOnly: 1 }, orbital: { win: 'whole', winMinY: 70 }, wardown: { up: 1, upX: [.4, .75], upH: .6, upA: .15 }, stockwood: { up: 3, upA: .25 }, welcome: { up: 2, upA: .3 }, airport: { win: 'whole', winMaxY: 62 } };
   const LANDMARKS_KEYS = window.LANDMARKS || {};
   const isGlass = (r, g, b) => { const mx = Math.max(r, g, b), mn = Math.min(r, g, b); return b > r + 18 && b >= g - 8 && mx > 85 && mx < 236 && (mx - mn) / mx < .52; };
 
@@ -232,8 +232,8 @@
       { const cnt = new Map(); let best = 0; comp.forEach(p => { const j = p * 4, k = (src[j] << 16) | (src[j + 1] << 8) | src[j + 2], v = (cnt.get(k) || 0) + 1; cnt.set(k, v); if (v > best) best = v; }); if (comp.length < (cfg.minWin || 26) || x1 - x0 < (cfg.minWin ? 1 : 3) || y1 - y0 < (cfg.minWin ? 2 : 3) || best < comp.length * .45) continue; }
       if (!inX((x0 + x1) / 2, cfg.winX) || (cfg.winMaxY && gy - y0 > cfg.winMaxY) || (cfg.winMinY && gy - y0 < cfg.winMinY)) continue;   // winMinY: leave the shop floor to the shop's own lighting
       let col, a;
-      if (mode === 'whole') { col = cfg.winCol || [255, 226, 168]; a = cfg.wholeA || 150; }      // one big lit space behind panels of glass: all on, all the same
-      else { if (rnd() > .62) continue; const pick = rnd(); col = house || cfg.warmOnly ? [255, 214, 130] : pick < .55 ? [255, 214, 130] : pick < .85 ? [255, 228, 170] : [236, 240, 255]; a = 235; }   // houses: every lit room the same warm yellow
+      if (mode === 'whole') { col = cfg.winCol || [255, 214, 130]; a = cfg.wholeA || 150; }      // one big lit space behind panels of glass: all on, all the same
+      else { if (rnd() > .62) continue; const pick = rnd(); col = [255, 214, 130]; a = 235; }   // every lit window in town the same warm yellow (owner rule: one colour of window light)
       comp.forEach(p => { const y = (p / W0) | 0, sh = 1 - .16 * (y - y0) / Math.max(1, y1 - y0); setp(p, [col[0] * sh, col[1] * sh, col[2] * sh], a); used[p] = 1; }); }
     let use = boards.filter(b => !b.pale && !(cfg.boardMinH && gy - b.y1 < cfg.boardMinH * ((window.SCALE && window.SCALE[sp.k]) || 1))); if (cfg.onlyTop && boards.length) { const t = Math.min(...boards.map(b => b.y0)); use = boards.filter(b => b.y0 === t); }
     if (cfg.noBoardX) use = use.filter(b => !inX((b.x0 + b.x1) / 2, cfg.noBoardX));
@@ -277,7 +277,14 @@
     if (cfg.up) { let top = H0; for (let y = 0; y < H0 && top === H0; y++) for (let x = 0; x < W0; x += 2) if (src[(y * W0 + x) * 4 + 3] > 60) { top = y; break; }
       const bh = Math.max(40, gy - top), r = cfg.upX || [0, 1], ux0 = bx0 + sp.w * r[0], uw = sp.w * (r[1] - r[0]), nL = cfg.up;
       const mk = document.createElement('canvas'); mk.width = W0; mk.height = H0; const m = mk.getContext('2d'); m.globalCompositeOperation = 'lighter';
-      const xs = [], rad = Math.min(70, uw / nL * .8); for (let i = 0; i < nL; i++) { const cx = ux0 + uw * (i + .5) / nL; xs.push(cx); m.save(); m.translate(cx, gy); m.scale(1, bh * (cfg.upH || .95) / rad); const rg = m.createRadialGradient(0, 0, 2, 0, 0, rad);
+      const xs = [], rad = Math.min(70, uw / nL * .8), SCu = (window.SCALE && window.SCALE[sp.k]) || 1, ly = cfg.upY ? Math.round(gy - cfg.upY * SCu) : gy;
+      if (cfg.upY) {   // ground spotlights hidden behind the front wall: narrow beams fanning up the building from the top of the wall; the wall itself stays dark
+        // the lamps sit on the ground behind the wall, so each beam is already wide where it shows above the wall top
+        for (let i = 0; i < nL; i++) { const cx = ux0 + uw * (i + .5) / nL, H = bh * (cfg.upH || .95) + (gy - ly), k = cfg.upK || 1;
+          for (const [sp2, al] of [[.22, .1], [.32, .09], [.44, .08], [.58, .06], [.74, .045]]) { const g = m.createLinearGradient(0, gy, 0, gy - H); g.addColorStop(0, 'rgba(255,255,255,' + al * k + ')'); g.addColorStop(.45, 'rgba(255,255,255,' + al * .6 * k + ')'); g.addColorStop(1, 'rgba(255,255,255,0)');
+            m.fillStyle = g; m.beginPath(); m.moveTo(cx - 2, gy); m.lineTo(cx + 2, gy); m.lineTo(cx + H * sp2, gy - H); m.lineTo(cx - H * sp2, gy - H); m.closePath(); m.fill(); } }
+        m.globalCompositeOperation = 'source-over'; m.clearRect(0, ly, W0, H0 - ly); }
+      else for (let i = 0; i < nL; i++) { const cx = ux0 + uw * (i + .5) / nL; xs.push(cx); m.save(); m.translate(cx, gy); m.scale(1, bh * (cfg.upH || .95) / rad); const rg = m.createRadialGradient(0, 0, 2, 0, 0, rad);
         rg.addColorStop(0, 'rgba(255,255,255,.95)'); rg.addColorStop(.55, 'rgba(255,255,255,.45)'); rg.addColorStop(1, 'rgba(255,255,255,0)'); m.fillStyle = rg; m.fillRect(-rad, -rad, rad * 2, rad); m.restore(); }
       const uc = document.createElement('canvas'); uc.width = W0; uc.height = H0; const u = uc.getContext('2d'); u.drawImage(sp.c, 0, 0); u.globalCompositeOperation = 'destination-in'; u.drawImage(mk, 0, 0);
       const uC = cfg.upCol || [255, 200, 130]; u.globalCompositeOperation = 'source-atop'; u.fillStyle = 'rgba(' + uC.join(',') + ',.3)'; u.fillRect(0, 0, W0, H0);
