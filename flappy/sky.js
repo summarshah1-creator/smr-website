@@ -185,7 +185,7 @@
   const NIGHT = {
     galaxy: { win: 'whole', up: 3, upA: .12, upCol: [200, 220, 255] }, townhall: { up: 4, upA: .42, relight: .15 }, stmarys: { win: 'whole', wholeA: 110, winCol: [255, 200, 120], up: 3, upA: .3, upCol: [255, 185, 110] }, letters: { up: 2, upA: .25, relight: .25 },
     frasers: { win: 'whole', winX: [0, .43], wholeA: 95, letters: false }, station: { win: 'whole' }, hatfactory: { win: 'none', letters: false, up: 3, upH: .8, upA: .3 },
-    chaiiwala: { win: 'whole', whiteText: [[5, 72, 125, 106]], glow: [[140, 80, 235, 102], [248, 72, 282, 104]] }, chaiikhana: { board: 1 }, spudkingz: {}, miamicrispy: { board: 1, win: 'whole' }, masjid: { up: 7, upA: .42, upY: 24, upCol: [225, 240, 255], relight: .04 }, masjidali: { up: 3, upA: .3, upCol: [225, 240, 255], win: 'whole', wholeA: 120, letters: false },
+    chaiiwala: { win: 'whole', whiteText: [[5, 72, 125, 106]], glow: [[140, 80, 235, 102], [248, 72, 282, 104]] }, chaiikhana: { board: 1 }, spudkingz: {}, miamicrispy: { board: 1, win: 'whole' }, masjid: { up: 7, upA: .42, upY: 24, upCol: [225, 240, 255], relight: .04, allNight: 1 }, masjidali: { up: 3, upA: .3, upCol: [225, 240, 255], win: 'whole', wholeA: 120, letters: false },
     suffa: { up: 2, upA: .18, upCol: [225, 240, 255] }, gurdwara: { up: 4, upA: .4, upCol: [255, 205, 110], relight: .12 }, ldh: {}, lutonhoo: { up: 5, upA: .5, upCol: [255, 210, 150], relight: .1 }, foodbank: { win: 'whole' }, inspire: { win: 'whole', letters: false },
     nadeem: { relight: .3, winMinY: 56, board: 1, glow: [[0, 118, 150, 152]], curtains: 1 }, oak: { letters: false }, periperi: { board: 1, win: 'whole' }, toros: {}, cycleking: { board: 1 }, gna: { board: 1 }, kahwa: { enclosed: 1 }, leagrave: { letters: false },
     topspizza: { board: 1, lit: [[0, 46, 180, 68]], whiteText: [[56, 56, 180, 68]] }, alquds: { board: 1 }, kaya: { lit: [[4, 64, 124, 96]], whiteText: [[4, 64, 124, 96]] }, karwan: { board: 1 }, krispy: { board: 1, onlyTop: true },
@@ -460,12 +460,12 @@
         tx.fillStyle = g; tx.fillRect(Math.min(x0, x1) - 2, GY - 330, l.sp.w + 4, 330); }); tx.restore(); }
     tx.save(); tx.setTransform(1, 0, 0, 1, 0, 0); tx.globalCompositeOperation = 'source-atop';
     const col = mix(mix(hex('#8a95a3'), hex('#ff9a4a'), clamp(S.gold / (S.gold + S.grey * .9 + .001))), hex('#0a1030'), clamp(n * 1.4));
-    tx.fillStyle = css(col, Math.min(.62, a).toFixed(3)); tx.fillRect(0, 0, TL.width, TL.height); tx.restore();
+    tx.fillStyle = S.tintCss = css(col, Math.min(.62, a).toFixed(3)); tx.fillRect(0, 0, TL.width, TL.height); tx.restore();
     // snow stays pale at night (moonlit), so it reads against the dark buildings
     if (S.snowAcc > .02 && n > .02) { tx.globalAlpha = Math.min(1, S.snowAcc) * n * .85; list.forEach(l => { if (l.x > W + 120 || l.x + l.sp.w < -120) return; const sn = S.snow(l.sp, l.x < W); if (sn) { tx.imageSmoothingEnabled = true; tx.drawImage(sn, Math.round(l.x - M), GY - LH + 6, sn.width / 3, sn.height / 3); tx.imageSmoothingEnabled = false; } }); tx.globalAlpha = 1; }
     if (S.lightA > .02) { list.forEach(l => { if (l.x > W + 120 || l.x + l.sp.w < -120) return; if (window.isClosed && isClosed(l.sp.k)) return; const lc = S.lights(l.sp, l.x < W); if (!lc) return;
       // each building has its own bedtime: houses first, shops with signs stay on longest (late-night takeaways)
-      if (l.bed == null) l.bed = l.house ? Math.random() : .35 + Math.random() * .65; const cfgN = NIGHT[l.sp.k] || {}, keep = window.SHUT_K && SHUT_K[l.sp.k] ? 1 : cfgN.board ? .75 : l.house ? .12 : .4, off = (S.late || 0) > l.bed;   // shops with shutters keep their signs lit; the shutter closes the front instead
+      if (l.bed == null) l.bed = l.house ? Math.random() : .35 + Math.random() * .65; const cfgN = NIGHT[l.sp.k] || {}, keep = cfgN.allNight || (window.SHUT_K && SHUT_K[l.sp.k]) ? 1 : cfgN.board ? .75 : l.house ? .12 : .4, off = (S.late || 0) > l.bed;   // shops with shutters keep their signs lit; the shutter closes the front instead
       tx.globalAlpha = S.lightA * (off ? keep : 1); tx.drawImage(lc, Math.round(l.x - M), GY - LH + 6); }); tx.globalAlpha = 1; }
     main.drawImage(TL, 0, -OY, TL.width / 2, TL.height / 2); };
 

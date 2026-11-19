@@ -220,7 +220,7 @@ html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;touch-action:m
 <script src="landmarks.js?v=1119b"></script>
 <script src="vehicles.js?v=1119"></script>
 <script src="namecheck.js"></script>
-<script src="sky.js?v=1119c"></script>
+<script src="sky.js?v=1119d"></script>
 <script src="fest.js?v=4"></script>
 <script>
 (() => {
@@ -692,7 +692,7 @@ const LB = (() => { const api = 'api.php'; let run = '', runFor = ''; const star
 /* ---------- always the latest version, also when saved to the Home Screen ----------
    version.json is rewritten on every deploy; when it changes the page reloads itself (straight away on the menu,
    or right after the current game ends), with a cache-busting query so the phone fetches the new HTML. */
-(() => { const BUILD = '11190114'; let pending = false;
+(() => { const BUILD = '11190130'; let pending = false;
   const go = () => { let last = 0; try { last = +sessionStorage.getItem('fk_upd_t') || 0; } catch (e) {} if (Date.now() - last < 60000) return;   // never loop: at most one reload a minute
     try { sessionStorage.setItem('fk_upd_t', String(Date.now())); } catch (e) {} location.replace(location.pathname + '?u=' + Date.now() + location.hash); };
   const check = () => fetch('version.json?ts=' + Date.now(), { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(j => {
@@ -1125,7 +1125,14 @@ function draw() {
   // banner plane over Currys: a little propeller plane towing "@DONNERRUSH · OPEN NOW OUTSIDE CURRYS"
   if (!bplane && BANNER_ON) { const cu = lmQueue.find(l => l.sp.k === 'currys' && !l.bannerGone && l.x < W * .75 && l.x + l.sp.w > 0); if (cu) { cu.bannerGone = 1; bplane = { t0: t }; } }   // flies in from the left, against the scroll, so it's always clearly moving
   if (bplane) { const d = t - bplane.t0, px = Math.round(-20 + d * 42), py = Math.round(GY - 238 + Math.sin(d * 1.4) * 3); drawBannerPlane(px, py, d); if (px - 46 - BANNER.w > W + 10) bplane = null; }
-  if (town) { ctx = MAIN; SKY.townEnd(ctx, W, OY, GY, lmQueue, M, LH); }
+  if (town) { ctx = MAIN; SKY.townEnd(ctx, W, OY, GY, lmQueue, M, LH);
+    // moving parts (Luton Hoo helicopter + fountain, Town Hall clock + flags, Masjid-e-Ali flag...) are drawn again on top of the night lights so they never look see-through, with the same night tint
+    if (SKY.n > .05 && SKY.tintCss) lmQueue.forEach(l => { if (!ANIM_K[l.sp.k] || l.x > W + 60 || l.x + l.sp.w < -60) return;
+      const A = window.__animC || (window.__animC = document.createElement('canvas')); if (A.width !== ctx.canvas.width || A.height !== ctx.canvas.height) { A.width = ctx.canvas.width; A.height = ctx.canvas.height; }
+      const a = A.getContext('2d'); a.setTransform(1, 0, 0, 1, 0, 0); a.clearRect(0, 0, A.width, A.height); a.setTransform(ctx.getTransform()); a.imageSmoothingEnabled = false;
+      const af = l.sp.k !== 'lutonhoo' && typeof SCALE !== 'undefined' && SCALE[l.sp.k]; if (af) { a.save(); a.translate(Math.round(l.x), GY); a.scale(af, af); LM_ANIM[l.sp.k](a, 0, 0, t); a.restore(); } else LM_ANIM[l.sp.k](a, Math.round(l.x), GY, t);
+      a.setTransform(1, 0, 0, 1, 0, 0); a.globalCompositeOperation = 'source-atop'; a.fillStyle = SKY.tintCss; a.fillRect(0, 0, A.width, A.height); a.globalCompositeOperation = 'source-over';
+      ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.drawImage(A, 0, 0); ctx.restore(); }); }
   lmQueue.forEach(l => { if (l.sp.k === 'smr' && l.x < W + 10 && l.x + l.sp.w > -10) drawSMRBoard(l.x, GY); }); drawShopGlow(lmQueue, GY); drawShutters(lmQueue, GY); drawGalaxyLights(lmQueue, GY);
   flags.forEach(drawFlag);
   if (window.FEST) FEST.front(ctx, W, GY, t, SCi, pipes, PW);   // Ramadan lanterns / Carnival bunting
@@ -1175,7 +1182,7 @@ function draw() {
     const gl = ctx.createRadialGradient(bird.x, bird.y, 2, bird.x, bird.y, 22); gl.addColorStop(0, 'rgba(255,220,90,.35)'); gl.addColorStop(1, 'rgba(255,220,90,0)'); ctx.fillStyle = gl; ctx.fillRect(bird.x - 22, bird.y - 22, 44, 44); }
   if (window.SKY && performance.now() - wxSndT > 500) { wxSndT = performance.now(); const q = SKY.cur, live = !SFX.adhanOn; SFX.weather(live ? q.rain * (q.drizzle ? .55 : 1) : 0, live ? q.fog : 0, live ? q.snow : 0); }   // weather sounds
   if (window.SKY && SKY.boom) { const bm = SKY.boom; SKY.boom = null; SFX.thunder(bm.d, bm.near); }   // thunder follows each lightning flash
-  if (SKY.cur.rain > .25 && Math.random() < .08 && state === 'play') feath.push({ x: bird.x - 2, y: bird.y + 4, vx: 0, vy: 20, life: .5, drip: 1 });
+
   feath.forEach(f => { f.life -= 1 / 60; f.x += f.vx / 60 - (state === 'play' ? speed / 60 * .2 : 0); f.y += f.vy / 60; f.vy += f.drip ? 6 : -2; f.vx *= .98; ctx.fillStyle = f.drip ? 'rgba(170,200,240,.8)' : 'rgba(225,228,236,' + Math.max(0, f.life).toFixed(2) + ')'; ctx.fillRect(Math.round(f.x), Math.round(f.y), f.drip ? 1 : 2, f.drip ? 2 : 1); });
   for (let i = feath.length - 1; i >= 0; i--) if (feath[i].life <= 0) feath.splice(i, 1);
   drawPigeon(Math.round(bird.x), Math.round(bird.y), rot, bird.frame);
