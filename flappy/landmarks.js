@@ -743,9 +743,9 @@ L.masjidali = { n: 'Masjid-e-Ali', w: 320, d(c, x, G) {
   R(c, '#6a6e76', x + 160, G - 160, 1, 36); CIRC(c, '#c9ccd0', x + 160, G - 161, 3); P(c, '#5a2a4a', [[x + 161, G - 154], [x + 170, G - 148], [x + 161, G - 144]]);
 } };
 
-L.jdgyms = { n: 'JD Gyms', w: 360, d(c, x, G) {
+L.jdgyms = { n: 'JD Gyms', w: 288, d(c, x0, G) { const x = x0 - 36;   // middle block keeps its layout; the wings are trimmed to 84 wide
   const CL = '#c9ced6';
-  for (const bx of [x, x + 240]) { BOX(c, CL, bx, G - 104, 120, 104); for (let i = 0; i < 6; i++) R(c, '#b6bcc5', bx, G - 88 + i * 14, 120, 1); BOX(c, '#3a3f4a', bx - 2, G - 112, 124, 10); R(c, '#4a505c', bx - 2, G - 107, 124, 1); BOX(c, '#2a3036', bx + 6, G - 56, 108, 56); for (let i = 0; i < 5; i++) R(c, '#3e4a56', bx + 10 + i * 21, G - 52, 17, 48); }
+  for (const bx of [x0, x0 + 204]) { BOX(c, CL, bx, G - 104, 84, 104); for (let i = 0; i < 6; i++) R(c, '#b6bcc5', bx, G - 88 + i * 14, 84, 1); BOX(c, '#3a3f4a', bx - 2, G - 112, 88, 10); R(c, '#4a505c', bx - 2, G - 107, 88, 1); BOX(c, '#2a3036', bx + 6, G - 56, 72, 56); for (let i = 0; i < 4; i++) R(c, '#3e4a56', bx + 9 + i * 17, G - 52, 14, 48); }   // side wings 30% narrower
   BOX(c, '#d4d8de', x + 112, G - 144, 136, 144);
   P(c, '#cdd1d7', [[x + 96, G - 152], [x + 264, G - 152], [x + 256, G - 162], [x + 104, G - 162]], true); for (const px of [x + 104, x + 252]) BOX(c, '#9aa3ad', px, G - 152, 4, 152);
   BOX(c, '#2f3a4c', x + 112, G - 148, 136, 46); R(c, '#3a4760', x + 112, G - 148, 136, 3);
@@ -1153,7 +1153,7 @@ const EX = {
   spudkingz(c, x, G) { PERSON(c, x + 76, G, '#2bb3c8', '#1a1a1e', '#6a4028', '#1a1a1e'); },
   bandq(c, x, G) { TREE(c, x + 40, G, 1.2, '#6faa3e', '#4f8a2c'); TREE(c, x + 410, G, 1.1, '#6faa3e', '#4f8a2c'); CAR(c, x + 300, G, '#f4f4f4'); CAR(c, x + 116, G, '#7a8290'); R(c, '#9aa3ad', x + 136, G - 70, 2, 70); BOX(c, '#ecebe7', x + 128, G - 72, 18, 3); },
   lidl(c, x, G) { TREE(c, x - 10, G, 1.5, '#4f8a3c', '#3a6b2c'); for (const bx of [x + 150, x + 236]) { BOX(c, '#1f52b0', bx, G - 30, 10, 26); R(c, '#ffe23a', bx + 2, G - 24, 6, 6); } },
-  jdgyms(c, x, G) { R(c, '#b98a62', x - 6, G - 3, 372, 3); for (let i = 0; i < 46; i++) R(c, '#a8784f', x - 4 + i * 8, G - 3, 1, 3); },
+  jdgyms(c, x, G) { R(c, '#b98a62', x - 6, G - 3, 300, 3); for (let i = 0; i < 37; i++) R(c, '#a8784f', x - 4 + i * 8, G - 3, 1, 3); },
   bigyellow(c, x, G) { for (let i = 0; i < 9; i++) { BOX(c, '#f4f2ec', x + 10 + i * 8, G - 10, 3, 10); R(c, '#f6d21a', x + 10 + i * 8, G - 6, 3, 2); } BOX(c, '#e8c84a', x + 80, G - 14, 8, 10); CIRC(c, OUT, x + 300, G - 8, 9); CIRC(c, '#4f8a3c', x + 300, G - 8, 8); },
   masjidali(c, x, G) { R(c, '#9a4a36', x + 96, G - 6, 224, 6); for (let i = 0; i < 11; i++) { if (i === 3 || i === 4) continue; CIRC(c, OUT, x + 100 + i * 20, G - 9, 6); CIRC(c, '#5f8f3c', x + 100 + i * 20, G - 9, 5); CIRC(c, '#7fb04a', x + 98 + i * 20, G - 11, 2); }
     for (const bx of [x + 136, x + 182]) { BOX(c, '#1a1a1e', bx, G - 14, 4, 14); R(c, '#d9b05a', bx, G - 15, 4, 2); }
@@ -1336,7 +1336,7 @@ const SHARP = {
     BOX(c, '#151618', X(-4), Y(88), Math.round(96 * f), 17); T(c, 'CHAIIKHANA', X(44), Y(88) + 4, 8, '#f4f4f2', 'center', true);
     T(c, 'ORDER', X(34), Y(30) + 2, 8, '#e0458a', 'center', true); },
 };
-const SCALE = { vauxhall: 1.25, kaya: .85, galaxy: 1.25, leagrave: .9, letters: .8, townhall: 1.2, masjidali: 1.5, inspire: 1.21, funfair: 1.25, airport: 1.2, sixthform: 1.44, uob: 1.2, chiltern: 1.2, lewsey: 1.2, grandbazar: 1.2, lidl: 1.2, matalan: 1.5, bandq: 1.56, tesco: 1.5, cycleking: .98, topspizza: .82, alquds: .82, kahwa: .82, gna: .82, toros: .82, krispy: .82, lutonhoo: 1.5, currys: 1.15, masjid: 1.32, suffa: 1.08, oak: .82, chaiikhana: .85, spudkingz: .48, nadeem: 1.52, chaiiwala: 1.32, frasers: 1.6, stmarys: 1.02, hatfactory: 1.3 };
+const SCALE = { jdgyms: 1.3, vauxhall: 1.25, kaya: .85, galaxy: 1.25, leagrave: .9, letters: .8, townhall: 1.2, masjidali: 1.5, inspire: 1.21, funfair: 1.25, airport: 1.2, sixthform: 1.44, uob: 1.2, chiltern: 1.2, lewsey: 1.2, grandbazar: 1.2, lidl: 1.2, matalan: 1.5, bandq: 1.56, tesco: 1.5, cycleking: .98, topspizza: .82, alquds: .82, kahwa: .82, gna: .82, toros: .82, krispy: .82, lutonhoo: 1.5, currys: 1.15, masjid: 1.32, suffa: 1.08, oak: .82, chaiikhana: .85, spudkingz: .48, nadeem: 1.52, chaiiwala: 1.32, frasers: 1.6, stmarys: 1.02, hatfactory: 1.3 };
 // (SCALE is applied at the end of the file, once every landmark is defined)
 
 /* things drawn after scaling, so they keep their own size */
