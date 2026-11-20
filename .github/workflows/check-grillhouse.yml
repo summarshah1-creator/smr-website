@@ -1,0 +1,9 @@
+name: Check grillhouse
+on: { push: { branches: [check/grillhouse] } }
+jobs:
+  c:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          for u in https://smrgraphics.co.uk/grillhouse/ https://smrgraphics.co.uk/grillhouse https://www.smrgraphics.co.uk/grillhouse/ https://smrgraphics.co.uk/grillhouse/img/stone.jpg https://smrgraphics.co.uk/; do
+            echo "== $u"; curl -sS -o /tmp/b -w "%{http_code} %{redirect_url} %{content_type} %{size_download}\n" -A "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 Safari/604.1" "$u"; head -c 400 /tmp/b; echo; done
