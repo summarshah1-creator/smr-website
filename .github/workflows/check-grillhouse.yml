@@ -6,5 +6,5 @@ jobs:
     steps:
       - run: |
           set +e
-          for u in https://smrgraphics.co.uk/grillhouse/ https://smrgraphics.co.uk/grillhouse https://smrgraphics.co.uk/grillhouse/img/stone.jpg; do
+          for u in https://smrgraphics.co.uk/grillhouse/ "https://smrgraphics.co.uk/grillhouse/?t=1"; do
             echo "== $u"; curl -sS -D - -o /tmp/b -A "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 Safari/604.1" -H "Accept: text/html" "$u" | head -15; [ -f /tmp/b ] && head -c 300 /tmp/b; rm -f /tmp/b; echo; done
