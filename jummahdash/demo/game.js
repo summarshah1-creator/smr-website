@@ -89,7 +89,67 @@ function hdUp(src1x, KB) {   // src1x: trimmed 1x canvas -> canvas at KB px per 
   const o = t.getContext('2d'); o.imageSmoothingEnabled = true; o.imageSmoothingQuality = 'high'; o.drawImage(hdCv, 0, 0, t.width, t.height);
   hdCv.width = hdCv.height = 1; return t;
 }
-let KB = 2;   // building px per unit = exactly the on-screen size (S * BS)
+
+/* automatic HD finishing for Flappy's pixel buildings (drawn at N px per unit):
+   thick 1-unit ink outlines thinned to fine lines, glass gets sky reflections, flat colours get grain,
+   soft light from the top and a darker base */
+const NOISE = (() => { const c = document.createElement('canvas'); c.width = c.height = 96; const o = c.getContext('2d'), d = o.createImageData(96, 96);
+  for (let i = 0; i < d.data.length; i += 4) { const v = 128 + (Math.random() - .5) * 60; d.data[i] = d.data[i + 1] = d.data[i + 2] = v; d.data[i + 3] = 255; } o.putImageData(d, 0, 0); return c; })();
+
+const patCache = {};
+function brickPat(N) {   // stretcher bond at real brick size (~2 x .66 units), each brick its own tone, thin pale mortar
+  const id = 'b' + N; if (patCache[id]) return patCache[id];
+  const bw = 2.1 * N, bh = .72 * N, c = document.createElement('canvas'); c.width = Math.round(bw * 8); c.height = Math.round(bh * 8); const o = c.getContext('2d');
+  o.fillStyle = 'rgb(200,200,200)'; o.fillRect(0, 0, c.width, c.height);
+  for (let r = 0; r < 8; r++) for (let i = -1; i < 9; i++) { const x = i * bw + (r % 2) * bw / 2, y = r * bh, v = 100 + Math.random() * 56 | 0;
+    o.fillStyle = `rgb(${v},${v},${v})`; o.fillRect(x + .5, y + .5, bw - 1, bh - 1); o.fillStyle = 'rgba(255,255,255,.18)'; o.fillRect(x + .5, y + .5, bw - 1, Math.max(.6, bh * .2)); }
+  return (patCache[id] = c);
+}
+function tilePat(N) {   // slate courses: overlapping rows with staggered joints
+  const id = 't' + N; if (patCache[id]) return patCache[id];
+  const tw = 1.6 * N, th = 1.1 * N, c = document.createElement('canvas'); c.width = Math.round(tw * 8); c.height = Math.round(th * 6); const o = c.getContext('2d');
+  o.fillStyle = 'rgb(128,128,128)'; o.fillRect(0, 0, c.width, c.height);
+  for (let r = 0; r < 6; r++) for (let i = -1; i < 9; i++) { const x = i * tw + (r % 2) * tw / 2, y = r * th, v = 112 + Math.random() * 34 | 0;
+    o.fillStyle = `rgb(${v},${v},${v})`; o.fillRect(x + .5, y, tw - 1, th - .8); o.fillStyle = 'rgba(0,0,0,.35)'; o.fillRect(x, y + th - .9, tw, .9); }
+  return (patCache[id] = c);
+}
+function hdFinish(c, o, N, l, top, r) {
+  const x0 = Math.max(0, l - 2), y0 = Math.max(0, top - 2), w = Math.min(c.width, r + 3) - x0, h = c.height - y0; if (w < 4 || h < 4) return;
+  const img = o.getImageData(x0, y0, w, h), d = img.data, src = new Uint8ClampedArray(d), glass = new Uint8Array(w * h);
+  const isInk = i => src[i + 3] > 200 && Math.abs(src[i] - 27) < 12 && Math.abs(src[i + 1] - 26) < 12 && Math.abs(src[i + 2] - 36) < 14;   // Flappy's outline colour #1b1a24 only
+  const k = Math.max(1, Math.round(N * .45));   // how far in from each side of a thick line we recolour
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { const i = (y * w + x) * 4; if (src[i + 3] < 10) continue;
+    if (isInk(i)) {   // thin the outline: an ink pixel next to a coloured pixel within k takes that colour, darkened a little
+      let best = -1; for (let s = 1; s <= k && best < 0; s++) for (const [dx, dy] of [[s, 0], [-s, 0], [0, s], [0, -s]]) { const xx = x + dx, yy = y + dy; if (xx < 0 || yy < 0 || xx >= w || yy >= h) continue; const j = (yy * w + xx) * 4; if (src[j + 3] > 200 && !isInk(j)) { best = j; break; } }
+      if (best >= 0) { d[i] = src[best] * .72; d[i + 1] = src[best + 1] * .72; d[i + 2] = src[best + 2] * .74; }
+      continue; }
+    const R0 = src[i], G0 = src[i + 1], B0 = src[i + 2];   // glass: cool blue-grey, not too dark, not white
+    if (B0 > R0 + 12 && B0 >= G0 - 6 && B0 > 90 && B0 < 235 && R0 < 200) glass[y * w + x] = 1;
+    else if (R0 > 120 && R0 < 222 && G0 > 44 && G0 < 128 && B0 > 30 && B0 < 104 && R0 - G0 > 48 && R0 - G0 < 140) glass[y * w + x] = 2;   // brick (not the bright sign reds)
+    else if (Math.abs(R0 - G0) < 12 && Math.abs(G0 - B0) < 16 && R0 > 44 && R0 < 112) glass[y * w + x] = 3; }   // slate / dark grey roof
+  o.putImageData(img, x0, y0);
+  // glass reflections: diagonal light streaks + top-lit gradient, only on glass pixels
+  const gm = document.createElement('canvas'); gm.width = w; gm.height = h; const g = gm.getContext('2d'), gd = g.createImageData(w, h);
+  for (let p = 0; p < w * h; p++) if (glass[p] === 1) { gd.data[p * 4 + 3] = 255; }
+  g.putImageData(gd, 0, 0); g.globalCompositeOperation = 'source-in';
+  const lg = g.createLinearGradient(0, 0, 0, h); lg.addColorStop(0, 'rgba(255,255,255,.30)'); lg.addColorStop(.5, 'rgba(255,255,255,.06)'); lg.addColorStop(1, 'rgba(20,40,70,.18)'); g.fillStyle = lg; g.fillRect(0, 0, w, h);
+  g.globalCompositeOperation = 'source-atop'; g.fillStyle = 'rgba(255,255,255,.22)'; const sw = 7 * N;
+  for (let sx = -h; sx < w; sx += 26 * N) { g.beginPath(); g.moveTo(sx, h); g.lineTo(sx + h * .6, 0); g.lineTo(sx + h * .6 + sw, 0); g.lineTo(sx + sw, h); g.fill(); }
+  o.save(); o.setTransform(1, 0, 0, 1, 0, 0); o.drawImage(gm, x0, y0);
+  // HD brickwork and roof tiles on top of Flappy's flat brick/slate colours
+  for (const [m, pat, a] of [[2, brickPat(N), .35]]) {
+    const mc = document.createElement('canvas'); mc.width = w; mc.height = h; const q = mc.getContext('2d'), md = q.createImageData(w, h); let any = 0;
+    for (let p = 0; p < w * h; p++) if (glass[p] === m) { md.data[p * 4 + 3] = 255; any = 1; }
+    if (!any) continue; q.putImageData(md, 0, 0); q.globalCompositeOperation = 'source-in'; q.globalAlpha = a; q.fillStyle = q.createPattern(pat, 'repeat'); q.fillRect(0, 0, w, h);
+    o.globalCompositeOperation = 'overlay'; o.drawImage(mc, x0, y0); o.globalCompositeOperation = 'source-over'; }
+  // grain + light: top a touch brighter, bottom a touch darker, all clipped to the building
+  o.globalCompositeOperation = 'source-atop';
+  o.globalAlpha = .07; o.fillStyle = o.createPattern(NOISE, 'repeat'); o.fillRect(x0, y0, w, h); o.globalAlpha = 1;
+  const sh = o.createLinearGradient(0, y0, 0, y0 + h); sh.addColorStop(0, 'rgba(255,250,235,.10)'); sh.addColorStop(.75, 'rgba(0,0,0,0)'); sh.addColorStop(1, 'rgba(20,10,30,.16)'); o.fillStyle = sh; o.fillRect(x0, y0, w, h);
+  o.restore();
+}
+let KB = 2;
+if (document.fonts) Promise.all(['700 10px Mont', '600 10px Oswald', '700 10px Amiri'].map(f => document.fonts.load(f))).then(() => { bCache.clear(); hazeCache.clear(); });   // redraw buildings once the sign fonts are in   // building px per unit = exactly the on-screen size (S * BS)
 function buildingCanvas(kind, key) {
   const id = kind + ':' + key; if (bCache.has(id)) { const v = bCache.get(id); bCache.delete(id); bCache.set(id, v); return v; }
   let w, draw;
@@ -106,6 +166,7 @@ function buildingCanvas(kind, key) {
   for (let y = 0; y < c.height; y += 3) { const row = y * c.width; for (let x = 0; x < c.width; x += 3) if (d[(row + x) * 4 + 3] > 8) { if (y < top) top = y; if (x < l) l = x; if (x > r) r = x; } }
   if (r < l) { l = 0; r = 4; top = c.height - 4; }
   l = Math.max(0, l - 3); top = Math.max(0, top - 3); r = Math.min(c.width - 1, r + 4);
+  if (!(window.LANDMARKS_HD && kind === 'lm' && LANDMARKS_HD[key])) hdFinish(c, o, N, l, top, r);   // automatic HD finishing on the Flappy art
   const kb = KB, f = kb / N, t = document.createElement('canvas'); t.width = Math.max(1, Math.round((r - l + 1) * f)); t.height = Math.max(1, Math.round((c.height - top) * f));
   const q = t.getContext('2d'); q.imageSmoothingEnabled = true; q.imageSmoothingQuality = 'high'; q.drawImage(c, l, top, r - l + 1, c.height - top, 0, 0, t.width, t.height);
   c.width = c.height = 1;
