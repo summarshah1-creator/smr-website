@@ -275,15 +275,32 @@ function reset() {
 
 /* street: a landmark, then 1–3 houses, then a landmark… (no repeats close together) */
 let lastLm = [];
+/* spacing (owner, 21 Nov): terraces and corner shops can join up, but standalone buildings get room either side, and the big stores
+   and sites get a car-park-sized space, so a bungalow never sits right up against Tesco */
+const BIG_LM = new Set(['tesco', 'currys', 'bandq', 'lidl', 'matalan', 'jdgyms', 'bigyellow', 'orbital', 'grandbazar', 'frasers', 'vauxhall', 'airport', 'ldh', 'stockwood', 'chiltern', 'uob', 'sixthform', 'inspire', 'marshfarm', 'venue', 'lutonhoo', 'foodbank', 'lewsey', 'masjid', 'masjidali', 'gurdwara', 'stmarys', 'galaxy', 'townhall', 'suffa', 'chaiiwala', 'barak', 'kaya', 'nadeem']);
+const ATTACHED = new Set(['kahwa', 'gna', 'topspizza', 'alquds', 'krispy', 'toros', 'cycleking', 'oak', 'miamicrispy', 'periperi', 'smr', 'hatfactory']);
+const DETACHED_H = new Set(['bungalow', 'newbuild']);
+const rnd2 = (a, b) => a + Math.random() * (b - a);
+function gapBetween(a, kind, key) { if (!a) return 0;
+  if (a.kind === 'lm' && a.inSet) return 0;   // sets (Frasers → station → Hat Factory, Wardown, airport) stay together
+  const bigA = a.kind === 'lm' && BIG_LM.has(a.key), bigB = kind === 'lm' && BIG_LM.has(key);
+  if (bigA || bigB) return rnd2(26, 70);
+  const detA = a.kind === 'hs' ? DETACHED_H.has(a.key) : !ATTACHED.has(a.key), detB = kind === 'hs' ? DETACHED_H.has(key) : !ATTACHED.has(key);
+  if (a.kind === 'hs' && kind === 'hs' && !detA && !detB) return Math.random() < .6 ? 0 : rnd2(8, 28);   // rows of houses often join
+  if (!detA && !detB) return Math.random() < .5 ? 0 : rnd2(6, 20);   // shop built onto a terrace
+  return rnd2(10, 42); }
 function nextBuilding() {
-  const prev = street[street.length - 1]; const x = prev ? prev.x + prev.w + (prev.gap || 0) : -60;
+  const prev = street[street.length - 1];
   const wantLm = !prev || prev.kind === 'hs' && (prev.run || 0) >= 1 + (Math.random() * 2 | 0);
   if (setQ.length || wantLm) { let k;
     if (setQ.length) k = setQ.shift();
     else { let u; do { if (!deck.length) deck = buildDeck(); u = deck.shift().filter(x => x !== myMosque); } while (!u.length); k = u.shift(); setQ = u; }
     lastLm.push(k); if (lastLm.length > 10) lastLm.shift();
-    street.push({ kind: 'lm', key: k, x, w: LANDMARKS[k].w * BS, gap: setQ.length ? 0 : 6 + Math.random() * 14 }); }
-  else { if (!houseDeck.length) { houseDeck = HOUSE_K().slice(); for (let i = houseDeck.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [houseDeck[i], houseDeck[j]] = [houseDeck[j], houseDeck[i]]; } } const k = houseDeck.shift(); street.push({ kind: 'hs', key: k, x, w: Math.round(HOUSES[k].w * 1.35) * BS, gap: 0, run: prev && prev.kind === 'hs' ? (prev.run || 1) + 1 : 1 }); }
+    const x = prev ? prev.x + prev.w + gapBetween(prev, 'lm', k) : -60;
+    street.push({ kind: 'lm', key: k, x, w: LANDMARKS[k].w * BS, inSet: setQ.length > 0 }); }
+  else { if (!houseDeck.length) { houseDeck = HOUSE_K().slice(); for (let i = houseDeck.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [houseDeck[i], houseDeck[j]] = [houseDeck[j], houseDeck[i]]; } }
+    const k = houseDeck.shift(), x = prev ? prev.x + prev.w + gapBetween(prev, 'hs', k) : -60;
+    street.push({ kind: 'hs', key: k, x, w: Math.round(HOUSES[k].w * 1.35) * BS, run: prev && prev.kind === 'hs' ? (prev.run || 1) + 1 : 1 }); }
 }
 function fillStreet() { while (!street.length || street[street.length - 1].x < W + 600) { nextBuilding(); const b = street[street.length - 1]; setTimeout(() => buildingCanvas(b.kind, b.key), 0); } }   // built ~1.5 screens ahead so there's no hitch
 function fillSkyline() { let x = skyline.length ? skyline[skyline.length - 1].x + skyline[skyline.length - 1].w : -100; while (x < W * 2.2) { if (!skyDeck.length) { skyDeck = STREET.slice(); for (let i = skyDeck.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [skyDeck[i], skyDeck[j]] = [skyDeck[j], skyDeck[i]]; } } const k = skyDeck.shift(); if (!LANDMARKS[k] || k === myMosque || street.some(b => b.key === k)) continue; skyline.push({ kind: 'lm', key: k, x, w: LANDMARKS[k].w * .5 }); x += LANDMARKS[k].w * .5 - 16; } }
@@ -1212,5 +1229,5 @@ resize(); seedStars(); reset(); refreshHome(); if (myMosque) setTimeout(refreshH
 let last = performance.now();
 function frame(now) { const dt = Math.min(.05, (now - last) / 1000); last = now; update(dt); draw(); requestAnimationFrame(frame); }
 requestAnimationFrame(frame);
-window.__jd = { veh: k => startVehicle(k), laser: () => [CEIL + 40, (CEIL + FLOOR) / 2].forEach((y, i) => obs.push({ type: 'laser', x: W / 2, y, ph: 'in', pt: 0, slide: 0, d: i * .12 })), eidi: n => { eidi = n; }, kill: w => die(w), gift: k => gifts.push({ k, x: W * .6, y: 200, b: 0 }), get state() { return state; }, start, hero, get obs() { return obs; }, spawnRocket: () => obs.push({ type: "rocket", x: W + 40, y: hero.y - 30, warn: 1.5, lock: 0, v: 0 }), setHold: v => holding = v, get dist() { return dist; }, mis: (s, c) => { RUN.steamed = s; coins = c; }, get npcs() { return npcs; }, boost: m => startBoost(m), get SHOP() { return SHOP; }, bc: (k, kd) => buildingCanvas(kd || "lm", k), carSprite: (k, ci, f) => carSprite(k, ci, f), queue: k => deck.unshift([k]), street: () => street, get STREET() { return STREET; } };
+window.__jd = { veh: k => startVehicle(k), laser: () => [CEIL + 40, (CEIL + FLOOR) / 2].forEach((y, i) => obs.push({ type: 'laser', x: W / 2, y, ph: 'in', pt: 0, slide: 0, d: i * .12 })), eidi: n => { eidi = n; }, kill: w => die(w), gift: k => gifts.push({ k, x: W * .6, y: 200, b: 0 }), get state() { return state; }, start, hero, get obs() { return obs; }, spawnRocket: () => obs.push({ type: "rocket", x: W + 40, y: hero.y - 30, warn: 1.5, lock: 0, v: 0 }), setHold: v => holding = v, get dist() { return dist; }, mis: (s, c) => { RUN.steamed = s; coins = c; }, get npcs() { return npcs; }, boost: m => startBoost(m), get SHOP() { return SHOP; }, bc: (k, kd) => buildingCanvas(kd || "lm", k), carSprite: (k, ci, f) => carSprite(k, ci, f), queue: k => deck.unshift([k]), street: () => street, npc: x => spawnNpc(x), car: x => spawnCar(x), get STREET() { return STREET; } };
 })();
