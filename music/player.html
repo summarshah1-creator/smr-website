@@ -1031,8 +1031,8 @@ function mediaSession(t) {
   const set = (a, f) => { try { navigator.mediaSession.setActionHandler(a, f); } catch (e) {} };
   set('play', play); set('pause', () => au.pause()); set('previoustrack', prev); set('nexttrack', () => next());
   set('seekto', d => { if (d.seekTime != null) au.currentTime = d.seekTime; });
-  set('seekbackward', d => { au.currentTime = Math.max(0, au.currentTime - (d.seekOffset || 10)); });
-  set('seekforward', d => { au.currentTime = Math.min(au.duration || 0, au.currentTime + (d.seekOffset || 10)); });
+  // no 10-second skip handlers: with these set, iPhone lock screen and CarPlay swap previous/next track for ±10 s buttons
+  set('seekbackward', null); set('seekforward', null);
 }
 
 /* ---------- keyboard ---------- */
