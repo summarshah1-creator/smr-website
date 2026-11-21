@@ -5,12 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#0b0912">
 <meta name="robots" content="noindex">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="/assets/icon-512.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="SMR Music">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>SMR Music</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Manrope:wght@400;500;600;700;800&family=Poppins:wght@300&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#0b0912;--bg2:#13101d;--card:#1a1626;--line:rgba(255,255,255,.08);--txt:#f4f1fa;--mut:#a59fb8;--a:#8b5cff;--b:#ff4fa3;--g:linear-gradient(90deg,#8b5cff,#ff4fa3);--tint:139,92,255;--safe:env(safe-area-inset-bottom,0px)}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
 html,body{background:var(--bg);color:var(--txt);font:500 15px/1.45 Manrope,system-ui,sans-serif;overscroll-behavior:none;touch-action:manipulation}
 button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 input,textarea{font:inherit;color:inherit}
@@ -18,13 +24,12 @@ svg{display:block}
 .ic{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .gt{background:var(--g);-webkit-background-clip:text;background-clip:text;color:transparent}
 /* header */
-.top{position:sticky;top:0;z-index:20;display:flex;justify-content:flex-end;align-items:center;gap:12px;min-height:58px;padding:9px 14px;background:rgba(11,9,18,.82);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
-.brand{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;align-items:center;gap:6px;text-decoration:none;color:#fff}
-.brand .mk{height:12px;width:auto}.brand span{font:300 15px/1 Poppins;padding-bottom:1px}
+.top{position:sticky;top:0;z-index:20;padding-top:env(safe-area-inset-top,0px);background:rgba(11,9,18,.82);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
+.bar58{position:relative;height:58px;display:flex;align-items:center;justify-content:flex-end;gap:10px;padding:0 14px}
+.brand{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;align-items:center;gap:6px;text-decoration:none;color:#fff;white-space:nowrap}
+.brand .mk{height:12px;width:auto;flex:none}.brand span{font:300 15px/1.35 Poppins;padding:0 1px 2px;margin-top:-1px}
 .top .rt{display:flex;gap:8px}
 @media (max-width:560px){.top .pill span{display:none}.top .pill{padding:0;width:40px;height:40px;justify-content:center}}
-.fbrand{display:flex;justify-content:center;align-items:center;gap:6px;color:#fff}
-.fbrand .mk{height:11px;width:auto}.fbrand span{font:300 14px/1 Poppins;padding-bottom:1px}
 .top .sp{flex:1}
 .pill{display:inline-flex;align-items:center;gap:7px;padding:9px 14px;border-radius:999px;background:rgba(255,255,255,.07);border:1px solid var(--line);font:700 13px Manrope;white-space:nowrap}
 .pill.pri{background:var(--g);border:0;color:#fff;box-shadow:0 6px 20px rgba(255,79,163,.25)}
@@ -95,7 +100,8 @@ svg{display:block}
 .full.drag{transition:none}
 .full .bgart{position:absolute;inset:-80px;background-size:cover;background-position:center;filter:blur(60px) saturate(1.6) brightness(.8);opacity:.75;z-index:-2;transform:scale(1.15);transition:background-image .6s}
 .full:before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(120% 70% at 50% 0%,rgba(var(--tint),.35),transparent 60%),linear-gradient(180deg,rgba(8,6,14,.15),rgba(8,6,14,.75) 70%,#08060e)}
-.fhead{display:flex;align-items:center;gap:10px;padding:calc(10px + env(safe-area-inset-top,0px)) 16px 6px}
+.fhead{padding-top:env(safe-area-inset-top,0px)}
+.fhead .bar58{justify-content:space-between}
 .fhead .mid{flex:1;text-align:center;min-width:0}
 .fhead .mid small{display:block;font:700 10.5px Manrope;letter-spacing:.14em;text-transform:uppercase;color:#d5cbe9;opacity:.8}
 .fhead .mid b{display:block;font:700 13.5px Manrope;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -125,10 +131,11 @@ svg{display:block}
 .lyrics .none{color:var(--mut);font:600 16px Manrope;text-align:center;margin-top:30%}
 .info{width:100%;display:flex;align-items:center;gap:12px;margin-top:18px}
 .info .t{flex:1;min-width:0}
-.info .tt{overflow:hidden;white-space:nowrap;-webkit-mask-image:linear-gradient(90deg,#000 85%,transparent);mask-image:linear-gradient(90deg,#000 85%,transparent)}
-.info .tt b{display:inline-block;font:800 22px Sora;letter-spacing:-.01em;padding-right:40px}
-.info .tt.marq b{animation:marq 12s linear infinite}
-@keyframes marq{0%,15%{transform:translateX(0)}85%,100%{transform:translateX(var(--mx))}}
+.info .tt{overflow:hidden;white-space:nowrap;padding:4px 0 3px}
+.info .tt.marq{-webkit-mask-image:linear-gradient(90deg,transparent,#000 4%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 4%,#000 92%,transparent)}
+.info .tt b{display:inline-block;font:800 22px/1.3 Sora;letter-spacing:-.01em}
+.info .tt.marq b{animation:marq var(--md,10s) ease-in-out infinite alternate}
+@keyframes marq{0%,20%{transform:translateX(0)}80%,100%{transform:translateX(var(--mx))}}
 .info .ar{color:#d4cbe5;font-weight:600;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .round{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.12)}
 .seek{width:100%;margin-top:16px}
@@ -210,6 +217,25 @@ svg{display:block}
 .sw input:checked+i{background:linear-gradient(90deg,#8b5cff,#ff4fa3)}
 .sw input:checked+i:after{transform:translateX(16px)}
 .btnrow{display:flex;gap:10px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap}
+/* exclusive preview / save sheet */
+.xhd{display:flex;gap:14px;align-items:center;margin-bottom:14px}
+.xhd .art{width:72px;height:72px;border-radius:12px;flex:none;box-shadow:0 10px 24px rgba(0,0,0,.45)}
+.xpill{display:inline-block;font:800 10.5px Manrope;letter-spacing:.12em;text-transform:uppercase;padding:4px 9px;border-radius:999px;background:var(--g);color:#fff;margin-bottom:6px}
+.xhd b{display:block;font:800 18px/1.2 Sora}.xhd span{color:var(--mut);font-weight:600;font-size:14px}
+.xhd .xpill{color:#fff;font-size:10.5px}
+.xtxt{color:#d6cee6;font-weight:600;margin-bottom:14px;line-height:1.5}
+.xopt{width:100%;display:flex;align-items:center;gap:14px;padding:14px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid var(--line);margin-bottom:10px;text-align:left}
+.xopt:hover{background:rgba(255,255,255,.08)}
+.xopt.pri{background:linear-gradient(135deg,rgba(139,92,255,.35),rgba(255,79,163,.28));border-color:rgba(255,255,255,.16)}
+.xopt .xi{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:rgba(255,255,255,.1);flex:none}
+.xopt.pri .xi{background:#fff;color:#130f1c}
+.xopt .xi .ic{width:22px;height:22px}
+.xopt b{display:block;font:800 15.5px Manrope}.xopt small{display:block;color:#bfb6d2;font:600 13px Manrope;margin-top:1px}
+.xsteps{margin:-2px 0 12px;padding:12px 14px;border-radius:14px;background:rgba(0,0,0,.25);border:1px solid var(--line);font:600 14px/1.55 Manrope;color:#e9e3f5;display:none}
+.xsteps.on{display:block}
+.xsteps ol{padding-left:20px}.xsteps li{margin:3px 0}
+.xsteps .k{display:inline-flex;align-items:center;gap:4px;padding:1px 7px;border-radius:7px;background:rgba(255,255,255,.12);font-weight:800;white-space:nowrap}
+.xsteps .k svg{width:14px;height:14px}
 .toast{position:fixed;left:50%;bottom:calc(96px + var(--safe));z-index:90;transform:translate(-50%,20px);opacity:0;padding:11px 18px;border-radius:999px;background:#fff;color:#120e1b;font:800 14px Manrope;box-shadow:0 10px 30px rgba(0,0,0,.4);transition:.3s;pointer-events:none;white-space:nowrap}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 .banner{margin:14px 0 0;padding:10px 14px;border-radius:12px;background:rgba(255,194,58,.12);border:1px solid rgba(255,194,58,.3);color:#ffd889;font:700 13px Manrope}
@@ -221,14 +247,13 @@ svg{display:block}
 </head>
 <body class="paused">
 
-<header class="top">
+<header class="top"><div class="bar58">
   <a class="brand" href="/#digital" aria-label="SMR Digital"><svg class="mk" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 256.4"><path fill="#fff" fill-rule="evenodd" d="M340.2 1.0 L340.2 255.3 L340.7 256.1 L399.6 255.8 L400.9 254.8 L400.6 103.9 L401.1 102.9 L402.2 102.9 L507.3 217.8 L509.9 220.4 L510.7 220.4 L617.9 103.4 L619.7 102.6 L620.2 103.4 L619.7 254.8 L620.7 256.1 L682.2 255.6 L682.7 255.1 L682.4 0.5 L627.7 0.5 L594.9 36.8 L510.4 133.2 L505.8 128.6 L422.1 32.7 L393.2 0.5 L340.7 0.5ZM712.8 0.8 L713.0 191.1 L822.3 85.4 L820.3 83.1 L792.2 63.5 L793.0 62.2 L807.9 61.7 L873.7 56.9 L905.4 55.3 L906.1 56.1 L906.1 59.4 L905.4 60.9 L896.6 112.1 L890.5 145.8 L889.7 147.3 L889.7 150.2 L888.9 150.9 L887.4 150.2 L886.3 148.1 L869.6 126.0 L868.9 126.0 L807.9 183.3 L807.9 184.1 L880.7 253.3 L884.0 255.8 L1000.0 255.6 L997.2 251.7 L926.5 173.3 L926.5 172.3 L927.7 171.3 L929.5 171.0 L938.5 167.2 L949.9 160.6 L957.8 154.2 L964.4 147.0 L970.8 138.1 L975.9 128.3 L980.1 116.5 L982.6 105.9 L984.0 96.9 L984.5 82.8 L982.9 67.6 L980.4 57.1 L976.8 46.5 L971.0 35.2 L964.3 25.9 L958.1 19.5 L948.8 12.5 L937.0 6.4 L925.9 2.9 L911.5 0.6 L808.2 0.0ZM28.8 27.0 L23.6 34.3 L20.2 40.1 L17.0 47.1 L14.1 55.5 L11.4 68.9 L11.5 87.4 L12.9 95.4 L15.0 102.6 L18.1 110.3 L22.4 118.5 L27.1 125.5 L32.5 131.9 L38.3 137.2 L44.7 142.0 L53.7 147.3 L64.8 151.8 L74.8 154.4 L87.9 156.2 L210.1 156.6 L237.9 157.3 L242.0 158.3 L245.8 160.1 L251.7 165.3 L254.1 168.7 L255.8 172.5 L256.9 177.2 L256.9 180.8 L254.8 187.8 L250.6 193.6 L244.8 197.9 L237.9 199.9 L44.5 200.1 L0.0 255.3 L0.3 256.4 L243.3 255.9 L251.2 254.9 L260.7 252.6 L267.9 250.1 L275.6 246.4 L282.1 242.5 L288.0 238.0 L294.7 231.5 L299.1 226.0 L303.5 219.3 L307.1 212.4 L309.7 206.0 L311.9 198.3 L313.3 191.3 L314.4 180.3 L313.1 167.1 L311.1 158.1 L308.7 150.7 L306.0 144.5 L301.6 136.8 L297.1 130.5 L291.6 124.2 L278.7 114.1 L269.7 109.1 L258.9 104.7 L246.9 101.7 L237.1 100.4 L154.3 100.0 L84.3 99.0 L77.2 96.1 L72.0 91.2 L68.3 84.1 L67.5 76.6 L68.0 73.0 L69.1 69.7 L73.6 63.1 L79.7 59.0 L87.4 57.0 L263.6 57.3 L264.8 56.3 L308.3 1.3 L308.0 0.5 L90.3 0.0 L78.7 0.6 L64.0 3.6 L51.2 8.9 L45.3 12.3 L39.1 16.8Z"/></svg><span class="gt">Digital</span></a>
   <div class="rt"><button class="pill pri" id="upBtn" hidden><svg class="ic" viewBox="0 0 24 24"><path d="M12 16V4M6 10l6-6 6 6M5 20h14"/></svg><span>Upload</span></button>
   <button class="iconbtn" id="setBtn" hidden aria-label="Settings"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3h0a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8v0a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button></div>
-</header>
+</div></header>
 
 <main class="wrap">
-  <div id="localNote" class="banner" hidden>Preview mode: tracks you add stay on this device only. On the live site they're saved for everyone.</div>
   <section class="hero" id="hero">
     <div class="bgart" id="heroBg"></div>
     <div class="in">
@@ -266,10 +291,10 @@ svg{display:block}
 <section class="full" id="full" aria-label="Now playing">
   <div class="bgart" id="fBg"></div>
 
-  <div class="fhead" id="fHead">
+  <div class="fhead" id="fHead"><div class="bar58">
     <button class="round" id="fClose" aria-label="Close"><svg class="ic" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button>
-    <div class="mid"><div class="fbrand" id="fFrom"><svg class="mk" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 256.4"><path fill="#fff" fill-rule="evenodd" d="M340.2 1.0 L340.2 255.3 L340.7 256.1 L399.6 255.8 L400.9 254.8 L400.6 103.9 L401.1 102.9 L402.2 102.9 L507.3 217.8 L509.9 220.4 L510.7 220.4 L617.9 103.4 L619.7 102.6 L620.2 103.4 L619.7 254.8 L620.7 256.1 L682.2 255.6 L682.7 255.1 L682.4 0.5 L627.7 0.5 L594.9 36.8 L510.4 133.2 L505.8 128.6 L422.1 32.7 L393.2 0.5 L340.7 0.5ZM712.8 0.8 L713.0 191.1 L822.3 85.4 L820.3 83.1 L792.2 63.5 L793.0 62.2 L807.9 61.7 L873.7 56.9 L905.4 55.3 L906.1 56.1 L906.1 59.4 L905.4 60.9 L896.6 112.1 L890.5 145.8 L889.7 147.3 L889.7 150.2 L888.9 150.9 L887.4 150.2 L886.3 148.1 L869.6 126.0 L868.9 126.0 L807.9 183.3 L807.9 184.1 L880.7 253.3 L884.0 255.8 L1000.0 255.6 L997.2 251.7 L926.5 173.3 L926.5 172.3 L927.7 171.3 L929.5 171.0 L938.5 167.2 L949.9 160.6 L957.8 154.2 L964.4 147.0 L970.8 138.1 L975.9 128.3 L980.1 116.5 L982.6 105.9 L984.0 96.9 L984.5 82.8 L982.9 67.6 L980.4 57.1 L976.8 46.5 L971.0 35.2 L964.3 25.9 L958.1 19.5 L948.8 12.5 L937.0 6.4 L925.9 2.9 L911.5 0.6 L808.2 0.0ZM28.8 27.0 L23.6 34.3 L20.2 40.1 L17.0 47.1 L14.1 55.5 L11.4 68.9 L11.5 87.4 L12.9 95.4 L15.0 102.6 L18.1 110.3 L22.4 118.5 L27.1 125.5 L32.5 131.9 L38.3 137.2 L44.7 142.0 L53.7 147.3 L64.8 151.8 L74.8 154.4 L87.9 156.2 L210.1 156.6 L237.9 157.3 L242.0 158.3 L245.8 160.1 L251.7 165.3 L254.1 168.7 L255.8 172.5 L256.9 177.2 L256.9 180.8 L254.8 187.8 L250.6 193.6 L244.8 197.9 L237.9 199.9 L44.5 200.1 L0.0 255.3 L0.3 256.4 L243.3 255.9 L251.2 254.9 L260.7 252.6 L267.9 250.1 L275.6 246.4 L282.1 242.5 L288.0 238.0 L294.7 231.5 L299.1 226.0 L303.5 219.3 L307.1 212.4 L309.7 206.0 L311.9 198.3 L313.3 191.3 L314.4 180.3 L313.1 167.1 L311.1 158.1 L308.7 150.7 L306.0 144.5 L301.6 136.8 L297.1 130.5 L291.6 124.2 L278.7 114.1 L269.7 109.1 L258.9 104.7 L246.9 101.7 L237.1 100.4 L154.3 100.0 L84.3 99.0 L77.2 96.1 L72.0 91.2 L68.3 84.1 L67.5 76.6 L68.0 73.0 L69.1 69.7 L73.6 63.1 L79.7 59.0 L87.4 57.0 L263.6 57.3 L264.8 56.3 L308.3 1.3 L308.0 0.5 L90.3 0.0 L78.7 0.6 L64.0 3.6 L51.2 8.9 L45.3 12.3 L39.1 16.8Z"/></svg><span class="gt">Digital</span></div></div>
-    <button class="round" id="fMore" aria-label="More"><svg class="ic" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.3" fill="currentColor"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/><circle cx="19" cy="12" r="1.3" fill="currentColor"/></svg></button>
+    <span class="brand" id="fFrom"><svg class="mk" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 256.4"><path fill="#fff" fill-rule="evenodd" d="M340.2 1.0 L340.2 255.3 L340.7 256.1 L399.6 255.8 L400.9 254.8 L400.6 103.9 L401.1 102.9 L402.2 102.9 L507.3 217.8 L509.9 220.4 L510.7 220.4 L617.9 103.4 L619.7 102.6 L620.2 103.4 L619.7 254.8 L620.7 256.1 L682.2 255.6 L682.7 255.1 L682.4 0.5 L627.7 0.5 L594.9 36.8 L510.4 133.2 L505.8 128.6 L422.1 32.7 L393.2 0.5 L340.7 0.5ZM712.8 0.8 L713.0 191.1 L822.3 85.4 L820.3 83.1 L792.2 63.5 L793.0 62.2 L807.9 61.7 L873.7 56.9 L905.4 55.3 L906.1 56.1 L906.1 59.4 L905.4 60.9 L896.6 112.1 L890.5 145.8 L889.7 147.3 L889.7 150.2 L888.9 150.9 L887.4 150.2 L886.3 148.1 L869.6 126.0 L868.9 126.0 L807.9 183.3 L807.9 184.1 L880.7 253.3 L884.0 255.8 L1000.0 255.6 L997.2 251.7 L926.5 173.3 L926.5 172.3 L927.7 171.3 L929.5 171.0 L938.5 167.2 L949.9 160.6 L957.8 154.2 L964.4 147.0 L970.8 138.1 L975.9 128.3 L980.1 116.5 L982.6 105.9 L984.0 96.9 L984.5 82.8 L982.9 67.6 L980.4 57.1 L976.8 46.5 L971.0 35.2 L964.3 25.9 L958.1 19.5 L948.8 12.5 L937.0 6.4 L925.9 2.9 L911.5 0.6 L808.2 0.0ZM28.8 27.0 L23.6 34.3 L20.2 40.1 L17.0 47.1 L14.1 55.5 L11.4 68.9 L11.5 87.4 L12.9 95.4 L15.0 102.6 L18.1 110.3 L22.4 118.5 L27.1 125.5 L32.5 131.9 L38.3 137.2 L44.7 142.0 L53.7 147.3 L64.8 151.8 L74.8 154.4 L87.9 156.2 L210.1 156.6 L237.9 157.3 L242.0 158.3 L245.8 160.1 L251.7 165.3 L254.1 168.7 L255.8 172.5 L256.9 177.2 L256.9 180.8 L254.8 187.8 L250.6 193.6 L244.8 197.9 L237.9 199.9 L44.5 200.1 L0.0 255.3 L0.3 256.4 L243.3 255.9 L251.2 254.9 L260.7 252.6 L267.9 250.1 L275.6 246.4 L282.1 242.5 L288.0 238.0 L294.7 231.5 L299.1 226.0 L303.5 219.3 L307.1 212.4 L309.7 206.0 L311.9 198.3 L313.3 191.3 L314.4 180.3 L313.1 167.1 L311.1 158.1 L308.7 150.7 L306.0 144.5 L301.6 136.8 L297.1 130.5 L291.6 124.2 L278.7 114.1 L269.7 109.1 L258.9 104.7 L246.9 101.7 L237.1 100.4 L154.3 100.0 L84.3 99.0 L77.2 96.1 L72.0 91.2 L68.3 84.1 L67.5 76.6 L68.0 73.0 L69.1 69.7 L73.6 63.1 L79.7 59.0 L87.4 57.0 L263.6 57.3 L264.8 56.3 L308.3 1.3 L308.0 0.5 L90.3 0.0 L78.7 0.6 L64.0 3.6 L51.2 8.9 L45.3 12.3 L39.1 16.8Z"/></svg><span class="gt">Digital</span></span>
+    <button class="round" id="fMore" aria-label="More"><svg class="ic" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.3" fill="currentColor"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/><circle cx="19" cy="12" r="1.3" fill="currentColor"/></svg></button></div>
   </div>
   <div class="fbody">
     <div class="stage" id="stage">
@@ -498,7 +523,7 @@ function parseLyrics(txt) {
 /* ---------- list ---------- */
 function rowHTML(t, i) {
   const art = t.art ? ' style="background-image:url(\'' + esc(t.art) + '\')"' : '';
-  const sub = [t.artist, t.album].filter(Boolean).join(' · ');
+  const sub = t.artist || '';
   return '<div class="row" data-id="' + esc(t.id) + '"><div class="art' + (t.art ? '' : ' ph') + '"' + art + '><div class="eq"><i></i><i></i><i></i></div></div>' +
     '<div class="t"><b>' + esc(t.title) + (t.hidden ? '<span class="tag">HIDDEN</span>' : '') + (t.lyrics ? '<span class="tag">LYRICS</span>' : '') + '</b><span>' + esc(sub || ' ') + '</span></div>' +
     '<span class="d">' + (t.duration ? fmt(t.duration) : '') + '</span>' +
@@ -520,7 +545,7 @@ function renderHero() {
   const t = cur() || S.tracks[0];
   $('#heroKick').textContent = cur() ? (au.paused ? 'Paused' : 'Now playing') : (S.tracks.length ? 'Latest' : S.settings.title);
   $('#heroTitle').textContent = t ? t.title : (S.settings.title || 'SMR Music');
-  $('#heroSub').textContent = t ? [t.artist, t.album].filter(Boolean).join(' · ') || S.settings.sub : (S.settings.sub || '');
+  $('#heroSub').textContent = t ? (t.artist || S.settings.sub) : (S.settings.sub || '');
   setArt($('#heroArt'), t && t.art); $('#heroBg').style.backgroundImage = t && t.art ? 'url("' + t.art + '")' : '';
   $('#playAll').disabled = $('#shufAll').disabled = !S.tracks.length;
   const on = !!cur() && !au.paused; $('#playAll').innerHTML = '<svg class="ic" viewBox="0 0 24 24"><path d="' + (on ? PAUSE : PLAY) + '"/></svg>' + (on ? 'Pause' : cur() ? 'Resume' : 'Play');
@@ -571,16 +596,16 @@ function paintNow() {
   const t = cur(); if (!t) return;
   $('#mini').classList.add('show');
   $('#mTitle').textContent = t.title; $('#mArtist').textContent = t.artist || S.settings.title;
-  $('#fTitle').textContent = t.title; $('#fArtist').textContent = [t.artist, t.album].filter(Boolean).join(' · ') || S.settings.title;
+  $('#fTitle').textContent = t.title; $('#fArtist').textContent = t.artist || S.settings.title;
   setArt($('#mArt'), t.art); setArt($('#fArt'), t.art);
   $('#fBg').style.backgroundImage = t.art ? 'url("' + t.art + '")' : '';
-  $('#fDl').hidden = !(t.download || S.owner);
+  $('#fDl').hidden = false;
   requestAnimationFrame(marquee);
   tint(t.art);
   renderLyrics();
   mediaSession(t);
 }
-function marquee() { const box = $('#fTT'), b = $('#fTitle'); box.classList.remove('marq'); const over = b.scrollWidth - box.clientWidth; if (over > 4) { box.style.setProperty('--mx', -(over + 10) + 'px'); box.classList.add('marq'); } }
+function marquee() { const box = $('#fTT'), b = $('#fTitle'); box.classList.remove('marq'); const over = b.offsetWidth - box.clientWidth; if (over > 2) { box.style.setProperty('--mx', -(over + 12) + 'px'); box.style.setProperty('--md', Math.max(4, over / 18) + 's'); box.classList.add('marq'); } }
 function tint(url) {
   const root = document.documentElement;
   if (!url) { root.style.setProperty('--tint', '139,92,255'); return; }
@@ -645,7 +670,7 @@ $('#cShuf').onclick = () => { S.shuffle = !S.shuffle; store.set('shuffle', S.shu
 $('#cRep').onclick = () => { S.repeat = (S.repeat + 1) % 3; store.set('repeat', S.repeat); paintState(); toast(['Repeat off', 'Repeat all', 'Repeat this track'][S.repeat]); };
 $('#playAll').onclick = () => { if (cur()) { toggle(); return; } S.shuffle = false; store.set('shuffle', false); startFrom(S.tracks[0] && S.tracks[0].id); openFull(); };
 $('#shufAll').onclick = () => { const ids = S.tracks.map(t => t.id); startFrom(ids[Math.floor(Math.random() * ids.length)], true); openFull(); };
-$('#fDl').onclick = () => download(cur());
+$('#fDl').onclick = () => saveSheet(cur());
 
 /* ---------- full player open/close with art flight ---------- */
 const full = $('#full');
@@ -756,7 +781,7 @@ const IC = {
   dl: '<path d="M12 4v12M6 10l6 6 6-6M5 20h14"/>', share: '<path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7M16 6l-4-4-4 4M12 2v13"/>',
   edit: '<path d="M12 20h9M16.5 3.5a2.1 2.1 0 1 1 3 3L7 19l-4 1 1-4z"/>', up: '<path d="m18 15-6-6-6 6"/>', down: '<path d="m6 9 6 6 6-6"/>',
   del: '<path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/>', eye: '<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
-  play: '<path d="M7 4.5v15l13-7.5z"/>', lyr: '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>', info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/>'
+  play: '<path d="M7 4.5v15l13-7.5z"/>', home: '<rect x="6" y="2" width="12" height="20" rx="3"/><path d="M12 7v6M9 10h6"/>', star: '<path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1 6.2-5.5-2.9-5.5 2.9 1-6.2L3 9.6l6.2-.9z"/>', link: '<path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/>', lyr: '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>', info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/>'
 };
 const ico = k => '<svg class="ic" viewBox="0 0 24 24">' + IC[k] + '</svg>';
 function trackMenu(id) {
@@ -764,7 +789,7 @@ function trackMenu(id) {
   const art = t.art ? ' style="background-image:url(\'' + esc(t.art) + '\')"' : '';
   let h = '<div class="menu"><div class="hd"><div class="art' + (t.art ? '' : ' ph') + '"' + art + '></div><div><b>' + esc(t.title) + '</b><span>' + esc([t.artist, t.album, t.year].filter(Boolean).join(' · ')) + '</span></div></div>';
   h += '<button data-x="play">' + ico('play') + 'Play</button><button data-x="next">' + ico('next') + 'Play next</button><button data-x="queue">' + ico('queue') + 'Add to queue</button>';
-  if (t.download || S.owner) h += '<button data-x="dl">' + ico('dl') + 'Download' + (S.owner && !t.download ? ' <span class="tag">ONLY YOU</span>' : '') + '</button>';
+  h += '<button data-x="dl">' + ico('dl') + (t.download || S.owner ? 'Download & save' : 'Save this track') + (S.owner && !t.download ? ' <span class="tag">ONLY YOU</span>' : '') + '</button>';
   h += '<button data-x="share">' + ico('share') + 'Share</button>';
   if (S.owner) h += '<div class="lab">Owner</div><button data-x="edit">' + ico('edit') + 'Edit details, art & lyrics</button><button data-x="mvup">' + ico('up') + 'Move up</button><button data-x="mvdn">' + ico('down') + 'Move down</button><button data-x="hide">' + ico('eye') + (t.hidden ? 'Show to everyone' : 'Hide from visitors') + '</button><button class="red" data-x="del">' + ico('del') + 'Delete track</button>';
   h += '</div>';
@@ -773,7 +798,7 @@ function trackMenu(id) {
     if (a === 'play') { closeSheet(); startFrom(id); openFull(); }
     if (a === 'next') { closeSheet(); playNext(id); }
     if (a === 'queue') { closeSheet(); addQueue(id); }
-    if (a === 'dl') { closeSheet(); download(t); }
+    if (a === 'dl') { saveSheet(t); }
     if (a === 'share') { closeSheet(); share(t); }
     if (a === 'edit') editTrack(t);
     if (a === 'mvup' || a === 'mvdn') { const i = S.tracks.indexOf(t), j = i + (a === 'mvup' ? -1 : 1); if (j < 0 || j >= S.tracks.length) return; [S.tracks[i], S.tracks[j]] = [S.tracks[j], S.tracks[i]]; renderList(); closeSheet(); if (!S.local) api('order', { ids: S.tracks.map(x => x.id) }).catch(err => toast(err.message)); }
@@ -796,6 +821,41 @@ async function share(t) {
   const text = t.title + (t.artist ? ' by ' + t.artist : '');
   if (navigator.share) { try { await navigator.share({ title: text, text, url }); return; } catch (e) { if (e.name === 'AbortError') return; } }
   try { await navigator.clipboard.writeText(url); toast('Link copied'); } catch (e) { prompt('Copy this link', url); }
+}
+
+/* ---------- exclusive preview: download / home screen / favourites ---------- */
+let installEvt = null;
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); installEvt = e; });
+const UA = navigator.userAgent, isIOS = /iPad|iPhone|iPod/.test(UA) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1), isAndroid = /Android/.test(UA);
+const SHARE_I = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7M16 6l-4-4-4 4M12 2v13"/></svg>';
+const DOTS_I = '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>';
+function trackUrl(t) { return location.origin + location.pathname + '#t=' + encodeURIComponent(t.id); }
+function saveSheet(t) {
+  if (!t) return;
+  try { history.replaceState(history.state, '', '#t=' + encodeURIComponent(t.id)); } catch (e) {}
+  const art = t.art ? ' style="background-image:url(\'' + esc(t.art) + '\')"' : '';
+  const canDl = t.download || S.owner;
+  const homeSteps = isIOS ? '<ol><li>Tap <span class="k">' + SHARE_I + 'Share</span> at the bottom of Safari</li><li>Scroll down, tap <span class="k">Add to Home Screen</span></li><li>Tap <span class="k">Add</span>. It opens straight to this track.</li></ol>'
+    : isAndroid ? '<ol><li>Tap <span class="k">' + DOTS_I + '</span> at the top of Chrome</li><li>Tap <span class="k">Add to Home screen</span> (or <span class="k">Install</span>)</li><li>Tap <span class="k">Add</span>. It opens straight to this track.</li></ol>'
+    : '<ol><li>Open this page on your phone</li><li>iPhone: <span class="k">Share</span> → <span class="k">Add to Home Screen</span></li><li>Android: <span class="k">⋮</span> → <span class="k">Add to Home screen</span></li></ol>';
+  const favSteps = isIOS ? '<ol><li>Tap <span class="k">' + SHARE_I + 'Share</span> at the bottom of Safari</li><li>Tap <span class="k">Add to Favourites</span> (or <span class="k">Add Bookmark</span>)</li></ol>'
+    : isAndroid ? '<ol><li>Tap <span class="k">' + DOTS_I + '</span> at the top of Chrome</li><li>Tap the <span class="k">☆</span> star</li></ol>'
+    : '<ol><li>Press <span class="k">' + (/Mac/.test(UA) ? '⌘' : 'Ctrl') + ' + D</span></li><li>Pick a folder and save</li></ol>';
+  const opt = (k, ic, title, sub, pri) => '<button class="xopt' + (pri ? ' pri' : '') + '" data-x="' + k + '"><span class="xi">' + ico(ic) + '</span><span><b>' + title + '</b><small>' + sub + '</small></span></button>';
+  let h = '<div class="xhd"><div class="art' + (t.art ? '' : ' ph') + '"' + art + '></div><div><span class="xpill">Exclusive preview</span><b>' + esc(t.title) + '</b><span>' + esc(t.artist || '') + '</span></div></div>';
+  h += '<div class="xtxt">This track is an exclusive preview, shared just with you. Keep it close so you can play it any time.</div>';
+  if (canDl) h += opt('dl', 'dl', 'Download the full track', 'Save it to your device to play offline', true);
+  h += opt('home', 'home', 'Add to your Home Screen', 'Opens like an app. One tap and it plays', !canDl) + '<div class="xsteps" id="xHome">' + homeSteps + '</div>';
+  h += opt('fav', 'star', 'Save to Favourites', 'Keep the link in your bookmarks') + '<div class="xsteps" id="xFav">' + favSteps + '</div>';
+  h += opt('copy', 'link', 'Copy the link', 'Send it to your phone or keep it somewhere safe');
+  openSheet('Keep this track', h, b => b.onclick = async e => {
+    const x = e.target.closest('[data-x]'); if (!x) return;
+    const a = x.dataset.x;
+    if (a === 'dl') { download(t); }
+    if (a === 'home') { if (installEvt) { installEvt.prompt(); try { await installEvt.userChoice; } catch (er) {} installEvt = null; return; } b.querySelector('#xHome').classList.toggle('on'); }
+    if (a === 'fav') b.querySelector('#xFav').classList.toggle('on');
+    if (a === 'copy') { const u = trackUrl(t); try { await navigator.clipboard.writeText(u); toast('Link copied'); } catch (er) { toast(u); } }
+  });
 }
 $('#tShare').onclick = () => cur() && share(cur());
 $('#tQueue').onclick = showQueue;
@@ -1005,7 +1065,7 @@ async function reload() {
 async function boot() {
   try { await reload(); }
   catch (e) {
-    S.local = true; S.owner = true; $('#localNote').hidden = false;
+    S.local = true; S.owner = false;
     try { const pl = await (await fetch('preload.json', { cache: 'no-store' })).json();
       for (const f of pl) { const blob = await (await fetch(f.src)).blob(); const file = new File([blob], f.name || f.src.split('/').pop(), { type: blob.type || 'audio/mpeg' });
         const [d] = await prepare([file]); if (!d) continue;
