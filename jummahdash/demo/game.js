@@ -5,6 +5,10 @@
 'use strict';
 const cv = document.getElementById('cv'), ctx = cv.getContext('2d');
 const $ = id => document.getElementById(id);
+const MOSQUES = [['masjid', 'Luton Central Mosque'], ['masjidali', 'Masjid-e-Ali'], ['suffa', 'Suffa-Tul-Islam']];
+const MOSQUE_K = MOSQUES.map(m => m[0]);
+let myMosque = (() => { try { return localStorage.getItem('jd_mosque') || ''; } catch (e) { return ''; } })();
+let bank = +(localStorage.getItem('jd_bank') || 0), passed = 0;
 const VH = 400;                       // world height in units
 const G = 300;                        // building ground line
 const ROAD_T = 309, ROAD_B = 352;     // road
@@ -17,7 +21,10 @@ let S = 1, W = 600, dpr = 1, KR = 2;  // units->px, screen width in units, rende
 
 function resize() {
   dpr = Math.min(window.devicePixelRatio || 1, 1.75);
-  cv.width = Math.round(innerWidth * dpr); cv.height = Math.round(innerHeight * dpr);
+  // always landscape: if the phone is upright, turn the whole stage 90° (the player just turns the phone)
+  const st = $('stage'), port = innerHeight > innerWidth, sw = port ? innerHeight : innerWidth, sh2 = port ? innerWidth : innerHeight;
+  st.style.width = sw + 'px'; st.style.height = sh2 + 'px'; st.style.transform = port ? `translateX(${innerWidth}px) rotate(90deg)` : 'none';
+  cv.width = Math.round(sw * dpr); cv.height = Math.round(sh2 * dpr);
   S = cv.height / VH; W = cv.width / S;
   const k = Math.min(4, Math.max(1, Math.round(S * 10) / 10));
   if (Math.abs(k - KR) > .3) { KR = k; bCache.clear(); hazeCache.clear(); }
@@ -130,12 +137,14 @@ let lastLm = [];
 function nextBuilding() {
   const prev = street[street.length - 1]; const x = prev ? prev.x + prev.w + (prev.gap || 0) : -60;
   const wantLm = !prev || prev.kind === 'hs' && (prev.run || 0) >= 1 + (Math.random() * 2 | 0);
-  if (wantLm) { let k; do { k = STREET[Math.random() * STREET.length | 0]; } while (lastLm.includes(k) || !LANDMARKS[k]); lastLm.push(k); if (lastLm.length > 10) lastLm.shift();
+  if (wantLm) { let k; const others = MOSQUE_K.filter(m => m !== myMosque && !lastLm.slice(-4).includes(m));
+    if (others.length && Math.random() < .3) k = others[Math.random() * others.length | 0];
+    else do { k = STREET[Math.random() * STREET.length | 0]; } while (lastLm.includes(k) || !LANDMARKS[k] || k === myMosque); lastLm.push(k); if (lastLm.length > 10) lastLm.shift();
     street.push({ kind: 'lm', key: k, x, w: LANDMARKS[k].w * BS, gap: 6 + Math.random() * 14 }); }
   else { const hk = HOUSE_K(); const k = hk[Math.random() * hk.length | 0]; street.push({ kind: 'hs', key: k, x, w: Math.round(HOUSES[k].w * 1.35) * BS, gap: 0, run: prev && prev.kind === 'hs' ? (prev.run || 1) + 1 : 1 }); }
 }
 function fillStreet() { while (!street.length || street[street.length - 1].x < W + 600) { nextBuilding(); const b = street[street.length - 1]; setTimeout(() => buildingCanvas(b.kind, b.key), 0); } }   // built ~1.5 screens ahead so there's no hitch
-function fillSkyline() { let x = skyline.length ? skyline[skyline.length - 1].x + skyline[skyline.length - 1].w : -100; while (x < W * 2.2) { const k = STREET[Math.random() * STREET.length | 0]; if (!LANDMARKS[k]) continue; skyline.push({ kind: 'lm', key: k, x, w: LANDMARKS[k].w * .5 }); x += LANDMARKS[k].w * .5 - 16; } }
+function fillSkyline() { let x = skyline.length ? skyline[skyline.length - 1].x + skyline[skyline.length - 1].w : -100; while (x < W * 2.2) { const k = STREET[Math.random() * STREET.length | 0]; if (!LANDMARKS[k] || k === myMosque) continue; skyline.push({ kind: 'lm', key: k, x, w: LANDMARKS[k].w * .5 }); x += LANDMARKS[k].w * .5 - 16; } }
 
 function spawnCar(x) {
   const k = CAR_KEYS[Math.random() * CAR_KEYS.length | 0]; if (!VEHICLES[k]) return;
@@ -200,7 +209,7 @@ function update(dt) {
   const dx = speed * dt; if (state !== 'menu') dist += dx;
 
   // scroll the world
-  street.forEach(b => b.x -= dx); while (street.length && street[0].x + street[0].w + 40 < -20) street.shift(); fillStreet();
+  street.forEach(b => { b.x -= dx; if (!b.past && b.kind === 'lm' && MOSQUE_K.includes(b.key) && b.x + b.w < hero.x && state === 'play') { b.past = 1; passed++; } }); while (street.length && street[0].x + street[0].w + 40 < -20) street.shift(); fillStreet();
   skyline.forEach(b => b.x -= dx * .32); while (skyline.length && skyline[0].x + skyline[0].w < -50) skyline.shift(); fillSkyline();
   cars.forEach(c => c.x += c.v * dt - dx * .92); cars = cars.filter(c => c.x > -260 && c.x < W + 300);
   if ((nextCar -= dt) <= 0) { spawnCar(); nextCar = 1.2 + Math.random() * 2.6; }
@@ -246,7 +255,7 @@ function update(dt) {
     if (hero.thrust) for (let i = 0; i < 2; i++) steam.push({ x: nz[0] + (Math.random() - .5) * 3, y: nz[1], vx: -speed * .35 - 30 - Math.random() * 40, vy: 150 + Math.random() * 90, r: 2.5 + Math.random() * 2, l: .5 + Math.random() * .35, l0: .8 });
     else if (Math.random() < dt * 10) steam.push({ x: nz[0], y: nz[1], vx: -speed * .3 - 10, vy: 30, r: 1.6, l: .4, l0: .4 });
   } else if (hissG) hissG.gain.setTargetAtTime(0, AC.currentTime, .06);
-  if (state === 'menu') { hero.x = W * .28; hero.y = FLOOR - 120 + Math.sin(t * 2.2) * 10; hero.run += dt * 8; hero.thrust = true; const nz = nozzle(); if (Math.random() < .7) steam.push({ x: nz[0], y: nz[1], vx: -60 - Math.random() * 40, vy: 140 + Math.random() * 60, r: 2.5 + Math.random() * 2, l: .5, l0: .7 }); }
+  if (state === 'menu') { hero.x = -200; hero.y = FLOOR; }
   if (hero.dead) {
     deadT += dt; hero.vy += 900 * dt; hero.y += hero.vy * dt; hero.x += (hero.vx - speed) * dt * .25; hero.vx *= Math.pow(.4, dt);
     hero.rot += dt * (hero.bounce < 2 ? 9 : 0);
@@ -279,7 +288,7 @@ function update(dt) {
   steam.forEach(p => { p.x += p.vx * dt; p.y += p.vy * dt; p.vy *= Math.pow(.25, dt); p.vx *= Math.pow(.6, dt); p.r += dt * 16; p.l -= dt; if (p.y > FLOOR + 4) { p.y = FLOOR + 4; p.vy = -p.vy * .2; p.vx -= 40 * dt * 10; } });
   steam = steam.filter(p => p.l > 0);
   sparks.forEach(p => { p.x += p.vx * dt - dx * .3; p.y += p.vy * dt; p.vy += 300 * dt; p.l -= dt; }); sparks = sparks.filter(p => p.l > 0);
-  if (state === 'play' || state === 'dead') { $('dist').textContent = Math.floor(dist / 10) + 'm'; $('coins').textContent = coins; }
+  if (state === 'play' || state === 'dead') { $('dist').textContent = Math.floor(dist / 10) + 'm'; $('coins').textContent = '£' + coins; }
 }
 function nozzle() { const c = Math.cos(hero.rot), s = Math.sin(hero.rot), lx = -14 * HS, ly = -16 * HS; return [hero.x + lx * c - ly * s, hero.y + lx * s + ly * c]; }
 
@@ -350,7 +359,7 @@ function draw() {
 }
 
 function drawHero() {
-  if (!heroImg.complete) return;
+  if (!heroImg.complete || state === 'menu') return;
   let f;
   if (hero.dead) f = FR('glide0_ko');
   else if (state === 'menu') f = FR('fly' + (Math.floor(t * 9) % 3) + '_effort');
@@ -428,22 +437,67 @@ function drawRocket(o) {
 }
 
 /* ---------------- flow ---------------- */
-function start() { audio(); if (AC && AC.state === 'suspended') AC.resume(); reset(); state = 'intro'; hero.x = -30; $('menu').classList.add('hide'); $('over').classList.add('hide'); $('hud').style.display = 'block'; }
+const mosName = () => (MOSQUES.find(m => m[0] === myMosque) || [, 'your masjid'])[1];
+function toast(msg) { const t2 = $('toast'); t2.textContent = msg; t2.classList.remove('hide'); clearTimeout(toast.t); toast.t = setTimeout(() => t2.classList.add('hide'), 2200); }
+function thumb(cnv, key) {   // a masjid drawn small for the picker / the home tile
+  const v = buildingCanvas('lm', key); if (!v) return; const o = cnv.getContext('2d'); o.clearRect(0, 0, cnv.width, cnv.height);
+  const k = Math.min(cnv.width * .94 / v.c.width, cnv.height * .9 / v.c.height); o.imageSmoothingQuality = 'high';
+  o.drawImage(v.c, (cnv.width - v.c.width * k) / 2, cnv.height - v.c.height * k - 2, v.c.width * k, v.c.height * k);
+}
+function refreshHome() {
+  $('hBest').textContent = best + 'm'; $('hBank').textContent = '£' + bank.toLocaleString('en-GB');
+  $('mosName').textContent = myMosque ? mosName() : 'Pick one'; $('mineName').textContent = mosName();
+  if (myMosque) thumb($('mosThumb'), myMosque);
+}
+function openPick() {
+  const L = $('mlist'); L.innerHTML = '';
+  MOSQUES.forEach(([k, n]) => { const b = document.createElement('button'); b.className = 'mcard' + (k === myMosque ? ' on' : '');
+    const c = document.createElement('canvas'); c.width = 320; c.height = 200; b.appendChild(c); b.appendChild(document.createTextNode(n));
+    b.addEventListener('pointerdown', e => { e.stopPropagation(); myMosque = k; try { localStorage.setItem('jd_mosque', k); } catch (e2) {} [...L.children].forEach(x => x.classList.remove('on')); b.classList.add('on'); refreshHome(); street = []; skyline = []; fillStreet(); fillSkyline(); });
+    L.appendChild(b); setTimeout(() => thumb(c, k), 0); });
+  $('pick').classList.remove('hide');
+}
+function share(txt) {
+  const data = { title: 'Jummah Dash', text: txt, url: location.href.split('#')[0] };
+  if (navigator.share) navigator.share(data).catch(() => {});
+  else { try { navigator.clipboard.writeText(txt + ' ' + data.url); toast('Link copied'); } catch (e) { toast(data.url); } }
+}
+function start() {
+  if (!myMosque) { openPick(); return; }
+  audio(); if (AC && AC.state === 'suspended') AC.resume();
+  street = []; skyline = []; reset(); passed = 0; state = 'intro'; hero.x = -30;
+  ['home', 'over', 'pick', 'how'].forEach(id => $(id).classList.add('hide')); $('hud').style.display = 'block';
+}
+function goHome() { state = 'menu'; ['over'].forEach(id => $(id).classList.add('hide')); $('hud').style.display = 'none'; $('home').classList.remove('hide'); refreshHome(); }
 function showOver() { const m = Math.floor(dist / 10); if (m > best) { best = m; try { localStorage.setItem('jd_best', best); } catch (e) {} }
-  $('oD').textContent = m + 'm'; $('oC').textContent = coins; $('oB').textContent = best + 'm';
+  bank += coins; try { localStorage.setItem('jd_bank', bank); } catch (e) {}
+  $('oD').textContent = m + 'm'; $('oC').textContent = '£' + coins; $('oB').textContent = best + 'm';
   $('ovT').textContent = ['MISSED THE KHUTBAH!', 'SO CLOSE, AKHI!', 'THE IMAM STARTED!', 'BACK OF THE SAFF FOR YOU'][Math.random() * 4 | 0];
+  $('ovWhy').textContent = `Still no sign of ${mosName()}…` + (passed ? ` You flew past ${passed} other masjid${passed > 1 ? 's' : ''}.` : '');
   $('over').classList.remove('hide'); }
-$('menu').addEventListener('pointerdown', e => { e.preventDefault(); start(); holding = false; });
-$('again').addEventListener('pointerdown', e => { e.preventDefault(); e.stopPropagation(); start(); });
-$('snd').addEventListener('pointerdown', e => { e.stopPropagation(); sndOn = !sndOn; $('snd').textContent = sndOn ? '🔊' : '🔇'; if (!sndOn && hissG) hissG.gain.value = 0; });
-const down = e => { if (e.target.closest && e.target.closest('.btn,.panel')) return; holding = true; audio(); };
-window.addEventListener('pointerdown', down); window.addEventListener('touchstart', e => { if (e.target.closest && e.target.closest('.btn,.panel')) return; e.preventDefault(); holding = true; audio(); }, { passive: false }); window.addEventListener('touchend', e => { if (!e.touches.length) holding = false; }); window.addEventListener('touchcancel', () => holding = false); window.addEventListener('pointerup', () => holding = false); window.addEventListener('pointercancel', () => holding = false);
+const tap = (id, fn) => $(id).addEventListener('pointerdown', e => { e.preventDefault(); e.stopPropagation(); fn(e); });
+tap('home', e => { if (e.target.closest('.tile')) return; start(); });
+tap('bMos', openPick); tap('pickClose', () => $('pick').classList.add('hide'));
+tap('bHow', () => $('how').classList.remove('hide')); tap('howClose', () => $('how').classList.add('hide'));
+tap('bShare', () => share('Late for Jummah? Play Jummah Dash – an SMR Original 🕌💨'));
+tap('again', start); tap('ovHome', goHome);
+tap('ovShare', () => share(`I flew ${Math.floor(dist / 10)}m and grabbed £${coins} trying to get to Jummah 😂 Beat that on Jummah Dash:`));
+tap('snd', () => { sndOn = !sndOn; $('snd').textContent = sndOn ? '🔊' : '🔇'; if (!sndOn && hissG) hissG.gain.value = 0; });
+const noHold = el => el && el.closest && el.closest('.btn,#home,.sheet,#over');
+window.addEventListener('pointerdown', e => { if (noHold(e.target)) return; holding = true; audio(); });
+window.addEventListener('touchstart', e => { if (noHold(e.target)) return; e.preventDefault(); holding = true; audio(); }, { passive: false });
+window.addEventListener('touchend', e => { if (!e.touches.length) holding = false; }); window.addEventListener('touchcancel', () => holding = false);
+window.addEventListener('pointerup', () => holding = false); window.addEventListener('pointercancel', () => holding = false);
 window.addEventListener('keydown', e => { if (e.code === 'Space' || e.code === 'ArrowUp') { e.preventDefault(); if (state === 'menu') start(); else if (state === 'dead' && !$('over').classList.contains('hide')) start(); else holding = true; } });
 window.addEventListener('keyup', e => { if (e.code === 'Space' || e.code === 'ArrowUp') holding = false; });
 document.addEventListener('gesturestart', e => e.preventDefault());
-window.addEventListener('resize', resize);
+window.addEventListener('resize', resize); window.addEventListener('orientationchange', () => setTimeout(resize, 200));
+// steam puffs out of the cooker on the home-screen art
+setInterval(() => { if (state !== 'menu' || document.hidden) return; const w = $('heroWrap'); const r = w.getBoundingClientRect(); if (!r.width) return;
+  for (const [fx, fy] of [[.13, .8], [.27, .8]]) { const p = document.createElement('div'); p.className = 'puff'; const sz = 10 + Math.random() * 14;
+    p.style.cssText = `width:${sz}px;height:${sz}px;left:${w.offsetLeft + w.offsetWidth * fx - sz / 2}px;top:${w.offsetTop + w.offsetHeight * fy}px`; w.parentNode.appendChild(p); setTimeout(() => p.remove(), 1150); } }, 140);
 
-resize(); seedStars(); reset(); hero.x = W * .28;
+resize(); seedStars(); reset(); refreshHome(); if (myMosque) setTimeout(refreshHome, 300);
 let last = performance.now();
 function frame(now) { const dt = Math.min(.05, (now - last) / 1000); last = now; update(dt); draw(); requestAnimationFrame(frame); }
 requestAnimationFrame(frame);

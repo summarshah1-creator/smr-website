@@ -12,55 +12,126 @@
 @font-face{font-family:Silk;font-weight:700;src:url(silkb.woff2)}
 @font-face{font-family:PS;src:url(ps2p.woff2)}
 @font-face{font-family:Amiri;font-weight:700;src:url(amiri.woff2)}
-html,body{margin:0;height:100%;background:#120c26;overflow:hidden;overscroll-behavior:none;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
-canvas{position:fixed;inset:0;width:100vw;height:100vh;display:block}
-#ui{position:fixed;inset:0;pointer-events:none;font-family:PS,monospace;color:#fff}
-.hud{position:absolute;top:max(10px,env(safe-area-inset-top));left:max(14px,env(safe-area-inset-left));font-size:20px;text-shadow:3px 3px 0 #160c28;display:none}
-.hud .c{font-size:13px;margin-top:8px;color:#ffd75a;display:flex;align-items:center;gap:6px}
-.hud .c i{display:inline-block;width:14px;height:14px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#fff3b0,#e9b52b 55%,#a8761a);box-shadow:0 0 0 2px #6b4a12}
-.top-r{position:absolute;top:max(10px,env(safe-area-inset-top));right:max(14px,env(safe-area-inset-right));display:flex;gap:8px;pointer-events:auto}
-.btn{font-family:PS,monospace;border:0;border-radius:10px;padding:8px 10px;font-size:12px;background:rgba(18,12,38,.7);color:#fff;box-shadow:0 0 0 2px rgba(255,255,255,.25) inset;cursor:pointer}
-.panel{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:radial-gradient(ellipse at center,rgba(14,8,32,.25),rgba(14,8,32,.75));pointer-events:auto}
-.panel img.logo{width:min(62vw,620px);filter:drop-shadow(0 8px 14px rgba(0,0,0,.5))}
-.bdg{width:min(34vw,280px);border-radius:40px}
-.badge{font-size:11px;letter-spacing:3px;color:#ffd75a;background:#151226;border:3px solid #ffd75a;border-radius:30px;padding:8px 16px}
-.badge b{color:#fff;font-family:Silk;font-weight:700;font-size:16px;letter-spacing:1px;margin:0 6px}
-.big{font-size:clamp(14px,2.6vw,22px);color:#ffd75a;text-shadow:3px 3px 0 #160c28;animation:pulse 1s infinite}
-.small{font-size:11px;color:#e8e4ff;opacity:.85;text-align:center;line-height:1.8}
-@keyframes pulse{50%{opacity:.45}}
-.card{background:rgba(18,12,38,.88);border:3px solid #ffd75a;border-radius:16px;padding:18px 26px;text-align:center;min-width:260px}
-.card h2{margin:0 0 12px;font-size:16px;color:#ffd75a}
-.row{display:flex;justify-content:space-between;gap:30px;font-size:13px;margin:8px 0}
-.go{margin-top:14px;font-family:PS,monospace;font-size:14px;background:#2fbf4a;color:#fff;border:0;border-radius:12px;padding:14px 20px;box-shadow:0 5px 0 #1b7a2c;cursor:pointer}
+html,body{margin:0;height:100%;background:#0c0820;overflow:hidden;overscroll-behavior:none;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+/* the game is always landscape: on a phone held upright the whole stage is turned sideways */
+#stage{position:fixed;left:0;top:0;overflow:hidden;transform-origin:0 0}
+canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+#ui{position:absolute;inset:0;pointer-events:none;font-family:PS,monospace;color:#fff}
+.hud{position:absolute;top:12px;left:16px;font-size:20px;text-shadow:3px 3px 0 #160c28;display:none}
+.hud .c{font-size:15px;margin-top:9px;color:#ffd75a;display:flex;align-items:center;gap:7px}
+.coin{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#fff3b0,#e9b52b 55%,#a8761a);box-shadow:0 0 0 2px #6b4a12;color:#6b4a12;font:700 11px Silk}
+.top-r{position:absolute;top:10px;right:12px;display:flex;gap:8px;pointer-events:auto}
+.btn{font-family:PS,monospace;border:0;border-radius:10px;padding:8px 10px;font-size:12px;background:rgba(18,12,38,.72);color:#fff;box-shadow:0 0 0 2px rgba(255,255,255,.25) inset;cursor:pointer}
 .hide{display:none!important}
-#rot{position:fixed;inset:0;background:#120c26;color:#fff;font-family:PS,monospace;font-size:13px;display:none;align-items:center;justify-content:center;text-align:center;line-height:2;padding:30px;z-index:9}
-@media (orientation:portrait) and (max-width:820px){#rot{display:flex}}
+
+/* ---------- home screen ---------- */
+#home{position:absolute;inset:0;pointer-events:auto;display:grid;grid-template-columns:minmax(150px,26%) 1fr;background:linear-gradient(90deg,rgba(10,6,28,.88) 0,rgba(10,6,28,.55) 30%,rgba(10,6,28,.1) 60%,rgba(10,6,28,.35))}
+.side{display:flex;flex-direction:column;gap:7px;padding:12px 10px 12px 22px;background:repeating-linear-gradient(135deg,#ffd21f 0 12px,#1a1024 12px 24px) left/8px 100% no-repeat}
+.side .tile{font-family:PS,monospace;font-size:clamp(8px,1.25vw,12px);text-align:left;border:0;border-radius:9px;padding:9px 10px;background:linear-gradient(#3a3168,#241c48);color:#fff;box-shadow:0 3px 0 #120c26,0 0 0 2px #5a4fa0 inset;display:flex;align-items:center;justify-content:space-between;gap:8px;cursor:pointer;line-height:1.5}
+.side .tile small{font-family:Silk;font-size:10px;color:#bdb4ff}
+.side .tile.gold{background:linear-gradient(#ffcf3a,#e09a12);color:#2a1500;box-shadow:0 3px 0 #8a5300,0 0 0 2px #fff0a8 inset}
+.side .tile.gold small{color:#5a3300}
+.side .tile.lock{opacity:.55}
+.side .mos{display:flex;align-items:center;gap:8px}
+.side .mos canvas{position:static;width:46px;height:31px;border-radius:6px;background:linear-gradient(#ffc27c,#f08c6e);flex:none}
+.main{position:relative}
+.title{position:absolute;left:4%;top:4%;width:min(56%,560px);display:flex;flex-direction:column;align-items:flex-start;gap:6px}
+.logo{width:100%;filter:drop-shadow(0 8px 12px rgba(0,0,0,.55))}
+.badge{font-family:Silk;font-weight:700;font-size:12px;letter-spacing:2px;color:#ffd75a;background:#151226;border:2px solid #ffd75a;border-radius:20px;padding:4px 12px}
+.tag{margin-left:2%;font-size:14px;color:#fff;text-shadow:3px 3px 0 #160c28}
+.tag b{color:#ffd75a}
+.heroWrap{position:absolute;right:2%;bottom:3%;height:84%;aspect-ratio:560/750;animation:bob 2.2s ease-in-out infinite}
+.hero{width:100%;height:100%;filter:drop-shadow(10px 14px 10px rgba(0,0,0,.45))}
+@keyframes bob{50%{transform:translateY(-4%) rotate(-1.5deg)}}
+.puff{position:absolute;border-radius:50%;background:#fff;pointer-events:none;animation:puff 1.1s linear forwards}
+@keyframes puff{from{opacity:.9}to{transform:translate(-50px,80px) scale(2.8);opacity:0}}
+.stats{position:absolute;top:10px;right:64px;display:flex;gap:8px;font-size:clamp(9px,1.3vw,13px)}
+.stats div{background:rgba(18,12,38,.8);border-radius:9px;padding:7px 10px;box-shadow:0 0 0 2px rgba(255,255,255,.2) inset;display:flex;align-items:center;gap:7px}
+.stats .gold{color:#ffd75a}
+.play{position:absolute;left:5.5%;bottom:9%;font-size:clamp(11px,1.9vw,19px);color:#ffd75a;text-shadow:3px 3px 0 #160c28;animation:pulse 1s infinite}
+.mine{position:absolute;left:5.5%;bottom:calc(9% + 34px);font-family:Silk;font-size:clamp(10px,1.4vw,14px);color:#e8e4ff;text-shadow:2px 2px 0 #160c28}
+.mine b{color:#7dffa0}
+@keyframes pulse{50%{opacity:.4}}
+
+/* ---------- pick your masjid ---------- */
+.sheet{position:absolute;inset:0;background:rgba(8,4,22,.84);display:flex;align-items:center;justify-content:center;pointer-events:auto}
+.sheet .box{background:linear-gradient(#2a2252,#171236);border:3px solid #ffd75a;border-radius:18px;padding:16px 18px;max-width:90%;text-align:center}
+.sheet h2{margin:0 0 6px;font-size:clamp(12px,1.8vw,17px);color:#ffd75a}
+.sheet p{margin:0 0 12px;font-family:Silk;font-size:clamp(10px,1.3vw,13px);color:#d9d3ff;line-height:1.45}
+.mlist{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.mcard{width:clamp(120px,22vw,190px);border:0;border-radius:12px;padding:8px;background:#2f2760;color:#fff;font-family:Silk;font-weight:700;font-size:clamp(10px,1.3vw,13px);box-shadow:0 0 0 2px #5a4fa0 inset;cursor:pointer}
+.mcard.on{background:#1f7a3a;box-shadow:0 0 0 3px #7dffa0 inset}
+.mcard canvas{position:static;width:100%;height:auto;aspect-ratio:16/10;border-radius:8px;background:linear-gradient(#ffc27c,#f08c6e);display:block;margin-bottom:6px}
+
+/* ---------- game over ---------- */
+#over{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at center,rgba(14,8,32,.25),rgba(14,8,32,.78));pointer-events:auto}
+.card{background:rgba(18,12,38,.92);border:3px solid #ffd75a;border-radius:16px;padding:16px 24px;text-align:center;min-width:280px}
+.card h2{margin:0 0 6px;font-size:16px;color:#ffd75a}
+.card .why{font-family:Silk;font-size:13px;color:#d9d3ff;margin-bottom:10px}
+.row{display:flex;justify-content:space-between;gap:30px;font-size:13px;margin:8px 0}
+.go{margin-top:12px;font-family:PS,monospace;font-size:12px;background:#2fbf4a;color:#fff;border:0;border-radius:12px;padding:12px 16px;box-shadow:0 5px 0 #1b7a2c;cursor:pointer}
+.go.alt{background:#3a3168;box-shadow:0 5px 0 #1a1438}
+#toast{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);background:#151226;border:2px solid #ffd75a;border-radius:12px;padding:8px 14px;font-family:Silk;font-size:13px;color:#fff;pointer-events:none}
 </style>
 </head>
 <body>
+<div id="stage">
 <canvas id="cv"></canvas>
 <div id="ui">
-  <div class="hud" id="hud"><div id="dist">0m</div><div class="c"><i></i><span id="coins">0</span></div></div>
+  <div class="hud" id="hud"><div id="dist">0m</div><div class="c"><span class="coin">£</span><span id="coins">£0</span></div></div>
   <div class="top-r"><button class="btn" id="snd">🔊</button></div>
-  <div class="panel" id="menu">
-    <img class="bdg" src="art/badge.png" alt="An SMR Original">
-    <img class="logo" src="art/logo.png" alt="Jummah Dash">
-    <div class="big">TAP TO START</div>
-    <div class="small">Hold to fly · let go to drop<br>Late for Jummah. Grab the £1 coins, dodge the sparks.</div>
-  </div>
-  <div class="panel hide" id="over">
-    <div class="card">
-      <h2 id="ovT">MISSED THE KHUTBAH!</h2>
-      <div class="row"><span>Distance</span><span id="oD">0m</span></div>
-      <div class="row"><span>£1 coins</span><span id="oC">0</span></div>
-      <div class="row"><span>Best</span><span id="oB">0m</span></div>
-      <button class="go" id="again">RUN AGAIN</button>
+
+  <div id="home">
+    <div class="side">
+      <button class="tile gold" id="bMos"><span class="mos"><canvas id="mosThumb" width="92" height="62"></canvas><span>MY MASJID<br><small id="mosName">Pick one</small></span></span></button>
+      <button class="tile" id="bShare">SHARE <small>with friends</small></button>
+      <button class="tile" id="bHow">HOW TO PLAY</button>
+      <button class="tile lock">POWER-UPS <small>soon</small></button>
+      <button class="tile lock">COSTUMES <small>soon</small></button>
+      <button class="tile lock">MISSIONS <small>soon</small></button>
+    </div>
+    <div class="main">
+      <div class="title"><div class="badge">AN SMR ORIGINAL</div>
+      <img class="logo" src="art/logo.webp" alt="Jummah Dash">
+      <div class="tag">LATE FOR <b>JUMMAH</b>. AGAIN.</div></div>
+      <div class="heroWrap" id="heroWrap"><img class="hero" src="art/hero_hd.webp" alt=""></div>
+      <div class="stats"><div>BEST <span id="hBest">0m</span></div><div class="gold"><span class="coin">£</span><span id="hBank">£0</span></div></div>
+      <div class="mine">Heading to <b id="mineName">your masjid</b></div>
+      <div class="play">TOUCH ANYWHERE TO PLAY</div>
     </div>
   </div>
+
+  <div class="sheet hide" id="pick">
+    <div class="box">
+      <h2>WHICH IS YOUR MASJID?</h2>
+      <p>Jummah's at your masjid. On the way you'll fly past every other masjid in Luton…</p>
+      <div class="mlist" id="mlist"></div>
+      <button class="go alt" id="pickClose">DONE</button>
+    </div>
+  </div>
+  <div class="sheet hide" id="how">
+    <div class="box">
+      <h2>HOW TO PLAY</h2>
+      <p>Hold anywhere to fire the pressure cooker and fly up. Let go to drop.<br>Grab the £1 coins. Dodge the sparking cables and the fireworks (watch for the ! on the right).<br>Get to Jummah before the khutbah starts. Good luck with that.</p>
+      <button class="go alt" id="howClose">GOT IT</button>
+    </div>
+  </div>
+
+  <div id="over" class="hide">
+    <div class="card">
+      <h2 id="ovT">MISSED THE KHUTBAH!</h2>
+      <div class="why" id="ovWhy"></div>
+      <div class="row"><span>Distance</span><span id="oD">0m</span></div>
+      <div class="row"><span>Collected</span><span id="oC">£0</span></div>
+      <div class="row"><span>Best</span><span id="oB">0m</span></div>
+      <button class="go" id="again">RUN AGAIN</button> <button class="go alt" id="ovShare">SHARE</button> <button class="go alt" id="ovHome">HOME</button>
+    </div>
+  </div>
+  <div id="toast" class="hide"></div>
 </div>
-<div id="rot">Turn your phone sideways<br>to play Jummah Dash ↻</div>
-<script src="landmarks.js?v=1795271746"></script>
-<script src="vehicles.js?v=1795271746"></script>
-<script src="game.js?v=1795271746"></script>
+</div>
+<script src="landmarks.js?v=1795280476"></script>
+<script src="vehicles.js?v=1795280476"></script>
+<script src="game.js?v=1795280476"></script>
 </body>
 </html>
