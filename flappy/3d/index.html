@@ -84,10 +84,11 @@ const stoneTex = tex(256, 256, (x, w, h) => { x.fillStyle = '#e9e3d4'; x.fillRec
 const textTex = (txt, bg, fg, font, w = 512, h = 128, sub) => tex(w, h, (x) => { x.fillStyle = bg; x.fillRect(0, 0, w, h); x.fillStyle = fg; x.font = font; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(txt, w / 2, h / 2 + (sub ? -10 : 2)); if (sub) { x.font = '22px sans-serif'; x.fillText(sub, w / 2, h - 22); } });
 const box = (w, h, d, m, x = 0, y = 0, z = 0, g) => { const b = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m); b.position.set(x, y, z); b.castShadow = b.receiveShadow = true; if (g) g.add(b); return b; };
 const cyl = (rt, rb, h, m, x, y, z, g, seg = 16, open = false, ts = 0, tl = Math.PI * 2) => { const c = new THREE.Mesh(new THREE.CylinderGeometry(rt, rb, h, seg, 1, open, ts, tl), m); c.position.set(x, y, z); c.castShadow = c.receiveShadow = true; if (g) g.add(c); return c; };
-const GLASS = mat(0x23303c, { roughness: .15, metalness: .6 }), GLASSL = mat(0x7fa4c4, { roughness: .1, metalness: .5 }), WHITE = mat(0xf4f2ec), DARK = mat(0x26252c), FRAME = mat(0xf7f5ef, { roughness: .6 });
+const GLASS = mat(0x2a3846, { roughness: .12, metalness: .2 }), GLASSL = mat(0x7fa4c4, { roughness: .1, metalness: .5 }), WHITE = mat(0xf4f2ec), DARK = mat(0x26252c), FRAME = mat(0xf7f5ef, { roughness: .6 });
 // a window set into a wall: dark glass recessed, white frame, sill that sticks out
 function windowSet(g, x, y, w, h, z = 0, sill = true, bars = 1) {
-  box(w + .16, h + .16, .1, FRAME, x, y, z + .02, g); box(w, h, .12, GLASS, x, y, z - .04, g);
+  box(w, h, .06, GLASS, x, y, z + .01, g);   // glass, with a white frame round it (four strips, not a solid board)
+  box(w + .16, .1, .12, FRAME, x, y + h / 2 + .03, z + .03, g); box(w + .16, .1, .12, FRAME, x, y - h / 2 - .03, z + .03, g); box(.1, h, .12, FRAME, x - w / 2 - .03, y, z + .03, g); box(.1, h, .12, FRAME, x + w / 2 + .03, y, z + .03, g);
   for (let i = 1; i < bars + 1; i++) box(.06, h, .14, FRAME, x - w / 2 + i * w / (bars + 1), y, z + .01, g);
   box(w, .06, .14, FRAME, x, y + h * .18, z + .01, g);
   if (sill) box(w + .3, .1, .3, mat(0xe4ded2), x, y - h / 2 - .1, z + .12, g);
@@ -245,6 +246,104 @@ BUILD.shops = () => { const g = new THREE.Group(), n = 3, sw = 6, W = n * sw, H 
     box(sw + .02, .3, 10.2, mat(0x6b6158), x0, H + .1, -5, g); }
   return { g, w: W };
 };
+/* ================= Leagrave Road (B579), south of the Marsh Road lights, modelled from the owner's Street View walk =================
+   left side: 1930s semis (render over brick, two-storey square bays, hipped tiled roofs, block-paved drives with low brick walls)
+   right side: car sales lots, big grey sheds (car showroom, car wash, carpets, MOT centre), a fuel station; the railway behind */
+function hipRoof(W, D, R, m, over = .35) {   // hipped roof: rectangle base at y=0 (x -W/2..W/2, z 0..-D), ridge along x
+  const w = W / 2 + over, z0 = over, z1 = -D - over, zm = -D / 2, rx = Math.max(0, w - (D / 2 + over));
+  const v = [[-w, 0, z0], [w, 0, z0], [w, 0, z1], [-w, 0, z1], [-rx, R, zm], [rx, R, zm]];
+  const tri = [[0, 1, 5], [0, 5, 4], [2, 3, 4], [2, 4, 5], [1, 2, 5], [3, 0, 4]], pos = [], uv = [];
+  tri.forEach(t => t.forEach(i => { pos.push(...v[i]); uv.push(v[i][0] * .5, (v[i][2] + v[i][1]) * .5); }));
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2)); g.computeVertexNormals();
+  const me = new THREE.Mesh(g, m); me.castShadow = me.receiveShadow = true; return me; }
+const roofTex = (c) => new THREE.MeshStandardMaterial({ roughness: .75, map: tex(256, 256, (x, w, h) => { x.fillStyle = c; x.fillRect(0, 0, w, h);
+  for (let r = 0; r < 16; r++) for (let k = 0; k < 8; k++) { x.fillStyle = shade(c, (Math.random() - .5) * 26); x.fillRect(k * 32 + (r % 2) * 16 + 1, r * 16 + 1, 30, 13); x.fillStyle = 'rgba(0,0,0,.35)'; x.fillRect(k * 32 + (r % 2) * 16, r * 16 + 13, 32, 3); } }, 1, 1) });
+const ROOF_BROWN = roofTex('#7a4a3a'), ROOF_GREY = roofTex('#5a5c62'), ROOF_RED = roofTex('#93503c');
+const renderM = (c) => new THREE.MeshStandardMaterial({ roughness: .95, map: tex(128, 128, (x, w, h) => { x.fillStyle = c; x.fillRect(0, 0, w, h); for (let i = 0; i < 2500; i++) { x.fillStyle = `rgba(${Math.random() < .5 ? '0,0,0' : '255,255,255'},${Math.random() * .09})`; x.fillRect(Math.random() * w, Math.random() * h, 1.5, 1.5); } }, 2, 2) });
+const RENDER = [renderM('#f2efe8'), renderM('#e8e2d6'), renderM('#d7d4cd'), renderM('#efe6d2')];
+const LBRICK = [new THREE.MeshStandardMaterial({ map: brickTex('#9a4a34', '#cbbcaa'), roughness: .95 }), new THREE.MeshStandardMaterial({ map: brickTex('#b0603e', '#d0c2b0'), roughness: .95 }), new THREE.MeshStandardMaterial({ map: brickTex('#8e5644', '#c7b9a7'), roughness: .95 })];
+const PAVING = new THREE.MeshStandardMaterial({ roughness: .95, map: tex(128, 128, (x, w, h) => { x.fillStyle = '#9b8f84'; x.fillRect(0, 0, w, h); for (let r = 0; r < 16; r++) for (let k = 0; k < 8; k++) { x.fillStyle = shade(['#a89b8c', '#8f7f72', '#b3a596'][(r + k) % 3], (Math.random() - .5) * 18); x.fillRect(k * 16 + (r % 2) * 8 + 1, r * 8 + 1, 14, 6); } }, 3, 3) });
+const TARMAC = new THREE.MeshStandardMaterial({ roughness: .95, map: tex(256, 256, (x, w, h) => { x.fillStyle = '#4d5057'; x.fillRect(0, 0, w, h); noise(x, w, h, 7000, .12); x.fillStyle = '#e8e6df'; for (let i = 0; i < 8; i++) x.fillRect(i * 32, 0, 3, 90); }, 3, 3) });
+const CLAD = (c) => new THREE.MeshStandardMaterial({ roughness: .55, metalness: .3, map: tex(128, 128, (x, w, h) => { x.fillStyle = c; x.fillRect(0, 0, w, h); for (let i = 0; i < w; i += 8) { x.fillStyle = 'rgba(255,255,255,.18)'; x.fillRect(i, 0, 2, h); x.fillStyle = 'rgba(0,0,0,.18)'; x.fillRect(i + 5, 0, 2, h); } noise(x, w, h, 600, .05); }, 8, 2) });
+const CLAD_GREY = CLAD('#b9bdc2'), CLAD_BLUE = CLAD('#244f9e'), CLAD_WHITE = CLAD('#e8e9ea');
+const signTex = (txt, bg, fg, sub) => tex(512, 96, (x, w, h) => { x.fillStyle = bg; x.fillRect(0, 0, w, h); x.fillStyle = fg; x.textAlign = 'center'; x.textBaseline = 'middle'; x.font = 'bold 46px sans-serif'; x.fillText(txt, w / 2, sub ? 38 : 50); if (sub) { x.font = 'bold 20px sans-serif'; x.fillText(sub, w / 2, 76); } }, 1, 1);
+const signPanel = (g, w, h, t, x, y, z) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshStandardMaterial({ map: t, roughness: .5 })); m.position.set(x, y, z); g.add(m); return m; };
+const binG = (g, x, z, c) => { box(.6, .95, .7, mat(c, { roughness: .6 }), x, .48, z, g); box(.66, .06, .76, mat(c), x, .98, z, g); };
+
+// one 1930s semi-detached pair: mirror-image houses, outer bays, doors in the middle, hipped roof, drives in front
+BUILD.semi = () => { const g = new THREE.Group(), HW = 6.4, W = HW * 2, H = 5.6, D = 9, SET = 6;
+  const r = Math.random, up = RENDER[(r() * RENDER.length) | 0], allRender = r() < .35, lo = allRender ? up : LBRICK[(r() * 3) | 0], roof = [ROOF_BROWN, ROOF_GREY, ROOF_RED][(r() * 3) | 0];
+  const z0 = -SET;   // house front line, the drive is in front of it
+  box(W, 2.8, D, lo, 0, 1.4, z0 - D / 2, g); box(W, H - 2.8, D, up, 0, 2.8 + (H - 2.8) / 2, z0 - D / 2, g);
+  box(W + .1, .12, D + .1, mat(0xe6e0d4), 0, 2.84, z0 - D / 2, g);                                  // band between the floors
+  const R = hipRoof(W, D, 3.4, roof); R.position.set(0, H, z0); g.add(R);
+  box(.9, 1.4, .9, lo, -1.4, H + 2.6, z0 - D / 2, g); box(.9, 1.4, .9, lo, 1.4, H + 2.6, z0 - D / 2, g); [-1.4, 1.4].forEach(cx => { box(1.05, .14, 1.05, mat(0x7a6a5e), cx, H + 3.35, z0 - D / 2, g); cyl(.12, .14, .45, mat(0xa45a3a), cx, H + 3.6, z0 - D / 2, g, 8); });
+  if (r() < .3) { box(3.2, 1.8, 2.4, up, (r() < .5 ? -1 : 1) * 3, H + 1.2, z0 - D * .62, g); windowSet(g, (r() < .5 ? -1 : 1) * 3, H + 1.2, 1.6, 1, z0 - D * .62 + 1.21, false, 1); }   // loft conversion dormer
+  [-1, 1].forEach(sd => { const hx = sd * HW / 2, bx = sd * (HW - 1.6);
+    // two-storey square bay with its own little hipped roof
+    box(2.8, 2.8, .9, lo, bx, 1.4, z0 + .45, g); box(2.8, H - 2.8 - .2, .9, up, bx, 2.8 + (H - 3) / 2, z0 + .45, g);
+    windowSet(g, bx, 1.55, 2.3, 1.45, z0 + .92, true, 2); windowSet(g, bx, 4.15, 2.3, 1.35, z0 + .92, true, 2);
+    [-1, 1].forEach(e => { const sw = box(.08, 1.3, .55, GLASS, bx + e * 1.41, 1.55, z0 + .45, g); const sw2 = box(.08, 1.2, .55, GLASS, bx + e * 1.41, 4.15, z0 + .45, g); });
+    const br = hipRoof(2.8, .9, .45, roof, .15); br.position.set(bx, H - .2, z0 + .9); g.add(br);
+    const tb = hipRoof(2.8, .9, .3, roof, .1); tb.position.set(bx, 2.82, z0 + .9); g.add(tb);              // tiled band over the ground-floor bay
+    // front door with a little porch canopy, upstairs landing window
+    const dx = sd * 1.35; box(1.05, 2.2, .15, mat([0xf4f4f0, 0x1f2f4e, 0x5a1c1c, 0x2d4a33][(r() * 4) | 0], { roughness: .4 }), dx, 1.1, z0 + .02, g); box(1.6, .12, .9, mat(0xe9e5dc), dx, 2.45, z0 + .45, g);
+    windowSet(g, dx, 4.2, .8, 1.1, z0 + .02, true, 0);
+    // drive: block paving, low brick wall with a gap, a car on it, bins
+    const dr = new THREE.Mesh(new THREE.PlaneGeometry(HW, SET), PAVING); dr.rotation.x = -Math.PI / 2; dr.position.set(hx, .03, -SET / 2); dr.receiveShadow = true; g.add(dr);
+    box(.25, .75, SET - .3, LBRICK[0], sd * (HW - .12), .37, -SET / 2, g);
+    box(HW - 3.4, .7, .25, LBRICK[0], hx + sd * 1.5, .35, -.15, g); box(HW - 3.3, .08, .32, mat(0xd8d0c2), hx + sd * 1.5, .72, -.15, g);
+    if (r() < .75) { const c = carG(CARC[(r() * CARC.length) | 0]); c.position.set(hx - sd * .6, .02, -SET / 2 - .2); g.add(c); }
+    binG(g, sd * (HW - .7), z0 + 1.0, [0x2f4f2f, 0x2a2a2a, 0x3a5aa0][(r() * 3) | 0]);
+    if (r() < .5) { const h = new THREE.Mesh(new THREE.BoxGeometry(HW - 3.6, .9, .7), mat(0x3f7a35, { roughness: 1 })); h.position.set(hx + sd * 1.6, .45, -.75); h.castShadow = true; g.add(h); }
+  });
+  return { g, w: W + .4 };
+};
+// car sales lot: tarmac with bay lines, rows of cars, blue railing along the pavement, feather flags, small office cabin
+BUILD.carlot = () => { const g = new THREE.Group(), W = 26 + ((Math.random() * 3) | 0) * 6, D = 22;
+  const t = new THREE.Mesh(new THREE.PlaneGeometry(W, D), TARMAC); t.rotation.x = -Math.PI / 2; t.position.set(0, .03, -D / 2); t.receiveShadow = true; g.add(t);
+  for (let row = 0; row < 3; row++) for (let x = -W / 2 + 1.6; x < W / 2 - 1; x += 2.5) { if (Math.random() < .12) continue; const c = carG(CARC[(Math.random() * CARC.length) | 0]); c.rotation.y = Math.PI / 2 + (row % 2 ? Math.PI : 0); c.position.set(x, .02, -3 - row * 6.5); g.add(c); }
+  const rail = mat(0x2c5fa8, { metalness: .5, roughness: .4 }); box(W, .07, .07, rail, 0, .95, -.2, g); box(W, .07, .07, rail, 0, .5, -.2, g); for (let x = -W / 2; x <= W / 2; x += 1.8) box(.08, 1, .08, rail, x, .5, -.2, g);
+  [-W / 2 + 2, W / 2 - 2].forEach((fx, i) => { cyl(.04, .04, 4.6, mat(0xdddddd, { metalness: .6 }), fx, 2.3, -.8, g, 6); const f = new THREE.Mesh(new THREE.PlaneGeometry(.6, 2), mat(i ? 0xd42b2b : 0x1f4fb8, { side: THREE.DoubleSide, roughness: .6 })); f.position.set(fx + .42, 3.0, -.8); f.rotation.y = .3; g.add(f); });
+  const ox = W / 2 - 4; box(6, 2.8, 3, CLAD_WHITE, ox, 1.4, -D + 2.5, g); windowSet(g, ox, 1.6, 3, 1.1, -D + 4.02, false, 1); const s = signPanel(g, 5.6, .9, signTex('CAR SALES', '#1f4fb8', '#fff'), ox, 3.25, -D + 4.02);
+  const hd = new THREE.Mesh(new THREE.BoxGeometry(W, 1.4, 1), mat(0x3f7a35, { roughness: 1 })); hd.position.set(0, .7, -D + .5); hd.castShadow = true; g.add(hd);
+  return { g, w: W };
+};
+// big grey shed: ribbed cladding, shallow pitched roof, coloured fascia with a sign, roller doors or a glazed showroom front
+const SHEDS = [['CAR SALES', 'OVER 120 CARS IN STOCK', '#1f4fb8', CLAD_GREY, 'show'], ['HAND CAR WASH', 'VALETING', '#1d3f8f', CLAD_BLUE, 'wash'], ['CARPETS & FURNITURE', '', '#244f9e', CLAD_GREY, 'doors'], ['MOT CENTRE', 'SERVICING · TYRES', '#c8202a', CLAD_WHITE, 'doors'], ['RECOVERY & TOWING', '24 HOURS', '#e0a020', CLAD_GREY, 'yard']];
+let shedI = 0;
+BUILD.shed = () => { const g = new THREE.Group(), [title, sub, col, clad, kind] = SHEDS[shedI++ % SHEDS.length], W = 30, H = 8, D = 26, SET = 9;
+  const fz = -SET; box(W, H, D, clad, 0, H / 2, fz - D / 2, g);
+  const sh = new THREE.Shape(); sh.moveTo(-D / 2 - .3, 0); sh.lineTo(D / 2 + .3, 0); sh.lineTo(0, 1.6); sh.lineTo(-D / 2 - .3, 0); const rf = new THREE.Mesh(new THREE.ExtrudeGeometry(sh, { depth: W + .4, bevelEnabled: false }), mat(0x8e9298, { roughness: .5, metalness: .4 })); rf.rotation.y = Math.PI / 2; rf.position.set(-W / 2 - .2, H, fz - D / 2); rf.castShadow = true; g.add(rf);
+  box(W + .2, 1.6, .3, mat(col, { roughness: .4 }), 0, H - .9, fz + .16, g); signPanel(g, W * .6, 1.3, signTex(title, col, '#fff', sub), 0, H - .9, fz + .33);
+  if (kind === 'show') { box(W * .6, 4.6, .2, GLASSL, -W * .15, 2.5, fz + .12, g); for (let x = -W * .45; x <= W * .15; x += 2.6) box(.12, 4.6, .3, mat(0xdfe3e6, { metalness: .6 }), x, 2.5, fz + .15, g); }
+  else { const n = kind === 'wash' ? 2 : 3; for (let i = 0; i < n; i++) { const dx = -W / 2 + W / (n + 1) * (i + 1); box(5, 5, .2, mat(0x9aa1a8, { metalness: .4, roughness: .5 }), dx, 2.5, fz + .12, g); for (let y = .3; y < 5; y += .35) box(5, .05, .26, mat(0xc0c6cb, { metalness: .5 }), dx, y, fz + .12, g); } }
+  if (kind === 'wash') { box(6, 4.5, 4, mat(0xe8e9ea), W / 2 - 4, 2.25, fz + 2, g); signPanel(g, 5.6, 1, signTex('CAR WASH', '#1d3f8f', '#fff'), W / 2 - 4, 3.6, fz + 4.02); }
+  // forecourt in front, a few parked cars, low railing
+  const t = new THREE.Mesh(new THREE.PlaneGeometry(W, SET), TARMAC); t.rotation.x = -Math.PI / 2; t.position.set(0, .03, -SET / 2); t.receiveShadow = true; g.add(t);
+  for (let x = -W / 2 + 2; x < W / 2 - 2; x += 2.6) if (Math.random() < .6) { const c = carG(CARC[(Math.random() * CARC.length) | 0]); c.rotation.y = Math.PI / 2; c.position.set(x, .02, -SET + 2.6); g.add(c); }
+  if (kind === 'doors' && title.startsWith('MOT')) { const fen = mat(0xb0302a, { roughness: .6 }); for (let x = -W / 2; x < W / 2; x += .35) box(.22, 1.8, .06, fen, x, .9, -.3, g); }
+  else { const rail = mat(0x2c5fa8, { metalness: .5, roughness: .4 }); box(W, .07, .07, rail, 0, .9, -.2, g); for (let x = -W / 2; x <= W / 2; x += 2) box(.08, .95, .08, rail, x, .47, -.2, g); }
+  return { g, w: W };
+};
+// fuel station: canopy on columns, pump islands, kiosk shop, price totem (generic, no brand)
+BUILD.fuel = () => { const g = new THREE.Group(), W = 26, D = 22;
+  const t = new THREE.Mesh(new THREE.PlaneGeometry(W, D), mat(0x8c8f94, { roughness: .9 })); t.rotation.x = -Math.PI / 2; t.position.set(0, .03, -D / 2); t.receiveShadow = true; g.add(t);
+  box(16, .9, 9, mat(0xf4f4f2, { roughness: .5 }), -2, 5.4, -8, g); box(16.1, .4, 9.1, mat(0x1d8a5a, { roughness: .4 }), -2, 5.05, -8, g);
+  [[-8, -5], [4, -5], [-8, -11], [4, -11]].forEach(([x, z]) => box(.45, 5, .45, mat(0xe8e8e8, { metalness: .4 }), x, 2.5, z, g));
+  [-5, 1].forEach(x => { box(1.2, .25, 6, mat(0xd8d8d8), x, .12, -8, g); [-10, -6].forEach(z => { box(.7, 1.8, .5, mat(0xf2f2f2), x, 1.15, z, g); box(.55, .5, .52, GLASS, x, 1.6, z, g); }); });
+  box(10, 3.6, 7, mat(0xf2f2f0), 8, 1.8, -D + 4, g); box(10.1, .7, 7.1, mat(0x1d8a5a), 8, 3.8, -D + 4, g); box(6, 2.4, .1, GLASSL, 8, 1.4, -D + 7.56, g);
+  const tot = new THREE.Group(); tot.position.set(W / 2 - 1.5, 0, -1); g.add(tot); box(1.4, 6, .5, mat(0xf4f4f2), 0, 3, 0, tot);
+  signPanel(tot, 1.2, 2.4, tex(64, 128, (x, w, h) => { x.fillStyle = '#1d8a5a'; x.fillRect(0, 0, w, h); x.fillStyle = '#fff'; x.font = 'bold 13px sans-serif'; x.textAlign = 'center'; x.fillText('FUEL', 32, 18); x.fillStyle = '#111'; x.fillRect(4, 30, 56, 90); x.fillStyle = '#ffb030'; x.font = 'bold 15px monospace'; x.fillText('143.9', 32, 60); x.fillText('151.9', 32, 95); }), 0, 4, .26);
+  return { g, w: W };
+};
+const LEFT_PLAN = ['semi'], RIGHT_PLAN = ['carlot', 'shed', 'carlot', 'shed', 'fuel', 'shed', 'carlot', 'shed', 'shed'];
+// the railway behind the commercial side: ballast, two tracks, overhead line masts
+const railG = (() => { const g = new THREE.Group(); const L = 18;
+  box(7, .3, L, mat(0x8a8178, { roughness: 1 }), 0, .15, 0, g); [-1.6, 1.6].forEach(tx => [-.72, .72].forEach(rx => box(.1, .15, L, mat(0x6a6a6e, { metalness: .7, roughness: .4 }), tx + rx, .38, 0, g)));
+  for (let z = -L / 2; z < L / 2; z += .8) [-1.6, 1.6].forEach(tx => box(2.2, .1, .25, mat(0x5a4a3c), tx, .32, z, g));
+  const st = mat(0x8e959c, { metalness: .5, roughness: .5 }); box(.3, 7.5, .3, st, -4, 3.75, 0, g); box(.3, 7.5, .3, st, 4, 3.75, 0, g); box(8.6, .35, .35, st, 0, 7.4, 0, g); [-1.6, 1.6].forEach(tx => box(.05, .05, L, mat(0x333333), tx, 6.4, 0, g));
+  return g; })();
 const PLAN = ['terrace', 'galaxy', 'shops', 'terrace', 'townhall', 'chaiikhana', 'terrace', 'masjid', 'shops', 'terrace'];
 
 /* ================= the street: road, kerbs, pavements, lamps, trees ================= */
@@ -273,7 +372,8 @@ function spawnCar(dir) { const bus = Math.random() < .12, g = bus ? busG() : car
 /* ================= spawning the town ahead, dropping it behind ================= */
 const live = []; let sideZ = [5, 5], planI = [0, 4], propZ = 5;
 function spawnProps() { const z = propZ; [-1, 1].forEach(s => { const l = lampG.clone(); l.position.set(s * 6.1, 0, z); l.rotation.y = s > 0 ? 0 : Math.PI; scene.add(l); live.push({ g: l, z1: z + 2 }); });
-  if (Math.random() < .6) { const t = treeG.clone(); const s = Math.random() < .5 ? -1 : 1; t.position.set(s * 8.6, 0, z - 9); scene.add(t); live.push({ g: t, z1: z - 6 }); }
+  if (ROAD) { const rg = railG.clone(); rg.position.set(52, 0, z - 9); scene.add(rg); live.push({ g: rg, z1: z }); }
+  if (Math.random() < (ROAD ? .15 : .6)) { const t = treeG.clone(); const s = Math.random() < .5 ? -1 : 1; t.position.set(s * 8.6, 0, z - 9); scene.add(t); live.push({ g: t, z1: z - 6 }); }
   propZ -= 18; }
 
 /* ================= the pigeon: modelled from the photos (seen from behind) ================= */
@@ -381,7 +481,7 @@ let state = 'menu', score = 0, best = +(localStorage.getItem('fk3d_best') || 0);
 const B = { x: 0, y: 5, z: 0, vy: 0, lane: 1, flapT: 0 }; let speed = 12;
 const $ = id => document.getElementById(id);
 function reset() { [...live].forEach(o => drop(o.g)); live.length = 0; rows.forEach(r => drop(r.g)); rows.length = 0;
-  sideZ = [5, 5]; planI = [0, 4]; propZ = 5; rowZ = -40; lastX = 1; Object.assign(B, { x: 0, y: 5, z: 0, vy: 0, lane: ROAD ? 1 : 0 }); traffic.forEach(c => scene.remove(c.g)); traffic.length = 0; trafT = 0; for (let k = 0; k < 8; k++) spawnCar(k % 2 ? 1 : -1); score = 0; speed = 12; $('score').textContent = '0'; }
+  sideZ = [5, 5]; planI = [0, ROAD ? 0 : 4]; shedI = 0; propZ = 5; rowZ = -40; lastX = 1; Object.assign(B, { x: 0, y: 5, z: 0, vy: 0, lane: ROAD ? 1 : 0 }); traffic.forEach(c => scene.remove(c.g)); traffic.length = 0; trafT = 0; for (let k = 0; k < 8; k++) spawnCar(k % 2 ? 1 : -1); score = 0; speed = 12; $('score').textContent = '0'; }
 function start() { reset(); state = 'play'; $('start').classList.add('hide'); $('over').classList.add('hide'); $('score').classList.remove('hide'); flap(); }
 function flap() { if (state !== 'play') return; B.vy = 7.6; B.flapT = 0; }
 function lane(d) { if (!ROAD || state !== 'play') return; B.lane = Math.max(0, Math.min(2, B.lane + d)); }
@@ -432,12 +532,13 @@ function bake(g) { // merge every mesh of a building into one mesh per material:
   keep.forEach(o => { o.updateMatrixWorld(true); const c = o.clone(); c.matrix.copy(o.matrixWorld); c.matrix.decompose(c.position, c.quaternion, c.scale); out.add(c); });
   g.traverse(o => { if (o.isMesh) o.geometry.dispose(); }); return out; }
 const drop = g => { scene.remove(g); if (g.userData.baked) g.traverse(o => { if (o.isMesh) o.geometry.dispose(); }); };
-function spawnSideFix(i) { const s = i ? 1 : -1; const kind = PLAN[planI[i]++ % PLAN.length], b = BUILD[kind](); const z = sideZ[i] - b.w / 2;
-  b.g.position.set(s * 10.6, 0, z); b.g.rotation.y = s > 0 ? -Math.PI / 2 : Math.PI / 2; const baked = bake(b.g); baked.userData.baked = 1; scene.add(baked); live.push({ g: baked, z1: sideZ[i] }); sideZ[i] -= b.w + 1.5; return true; }
+function spawnSideFix(i) { const s = i ? 1 : -1; const PL = ROAD ? (i ? RIGHT_PLAN : LEFT_PLAN) : PLAN, kind = PL[planI[i]++ % PL.length], b = BUILD[kind](); const z = sideZ[i] - b.w / 2;
+  b.g.position.set(s * 10.6, 0, z); b.g.rotation.y = s > 0 ? -Math.PI / 2 : Math.PI / 2; const baked = bake(b.g); baked.userData.baked = 1; scene.add(baked); live.push({ g: baked, z1: sideZ[i] }); sideZ[i] -= b.w + (ROAD ? (i ? 1 : .6) : 1.5); return true; }
 function loop(now) { const dt = Math.min(.05, (now - last) / 1000); last = now; step(dt); renderer.render(scene, camera);
   fpsN++; fpsT += dt; if (fpsT > 1) { $('fps').textContent = Math.round(fpsN / fpsT) + ' fps'; fpsN = 0; fpsT = 0; } requestAnimationFrame(loop); }
+window.__shot = (px, py, pz, lx, ly, lz) => { camera.position.set(px, B.y * 0 + py, B.z + pz); camera.lookAt(lx, ly, B.z + lz); renderer.render(scene, camera); };
 window.__step = (ms, n = 1) => { for (let i = 0; i < n; i++) step(ms / 1000); renderer.render(scene, camera); };
-if (ROAD) { document.querySelector('#start h1').textContent = 'LUTON ROAD 3D'; document.querySelector('#start p').innerHTML = 'Just the street for now: no pipes. <b>Swipe left/right</b> to change lane, <b>tap</b> to hop up. You can\'t crash.'; $('score').style.display = 'none'; $('tag').textContent = 'ROAD MODEL'; }
+if (ROAD) { document.querySelector('#start h1').textContent = 'LEAGRAVE ROAD 3D'; document.querySelector('#start p').innerHTML = 'Leagrave Road, Luton, modelled from Street View. No pipes for now. <b>Swipe left/right</b> to change lane, <b>tap</b> to hop up. You can\'t crash.'; $('score').style.display = 'none'; $('tag').textContent = 'ROAD MODEL'; }
 reset(); if (!qs.has('manual')) requestAnimationFrame(loop); else __step(16);
 </script>
 </body></html>
