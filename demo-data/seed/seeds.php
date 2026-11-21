@@ -564,7 +564,7 @@ return json_decode(<<<'JSON'
  },
  {
   "slug": "gatsby",
-  "version": "2026-11-21a",
+  "version": "2026-11-21b",
   "ver": "1.0",
   "name": "Gatsby Law",
   "accent": "#D4AF61",
