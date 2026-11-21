@@ -35,6 +35,7 @@ function music_db(): PDO {
         $done = true;
         try { music_seed_import(); } catch (Throwable $e) {}
         try { music_video_seed_import(); } catch (Throwable $e) {}
+        try { music_audio_seed_import(); } catch (Throwable $e) {}
         // one-off text fixes for tracks that were already imported (each runs once)
         if (music_kv('fix:gatsby-about-2') === null) {
             $pdo->prepare("UPDATE music_tracks SET about = ?, updated_at = ? WHERE slug = 'thats-gatsby-law'")->execute(["That’s Gatsby Law (NFA) is Saf Rathor’s story, told from his point of view. Two brothers, two bosses: Saf and his big brother started Gatsby Law with a desk, a phone and their dad’s belief that the future was bright. Ten years on, their name is on the building.\n\nThe song goes behind the results: 3am calls from worried mums, cases nobody thought could be won, and the long nights the cameras never show. NFA stands for No Further Action, the result every client hopes for, and the promise Saf makes when the phone rings.\n\nWhat drives them is simple: every case is a life, not a number. The nice cars came later; what they’re proudest of is showing the next generation what’s possible.", now()]);
@@ -165,6 +166,41 @@ function music_video_seed_import(): void {
         }
         @unlink($tmp);
         if ($done) music_kv('vseed:' . $name, (string) now());
+    }
+}
+/* Replacement audio for a track that's already on the site: demo-data/music-seed/<name>.audio.pack.php (PHP that exits + ZIP of
+   audio.<ext>, meta.json {"slug"}), swapped in once (music_kv 'aseed:<name>'). Bumps updated_at so phones fetch the new file. */
+function music_audio_seed_import(): void {
+    $dir = SITE_ROOT . '/demo-data/music-seed';
+    if (!is_dir($dir) || !class_exists('ZipArchive')) return;
+    foreach (glob($dir . '/*.audio.pack.php') ?: [] as $pack) {
+        $name = basename($pack, '.audio.pack.php');
+        if (music_kv('aseed:' . $name) !== null) continue;
+        $in = fopen($pack, 'rb'); $head = (string) fread($in, 256);
+        $at = strpos($head, '__halt_compiler();'); if ($at === false) { fclose($in); continue; }
+        fseek($in, $at + strlen('__halt_compiler();'));
+        $tmp = music_dir() . '/.aseed-' . bin2hex(random_bytes(4)) . '.zip';
+        $o = fopen($tmp, 'wb'); stream_copy_to_stream($in, $o); fclose($o); fclose($in);
+        $z = new ZipArchive(); $done = false;
+        if ($z->open($tmp) === true) {
+            $m = json_decode((string) $z->getFromName('meta.json'), true) ?: [];
+            $st = db()->prepare('SELECT code, ext FROM music_tracks WHERE slug = ?'); $st->execute([(string) ($m['slug'] ?? '')]);
+            $t = $st->fetch();
+            $file = '';
+            for ($i = 0; $i < $z->numFiles; $i++) { $n = $z->getNameIndex($i); if (preg_match('/^audio\.([a-z0-9]+)$/', $n, $mm) && isset(MUSIC_AUDIO[$mm[1]])) $file = $n; }
+            if ($t && $file !== '') {
+                $d = music_dir((string) $t['code']); $ext = substr($file, 6);
+                if ($z->extractTo($d . '/.new', [$file]) && is_file("$d/.new/$file")) {
+                    if ($ext !== $t['ext']) @unlink("$d/audio." . $t['ext']);
+                    rename("$d/.new/$file", "$d/audio.$ext"); @rmdir("$d/.new");
+                    db()->prepare('UPDATE music_tracks SET ext = ?, size = ?, updated_at = ? WHERE code = ?')->execute([$ext, filesize("$d/audio.$ext"), now(), $t['code']]);
+                    $done = true;
+                }
+            } elseif (!$t) $done = true;
+            $z->close();
+        }
+        @unlink($tmp);
+        if ($done) music_kv('aseed:' . $name, (string) now());
     }
 }
 function music_seed_import(): void {
