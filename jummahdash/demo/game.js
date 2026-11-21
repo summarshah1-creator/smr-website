@@ -171,14 +171,14 @@ function buildingCanvas(kind, key, bakeAnim) {
   const q = t.getContext('2d'); q.imageSmoothingEnabled = true; q.imageSmoothingQuality = 'high'; q.drawImage(c, l, top, r - l + 1, c.height - top, 0, 0, t.width, t.height);
   c.width = c.height = 1;
   const v = { c: t, k: kb, ox: l / N - M, w, top: top / N - (LH - 6), h: (LH * N - top) / N };
-  bCache.set(id, v); while (bCache.size > 16) bCache.delete(bCache.keys().next().value);
+  bCache.set(id, v); while (bCache.size > 30) bCache.delete(bCache.keys().next().value);
   return v;
 }
 function hazed(id, v) {   // pale, sunset-tinted copy for the far skyline
   if (hazeCache.has(id)) return hazeCache.get(id);
-  const c = document.createElement('canvas'); c.width = v.c.width; c.height = v.c.height; const o = c.getContext('2d');
-  o.drawImage(v.c, 0, 0); o.globalCompositeOperation = 'source-atop'; o.fillStyle = DAY ? 'rgba(168,200,232,.66)' : 'rgba(204,128,150,.72)'; o.fillRect(0, 0, c.width, c.height);
-  hazeCache.set(id, c); while (hazeCache.size > 10) hazeCache.delete(hazeCache.keys().next().value); return c;
+  const c = document.createElement('canvas'); c.width = Math.max(1, Math.round(v.c.width * .5)); c.height = Math.max(1, Math.round(v.c.height * .5)); const o = c.getContext('2d'); o.imageSmoothingQuality = 'high';
+  o.drawImage(v.c, 0, 0, c.width, c.height); o.globalCompositeOperation = 'source-atop'; o.fillStyle = DAY ? 'rgba(168,200,232,.66)' : 'rgba(204,128,150,.72)'; o.fillRect(0, 0, c.width, c.height);
+  hazeCache.set(id, c); while (hazeCache.size > 40) hazeCache.delete(hazeCache.keys().next().value); return c;
 }
 
 /* vehicles, rendered at KR, both directions */
@@ -216,7 +216,7 @@ function carSprite(k, ci, flip) {
 }
 // turning wheels: the rim + spokes are redrawn over each wheel every frame, rotated by how far the car has rolled
 function drawWheels(sp, x0, y0, roll) { for (const w of sp.wh) { const cx = x0 + w.x, cy = y0 + w.y, r = w.r * .64; if (r < 1.2) continue;
-  ctx.save(); ctx.translate(cx, cy); const g = ctx.createRadialGradient(-r * .3, -r * .3, 0, 0, 0, r); g.addColorStop(0, '#f4f6f8'); g.addColorStop(.6, w.rim || '#9aa2ab'); g.addColorStop(1, '#4a4e56'); ctx.beginPath(); ctx.arc(0, 0, r, 0, 7); ctx.fillStyle = g; ctx.fill();
+  ctx.save(); ctx.translate(cx, cy); ctx.beginPath(); ctx.arc(0, 0, r, 0, 7); ctx.fillStyle = w.rim || '#9aa2ab'; ctx.fill(); ctx.beginPath(); ctx.arc(-r * .2, -r * .2, r * .55, 0, 7); ctx.fillStyle = 'rgba(255,255,255,.25)'; ctx.fill();
   ctx.rotate(roll / w.r); ctx.strokeStyle = 'rgba(40,42,48,.85)'; ctx.lineWidth = Math.max(.6, r * .2); for (let i = 0; i < w.spokes; i++) { const a = i * 2 * Math.PI / w.spokes; ctx.beginPath(); ctx.moveTo(Math.cos(a) * r * .25, Math.sin(a) * r * .25); ctx.lineTo(Math.cos(a) * r * .92, Math.sin(a) * r * .92); ctx.stroke(); }
   ctx.beginPath(); ctx.arc(0, 0, r * .24, 0, 7); ctx.fillStyle = '#5a5d66'; ctx.fill(); ctx.restore(); } }
 
@@ -302,7 +302,9 @@ function nextBuilding() {
     const k = houseDeck.shift(), x = prev ? prev.x + prev.w + gapBetween(prev, 'hs', k) : -60;
     street.push({ kind: 'hs', key: k, x, w: Math.round(HOUSES[k].w * 1.35) * BS, run: prev && prev.kind === 'hs' ? (prev.run || 1) + 1 : 1 }); }
 }
-function fillStreet() { while (!street.length || street[street.length - 1].x < W + 600) { nextBuilding(); const b = street[street.length - 1]; setTimeout(() => buildingCanvas(b.kind, b.key), 0); } }   // built ~1.5 screens ahead so there's no hitch
+const bakeQ = [];
+function fillStreet() { while (!street.length || street[street.length - 1].x < W + 900) { nextBuilding(); const b = street[street.length - 1]; bakeQ.push(b); } }
+function bakeOne() { const b = bakeQ.shift(); if (b) buildingCanvas(b.kind, b.key); }   // one picture per frame, well before it scrolls on   // built ~1.5 screens ahead so there's no hitch
 function fillSkyline() { let x = skyline.length ? skyline[skyline.length - 1].x + skyline[skyline.length - 1].w : -100; while (x < W * 2.2) { if (!skyDeck.length) { skyDeck = STREET.slice(); for (let i = skyDeck.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [skyDeck[i], skyDeck[j]] = [skyDeck[j], skyDeck[i]]; } } const k = skyDeck.shift(); if (!LANDMARKS[k] || k === myMosque || street.some(b => b.key === k)) continue; skyline.push({ kind: 'lm', key: k, x, w: LANDMARKS[k].w * .5 }); x += LANDMARKS[k].w * .5 - 16; } }
 
 function spawnCar(x) {
@@ -865,7 +867,7 @@ function drawJet() { const now = performance.now() / 1000, dt = Math.min(.05, no
 /* live animations from Flappy (owner, 21 Nov): the moving parts of the buildings (Luton Hoo helicopter + fountain, Town Hall clock +
    flags, Masjid-e-Ali flag, Wardown ducks + pedalo, the bridge water, the funfair) are drawn every frame on top of the building
    picture, a Thameslink train runs along the station viaduct and planes take off from behind the airport */
-const LIVE_ANIM = new Set(Object.keys(window.LM_ANIM || {}).filter(k => k !== 'train' && k !== 'plane'));
+const LIVE_ANIM = new Set(Object.keys(window.LM_ANIM || {}).filter(k => k !== 'train' && k !== 'plane' && k !== 'wardownbridge'));
 function drawTrain(b, t) { const k = BS * ((window.SCALE && SCALE.station) || 1), x0 = b.x / k, Gs = G / k; const span = 270, per = 9, ph = (t % per) / per, off = -230 + ph * (span + 460);
   ctx.save(); ctx.scale(k, k); ctx.beginPath(); ctx.rect(x0 - 6, Gs - 150, span + 12, 58); ctx.clip();
   const tx = x0 + off, deck = Gs - 94;
@@ -895,7 +897,7 @@ function drawTakeoff(b, t) { const k = BS * ((window.SCALE && SCALE.airport) || 
 
 function px(v) { return Math.round(v * S) / S; }
 function draw() {
-  ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
+  ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'low';
   if (!skyCv || skyCv.width !== cv.width || skyCv.height !== cv.height) buildSky();
   ctx.drawImage(skyCv, 0, 0);
   const shx = shake > 0 ? (Math.random() - .5) * shake * 14 : 0, shy = shake > 0 ? (Math.random() - .5) * shake * 14 : 0;
@@ -903,7 +905,7 @@ function draw() {
   drawJet();
   // far hazy skyline (smaller, slower)
   const sk = .5;
-  skyline.forEach(b => { const v = buildingCanvas(b.kind, b.key, true); if (!v) return; const h = hazed(b.kind + ':' + b.key + '@' + KR, v);
+  skyline.forEach(b => { const v = buildingCanvas(b.kind, b.key); if (!v) return; const h = hazed(b.kind + ':' + b.key + '@' + KR, v);
     ctx.drawImage(h, b.x + v.ox * sk, G - 8 + v.top * sk, v.c.width / v.k * sk, v.c.height / v.k * sk); });
   // main street buildings
   ctx.imageSmoothingEnabled = true;
@@ -1262,7 +1264,7 @@ window.addEventListener('resize', resize); window.addEventListener('orientationc
 
 resize(); seedStars(); reset(); refreshHome(); if (myMosque) setTimeout(refreshHome, 300);
 let last = performance.now();
-function frame(now) { const dt = Math.min(.05, (now - last) / 1000); last = now; update(dt); draw(); requestAnimationFrame(frame); }
+function frame(now) { const dt = Math.min(.05, (now - last) / 1000); last = now; update(dt); draw(); if (bakeQ.length) bakeOne(); requestAnimationFrame(frame); }
 requestAnimationFrame(frame);
 window.__jd = { veh: k => startVehicle(k), laser: () => [CEIL + 40, (CEIL + FLOOR) / 2].forEach((y, i) => obs.push({ type: 'laser', x: W / 2, y, ph: 'in', pt: 0, slide: 0, d: i * .12 })), eidi: n => { eidi = n; }, kill: w => die(w), gift: k => gifts.push({ k, x: W * .6, y: 200, b: 0 }), get state() { return state; }, start, hero, get obs() { return obs; }, spawnRocket: () => obs.push({ type: "rocket", x: W + 40, y: hero.y - 30, warn: 1.5, lock: 0, v: 0 }), setHold: v => holding = v, get dist() { return dist; }, mis: (s, c) => { RUN.steamed = s; coins = c; }, get npcs() { return npcs; }, boost: m => startBoost(m), get SHOP() { return SHOP; }, bc: (k, kd) => buildingCanvas(kd || "lm", k), carSprite: (k, ci, f) => carSprite(k, ci, f), queue: k => deck.unshift([k]), street: () => street, npc: x => spawnNpc(x), car: x => spawnCar(x), get STREET() { return STREET; } };
 })();

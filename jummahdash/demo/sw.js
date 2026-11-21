@@ -1,10 +1,10 @@
 /* Jummah Dash: keeps the whole game on the phone. First visit downloads it once;
    after that it opens from the phone, and an update only downloads the files that changed. */
-const BUILD = '20261121222218';
+const BUILD = '20261121222628';
 const FILES = {
 "hd/landmarks_hd.js": "293b1ffb02",
 "hd/foodbank.png": "8f4400d5e6",
-"game.js": "a4e16357ec",
+"game.js": "5be57fec09",
 "landmarks.js": "9b916dc9ee",
 "vehicles.js": "565dab9723",
 "manifest.webmanifest": "636eadba05",
