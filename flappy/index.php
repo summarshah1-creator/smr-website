@@ -440,9 +440,9 @@ function startChase() { const ks = ['lambo', 'f40', 'p911', 'c63', 'a45', 'rs3',
 }
 /* ---------- gold crate power-up: a delivery truck drives towards you with a glowing gold crate on the back.
    Dip low over the crate: a gold beam smashes the pipes ahead, a short shield, a lift, then double points for 15 s.
-   Only on with ?power=1 (demo) for now: the truck comes every few seconds and scores aren't saved. ---------- */
+   Normal play: 1 in 100 games, once, 20-60 s in. ?power=1 = demo: the truck comes every few seconds and scores aren't saved. ---------- */
 const PWR = (() => {
-  const demo = /[?&]power=1/.test(location.search), live = false, DBL = 15, CRAWL = 55;
+  const demo = /[?&]power=1/.test(location.search), DBL = 30, CRAWL = 55, ODDS = 100;   // in normal play the truck turns up in 1 in 100 games, once
   if (demo) window.__fkNoBoard = 1;
   // pixel truck (facing left, it drives towards the pigeon), 57 x 34
   const K = 1.8, TW = 57, TH = 34, cnv = document.createElement('canvas'); cnv.width = TW * 2; cnv.height = TH * 2;
@@ -454,21 +454,21 @@ const PWR = (() => {
   const crate = document.createElement('canvas'); crate.width = 28; crate.height = 22;
   { const c = crate.getContext('2d'), R = (x, y, w, h, col) => { c.fillStyle = col; c.fillRect(x * 2, y * 2, w * 2, h * 2); };
     R(0, 0, 14, 11, '#1b1a24'); R(1, 1, 12, 9, '#e7b23a'); R(1, 1, 12, 1, '#ffe48a'); R(1, 4, 12, 1, '#c8901f'); R(1, 7, 12, 1, '#c8901f'); R(1, 1, 1, 9, '#b57d17'); R(12, 1, 1, 9, '#b57d17'); R(4, 2, 1, 7, '#f5c94e'); R(9, 2, 1, 7, '#f5c94e'); R(6, 5, 2, 2, '#fff6cf'); }
-  let truck = null, warnT = 0, nextT = 0, playT = 0, beamT = 0, beamY = 0, safeT = 0, dblT = 0, gFlash = 0, shards = [], sparks = [], tip = null, tipT = 0, got = 0;
+  let lucky = false, truck = null, warnT = 0, nextT = 0, playT = 0, beamT = 0, beamY = 0, safeT = 0, dblT = 0, gFlash = 0, shards = [], sparks = [], tip = null, tipT = 0, got = 0;
   const hud = () => document.getElementById('x2');
   const say = (txt, secs) => { tip = tip || document.getElementById('pwrTip'); if (!tip) return; tip.textContent = txt; tip.classList.add('on'); tipT = secs; };
   const sound = () => { if (!window.SFX || !SFX.on) return; try { SFX.powerup(); } catch (e) {} };
   return {
-    demo, get blockFar() { return !!truck || warnT > 0 || ((demo || live) && playT > nextT - 5 && dblT <= 0); },
+    demo, get blockFar() { return !!truck || warnT > 0 || ((demo || lucky) && playT > nextT - 5 && dblT <= 0); },
     safe: () => safeT > 0, mult: () => dblT > 0 ? 2 : 1, beamOn: () => beamT > 0,
-    reset() { truck = null; warnT = 0; beamT = 0; safeT = 0; dblT = 0; gFlash = 0; shards = []; sparks = []; playT = 0; nextT = demo ? 3.5 : 70 + Math.random() * 50; const h = hud(); if (h) h.classList.remove('on'); document.body.classList.remove('x2on'); if (demo) say('DEMO: a gold crate truck is coming. Dip low over the glowing crate to grab it!', 5); },
+    reset() { truck = null; warnT = 0; beamT = 0; safeT = 0; dblT = 0; gFlash = 0; shards = []; sparks = []; playT = 0; got = 0; lucky = demo || Math.random() < 1 / ODDS; nextT = demo ? 3.5 : 20 + Math.random() * 40; const h = hud(); if (h) h.classList.remove('on'); document.body.classList.remove('x2on'); if (demo) say('DEMO: a gold crate truck is coming. Dip low over the glowing crate to grab it!', 5); },
     update(dt, state, bird, pipes, W, GY, H, speed, PW, nextPipe, ROAD) {
       if (tipT > 0) { tipT -= dt; if (tipT <= 0 && tip) tip.classList.remove('on'); }
       if (gFlash > 0) gFlash -= dt; if (beamT > 0) beamT -= dt; if (safeT > 0) safeT -= dt;
       shards.forEach(s => { s.x += s.vx * dt - speed * dt * .3; s.y += s.vy * dt; s.vy += 420 * dt; s.r += s.vr * dt; s.life -= dt; }); shards = shards.filter(s => s.life > 0 && s.y < H + 20);
       sparks.forEach(s => { s.x += s.vx * dt; s.y += s.vy * dt; s.vy += 60 * dt; s.life -= dt; }); sparks = sparks.filter(s => s.life > 0);
       if (state !== 'play') return;
-      if (!(demo || live)) return;
+      if (!(demo || lucky)) return;
       playT += dt;
       if (dblT > 0) { dblT -= dt; const h = hud(); if (h) { h.querySelector('i').style.width = Math.max(0, dblT / DBL * 100) + '%'; if (dblT <= 0) { h.classList.remove('on'); document.body.classList.remove('x2on'); if (window.SFX && SFX.on) try { SFX.powerdown(); } catch (e) {} } } }
       if (!truck && warnT <= 0 && dblT <= 0 && playT >= nextT && !(window.__fk && __fk().cars.some(c => c.lane === 0 && c.x + c.sp.w > -150 && c.x < W + 20))) {
@@ -484,10 +484,10 @@ const PWR = (() => {
           pipes.forEach(p => { if (p.x + PW > bird.x - 6 && !p.broken) { p.broken = 1; for (let i = 0; i < 26; i++) { const top = i % 2 === 0, y0 = top ? Math.random() * p.top : p.top + p.gap + Math.random() * (GY - p.top - p.gap); shards.push({ x: p.x + Math.random() * PW, y: y0, w: 3 + Math.random() * 6 | 0, h: 3 + Math.random() * 8 | 0, vx: 30 + Math.random() * 150, vy: -140 + Math.random() * 120, r: 0, vr: (Math.random() - .5) * 14, life: 1.6 + Math.random() * .6, c: ['#5bbf3a', '#86dc5a', '#3f9a28', '#9be86a'][i % 4] }); } } });
           for (let i = 0; i < 40; i++) { const a = Math.random() * 6.28, sp = 30 + Math.random() * 110; sparks.push({ x: cx, y: ROAD + 14 - 18 * K, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 40, life: .5 + Math.random() * .6 }); }
           const h = hud(); if (h) { h.classList.remove('on'); void h.offsetWidth; h.classList.add('on'); } document.body.classList.add('x2on');
-          if (demo) say('DOUBLE POINTS for 15 seconds!', 2.5);
+          if (demo) say('DOUBLE POINTS for 30 seconds!', 2.5); if (!demo && window.TRACK) try { TRACK.send('power'); } catch (e) {}
           if (window.moment) window.moment('power');
         }
-        if (truck.x < -TW * K - 10) { truck = null; nextT = playT + (demo ? 6 + Math.random() * 3 : 70 + Math.random() * 50); if (demo && !got) say('Missed it! Another one is coming…', 2.5); }
+        if (truck.x < -TW * K - 10) { truck = null; nextT = demo ? playT + 6 + Math.random() * 3 : 1e9; if (demo && !got) say('Missed it! Another one is coming…', 2.5); }
       }
     },
     newPipe(p) { if (beamT > 0) p.broken = 1; },
@@ -519,7 +519,7 @@ const PWR = (() => {
       if (dblT > 0) { for (let i = 0; i < 3; i++) { const a = (t * 1.8 + i / 3) % 1; ctx.globalAlpha = (1 - a) * .9; ctx.fillStyle = '#ffd84a'; ctx.fillRect(Math.round(bird.x - 8 - a * 20), Math.round(bird.y - 2 + (i - 1) * 4), 2, 1); } ctx.globalAlpha = 1; }
       if (gFlash > 0) { ctx.fillStyle = 'rgba(255,236,160,' + (Math.min(1, gFlash / .35) * .55).toFixed(2) + ')'; ctx.fillRect(0, -OY - 400, W, H + OY + 800); }
     },
-    get st() { return { truck, warnT, dblT, beamT, safeT, got }; },
+    get used() { return got > 0; }, get st() { return { truck, warnT, dblT, beamT, safeT, got }; },
     __spawn() { warnT = .01; truck = null; }
   };
 })();
@@ -752,7 +752,7 @@ const LB = (() => { const api = 'api.php'; let run = '', runFor = ''; const star
   ['pzN', 'pzP'].forEach(i => $(i).addEventListener('keydown', e => e.stopPropagation())); $('przM').addEventListener('click', e => e.stopPropagation());
   let pending = 0, renaming = false;
   const submit = (nm, sc, rename) => {
-    if (online) return fetch(api + '?a=score', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: nm, score: sc, pid, rename: rename ? 1 : 0, run: runFor, phone: rename ? '' : (ukMob($('nbP').value) || '') }) }).then(r => r.json()).then(j => { if (j.error) throw new Error(j.error); data = j; return j; });
+    if (online) return fetch(api + '?a=score', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: nm, score: sc, pid, rename: rename ? 1 : 0, run: runFor, pw: window.PWR && PWR.used ? 1 : 0, phone: rename ? '' : (ukMob($('nbP').value) || '') }) }).then(r => r.json()).then(j => { if (j.error) throw new Error(j.error); data = j; return j; });
     const l = localLoad(); if (rename) l.forEach(r => { if (r.pid === pid) r.name = nm; }); else l.push({ name: nm, score: sc, day: day(), pid }); try { localStorage.setItem('fk_board', JSON.stringify(l.sort((a, b) => b.score - a.score).slice(0, 200))); } catch (e) {} localLoad(); return Promise.resolve(data); };
   const title = sc => { const rt = rankOf(data.today, sc), ra = rankOf(data.all, sc); return ra === 1 ? '\u{1F3C6} NEW ALL-TIME HIGH SCORE!' : ra && ra <= 10 ? '\u{1F3C6} #' + ra + ' OF ALL TIME!' : rt === 1 ? '\u{1F3C6} TOP SCORE TODAY!' : rt ? '\u{1F3C6} #' + rt + ' TODAY!' : ra ? '\u{1F3C6} #' + ra + ' OF ALL TIME!' : ''; };
   const showSaved = sc => { $('nbT').textContent = title(sc) || '\u{1F3C6} ON THE LEADERBOARD!'; $('nbS').innerHTML = 'Saved as <span class="nbn">' + esc(name) + '</span><br><a href="#" id="nbChg">Not you? Change name</a>'; $('nameBox').classList.add('saved'); $('nameBox').classList.remove('hide');
@@ -784,7 +784,7 @@ const LB = (() => { const api = 'api.php'; let run = '', runFor = ''; const star
 /* ---------- always the latest version, also when saved to the Home Screen ----------
    version.json is rewritten on every deploy; when it changes the page reloads itself (straight away on the menu,
    or right after the current game ends), with a cache-busting query so the phone fetches the new HTML. */
-(() => { const BUILD = '11210227'; let pending = false;
+(() => { const BUILD = '11210231'; let pending = false;
   const go = () => { let last = 0; try { last = +sessionStorage.getItem('fk_upd_t') || 0; } catch (e) {} if (Date.now() - last < 60000) return;   // never loop: at most one reload a minute
     try { sessionStorage.setItem('fk_upd_t', String(Date.now())); } catch (e) {} location.replace(location.pathname + '?u=' + Date.now() + location.hash); };
   const check = () => fetch('version.json?ts=' + Date.now(), { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(j => {

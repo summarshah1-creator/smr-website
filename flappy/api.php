@@ -197,7 +197,7 @@ try {
         if ($rename) { $k = 'fk_score:' . fk_ip(); if (too_many($k, 15, 3600)) json_out(['error' => 'Too many changes this hour.'], 429); note_fail($k); $pid = fk_pid($in['pid']); fk_db()->prepare('UPDATE fk_scores SET name = ? WHERE pid = ?')->execute([$name, $pid]); json_out(['ok' => true] + fk_board($pid)); }
         if ($score < 1 || $score > 9999) json_out(['error' => 'Score not accepted.'], 400);
         // time check: the game asks the server for a run id when play starts, so the server knows how long the run really took
-        $need = fk_min_secs($score); $took = -1;
+        $need = fk_min_secs(empty($in['pw']) ? $score : max(0, $score - 25)); $took = -1;   // a gold crate power-up (x2 for 30 s) can add up to about 25 points without extra time
         $rid = preg_replace('/[^a-f0-9]/', '', (string) ($in['run'] ?? ''));
         if ($rid !== '') { $q = fk_db()->prepare('SELECT at FROM fk_runs WHERE id = ? AND used = 0'); $q->execute([$rid]); $at = $q->fetchColumn(); if ($at !== false) $took = time() - (int) $at; }
         if ($score > 15 && $took < $need) {
