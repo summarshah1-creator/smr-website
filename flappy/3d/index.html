@@ -271,8 +271,8 @@ const signPanel = (g, w, h, t, x, y, z) => { const m = new THREE.Mesh(new THREE.
 const binG = (g, x, z, c) => { box(.6, .95, .7, mat(c, { roughness: .6 }), x, .48, z, g); box(.66, .06, .76, mat(c), x, .98, z, g); };
 
 // one 1930s semi-detached pair: mirror-image houses, outer bays, doors in the middle, hipped roof, drives in front
-BUILD.semi = () => { const g = new THREE.Group(), HW = 6.4, W = HW * 2, H = 5.6, D = 9, SET = 6;
-  const r = Math.random, up = RENDER[(r() * RENDER.length) | 0], allRender = r() < .35, lo = allRender ? up : LBRICK[(r() * 3) | 0], roof = [ROOF_BROWN, ROOF_GREY, ROOF_RED][(r() * 3) | 0];
+BUILD.semi = (tudor) => { const g = new THREE.Group(), HW = 6.4, W = HW * 2, H = 5.6, D = 9, SET = 6;
+  const r = Math.random, up = tudor ? RENDER[0] : RENDER[(r() * RENDER.length) | 0], allRender = !tudor && r() < .35, lo = allRender ? up : LBRICK[(r() * 3) | 0], roof = [ROOF_BROWN, ROOF_GREY, ROOF_RED][(r() * 3) | 0];
   const z0 = -SET;   // house front line, the drive is in front of it
   box(W, 2.8, D, lo, 0, 1.4, z0 - D / 2, g); box(W, H - 2.8, D, up, 0, 2.8 + (H - 2.8) / 2, z0 - D / 2, g);
   box(W + .1, .12, D + .1, mat(0xe6e0d4), 0, 2.84, z0 - D / 2, g);                                  // band between the floors
@@ -283,6 +283,7 @@ BUILD.semi = () => { const g = new THREE.Group(), HW = 6.4, W = HW * 2, H = 5.6,
     // two-storey square bay with its own little hipped roof
     box(2.8, 2.8, .9, lo, bx, 1.4, z0 + .45, g); box(2.8, H - 2.8 - .2, .9, up, bx, 2.8 + (H - 3) / 2, z0 + .45, g);
     windowSet(g, bx, 1.55, 2.3, 1.45, z0 + .92, true, 2); windowSet(g, bx, 4.15, 2.3, 1.35, z0 + .92, true, 2);
+    if (tudor) { const TB = mat(0x1d1b1c); [-1.33, 1.33].forEach(e => box(.14, H - 3, .05, TB, bx + e, 2.8 + (H - 3) / 2, z0 + .93, g)); box(2.8, .14, .05, TB, bx, H - .35, z0 + .93, g); box(2.8, .14, .05, TB, bx, 3.05, z0 + .93, g);}
     [-1, 1].forEach(e => { const sw = box(.08, 1.3, .55, GLASS, bx + e * 1.41, 1.55, z0 + .45, g); const sw2 = box(.08, 1.2, .55, GLASS, bx + e * 1.41, 4.15, z0 + .45, g); });
     const br = hipRoof(2.8, .9, .45, roof, .15); br.position.set(bx, H - .2, z0 + .9); g.add(br);
     const tb = hipRoof(2.8, .9, .3, roof, .1); tb.position.set(bx, 2.82, z0 + .9); g.add(tb);              // tiled band over the ground-floor bay
@@ -337,7 +338,80 @@ BUILD.fuel = () => { const g = new THREE.Group(), W = 26, D = 22;
   signPanel(tot, 1.2, 2.4, tex(64, 128, (x, w, h) => { x.fillStyle = '#1d8a5a'; x.fillRect(0, 0, w, h); x.fillStyle = '#fff'; x.font = 'bold 13px sans-serif'; x.textAlign = 'center'; x.fillText('FUEL', 32, 18); x.fillStyle = '#111'; x.fillRect(4, 30, 56, 90); x.fillStyle = '#ffb030'; x.font = 'bold 15px monospace'; x.fillText('143.9', 32, 60); x.fillText('151.9', 32, 95); }), 0, 4, .26);
   return { g, w: W };
 };
-const LEFT_PLAN = ['semi'], RIGHT_PLAN = ['carlot', 'shed', 'carlot', 'shed', 'fuel', 'shed', 'carlot', 'shed', 'shed'];
+/* ---- Leagrave Road, further south (owner's second Street View walk): tyre yard, van sales, MOT garages, Fitzroy Ave corner parade,
+        peri peri takeaway, MOT canopy, Rondini Ave, the masjid & madrasa, mock-Tudor semis ---- */
+const palisade = (g, W, col, z = -.2, h = 2) => { const m = mat(col, { roughness: .6, metalness: .3 }); box(W, .08, .06, m, 0, h * .3, z, g); box(W, .08, .06, m, 0, h * .8, z, g); for (let x = -W / 2; x <= W / 2; x += .25) box(.07, h, .04, m, x, h / 2, z + .04, g); };
+const tyreStack = (g, x, z, n) => { const tm = mat(0x1c1c1e, { roughness: .9 }); for (let i = 0; i < n; i++) { const t = new THREE.Mesh(new THREE.TorusGeometry(.34, .13, 6, 14), tm); t.rotation.x = Math.PI / 2; t.position.set(x, .13 + i * .26, z); t.castShadow = true; g.add(t); } };
+const PALFLAG = tex(96, 48, (x, w, h) => { ['#111', '#fff', '#16883a'].forEach((c, i) => { x.fillStyle = c; x.fillRect(0, i * h / 3, w, h / 3); }); x.fillStyle = '#d0202a'; x.beginPath(); x.moveTo(0, 0); x.lineTo(w * .38, h / 2); x.lineTo(0, h); x.fill(); });
+const flagPole = (g, x, z, hgt = 5) => { cyl(.04, .05, hgt, mat(0xdddddd, { metalness: .6 }), x, hgt / 2, z, g, 6); const f = new THREE.Mesh(new THREE.PlaneGeometry(1.4, .7), new THREE.MeshStandardMaterial({ map: PALFLAG, side: THREE.DoubleSide })); f.position.set(x + .72, hgt - .4, z); g.add(f); };
+const vanG = (col = 0xf2f2f2) => { const g = new THREE.Group(), m = mat(col, { roughness: .4, metalness: .3 }); box(2, 2.1, 5, m, 0, 1.35, .2, g); box(1.9, .9, 1.2, m, 0, .9, -2.6, g); box(1.85, .7, .1, GLASS, 0, 1.75, -2.25, g); box(2.02, .6, 1.2, GLASS, 0, 1.9, -1.6, g);
+  [[-1, 1.7], [1, 1.7], [-1, -2.2], [1, -2.2]].forEach(([x, z]) => { const w = cyl(.38, .38, .3, mat(0x111111), x, .38, z, g, 12); w.rotation.z = Math.PI / 2; }); return g; };
+const forecourt = (g, W, D, m = TARMAC) => { const t = new THREE.Mesh(new THREE.PlaneGeometry(W, D), m); t.rotation.x = -Math.PI / 2; t.position.set(0, .03, -D / 2); t.receiveShadow = true; g.add(t); };
+const gableShed = (g, x, w, D, H, front, title, col, kind) => {   // shed with its gable end facing the road
+  const sh = new THREE.Shape(); sh.moveTo(-w / 2, 0); sh.lineTo(w / 2, 0); sh.lineTo(w / 2, H); sh.lineTo(0, H + 2.2); sh.lineTo(-w / 2, H); sh.lineTo(-w / 2, 0);
+  const e = new THREE.Mesh(new THREE.ExtrudeGeometry(sh, { depth: D, bevelEnabled: false }), CLAD_GREY); e.position.set(x, 0, -D - 4); e.castShadow = e.receiveShadow = true; g.add(e);
+  const f = new THREE.Mesh(new THREE.ShapeGeometry(sh), front); f.position.set(x, 0, -3.98); g.add(f);
+  box(w * .55, 4, .15, kind === 'open' ? DARK : mat(0x3a5fb0, { metalness: .4, roughness: .5 }), x - w * .12, 2, -3.9, g);
+  if (kind !== 'open') for (let y = .3; y < 4; y += .35) box(w * .55, .05, .2, mat(0x6f8fd0), x - w * .12, y, -3.9, g);
+  signPanel(g, w * .8, 1.1, signTex(title, col, '#fff'), x, H - .3, -3.85); };
+BUILD.tyreyard = () => { const g = new THREE.Group(), W = 22; forecourt(g, W, 14); palisade(g, W, 0xb83a2a);
+  for (let i = 0; i < 18; i++) tyreStack(g, -W / 2 + 1.5 + (i % 9) * 2.2, -5 - (i / 9 | 0) * 3, 4 + (Math.random() * 4 | 0));
+  box(10, 2.6, 4, mat(0x2b2b2e), 3, 1.3, -12, g); for (let i = 0; i < 14; i++) tyreStack(g, -1 + (i % 7) * 1.2, -10.6 - (i / 7 | 0) * .8, 7);
+  cyl(.12, .12, 6, mat(0x777777), -W / 2 + 1.5, 3, -.8, g, 6); signPanel(g, 1.6, 4, tex(64, 160, (x, w, h) => { x.fillStyle = '#1d3f8f'; x.fillRect(0, 0, w, h); x.fillStyle = '#ffd84a'; x.font = 'bold 14px sans-serif'; x.textAlign = 'center'; ['MOTORS', 'TYRES', 'MOT', 'REPAIRS', 'SERVICE'].forEach((t, i) => x.fillText(t, w / 2, 24 + i * 28)); }), -W / 2 + 1.5, 4.2, -.65);
+  flagPole(g, -W / 2 + 3.2, -.8); flagPole(g, W / 2 - 2, -.8, 4.5); return { g, w: W }; };
+BUILD.vanlot = () => { const g = new THREE.Group(), W = 28; forecourt(g, W, 18); palisade(g, W, 0x1f4fb8, -.2, 2.2);
+  for (let r = 0; r < 2; r++) for (let x = -W / 2 + 2; x < W / 2 - 8; x += 2.8) { const v = vanG([0xf2f2f2, 0xf2f2f2, 0xe8e8e8, 0x9aa3ad][(Math.random() * 4) | 0]); v.rotation.y = Math.PI / 2; v.position.set(x, 0, -4 - r * 7); g.add(v); }
+  const cx = W / 2 - 4.5; box(7, 3.2, 6, mat(0xf2f0ea), cx, 1.6, -9, g); const rf = hipRoof(7, 6, 1.4, mat(0x8a8f96, { metalness: .4, roughness: .5 })); rf.position.set(cx, 3.2, -6); g.add(rf);
+  windowSet(g, cx - 1, 1.7, 1.6, 1.2, -5.98, false, 1); box(1, 2.1, .1, mat(0x30343a), cx + 2, 1.05, -5.97, g); signPanel(g, 6.6, .8, signTex('COMMERCIAL VAN SALES', '#1f4fb8', '#fff'), cx, 3.8, -5.6);
+  return { g, w: W }; };
+BUILD.garages = () => { const g = new THREE.Group(), W = 27; forecourt(g, W, 5);
+  const OR = new THREE.MeshStandardMaterial({ map: CLAD('#e06a3a').map, roughness: .55, metalness: .3 });
+  gableShed(g, -9, 8.6, 16, 5, OR, 'MOT · TYRES', '#1d3f8f'); gableShed(g, 0, 8.6, 16, 5, CLAD_BLUE, 'TYRES · EXHAUSTS', '#c8202a', 'open'); gableShed(g, 9, 8.6, 16, 5, OR, 'BODY SHOP', '#1d3f8f');
+  for (let i = 0; i < 3; i++) { const c = carG(CARC[(Math.random() * CARC.length) | 0]); c.rotation.y = Math.PI / 2 * (i % 2 ? 1 : -1); c.position.set(-8 + i * 8, .02, -1.6); g.add(c); }
+  palisade(g, 6, 0xc8302a, -.2, 1.6); return { g, w: W }; };
+// side road off the main road with give-way lines and a street-name plate
+const junction = (name) => () => { const g = new THREE.Group(), W = 9;
+  const t = new THREE.Mesh(new THREE.PlaneGeometry(W, 40), roadM); t.rotation.x = -Math.PI / 2; t.rotation.z = Math.PI / 2; t.position.set(0, .215, -15); t.receiveShadow = true; g.add(t);
+  for (let x = -W / 2 + .4; x < 0; x += .9) box(.5, .02, .18, mat(0xecebe4), x, .23, 4.6, g); box(.15, .02, 4, mat(0xecebe4), 0, .23, 2.6, g);
+  const pl = new THREE.Group(); pl.position.set(W / 2 + .8, 0, 1); g.add(pl); [-.8, .8].forEach(x => box(.07, 1.1, .07, DARK, x, .55, 0, pl)); signPanel(pl, 2, .45, signTex(name, '#fff', '#111'), 0, 1.0, .05);
+  return { g, w: W }; };
+BUILD.fitzroy = junction('FITZROY AVE'); BUILD.rondini = junction('RONDINI AVE');
+// corner parade: two storeys, flats over three shops (takeaway, food & wine with fruit outside, business centre)
+BUILD.parade = () => { const g = new THREE.Group(), W = 21, H = 6.4, D = 11; const bm = new THREE.MeshStandardMaterial({ map: brickTex('#b8a48a', '#d6cbbb'), roughness: .9 });
+  box(W, H, D, bm, 0, H / 2, -2 - D / 2, g); box(W + .3, .3, D + .3, mat(0xe8e2d6), 0, H + .1, -2 - D / 2, g);
+  [[-7, '#c8202a', 'TAKEAWAY', 'glass'], [0, '#1d7a3a', 'FOOD & WINE', 'glass'], [7, '#5a6270', 'BUSINESS CENTRE', 'shut']].forEach(([x, c, t, k]) => {
+    signPanel(g, 6.4, .9, signTex(t, c, '#fff'), x, 3.35, -1.9); box(6.6, 1, .25, mat(c), x, 3.35, -2.1, g);
+    if (k === 'glass') { box(5.6, 2.4, .1, GLASSL, x, 1.5, -1.98, g); box(5.8, .12, .14, mat(0xdddddd), x, 2.75, -1.95, g); } else { box(5.6, 2.6, .12, mat(0x9aa1a8, { metalness: .4 }), x, 1.4, -1.98, g); for (let y = .2; y < 2.7; y += .3) box(5.6, .04, .16, mat(0xc0c6cb), x, y, -1.95, g); }
+    windowSet(g, x - 1.4, 5, 1.6, 1.3, -1.98, true, 1); windowSet(g, x + 1.4, 5, 1.6, 1.3, -1.98, true, 1); });
+  for (let i = 0; i < 6; i++) { box(.6, .3, .45, mat(0x8a6a3a), -2 + i * .65, .65, -1.2, g); box(.55, .15, .4, mat([0xf0a020, 0xd03020, 0x6ab030, 0xf0d040][i % 4]), -2 + i * .65, .86, -1.2, g); } box(4.2, .5, .5, mat(0x6a5a40), -.4, .25, -1.2, g);
+  forecourt(g, W, 2, PAVING); return { g, w: W }; };
+BUILD.periperi = () => { const g = new THREE.Group(), W = 12; forecourt(g, W, 6, PAVING);
+  box(W, 4.4, 9, CLAD('#3a3d44'), 0, 2.2, -6 - 4.5, g); box(W - 2, 2.6, .1, GLASSL, 0, 1.4, -5.98, g); box(W, .9, .3, mat(0xffffff), 0, 3.4, -5.9, g);
+  signPanel(g, 6, .8, signTex('PERI PERI', '#ffffff', '#d0202a'), 0, 3.4, -5.74);
+  const wood = mat(0x8a5a30, { roughness: .9 }); [-3, 2].forEach(x => { box(2.2, .08, .9, wood, x, .78, -3, g); [-.75, .75].forEach(o => box(2.2, .06, .3, wood, x, .45, -3 + o, g)); [-.9, .9].forEach(o => box(.08, .78, .08, wood, x + o, .39, -3, g)); });
+  return { g, w: W }; };
+// old fuel-station canopy now an MOT & tyre centre: pink/red fascia, tyre racks under it
+BUILD.motcanopy = () => { const g = new THREE.Group(), W = 22; forecourt(g, W, 18);
+  box(18, .9, 9, mat(0xf2f2f2), 0, 5.2, -7, g); box(18.1, .7, 9.1, mat(0xd8506a, { roughness: .5 }), 0, 4.75, -7, g);
+  [-4.5, 0, 4.5].forEach(x => signPanel(g, 3, .6, signTex('MOT', '#d8506a', '#fff'), x, 4.75, -2.43));
+  [[-8, -3], [8, -3], [-8, -11], [8, -11]].forEach(([x, z]) => box(.45, 4.4, .45, mat(0xe0e0e0), x, 2.2, z, g));
+  box(14, 2.4, 1, mat(0x404448, { metalness: .4 }), 0, 1.2, -14, g); for (let i = 0; i < 20; i++) tyreStack(g, -6.3 + (i % 10) * 1.4, -13.3 - (i / 10 | 0) * .1, 3);
+  for (let i = 0; i < 3; i++) { const c = carG(CARC[(Math.random() * CARC.length) | 0]); c.rotation.y = .3; c.position.set(-6 + i * 5, .02, -6.5); g.add(c); }
+  signPanel(g, 7, 1, signTex('MOTOR CITY', '#1d3f8f', '#fff', 'MOT · TYRES · SERVICING'), 0, 3.4, -2.42);
+  return { g, w: W }; };
+// the masjid & madrasa: cream render, arched windows, white wall with a sign board
+BUILD.madrasa = () => { const g = new THREE.Group(), W = 16, H = 6.4, D = 12; const cm = RENDER[3];
+  box(W, H, D, cm, 0, H / 2, -5 - D / 2, g); const rf = hipRoof(W, D, 2.2, ROOF_BROWN); rf.position.set(0, H, -5); g.add(rf);
+  for (let i = 0; i < 3; i++) { const x = -4.5 + i * 4.5; box(1.6, 1.8, .1, GLASS, x, 1.6, -4.97, g); const a = new THREE.Mesh(new THREE.CircleGeometry(.8, 16, 0, Math.PI), GLASS); a.position.set(x, 2.5, -4.9); g.add(a);
+    const fr = new THREE.Mesh(new THREE.TorusGeometry(.85, .07, 4, 16, Math.PI), mat(0xffffff)); fr.position.set(x, 2.5, -4.9); g.add(fr); windowSet(g, x, 4.8, 2, 1.2, -4.97, true, 1); }
+  box(W + 2, 1.2, .35, mat(0xf4f4f2), 0, .6, -.3, g); box(W + 2, .1, .45, mat(0xdcdcd6), 0, 1.25, -.3, g);
+  const sb = new THREE.Group(); sb.position.set(-W / 2 + 2.5, 0, -.1); g.add(sb); [-1, 1].forEach(x => box(.1, 2.4, .1, DARK, x, 1.2, 0, sb));
+  signPanel(sb, 2.4, 1.6, tex(160, 110, (x, w, h) => { x.fillStyle = '#f4f7f2'; x.fillRect(0, 0, w, h); x.strokeStyle = '#1d6a3a'; x.lineWidth = 6; x.strokeRect(3, 3, w - 6, h - 6); x.fillStyle = '#1d6a3a'; x.textAlign = 'center'; x.font = 'bold 16px serif'; x.fillText('MASJID', w / 2, 40); x.fillText('& MADRASA', w / 2, 66); x.font = '12px serif'; x.fillText('High School', w / 2, 90); }), 0, 2, .06);
+  forecourt(g, W + 2, 5, PAVING); return { g, w: W + 2 }; };
+BUILD.tudor = () => BUILD.semi(true);
+const LEFT_PLAN = ['semi', 'semi', 'tudor', 'semi', 'tudor', 'tudor', 'semi', 'rondini', 'semi', 'madrasa', 'semi', 'tudor', 'semi', 'semi'];
+const RIGHT_PLAN = ['carlot', 'shed', 'carlot', 'shed', 'fuel', 'shed', 'carlot', 'shed', 'tyreyard', 'vanlot', 'garages', 'garages', 'fitzroy', 'parade', 'periperi', 'motcanopy', 'shed'];
+
 // the railway behind the commercial side: ballast, two tracks, overhead line masts
 const railG = (() => { const g = new THREE.Group(); const L = 18;
   box(7, .3, L, mat(0x8a8178, { roughness: 1 }), 0, .15, 0, g); [-1.6, 1.6].forEach(tx => [-.72, .72].forEach(rx => box(.1, .15, L, mat(0x6a6a6e, { metalness: .7, roughness: .4 }), tx + rx, .38, 0, g)));
