@@ -45,10 +45,10 @@ addEventListener('load', loadStep);
 let SHOP = (() => { try { return JSON.parse(localStorage.getItem('jd_shop')) || null; } catch (e) { return null; } })() || { own: { classic: 1 }, eq: [], slots: 2, outfit: 'classic', hs500: 0, hs1000: 0, save: 0 };
 const saveShop = () => { try { localStorage.setItem('jd_shop', JSON.stringify(SHOP)); } catch (e) {} };
 const OUTFIT_KEYS = ['classic', 'eid', 'luton', 'puffer', 'moroccan'];
-const heroImgs = {}; OUTFIT_KEYS.forEach(k => heroImgs[k] = img(k === 'classic' ? 'art/hero3.png?h=1aa163e5a2' : 'art/hero3_' + k + '.png?v=1'));
+const heroImgs = {}; OUTFIT_KEYS.forEach(k => heroImgs[k] = img(k === 'classic' ? 'art/hero3.png?h=3159ddfc2e' : 'art/hero3_' + k + '.png?v=2'));
 let heroImg = heroImgs[SHOP.outfit] || heroImgs.classic; const HX4 = 3;
 const hasG = id => SHOP.eq.includes(id);   // hero redrawn at 3x the pixels (smooth curves, finer detail)
-const HERO_FR = ['run0_normal', 'run1_normal', 'run2_normal', 'run3_normal', 'run4_normal', 'run5_normal', 'fly0_effort', 'fly1_effort', 'fly2_effort', 'fly0_panic', 'fly1_panic', 'fly2_panic', 'glide0_normal', 'glide1_normal', 'land0_effort', 'glide0_ko', 'run0_happy', 'run0_blink', 'hang0_happy', 'hang1_happy', 'hang2_happy', 'hang3_happy'];
+const HERO_FR = ['run0_normal', 'run1_normal', 'run2_normal', 'run3_normal', 'run4_normal', 'run5_normal', 'fly0_effort', 'fly1_effort', 'fly2_effort', 'fly0_panic', 'fly1_panic', 'fly2_panic', 'glide0_normal', 'glide1_normal', 'land0_effort', 'glide0_ko', 'run0_happy', 'run0_blink', 'hang0_happy', 'hang1_happy', 'hang2_happy', 'hang3_happy', 'fall0_panic', 'fall1_panic', 'fall2_panic', 'fall0_ko', 'sit0_happy', 'sit1_happy'];
 const FR = n => HERO_FR.indexOf(n);
 const NPC_META = {"pc_m":{"w":95,"h":175,"n":15,"type":"walk","k":2},"pc_f":{"w":95,"h":149,"n":15,"type":"walk","k":2},"pcso":{"w":98,"h":147,"n":15,"type":"walk","k":2},"warden":{"w":98,"h":147,"n":15,"type":"walk","k":2},"fan_dad":{"w":87,"h":204,"n":15,"type":"walk","k":2},"fan_f":{"w":95,"h":136,"n":15,"type":"walk","k":2},"fan_kid":{"w":101,"h":147,"n":15,"type":"walk","k":2},"blonde":{"w":95,"h":139,"n":15,"type":"walk","k":2},"abaya":{"w":97,"h":139,"n":15,"type":"walk","k":2},"teen":{"w":95,"h":139,"n":15,"type":"walk","k":2},"aunty":{"w":95,"h":144,"n":15,"type":"walk","k":2},"uncle":{"w":95,"h":139,"n":15,"type":"walk","k":2},"nurse":{"w":95,"h":152,"n":15,"type":"walk","k":2},"elder":{"w":97,"h":144,"n":15,"type":"walk","k":2},"builder":{"w":97,"h":152,"n":15,"type":"walk","k":2},"rider":{"w":101,"h":134,"n":15,"type":"walk","k":2},"rider_g":{"w":107,"h":147,"n":15,"type":"walk","k":2},"rider_o":{"w":107,"h":147,"n":15,"type":"walk","k":2},"schoolboy":{"w":95,"h":134,"n":15,"type":"walk","k":2},"shop":{"w":95,"h":134,"n":15,"type":"walk","k":2},"lad":{"w":95,"h":134,"n":15,"type":"walk","k":2},"esc_a":{"w":108,"h":155,"n":5,"type":"esc","k":2},"esc_b":{"w":147,"h":163,"n":5,"type":"esc","k":2},"esc_c":{"w":147,"h":150,"n":5,"type":"esc","k":2},"esc_d":{"w":147,"h":155,"n":5,"type":"esc","k":2},"esc_e":{"w":108,"h":163,"n":5,"type":"esc","k":2},"postie":{"w":98,"h":147,"n":15,"type":"walk","k":2}};   // sprite sheets: walkers = walk0-3, blink0-3, shock, cheer, dizzy; e-scooters = ride0-2, shock, cheer
 const NPC_KEYS = Object.keys(NPC_META).filter(k => NPC_META[k].type === 'walk'), ESC_KEYS = Object.keys(NPC_META).filter(k => NPC_META[k].type === 'esc');
@@ -731,7 +731,7 @@ const RIDES = ['tuktuk', 'carpet', 'kabootar', 'sandals'];
 const PIG_COL = { o: '#1b1a24', h: '#7f899e', e: '#f08a2a', k: '#1b1a24', c: '#eef0f4', b: '#3a3d44', n: '#4fa36a', p: '#8a5fb0', l: '#c3cad8', g: '#9aa3b5', d: '#7d8698', t: '#5a6476', f: '#e88a7a', w: '#d4dae4', K: '#2e3442' };
 const PIG_BODY = ['...................ooo...', '..................ohhhoo.', '..................ohekhho', '.................oohhhhcbb', '...ooooooooooooonnhhhooo.', '..otlllllllllllnnnhho....', '.ottgglllllllllppnno.....', 'oKttggggggggggppnnno.....', 'oKttgggggggggggppgo......', '.ooKdgggggggggggggo......', '...odddgggggggggggo......', '....oodddddddddddo.......', '......ooooffoffoo........'];
 const PIG_WINGS = [['.oooo.......', 'owwwwoo.....', '.oggwwwoo...', '..oKgggwwo..', '...ogKKggwo.', '....oggKKggo'], ['oooooooooo..', 'owwwwwwwwwoo', 'oggggggggggo', 'oKKKgKKKgggo', '.ogggggggoo.', '..ooooooo...'], ['oooooooooo..', 'owwwwwwwwwoo', '.oggggggggo.', '..oKKgKKgo..', '...oggggo...', '....oggo....', '.....oo.....']];
-const PK = 5, pigCv = [0, 1, 2].map(f => { const c = document.createElement('canvas'); c.width = 30 * PK; c.height = 26 * PK; const x = c.getContext('2d');
+const PK = 3.2, pigCv = [0, 1, 2].map(f => { const c = document.createElement('canvas'); c.width = 30 * PK; c.height = 26 * PK; const x = c.getContext('2d');
   const paint = (rows, ox, oy) => rows.forEach((r, j) => { for (let i = 0; i < r.length; i++) { const ch = r[i]; if (ch === '.') continue; x.fillStyle = PIG_COL[ch]; x.fillRect((ox + i) * PK, (oy + j) * PK, PK, PK); } });
   paint(PIG_BODY, 2, 12); paint(PIG_WINGS[f], 7, 12 + [-9, -4, -3][f] + 7); x.fillStyle = 'rgba(140,255,190,.35)'; x.fillRect(19 * PK, 16 * PK, 2 * PK, 2 * PK); return c; });
 function runStarted() {   // start of the run proper: offer head starts (like their HEAD START buttons), golden misbaha ride
@@ -794,23 +794,23 @@ function drawBoost() {
 }
 function startVehicle(k) {
   RUN[k] = 1;
-  veh = { k, t: 0, vy: 0, jumps: 0, held: false, wob: 0, g: 1, s: 1, flap: 0, fuel: 1, nb: 0, ht: 0 }; if (k === 'tuktuk' && !RUN.nitroTip) { RUN.nitroTip = 1; setTimeout(() => pops.push({ x: hero.x + 30, y: hero.y - 110, txt: 'HOLD FOR NITRO!', col: '#ffd21f', t: 0 }), 900); } hero.thrust = false; if (k === 'kabootar') hero.vy = -200;
+  veh = { k, t: 0, vy: 0, jumps: 0, held: false, wob: 0, g: 1, s: 1, flap: 0, fuel: 1, nb: 0, ht: 0 }; if (k === 'kabootar') veh.tip = 1; if (k === 'tuktuk' && !RUN.nitroTip) { RUN.nitroTip = 1; setTimeout(() => pops.push({ x: hero.x + 30, y: hero.y - 110, txt: 'HOLD FOR NITRO!', col: '#ffd21f', t: 0 }), 900); } hero.thrust = false; if (k === 'kabootar') hero.vy = -200;
   banner = { k, t: 0 }; rings.push({ x: hero.x, y: hero.y - 30, t: 0 }); flashT = .12; flashCol = '255,255,255';
   tone(523, .1, 'square', .06); setTimeout(() => tone(659, .1, 'square', .06), 90); setTimeout(() => tone(784, .2, 'square', .06), 180);
 }
 function vehCircles() { const x = hero.x, y = hero.y;
-  if (veh.k === 'kabootar') return [[x + 2, y - 30, 14], [x - 4, y - 110, 26]];
+  if (veh.k === 'kabootar') return [[x + 2, y - 30, 13], [x, y - 62, 11], [x + 18, y - 100, 16]];
   if (veh.k === 'sandals') { const sg = veh.s < 0 ? -1 : 1; return [[x + 3, y - 31 * sg, 10], [x + 7, y - 58 * sg, 9]]; }
   return veh.k === 'tuktuk' ? [[x - 4, y - 22, 18], [x + 16, y - 16, 12], [x - 2, y - 48, 12]] : [[x, y - 8, 16], [x + 4, y - 36, 12]]; }
 function vehUpdate(dt) {
   veh.t += dt; hero.run += dt * (6 + speed / 22); if (hissG) hissG.gain.setTargetAtTime(0, AC.currentTime, .06);
   if (veh.k === 'kabootar') {   // flappy controls: tap to flap
     const press = holding && !veh.held; veh.held = holding; veh.flap -= dt;
-    if (press) { hero.vy = -330; veh.flap = .28; RUN.flaps++; tone(700, .05, 'square', .04, 1.4); for (let i = 0; i < 4; i++) sparks.push({ x: hero.x - 10, y: hero.y - 90, vx: -80 - Math.random() * 60, vy: 40 + Math.random() * 60, l: .4, c: '#e8ecf4' }); }
-    hero.vy += 1050 * dt; hero.vy = Math.min(hero.vy, 460); hero.y += hero.vy * dt;
+    if (press) { hero.vy = -270; veh.flap = .28; veh.tip = 0; RUN.flaps++; tone(700, .05, 'square', .04, 1.4); for (let i = 0; i < 4; i++) sparks.push({ x: hero.x - 10, y: hero.y - 90, vx: -80 - Math.random() * 60, vy: 40 + Math.random() * 60, l: .4, c: '#e8ecf4' }); }
+    hero.vy += 860 * dt; hero.y += hero.vy * dt;
     if (hero.y >= FLOOR) { hero.y = FLOOR; hero.vy = 0; }
-    if (hero.y - 185 < CEIL) { hero.y = CEIL + 185; hero.vy = Math.max(0, hero.vy); }
-    hero.rot = Math.max(-.3, Math.min(.35, hero.vy / 1100));
+    if (hero.y - 120 < CEIL) { hero.y = CEIL + 120; hero.vy = Math.max(0, hero.vy); }
+    hero.rot = Math.max(-.35, Math.min(.5, hero.vy / 700));
     return;
   }
   if (veh.k === 'sandals') {   // gravity sandals: tap to flip between pavement and the top of the screen
@@ -858,13 +858,19 @@ function vehCrash() {
 }
 function drawVehicle() {
   const x = hero.x, y = hero.y, k = veh.k;
-  if (k === 'kabootar') {
-    ctx.save(); ctx.translate(x, y); ctx.rotate(hero.rot * .15);
-    const sw = Math.sin(t * 6) * .06; ctx.save(); ctx.translate(0, -75); ctx.rotate(sw); ctx.translate(0, 75);
-    const hf = 'hang' + (Math.floor(t * 8) % 4) + '_happy'; ctx.imageSmoothingEnabled = true; ctx.drawImage(heroImg, FR(hf) * HW * HX4, 0, HW * HX4, HH0 * HX4, -HW * HS / 2, -HH, HW * HS, HH); ctx.restore();
-    const f = veh.flap > .14 ? 2 : veh.flap > 0 ? 1 : Math.floor(t * 4) % 2 ? 0 : 1; ctx.imageSmoothingEnabled = false;
-    ctx.translate(-6, -68); ctx.rotate(hero.rot * .35); ctx.drawImage(pigCv[f], -12.5 * PK - 2, -24 * PK);
-    ctx.restore(); ctx.imageSmoothingEnabled = true; return;
+  if (k === 'kabootar') {   // the exact Flappy pigeon (smaller); he hangs under it with both fists round its tail feathers
+    const f = veh.flap > .14 ? 2 : veh.flap > 0 ? 1 : Math.floor(t * 4) % 2 ? 0 : 1, FX = 10.5, FY = -83;   // FX/FY = his fist in the hang frame
+    ctx.save(); ctx.translate(x + FX, y + FY); ctx.rotate(hero.rot);
+    ctx.save(); ctx.rotate(-hero.rot * .6 + Math.sin(t * 5) * .05); ctx.imageSmoothingEnabled = true; const hf = 'hang' + (Math.floor(t * 8) % 4) + '_happy';
+    ctx.drawImage(heroImg, FR(hf) * HW * HX4, 0, HW * HX4, HH0 * HX4, -HW * HS / 2 - FX, -FY - HH, HW * HS, HH); ctx.restore();
+    { const gx = 2, gy = -17;   // his arm reaches up to the tail: sleeve, then the pigeon, then his fist wrapped round the tail feathers
+      ctx.lineCap = 'round'; ctx.strokeStyle = '#1a161e'; ctx.lineWidth = 6.5; ctx.beginPath(); ctx.moveTo(0, 4); ctx.lineTo(gx, gy + 3); ctx.stroke(); ctx.strokeStyle = SHOP.outfit === 'luton' ? '#f67a20' : SHOP.outfit === 'puffer' ? '#2c2c34' : SHOP.outfit === 'moroccan' ? '#963a2e' : SHOP.outfit === 'eid' ? '#fcf0ce' : '#f8f6fa'; ctx.lineWidth = 4; ctx.stroke();
+      ctx.save(); ctx.translate(gx, gy); ctx.rotate(-.42 - hero.rot * .4); ctx.imageSmoothingEnabled = false; ctx.drawImage(pigCv[f], -3.5 * PK, -20.5 * PK); ctx.imageSmoothingEnabled = true; ctx.restore();
+      ctx.fillStyle = '#d48a58'; ctx.strokeStyle = '#1a161e'; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.ellipse(gx, gy + 1, 4.2, 3.6, 0, 0, 7); ctx.fill(); ctx.stroke(); ctx.strokeStyle = '#a8643c'; ctx.lineWidth = .8; ctx.beginPath(); ctx.moveTo(gx - 2.6, gy + 1.5); ctx.lineTo(gx + 2.6, gy + 1.5); ctx.stroke(); }
+    ctx.restore();
+    if (veh.t < 3.2) { const a = Math.min(1, veh.t * 3, (3.2 - veh.t) * 2), s = 1 + Math.sin(t * 9) * .06; ctx.save(); ctx.globalAlpha = a; ctx.translate(W / 2, VH * .3); ctx.scale(s, s); ctx.font = '700 26px Silk'; ctx.textAlign = 'center'; ctx.lineJoin = 'round';
+      ctx.lineWidth = 6; ctx.strokeStyle = '#1b1a24'; ctx.strokeText('TAP TO FLAP', 0, 0); ctx.fillStyle = '#fff'; ctx.fillText('TAP TO FLAP', 0, 0); ctx.restore(); }
+    return;
   }
   if (k === 'sandals') {
     ctx.save(); ctx.translate(x, y); ctx.scale(1, veh.s);
@@ -915,7 +921,7 @@ function drawVehicle() {
     const wave = i => { const u = i / n; return Math.sin(t * 6.5 - u * 7) * (2.2 + u * 3.2) + Math.sin(t * 3.1 - u * 3) * 1.2; };
     const pts = []; for (let i = 0; i <= n; i++) pts.push([-W2 + i * (W2 * 2 / n), wave(i)]);
     const mid = Math.floor(n * .55);
-    ctx.drawImage(heroImg, FR('glide0_normal') * HW * HX4, 0, HW * HX4, HH0 * HX4, -HW * HS / 2, -HH + 14 + pts[mid][1], HW * HS, HH);
+    ctx.drawImage(heroImg, FR('sit' + (Math.floor(t * 3) % 2) + '_happy') * HW * HX4, 0, HW * HX4, HH0 * HX4, -HW * HS / 2 - 4, -HH + 10.5 + pts[mid][1], HW * HS, HH);
     const TH = 5;
     ctx.fillStyle = '#4a0c18'; ctx.beginPath(); pts.forEach(([px2, py], i) => i ? ctx.lineTo(px2, py + 1) : ctx.moveTo(px2, py + 1)); for (let i = n; i >= 0; i--) ctx.lineTo(pts[i][0], pts[i][1] + TH + 1); ctx.closePath(); ctx.fill();   // underside / thickness
     for (let i = 0; i < n; i++) { const [x0, y0] = pts[i], [x1, y1] = pts[i + 1], sl = (y1 - y0) / (x1 - x0), lit = Math.max(.72, Math.min(1.25, 1 - sl * 1.4));
@@ -1124,7 +1130,7 @@ function drawHero() {
   if (veh) { drawVehicle(); return; }
   if (inv > 0 && Math.floor(t * 14) % 2) return;
   let f;
-  if (hero.dead) f = hero.shockT > 0 || hero.slide ? FR('glide0_ko') : FR('fly' + (Math.floor((hero.flail || 0) * 14) % 3) + '_panic');   // arms flailing as he tumbles
+  if (hero.dead) f = hero.shockT > 0 || hero.slide ? FR('fall0_ko') : FR('fall' + (Math.floor((hero.flail || 0) * 14) % 3) + '_panic');   // arms flailing as he tumbles
   else if (state === 'menu') f = FR('fly' + (Math.floor(t * 9) % 3) + '_effort');
   else if (hero.ground) f = hero.landT > 0 ? FR('land0_effort') : FR('run' + (Math.floor(hero.run) % 6) + '_normal');
   else if (hero.thrust) f = FR('fly' + (Math.floor(t * 12) % 3) + (panicT > 0 ? '_panic' : '_effort'));
