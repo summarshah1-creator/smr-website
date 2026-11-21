@@ -4,6 +4,7 @@
 (function () {
 const HD = window.LANDMARKS_HD = {};
 const LINE = '#4a4338';
+const HDIMG = {}; window.HD_READY = Promise.all([['foodbank', 'hd/foodbank.png']].map(([k, src]) => new Promise(res => { const im = new Image(); im.onload = () => { HDIMG[k] = im; res(); }; im.onerror = res; im.src = src; })));
 const lg = (c, x0, y0, x1, y1, stops) => { const g = c.createLinearGradient(x0, y0, x1, y1); stops.forEach(([o, col]) => g.addColorStop(o, col)); return g; };
 const rect = (c, fill, x, y, w, h, stroke, lw = .45) => { c.fillStyle = fill; c.fillRect(x, y, w, h); if (stroke) { c.strokeStyle = stroke; c.lineWidth = lw; c.strokeRect(x + lw / 2, y + lw / 2, w - lw, h - lw); } };
 const poly = (c, fill, pts, stroke, lw = .45) => { c.beginPath(); pts.forEach(([a, b], i) => i ? c.lineTo(a, b) : c.moveTo(a, b)); c.closePath(); c.fillStyle = fill; c.fill(); if (stroke) { c.strokeStyle = stroke; c.lineWidth = lw; c.lineJoin = 'round'; c.stroke(); } };
@@ -1158,6 +1159,604 @@ HD.frasers = (c, x, G) => {
   rect(c, '#26313a', x + 8, G - 27, fw - 16, 27); for (let i = 0; i < 7; i++) { c.fillStyle = lg(c, 0, G - 25, 0, G, [[0, '#c4dce6'], [1, '#6a96a8']]); c.fillRect(x + 10 + i * 16, G - 25, 14, 25); } glare(c, x + 10, G - 25, 110, 25);
   for (let i = 0; i < 9; i++) bollard(c, x - 4.5 + i * 18, G, '#2a2c30', '#5a5e66');
   for (const [k, s2] of [[24, .95], [92, .85], [152, .95]]) tree(c, tx + k, G, s2, { d: '#4f8a2c', m: '#6aa83a', l: '#9ccc66' });
+  c.restore();
+};
+
+const ext = (c, s2, x, y, px, face, side, depth = 3, f = 'Mont, sans-serif', w = 900) => { c.save(); c.font = `${w} ${px}px ${f}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.lineJoin = 'round'; c.fillStyle = side; for (let d = depth; d > 0; d -= .5) c.fillText(s2, x + d * .8, y + d * .6); c.fillStyle = face; c.fillText(s2, x, y); c.restore(); };
+
+// Step Forward Luton: white wall with the red-and-black lattice, big chunky 3D orange LUTON letters in front, brown brick block
+// on the right, paving, planters
+HD.letters = (c, x, G) => {
+  c.save(); c.lineJoin = 'round';
+  rect(c, '#efeee9', x, G - 110, 120, 110, LINE, .45);
+  c.save(); c.beginPath(); c.rect(x, G - 110, 120, 50); c.clip(); for (let i = -1; i < 7; i++) { line(c, '#c1544f', 3.2, [[x + i * 20, G - 110], [x + i * 20 + 22, G - 66]]); line(c, '#26262a', 3.2, [[x + i * 20 + 22, G - 110], [x + i * 20, G - 66]]); } c.restore();
+  brick(c, x + 120, G - 86, 70, 86, '#8a6a54'); c.strokeStyle = LINE; c.strokeRect(x + 120, G - 86, 70, 86);
+  rect(c, '#bdbab2', x, G - 6, 190, 6); for (let i = 0; i < 19; i++) rect(c, '#a8a59c', x + i * 10, G - 6, .4, 6);
+  ext(c, 'LUTON', x + 95, G - 36, 50, '#f0601e', '#9c3410', 5);
+  for (const [px, w2, h2] of [[x - 20, 20, 14], [x + 172, 22, 12]]) { brick(c, px, G - h2, w2, h2, '#c58f52', { bw: 2.6, bh: 1.2 }); rect(c, '#4f8a3c', px + 1, G - h2 - 3, w2 - 2, 3); for (let i = 0; i < 6; i++) { c.beginPath(); c.arc(px + 2 + i * (w2 - 4) / 5, G - h2 - 3, 1.6, 0, 7); c.fillStyle = i % 2 ? '#6faa4e' : '#4f8a3c'; c.fill(); } }
+  c.restore();
+};
+
+// Luton Station: viaduct with overhead line masts behind, brown brick booking hall with the blue Welcome to Luton board over the
+// doors, National Rail sign, posters, ticket machine, defib, glass block with blue panels on the right
+HD.station = (c, x, G) => {
+  c.save(); c.lineJoin = 'round';
+  for (const px of [x + 20, x + 130, x + 240]) { panels(c, px, G - 92, 10, 30, '#a0a6ac', 10); rect(c, '#6a6e76', px + 4, G - 136, 1.6, 44); rect(c, '#6a6e76', px - 6, G - 132, 16, 1.6); rect(c, '#9aa0a8', px - 4, G - 133.6, 1.4, 3); rect(c, '#9aa0a8', px + 6.6, G - 133.6, 1.4, 3); }
+  line(c, '#4a4d54', .5, [[x - 6, G - 129], [x + 276, G - 129]]); line(c, '#4a4d54', .35, [[x - 6, G - 126], [x + 276, G - 126]]);
+  panels(c, x - 6, G - 92, 282, 8, '#b8bec4', 4); rect(c, '#4a4d54', x - 6, G - 94, 282, 2);
+  rect(c, '#26303d', x + 210, G - 66, 60, 66); c.fillStyle = lg(c, 0, G - 64, 0, G - 42, [[0, '#e4ecf2'], [1, '#9ab0c4']]); c.fillRect(x + 212, G - 64, 56, 22); c.fillStyle = lg(c, 0, G - 40, 0, G, [[0, '#3a74c8'], [1, '#1f4a94']]); c.fillRect(x + 212, G - 40, 56, 40); rect(c, '#26303d', x + 239.4, G - 64, 1.2, 64); glare(c, x + 212, G - 64, 56, 64); rect(c, '#3a3d44', x + 206, G - 70, 68, 4);
+  brick(c, x, G - 74, 210, 74, '#7a4e3a'); c.strokeStyle = LINE; c.lineWidth = .5; c.strokeRect(x, G - 74, 210, 74); rect(c, '#bdb7aa', x - 2, G - 78, 214, 4, LINE, .35);
+  for (let i = 0; i < 3; i++) sash(c, x + 34 + i * 20, G - 64, 16, 12, { stone: '#f4f2ec' }); sash(c, x + 2, G - 64, 12, 22, { stone: '#f4f2ec' });
+  rect(c, '#1f3f8a', x + 104, G - 60, 62, 22, '#0e2050', .4); rect(c, '#ffffff', x + 106, G - 58, 58, 18); txt(c, 'Welcome to', x + 135, G - 53.4, 5, '#1f3f8a', { f: 'Mont, sans-serif', w: 600 }); txt(c, 'Luton', x + 135, G - 45.4, 8, '#1f3f8a', { f: 'Mont, sans-serif', w: 800 });
+  rect(c, '#1f3f8a', x + 112, G - 38, 46, 38); rect(c, '#3a3d44', x + 116, G - 36, 38, 36); c.fillStyle = lg(c, 0, G - 36, 0, G, [[0, '#c89a62'], [1, '#9a7444']]); c.fillRect(x + 116, G - 36, 14, 36); c.fillStyle = lg(c, 0, G - 36, 0, G, [[0, '#8aa8c0'], [1, '#3a4a5a']]); c.fillRect(x + 132, G - 36, 22, 36); glare(c, x + 132, G - 36, 22, 36);
+  rect(c, '#d32f2f', x + 192, G - 70, 14, 20, '#6a1010', .3); line(c, '#fff', .9, [[x + 194.6, G - 64], [x + 203.4, G - 64]]); line(c, '#fff', .9, [[x + 194.6, G - 57], [x + 203.4, G - 57]]); line(c, '#fff', .9, [[x + 196, G - 66.6], [x + 202, G - 60.6], [x + 196, G - 54.4]]);
+  const poster = (px, py, w, h, col) => { rect(c, '#1f3f8a', px - 1, py - 1, w + 2, h + 2); rect(c, '#f6f4ee', px, py, w, h); rect(c, col, px + 2, py + 2, w - 4, h * .35); for (let k = 0; k < 4; k++) rect(c, '#9aa0a8', px + 2, py + h * .5 + k * 2.4, w - 4 - (k % 2) * 3, .6); };
+  poster(x + 6, G - 36, 18, 22, '#d84b6a'); poster(x + 28, G - 38, 16, 24, '#3a74c8'); poster(x + 48, G - 36, 16, 22, '#f2a33a'); poster(x + 92, G - 38, 14, 22, '#5aa86a'); poster(x + 164, G - 38, 18, 24, '#8a4fd8');
+  rect(c, '#1a1a1e', x + 70, G - 44, 18, 32, '#000', .3); rect(c, '#3fb04a', x + 70, G - 44, 18, 3); c.fillStyle = lg(c, 0, G - 38, 0, G - 30, [[0, '#cfe4f2'], [1, '#6f8ea8']]); c.fillRect(x + 74, G - 38, 10, 8); rect(c, '#5a6470', x + 74, G - 26, 10, 4); rect(c, '#9aa0a8', x + 76, G - 20, 6, 1);
+  rect(c, '#f2c43a', x + 186, G - 34, 12, 14, '#7a5a10', .3); rect(c, '#2e8b3a', x + 189, G - 31, 6, 4); line(c, '#fff', .6, [[x + 190, G - 29], [x + 191.6, G - 29], [x + 192.4, G - 30.6], [x + 193.2, G - 27.4], [x + 194, G - 29]]);
+  c.restore();
+};
+
+// SMR billboard building: red-brick gable end (stone coping, chimney + pots, drainpipe, tie plates), narrow front strip with sash
+// windows and a blue door; steel billboard frame with lamp arms: dark board with the real SMR mark, WEBSITES / APPS, GRAPHIC DESIGN,
+// PRINTING in the brand gradients and smrgraphics.co.uk; SMR STUDIO plate over the door
+const SMR_MARK = new Path2D('M340.2 1.0 L340.2 255.3 L340.7 256.1 L399.6 255.8 L400.9 254.8 L400.6 103.9 L401.1 102.9 L402.2 102.9 L507.3 217.8 L509.9 220.4 L510.7 220.4 L617.9 103.4 L619.7 102.6 L620.2 103.4 L619.7 254.8 L620.7 256.1 L682.2 255.6 L682.7 255.1 L682.4 0.5 L627.7 0.5 L594.9 36.8 L510.4 133.2 L505.8 128.6 L422.1 32.7 L393.2 0.5 L340.7 0.5ZM712.8 0.8 L713.0 191.1 L822.3 85.4 L820.3 83.1 L792.2 63.5 L793.0 62.2 L807.9 61.7 L873.7 56.9 L905.4 55.3 L906.1 56.1 L906.1 59.4 L905.4 60.9 L896.6 112.1 L890.5 145.8 L889.7 147.3 L889.7 150.2 L888.9 150.9 L887.4 150.2 L886.3 148.1 L869.6 126.0 L868.9 126.0 L807.9 183.3 L807.9 184.1 L880.7 253.3 L884.0 255.8 L1000.0 255.6 L997.2 251.7 L926.5 173.3 L926.5 172.3 L927.7 171.3 L929.5 171.0 L938.5 167.2 L949.9 160.6 L957.8 154.2 L964.4 147.0 L970.8 138.1 L975.9 128.3 L980.1 116.5 L982.6 105.9 L984.0 96.9 L984.5 82.8 L982.9 67.6 L980.4 57.1 L976.8 46.5 L971.0 35.2 L964.3 25.9 L958.1 19.5 L948.8 12.5 L937.0 6.4 L925.9 2.9 L911.5 0.6 L808.2 0.0ZM28.8 27.0 L23.6 34.3 L20.2 40.1 L17.0 47.1 L14.1 55.5 L11.4 68.9 L11.5 87.4 L12.9 95.4 L15.0 102.6 L18.1 110.3 L22.4 118.5 L27.1 125.5 L32.5 131.9 L38.3 137.2 L44.7 142.0 L53.7 147.3 L64.8 151.8 L74.8 154.4 L87.9 156.2 L210.1 156.6 L237.9 157.3 L242.0 158.3 L245.8 160.1 L251.7 165.3 L254.1 168.7 L255.8 172.5 L256.9 177.2 L256.9 180.8 L254.8 187.8 L250.6 193.6 L244.8 197.9 L237.9 199.9 L44.5 200.1 L0.0 255.3 L0.3 256.4 L243.3 255.9 L251.2 254.9 L260.7 252.6 L267.9 250.1 L275.6 246.4 L282.1 242.5 L288.0 238.0 L294.7 231.5 L299.1 226.0 L303.5 219.3 L307.1 212.4 L309.7 206.0 L311.9 198.3 L313.3 191.3 L314.4 180.3 L313.1 167.1 L311.1 158.1 L308.7 150.7 L306.0 144.5 L301.6 136.8 L297.1 130.5 L291.6 124.2 L278.7 114.1 L269.7 109.1 L258.9 104.7 L246.9 101.7 L237.1 100.4 L154.3 100.0 L84.3 99.0 L77.2 96.1 L72.0 91.2 L68.3 84.1 L67.5 76.6 L68.0 73.0 L69.1 69.7 L73.6 63.1 L79.7 59.0 L87.4 57.0 L263.6 57.3 L264.8 56.3 L308.3 1.3 L308.0 0.5 L90.3 0.0 L78.7 0.6 L64.0 3.6 L51.2 8.9 L45.3 12.3 L39.1 16.8Z');
+HD.smr = (c, x, G) => {
+  c.save(); c.lineJoin = 'round'; const WT = G - 150, b = { x: 14, y: 140, w: 148, h: 82 };
+  c.save(); c.beginPath(); c.moveTo(x + 9, G); c.lineTo(x + 9, WT); c.lineTo(x + 88, WT - 29); c.lineTo(x + 167, WT); c.lineTo(x + 167, G); c.closePath(); c.clip(); brick(c, x + 9, WT - 30, 158, 180, '#9c4a36'); c.restore();
+  line(c, LINE, .5, [[x + 9, G], [x + 9, WT], [x + 88, WT - 29], [x + 167, WT], [x + 167, G]]);
+  poly(c, '#5e5f66', [[x + 6, WT + 1], [x + 88, WT - 31], [x + 170, WT + 1], [x + 170, WT + 4], [x + 88, WT - 27], [x + 6, WT + 4]], LINE, .35);
+  stack(c, x + 80, WT - 46, 16, 18, '#8a3f2e', 2);
+  brick(c, x + 168, WT + 8, 34, 142, '#8a4030'); c.strokeStyle = LINE; c.lineWidth = .45; c.strokeRect(x + 168, WT + 8, 34, 142); slate(c, [[x + 166, WT + 9], [x + 176, WT - 4], [x + 204, WT - 4], [x + 204, WT + 9]], '#4a4b52');
+  for (let f = 0; f < 3; f++) sash(c, x + 176, WT + 18 + f * 38, 18, 26, { stone: '#f1ede4', key: true });
+  rect(c, '#1f3a5c', x + 176, G - 30, 18, 30, '#0e1e30', .35); for (const [a, b2] of [[3, 9], [3, 19]]) rect(c, 'rgba(255,255,255,.1)', x + 179, G - 30 + b2 - 6, 12, 7); c.fillStyle = lg(c, 0, G - 27, 0, G - 19, [[0, '#cfe0ee'], [1, '#7a9ab4']]); c.fillRect(x + 179, G - 27, 12, 5); c.beginPath(); c.arc(x + 190, G - 15, .9, 0, 7); c.fillStyle = '#e3c46a'; c.fill(); rect(c, '#d9d2c2', x + 174, G - 33, 22, 2);
+  c.fillStyle = lg(c, x + 162, 0, x + 165, 0, [[0, '#2a2c32'], [.5, '#5a5c64'], [1, '#2a2c32']]); c.fillRect(x + 162, WT + 2, 3, 148); for (const [ax, ay] of [[30, 30], [146, 30]]) { c.beginPath(); c.arc(x + ax, G - ay, 2.6, 0, 7); c.fillStyle = '#3c3e44'; c.fill(); c.strokeStyle = '#1b1a24'; c.lineWidth = .4; c.stroke(); }
+  // billboard
+  const bx = x + b.x, by = G - b.y; rect(c, '#2a2c33', bx - 4, by - 4, b.w + 8, b.h + 8, '#141418', .5); rect(c, '#9aa0aa', bx - 3, by - 3, b.w + 6, .8);
+  c.fillStyle = lg(c, 0, by, 0, by + b.h, [[0, '#18182e'], [1, '#0a0a14']]); c.fillRect(bx, by, b.w, b.h);
+  { const g = c.createRadialGradient(bx + b.w / 2, by + b.h * .32, 2, bx + b.w / 2, by + b.h * .32, b.w * .55); g.addColorStop(0, 'rgba(120,80,255,.25)'); g.addColorStop(1, 'rgba(120,80,255,0)'); c.fillStyle = g; c.fillRect(bx, by, b.w, b.h); }
+  c.save(); const lw = 84, sc = lw / 1000; c.translate(bx + (b.w - lw) / 2, by + 6); c.scale(sc, sc); c.fillStyle = '#ffffff'; c.fill(SMR_MARK, 'evenodd'); c.restore();
+  [['WEBSITES / APPS', '#7b6bff', '#e04bff'], ['GRAPHIC DESIGN', '#3a7bff', '#b04bff'], ['PRINTING', '#ff3d8b', '#ff9a3d']].forEach(([t, a, b2], i) => { c.save(); c.font = '800 7.4px Mont, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; const tw = c.measureText(t).width, cx = bx + b.w / 2, y = by + 37 + i * 10; c.fillStyle = lg(c, cx - tw / 2, 0, cx + tw / 2, 0, [[0, a], [1, b2]]); c.fillText(t, cx, y); c.restore(); });
+  rect(c, 'rgba(255,255,255,.2)', bx + b.w / 2 - 36, by + 66, 72, .6); txt(c, 'smrgraphics.co.uk', bx + b.w / 2, by + 73, 5.6, '#ffffff', { f: 'Mont, sans-serif', w: 500 });
+  rect(c, '#2a2c33', bx + 10, by + b.h + 4, b.w - 20, 2);
+  for (let i = 0; i < 3; i++) { const lx = bx + 24 + i * (b.w - 48) / 2; rect(c, '#1b1a24', lx, by - 14, 1.6, 10); rect(c, '#1b1a24', lx, by - 14, 8, 1.6); rect(c, '#c9ccd2', lx + 6, by - 13, 6, 2.6, '#1b1a24', .3); }
+  rect(c, '#1b1d24', x + 40, G - 30, 96, 10, '#000', .3); txt(c, 'SMR  STUDIO', x + 88, G - 25, 5.6, '#e9e4d6', { f: 'Mont, sans-serif', w: 700, ls: 1.2 });
+  rect(c, '#3a3d44', x + 70, G - 18, 36, 18); for (const dx of [x + 72, x + 89]) { c.fillStyle = lg(c, 0, G - 16, 0, G, [[0, '#cfe0ee'], [1, '#6f8ea8']]); c.fillRect(dx, G - 16, 15, 16); glare(c, dx, G - 16, 15, 16); }
+  c.restore();
+};
+
+// The Hat Factory: gable end of the old factory (pointed top with a pale coping, stone bands either side), the "If you can dream
+// it you must do it" mural (patterned tiles, big pink capitals with blue shadow; never lit at night), small sign, metal hoarding
+HD.hatfactory = (c, x, G) => {
+  c.save(); c.lineJoin = 'round'; const W = 140, top = G - 208, eave = G - 176;
+  c.save(); c.beginPath(); c.moveTo(x, G); c.lineTo(x, eave); c.lineTo(x + W / 2, top); c.lineTo(x + W, eave); c.lineTo(x + W, G); c.closePath(); c.clip(); brick(c, x, top, W, 208, '#8f4a35'); c.restore();
+  line(c, LINE, .5, [[x, G], [x, eave], [x + W / 2, top], [x + W, eave], [x + W, G]]);
+  poly(c, '#ebe6db', [[x - 3, eave + 1], [x + W / 2, top - 3], [x + W + 3, eave + 1], [x + W, eave + 2.6], [x + W / 2, top + 1], [x, eave + 2.6]], LINE, .35);
+  for (const yy of [G - 152, G - 116, G - 80]) for (const sx of [x, x + W - 14]) { rect(c, '#ebe4d6', sx, yy, 14, 4, '#9a9288', .25); rect(c, '#cfc6b4', sx, yy + 4, 14, .8); }
+  const mx = x + 16, mw = W - 32, my = G - 170, mh = 122;
+  rect(c, '#c98a7c', mx, my, mw, mh, '#6a4a40', .4); const pc = ['#d9a596', '#a9b6c8', '#c77a6e', '#e2c7a8', '#9fb0a8', '#d8a8b8', '#f0d8c8', '#8a9cb8'];
+  for (let i = 0; i * 2.6 < mw - 1; i++) for (let j = 0; j * 2.6 < mh - 1; j++) { c.fillStyle = pc[(i * 3 + j * 5 + ((i * j) % 7)) % 8]; c.fillRect(mx + .4 + i * 2.6, my + .4 + j * 2.6, 2.2, 2.2); }
+  ['IF YOU', 'CAN', 'DREAM IT', 'YOU MUST', 'DO IT'].forEach((w, k) => { const ty = my + 14 + k * 23; c.save(); c.font = '900 15px Mont, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.lineJoin = 'round';
+    while (c.measureText(w).width > mw - 8) c.font = `900 ${parseFloat(c.font) - .5}px Mont, sans-serif`;
+    c.fillStyle = '#1f3f8f'; c.fillText(w, mx + mw / 2 + 1.6, ty + 1.6); c.fillStyle = '#3a6fd8'; c.fillText(w, mx + mw / 2 + .8, ty + .8); c.fillStyle = '#ffb8d8'; c.fillText(w, mx + mw / 2, ty); c.restore(); });
+  rect(c, '#1f2a4a', x + W / 2 - 16, G - 44, 32, 10, '#000', .3); rect(c, '#ffffff', x + W / 2 - 12, G - 41, 24, .8); rect(c, '#9fb3d8', x + W / 2 - 10, G - 38, 20, .8);
+  for (let i = 0; i * 6 < W + 16; i++) { c.fillStyle = lg(c, x - 8 + i * 6, 0, x - 2 + i * 6, 0, [[0, '#8e959c'], [.5, '#b4bbc2'], [1, '#868d94']]); c.fillRect(x - 8 + i * 6, G - 30, 6, 30); } rect(c, '#5d646b', x - 8, G - 30, W + 16, 1.6); for (let i = 0; i < 6; i++) rect(c, '#3a3d44', x - 6 + i * 29, G - 3, 4, 3);
+  for (let i = 0; i < 13; i++) { const a = -Math.PI / 2 + (i - 6) * .2; line(c, i % 2 ? '#4f8a3c' : '#6faa4e', 1.2, [[x + 160, G - 3], [x + 160 + Math.cos(a) * 18, G - 3 + Math.sin(a) * 20]]); } rect(c, '#4a2f25', x + 146, G - 4, 34, 4);
+  c.restore();
+};
+
+// Luton & Dunstable University Hospital: tall grey ward block behind, dark louvred side blocks, tan cladding box with diagonal
+// joints and the name, tall glass window, ground floor of glass doors, black MAIN ENTRANCE and red EMERGENCY DEPT signs (centred),
+// red leg, curved low wall with a rail
+HD.ldh = (c, x, G) => {
+  c.save(); c.lineJoin = 'round'; x += 44; const TN = '#dcaa7c';
+  panels(c, x + 152, G - 236, 148, 236, '#aeb2b8', 18); rect(c, '#7e848c', x + 196, G - 250, 70, 14, LINE, .4); for (let i = 0; i < 12; i++) rect(c, '#6a7078', x + 198 + i * 5.6, G - 248, 2.6, 10);
+  for (let r = 0; r < 4; r++) for (let i = 0; i < 7; i++) { c.fillStyle = lg(c, 0, G - 226 + r * 18, 0, G - 215 + r * 18, [[0, (r + i) % 3 ? '#8aa4ba' : '#a8c0d2'], [1, '#4f6a82']]); c.fillRect(x + 157 + i * 20, G - 226 + r * 18, 16, 11); }
+  for (const [bx, bw, bh] of [[x - 40, 106, 132], [x + 270, 30, 124]]) { rect(c, '#2e3238', bx, G - bh, bw, bh, LINE, .4); for (let i = 0; i < 18; i++) rect(c, '#3e434b', bx + 2, G - bh + 4 + i * 2.2, bw - 4, 1.2); }
+  rect(c, '#4a5562', x + 18, G - 86, 44, 12);
+  c.fillStyle = lg(c, x + 64, 0, x + 272, 0, [[0, shade(TN, 1.04)], [1, shade(TN, .94)]]); c.fillRect(x + 64, G - 156, 208, 110); c.strokeStyle = LINE; c.lineWidth = .45; c.strokeRect(x + 64, G - 156, 208, 110);
+  c.save(); c.beginPath(); c.rect(x + 64, G - 156, 208, 40); c.clip(); for (let i = -2; i < 20; i++) line(c, shade(TN, .86), .5, [[x + 64 + i * 13, G - 116], [x + 64 + i * 13 + 20, G - 156]]); c.restore();
+  for (const yy of [G - 116, G - 84]) rect(c, shade(TN, .88), x + 64, yy, 208, .6); for (let i = 1; i < 9; i++) rect(c, shade(TN, .88), x + 64 + i * 23, G - 116, .6, 70);
+  rect(c, '#26292e', x + 86, G - 134, 50, 88); curtain(c, x + 90, G - 130, 42, 80, 2, 3);
+  txt(c, 'Luton and Dunstable', x + 205, G - 106, 6.4, '#f4f6f8', { f: 'Mont, sans-serif', w: 500 }); txt(c, 'University Hospital', x + 205, G - 97, 6.4, '#f4f6f8', { f: 'Mont, sans-serif', w: 500 });
+  rect(c, '#4a4e56', x - 40, G - 46, 330, 46); for (let i = 0; i < 22; i++) rect(c, '#3e424a', x - 40, G - 44 + i * 2, 330, .5);
+  curtain(c, x - 34, G - 42, 42, 42, 2, 2); curtain(c, x + 14, G - 42, 56, 42, 2, 2); rect(c, '#2e3238', x + 40, G - 18, 26, 18); curtain(c, x + 90, G - 42, 56, 42, 4, 1); curtain(c, x + 168, G - 42, 70, 42, 3, 1); rect(c, '#d8262f', x + 196, G - 34, 18, 18);
+  rect(c, '#121418', x - 44, G - 58, 208, 14, '#000', .4); txt(c, 'MAIN ENTRANCE', x + 60, G - 51, 7, '#ffffff', { f: 'Mont, sans-serif', w: 800, ls: .8 });
+  rect(c, '#e3171f', x + 162, G - 60, 100, 16, '#7a0a0e', .4); txt(c, 'EMERGENCY DEPARTMENT', x + 212, G - 52, 5.6, '#ffffff', { f: 'Mont, sans-serif', w: 800, ls: .4 });
+  poly(c, '#e3171f', [[x + 248, G - 44], [x + 262, G - 44], [x + 262, G], [x + 254, G], [x + 254, G - 30]], '#7a0a0e', .35);
+  c.fillStyle = '#3a3e44'; c.beginPath(); c.moveTo(x - 46, G); c.lineTo(x - 46, G - 8); c.quadraticCurveTo(x + 129, G - 16, x + 304, G - 8); c.lineTo(x + 304, G); c.closePath(); c.fill();
+  for (let i = 0; i < 70; i++) rect(c, 'rgba(0,0,0,.18)', x - 46 + i * 5, G - 8, .4, 8);
+  c.strokeStyle = '#dcd8ce'; c.lineWidth = 1.6; c.beginPath(); c.moveTo(x - 46, G - 8); c.quadraticCurveTo(x + 129, G - 16, x + 304, G - 8); c.stroke();
+  line(c, '#b8bec6', .8, [[x + 186, G - 20], [x + 240, G - 26]]); for (const px of [x + 190, x + 214, x + 236]) line(c, '#b8bec6', .7, [[px, G - 20.4 - (px - x - 186) * .11], [px, G - 11]]);
+  c.restore();
+};
+
+// Luton Foodbank: green corrugated warehouse with a dark roof band, yellow-buff brick base, white sign with the real look (red
+// "luton", grey "food" + red "bank", white heart with the yolk), barred window, grey door, open loading bay with shelves and crates
+HD.foodbank = (c, x, G) => {
+  c.save(); c.lineJoin = 'round';
+  ribbed(c, x, G - 112, 300, 64, '#2f7a5a', 2.2); rect(c, '#1f5a40', x - 3, G - 118, 306, 7, '#0e3a28', .4); rect(c, '#3f9a72', x - 3, G - 118, 306, 1);
+  brick(c, x, G - 48, 156, 48, '#dab56c'); brick(c, x + 252, G - 48, 48, 48, '#dab56c'); line(c, LINE, .45, [[x, G - 48], [x + 300, G - 48]]);
+  rect(c, '#f4f2ec', x + 10, G - 42, 28, 26, '#8a8880', .35); rect(c, '#3a3d44', x + 12, G - 40, 24, 22); for (let i = 0; i < 7; i++) rect(c, '#a8b0ba', x + 13 + i * 3.4, G - 40, .8, 22);
+  rect(c, '#808e98', x + 70, G - 42, 20, 42, '#3a444c', .4); c.fillStyle = lg(c, 0, G - 38, 0, G - 26, [[0, '#d4e2ec'], [1, '#7a94a8']]); c.fillRect(x + 74, G - 38, 12, 12); rect(c, '#c0c6cc', x + 86, G - 22, 2, 1); rect(c, '#4a4e56', x + 96, G - 36, 10, 8);
+  rect(c, '#1f5a40', x + 156, G - 98, 96, 98); rect(c, '#17171b', x + 160, G - 92, 88, 92); rect(c, '#3f8a68', x + 158, G - 98, 92, 6);
+  // inside the bay (owner): a big white van parked nose-out in the middle, four shelves of green and blue crates either side of it
+  c.fillStyle = lg(c, 0, G - 92, 0, G, [[0, '#24242a'], [1, '#121216']]); c.fillRect(x + 160, G - 92, 88, 92);
+  const crate = (cx, cy, w, h, col) => { c.fillStyle = lg(c, 0, cy, 0, cy + h, [[0, shade(col, 1.18)], [1, shade(col, .78)]]); c.fillRect(cx, cy, w, h); rect(c, 'rgba(0,0,0,.28)', cx, cy + h * .45, w, .4); rect(c, 'rgba(0,0,0,.45)', cx + w * .3, cy + 1, w * .4, 1.1); c.strokeStyle = 'rgba(0,0,0,.4)'; c.lineWidth = .3; c.strokeRect(cx, cy, w, h); };
+  for (const [sx, sw] of [[x + 161, 22], [x + 225, 22]]) { for (const px of [sx, sx + sw - 1.2]) rect(c, '#8a929c', px, G - 82, 1.2, 82);
+    for (let k = 0; k < 4; k++) { const sy = G - 62 + k * 19 - 19; rect(c, '#a8b0ba', sx, sy + 15, sw, 1.4); const n = 2; for (let j = 0; j < n; j++) crate(sx + 1.6 + j * 9.6, sy + 7.6, 8.6, 7.2, (j + k + (sx > x + 200 ? 1 : 0)) % 2 ? '#2a6fd8' : '#3fae5a'); } }
+  { const vx = x + 204, vb = G - 1, W2 = 38, H2 = 56;   // van front-on
+    c.fillStyle = 'rgba(0,0,0,.35)'; c.beginPath(); c.ellipse(vx, vb, W2 * .6, 2, 0, 0, 7); c.fill();
+    for (const wx of [vx - W2 / 2 + 2, vx + W2 / 2 - 7]) { c.fillStyle = '#141416'; c.beginPath(); c.roundRect ? c.roundRect(wx, vb - 8, 5, 8, 1.4) : c.rect(wx, vb - 8, 5, 8); c.fill(); }
+    c.fillStyle = lg(c, vx - W2 / 2, 0, vx + W2 / 2, 0, [[0, '#d4d8dc'], [.3, '#ffffff'], [.7, '#f2f4f6'], [1, '#c4c8cc']]); c.beginPath(); c.moveTo(vx - W2 / 2, vb - 6); c.lineTo(vx - W2 / 2, vb - H2 + 6); c.quadraticCurveTo(vx - W2 / 2, vb - H2, vx - W2 / 2 + 6, vb - H2); c.lineTo(vx + W2 / 2 - 6, vb - H2); c.quadraticCurveTo(vx + W2 / 2, vb - H2, vx + W2 / 2, vb - H2 + 6); c.lineTo(vx + W2 / 2, vb - 6); c.closePath(); c.fill(); c.strokeStyle = 'rgba(0,0,0,.4)'; c.lineWidth = .4; c.stroke();
+    c.fillStyle = lg(c, 0, vb - H2 + 10, 0, vb - 28, [[0, '#7a8ea0'], [.6, '#3a4654'], [1, '#2a323c']]); c.beginPath(); c.moveTo(vx - W2 / 2 + 3, vb - 28); c.lineTo(vx - W2 / 2 + 5, vb - H2 + 12); c.lineTo(vx + W2 / 2 - 5, vb - H2 + 12); c.lineTo(vx + W2 / 2 - 3, vb - 28); c.closePath(); c.fill();
+    c.save(); c.beginPath(); c.moveTo(vx - W2 / 2 + 3, vb - 28); c.lineTo(vx - W2 / 2 + 5, vb - H2 + 12); c.lineTo(vx + W2 / 2 - 5, vb - H2 + 12); c.lineTo(vx + W2 / 2 - 3, vb - 28); c.clip(); c.fillStyle = 'rgba(255,255,255,.16)'; c.beginPath(); c.moveTo(vx - 10, vb - 28); c.lineTo(vx - 2, vb - H2 + 12); c.lineTo(vx + 4, vb - H2 + 12); c.lineTo(vx - 4, vb - 28); c.fill(); c.restore();
+    for (const d of [-1, 1]) { rect(c, '#2a2a2e', vx + d * (W2 / 2 + 1.4) - 1.6, vb - 34, 3.2, 4.6); line(c, '#2a2a2e', .6, [[vx + d * W2 / 2, vb - 32], [vx + d * (W2 / 2 + 1.4), vb - 32]]); }
+    rect(c, '#d84a2a', vx - 8, vb - H2 + 5, 16, 3.4); txt(c, 'FOODBANK', vx, vb - H2 + 6.7, 2.4, '#ffffff', { f: 'Mont, sans-serif', w: 900 });
+    rect(c, '#2a2e34', vx - 12, vb - 24, 24, 7, '#141418', .3); for (let k = 0; k < 4; k++) rect(c, '#3e444c', vx - 11, vb - 23 + k * 1.6, 22, .7); c.beginPath(); c.arc(vx, vb - 20.6, 1.6, 0, 7); c.fillStyle = '#c8ccd2'; c.fill();
+    for (const d of [-1, 1]) { c.fillStyle = lg(c, vx + d * 15 - 3.6, 0, vx + d * 15 + 3.6, 0, [[0, '#e8f0f6'], [1, '#a8b8c6']]); c.beginPath(); c.moveTo(vx + d * 12.6, vb - 24); c.lineTo(vx + d * 18.4, vb - 25); c.lineTo(vx + d * 18.4, vb - 20); c.lineTo(vx + d * 12.6, vb - 19.6); c.fill(); rect(c, '#f2a33a', vx + d * 16.6 - 1, vb - 18.6, 2, 1.2); }
+    rect(c, '#3a3e44', vx - W2 / 2 + 1, vb - 14, W2 - 2, 6, '#1a1c20', .3); rect(c, '#f2c94c', vx - 6, vb - 13, 12, 3.4, '#7a6010', .2); rect(c, '#1b1a24', vx - 4.4, vb - 11.8, 8.8, .5); }
+  rect(c, '#ffffff', x + 14, G - 106, 132, 34, '#8a8880', .4);
+  { const im = HDIMG.foodbank; if (im) { const h2 = 30, w2 = h2 * im.width / im.height; c.drawImage(im, x + 80 - w2 / 2, G - 104, w2, h2); }   // the real Luton Foodbank logo (owner's file)
+    else { txt(c, 'luton', x + 46, G - 98.6, 8, '#d32f2f', { f: 'Mont, sans-serif', w: 600 }); txt(c, 'foodbank', x + 70, G - 85, 14, '#5a5a5e', { f: 'Mont, sans-serif', w: 600 }); } }
+  c.restore();
+};
+
+// Inspire Luton Sports Village: tall red-brick sports hall with the white ring logo (figure + inspire / Luton Sports Village), lower
+// middle wing with deep-set windows, glass hall front behind brick piers on the right, white copings, green verge, young trees
+HD.inspire = (c, x, G) => {
+  c.save(); c.lineJoin = 'round'; const B = '#a8503a';
+  brick(c, x + 120, G - 104, 110, 104, B); c.strokeStyle = LINE; c.lineWidth = .45; c.strokeRect(x + 120, G - 104, 110, 104); rect(c, '#ebebe9', x + 118, G - 108, 114, 4, LINE, .35);
+  for (const wx of [x + 130, x + 170, x + 206]) for (const wy of [G - 90, G - 44]) { rect(c, '#26303d', wx, wy, 18, 30); c.fillStyle = lg(c, 0, wy, 0, wy + 30, [[0, '#9ab6cc'], [1, '#3e5468']]); c.fillRect(wx + 2, wy + 2, 14, 26); glare(c, wx + 2, wy + 2, 14, 26); }
+  rect(c, '#ebebe9', x + 226, G - 146, 218, 6, LINE, .35);
+  curtain(c, x + 232, G - 140, 204, 140, 10, 4); rect(c, '#26303d', x + 232, G - 70, 204, 2.4);
+  for (const px of [x + 230, x + 278, x + 326, x + 374, x + 420]) { brick(c, px, G - 140, 14, 140, B); c.strokeStyle = LINE; c.strokeRect(px, G - 140, 14, 140); }
+  brick(c, x + 230, G - 140, 204, 12, B); c.strokeRect(x + 230, G - 140, 204, 12);
+  rect(c, '#26303d', x + 296, G - 40, 26, 40); for (const dx of [x + 298, x + 310]) { c.fillStyle = lg(c, 0, G - 38, 0, G, [[0, '#d4e4f0'], [1, '#7a9ab4']]); c.fillRect(dx, G - 38, 10, 38); }
+  brick(c, x, G - 160, 156, 160, B); c.strokeStyle = LINE; c.lineWidth = .5; c.strokeRect(x, G - 160, 156, 160); rect(c, '#ebebe9', x - 2, G - 164, 160, 4, LINE, .35);
+  c.strokeStyle = '#f6f4ee'; c.lineWidth = 1.3; c.beginPath(); c.ellipse(x + 78, G - 108, 66, 28, 0, 0, 7); c.stroke();
+  { const fx = x + 30, fy = G - 120; c.fillStyle = '#f6f4ee'; c.beginPath(); c.arc(fx, fy - 6, 3, 0, 7); c.fill(); c.lineCap = 'round'; line(c, '#f6f4ee', 2.4, [[fx - 1, fy - 1], [fx - 5, fy + 10]]); line(c, '#f6f4ee', 1.8, [[fx - 1, fy], [fx + 8, fy - 6]]); line(c, '#f6f4ee', 1.8, [[fx - 1, fy], [fx - 9, fy + 2]]); line(c, '#f6f4ee', 1.8, [[fx - 5, fy + 10], [fx - 2, fy + 18]]); line(c, '#f6f4ee', 1.8, [[fx - 5, fy + 10], [fx - 11, fy + 15]]); }
+  txt(c, 'inspire', x + 88, G - 115, 17, '#f6f4ee', { f: 'Mont, sans-serif', w: 500 }); txt(c, 'Luton Sports Village', x + 88, G - 100, 6.4, '#f6f4ee', { f: 'Mont, sans-serif', w: 500 });
+  rect(c, '#f4f2ec', x + 8, G - 52, 8, 6, '#8a8880', .3);
+  for (const lx of [x + 170, x + 260]) { c.fillStyle = lg(c, lx, 0, lx + 2.4, 0, [[0, '#8a9098'], [.5, '#d0d4d8'], [1, '#7a8088']]); c.fillRect(lx, G - 120, 2.4, 120); rect(c, '#9aa0a8', lx, G - 120, 12, 1.6); rect(c, '#e8ecef', lx + 9, G - 119, 4, 1.6); c.fillStyle = lg(c, lx + 4, 0, lx + 14, 0, [[0, '#2a62c4'], [1, '#1f4fa8']]); c.fillRect(lx + 4, G - 104, 10, 30); c.beginPath(); c.arc(lx + 9, G - 96, 2.6, 0, 7); c.fillStyle = '#9ad8f4'; c.fill(); line(c, '#ffffff', .5, [[lx + 6, G - 84], [lx + 12, G - 84]]); }
+  c.fillStyle = lg(c, 0, G - 5, 0, G, [[0, '#7fcf5a'], [1, '#5aa83a']]); c.fillRect(x, G - 4, 230, 4); for (const tx of [x + 150, x + 196]) { rect(c, '#5a3d2a', tx, G - 24, 1.6, 24); tree(c, tx + .8, G - 22, .45, { d: '#3a6b2c', m: '#5f8f3c', l: '#8ac060' }); }
+  c.restore();
+};
+
+// Nadeem Plaza: round corner tower in cream render (shaded as a cylinder), blue-framed glass ground floor with the COFFEE POT
+// fascia (lit as one cafe), white first-floor band of windows, cream drum with stone rings, two windows, red NADEEM PLAZA in its own
+// font, blue clerestory band, white overhanging cap; red brick paving
+HD.nadeem = (c, x, G) => {
+  c.save(); c.lineJoin = 'round'; const cx = x + 75, W = 104, l = cx - W / 2;
+  const cylG = (y, h, base) => lg(c, l, 0, l + W, 0, [[0, shade(base, 1.04)], [.3, shade(base, 1.1)], [.6, shade(base, .98)], [1, shade(base, .82)]]);
+  const cyl = (y, h, base) => { c.fillStyle = cylG(y, h, base); c.fillRect(l, y, W, h); line(c, LINE, .45, [[l, y], [l, y + h]]); line(c, LINE, .45, [[l + W, y], [l + W, y + h]]); };
+  const band = (y, h, n, pane, frame) => { c.fillStyle = cylG(y, h, frame); c.fillRect(l, y, W, h); for (let i = 0; i < n; i++) { const a0 = Math.acos(1 - 2 * i / n), a1 = Math.acos(1 - 2 * (i + 1) / n); const px0 = l + W * (1 - Math.cos(a0)) / 2, px1 = l + W * (1 - Math.cos(a1)) / 2; c.fillStyle = lg(c, 0, y, 0, y + h, [[0, shade(pane, 1.25)], [1, shade(pane, .7)]]); c.fillRect(px0 + 1, y + 2, px1 - px0 - 2, h - 4); } glare(c, l, y, W, h); };
+  band(G - 34, 34, 7, '#5d8fbf', '#1f5fa8'); rect(c, '#2a3a52', cx - 9, G - 30, 18, 30); c.fillStyle = lg(c, 0, G - 27, 0, G - 13, [[0, '#d4e4f0'], [1, '#7a9ab4']]); c.fillRect(cx - 6, G - 27, 12, 14); rect(c, '#f4f2ec', l + 6, G - 26, 12, 18, '#8a8880', .3);
+  cyl(G - 48, 14, '#e9e2cf'); rect(c, '#2b211c', cx - 34, G - 48, 68, 12, '#000', .3); txt(c, 'COFFEE POT', cx, G - 42, 7, '#ff6a2a', { f: 'Mont, sans-serif', w: 900, ls: .6 });
+  band(G - 84, 36, 7, '#d8dcd8', '#1f5fa8'); for (let i = 0; i < 6; i++) { const px = l + 6 + i * W / 6; rect(c, '#6f7880', px, G - 78, W / 6 - 9, 1.2); rect(c, '#6f7880', px, G - 70, W / 6 - 9, 1.2); }
+  cyl(G - 150, 66, '#e8e1ce'); for (const yy of [G - 116, G - 94]) { c.fillStyle = cylG(yy, 2, '#c8c0aa'); c.fillRect(l, yy, W, 2); rect(c, 'rgba(255,255,255,.4)', l, yy + 2, W, .6); }
+  sash(c, cx - 32, G - 112, 14, 14, { stone: '#f4f2ec' }); sash(c, cx + 18, G - 112, 14, 14, { stone: '#f4f2ec' });
+  c.save(); c.font = '900 15px Mont, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.lineJoin = 'round'; for (const [t, ty] of [['NADEEM', G - 141], ['PLAZA', G - 126]]) { c.fillStyle = '#7a1717'; c.fillText(t, cx + .8, ty + .8); c.fillStyle = '#e0262f'; c.fillText(t, cx, ty); } c.restore();
+  rect(c, '#1b1a24', l + 5, G - 172, W - 10, 22); c.fillStyle = '#20304a'; c.fillRect(l + 6, G - 171, W - 12, 21); for (let i = 0; i < 8; i++) { c.fillStyle = lg(c, 0, G - 169, 0, G - 152, [[0, '#8ab4dc'], [1, '#2a5a94']]); c.fillRect(l + 8 + i * (W - 16) / 8, G - 169, (W - 16) / 8 - 1.6, 17); } glare(c, l + 6, G - 171, W - 12, 21);
+  c.fillStyle = cylG(G - 182, 11, '#f1ebda'); c.fillRect(l - 4, G - 182, W + 8, 11); c.strokeStyle = LINE; c.lineWidth = .45; c.strokeRect(l - 4, G - 182, W + 8, 11); rect(c, 'rgba(0,0,0,.2)', l + 5, G - 171, W - 10, 1.4);
+  rect(c, '#c25a3c', x - 6, G - 3, 162, 3); for (let i = 0; i < 40; i++) rect(c, '#a84a30', x - 4 + i * 4, G - 3, .4, 3);
+  c.restore();
+};
+
+// Kenilworth Road, Oak Stand: the terrace the entrance is cut into (slate roof, chimneys, six first-floor sashes, white door
+// cases either side), blue OAK STAND sign with BLOCKS F·G GATE 6 / GATE 7 BLOCKS D·E (never lit), white entrance block, navy
+// gates with orange frames
+HD.oak = (c, x, G) => {
+  c.save(); c.lineJoin = 'round';
+  for (const cx of [x + 40, x + 156]) stack(c, cx, G - 160, 16, 26, '#a8503a', 2);
+  slate(c, [[x - 4, G - 112], [x + 214, G - 112], [x + 192, G - 146], [x + 18, G - 146]], '#4b4b50');
+  brick(c, x, G - 112, 210, 112, '#a8503a'); c.strokeStyle = LINE; c.lineWidth = .5; c.strokeRect(x, G - 112, 210, 112);
+  for (let i = 0; i < 6; i++) { rect(c, '#ebe3d2', x + 10 + i * 34, G - 104, 22, 3, '#8a8270', .25); sash(c, x + 12 + i * 34, G - 100, 18, 24, { stone: '#f4f2ec' }); rect(c, '#ebe3d2', x + 10 + i * 34, G - 75, 22, 2); }
+  c.fillStyle = lg(c, 0, G - 66, 0, G - 46, [[0, '#2a50c0'], [1, '#162e8a']]); c.fillRect(x + 32, G - 66, 146, 20); c.strokeStyle = '#0a1a50'; c.strokeRect(x + 32, G - 66, 146, 20);
+  txt(c, 'OAK STAND', x + 105, G - 56, 10, '#ffffff', { f: 'Mont, sans-serif', w: 900, ls: .8 });
+  for (const [bx, blk, gate] of [[x + 50, 'F·G', '6'], [x + 160, 'D·E', '7']]) { txt(c, 'BLOCKS', bx - 6, G - 61.4, 2.6, '#fff', { f: 'Mont, sans-serif' }); txt(c, blk, bx - 6, G - 55.4, 6, '#fff', { f: 'Mont, sans-serif', w: 900 }); txt(c, 'GATE', bx + 6, G - 61.4, 2.6, '#fff', { f: 'Mont, sans-serif' }); poly(c, '#ffffff', [[bx + 2.6, G - 58.6], [bx + 9.4, G - 58.6], [bx + 6, G - 51.4]]); txt(c, gate, bx + 6, G - 56.6, 4, '#1e3fa3', { f: 'Mont, sans-serif', w: 900 }); }
+  rect(c, '#efeee9', x + 36, G - 46, 138, 46, LINE, .4);
+  const gate2 = (gx, gw, gh) => { rect(c, '#e8641c', gx - 2, G - gh, gw + 4, gh); c.fillStyle = lg(c, 0, G - gh, 0, G, [[0, '#2a3a6a'], [1, '#1a2448']]); c.fillRect(gx, G - gh + 2, gw, gh - 2); for (let k = 1; k < gw / 4; k++) rect(c, 'rgba(0,0,0,.25)', gx + k * 4, G - gh + 2, .4, gh - 2); };
+  gate2(x + 76, 56, 40); gate2(x + 48, 14, 36); gate2(x + 146, 16, 36);
+  for (const dx of [x + 10, x + 186]) { rect(c, '#f6f4ee', dx, G - 38, 14, 38, '#8a8880', .35); rect(c, '#e2ded4', dx + 2, G - 34, 10, 14); rect(c, '#e2ded4', dx + 2, G - 18, 10, 14); c.beginPath(); c.arc(dx + 7, G - 31, 2.4, 0, 7); c.fillStyle = '#a8c0d2'; c.fill(); rect(c, '#c9a64a', dx + 10, G - 18, 1.4, 1); }
+  brick(c, x + 2, G - 12, 26, 12, '#a8503a'); brick(c, x + 178, G - 14, 8, 14, '#a8503a');
+  c.restore();
+};
+
+// Cycle King: three brick blocks over the shops (tall left, low middle, tall right) with stepped parapets and white windows; yellow
+// fascias in red frames (CYCLE KING with red bursts, CYCLE KING with a bike + chequer strip, 7 DAYS A WEEK), red pilasters, windows
+// packed with bikes, glass doors
+HD.cycleking = (c, x, G) => {
+  c.save(); c.lineJoin = 'round'; const B = '#9a4a34', Y = '#f8d420', RD = '#d8262f';
+  for (const [bx, bw, top] of [[x, 130, 160], [x + 130, 104, 124], [x + 234, 110, 150]]) { brick(c, bx, G - top, bw, top - 44, B); c.strokeStyle = LINE; c.lineWidth = .45; c.strokeRect(bx, G - top, bw, top - 44); rect(c, '#c4bcae', bx - 1, G - top - 1.6, bw + 2, 1.6); }
+  for (const [px, pw, top] of [[x + 6, 24, 160], [x + 52, 26, 160], [x + 100, 24, 160], [x + 240, 26, 150], [x + 304, 34, 150]]) { brick(c, px, G - top - 8, pw, 8, B); c.strokeStyle = LINE; c.strokeRect(px, G - top - 8, pw, 8); rect(c, '#c4bcae', px - 1, G - top - 9.6, pw + 2, 1.6); }
+  for (const [wx, wy, w, h] of [[22, 150, 28, 18], [84, 150, 22, 18], [16, 108, 26, 18], [56, 108, 22, 18], [96, 108, 16, 18], [144, 120, 26, 10], [180, 120, 26, 10], [244, 136, 14, 18], [274, 118, 18, 18], [308, 118, 22, 18], [274, 140, 18, 12]]) sash(c, x + wx, G - wy, w, h, { stone: '#f2f0ea' });
+  for (const [sx, sw] of [[x - 2, 132], [x + 130, 104], [x + 234, 112]]) { rect(c, RD, sx, G - 68, sw, 22, '#6a0e0e', .4); c.fillStyle = lg(c, 0, G - 66, 0, G - 48, [[0, '#ffe45a'], [1, '#eec010']]); c.fillRect(sx + 2, G - 66, sw - 4, 18); }
+  const burst = (bx, by) => { c.fillStyle = RD; c.beginPath(); for (let i = 0; i < 16; i++) { const a = i * Math.PI / 8, r = i % 2 ? 2.6 : 5.6; c.lineTo(bx + Math.cos(a) * r, by + Math.sin(a) * r * .7); } c.fill(); };
+  const bike = (bx, by, col, s2 = 1) => { c.strokeStyle = col; c.lineWidth = .7 * s2; for (const wx of [bx, bx + 9 * s2]) { c.beginPath(); c.arc(wx, by, 3 * s2, 0, 7); c.stroke(); } c.beginPath(); c.moveTo(bx, by); c.lineTo(bx + 3 * s2, by - 4 * s2); c.lineTo(bx + 7.6 * s2, by - 4 * s2); c.lineTo(bx + 9 * s2, by); c.moveTo(bx + 3 * s2, by - 4 * s2); c.lineTo(bx + 4.6 * s2, by); c.lineTo(bx + 7.6 * s2, by - 4 * s2); c.moveTo(bx + 2.4 * s2, by - 5 * s2); c.lineTo(bx + 4 * s2, by - 5 * s2); c.moveTo(bx + 7.6 * s2, by - 4 * s2); c.lineTo(bx + 7.2 * s2, by - 5.6 * s2); c.stroke(); };
+  burst(x + 10, G - 57); burst(x + 118, G - 57); txt(c, 'CYCLE KING', x + 64, G - 56.6, 10.6, RD, { f: 'Mont, sans-serif', w: 900 });
+  rect(c, RD, x + 132, G - 66, 100, 3.6); for (let i = 0; i < 25; i++) rect(c, '#ffffff', x + 133 + i * 4, G - 65.2, 2, 1.8);
+  txt(c, 'CYCLE KING', x + 172, G - 55, 8, RD, { f: 'Mont, sans-serif', w: 900 }); bike(x + 208, G - 52.4, '#1b1a24', 1.1);
+  txt(c, '7 DAYS A WEEK', x + 290, G - 57, 8, RD, { f: 'Mont, sans-serif', w: 900 });
+  rect(c, '#ecebe5', x - 2, G - 46, 348, 46);
+  for (const [wx, ww] of [[x + 4, 56], [x + 68, 56], [x + 140, 40], [x + 240, 46], [x + 292, 46]]) { c.fillStyle = lg(c, 0, G - 42, 0, G - 4, [[0, '#f0f2ee'], [1, '#c8ccd0']]); c.fillRect(wx, G - 42, ww, 38); rect(c, '#3a4048', wx, G - 42, ww, 38, null);
+    c.fillStyle = lg(c, 0, G - 42, 0, G - 4, [[0, '#e8ecee'], [1, '#aab2ba']]); c.fillRect(wx + 1.4, G - 40.6, ww - 2.8, 35.2);
+    const cols = ['#e0302a', '#2a6fd8', '#f2c43a', '#3fae5a', '#e8641c', '#b23ad8', '#2a2a2e'];
+    for (let row = 0; row < 3; row++) for (let i = 0; i * 9 < ww - 12; i++) bike(wx + 4 + i * 9 + (row % 2) * 4, G - 32 + row * 10, cols[(i * 3 + row * 2 + Math.round(wx)) % cols.length], .85);
+    glare(c, wx + 1.4, G - 40.6, ww - 2.8, 35.2); }
+  for (const px of [x - 2, x + 62, x + 128, x + 232, x + 286, x + 342]) { c.fillStyle = lg(c, px, 0, px + 4, 0, [[0, '#a81a20'], [.5, '#e8343a'], [1, '#a81a20']]); c.fillRect(px, G - 46, 4, 46); }
+  rect(c, '#2a2f38', x + 184, G - 42, 40, 42); for (const dx of [x + 187, x + 206]) { c.fillStyle = lg(c, 0, G - 39, 0, G - 5, [[0, '#d4e4f0'], [1, '#7a9ab4']]); c.fillRect(dx, G - 39, 15, 34); glare(c, dx, G - 39, 15, 34); }
+  c.restore();
+};
+
+// Lewsey Sports Park: brown brick block with LEWSEY / SPORTS PARK / active, louvres, white clad hall with a window band and the
+// ENTRANCE panel (crisp, inside a taller white panel), glass entrance; small clad block on the left with a red-edged door; steps,
+// yellow handrails, blue disabled sign, yellow bay lines
+HD.lewsey = (c, x, G) => {
+  c.save(); c.lineJoin = 'round';
+  const CLAD = (bx, by, w, h) => { c.fillStyle = lg(c, 0, by, 0, by + h, [[0, '#f2ecdc'], [1, '#e2dac6']]); c.fillRect(bx, by, w, h); for (let yy = by + 2.4; yy < by + h; yy += 2.4) rect(c, 'rgba(120,100,60,.18)', bx, yy, w, .4); c.strokeStyle = LINE; c.lineWidth = .45; c.strokeRect(bx, by, w, h); };
+  CLAD(x + 120, G - 140, 160, 140); CLAD(x + 210, G - 156, 70, 18); rect(c, '#4a4d54', x + 120, G - 122, 160, 1.6); rect(c, '#4a4d54', x + 120, G - 92, 160, 1.6);
+  rect(c, '#efeee9', x + 124, G - 116, 152, 20); for (let i = 0; i < 6; i++) { c.fillStyle = lg(c, 0, G - 113, 0, G - 99, [[0, '#d4e4ee'], [1, '#7a9ab0']]); c.fillRect(x + 140 + i * 22, G - 113, 18, 14); } glare(c, x + 140, G - 113, 128, 14); rect(c, '#3a3d44', x + 126, G - 112, 10, 8);
+  CLAD(x + 26, G - 150, 98, 14);
+  brick(c, x + 20, G - 136, 100, 136, '#a5643f'); c.strokeStyle = LINE; c.lineWidth = .5; c.strokeRect(x + 20, G - 136, 100, 136); rect(c, '#3a3d44', x + 18, G - 138, 104, 2.6);
+  ext(c, 'LEWSEY', x + 70, G - 118, 15, '#f6f4ee', '#5a2e1a', 1.6); txt(c, 'SPORTS PARK', x + 70, G - 104, 7, '#f6f4ee', { f: 'Mont, sans-serif', w: 900, sh: '#5a2e1a' });
+  rect(c, '#f6f4ee', x + 40, G - 100, 60, 13); c.save(); c.font = '700 8px Mont, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = '#e8641c'; c.fillText('act ve', x + 70, G - 93.4); c.restore();
+  { const ix = x + 72.6, iy = G - 94; c.strokeStyle = '#3aa848'; c.lineWidth = .8; c.beginPath(); c.arc(ix, iy, 2.2, Math.PI * .1, Math.PI * 1.6); c.stroke(); c.beginPath(); c.arc(ix + 1.6, iy - 2.6, .8, 0, 7); c.fillStyle = '#3aa848'; c.fill(); }
+  for (const vx of [x + 40, x + 82]) { rect(c, '#ebebe7', vx, G - 84, 14, 10, '#8a8880', .3); for (let i = 0; i < 4; i++) rect(c, '#9a9a9a', vx + 1, G - 82.6 + i * 2.2, 12, .9); }
+  for (let i = 0; i < 6; i++) rect(c, '#b9744e', x + 30 + i * 16, G - 20, 5, 4);
+  rect(c, '#e9ecef', x + 120, G - 64, 160, 15); rect(c, '#ffffff', x + 182, G - 63, 82, 13, '#c8ccd0', .3); txt(c, 'ENTRANCE', x + 223, G - 56.4, 7, '#22408a', { f: 'Mont, sans-serif', w: 800, ls: .8 });
+  rect(c, '#f6f6f4', x + 124, G - 50, 152, 50); rect(c, '#ffffff', x + 126, G - 46, 18, 46, '#c8ccd0', .3);
+  for (let i = 0; i < 6; i++) { c.fillStyle = lg(c, 0, G - 46, 0, G - 2, i < 2 ? [[0, '#a8b4c0'], [1, '#6a7682']] : [[0, '#5a6a7c'], [1, '#2a3240']]); c.fillRect(x + 148 + i * 21, G - 46, 18, 44); } glare(c, x + 148, G - 46, 124, 44); rect(c, '#e9ecef', x + 148, G - 40, 126, .8); rect(c, '#2f6fb5', x + 158, G - 32, 4, 4);
+  CLAD(x, G - 70, 22, 70); rect(c, '#ebebe7', x - 2, G - 54, 24, 4); rect(c, '#3a4250', x + 4, G - 46, 12, 46); rect(c, '#c8202a', x + 16, G - 46, 1.6, 46);
+  for (let i = 0; i < 4; i++) rect(c, '#6a4a34', x - 14, G - 4 - i * 4, 36, 2); rect(c, '#f2c14e', x + 8, G - 22, 30, 1.6); for (const px of [x + 8, x + 22, x + 36]) rect(c, '#f2c14e', px, G - 22, 1.6, 22);
+  rect(c, '#2f6fb5', x + 24, G - 42, 10, 12, '#0e2a6a', .3); c.beginPath(); c.arc(x + 29, G - 38.6, .9, 0, 7); c.fillStyle = '#fff'; c.fill(); c.beginPath(); c.arc(x + 29.6, G - 34, 2.2, .3, 2.6); c.strokeStyle = '#fff'; c.lineWidth = .6; c.stroke();
+  rect(c, '#f2c14e', x + 40, G - 2, 80, 1.6); for (let i = 0; i < 6; i++) rect(c, '#f2c14e', x + 44 + i * 13, G - 2, .8, 2);
+  c.restore();
+};
+
+// a parked car seen from behind (Leagrave Road drive): saloon or hot hatch
+const carBack = (c, bx, G, col, hatch2) => { const D = shade(col, .72), L2 = shade(col, 1.25);
+  c.fillStyle = lg(c, 0, G - 28, 0, G - 4, [[0, L2], [.4, col], [1, D]]); c.beginPath();
+  if (hatch2) { c.moveTo(bx, G - 4); c.lineTo(bx, G - 14); c.quadraticCurveTo(bx, G - 18, bx + 2.6, G - 18.6); c.lineTo(bx + 4.6, G - 26); c.lineTo(bx + 26.4, G - 26); c.lineTo(bx + 28.4, G - 18.6); c.quadraticCurveTo(bx + 31, G - 18, bx + 31, G - 14); c.lineTo(bx + 31, G - 4); }
+  else { c.moveTo(bx, G - 4); c.lineTo(bx, G - 15); c.quadraticCurveTo(bx + 1, G - 19, bx + 4, G - 19); c.lineTo(bx + 7, G - 19); c.lineTo(bx + 9.6, G - 27.6); c.lineTo(bx + 24.4, G - 27.6); c.lineTo(bx + 27, G - 19); c.lineTo(bx + 30, G - 19); c.quadraticCurveTo(bx + 33, G - 19, bx + 34, G - 15); c.lineTo(bx + 34, G - 4); }
+  c.closePath(); c.fill(); c.strokeStyle = 'rgba(0,0,0,.5)'; c.lineWidth = .4; c.stroke();
+  const W2 = hatch2 ? 31 : 34; c.fillStyle = lg(c, 0, G - 26, 0, G - 19, [[0, '#5a6878'], [1, '#1a2028']]); c.beginPath(); if (hatch2) { c.moveTo(bx + 5.6, G - 18.6); c.lineTo(bx + 7, G - 24.6); c.lineTo(bx + 24, G - 24.6); c.lineTo(bx + 25.4, G - 18.6); } else { c.moveTo(bx + 8.6, G - 19.4); c.lineTo(bx + 10.6, G - 26.4); c.lineTo(bx + 23.4, G - 26.4); c.lineTo(bx + 25.4, G - 19.4); } c.fill();
+  rect(c, 'rgba(255,255,255,.25)', bx + W2 * .32, G - 25.6, W2 * .16, .6);
+  if (hatch2) { rect(c, '#141416', bx + 2.8, G - 28, 25.4, 2); rect(c, '#e83030', bx + 10.5, G - 27.6, 10, .5); }
+  for (const lx of [bx + 1, bx + W2 - 8]) { c.fillStyle = lg(c, lx, 0, lx + 7, 0, [[0, '#7a0c10'], [.5, '#ff3a3a'], [1, '#7a0c10']]); c.fillRect(lx, G - 15.6, 7, 2.8); }
+  rect(c, '#f2c94c', bx + W2 / 2 - 5, G - 11.6, 10, 3.6, '#7a6010', .2); rect(c, '#1b1a24', bx + W2 / 2 - 3.4, G - 10.4, 6.8, .5);
+  rect(c, hatch2 ? '#141416' : D, bx + 1, G - 7, W2 - 2, 2.4); rect(c, 'rgba(255,255,255,.18)', bx + 2, G - 17.6, W2 - 4, .5);
+  for (const tx of [bx + 2, bx + W2 - 8]) { c.fillStyle = '#141416'; c.beginPath(); c.roundRect ? c.roundRect(tx, G - 4.6, 6, 4.6, 1) : c.rect(tx, G - 4.6, 6, 4.6); c.fill(); } };
+
+// Leagrave Road house: light grey rendered semi with a brown tiled roof, three skylights, chimney with pots, white uPVC windows (the
+// left ones with top openers, lower one with blinds), satellite dish, grey composite door with diamond glass, red brick piers,
+// black gate with the faded back building over it, block-paved drive full: black saloon, blue saloon, red A45-style hatch
+HD.leagrave = (c, x, G) => {
+  c.save(); c.lineJoin = 'round'; const GR = '#d8dada', GD = '#b4b8b8', RW = '#b0503c';
+  slate(c, [[x + 4, G - 112], [x + 108, G - 112], [x + 102, G - 150], [x + 10, G - 150]], '#6e6354');
+  for (const sx of [x + 18, x + 49, x + 80]) { rect(c, '#2e343c', sx, G - 140, 14, 8, '#14181c', .3); c.fillStyle = lg(c, 0, G - 139, 0, G - 133, [[0, '#b8cad8'], [1, '#5a7088']]); c.fillRect(sx + 1, G - 139, 12, 6); }
+  stack(c, x + 11, G - 164, 14, 16, '#9a5440', 2);
+  c.fillStyle = lg(c, x + 8, 0, x + 104, 0, [[0, '#e2e4e4'], [1, '#cdd0d0']]); c.fillRect(x + 8, G - 112, 96, 112); c.strokeStyle = LINE; c.lineWidth = .45; c.strokeRect(x + 8, G - 112, 96, 112); rect(c, 'rgba(0,0,0,.12)', x + 60, G - 112, .5, 112);
+  c.fillStyle = lg(c, x + 98, 0, x + 101, 0, [[0, '#d0d2d2'], [.5, '#ffffff'], [1, '#c4c6c6']]); c.fillRect(x + 98, G - 110, 3, 110); rect(c, 'rgba(0,0,0,.22)', x + 8, G - 112, 96, 2);
+  const BAYWIN = (wx, wy, h, blinds) => { rect(c, '#f6f6f4', wx, wy, 42, h, '#9a9a96', .35); const top = wy + 3, ph = h - 6;
+    for (const [px, pw] of [[3, 4], [9, 11], [22, 11], [35, 4]]) { c.fillStyle = lg(c, 0, top, 0, top + ph, [[0, '#dfe8ee'], [.5, '#8aa0b2'], [1, '#56687a']]); c.fillRect(wx + px, top, pw, ph); rect(c, '#f6f6f4', wx + px, top + 5, pw, 1.2);
+      if (blinds) for (let i = 0; i < ph - 8; i += 1.6) rect(c, 'rgba(240,240,236,.55)', wx + px, top + 7 + i, pw, .7); }
+    glare(c, wx + 3, top, 36, ph); };
+  BAYWIN(x + 14, G - 104, 30, false); rect(c, GD, x + 12, G - 74, 46, 2.6);
+  rect(c, '#f6f6f4', x + 66, G - 104, 30, 30, '#9a9a96', .35); for (const yy of [G - 101, G - 88]) { c.fillStyle = lg(c, 0, yy, 0, yy + 11, [[0, '#dfe8ee'], [1, '#6a8296']]); c.fillRect(x + 69, yy, 24, 11); } glare(c, x + 69, G - 101, 24, 24); rect(c, GD, x + 64, G - 74, 34, 2.6);
+  { const dx = x + 99, dy = G - 66; rect(c, '#5a5e66', dx + 3, dy - .7, 4, 1.4); c.fillStyle = lg(c, dx - 4, dy - 6, dx + 4, dy + 6, [[0, '#c4c8ce'], [1, '#7a8088']]); c.beginPath(); c.ellipse(dx, dy, 4.4, 5.8, -.35, 0, 7); c.fill(); c.strokeStyle = '#3a3d44'; c.lineWidth = .4; c.stroke(); line(c, '#3a3d44', .5, [[dx, dy], [dx - 3.6, dy - 1]]); }
+  BAYWIN(x + 14, G - 62, 32, true); rect(c, GD, x + 12, G - 30, 46, 2.6);
+  rect(c, '#6e7276', x + 66, G - 54, 22, 54, '#3a3d40', .35); c.fillStyle = lg(c, x + 70, 0, x + 84, 0, [[0, '#4a5262'], [1, '#323a46']]); c.fillRect(x + 70, G - 49, 14, 49);
+  for (const dy of [G - 42, G - 33, G - 24]) poly(c, '#b4c8d8', [[x + 77, dy - 2.6], [x + 79.6, dy], [x + 77, dy + 2.6], [x + 74.4, dy]]); rect(c, '#c8ccd2', x + 81.6, G - 28, .8, 6);
+  brick(c, x, G - 16, 8, 16, RW); rect(c, '#2a2a2e', x, G - 18, 8, 2); brick(c, x + 140, G - 16, 8, 16, RW); rect(c, '#2a2a2e', x + 140, G - 18, 8, 2);
+  c.save(); c.globalAlpha = .75; poly(c, '#bc6e5c', [[x + 104, G - 51], [x + 131, G - 51], [x + 129.5, G - 55.5], [x + 104, G - 55.5]]); rect(c, '#cbcdce', x + 104, G - 51, 27, 5); c.restore();
+  rect(c, '#1e2024', x + 104, G - 46, 36, 46); for (let i = 0; i < 17; i++) rect(c, '#34383e', x + 105 + i * 2.1, G - 44, 1, 44); rect(c, '#3a3e44', x + 104, G - 46, 36, 1.6); rect(c, '#4a4e56', x + 104, G - 24, 36, .8);
+  rect(c, '#b06a54', x + 8, G - 3, 132, 3); for (let i = 0; i < 66; i++) rect(c, '#9a5a46', x + 8 + i * 2, G - 3, .4, 3); rect(c, '#9a5a46', x + 8, G - 1.6, 132, .3);
+  carBack(c, x + 16, G, '#1c1d22'); carBack(c, x + 58, G, '#2e3d6e'); carBack(c, x + 100.5, G, '#d8141c', true);
+  c.restore();
+};
+
+// Marsh Farm Estate: Lea Bank, Five Springs and Penhill, three 15-storey blocks in blue/white patchwork cladding (the middle one a
+// little shorter, the right one thinner), recessed balcony column with white rails, stairwell strip, window grid, aerials, trees
+HD.marshfarm = (c, x, G) => {
+  c.save(); c.lineJoin = 'round';
+  const PAL = ['#6aa2d8', '#4b88c8', '#3a76bf', '#2c66b4', '#22529e', '#1b4288', '#163672', '#b8d0e6'];
+  const hash = (a, b, cc) => { const v = Math.sin(a * 91.7 + b * 47.3 + cc * 13.1) * 43758.5; return v - Math.floor(v); };
+  const tower = (tx, w, h, sd, bal, strip) => { const top = G - h, FL = h / 15, cw = 3, cols = Math.ceil(w / cw);
+    for (let f = 0; f < 30; f++) for (let i = 0; i < cols; i++) { const n = hash(sd, Math.floor(i / 2), Math.floor(f / 3)), m = hash(sd + 9, i, f); const k = n > .92 ? 7 : Math.min(6, Math.floor(n * 5 + (m > .8 ? 1 : 0))); c.fillStyle = PAL[k]; c.fillRect(tx + i * cw, top + f * FL / 2, Math.min(cw, w - i * cw), FL / 2 + .1); }
+    const [bx, bw] = bal; c.fillStyle = lg(c, tx + bx, 0, tx + bx + bw, 0, [[0, '#0e1c3a'], [1, '#1a3060']]); c.fillRect(tx + bx, top + 2, bw, h - 2); for (let f = 0; f < 15; f++) { rect(c, '#eef2f6', tx + bx, top + f * FL + FL - 3, bw, .8); for (let k = 0; k < bw; k += 2) rect(c, 'rgba(238,242,246,.6)', tx + bx + k, top + f * FL + FL - 6, .3, 3); }
+    for (let f = 0; f < 15; f++) for (let i = 0; i < Math.floor(w / 6); i++) { const wx = tx + i * 6 + .5; if (wx + 5 > tx + bx - 1 && wx < tx + bx + bw + 1) continue; if (wx + 5 > tx + strip[0] - 1 && wx < tx + strip[0] + strip[1] + 1) continue;
+      const wy = top + f * FL + 2; rect(c, '#f2f4f6', wx, wy, 4.4, FL - 4.4); c.fillStyle = lg(c, 0, wy, 0, wy + FL - 5, [[0, '#a8c0d4'], [1, '#4a6a86']]); c.fillRect(wx + .6, wy + .6, 3.2, FL - 5.6); }
+    const [sx, sw] = strip; rect(c, '#e9edf2', tx + sx, top + 3, sw, h - 3); for (let f = 0; f < 15; f++) { c.fillStyle = lg(c, 0, 0, 0, 1, [[0, '#9ab4ca'], [1, '#7d97ad']]); c.fillStyle = '#86a0b6'; c.fillRect(tx + sx + 1, top + f * FL + 2, sw - 2, FL - 3); }
+    rect(c, '#c8daea', tx, top, w, 2); c.strokeStyle = '#1b1a24'; c.lineWidth = .5; c.strokeRect(tx, top, w, h); rect(c, 'rgba(10,20,50,.18)', tx + w - 5, top, 5, h);
+    for (const ax of [tx + w * .2, tx + w * .7]) { rect(c, '#7a8088', ax, top - 9, .8, 9); rect(c, '#9aa0a8', ax - 2.4, top - 6, 5.6, .6); rect(c, '#9aa0a8', ax - 1.6, top - 3.6, 4, .6); } };
+  tower(x + 4, 104, 300, 1, [8, 16], [58, 12]); tower(x + 140, 104, 282, 2, [8, 16], [58, 12]); tower(x + 276, 88, 300, 3, [6, 14], [50, 11]);
+  for (const [tx2, s2] of [[18, 1.5], [124, 1.7], [262, 1.6], [350, 1.8]]) tree(c, x + tx2, G, s2, { d: '#3a6b2c', m: '#4f8a3c', l: '#7ab858' });
+  c.restore();
+};
+
+// Venue Central (Britannia Estates): side wing with louvred grey top, dark board VENUE · vc · CENTRAL, glass door; main block in
+// warm render with pilasters, dark roof band, black VENUE CENTRAL board with the VC ring + BRITANNIA ESTATES, tall dark windows,
+// big glazed entrance (warm light inside), wall lamps, planters and topiary
+HD.venue = (c, x0, G) => {
+  c.save(); c.lineJoin = 'round';
+  { const x = x0, B = '#e6dccb'; c.fillStyle = lg(c, x, 0, x + 124, 0, [[0, B], [1, shade(B, .92)]]); c.fillRect(x, G - 66, 124, 66); for (let i = 0; i < 4; i++) rect(c, shade(B, .92), x, G - 50 + i * 12, 124, .5); c.strokeStyle = LINE; c.lineWidth = .45; c.strokeRect(x, G - 66, 124, 66);
+    rect(c, '#4a4d54', x - 2, G - 84, 128, 18, '#22242a', .4); for (let i = 0; i < 9; i++) rect(c, '#6a6e76', x, G - 82 + i * 2, 124, .8); for (let i = 0; i < 9; i++) rect(c, '#33363c', x + i * 15, G - 84, 1.4, 18);
+    rect(c, '#2a2c30', x - 1, G - 64, 126, 16, '#000', .3); txt(c, 'V E N U E', x + 30, G - 56, 5.6, '#efe9dd', { f: 'Mont, sans-serif', w: 400 }); txt(c, 'C E N T R A L', x + 90, G - 56, 5.6, '#efe9dd', { f: 'Mont, sans-serif', w: 400 });
+    c.beginPath(); c.arc(x + 57, G - 56, 6.4, 0, 7); c.fillStyle = lg(c, x + 51, G - 62, x + 63, G - 50, [[0, '#e8c878'], [1, '#9a7a32']]); c.fill(); txt(c, 'vc', x + 57, G - 56.4, 5, '#2a2c30', { f: 'Georgia, serif', w: 700 });
+    rect(c, '#1a1c20', x + 54, G - 44, 44, 44); c.fillStyle = lg(c, 0, G - 42, 0, G, [[0, '#f0f4f6'], [1, '#b8c4cc']]); c.fillRect(x + 56, G - 42, 18, 40); c.fillRect(x + 76, G - 42, 20, 40); rect(c, '#1a1c20', x + 74, G - 42, 2, 40); rect(c, '#3a3d44', x + 80, G - 30, 14, 30); glare(c, x + 56, G - 42, 40, 40);
+    rect(c, '#e8c84a', x + 34, G - 30, 5, 5, '#6a5a10', .3); rect(c, '#3a3d44', x + 114, G - 72, 4, 72); rect(c, '#8a8478', x + 12, G - 6, 10, 6); }
+  const x = x0 + 120, B = '#dcc4a2';
+  c.fillStyle = lg(c, x, 0, x + 220, 0, [[0, shade(B, 1.03)], [1, shade(B, .94)]]); c.fillRect(x, G - 130, 220, 130); for (let i = 0; i < 7; i++) rect(c, shade(B, .92), x, G - 110 + i * 16, 220, .5); c.strokeStyle = LINE; c.lineWidth = .5; c.strokeRect(x, G - 130, 220, 130);
+  for (const px of [x + 30, x + 62, x + 158, x + 190]) { c.fillStyle = lg(c, px, 0, px + 8, 0, [[0, shade(B, 1.08)], [.7, shade(B, 1.02)], [1, shade(B, .82)]]); c.fillRect(px, G - 112, 8, 112); }
+  rect(c, '#2a2624', x - 4, G - 116, 228, 6, '#000', .3);
+  c.fillStyle = lg(c, 0, G - 140, 0, G - 116, [[0, '#262626'], [1, '#101010']]); c.fillRect(x + 34, G - 140, 152, 24); c.strokeStyle = '#000'; c.strokeRect(x + 34, G - 140, 152, 24); rect(c, '#e8e3d8', x + 34, G - 140, 152, .6);
+  txt(c, 'V E N U E', x + 70, G - 131.6, 6.4, '#efe9dd', { f: 'Mont, sans-serif', w: 400 }); txt(c, 'C E N T R A L', x + 150, G - 131.6, 6.4, '#efe9dd', { f: 'Mont, sans-serif', w: 400 });
+  c.beginPath(); c.arc(x + 110, G - 131.6, 6.4, 0, 7); c.strokeStyle = '#c8b898'; c.lineWidth = .5; c.stroke(); for (let i = 0; i < 24; i++) { const a = i * Math.PI / 12; c.beginPath(); c.arc(x + 110 + Math.cos(a) * 7.6, G - 131.6 + Math.sin(a) * 7.6, .35, 0, 7); c.fillStyle = '#b9ab98'; c.fill(); } txt(c, 'VC', x + 110, G - 131.8, 4.4, '#efe9dd', { f: 'Georgia, serif', w: 700 });
+  rect(c, '#3a3632', x + 50, G - 123, 120, 5); txt(c, 'B R I T A N N I A   E S T A T E S', x + 110, G - 120.4, 3, '#e8e0d2', { f: 'Mont, sans-serif', w: 400 });
+  const TW = (wx, w, h) => { rect(c, '#14161a', wx, G - 14 - h, w, h); for (let j = 0; j < 4; j++) { c.fillStyle = j === 3 ? '#ebe6d8' : lg(c, 0, G - 12 - h + j * h / 4, 0, G - 14 - h + (j + 1) * h / 4, [[0, '#4a5a6c'], [1, '#1e2630']]); c.fillRect(wx + 2, G - 12 - h + j * (h / 4), w - 4, h / 4 - 2); } glare(c, wx + 2, G - 12 - h, w - 4, h - 4); };
+  TW(x + 14, 12, 82); TW(x + 44, 12, 82); TW(x + 172, 12, 82); TW(x + 200, 12, 82);
+  rect(c, '#14161a', x + 78, G - 100, 64, 100); for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) { c.fillStyle = j < 2 ? lg(c, 0, G - 98 + j * 25, 0, G - 75 + j * 25, [[0, '#4a5a6c'], [1, '#22303e']]) : lg(c, 0, G - 98 + j * 25, 0, G - 75 + j * 25, [[0, '#fbe2a8'], [1, '#e8c47a']]); c.fillRect(x + 80 + i * 16, G - 98 + j * 25, 14, 23); } glare(c, x + 80, G - 98, 62, 98);
+  for (const lx of [x + 8, x + 206]) { rect(c, '#2a2a2e', lx, G - 128, 6, 4); const g = c.createRadialGradient(lx + 3, G - 122, 0, lx + 3, G - 122, 7); g.addColorStop(0, 'rgba(255,250,220,.6)'); g.addColorStop(1, 'rgba(255,250,220,0)'); c.fillStyle = g; c.fillRect(lx - 5, G - 129, 16, 16); }
+  rect(c, '#d9cdb6', x - 6, G - 2, 232, 2);
+  const POT = (px, col, h, leaf) => { c.fillStyle = lg(c, px, 0, px + 8, 0, [[0, shade(col, 1.3)], [1, shade(col, .8)]]); c.fillRect(px, G - 7, 8, 7); rect(c, '#5a3d2a', px + 3.4, G - 7 - h, 1.2, h); c.beginPath(); c.arc(px + 4, G - 9 - h, 5.6, 0, 7); c.fillStyle = leaf; c.fill(); c.beginPath(); c.arc(px + 2.6, G - 10.6 - h, 2.6, 0, 7); c.fillStyle = shade(leaf, 1.25); c.fill(); };
+  POT(x + 60, '#2a2a2e', 18, '#a84a3a'); POT(x + 146, '#2a2a2e', 18, '#b2402e'); POT(x + 34, '#f0ede6', 8, '#5f8f3c'); POT(x + 164, '#e8e3d8', 6, '#6faa4e');
+  rect(c, '#2a2a2e', x + 180, G - 8, 18, 8); for (let i = 0; i < 5; i++) { c.beginPath(); c.arc(x + 182 + i * 3.4, G - 9, 1.8, 0, 7); c.fillStyle = i % 2 ? '#f4f2ec' : '#6faa4e'; c.fill(); }
+  c.restore();
+};
+
+// The Chiltern Hotel: long white four-storey block with rows of windows (some curtains drawn), rooftop plant box, blue band, the big
+// blue THE CHILTERN HOTEL board with the C crest, white canopy over the entrance, WELCOME (crisp) over the door, blue awnings,
+// teal-glass restaurant on the left, golden clipped hedges
+HD.chiltern = (c, x, G) => {
+  c.save(); c.lineJoin = 'round'; const Wc = '#f3f1ed';
+  rect(c, '#e6e3dd', x + 40, G - 134, 60, 10, LINE, .35);
+  c.fillStyle = lg(c, 0, G - 124, 0, G - 24, [[0, '#fbfaf8'], [1, '#e8e5df']]); c.fillRect(x, G - 124, 350, 100); c.strokeStyle = LINE; c.lineWidth = .45; c.strokeRect(x, G - 124, 350, 100); rect(c, '#dcd8d0', x, G - 124, 350, 2);
+  for (let r = 0; r < 4; r++) { const yy = G - 118 + r * 24; rect(c, '#e4e0d8', x, yy + 15, 350, 2.4); for (let i = 0; i < 16; i++) { const wx = x + 4 + i * 21.5; rect(c, '#b8bcc2', wx - .6, yy - .6, 18.2, 14.2); const cur = ((i * 7 + r * 3) % 5); c.fillStyle = cur === 0 ? '#d8d0c0' : lg(c, 0, yy, 0, yy + 13, [[0, '#c4d4e0'], [1, '#6a8296']]); c.fillRect(wx, yy, 17, 13); if (cur === 1) { rect(c, '#e8e2d4', wx, yy, 5, 13); rect(c, '#e8e2d4', wx + 12, yy, 5, 13); } rect(c, '#f3f1ed', wx + 8, yy, 1, 13); } }
+  glare(c, x, G - 118, 350, 90);
+  rect(c, '#1f5fb8', x, G - 26, 350, 2);
+  rect(c, '#9aa3ad', x + 4, G - 24, 104, 4); curtain(c, x + 6, G - 20, 100, 20, 6, 1, ['#a8e0e8', '#4fa9b8', '#2a7a88']); rect(c, '#3ac3d0', x + 12, G - 12, 40, 12, '#1a6a74', .3);
+  rect(c, '#3a3d44', x + 260, G - 24, 60, 24); for (let i = 0; i < 24; i++) rect(c, '#4a4e56', x + 262 + i * 2.4, G - 22, 1, 20);
+  rect(c, '#2a2f3a', x + 110, G - 24, 150, 24); for (let i = 0; i < 6; i++) { c.fillStyle = lg(c, 0, G - 20, 0, G - 6, [[0, '#fbe2a8'], [1, '#e0b868']]); c.fillRect(x + 114 + i * 24, G - 20, 18, 14); }
+  for (const ax of [x + 116, x + 216]) { c.fillStyle = lg(c, 0, G - 26, 0, G - 18, [[0, '#2f72cc'], [1, '#1a4a94']]); c.beginPath(); c.moveTo(ax, G - 18); c.lineTo(ax + 4, G - 26); c.lineTo(ax + 30, G - 26); c.lineTo(ax + 34, G - 18); c.fill(); for (let k = 0; k < 5; k++) { c.beginPath(); c.arc(ax + 3.4 + k * 6.8, G - 18, 3.4, 0, Math.PI); c.fill(); } }
+  rect(c, '#efeee9', x + 151, G - 26, 64, 26, LINE, .35); txt(c, 'WELCOME', x + 183, G - 21.6, 5, '#4a4d54', { f: 'Mont, sans-serif', w: 700, ls: 1 }); rect(c, '#3a3d44', x + 174, G - 16, 18, 16); rect(c, '#8a1d2a', x + 179, G - 14, 8, 14);
+  rect(c, '#ebe9e3', x + 104, G - 44, 158, 6, LINE, .35); rect(c, '#ebe9e3', x + 168, G - 38, 2.6, 12); rect(c, '#ebe9e3', x + 195, G - 38, 2.6, 12);
+  c.fillStyle = lg(c, 0, G - 70, 0, G - 42, [[0, '#2f72cc'], [1, '#174a9a']]); c.fillRect(x + 96, G - 70, 174, 28); c.strokeStyle = '#0e2a6a'; c.strokeRect(x + 96, G - 70, 174, 28);
+  c.beginPath(); c.arc(x + 183, G - 70, 12, Math.PI, 0); c.fillStyle = '#2f72cc'; c.fill(); c.strokeStyle = '#0e2a6a'; c.stroke(); txt(c, 'C', x + 183, G - 75.6, 8, '#ffffff', { f: 'Georgia, serif', w: 700 });
+  txt(c, 'THE', x + 114, G - 56, 6.4, '#ffffff', { f: 'Mont, sans-serif', w: 600, ls: 1 }); txt(c, 'CHILTERN', x + 181, G - 56, 15, '#ffffff', { f: 'Mont, sans-serif', w: 400, ls: 1.6 }); txt(c, 'HOTEL', x + 250, G - 56, 6.4, '#ffffff', { f: 'Mont, sans-serif', w: 600, ls: 1 });
+  const HEDGE = (hx, w, h) => { c.fillStyle = '#b0a030'; c.beginPath(); c.roundRect ? c.roundRect(hx, G - h, w, h, 2) : c.rect(hx, G - h, w, h); c.fill(); for (let i = 0; i < w * h / 2; i++) { c.beginPath(); c.arc(hx + (i * 13.7) % w, G - h + .6 + (i * 7.3) % (h - .6), .9, 0, 7); c.fillStyle = ['#a99a28', '#e2cf58', '#c5b13a', '#8a7a1a'][i % 4]; c.fill(); } };
+  HEDGE(x - 10, 130, 12); HEDGE(x + 240, 120, 12); rect(c, '#2a2c33', x + 120, G - 6, 6, 6); rect(c, '#2a2c33', x + 234, G - 6, 6, 6);
+  c.restore();
+};
+
+// University of Bedfordshire: dark brick teaching block with a grid of windows, blue glazed link, tall white block with the red
+// three-peak crest + UNIVERSITY OF BEDFORDSHIRE, purple fin, glazed ground floor; lawn, bollards, trees
+HD.uob = (c, x, G) => {
+  c.save(); c.lineJoin = 'round';
+  brick(c, x, G - 140, 80, 140, '#3e3f45', { mortar: 'rgba(120,120,130,.3)' }); c.strokeStyle = LINE; c.lineWidth = .45; c.strokeRect(x, G - 140, 80, 140);
+  for (let r = 0; r < 5; r++) for (let i = 0; i < 4; i++) sash(c, x + 6 + i * 18, G - 132 + r * 22, 14, 14, { stone: '#e9e9e6' });
+  curtain(c, x + 80, G - 96, 26, 96, 1, 6, ['#8ab0cc', '#3d6584', '#24405a']);
+  panels(c, x + 106, G - 176, 94, 120, '#efefed', 7.5); panels(c, x + 150, G - 190, 44, 16, '#efefed', 8);
+  c.fillStyle = lg(c, x + 194, 0, x + 198, 0, [[0, '#7a2a6a'], [1, '#b04aa0']]); c.fillRect(x + 194, G - 120, 4, 40);
+  for (const [a, h2] of [[140, 12], [148, 16], [158, 12]]) poly(c, '#c8272e', [[x + a, G - 150], [x + a + 4.5, G - 150 - h2], [x + a + 9, G - 150]]);
+  txt(c, 'UNIVERSITY OF', x + 153, G - 141, 5.6, '#7a2a2a', { f: 'Mont, sans-serif', w: 700, ls: .6 }); txt(c, 'BEDFORDSHIRE', x + 153, G - 134, 5.6, '#7a2a2a', { f: 'Mont, sans-serif', w: 700, ls: .6 });
+  curtain(c, x + 106, G - 56, 94, 56, 6, 3, ['#7a90a6', '#3d4e60', '#26323e']);
+  c.fillStyle = lg(c, 0, G - 6, 0, G, [[0, '#6fae4a'], [1, '#4f8a33']]); c.fillRect(x + 80, G - 6, 110, 6); for (let i = 0; i < 9; i++) bollard(c, x + 86 + i * 12, G, '#b8bec6', '#6a6e76');
+  tree(c, x + 30, G, .9, { d: '#3a6b2c', m: '#4f8a3c', l: '#7ab858' }); tree(c, x + 96, G, .9, { d: '#3a6b2c', m: '#4f8a3c', l: '#7ab858' });
+  c.restore();
+};
+
+// ---------- park kit ----------
+const lawn = (c, x, G, w, h = 16) => { c.fillStyle = lg(c, 0, G - h, 0, G, [[0, '#6fbb52'], [1, '#4f9a3c']]); c.fillRect(x, G - h, w, h); for (let i = 0; i < w * 1.6; i++) { const gx = x + (i * 37.31) % w, gy = G - h + 1 + (i * 7.7) % (h - 1); line(c, i % 3 ? '#4a9238' : '#86cc64', .5, [[gx, gy + 1.6], [gx + (i % 2 ? .6 : -.6), gy]]); } };
+const lake = (c, x, G, w, h = 16) => { c.fillStyle = lg(c, 0, G - h, 0, G, [[0, '#4a7e8c'], [.5, '#3d6b78'], [1, '#2e5662']]); c.fillRect(x, G - h, w, h); for (let i = 0; i < w / 3; i++) rect(c, 'rgba(255,255,255,.28)', x + (i * 23.7) % (w - 6), G - h + 2 + (i * 5.3) % (h - 3), 3 + (i % 3) * 2, .5); rect(c, 'rgba(255,255,255,.18)', x, G - h, w, .8); };
+const willow = (c, x, G, s2 = 1) => { rect(c, '#5a3d2a', x - 2.6 * s2, G - 52 * s2, 5.2 * s2, 52 * s2); c.beginPath(); c.arc(x, G - 66 * s2, 30 * s2, 0, 7); c.fillStyle = '#6e9638'; c.fill(); c.beginPath(); c.arc(x - 8 * s2, G - 74 * s2, 18 * s2, 0, 7); c.fillStyle = '#94bb52'; c.fill();
+  for (let i = 0; i < 46; i++) { const fx = x - 30 * s2 + i * 1.32 * s2, len = (20 + (i * 7) % 16) * s2; c.beginPath(); c.moveTo(fx, G - 66 * s2); c.quadraticCurveTo(fx + 1.4 * s2, G - 66 * s2 + len * .6, fx + .6 * s2, G - 50 * s2 + len * .3); c.strokeStyle = ['#6e9638', '#86b049', '#a8cc60', '#5a8030'][i % 4]; c.lineWidth = 1.3 * s2; c.stroke(); } };
+
+// Luton Sixth Form College: yellow-buff brick, white canopy with posts over the side entrance, tall glazed entrance block with the
+// red drum roof and thin white posts, grey plant room with windows, Luton / SIXTH FORM / COLLEGE lettering (not lit), green gates
+HD.sixthform = (c, x0, G) => {
+  c.save(); c.lineJoin = 'round';
+  brick(c, x0, G - 70, 112, 70, '#dcab52'); c.strokeStyle = LINE; c.lineWidth = .45; c.strokeRect(x0, G - 70, 112, 70); rect(c, '#3d3d42', x0, G - 6, 112, 6);
+  for (let i = 0; i < 3; i++) curtain(c, x0 + 10 + i * 34, G - 52, 18, 28, 2, 2, ['#a8dcd8', '#5aa6a4', '#2e6e6c']);
+  poly(c, '#efefee', [[x0 + 4, G - 64], [x0 + 70, G - 64], [x0 + 62, G - 58], [x0 + 10, G - 58]], LINE, .35); rect(c, '#e8e8e8', x0 + 12, G - 58, 1.6, 58); rect(c, '#e8e8e8', x0 + 60, G - 58, 1.6, 58);
+  for (let i = 0; i < 10; i++) rect(c, '#2e8b57', x0 + 4 + i * 6, G - 28, 1.6, 28); rect(c, '#2e8b57', x0 + 4, G - 28, 58, 1.6); rect(c, '#2e8b57', x0 + 4, G - 16, 58, 1);
+  const x = x0 + 110;
+  brick(c, x, G - 70, 244, 70, '#dcab52'); c.strokeStyle = LINE; c.strokeRect(x, G - 70, 244, 70); rect(c, '#3d3d42', x, G - 6, 244, 6);
+  panels(c, x + 150, G - 92, 70, 22, '#70747a', 11); for (let i = 0; i < 3; i++) curtain(c, x + 154 + i * 22, G - 88, 18, 12, 1, 1, ['#a8dcd8', '#5aa6a4', '#2e6e6c']);
+  c.fillStyle = lg(c, 0, G - 112, 0, G - 100, [[0, '#e05a3e'], [1, '#a8321e']]); c.beginPath(); c.moveTo(x + 58, G - 100); c.lineTo(x + 64, G - 108); c.quadraticCurveTo(x + 100, G - 114, x + 136, G - 108); c.lineTo(x + 142, G - 100); c.closePath(); c.fill(); c.strokeStyle = LINE; c.lineWidth = .4; c.stroke(); rect(c, '#dcab52', x + 58, G - 100, 84, 4);
+  curtain(c, x + 62, G - 90, 76, 90, 7, 4, ['#8ab0c8', '#3e566c', '#24323e']);
+  rect(c, '#7e838a', x + 46, G - 96, 108, 5, LINE, .35); for (const px of [x + 60, x + 86, x + 112, x + 138]) rect(c, '#f6f4ee', px, G - 91, 2, 91);
+  curtain(c, x + 16, G - 48, 16, 26, 1, 2, ['#a8dcd8', '#5aa6a4', '#2e6e6c']);
+  for (let i = 0; i < 3; i++) poly(c, i === 1 ? '#d8262f' : '#9aa0a8', [[x + 174 + i * 7, G - 64], [x + 180 + i * 7, G - 64], [x + 176 + i * 7, G - 58], [x + 170 + i * 7, G - 58]]);
+  txt(c, 'Luton', x + 186, G - 49, 15, '#26292f', { f: 'Mont, sans-serif', w: 600 }); txt(c, 'SIXTH FORM', x + 186, G - 37, 5.6, '#5e6b5a', { f: 'Mont, sans-serif', w: 600, ls: .6 }); txt(c, 'COLLEGE', x + 186, G - 31, 5.6, '#5e6b5a', { f: 'Mont, sans-serif', w: 600, ls: .6 });
+  for (let i = 0; i < 6; i++) rect(c, '#2e8b57', x + 214 + i * 6, G - 28, 1.6, 28); rect(c, '#2e8b57', x + 212, G - 28, 32, 1.6); rect(c, '#2e8b57', x + 212, G - 16, 32, 1);
+  rect(c, '#5a5e66', x0 - 6.6, G - 80, 1.4, 80); rect(c, '#5a5e66', x0 - 6.6, G - 80, 7, 1.4); rect(c, '#e8e8e8', x0 - 1, G - 79.6, 4, 2);
+  c.restore();
+};
+
+// Wardown Park field: park trees, lawn, WARDOWN PARK sign, play area with red swing frame + swings, blue climbing tower with a
+// yellow slide and ladder, soft play surface
+HD.wardownfield = (c, x, G) => {
+  c.save(); c.lineJoin = 'round';
+  tree(c, x + 30, G - 26, 1.3, { d: '#2f5f3a', m: '#3d7848', l: '#5a9a5a' }); tree(c, x + 168, G - 28, 1.5, { d: '#2a5434', m: '#356b40', l: '#4f8a4f' }); tree(c, x + 100, G - 4, 1.5, { d: '#4a7f30', m: '#5f9a3e', l: '#8ac060' });
+  lawn(c, x - 2, G, 204);
+  rect(c, '#4a3326', x + 12, G - 18, 2.4, 10); rect(c, '#4a3326', x + 42, G - 18, 2.4, 10); rect(c, '#2f6a3a', x + 6, G - 36, 44, 18, '#e8e4d0', .8); txt(c, 'WARDOWN', x + 28, G - 30.4, 6.4, '#ffffff', { f: 'Mont, sans-serif', w: 800, ls: .6 }); txt(c, 'PARK', x + 28, G - 23, 6.4, '#f2c43a', { f: 'Mont, sans-serif', w: 900, ls: 1 });
+  rect(c, '#c8503a', x + 58, G - 8, 130, 6); for (let i = 0; i < 26; i++) rect(c, 'rgba(0,0,0,.12)', x + 58 + i * 5, G - 8, .4, 6);
+  c.lineCap = 'round'; for (const [a, b] of [[62, 70], [110, 102]]) line(c, '#d32f2f', 2, [[x + a, G - 8], [x + b, G - 48]]); line(c, '#d32f2f', 2.4, [[x + 68, G - 49], [x + 104, G - 49]]);
+  for (const sx of [x + 78, x + 94]) { line(c, '#9aa3ad', .5, [[sx, G - 47], [sx, G - 21]]); line(c, '#9aa3ad', .5, [[sx + 5, G - 47], [sx + 5, G - 21]]); rect(c, '#1a1a1e', sx - 1, G - 22, 8, 1.6); }
+  c.fillStyle = lg(c, x + 124, 0, x + 146, 0, [[0, '#3a80e0'], [1, '#1f58b8']]); c.fillRect(x + 124, G - 40, 22, 32); poly(c, '#f2c43a', [[x + 122, G - 40], [x + 135, G - 50], [x + 148, G - 40]], '#8a6a10', .3);
+  for (let i = 0; i < 4; i++) rect(c, '#f4f2ec', x + 117, G - 38 + i * 8, 7, 1); rect(c, '#9aa3ad', x + 116, G - 40, 1, 32); rect(c, '#9aa3ad', x + 123, G - 40, 1, 32);
+  c.fillStyle = lg(c, 0, G - 38, 0, G - 8, [[0, '#ffd84a'], [1, '#e8a820']]); c.beginPath(); c.moveTo(x + 146, G - 38); c.lineTo(x + 150, G - 38); c.quadraticCurveTo(x + 166, G - 30, x + 182, G - 8); c.lineTo(x + 176, G - 8); c.quadraticCurveTo(x + 162, G - 28, x + 146, G - 34); c.fill();
+  c.restore();
+};
+
+// Wardown Park lake: boat house (brick, red tiled roof, two doors with cream panels, red sign), willow, park trees; the lake with
+// ducks and an empty pedalo moored (drawn in the animation)
+HD.wardown = (c, x, G) => {
+  c.save(); c.lineJoin = 'round';
+  tree(c, x + 170, G - 30, 1.5, { d: '#2a5434', m: '#356b40', l: '#4f8a4f' }); tree(c, x + 196, G - 28, 1.1, { d: '#2f5f3a', m: '#3d7848', l: '#5a9a5a' });
+  brick(c, x + 96, G - 58, 80, 42, '#a8553f'); c.strokeStyle = LINE; c.lineWidth = .45; c.strokeRect(x + 96, G - 58, 80, 42);
+  slate(c, [[x + 88, G - 58], [x + 184, G - 58], [x + 168, G - 78], [x + 104, G - 78]], '#b5503a');
+  for (const dx of [x + 106, x + 146]) { rect(c, '#5b3a2c', dx, G - 50, 20, 34, '#2a1a10', .35); rect(c, '#ece0cf', dx + 3, G - 47, 14, 10); rect(c, '#5b3a2c', dx + 9.4, G - 47, 1.2, 10); for (let k = 0; k < 5; k++) rect(c, 'rgba(0,0,0,.2)', dx + 3, G - 34 + k * 3.6, 14, .4); }
+  rect(c, '#c8352b', x + 168, G - 50, 6, 10, '#6a1010', .3);
+  lake(c, x, G, 210); rect(c, '#7a7068', x, G - 18, 210, 2);
+  for (let i = 0; i < 20; i++) rect(c, '#1b1a24', x + 4 + i * 10, G - 20, .8, 4); rect(c, '#1b1a24', x, G - 20, 210, .8);
+  willow(c, x + 40, G - 2);
+  rect(c, '#6b4a32', x + 186, G - 24, 18, 2.4); rect(c, '#3a2a20', x + 188, G - 21.6, 1.6, 5); rect(c, '#3a2a20', x + 200, G - 21.6, 1.6, 5);
+  c.restore();
+};
+window.LM_ANIM.wardown = (c, x, G, t) => {
+  const duck = (dx, dy, f, kind) => { c.save(); c.translate(dx, dy); c.scale(f, 1); c.beginPath(); c.ellipse(0, 0, 3.6, 1.8, 0, 0, 7); c.fillStyle = kind ? '#8a6a44' : '#9a8a78'; c.fill(); c.beginPath(); c.arc(2.6, -2, 1.4, 0, 7); c.fillStyle = kind ? '#7a5a3a' : '#2e8b57'; c.fill(); poly(c, '#f2c43a', [[3.8, -2.2], [5.4, -1.8], [3.8, -1.4]]); if (!kind) rect(c, '#f4f2ec', 1.6, -1, 2, .5); rect(c, 'rgba(255,255,255,.4)', -5, 1.8, 3, .5); c.restore(); };
+  const p1 = Math.sin(t * .35), d1 = Math.cos(t * .35) >= 0 ? 1 : -1; duck(x + 44 + p1 * 22, G - 8, d1, 0); duck(x + 64 + p1 * 22, G - 6, d1, 1); duck(x + 172, G - 7, -1, 0);
+  const bx = x + 120 + Math.sin(t * .2) * 30, by = G - 11; c.fillStyle = lg(c, 0, by - 4, 0, by + 4, [[0, '#4aa0e8'], [1, '#1f5fb0']]); c.beginPath(); c.moveTo(bx - 11, by); c.quadraticCurveTo(bx - 12, by + 4, bx - 6, by + 4); c.lineTo(bx + 8, by + 4); c.quadraticCurveTo(bx + 13, by + 4, bx + 12, by); c.closePath(); c.fill();
+  rect(c, '#f4f4f0', bx - 9, by - 1, 20, 1.4); rect(c, '#e8e8e4', bx - 5, by - 6, 3, 5); rect(c, '#e8e8e4', bx + 3, by - 6, 3, 5); rect(c, 'rgba(255,255,255,.5)', bx - 14, by + 4, 8, .6);
+};
+
+// Wardown Park bridge: park trees and a big willow; the white suspension footbridge (stone piers, twin-post towers, sagging cables,
+// hangers, lattice railings) crossing from the far bank to the near one is drawn in the animation layer with the water
+HD.wardownbridge = (c, x, G) => {
+  c.save(); c.lineJoin = 'round';
+  tree(c, x + 150, G - 26, 1.5, { d: '#2a5434', m: '#356b40', l: '#4f8a4f' }); tree(c, x + 14, G - 24, 1.3, { d: '#2f5f3a', m: '#3d7848', l: '#5a9a5a' });
+  willow(c, x + 77, G - 4, 1.15);
+  c.restore();
+};
+window.LM_ANIM.wardownbridge = (c, x, G, t) => {
+  lake(c, x, G, 170); rect(c, '#5f9e44', x, G - 19, 48, 3);
+  c.save(); const KS = 13 / 162; c.transform(1, KS, 0, 1, 0, -KS * (x + 166));
+  const WH = '#f6f6f2', SD = '#c9c9c2', ST = '#ddd4c2', L0 = x + 4, L1 = x + 166, TA = x + 16, TB = x + 152, TY = G - 64, DY = G - 26;
+  for (const tx of [TA, TB]) { brick(c, tx - 6, G - 18, 20, 18, '#8a6a5a', { bw: 2.4, bh: 1.1 }); for (const k of [-3, 5]) { c.fillStyle = lg(c, tx + k, 0, tx + k + 5, 0, [[0, '#ece4d4'], [1, '#bcb2a0']]); c.fillRect(tx + k, TY, 5, DY - TY + 8); } rect(c, ST, tx - 4, TY - 3, 15, 3, '#8a8270', .3); rect(c, ST, tx - 3, TY + 12, 13, 2); }
+  const cy = xx => { const u = (xx - (TA + 3)) / (TB - TA); return (1 - u) * (1 - u) * (TY + 2) + 2 * u * (1 - u) * (DY - 16) + u * u * (TY + 2); };
+  c.strokeStyle = WH; c.lineWidth = 1; c.beginPath(); c.moveTo(TA + 3, TY + 2); c.quadraticCurveTo((TA + TB) / 2 + 3, DY - 30, TB + 3, TY + 2); c.stroke(); line(c, WH, 1, [[L0, DY - 6], [TA - 2, TY + 2]]); line(c, WH, 1, [[L1, DY - 6], [TB + 8, TY + 2]]);
+  for (let hx = TA + 8; hx < TB - 4; hx += 4) rect(c, SD, hx, cy(hx), .5, Math.max(0, DY - 10 - cy(hx)));
+  rect(c, WH, L0, DY, L1 - L0, 3.4, '#9a9a94', .3); rect(c, SD, L0, DY + 3, L1 - L0, .8); rect(c, WH, L0, DY - 11, L1 - L0, 1.6);
+  c.save(); c.beginPath(); c.rect(L0, DY - 9.4, L1 - L0, 9.4); c.clip(); for (let i = L0 - 10; i < L1 + 10; i += 3.4) { line(c, WH, .55, [[i, DY - 9.4], [i + 9.4, DY]]); line(c, WH, .55, [[i + 9.4, DY - 9.4], [i, DY]]); } c.restore();
+  for (let i = L0; i <= L1; i += 12) rect(c, WH, i, DY - 12, 1.4, 12);
+  c.restore();
+  c.save(); c.beginPath(); c.rect(x, G - 16, 60, 16); c.clip(); lake(c, x, G, 60); c.restore();
+};
+
+// Wardown funfair: lawn, big wheel A-frame (the wheel turns in the animation), BIG WHEEL board, pendulum ride tower, striped
+// carousel tent with horses, stalls with striped canopies (DUCKS / CANDY / DONUT), bunting
+HD.funfair = (c, x, G) => {
+  c.save(); c.lineJoin = 'round';
+  lawn(c, x - 2, G, 404);
+  for (const sd of [-1, 1]) { c.fillStyle = lg(c, x + 72, 0, x + 72 + sd * 30, 0, [[0, '#e8eef4'], [1, '#a8b0b8']]); c.beginPath(); c.moveTo(x + 72, G - 92); c.lineTo(x + 72 + sd * 30, G - 6); c.lineTo(x + 72 + sd * 26, G - 6); c.lineTo(x + 72 - sd * 2, G - 92); c.fill(); }
+  rect(c, '#d32f2f', x + 46, G - 14, 52, 8, '#6a0e0e', .3); txt(c, 'BIG WHEEL', x + 72, G - 10, 5.4, '#ffffff', { f: 'Mont, sans-serif', w: 900, ls: .6 });
+  for (const sd of [-1, 1]) { c.fillStyle = lg(c, x + 196, 0, x + 196 + sd * 34, 0, [[0, '#ffe066'], [1, '#d8a820']]); c.beginPath(); c.moveTo(x + 196, G - 150); c.lineTo(x + 196 + sd * 34, G - 6); c.lineTo(x + 196 + sd * 28, G - 6); c.lineTo(x + 196 - sd * 2, G - 150); c.fill(); }
+  rect(c, '#e8641c', x + 160, G - 14, 72, 8, '#7a2a08', .3); for (let i = 0; i < 8; i++) rect(c, i % 2 ? '#f2c43a' : '#d32f2f', x + 162 + i * 9, G - 12, 5, 4);
+  { const cx = x + 280, top = G - 66, w = 76, h = 22; for (let i = 0; i < 12; i++) { c.fillStyle = i % 2 ? '#d32f2f' : '#f2c43a'; c.beginPath(); c.moveTo(cx, top); c.lineTo(cx - w / 2 + i * w / 12, top + h); c.lineTo(cx - w / 2 + (i + 1) * w / 12, top + h); c.fill(); } line(c, LINE, .4, [[cx - w / 2, top + h], [cx, top], [cx + w / 2, top + h]]);
+    for (let i = 0; i < 12; i++) { c.beginPath(); c.arc(cx - w / 2 + (i + .5) * w / 12, top + h, w / 24, 0, Math.PI); c.fillStyle = i % 2 ? '#d32f2f' : '#f2c43a'; c.fill(); } rect(c, '#d32f2f', cx - 1, top - 6, 2, 6); poly(c, '#f2c43a', [[cx + 1, top - 6], [cx + 6, top - 4.6], [cx + 1, top - 3]]); }
+  rect(c, '#f6e6b8', x + 246, G - 40, 68, 32, LINE, .35); for (let i = 0; i < 6; i++) { rect(c, '#d9b44a', x + 252 + i * 11, G - 40, .8, 26); const hy = G - 24 + Math.sin(i * 1.7) * 3; c.fillStyle = ['#f4f2ec', '#e0558c', '#2a6fd8'][i % 3]; c.beginPath(); c.ellipse(x + 252.4 + i * 11, hy, 4, 2.2, 0, 0, 7); c.fill(); c.beginPath(); c.arc(x + 255.4 + i * 11, hy - 2.4, 1.4, 0, 7); c.fill(); }
+  for (const [sx, a, b, label] of [[x + 112, '#2a6fd8', '#f4f2ec', 'DUCKS'], [x + 330, '#d32f2f', '#f4f2ec', 'CANDY'], [x + 362, '#3fae5a', '#f2c43a', 'DONUT']]) {
+    rect(c, '#f6e6b8', sx, G - 30, 32, 22, LINE, .35); for (let i = 0; i < 8; i++) rect(c, i % 2 ? a : b, sx - 2 + i * 4.5, G - 40, 4.5, 8); for (let i = 0; i < 8; i++) { c.beginPath(); c.arc(sx + .25 + i * 4.5, G - 32, 2.25, 0, Math.PI); c.fillStyle = i % 2 ? a : b; c.fill(); }
+    rect(c, '#3a3d44', sx + 2, G - 22, 28, 1.6); txt(c, label, sx + 16, G - 26, 4.6, '#1b1a24', { f: 'Mont, sans-serif', w: 900 }); }
+  c.beginPath(); for (let i = 0; i <= 24; i++) { const bx = x + 100 + i * 12; c.lineTo(bx, G - 48 + Math.abs(Math.sin(i * .52)) * 3); } line; c.strokeStyle = '#3a3d44'; c.lineWidth = .4; c.stroke();
+  for (let i = 0; i < 24; i++) { const bx = x + 100 + i * 12, by = G - 48 + Math.abs(Math.sin(i * .52)) * 3; poly(c, ['#d32f2f', '#f2c43a', '#2a6fd8', '#3fae5a'][i % 4], [[bx + 1, by], [bx + 9, by], [bx + 5, by + 6]]); }
+  c.restore();
+};
+window.LM_ANIM.funfair = (c, x, G, t) => {
+  const cx = x + 72, cy = G - 92, r = 56, a0 = t * .35, cols = ['#d32f2f', '#f2c43a', '#2a6fd8', '#3fae5a', '#e0558c', '#e8641c'];
+  c.beginPath(); c.arc(cx, cy, r, 0, 7); c.strokeStyle = '#1b1a24'; c.lineWidth = 2.4; c.stroke(); c.strokeStyle = '#eef2f6'; c.lineWidth = 1.4; c.stroke(); c.beginPath(); c.arc(cx, cy, r - 6, 0, 7); c.strokeStyle = '#c8d0d8'; c.lineWidth = .6; c.stroke();
+  for (let i = 0; i < 24; i++) { const a = a0 + i * Math.PI / 12; line(c, '#c8d0d8', .45, [[cx, cy], [cx + Math.cos(a) * r, cy + Math.sin(a) * r]]); }
+  for (let i = 0; i < 12; i++) { const a = a0 + i * Math.PI / 6, gx = cx + Math.cos(a) * r, gy = cy + Math.sin(a) * r; rect(c, '#3a3d44', gx - .4, gy, .8, 3.4); c.fillStyle = lg(c, 0, gy + 3, 0, gy + 10, [[0, shade(cols[i % 6], 1.2)], [1, shade(cols[i % 6], .8)]]); c.beginPath(); c.roundRect ? c.roundRect(gx - 4.6, gy + 3, 9.2, 7, 1.6) : c.rect(gx - 4.6, gy + 3, 9.2, 7); c.fill(); rect(c, '#e8f2f8', gx - 3, gy + 4.4, 6, 2.4); }
+  for (let i = 0; i < 24; i++) { const a = -a0 + i * .262; c.beginPath(); c.arc(cx + Math.cos(a) * (r - 3), cy + Math.sin(a) * (r - 3), .7, 0, 7); c.fillStyle = i % 2 ? '#fff6b0' : '#ffd060'; c.fill(); }
+  c.beginPath(); c.arc(cx, cy, 4.4, 0, 7); c.fillStyle = '#f2c43a'; c.fill(); c.strokeStyle = '#1b1a24'; c.lineWidth = .5; c.stroke();
+  const px = x + 196, py = G - 148, sw = Math.sin(t * 1.1) * 1.15, L2 = 112, ex = px + Math.sin(sw) * L2, ey = py + Math.cos(sw) * L2;
+  c.save(); c.translate(px, py); c.rotate(-sw); c.fillStyle = lg(c, -3, 0, 3, 0, [[0, '#c84a10'], [.5, '#ff8a3c'], [1, '#c84a10']]); c.fillRect(-3, 0, 6, L2); for (let i = 8; i < L2; i += 12) rect(c, '#f2c43a', -3, i, 6, 4); c.restore();
+  c.save(); c.translate(ex, ey); c.rotate(-sw); c.fillStyle = lg(c, 0, -5, 0, 5, [[0, '#4a8ae8'], [1, '#1f4fa8']]); c.beginPath(); c.roundRect ? c.roundRect(-16, -5, 32, 10, 3) : c.rect(-16, -5, 32, 10); c.fill(); for (let i = 0; i < 6; i++) rect(c, '#f2c43a', -14 + i * 5, -7.6, 3.6, 3); c.restore();
+  c.beginPath(); c.arc(px, py, 4.6, 0, 7); c.fillStyle = '#9aa3ad'; c.fill(); c.strokeStyle = '#1b1a24'; c.lineWidth = .5; c.stroke(); rect(c, '#d32f2f', px - 4, py - 10, 8, 6, '#6a0e0e', .3);
+};
+
+// Stockwood Discovery Centre: park trees behind, grey stone entrance block with a timber pergola + glass doors, purple STOCKWOOD
+// DISCOVERY board, timber-framed cafe glazing, walled garden (red brick wall, trellis, white obelisk), knot-garden hedges, stone urns
+// with flowers, spiral topiary, the well with its iron arch
+HD.stockwood = (c, x, G) => {
+  c.save(); c.lineJoin = 'round';
+  for (const [tx, s2] of [[20, 1.4], [120, 1.7], [250, 1.6], [340, 1.4]]) tree(c, x + tx, G - 50, s2, { d: '#2f5f2c', m: '#3f6f34', l: '#6a9a4a' });
+  brick(c, x, G - 52, 160, 52, '#aaa69e', { mortar: 'rgba(80,80,80,.25)' }); c.strokeStyle = LINE; c.lineWidth = .45; c.strokeRect(x, G - 52, 160, 52); rect(c, '#ebe6d9', x - 2, G - 56, 164, 4, LINE, .3);
+  rect(c, '#c9a36a', x + 70, G - 52, 90, 52); for (let i = 0; i < 5; i++) { c.fillStyle = lg(c, x + 72 + i * 17, 0, x + 87 + i * 17, 0, [[0, '#c49a5e'], [1, '#a8844e']]); c.fillRect(x + 72 + i * 17, G - 46, 15, 46); c.fillStyle = lg(c, 0, G - 44, 0, G - 2, [[0, '#5a6878'], [1, '#22283a']]); c.fillRect(x + 74 + i * 17, G - 44, 11, 42); glare(c, x + 74 + i * 17, G - 44, 11, 42); }
+  rect(c, '#dcc8a0', x + 66, G - 58, 98, 6, LINE, .3);
+  for (const px of [x + 18, x + 48]) { c.fillStyle = lg(c, px, 0, px + 4, 0, [[0, '#d4ae74'], [1, '#a8844e']]); c.fillRect(px, G - 44, 4, 44); } rect(c, '#c9a36a', x + 12, G - 48, 44, 4, '#7a5a2a', .3); for (let i = 0; i < 9; i++) rect(c, '#a8844e', x + 13 + i * 5, G - 50.4, 2, 2.4);
+  rect(c, '#3a2a20', x + 26, G - 36, 18, 36); for (const dx of [x + 28, x + 36]) { c.fillStyle = lg(c, 0, G - 34, 0, G, [[0, '#d4e4f0'], [1, '#7a9ab4']]); c.fillRect(dx, G - 34, 6, 30); }
+  c.fillStyle = lg(c, 0, G - 72, 0, G - 59, [[0, '#6a3a7e'], [1, '#4a2058']]); c.fillRect(x + 4, G - 72, 150, 13); c.strokeStyle = '#2a0e36'; c.strokeRect(x + 4, G - 72, 150, 13); txt(c, 'STOCKWOOD  DISCOVERY  CENTRE', x + 79, G - 65.4, 5.4, '#ffffff', { f: 'Mont, sans-serif', w: 700, ls: .6 });
+  brick(c, x + 164, G - 46, 216, 46, '#a8603e'); c.strokeStyle = LINE; c.strokeRect(x + 164, G - 46, 216, 46); rect(c, '#c8b8a0', x + 163, G - 47.6, 218, 1.6);
+  for (let i = 0; i < 54; i++) rect(c, '#c9a36a', x + 166 + i * 4, G - 62, .7, 16); for (let j = 0; j < 4; j++) rect(c, '#c9a36a', x + 164, G - 62 + j * 5, 216, .7);
+  c.fillStyle = lg(c, x + 270, 0, x + 278, 0, [[0, '#f4f0e6'], [1, '#c8c2b4']]); c.fillRect(x + 270, G - 76, 8, 30); poly(c, '#ebe6d9', [[x + 270, G - 76], [x + 274, G - 88], [x + 278, G - 76]], LINE, .3);
+  for (let i = 0; i < 6; i++) { c.fillStyle = lg(c, 0, G - 14, 0, G, [[0, '#5a9a44'], [1, '#2f6a28']]); c.beginPath(); c.roundRect ? c.roundRect(x + 168 + i * 35, G - 14, 30, 14, 3) : c.rect(x + 168 + i * 35, G - 14, 30, 14); c.fill(); for (let k = 0; k < 20; k++) { c.beginPath(); c.arc(x + 170 + i * 35 + (k * 7.3) % 26, G - 12 + (k * 3.7) % 10, .9, 0, 7); c.fillStyle = k % 2 ? '#6aaa50' : '#3f7d33'; c.fill(); } }
+  const URN = ux => { c.fillStyle = lg(c, ux, 0, ux + 6, 0, [[0, '#f4f0e6'], [1, '#c8c2b4']]); c.fillRect(ux, G - 20, 6, 20); c.beginPath(); c.moveTo(ux - 5, G - 30); c.lineTo(ux + 11, G - 30); c.quadraticCurveTo(ux + 9, G - 20, ux + 3, G - 20); c.quadraticCurveTo(ux - 3, G - 20, ux - 5, G - 30); c.fill(); for (let i = 0; i < 12; i++) { c.beginPath(); c.arc(ux - 4 + i * 1.3, G - 32 - (i % 3), 1.4, 0, 7); c.fillStyle = ['#d84b3c', '#f2c14e', '#e0458a', '#7a4fb5', '#5a9a44'][i % 5]; c.fill(); } };
+  URN(x + 196); URN(x + 344);
+  rect(c, '#aaa69e', x + 252, G - 14, 34, 14, LINE, .35); brick(c, x + 252, G - 14, 34, 14, '#aaa69e', { bw: 2.4, bh: 1.1 }); c.strokeStyle = '#1a1a1e'; c.lineWidth = 1.2; c.beginPath(); c.moveTo(x + 256, G - 14); c.quadraticCurveTo(x + 269, G - 60, x + 282, G - 14); c.stroke(); rect(c, '#1a1a1e', x + 268.4, G - 37, 1.2, 8); rect(c, '#7a5a3a', x + 266, G - 30, 6, 4);
+  for (const tx of [x + 226, x + 316]) { rect(c, '#e8e3d6', tx - 4, G - 6, 8, 6); for (let k = 0; k < 5; k++) { c.beginPath(); c.ellipse(tx, G - 10 - k * 7, 6 - k * .9, 3.6, 0, 0, 7); c.fillStyle = k % 2 ? '#4f8a3c' : '#3f7d33'; c.fill(); } }
+  c.restore();
+};
+
+// Welcome to Luton: the grass bank by the airport road with WELCOME TO LUTON laid out in big white letters on dark tarmac (as seen
+// from the planes), mown edge, fence along the top
+HD.welcome = (c, x, G) => {
+  c.save(); c.lineJoin = 'round';
+  c.fillStyle = lg(c, 0, G - 88, 0, G, [[0, '#78b85a'], [1, '#4f8a36']]); c.beginPath(); c.moveTo(x, G); c.lineTo(x + 34, G - 88); c.lineTo(x + 226, G - 88); c.lineTo(x + 260, G); c.fill();
+  for (let i = 0; i < 260; i++) { const gx = x + 10 + (i * 37.3) % 240, gy = G - 84 + (i * 23.7) % 82; if (gx < x + 34 - (gy - G + 88) * .39 + 34 && gx < x + 20) continue; line(c, i % 3 ? '#4f8a36' : '#8cc86a', .5, [[gx, gy + 1.6], [gx + .4, gy]]); }
+  c.fillStyle = lg(c, 0, G - 80, 0, G - 6, [[0, '#4a4e54'], [1, '#5e6268']]); c.beginPath(); c.moveTo(x + 20, G - 6); c.lineTo(x + 46, G - 80); c.lineTo(x + 214, G - 80); c.lineTo(x + 240, G - 6); c.fill();
+  for (let i = 0; i < 160; i++) rect(c, i % 2 ? '#3e4248' : '#6a6e74', x + 40 + (i * 31.7) % 180, G - 76 + (i * 17.3) % 68, .8, .5);
+  c.save(); c.font = '900 13px Mont, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.letterSpacing = '2px'; c.fillStyle = '#f4f4f0'; c.fillText('WELCOME TO', x + 130, G - 62); c.restore();
+  c.save(); c.translate(x + 130, G - 32); c.scale(1, 1.1); c.font = '900 40px Mont, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.letterSpacing = '3px'; c.fillStyle = 'rgba(0,0,0,.25)'; c.fillText('LUTON', 1, 1); c.fillStyle = '#f6f6f2'; c.fillText('LUTON', 0, 0); c.restore();
+  for (let i = 0; i < 10; i++) rect(c, '#3a3d44', x + 52 + i * 17, G - 96, 1, 8); rect(c, '#3a3d44', x + 52, G - 96, 154, 1); rect(c, '#3a3d44', x + 52, G - 92, 154, .6);
+  c.restore();
+};
+
+// Vauxhall Luton plant: long white main hall, tall silver chimneys, grey vent towers, teal plant rooms; white office block with window
+// grids and the red V badge (generic, not the griffin) + VAUXHALL; grey ribbed block with red edges, red-framed windows and HOME OF THE
+// VAUXHALL VIVARO; long shed with a red van; brick wall with hedges, brick piers, blue mesh gates, Gate 2 sign, lamp posts
+HD.vauxhall = (c, x, G) => {
+  c.save(); c.lineJoin = 'round'; const RD = '#d42a2a', TL = '#5f8f94';
+  ribbed(c, x + 150, G - 150, 322, 70, '#e8eaed', 2.6); rect(c, '#c9ced4', x + 148, G - 153, 326, 3);
+  for (const cx of [x + 196, x + 250, x + 286]) { c.fillStyle = lg(c, cx, 0, cx + 9, 0, [[0, '#9aa3ad'], [.4, '#f4f6f8'], [1, '#8a929c']]); c.fillRect(cx, G - 214, 9, 64); rect(c, '#7a828c', cx - 1, G - 216, 11, 2.4); rect(c, '#9aa3ad', cx - 3, G - 160, 15, 1.6); }
+  for (const [vx, vh] of [[x + 40, 34], [x + 82, 30], [x + 352, 36], [x + 396, 40], [x + 440, 32]]) { const vb = vx > x + 150 ? G - 150 : G - 128; ribbed(c, vx, vb - vh, 22, vh, '#8a9098', 2); }
+  for (const [tx, tw] of [[x + 100, 50], [x + 306, 30]]) { panels(c, tx, G - 150, tw, 22, TL, 5.5); poly(c, '#4f7d82', [[tx - 2, G - 150], [tx + tw / 2, G - 158], [tx + tw + 2, G - 150]], LINE, .3); rect(c, RD, tx, G - 150, 1, 22); }
+  panels(c, x, G - 128, 168, 128, '#eef0f2', 16); rect(c, '#9aa1a8', x - 2, G - 131, 172, 3);
+  const grid = (gx, gy, cols, rows, cw, ch, dark) => { rect(c, '#3a3f46', gx - 1, gy - 1, cols * cw + 1, rows * ch + 1); for (let i = 0; i < cols; i++) for (let j = 0; j < rows; j++) { c.fillStyle = (i + j * 3) % 7 === 2 ? '#c9d8e2' : lg(c, 0, gy + j * ch, 0, gy + (j + 1) * ch, dark ? [[0, '#7a8a98'], [1, '#4a5866']] : [[0, '#a8bccc'], [1, '#6a8090']]); c.fillRect(gx + i * cw, gy + j * ch, cw - 1, ch - 1); } };
+  grid(x + 4, G - 116, 14, 3, 7, 7, true); grid(x + 4, G - 72, 14, 3, 7, 7, false); rect(c, '#d9dce0', x + 4, G - 50, 98, 3); grid(x + 154, G - 120, 2, 14, 6, 7, false);
+  rect(c, '#c3c7cc', x + 104, G - 118, 46, 42, '#8a9098', .35); c.beginPath(); c.arc(x + 127, G - 101, 10.6, 0, 7); c.fillStyle = '#c8202a'; c.fill(); c.beginPath(); c.arc(x + 127, G - 101, 7.4, 0, 7); c.fillStyle = '#eef2f4'; c.fill(); c.beginPath(); c.arc(x + 127, G - 101, 6.2, 0, 7); c.fillStyle = '#c8202a'; c.fill();
+  poly(c, '#f4f6f8', [[x + 123, G - 106], [x + 125.6, G - 106], [x + 127.5, G - 100.4], [x + 129.4, G - 106], [x + 132, G - 106], [x + 128.6, G - 97], [x + 126.4, G - 97]]);
+  txt(c, 'VAUXHALL', x + 127, G - 83, 5.6, '#3a3f46', { f: 'Mont, sans-serif', w: 800, ls: .8 });
+  brick(c, x, G - 14, 168, 14, '#8a5a3a');
+  ribbed(c, x + 168, G - 112, 182, 112, '#b9bec4', 2.6); rect(c, RD, x + 168, G - 114, 182, 2); rect(c, RD, x + 348, G - 112, 2, 112); rect(c, RD, x + 168, G - 112, 2, 112);
+  txt(c, 'HOME OF THE', x + 259, G - 104, 5.4, RD, { f: 'Mont, sans-serif', w: 800, ls: .8 });
+  c.save(); c.font = '900 11px Mont, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.lineJoin = 'round'; c.lineWidth = 2.2; c.strokeStyle = '#f4f6f8'; c.strokeText('VAUXHALL VIVARO', x + 259, G - 95); c.fillStyle = RD; c.fillText('VAUXHALL VIVARO', x + 259, G - 95); c.restore();
+  const rwin = (wx, wy, ww, wh, cols, rows) => { rect(c, RD, wx, wy, ww, wh); const cw = (ww - 4) / cols, ch = (wh - 4) / rows; for (let i = 0; i < cols; i++) for (let j = 0; j < rows; j++) { c.fillStyle = lg(c, 0, wy + 2 + j * ch, 0, wy + 2 + (j + 1) * ch, [[0, '#7a8a98'], [1, '#3f4a55']]); c.fillRect(wx + 2 + i * cw + .4, wy + 2 + j * ch + .4, cw - .8, ch - .8); } glare(c, wx + 2, wy + 2, ww - 4, wh - 4); };
+  rwin(x + 186, G - 84, 40, 24, 4, 3); rwin(x + 236, G - 84, 20, 24, 2, 3); rwin(x + 266, G - 86, 70, 26, 7, 3); rwin(x + 186, G - 50, 40, 30, 4, 4); rwin(x + 236, G - 50, 20, 30, 2, 4); rwin(x + 266, G - 52, 70, 32, 7, 4);
+  ribbed(c, x + 350, G - 80, 120, 80, '#e6e8eb', 2.6); rect(c, RD, x + 350, G - 82, 120, 2); panels(c, x + 350, G - 92, 120, 10, '#c9ced4', 5);
+  { const vx = x + 390, vy = G - 70; c.fillStyle = lg(c, 0, vy, 0, vy + 14, [[0, '#e83030'], [1, '#a81a1e']]); c.beginPath(); c.moveTo(vx, vy + 14); c.lineTo(vx, vy + 4); c.quadraticCurveTo(vx, vy, vx + 4, vy); c.lineTo(vx + 22, vy); c.lineTo(vx + 30, vy + 7); c.quadraticCurveTo(vx + 34, vy + 8, vx + 34, vy + 11); c.lineTo(vx + 34, vy + 14); c.fill(); c.fillStyle = '#3f4a55'; c.beginPath(); c.moveTo(vx + 23, vy + 1.6); c.lineTo(vx + 29, vy + 6.6); c.lineTo(vx + 23, vy + 6.6); c.fill(); for (const wx of [vx + 7, vx + 27]) { c.beginPath(); c.arc(wx, vy + 14, 3, 0, 7); c.fillStyle = '#141416'; c.fill(); c.beginPath(); c.arc(wx, vy + 14, 1.4, 0, 7); c.fillStyle = '#b8bec6'; c.fill(); } }
+  rect(c, RD, x + 448, G - 30, 18, 30); rect(c, '#3a3f46', x + 450, G - 28, 14, 28);
+  brick(c, x - 2, G - 20, 238, 20, '#9a5038'); c.strokeStyle = LINE; c.lineWidth = .4; c.strokeRect(x - 2, G - 20, 238, 20); rect(c, '#cdc8bc', x - 3, G - 23, 240, 3, LINE, .25);
+  for (const [hx, hw] of [[x + 10, 44], [x + 178, 52]]) { c.fillStyle = '#356b2c'; c.beginPath(); c.roundRect ? c.roundRect(hx, G - 35, hw, 15, 3) : c.rect(hx, G - 35, hw, 15); c.fill(); for (let k = 0; k < hw * 2; k++) { c.beginPath(); c.arc(hx + 1 + (k * 7.3) % (hw - 2), G - 33 + (k * 3.3) % 12, 1, 0, 7); c.fillStyle = k % 3 ? '#4f8f3e' : '#6aaa50'; c.fill(); } }
+  const PIER = px => { brick(c, px, G - 40, 14, 40, '#9a5038'); c.strokeStyle = LINE; c.lineWidth = .4; c.strokeRect(px, G - 40, 14, 40); rect(c, '#6a6f77', px - 1, G - 43, 16, 3); };
+  const GATE = (gx, gw) => { c.strokeStyle = 'rgba(42,63,154,.55)'; c.lineWidth = .3; for (let yy = G - 33; yy < G - 3; yy += 1.4) { c.beginPath(); c.moveTo(gx, yy); c.lineTo(gx + gw, yy); c.stroke(); } for (let xx = gx; xx < gx + gw; xx += 1.4) { c.beginPath(); c.moveTo(xx, G - 33); c.lineTo(xx, G - 3); c.stroke(); }
+    rect(c, '#2a3f9a', gx, G - 36, gw, 2.4); rect(c, '#2a3f9a', gx, G - 18, gw, 1.6); rect(c, '#2a3f9a', gx, G - 3, gw, 3); for (let k = 0; k <= gw; k += gw / 6) rect(c, '#2a3f9a', gx + Math.min(k, gw - 1.6), G - 36, 1.6, 36); for (let k = 2; k < gw; k += 3) rect(c, '#1f2f7a', gx + k, G - 39, .7, 3); };
+  PIER(x + 236); GATE(x + 250, 100); PIER(x + 350); GATE(x + 364, 92); PIER(x + 456);
+  rect(c, '#f6f8fa', x + 256, G - 34, 58, 20, '#8a9098', .35); c.beginPath(); c.arc(x + 264, G - 24, 4, 0, 7); c.fillStyle = '#c8202a'; c.fill(); c.beginPath(); c.arc(x + 264, G - 24, 2, 0, 7); c.fillStyle = '#f6f8fa'; c.fill();
+  txt(c, 'VAUXHALL', x + 288, G - 27.4, 5, '#1f2f5a', { f: 'Mont, sans-serif', w: 900 }); txt(c, 'Gate 2', x + 288, G - 20.6, 4.6, '#3a3f46', { f: 'Mont, sans-serif', w: 600 });
+  for (const lx of [x + 172, x + 344]) { c.fillStyle = lg(c, lx, 0, lx + 2, 0, [[0, '#8a929c'], [.5, '#d0d4d8'], [1, '#7a828c']]); c.fillRect(lx, G - 96, 2, 96); rect(c, '#9aa3ad', lx, G - 96, 10, 1.6); rect(c, '#e8ecef', lx + 8, G - 95, 4, 1.6); }
+  c.restore();
+};
+
+// London Luton Airport: big grey ribbed terminal with the LLA block logo (L, L and a folded A shape) + London Luton Airport, white
+// canopy edge, covered walkway posts, dark glazed ground floor (only the ground-floor glass lights at night), teal angled panels,
+// coloured check-in desks; red bag, black bag, blue bag by the doors
+HD.airport = (c, x, G) => {
+  c.save(); c.lineJoin = 'round';
+  ribbed(c, x, G - 150, 420, 150, '#646d78', 3); rect(c, '#727b86', x, G - 150, 420, 4); rect(c, 'rgba(0,0,0,.12)', x, G - 100, 420, .6);
+  { const lx = x + 172, ly = G - 140, u = 9; c.fillStyle = '#ffffff';   // LLA block logo
+    c.fillRect(lx, ly, u * .9, u * 2.4); c.fillRect(lx, ly + u * 1.6, u * 2, u * .8);
+    c.fillRect(lx + u * 2.6, ly, u * .9, u * 2.4); c.fillRect(lx + u * 2.6, ly + u * 1.6, u * 2, u * .8);
+    c.beginPath(); c.moveTo(lx + u * 5.2, ly + u * 2.4); c.lineTo(lx + u * 6.3, ly); c.lineTo(lx + u * 7.4, ly + u * 1.1); c.lineTo(lx + u * 6.8, ly + u * 2.4); c.closePath(); c.fill();
+    c.beginPath(); c.moveTo(lx + u * 6.9, ly + u * .6); c.lineTo(lx + u * 7.4, ly); c.lineTo(lx + u * 8.6, ly + u * 1.2); c.lineTo(lx + u * 7.9, ly + u * 1.7); c.closePath(); c.fill(); }
+  txt(c, 'London Luton Airport', x + 210, G - 104, 12, '#ffffff', { f: 'Mont, sans-serif', w: 500 });
+  rect(c, '#f4f4f4', x - 4, G - 54, 428, 6, LINE, .35); for (let i = 0; i < 16; i++) { c.fillStyle = lg(c, x + 6 + i * 27, 0, x + 8 + i * 27, 0, [[0, '#d0d0d0'], [.5, '#ffffff'], [1, '#c4c4c4']]); c.fillRect(x + 6 + i * 27, G - 48, 2, 48); }
+  rect(c, '#2a333d', x, G - 47, 420, 47); for (let i = 0; i < 16; i++) { c.fillStyle = i % 3 === 1 ? lg(c, 0, G - 43, 0, G - 5, [[0, '#ffe08a'], [1, '#e8a83a']]) : lg(c, 0, G - 43, 0, G - 5, [[0, '#5a6c80'], [1, '#2e3a48']]); c.fillRect(x + 4 + i * 26, G - 43, 22, 38); } glare(c, x, G - 43, 420, 38);
+  for (const tx of [x + 150, x + 300]) { c.fillStyle = lg(c, tx, 0, tx + 20, 0, [[0, '#3ac8c4'], [1, '#1f8e8c']]); c.beginPath(); c.moveTo(tx, G); c.lineTo(tx, G - 30); c.lineTo(tx + 20, G - 40); c.lineTo(tx + 20, G); c.fill(); for (let k = 0; k < 3; k++) poly(c, '#ffffff', [[tx + 6 + k * 4, G - 22], [tx + 9 + k * 4, G - 19], [tx + 6 + k * 4, G - 16], [tx + 7.6 + k * 4, G - 16], [tx + 10.6 + k * 4, G - 19], [tx + 7.6 + k * 4, G - 22]]); }
+  const bag = (bx, col, h) => { c.fillStyle = lg(c, bx, 0, bx + 6, 0, [[0, shade(col, 1.2)], [1, shade(col, .75)]]); c.beginPath(); c.roundRect ? c.roundRect(bx, G - h - 1, 6, h, 1) : c.rect(bx, G - h - 1, 6, h); c.fill(); rect(c, '#2a2a2e', bx + 2.4, G - h - 5, 1.2, 4); rect(c, '#2a2a2e', bx + 1.4, G - h - 5.6, 3.2, .8); c.beginPath(); c.arc(bx + 1.4, G - .6, .7, 0, 7); c.arc(bx + 4.6, G - .6, .7, 0, 7); c.fillStyle = '#141416'; c.fill(); };
+  bag(x + 46, '#c8202a', 7); bag(x + 116, '#2a2a2e', 6); bag(x + 366, '#3f6fb5', 7); bag(x + 240, '#f2c14e', 6);
   c.restore();
 };
 })();

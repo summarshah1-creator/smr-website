@@ -149,7 +149,7 @@ function hdFinish(c, o, N, l, top, r) {
   o.restore();
 }
 let KB = 2;
-if (document.fonts) Promise.all(['700 10px Mont', '600 10px Oswald', '700 10px Amiri'].map(f => document.fonts.load(f))).then(() => { bCache.clear(); hazeCache.clear(); });   // redraw buildings once the sign fonts are in   // building px per unit = exactly the on-screen size (S * BS)
+if (document.fonts) Promise.all(['700 10px Mont', '600 10px Oswald', '700 10px Amiri'].map(f => document.fonts.load(f)).concat(window.HD_READY || [])).then(() => { bCache.clear(); hazeCache.clear(); });   // redraw buildings once the sign fonts are in   // building px per unit = exactly the on-screen size (S * BS)
 function buildingCanvas(kind, key) {
   const id = kind + ':' + key; if (bCache.has(id)) { const v = bCache.get(id); bCache.delete(id); bCache.set(id, v); return v; }
   let w, draw;
