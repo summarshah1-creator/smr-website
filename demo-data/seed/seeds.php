@@ -561,6 +561,23 @@ return json_decode(<<<'JSON'
    "Book a free assessment and get in touch straight from any page, on WhatsApp or by phone.",
    "Accessibility tools and a proper cookie banner are built in."
   ]
+ },
+ {
+  "slug": "gatsby",
+  "version": "2026-11-21a",
+  "ver": "1.0",
+  "name": "Gatsby Law",
+  "accent": "#D4AF61",
+  "tagline": "Criminal defence solicitors website · Hertfordshire",
+  "description": "A new website for Gatsby Law, criminal defence solicitors: 24-hour police station help, serious crime services, results, the team, their media and a quick case check, all in Gatsby Law's black and gold.",
+  "tips": [
+   "The 24-hour line sits at the bottom of every page on phones, so anyone arrested can call in one tap.",
+   "Each service has its own page: police station, serious crime, court and more.",
+   "Results and the team build trust before someone picks up the phone.",
+   "The media section shows fight nights, court days and podcasts, so people get to know Aamer and Saf.",
+   "Case check: visitors answer a few quick questions and get straight through to the right person.",
+   "Everything is styled in Gatsby Law's own black and gold, with their real photos."
+  ]
  }
 ]
 JSON
