@@ -985,7 +985,7 @@ HD.currys = (c, x, G) => {
   c.fillStyle = 'rgba(30,40,50,.5)'; c.fillRect(x + 150, G - 40, 60, 40); for (const dx of [x + 152, x + 181]) { c.fillStyle = lg(c, 0, G - 38, 0, G, [[0, '#cfe0ec'], [1, '#6a8aa4']]); c.fillRect(dx, G - 38, 27, 38); } glare(c, x + 150, G - 40, 60, 40);
   for (const bx of [x + 92, x + 106, x + 246, x + 260]) { rect(c, '#1f6f3f', bx, G - 26, 9, 14, '#0e3a20', .3); txt(c, 'P', bx + 4.5, G - 19, 6, '#fff'); rect(c, '#d8d8d8', bx + 4, G - 12, 1, 12); }
   tree(c, x + 60, G, 1.1, { d: '#4f8a2c', m: '#6faa3e', l: '#9ccc66' }); tree(c, x + 300, G, 1.4, { d: '#5a8a34', m: '#7fb04a', l: '#a8d070' }); for (let i = 0; i < 6; i++) bollard(c, x + 6 + i * 10, G);
-  const V = window.VEHICLES; if (V && V.mrrushed && V.mrrushed.parked) { V.mrrushed.parked(c, x + 94, G, .79, null); if (V.donner) V.donner.parked(c, x + 226, G, .81); }
+  const V = window.VEHICLES, hc = (q, b) => window.hdCtx ? hdCtx(q, b, G - 66, G) : q; if (V && V.mrrushed && V.mrrushed.parked) { V.mrrushed.parked(hc(c, null), x + 94, G, .79, null); if (V.donner) V.donner.parked(hc(c, '#141416'), x + 226, G, .81); }
   c.restore();
 };
 
@@ -1275,27 +1275,46 @@ HD.ldh = (c, x, G) => {
 // "luton", grey "food" + red "bank", white heart with the yolk), barred window, grey door, open loading bay with shelves and crates
 HD.foodbank = (c, x, G) => {
   c.save(); c.lineJoin = 'round';
-  ribbed(c, x, G - 112, 300, 64, '#2f7a5a', 2.2); rect(c, '#1f5a40', x - 3, G - 118, 306, 7, '#0e3a28', .4); rect(c, '#3f9a72', x - 3, G - 118, 306, 1);
-  brick(c, x, G - 48, 156, 48, '#dab56c'); brick(c, x + 252, G - 48, 48, 48, '#dab56c'); line(c, LINE, .45, [[x, G - 48], [x + 300, G - 48]]);
-  rect(c, '#f4f2ec', x + 10, G - 42, 28, 26, '#8a8880', .35); rect(c, '#3a3d44', x + 12, G - 40, 24, 22); for (let i = 0; i < 7; i++) rect(c, '#a8b0ba', x + 13 + i * 3.4, G - 40, .8, 22);
-  rect(c, '#808e98', x + 70, G - 42, 20, 42, '#3a444c', .4); c.fillStyle = lg(c, 0, G - 38, 0, G - 26, [[0, '#d4e2ec'], [1, '#7a94a8']]); c.fillRect(x + 74, G - 38, 12, 12); rect(c, '#c0c6cc', x + 86, G - 22, 2, 1); rect(c, '#4a4e56', x + 96, G - 36, 10, 8);
+  ribbed(c, x, G - 112, 281, 64, '#2f7a5a', 2.2); rect(c, '#1f5a40', x - 3, G - 118, 287, 7, '#0e3a28', .4); rect(c, '#3f9a72', x - 3, G - 118, 287, 1);
+  brick(c, x, G - 48, 156, 48, '#dab56c'); brick(c, x + 252, G - 48, 29, 48, '#dab56c');   // right wall 40% narrower (owner) line(c, LINE, .45, [[x, G - 48], [x + 281, G - 48]]);
+  // from the owner's photo (35 York St): two dark-framed windows with security grilles + blinds, small plaques, the door right by
+  // the garage (white frame, dark inside), red-brick edge where the brick meets the bay
+  for (const wx of [x + 14, x + 54]) { rect(c, '#4a4e56', wx, G - 40, 28, 26, '#22242a', .4); c.fillStyle = lg(c, 0, G - 38, 0, G - 16, [[0, '#8a96a2'], [1, '#3e4650']]); c.fillRect(wx + 2, G - 38, 24, 22); for (let k = 0; k < 10; k++) rect(c, 'rgba(230,226,214,.5)', wx + 2, G - 38 + k * 1.4, 24, .6);
+    for (let k = 0; k < 9; k++) rect(c, '#2a2c32', wx + 3 + k * 2.6, G - 38, .7, 22); rect(c, '#2a2c32', wx + 2, G - 28, 24, .7); rect(c, '#d8cfb8', wx - 1, G - 14, 30, 1.6, '#8a8270', .25); }
+  for (const px of [x + 92, x + 136]) rect(c, '#8a9098', px, G - 44, 10, 5, '#4a4e56', .3);
+  rect(c, '#f4f4f2', x + 114, G - 41, 20, 41, '#8a8a84', .35); c.fillStyle = lg(c, 0, G - 39, 0, G, [[0, '#1e2228'], [1, '#2a3038']]); c.fillRect(x + 116, G - 39, 16, 39); rect(c, '#3a5a8a', x + 118, G - 30, 3, 20); rect(c, '#c8202a', x + 124, G - 24, 4, 6);
+  poly(c, '#d8dce0', [[x + 131.4, G - 39], [x + 134.6, G - 40.6], [x + 134.6, G + .4], [x + 131.4, G]], '#8a8a84', .3);
+  { const cx = x + 138; c.fillStyle = lg(c, cx, 0, cx + 7, 0, [[0, '#e88a1a'], [.5, '#ffb040'], [1, '#d07a10']]); c.beginPath(); c.moveTo(cx, G); c.lineTo(cx + 3, G - 11); c.lineTo(cx + 4.4, G - 11); c.lineTo(cx + 7.4, G); c.fill(); c.beginPath(); c.arc(cx + 3.7, G - 5, 1.6, 0, 7); c.fillStyle = '#2a4ab8'; c.fill(); rect(c, '#c8202a', cx + 2.2, G - 5.3, 3, .6); rect(c, '#2a2a2e', cx - 1, G - 1.4, 9.4, 1.4); }
+  brick(c, x + 148, G - 48, 8, 48, '#b0583e', { bw: 2.4, bh: 1.1 });
   rect(c, '#1f5a40', x + 156, G - 98, 96, 98); rect(c, '#17171b', x + 160, G - 92, 88, 92); rect(c, '#3f8a68', x + 158, G - 98, 92, 6);
   // inside the bay (owner): a big white van parked nose-out in the middle, four shelves of green and blue crates either side of it
   c.fillStyle = lg(c, 0, G - 92, 0, G, [[0, '#24242a'], [1, '#121216']]); c.fillRect(x + 160, G - 92, 88, 92);
   const crate = (cx, cy, w, h, col) => { c.fillStyle = lg(c, 0, cy, 0, cy + h, [[0, shade(col, 1.18)], [1, shade(col, .78)]]); c.fillRect(cx, cy, w, h); rect(c, 'rgba(0,0,0,.28)', cx, cy + h * .45, w, .4); rect(c, 'rgba(0,0,0,.45)', cx + w * .3, cy + 1, w * .4, 1.1); c.strokeStyle = 'rgba(0,0,0,.4)'; c.lineWidth = .3; c.strokeRect(cx, cy, w, h); };
-  for (const [sx, sw] of [[x + 161, 22], [x + 225, 22]]) { for (const px of [sx, sx + sw - 1.2]) rect(c, '#8a929c', px, G - 82, 1.2, 82);
+  c.save(); c.beginPath(); c.rect(x + 160, G - 92, 88, 92); c.clip();
+  for (const [sx, sw] of [[x + 150, 24], [x + 234, 24]]) { for (const px of [sx, sx + sw - 1.2]) rect(c, '#8a929c', px, G - 82, 1.2, 82);
     for (let k = 0; k < 4; k++) { const sy = G - 62 + k * 19 - 19; rect(c, '#a8b0ba', sx, sy + 15, sw, 1.4); const n = 2; for (let j = 0; j < n; j++) crate(sx + 1.6 + j * 9.6, sy + 7.6, 8.6, 7.2, (j + k + (sx > x + 200 ? 1 : 0)) % 2 ? '#2a6fd8' : '#3fae5a'); } }
-  { const vx = x + 204, vb = G - 1, W2 = 38, H2 = 56;   // van front-on
-    c.fillStyle = 'rgba(0,0,0,.35)'; c.beginPath(); c.ellipse(vx, vb, W2 * .6, 2, 0, 0, 7); c.fill();
-    for (const wx of [vx - W2 / 2 + 2, vx + W2 / 2 - 7]) { c.fillStyle = '#141416'; c.beginPath(); c.roundRect ? c.roundRect(wx, vb - 8, 5, 8, 1.4) : c.rect(wx, vb - 8, 5, 8); c.fill(); }
-    c.fillStyle = lg(c, vx - W2 / 2, 0, vx + W2 / 2, 0, [[0, '#d4d8dc'], [.3, '#ffffff'], [.7, '#f2f4f6'], [1, '#c4c8cc']]); c.beginPath(); c.moveTo(vx - W2 / 2, vb - 6); c.lineTo(vx - W2 / 2, vb - H2 + 6); c.quadraticCurveTo(vx - W2 / 2, vb - H2, vx - W2 / 2 + 6, vb - H2); c.lineTo(vx + W2 / 2 - 6, vb - H2); c.quadraticCurveTo(vx + W2 / 2, vb - H2, vx + W2 / 2, vb - H2 + 6); c.lineTo(vx + W2 / 2, vb - 6); c.closePath(); c.fill(); c.strokeStyle = 'rgba(0,0,0,.4)'; c.lineWidth = .4; c.stroke();
-    c.fillStyle = lg(c, 0, vb - H2 + 10, 0, vb - 28, [[0, '#7a8ea0'], [.6, '#3a4654'], [1, '#2a323c']]); c.beginPath(); c.moveTo(vx - W2 / 2 + 3, vb - 28); c.lineTo(vx - W2 / 2 + 5, vb - H2 + 12); c.lineTo(vx + W2 / 2 - 5, vb - H2 + 12); c.lineTo(vx + W2 / 2 - 3, vb - 28); c.closePath(); c.fill();
-    c.save(); c.beginPath(); c.moveTo(vx - W2 / 2 + 3, vb - 28); c.lineTo(vx - W2 / 2 + 5, vb - H2 + 12); c.lineTo(vx + W2 / 2 - 5, vb - H2 + 12); c.lineTo(vx + W2 / 2 - 3, vb - 28); c.clip(); c.fillStyle = 'rgba(255,255,255,.16)'; c.beginPath(); c.moveTo(vx - 10, vb - 28); c.lineTo(vx - 2, vb - H2 + 12); c.lineTo(vx + 4, vb - H2 + 12); c.lineTo(vx - 4, vb - 28); c.fill(); c.restore();
-    for (const d of [-1, 1]) { rect(c, '#2a2a2e', vx + d * (W2 / 2 + 1.4) - 1.6, vb - 34, 3.2, 4.6); line(c, '#2a2a2e', .6, [[vx + d * W2 / 2, vb - 32], [vx + d * (W2 / 2 + 1.4), vb - 32]]); }
-    rect(c, '#d84a2a', vx - 8, vb - H2 + 5, 16, 3.4); txt(c, 'FOODBANK', vx, vb - H2 + 6.7, 2.4, '#ffffff', { f: 'Mont, sans-serif', w: 900 });
-    rect(c, '#2a2e34', vx - 12, vb - 24, 24, 7, '#141418', .3); for (let k = 0; k < 4; k++) rect(c, '#3e444c', vx - 11, vb - 23 + k * 1.6, 22, .7); c.beginPath(); c.arc(vx, vb - 20.6, 1.6, 0, 7); c.fillStyle = '#c8ccd2'; c.fill();
-    for (const d of [-1, 1]) { c.fillStyle = lg(c, vx + d * 15 - 3.6, 0, vx + d * 15 + 3.6, 0, [[0, '#e8f0f6'], [1, '#a8b8c6']]); c.beginPath(); c.moveTo(vx + d * 12.6, vb - 24); c.lineTo(vx + d * 18.4, vb - 25); c.lineTo(vx + d * 18.4, vb - 20); c.lineTo(vx + d * 12.6, vb - 19.6); c.fill(); rect(c, '#f2a33a', vx + d * 16.6 - 1, vb - 18.6, 2, 1.2); }
-    rect(c, '#3a3e44', vx - W2 / 2 + 1, vb - 14, W2 - 2, 6, '#1a1c20', .3); rect(c, '#f2c94c', vx - 6, vb - 13, 12, 3.4, '#7a6010', .2); rect(c, '#1b1a24', vx - 4.4, vb - 11.8, 8.8, .5); }
+  c.restore();
+  { const vx = x + 204, vb = G - 1, W2 = 40, H2 = 60, L = vx - W2 / 2, Rr = vx + W2 / 2;   // high-roof panel van, front-on
+    c.fillStyle = 'rgba(0,0,0,.4)'; c.beginPath(); c.ellipse(vx, vb, W2 * .62, 2.2, 0, 0, 7); c.fill();
+    for (const wx of [L + 1.6, Rr - 7.6]) { c.fillStyle = '#121214'; c.beginPath(); c.roundRect ? c.roundRect(wx, vb - 9, 6, 9, 1.6) : c.rect(wx, vb - 9, 6, 9); c.fill(); }
+    // body: tall box, rounded roof corners, a little narrower at the top
+    c.fillStyle = lg(c, L, 0, Rr, 0, [[0, '#c8ccd0'], [.18, '#f4f6f8'], [.5, '#ffffff'], [.82, '#eef0f2'], [1, '#b8bcc2']]); c.beginPath(); c.moveTo(L, vb - 8); c.lineTo(L, vb - 30); c.lineTo(L + 1.6, vb - H2 + 6); c.quadraticCurveTo(L + 2, vb - H2, L + 7, vb - H2); c.lineTo(Rr - 7, vb - H2); c.quadraticCurveTo(Rr - 2, vb - H2, Rr - 1.6, vb - H2 + 6); c.lineTo(Rr, vb - 30); c.lineTo(Rr, vb - 8); c.closePath(); c.fill(); c.strokeStyle = 'rgba(0,0,0,.45)'; c.lineWidth = .45; c.stroke();
+    // big windscreen with a dark top tint band and a reflection
+    c.fillStyle = lg(c, 0, vb - H2 + 8, 0, vb - 31, [[0, '#2a323c'], [.25, '#8aa0b4'], [.7, '#4a5868'], [1, '#2a323c']]); c.beginPath(); c.moveTo(L + 3, vb - 31); c.lineTo(L + 4.4, vb - H2 + 9); c.quadraticCurveTo(vx, vb - H2 + 6.6, Rr - 4.4, vb - H2 + 9); c.lineTo(Rr - 3, vb - 31); c.quadraticCurveTo(vx, vb - 29.6, L + 3, vb - 31); c.fill();
+    c.save(); c.clip(); c.fillStyle = 'rgba(255,255,255,.18)'; c.beginPath(); c.moveTo(vx - 12, vb - 30); c.lineTo(vx - 3, vb - H2 + 8); c.lineTo(vx + 3, vb - H2 + 8); c.lineTo(vx - 6, vb - 30); c.fill(); c.restore();
+    line(c, '#2a2c30', .6, [[vx - 9, vb - 32], [vx - 1, vb - 36]]); line(c, '#2a2c30', .6, [[vx + 2, vb - 32], [vx + 10, vb - 36]]);   // wipers
+    rect(c, '#d84a2a', vx - 9, vb - H2 + 2.6, 18, 3, '#7a1a0a', .2); txt(c, 'FOODBANK', vx, vb - H2 + 4.1, 2.2, '#ffffff', { f: 'Mont, sans-serif', w: 900 });
+    // short bonnet, then the grille between swept headlights
+    c.fillStyle = lg(c, 0, vb - 30, 0, vb - 22, [[0, '#ffffff'], [1, '#d8dce0']]); c.beginPath(); c.moveTo(L + 1, vb - 29); c.quadraticCurveTo(vx, vb - 31.4, Rr - 1, vb - 29); c.lineTo(Rr - .6, vb - 23); c.lineTo(L + .6, vb - 23); c.fill();
+    c.fillStyle = '#1e2126'; c.beginPath(); c.roundRect ? c.roundRect(vx - 9.6, vb - 24, 19.2, 8, 1.4) : c.rect(vx - 9.6, vb - 24, 19.2, 8); c.fill(); for (let k = 0; k < 3; k++) rect(c, '#6a7078', vx - 8.6, vb - 22.6 + k * 2.4, 17.2, .7);
+    c.beginPath(); c.arc(vx, vb - 20, 2, 0, 7); c.fillStyle = '#c8ccd2'; c.fill(); c.beginPath(); c.arc(vx, vb - 20, 1.2, 0, 7); c.fillStyle = '#1e2126'; c.fill();
+    for (const d of [-1, 1]) { const hx = vx + d * 14.4; c.fillStyle = '#1e2126'; c.beginPath(); c.moveTo(hx - 5 * d, vb - 25); c.lineTo(hx + 4.6 * d, vb - 26.6); c.lineTo(hx + 5.2 * d, vb - 20); c.lineTo(hx - 5 * d, vb - 19.6); c.closePath(); c.fill();
+      c.fillStyle = lg(c, hx - 4, 0, hx + 4, 0, [[0, '#f4f8fc'], [1, '#a8b8c8']]); c.beginPath(); c.moveTo(hx - 4.2 * d, vb - 24.4); c.lineTo(hx + 4 * d, vb - 25.8); c.lineTo(hx + 4.4 * d, vb - 20.6); c.lineTo(hx - 4.2 * d, vb - 20.4); c.closePath(); c.fill(); rect(c, '#f2a33a', hx + (d > 0 ? 1.6 : -3.6), vb - 22, 2, 1.2);
+      rect(c, '#1e2126', vx + d * (W2 / 2 + 2.6) - 1.8, vb - 36, 3.6, 5.6, '#000', .2); line(c, '#1e2126', .7, [[vx + d * W2 / 2, vb - 32], [vx + d * (W2 / 2 + 2), vb - 33]]); }
+    // bumper with fog lights and the white front number plate
+    c.fillStyle = lg(c, 0, vb - 16, 0, vb - 7, [[0, '#4a4e56'], [1, '#26292e']]); c.beginPath(); c.roundRect ? c.roundRect(L - .6, vb - 16, W2 + 1.2, 9, 2) : c.rect(L - .6, vb - 16, W2 + 1.2, 9); c.fill();
+    for (const d of [-1, 1]) { c.beginPath(); c.arc(vx + d * 15, vb - 11.4, 1.3, 0, 7); c.fillStyle = '#e8eef4'; c.fill(); }
+    rect(c, '#f8f8f6', vx - 7, vb - 13.6, 14, 4, '#1b1a24', .3); txt(c, 'LT24 FBK', vx, vb - 11.5, 2.6, '#141416', { f: 'Mont, sans-serif', w: 900 }); }
   rect(c, '#ffffff', x + 14, G - 106, 132, 34, '#8a8880', .4);
   { const im = HDIMG.foodbank; if (im) { const h2 = 30, w2 = h2 * im.width / im.height; c.drawImage(im, x + 80 - w2 / 2, G - 104, w2, h2); }   // the real Luton Foodbank logo (owner's file)
     else { txt(c, 'luton', x + 46, G - 98.6, 8, '#d32f2f', { f: 'Mont, sans-serif', w: 600 }); txt(c, 'foodbank', x + 70, G - 85, 14, '#5a5a5e', { f: 'Mont, sans-serif', w: 600 }); } }
@@ -1740,25 +1759,35 @@ HD.vauxhall = (c, x, G) => {
   c.restore();
 };
 
-// London Luton Airport: big grey ribbed terminal with the LLA block logo (L, L and a folded A shape) + London Luton Airport, white
-// canopy edge, covered walkway posts, dark glazed ground floor (only the ground-floor glass lights at night), teal angled panels,
-// coloured check-in desks; red bag, black bag, blue bag by the doors
+// London Luton Airport (owner's photo): big grey terminal in large flat cladding panels, the LLA block logo (two Ls made of three
+// squares each, the A as two tilted squares) with London Luton Airport under it, white canopy on slim posts over the front, dark
+// glazing with warm-lit check-in inside (only the ground-floor glass lights at night), teal panels with the grey diamond, stair rails
 HD.airport = (c, x, G) => {
   c.save(); c.lineJoin = 'round';
-  ribbed(c, x, G - 150, 420, 150, '#646d78', 3); rect(c, '#727b86', x, G - 150, 420, 4); rect(c, 'rgba(0,0,0,.12)', x, G - 100, 420, .6);
-  { const lx = x + 172, ly = G - 140, u = 9; c.fillStyle = '#ffffff';   // LLA block logo
-    c.fillRect(lx, ly, u * .9, u * 2.4); c.fillRect(lx, ly + u * 1.6, u * 2, u * .8);
-    c.fillRect(lx + u * 2.6, ly, u * .9, u * 2.4); c.fillRect(lx + u * 2.6, ly + u * 1.6, u * 2, u * .8);
-    c.beginPath(); c.moveTo(lx + u * 5.2, ly + u * 2.4); c.lineTo(lx + u * 6.3, ly); c.lineTo(lx + u * 7.4, ly + u * 1.1); c.lineTo(lx + u * 6.8, ly + u * 2.4); c.closePath(); c.fill();
-    c.beginPath(); c.moveTo(lx + u * 6.9, ly + u * .6); c.lineTo(lx + u * 7.4, ly); c.lineTo(lx + u * 8.6, ly + u * 1.2); c.lineTo(lx + u * 7.9, ly + u * 1.7); c.closePath(); c.fill(); }
-  txt(c, 'London Luton Airport', x + 210, G - 104, 12, '#ffffff', { f: 'Mont, sans-serif', w: 500 });
-  rect(c, '#f4f4f4', x - 4, G - 54, 428, 6, LINE, .35); for (let i = 0; i < 16; i++) { c.fillStyle = lg(c, x + 6 + i * 27, 0, x + 8 + i * 27, 0, [[0, '#d0d0d0'], [.5, '#ffffff'], [1, '#c4c4c4']]); c.fillRect(x + 6 + i * 27, G - 48, 2, 48); }
-  rect(c, '#2a333d', x, G - 47, 420, 47); for (let i = 0; i < 16; i++) { c.fillStyle = i % 3 === 1 ? lg(c, 0, G - 43, 0, G - 5, [[0, '#ffe08a'], [1, '#e8a83a']]) : lg(c, 0, G - 43, 0, G - 5, [[0, '#5a6c80'], [1, '#2e3a48']]); c.fillRect(x + 4 + i * 26, G - 43, 22, 38); } glare(c, x, G - 43, 420, 38);
-  for (const tx of [x + 150, x + 300]) { c.fillStyle = lg(c, tx, 0, tx + 20, 0, [[0, '#3ac8c4'], [1, '#1f8e8c']]); c.beginPath(); c.moveTo(tx, G); c.lineTo(tx, G - 30); c.lineTo(tx + 20, G - 40); c.lineTo(tx + 20, G); c.fill(); for (let k = 0; k < 3; k++) poly(c, '#ffffff', [[tx + 6 + k * 4, G - 22], [tx + 9 + k * 4, G - 19], [tx + 6 + k * 4, G - 16], [tx + 7.6 + k * 4, G - 16], [tx + 10.6 + k * 4, G - 19], [tx + 7.6 + k * 4, G - 22]]); }
-  const bag = (bx, col, h) => { c.fillStyle = lg(c, bx, 0, bx + 6, 0, [[0, shade(col, 1.2)], [1, shade(col, .75)]]); c.beginPath(); c.roundRect ? c.roundRect(bx, G - h - 1, 6, h, 1) : c.rect(bx, G - h - 1, 6, h); c.fill(); rect(c, '#2a2a2e', bx + 2.4, G - h - 5, 1.2, 4); rect(c, '#2a2a2e', bx + 1.4, G - h - 5.6, 3.2, .8); c.beginPath(); c.arc(bx + 1.4, G - .6, .7, 0, 7); c.arc(bx + 4.6, G - .6, .7, 0, 7); c.fillStyle = '#141416'; c.fill(); };
-  bag(x + 46, '#c8202a', 7); bag(x + 116, '#2a2a2e', 6); bag(x + 366, '#3f6fb5', 7); bag(x + 240, '#f2c14e', 6);
+  c.fillStyle = lg(c, 0, G - 150, 0, G - 48, [[0, '#5e6670'], [1, '#6e7680']]); c.fillRect(x, G - 150, 420, 102); c.strokeStyle = LINE; c.lineWidth = .45; c.strokeRect(x, G - 150, 420, 102);
+  for (let r = 0; r < 6; r++) { rect(c, 'rgba(0,0,0,.18)', x, G - 150 + r * 17, 420, .5); for (let k = 0; k < 14; k++) rect(c, 'rgba(0,0,0,.12)', x + ((k * 30 + r * 15) % 420), G - 150 + r * 17, .4, 17); }
+  rect(c, '#7a828c', x, G - 150, 420, 2.4); ribbed(c, x + 388, G - 150, 32, 102, '#7e8690', 2);
+  { const u = 8.6, lx = x + 226, ly = G - 138, sq = (qx, qy) => { c.fillStyle = '#ffffff'; c.fillRect(qx, qy, u, u); };   // LLA mark
+    sq(lx, ly); sq(lx, ly + u + .9); sq(lx + u + .9, ly + u + .9);
+    const l2 = lx + 2 * u + 7; sq(l2, ly - u * .4); sq(l2, ly + u * .6 + .9); sq(l2 + u + .9, ly + u * .6 + .9);
+    const dia = (cx, cy) => { c.save(); c.translate(cx, cy); c.rotate(Math.PI / 4); c.fillStyle = '#ffffff'; c.fillRect(-u * .8, -u * .8, u * 1.6, u * 1.6); c.restore(); };
+    dia(lx + 4 * u + 16, ly + u * .5); dia(lx + 5 * u + 21.4, ly + u * .5); }
+  txt(c, 'London Luton Airport', x + 290, G - 104, 11.4, '#ffffff', { f: 'Mont, sans-serif', w: 500 });
+  // ground floor: dark glazing with warm check-in light, mullions
+  rect(c, '#2a333d', x, G - 48, 420, 48);
+  for (let i = 0; i < 20; i++) { const gx = x + 2 + i * 21; c.fillStyle = (i % 4 === 1 || i % 4 === 2) ? lg(c, 0, G - 44, 0, G - 4, [[0, '#f8dc94'], [.6, '#e8b860'], [1, '#c89040']]) : lg(c, 0, G - 44, 0, G - 4, [[0, '#6a7e94'], [1, '#2e3a48']]); c.fillRect(gx, G - 44, 19, 40); }
+  glare(c, x, G - 44, 420, 40); for (let i = 0; i < 8; i++) { rect(c, ['#c8202a', '#f2c43a', '#3f6fb5', '#2a2a2e'][i % 4], x + 30 + i * 48, G - 14, 6, 10); }
+  // white canopy on slim posts
+  c.fillStyle = lg(c, 0, G - 60, 0, G - 50, [[0, '#ffffff'], [1, '#d4d8dc']]); c.beginPath(); c.moveTo(x - 6, G - 50); c.lineTo(x - 6, G - 54); c.quadraticCurveTo(x + 210, G - 62, x + 426, G - 56); c.lineTo(x + 426, G - 52); c.quadraticCurveTo(x + 210, G - 56, x - 6, G - 50); c.fill(); c.strokeStyle = '#8a9098'; c.lineWidth = .4; c.stroke();
+  for (let i = 0; i < 12; i++) { const px2 = x + 10 + i * 36; c.fillStyle = lg(c, px2, 0, px2 + 2, 0, [[0, '#c4c8cc'], [.5, '#ffffff'], [1, '#aab0b6']]); c.fillRect(px2, G - 54, 2, 54); }
+  // teal panels with the grey diamond
+  for (const tx of [x + 150, x + 330]) { c.fillStyle = lg(c, tx, 0, tx + 20, 0, [[0, '#3ac8c4'], [1, '#22a4a2']]); c.fillRect(tx, G - 34, 20, 34); c.strokeStyle = '#147a78'; c.lineWidth = .4; c.strokeRect(tx, G - 34, 20, 34); c.save(); c.translate(tx + 10, G - 17); c.rotate(Math.PI / 4); c.fillStyle = '#4a525c'; c.fillRect(-6, -6, 12, 12); c.restore(); poly(c, '#3ac8c4', [[tx + 6, G - 19], [tx + 13, G - 17], [tx + 6, G - 15]]); }
+  // stair rails
+  for (let i = 0; i < 4; i++) { const rx = x + 250 + i * 18; line(c, '#5a626c', .9, [[rx, G - 16], [rx + 14, G - 22]]); rect(c, '#5a626c', rx, G - 16, .8, 16); rect(c, '#5a626c', rx + 14, G - 22, .8, 22); }
+  for (let i = 0; i < 5; i++) rect(c, i % 2 ? '#c8ccd0' : '#dcdfe2', x + 246, G - 3 - i * 0, 80, 0); rect(c, '#cfd2d6', x + 244, G - 4, 84, 4);
   c.restore();
 };
+
 
 // ======================= HOUSES (HD) =======================
 // From the owner's Leagrave Road / 3D-game references: red-brick terraces with square bays under little hipped roofs, porches,

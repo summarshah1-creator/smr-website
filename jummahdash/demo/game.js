@@ -184,17 +184,41 @@ function hazed(id, v) {   // pale, sunset-tinted copy for the far skyline
 /* vehicles, rendered at KR, both directions */
 const CAR_KEYS = ['golf', 'a45', 'rs3', 'taxi', 'van', 'smallvan', 'bus', 'police', 'gwagon', 'c63', 'pickup', 'moped', 'bike', 'coach', 'binlorry', 'ambulance'];
 const carCache = new Map();
+/* HD pass for the vehicle art (owner, 21 Nov): the shared Flappy drawings go through a context wrapper that turns the flat body
+   colour into a glossy gradient with a reflection band, thins the dark outlines, gives the glass a sky reflection and the rims a
+   metallic finish; every model, colour and owner detail stays exactly as drawn */
+const hdNorm = (() => { const t = document.createElement('canvas').getContext('2d'); return s => { t.fillStyle = '#000'; t.fillStyle = s; return t.fillStyle; }; })();
+const hdSh = (hex, k) => { const n = parseInt(hex.slice(1), 16), f = v => Math.max(0, Math.min(255, Math.round(v * k))); return `rgb(${f(n >> 16)},${f(n >> 8 & 255)},${f(n & 255)})`; };
+window.hdCtx = (o, body, top, bot) => {
+  const B = body ? hdNorm(body) : null, GLS = new Set(['#26303a', '#2a3038', '#22262c', '#2a323c', '#1f2a3a', '#3f4a55', '#2a2f38']), TYRE = '#16171a', OUTL = '#1b1a24';
+  const bodyGrad = () => { const gr = o.createLinearGradient(0, top, 0, bot); gr.addColorStop(0, hdSh(B, 1.32)); gr.addColorStop(.3, hdSh(B, 1.08)); gr.addColorStop(.42, hdSh(B, 1.2)); gr.addColorStop(.5, B); gr.addColorStop(.8, hdSh(B, .86)); gr.addColorStop(1, hdSh(B, .68)); return gr; };
+  const glassGrad = () => { const gr = o.createLinearGradient(0, top, 0, top + (bot - top) * .55); gr.addColorStop(0, '#9cb6ca'); gr.addColorStop(.5, '#3c4a58'); gr.addColorStop(1, '#1a2028'); return gr; };
+  const swap = () => { const fs = o.fillStyle; if (typeof fs !== 'string') return null; const f = fs.toLowerCase(); if (B && f === B) { o.fillStyle = bodyGrad(); return fs; } if (GLS.has(f)) { o.fillStyle = glassGrad(); return fs; } return null; };
+  return new Proxy(o, { get(t, p) {
+    if (p === 'fill') return (...a) => { const k = swap(); t.fill(...a); if (k) t.fillStyle = k; };
+    if (p === 'fillRect') return (...a) => { const k = swap(); t.fillRect(...a); if (k) t.fillStyle = k; };
+    if (p === 'stroke') return (...a) => { const lw = t.lineWidth, ss = typeof t.strokeStyle === 'string' ? t.strokeStyle.toLowerCase() : ''; if (ss === OUTL || ss === '#000000') t.lineWidth = Math.min(lw, .55); t.stroke(...a); t.lineWidth = lw; };
+    const v = t[p]; return typeof v === 'function' ? v.bind(t) : v; }, set(t, p, v) { t[p] = v; return true; } });
+};
 function carSprite(k, ci, flip) {
   const id = k + ci + flip + '@' + KR; if (carCache.has(id)) return carCache.get(id);
   const V = VEHICLES[k]; const col = V.colours[ci % V.colours.length]; const SC = 1.6, k2 = KR * SC;
   const c = document.createElement('canvas'); c.width = Math.ceil((V.w + 6) * k2); c.height = Math.ceil(90 * k2); const o = c.getContext('2d');
-  o.scale(k2, k2); try { V.d(o, 3, 86, col); } catch (e) {}
+  o.scale(k2, k2); window.__WREC = []; try { V.d(hdCtx(o, col[1], 86 - (V.h || 24), 86), 3, 86, col); } catch (e) {} const wr = window.__WREC; window.__WREC = null;
+  // specular sweep across the bodywork
+  o.setTransform(1, 0, 0, 1, 0, 0); o.globalCompositeOperation = 'source-atop'; const sg = o.createLinearGradient(c.width * .2, 0, c.width * .55, c.height); sg.addColorStop(0, 'rgba(255,255,255,0)'); sg.addColorStop(.48, 'rgba(255,255,255,.1)'); sg.addColorStop(.52, 'rgba(255,255,255,0)'); o.fillStyle = sg; o.fillRect(0, 0, c.width, c.height); o.globalCompositeOperation = 'source-over';
   let out = c;
   if (flip) { const f = document.createElement('canvas'); f.width = c.width; f.height = c.height; const g = f.getContext('2d'); g.translate(f.width, 0); g.scale(-1, 1); g.drawImage(c, 0, 0); g.setTransform(1, 0, 0, 1, 0, 0);
-    if (V.fixMirror) { g.scale(k2, k2); try { V.fixMirror(g, 3, 86, f.width / k2); } catch (e) {} } out = f; }
-  const v = { c: out, w: (V.w + 6) * SC, h: 90 * SC, gy: 86 * SC, sp: V.speed };
+    if (V.fixMirror) { g.scale(k2, k2); try { V.fixMirror(hdCtx(g, col[1], 86 - (V.h || 24), 86), 3, 86, f.width / k2); } catch (e) {} } out = f; }
+  const wh = (wr || []).map(w => ({ x: (flip ? c.width - w.x : w.x) / KR, y: w.y / KR, r: w.r / KR, rim: w.rim, spokes: w.spokes || 5 }));
+  const v = { c: out, w: (V.w + 6) * SC, h: 90 * SC, gy: 86 * SC, sp: V.speed, wh };
   carCache.set(id, v); if (carCache.size > 40) carCache.delete(carCache.keys().next().value); return v;
 }
+// turning wheels: the rim + spokes are redrawn over each wheel every frame, rotated by how far the car has rolled
+function drawWheels(sp, x0, y0, roll) { for (const w of sp.wh) { const cx = x0 + w.x, cy = y0 + w.y, r = w.r * .64; if (r < 1.2) continue;
+  ctx.save(); ctx.translate(cx, cy); const g = ctx.createRadialGradient(-r * .3, -r * .3, 0, 0, 0, r); g.addColorStop(0, '#f4f6f8'); g.addColorStop(.6, w.rim || '#9aa2ab'); g.addColorStop(1, '#4a4e56'); ctx.beginPath(); ctx.arc(0, 0, r, 0, 7); ctx.fillStyle = g; ctx.fill();
+  ctx.rotate(roll / w.r); ctx.strokeStyle = 'rgba(40,42,48,.85)'; ctx.lineWidth = Math.max(.6, r * .2); for (let i = 0; i < w.spokes; i++) { const a = i * 2 * Math.PI / w.spokes; ctx.beginPath(); ctx.moveTo(Math.cos(a) * r * .25, Math.sin(a) * r * .25); ctx.lineTo(Math.cos(a) * r * .92, Math.sin(a) * r * .92); ctx.stroke(); }
+  ctx.beginPath(); ctx.arc(0, 0, r * .24, 0, 7); ctx.fillStyle = '#5a5d66'; ctx.fill(); ctx.restore(); } }
 
 /* £1 coin: gold 12-sided with a silver centre, pre-drawn at a few spin widths */
 const COIN_R = 9; let coinFrames = [], coinK = 0;
@@ -802,6 +826,25 @@ function buildSky() {
   const vg = v.createRadialGradient(cv.width / 2, cv.height * .55, cv.height * .35, cv.width / 2, cv.height * .55, cv.width * .75);
   vg.addColorStop(0, 'rgba(10,6,24,0)'); vg.addColorStop(1, 'rgba(10,6,24,.42)'); v.fillStyle = vg; v.fillRect(0, 0, cv.width, cv.height);
 }
+/* a jet crossing the sky every 25-50 s, climbing slightly, leaving a contrail that spreads and fades (owner, 21 Nov) */
+const JET = window.__JET = { t: 8 + Math.random() * 10, on: null, trail: [] };
+function drawJet() { const now = performance.now() / 1000, dt = Math.min(.05, now - (JET.last || now)); JET.last = now;
+  if (!JET.on) { JET.t -= dt; if (JET.t <= 0) { const dir = Math.random() < .5 ? 1 : -1; JET.on = { x: dir > 0 ? -40 : W + 40, y: 26 + Math.random() * 40, dir, v: 34 + Math.random() * 10, climb: -(1 + Math.random() * 1.4), s: .8 + Math.random() * .35 }; JET.trail = []; JET.drop = 0; } }
+  const j = JET.on;
+  if (j) { j.x += j.dir * j.v * dt; j.y += j.climb * dt; JET.drop += dt; if (JET.drop > .08) { JET.drop = 0; JET.trail.push({ x: j.x - j.dir * 14 * j.s, y: j.y + 1.4 * j.s, t: now }); } if (j.x < -80 || j.x > W + 80) { JET.on = null; JET.t = 25 + Math.random() * 25; } }
+  for (const p of JET.trail) { const age = now - p.t; if (age > 9) continue; const a = (1 - age / 9) * .55, r = 1.1 + age * .7; ctx.fillStyle = `rgba(255,255,255,${a.toFixed(3)})`; ctx.beginPath(); ctx.ellipse(p.x, p.y + age * .6, r * 1.6, r, 0, 0, 7); ctx.fill(); }
+  while (JET.trail.length && now - JET.trail[0].t > 9) JET.trail.shift();
+  if (!j) return; ctx.save(); ctx.translate(j.x, j.y); ctx.scale(j.dir * j.s, j.s); ctx.rotate(-.04);
+  ctx.fillStyle = '#9aa6b4'; ctx.beginPath(); ctx.moveTo(-2, 0); ctx.lineTo(-9, 7); ctx.lineTo(-5.4, 7); ctx.lineTo(4, .6); ctx.fill();   // far wing
+  const fg = ctx.createLinearGradient(0, -2.4, 0, 2.4); fg.addColorStop(0, '#ffffff'); fg.addColorStop(1, '#c4ccd6'); ctx.fillStyle = fg;
+  ctx.beginPath(); ctx.moveTo(-14, -1.2); ctx.quadraticCurveTo(-15, 1.6, -12, 1.8); ctx.lineTo(10, 1.8); ctx.quadraticCurveTo(15, 1.6, 15.6, 0); ctx.quadraticCurveTo(14, -1.8, 10, -1.8); ctx.lineTo(-12, -1.8); ctx.closePath(); ctx.fill();
+  ctx.fillStyle = '#2a5ab8'; ctx.beginPath(); ctx.moveTo(-11, -1.6); ctx.lineTo(-15, -7.4); ctx.lineTo(-12.6, -7.4); ctx.lineTo(-7, -1.6); ctx.fill();   // tail fin
+  ctx.fillStyle = '#d8dee6'; ctx.beginPath(); ctx.moveTo(-12, 0); ctx.lineTo(-16, 2.4); ctx.lineTo(-14.6, 2.4); ctx.lineTo(-10, .4); ctx.fill();
+  ctx.fillStyle = '#e4e8ee'; ctx.beginPath(); ctx.moveTo(-1, .6); ctx.lineTo(-7, 6.4); ctx.lineTo(-4, 6.4); ctx.lineTo(5, 1); ctx.fill();   // near wing
+  ctx.fillStyle = '#8a96a6'; ctx.beginPath(); ctx.ellipse(-2.6, 3.6, 2, .9, 0, 0, 7); ctx.fill();   // engine
+  ctx.fillStyle = '#2a5ab8'; ctx.fillRect(-8, -.3, 18, .5); ctx.fillStyle = '#3a4656'; for (let i = 0; i < 9; i++) ctx.fillRect(-6 + i * 2, -1, .7, .6); ctx.fillRect(12, -1.1, 1.8, .8);
+  ctx.restore(); }
+
 function px(v) { return Math.round(v * S) / S; }
 function draw() {
   ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
@@ -809,6 +852,7 @@ function draw() {
   ctx.drawImage(skyCv, 0, 0);
   const shx = shake > 0 ? (Math.random() - .5) * shake * 14 : 0, shy = shake > 0 ? (Math.random() - .5) * shake * 14 : 0;
   ctx.setTransform(S, 0, 0, S, shx * S, shy * S);
+  drawJet();
   // far hazy skyline (smaller, slower)
   const sk = .5;
   skyline.forEach(b => { const v = buildingCanvas(b.kind, b.key); if (!v) return; const h = hazed(b.kind + ':' + b.key + '@' + KR, v);
@@ -829,7 +873,7 @@ function draw() {
   // cars (far lane then near lane)
   [true, false].forEach(far => cars.filter(c => c.far === far).forEach(c => { const sp = carSprite(c.k, c.ci, far); const gy = far ? ROAD_T + 19 : ROAD_B - 3;
     ctx.fillStyle = 'rgba(0,0,0,.22)'; ctx.beginPath(); ctx.ellipse(c.x + sp.w / 2, gy, sp.w * .46, 2.8, 0, 0, 7); ctx.fill();
-    ctx.drawImage(sp.c, px(c.x), px(gy - sp.gy), sp.w, sp.h); }));
+    ctx.drawImage(sp.c, px(c.x), px(gy - sp.gy), sp.w, sp.h); c.roll = (c.roll || 0) + Math.abs(c.v) * (1 / 60) * (far ? -1 : 1); if (sp.wh.length) drawWheels(sp, px(c.x), px(gy - sp.gy), c.roll); }));
   // kerb + front pavement
   ctx.fillStyle = '#d4c8c2'; ctx.fillRect(0, ROAD_B, W, 4); ctx.fillStyle = '#8f8088'; ctx.fillRect(0, ROAD_B + 4, W, 2);
   const pg = ctx.createLinearGradient(0, PAVE_T - 2, 0, VH); pg.addColorStop(0, '#cbb8b0'); pg.addColorStop(1, '#a8949a'); ctx.fillStyle = pg; ctx.fillRect(0, ROAD_B + 6, W, VH - ROAD_B - 6);
@@ -1168,5 +1212,5 @@ resize(); seedStars(); reset(); refreshHome(); if (myMosque) setTimeout(refreshH
 let last = performance.now();
 function frame(now) { const dt = Math.min(.05, (now - last) / 1000); last = now; update(dt); draw(); requestAnimationFrame(frame); }
 requestAnimationFrame(frame);
-window.__jd = { veh: k => startVehicle(k), laser: () => [CEIL + 40, (CEIL + FLOOR) / 2].forEach((y, i) => obs.push({ type: 'laser', x: W / 2, y, ph: 'in', pt: 0, slide: 0, d: i * .12 })), eidi: n => { eidi = n; }, kill: w => die(w), gift: k => gifts.push({ k, x: W * .6, y: 200, b: 0 }), get state() { return state; }, start, hero, get obs() { return obs; }, spawnRocket: () => obs.push({ type: "rocket", x: W + 40, y: hero.y - 30, warn: 1.5, lock: 0, v: 0 }), setHold: v => holding = v, get dist() { return dist; }, mis: (s, c) => { RUN.steamed = s; coins = c; }, get npcs() { return npcs; }, boost: m => startBoost(m), get SHOP() { return SHOP; }, bc: (k, kd) => buildingCanvas(kd || "lm", k), get STREET() { return STREET; } };
+window.__jd = { veh: k => startVehicle(k), laser: () => [CEIL + 40, (CEIL + FLOOR) / 2].forEach((y, i) => obs.push({ type: 'laser', x: W / 2, y, ph: 'in', pt: 0, slide: 0, d: i * .12 })), eidi: n => { eidi = n; }, kill: w => die(w), gift: k => gifts.push({ k, x: W * .6, y: 200, b: 0 }), get state() { return state; }, start, hero, get obs() { return obs; }, spawnRocket: () => obs.push({ type: "rocket", x: W + 40, y: hero.y - 30, warn: 1.5, lock: 0, v: 0 }), setHold: v => holding = v, get dist() { return dist; }, mis: (s, c) => { RUN.steamed = s; coins = c; }, get npcs() { return npcs; }, boost: m => startBoost(m), get SHOP() { return SHOP; }, bc: (k, kd) => buildingCanvas(kd || "lm", k), carSprite: (k, ci, f) => carSprite(k, ci, f), get STREET() { return STREET; } };
 })();
