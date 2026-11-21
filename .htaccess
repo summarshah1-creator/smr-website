@@ -19,6 +19,9 @@ DirectoryIndex index.html
   RewriteRule ^m/([A-Za-z0-9]{10})/?$ share/index.php?id=$1 [L,QSA]
   # Flappy Kabootar game: /flappykabootar (and /flappy-kabootar) → /flappy/
   RewriteRule ^flappy-?kabootar/?$ /flappy/ [R=302,L,NC]
+  # SMR Player (music): /player = all public tracks, /player/<slug> = one track (also private/hidden ones)
+  RewriteRule ^player/?$ music/index.php [L,QSA]
+  RewriteRule ^player/([A-Za-z0-9-]{1,80})/?$ music/index.php?t=$1 [L,QSA]
   # Finished designs for a client: /d/<token> (works 14 days)
   RewriteRule ^d/([A-Za-z0-9_-]{12,40})/?$ designs/index.php?k=$1 [L,QSA]
 </IfModule>

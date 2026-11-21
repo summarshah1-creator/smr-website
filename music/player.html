@@ -8,7 +8,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="/assets/icon-512.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="SMR Music">
+<meta name="apple-mobile-web-app-title" content="SMR Player">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>SMR Music</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -411,7 +411,7 @@ svg{display:block}
 'use strict';
 const $ = s => document.querySelector(s);
 const au = $('#au');
-const S = { tracks: [], owner: false, csrf: '', local: false, settings: { title: 'SMR Music', sub: '', download_all: false },
+const S = { tracks: [], owner: false, csrf: '', local: false, settings: { title: 'SMR Player', sub: '', download_all: false },
   queue: [], qi: -1, shuffle: false, repeat: 0 /*0 off 1 all 2 one*/, speed: 1, vol: 1, muted: false, lyr: false, sleepAt: 0, sleepEnd: false, playedId: null };
 const store = { get(k, d) { try { const v = localStorage.getItem('smrm_' + k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
   set(k, v) { try { localStorage.setItem('smrm_' + k, JSON.stringify(v)); } catch (e) {} } };
@@ -428,7 +428,7 @@ const byId = id => S.tracks.find(t => t.id === id);
 async function api(a, body, isForm) {
   const o = { method: 'POST', headers: { 'X-CSRF': S.csrf }, credentials: 'same-origin' };
   if (isForm) o.body = body; else { o.headers['Content-Type'] = 'application/json'; o.body = JSON.stringify(body || {}); }
-  const r = await fetch('api.php?a=' + a, o); let j = {}; try { j = await r.json(); } catch (e) {}
+  const r = await fetch('/music/api.php?a=' + a, o); let j = {}; try { j = await r.json(); } catch (e) {}
   if (!r.ok) throw new Error(j.error || ('Error ' + r.status)); return j;
 }
 
@@ -609,13 +609,14 @@ function renderList() {
 }
 function markRows() { const c = cur(); document.querySelectorAll('.row').forEach(r => r.classList.toggle('on', !!c && r.dataset.id === c.id)); }
 function renderHero() {
-  document.title = S.settings.title || 'SMR Music';
+  document.title = S.settings.title || 'SMR Player';
   const t = cur() || S.tracks[0];
-  $('#heroKick').textContent = cur() ? (au.paused ? 'Paused' : 'Now playing') : (S.tracks.length ? 'Latest' : S.settings.title);
-  $('#heroTitle').textContent = t ? t.title : (S.settings.title || 'SMR Music');
+  $('#heroKick').textContent = cur() ? (au.paused ? 'Paused' : 'Now playing') : (S.tracks.length ? 'Latest' : 'Coming soon');
+  $('#heroTitle').textContent = t ? t.title : (S.settings.title || 'SMR Player');
   $('#heroSub').textContent = t ? (t.artist || S.settings.sub) : (S.settings.sub || '');
   setArt($('#heroArt'), t && t.art); $('#heroBg').style.backgroundImage = t && t.art ? 'url("' + t.art + '")' : '';
   $('#playAll').disabled = $('#shufAll').disabled = !S.tracks.length;
+  $('#playAll').style.display = $('#shufAll').style.display = S.tracks.length ? '' : 'none';
   const on = !!cur() && !au.paused; $('#playAll').innerHTML = '<svg class="ic" viewBox="0 0 24 24"><path d="' + (on ? PAUSE : PLAY) + '"/></svg>' + (on ? 'Pause' : cur() ? 'Resume' : 'Play');
 }
 $('#list').addEventListener('click', e => {
@@ -701,7 +702,7 @@ au.addEventListener('error', () => { if (au.src) toast('This track couldn’t be
 let lastPos = 0;
 au.addEventListener('timeupdate', () => {
   paintTime();
-  const t = cur(); if (t && S.playedId !== t.id && au.currentTime > 30 && !S.local) { S.playedId = t.id; fetch('api.php?a=played&id=' + encodeURIComponent(t.id), { method: 'POST', credentials: 'same-origin' }).catch(() => {}); }
+  const t = cur(); if (t && S.playedId !== t.id && au.currentTime > 30 && !S.local) { S.playedId = t.id; fetch('/music/api.php?a=played&id=' + encodeURIComponent(t.id), { method: 'POST', credentials: 'same-origin' }).catch(() => {}); }
   if (S.sleepAt && Date.now() >= S.sleepAt) { setSleep(0); fadeStop(); }
   syncLyrics();
   if (Math.abs(au.currentTime - lastPos) > 5 && 'mediaSession' in navigator && navigator.mediaSession.setPositionState && isFinite(au.duration)) { lastPos = au.currentTime; try { navigator.mediaSession.setPositionState({ duration: au.duration, position: au.currentTime, playbackRate: au.playbackRate }); } catch (e) {} }
@@ -915,7 +916,7 @@ function trackMenu(id, fromPlayer) {
   h += '<button data-x="dl">' + ico('dl') + (t.download || S.owner ? 'Download & save' : 'Save this track') + (S.owner && !t.download ? ' <span class="tag">ONLY YOU</span>' : '') + '</button>';
   h += '<button data-x="share">' + ico('share') + 'Share</button>';
   if (fromPlayer) h += '<div class="lab">Playback</div><button data-x="speed">' + ico('speed') + 'Playback speed <span class="mv">' + S.speed + '×</span></button><button data-x="sleep">' + ico('moon') + 'Sleep timer <span class="mv">' + (S.sleepEnd ? 'End of track' : S.sleepAt ? Math.max(1, Math.round((S.sleepAt - Date.now()) / 60000)) + ' min' : 'Off') + '</span></button>';
-  if (S.owner) h += '<div class="lab">Owner</div><button data-x="edit">' + ico('edit') + 'Edit details, art & lyrics</button><button data-x="mvup">' + ico('up') + 'Move up</button><button data-x="mvdn">' + ico('down') + 'Move down</button><button data-x="hide">' + ico('eye') + (t.hidden ? 'Show to everyone' : 'Hide from visitors') + '</button><button class="red" data-x="del">' + ico('del') + 'Delete track</button>';
+  if (S.owner) h += '<div class="lab">Owner</div><button data-x="edit">' + ico('edit') + 'Edit details, art & lyrics</button><button data-x="mvup">' + ico('up') + 'Move up</button><button data-x="mvdn">' + ico('down') + 'Move down</button><button data-x="hide">' + ico('eye') + (t.hidden ? 'Show on the player home page' : 'Make private (link only)') + '</button><button class="red" data-x="del">' + ico('del') + 'Delete track</button>';
   h += '</div>';
   openSheet('Track', h, b => b.onclick = async e => {
     const x = e.target.closest('[data-x]'); if (!x) return; const a = x.dataset.x;
@@ -928,7 +929,7 @@ function trackMenu(id, fromPlayer) {
     if (a === 'sleep') $('#tSleep').click();
     if (a === 'edit') editTrack(t);
     if (a === 'mvup' || a === 'mvdn') { const i = S.tracks.indexOf(t), j = i + (a === 'mvup' ? -1 : 1); if (j < 0 || j >= S.tracks.length) return; [S.tracks[i], S.tracks[j]] = [S.tracks[j], S.tracks[i]]; renderList(); closeSheet(); if (!S.local) api('order', { ids: S.tracks.map(x => x.id) }).catch(err => toast(err.message)); }
-    if (a === 'hide') { t.hidden = !t.hidden; closeSheet(); renderList(); if (!S.local) api('update', Object.assign(formOf(t), { hidden: t.hidden })).catch(err => toast(err.message)); toast(t.hidden ? 'Hidden from visitors' : 'Visible to everyone'); }
+    if (a === 'hide') { t.hidden = !t.hidden; closeSheet(); renderList(); if (!S.local) api('update', Object.assign(formOf(t), { hidden: t.hidden })).catch(err => toast(err.message)); toast(t.hidden ? 'Private: only people with its link can play it' : 'Visible to everyone'); }
     if (a === 'del') { if (!confirm('Delete "' + t.title + '"? This can’t be undone.')) return; closeSheet(); if (!S.local) { try { await api('delete', { id }); } catch (err) { toast(err.message); return; } }
       S.tracks = S.tracks.filter(x => x.id !== id); const qi = S.queue.indexOf(id); if (qi >= 0) { S.queue.splice(qi, 1); if (qi < S.qi) S.qi--; else if (qi === S.qi) { au.pause(); au.removeAttribute('src'); au.dataset.id = ''; if (S.queue.length) { S.qi = Math.min(S.qi, S.queue.length - 1); load(false); } else { S.qi = -1; $('#mini').classList.remove('show'); closeFull(); } } } renderList(); toast('Deleted'); }
   });
@@ -938,12 +939,12 @@ function formOf(t) { return { id: t.id, title: t.title, artist: t.artist, album:
 function download(t) {
   if (!t) return;
   const a = document.createElement('a');
-  a.href = S.local ? t.src : 'api.php?a=dl&id=' + encodeURIComponent(t.id);
+  a.href = S.local ? t.src : '/music/api.php?a=dl&id=' + encodeURIComponent(t.id);
   a.download = ((t.artist ? t.artist + ' - ' : '') + t.title + '.' + (t.ext || 'mp3')).replace(/[\\/:*?"<>|]/g, '');
   document.body.appendChild(a); a.click(); a.remove(); toast('Downloading…');
 }
 async function share(t) {
-  const url = location.origin + location.pathname + '#t=' + encodeURIComponent(t.id);
+  const url = trackUrl(t);
   const text = t.title + (t.artist ? ' by ' + t.artist : '');
   if (navigator.share) { try { await navigator.share({ title: text, text, url }); return; } catch (e) { if (e.name === 'AbortError') return; } }
   try { await navigator.clipboard.writeText(url); toast('Link copied'); } catch (e) { prompt('Copy this link', url); }
@@ -955,10 +956,11 @@ window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); instal
 const UA = navigator.userAgent, isIOS = /iPad|iPhone|iPod/.test(UA) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1), isAndroid = /Android/.test(UA);
 const SHARE_I = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7M16 6l-4-4-4 4M12 2v13"/></svg>';
 const DOTS_I = '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>';
-function trackUrl(t) { return location.origin + location.pathname + '#t=' + encodeURIComponent(t.id); }
+const PATH_SLUG = (location.pathname.match(/^\/player\/([A-Za-z0-9-]+)\/?$/) || [])[1] || '';
+function trackUrl(t) { return t.slug && !S.local ? location.origin + '/player/' + t.slug : location.origin + location.pathname + '#t=' + encodeURIComponent(t.id); }
 function saveSheet(t) {
   if (!t) return;
-  try { history.replaceState(history.state, '', '#t=' + encodeURIComponent(t.id)); } catch (e) {}
+  try { history.replaceState(history.state, '', t.slug && !S.local ? '/player/' + t.slug : '#t=' + encodeURIComponent(t.id)); } catch (e) {}
   const art = t.art ? ' style="background-image:url(\'' + esc(t.art) + '\')"' : '';
   const canDl = t.download || S.owner;
   const homeSteps = isIOS ? '<ol><li>Tap <span class="k">' + SHARE_I + 'Share</span> at the bottom of Safari</li><li>Scroll down, tap <span class="k">Add to Home Screen</span></li><li>Tap <span class="k">Add</span>. It opens straight to this track.</li></ol>'
@@ -1182,7 +1184,7 @@ $('#setBtn').onclick = () => {
 /* ---------- start ---------- */
 async function reload() {
   if (S.local) { renderList(); return; }
-  const r = await fetch('api.php?a=list', { credentials: 'same-origin', cache: 'no-store' });
+  const r = await fetch('/music/api.php?a=list' + (PATH_SLUG ? '&t=' + encodeURIComponent(PATH_SLUG.toLowerCase()) : ''), { credentials: 'same-origin', cache: 'no-store' });
   if (!r.ok) throw new Error('no api');
   const j = await r.json();
   const keep = new Map(S.tracks.map(t => [t.id, t]));
@@ -1202,8 +1204,9 @@ async function boot() {
   }
   $('#upBtn').hidden = $('#setBtn').hidden = !S.owner;
   paintVol(); paintState();
-  const h = location.hash.match(/t=([^&]+)/); const want = h ? decodeURIComponent(h[1]) : (store.get('last', {}) || {}).id;
-  if (want && byId(want)) { S.queue = S.tracks.map(t => t.id); S.qi = S.queue.indexOf(want); load(false); if (h) openFull(); }
+  const h = location.hash.match(/t=([^&]+)/); const bySlug = PATH_SLUG && S.tracks.find(t => t.slug === PATH_SLUG.toLowerCase());
+  const want = bySlug ? bySlug.id : h ? decodeURIComponent(h[1]) : (store.get('last', {}) || {}).id;
+  if (want && byId(want)) { S.queue = S.tracks.map(t => t.id); S.qi = S.queue.indexOf(want); load(false); if (h || bySlug) openFull(); }
 }
 document.addEventListener('gesturestart', e => e.preventDefault());
 boot();

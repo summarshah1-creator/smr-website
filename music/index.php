@@ -1,9 +1,31 @@
 <?php
-// SMR Music player page. Served through PHP with no-cache so phones always get the latest copy.
+// SMR Player page: smrgraphics.co.uk/player (all public tracks) and /player/<slug> (one track, works for hidden/private tracks too).
+// Served through PHP with no-cache so phones always get the latest copy; adds link-preview tags and a per-track Home Screen manifest.
+define('SMR_DEMO', 1);
+require dirname(__DIR__) . '/demo-lib/music.php';
 header('Content-Type: text/html; charset=UTF-8');
 header('Cache-Control: no-cache, no-store, must-revalidate');
 header('X-Content-Type-Options: nosniff');
 header('Referrer-Policy: same-origin');
 header('X-Robots-Tag: noindex, nofollow');
 header("Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self' blob:; frame-ancestors 'self'; base-uri 'self'; object-src 'none'");
-readfile(__DIR__ . '/player.html');
+$h = fn($s) => htmlspecialchars((string) $s, ENT_QUOTES, 'UTF-8');
+$slug = strtolower(preg_replace('/[^a-z0-9-]/i', '', (string) ($_GET['t'] ?? '')));
+$t = null;
+try { $t = $slug !== '' ? music_by_slug($slug) : null; } catch (Throwable $e) {}
+$host = 'https://' . ($_SERVER['HTTP_HOST'] ?? 'smrgraphics.co.uk');
+if ($t) {
+    $title = $t['title'] . ($t['artist'] !== '' ? ' · ' . $t['artist'] : '');
+    $desc = 'Exclusive preview on SMR Player. Designed & built by SMR Digital.';
+    $img = $t['art'] !== '' ? $host . '/music/api.php?a=art&id=' . $t['code'] . '&v=' . $t['updated_at'] : $host . '/assets/icon-512.png';
+    $url = $host . '/player/' . $t['slug'];
+} else {
+    $title = 'SMR Player'; $desc = 'Music on SMR Player. Designed & built by SMR Digital.';
+    $img = $host . '/assets/icon-512.png'; $url = $host . '/player';
+}
+$meta = '<meta property="og:type" content="music.song"><meta property="og:title" content="' . $h($title) . '"><meta property="og:description" content="' . $h($desc) . '">'
+    . '<meta property="og:image" content="' . $h($img) . '"><meta property="og:url" content="' . $h($url) . '"><meta name="twitter:card" content="summary_large_image">';
+$html = (string) file_get_contents(__DIR__ . '/player.html');
+$html = str_replace('<link rel="manifest" href="manifest.webmanifest">', '<link rel="manifest" href="/music/manifest.php' . ($t ? '?t=' . $h($t['slug']) : '') . '">' . $meta, $html);
+$html = str_replace('<title>SMR Music</title>', '<title>' . $h($t ? $t['title'] . ' · SMR Player' : 'SMR Player') . '</title>', $html);
+echo $html;

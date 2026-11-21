@@ -14,14 +14,16 @@ if ($a === 'list') {
     if (random_int(1, 20) === 1) music_sweep();
     $rows = music_db()->query('SELECT * FROM music_tracks WHERE ready = 1 ORDER BY sort ASC, id DESC')->fetchAll();
     $out = [];
-    foreach ($rows as $t) { if ($t['hidden'] && !$owner) continue; $out[] = music_public($t, $owner); }
+    // Hidden tracks are private: left off the list, but anyone with the track's own link (/player/<slug>) gets that one.
+    $want = strtolower((string) ($_GET['t'] ?? ''));
+    foreach ($rows as $t) { if ($t['hidden'] && !$owner && ($want === '' || $t['slug'] !== $want)) continue; $out[] = music_public($t, $owner); }
     $res = ['tracks' => $out, 'settings' => music_settings(), 'owner' => $owner];
     if ($owner) $res['csrf'] = $tok['csrf'];
     json_out($res);
 }
 if (($a === 'play' || $a === 'dl') && $method !== 'POST') {
     $t = music_track((string) ($_GET['id'] ?? ''));
-    if (!$t || !$t['ready'] || ($t['hidden'] && !$owner)) { http_response_code(404); exit; }
+    if (!$t || !$t['ready']) { http_response_code(404); exit; } // hidden tracks still play for people with the private link (codes can't be guessed)
     $path = music_dir($t['code']) . '/audio.' . $t['ext'];
     if (!is_file($path)) { http_response_code(404); exit; }
     if ($a === 'dl') {
@@ -34,7 +36,7 @@ if (($a === 'play' || $a === 'dl') && $method !== 'POST') {
 }
 if ($a === 'art' && $method !== 'POST') {
     $t = music_track((string) ($_GET['id'] ?? ''));
-    if (!$t || $t['art'] === '' || ($t['hidden'] && !$owner)) { http_response_code(404); exit; }
+    if (!$t || $t['art'] === '') { http_response_code(404); exit; }
     $path = music_dir($t['code']) . '/art.' . $t['art'];
     if (!is_file($path)) { http_response_code(404); exit; }
     header('Cache-Control: public, max-age=604800');
@@ -78,9 +80,9 @@ switch ($a) {
         $code = rand_token(12);
         @mkdir(music_dir($code), 0750, true);
         $min = (int) music_db()->query('SELECT COALESCE(MIN(sort), 0) FROM music_tracks')->fetchColumn();
-        music_db()->prepare('INSERT INTO music_tracks (code, title, artist, album, year, genre, track_no, duration, ext, size, lyrics, about, download, sort, ready, created_at, updated_at)
-            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,0,?,?)')->execute([$code, $m['title'], $m['artist'], $m['album'], $m['year'], $m['genre'], $m['track_no'],
-            (float) ($in['duration'] ?? 0), $ext, $size, $m['lyrics'], $m['about'], $m['download'], $min - 1, now(), now()]);
+        music_db()->prepare('INSERT INTO music_tracks (code, title, artist, album, year, genre, track_no, duration, ext, size, lyrics, about, download, slug, sort, ready, created_at, updated_at)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,0,?,?)')->execute([$code, $m['title'], $m['artist'], $m['album'], $m['year'], $m['genre'], $m['track_no'],
+            (float) ($in['duration'] ?? 0), $ext, $size, $m['lyrics'], $m['about'], $m['download'], music_slug($m['title']), $min - 1, now(), now()]);
         json_out(['ok' => true, 'id' => $code]);
     }
     case 'up_chunk': {

@@ -22,10 +22,27 @@ function music_db(): PDO {
         $pdo->exec("CREATE TABLE IF NOT EXISTS music_kv (k TEXT PRIMARY KEY, v TEXT)");
         $cols = array_column($pdo->query('PRAGMA table_info(music_tracks)')->fetchAll(), 'name');
         if (!in_array('about', $cols, true)) $pdo->exec("ALTER TABLE music_tracks ADD COLUMN about TEXT DEFAULT ''");
+        if (!in_array('slug', $cols, true)) $pdo->exec("ALTER TABLE music_tracks ADD COLUMN slug TEXT DEFAULT ''");
+        foreach ($pdo->query("SELECT code, title FROM music_tracks WHERE slug IS NULL OR slug = ''")->fetchAll() as $r)
+            $pdo->prepare('UPDATE music_tracks SET slug = ? WHERE code = ?')->execute([music_slug((string) $r['title']), $r['code']]);
         $done = true;
         try { music_seed_import(); } catch (Throwable $e) {}
     }
     return $pdo;
+}
+/* A unique link name from the title: "That's Gatsby Law (NFA)" -> thats-gatsby-law-nfa (adds -2, -3… if taken). */
+function music_slug(string $title, ?string $want = null): string {
+    $base = strtolower((string) ($want ?? $title));
+    $base = str_replace(["'", '’', '‘'], '', $base);
+    $base = trim((string) preg_replace('/[^a-z0-9]+/', '-', $base), '-');
+    $base = substr($base, 0, 60) ?: 'track';
+    $s = $base; $n = 1;
+    $st = db()->prepare('SELECT 1 FROM music_tracks WHERE slug = ?');
+    while (true) { $st->execute([$s]); if (!$st->fetchColumn()) return $s; $s = $base . '-' . (++$n); }
+}
+function music_by_slug(string $slug): ?array {
+    $st = music_db()->prepare('SELECT * FROM music_tracks WHERE slug = ? AND ready = 1'); $st->execute([strtolower($slug)]);
+    return $st->fetch() ?: null;
 }
 function music_dir(?string $code = null): string {
     $d = private_dir() . '/music';
@@ -41,7 +58,7 @@ function music_kv(string $k, ?string $v = null): ?string {
 }
 function music_settings(): array {
     $s = json_decode((string) music_kv('settings'), true) ?: [];
-    return ['title' => (string) ($s['title'] ?? 'SMR Music'), 'sub' => (string) ($s['sub'] ?? 'Original tracks by SMR'),
+    return ['title' => (string) ($s['title'] ?? 'SMR Player'), 'sub' => (string) ($s['sub'] ?? 'Music by SMR Digital'),
         'download_all' => !empty($s['download_all'])];
 }
 function music_track(string $code): ?array {
@@ -52,8 +69,8 @@ function music_public(array $t, bool $owner = false): array {
     $s = music_settings();
     $o = ['id' => $t['code'], 'title' => $t['title'], 'artist' => $t['artist'], 'album' => $t['album'], 'year' => $t['year'],
         'genre' => $t['genre'], 'track' => $t['track_no'], 'duration' => (float) $t['duration'],
-        'art' => $t['art'] !== '' ? 'api.php?a=art&id=' . $t['code'] . '&v=' . $t['updated_at'] : '',
-        'src' => 'api.php?a=play&id=' . $t['code'] . '&v=' . $t['updated_at'],
+        'slug' => (string) ($t['slug'] ?? ''), 'art' => $t['art'] !== '' ? '/music/api.php?a=art&id=' . $t['code'] . '&v=' . $t['updated_at'] : '',
+        'src' => '/music/api.php?a=play&id=' . $t['code'] . '&v=' . $t['updated_at'],
         'lyrics' => $t['lyrics'], 'about' => (string) ($t['about'] ?? ''), 'download' => (bool) $t['download'] || $s['download_all'], 'ext' => $t['ext']];
     if ($owner) { $o['hidden'] = (bool) $t['hidden']; $o['plays'] = (int) $t['plays']; $o['size'] = (int) $t['size']; $o['own_download'] = (bool) $t['download']; }
     return $o;
@@ -118,10 +135,10 @@ function music_seed_import(): void {
                 file_put_contents("$d/audio.$ext", $audio);
                 if ($art !== '' && ($a = $z->getFromName('art.' . $art)) !== false) file_put_contents("$d/art.$art", $a); else $art = '';
                 $min = (int) db()->query('SELECT COALESCE(MIN(sort), 0) FROM music_tracks')->fetchColumn();
-                db()->prepare('INSERT INTO music_tracks (code, title, artist, album, year, genre, track_no, duration, ext, size, art, lyrics, about, download, sort, ready, created_at, updated_at)
-                    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,1,?,?)')->execute([$code, (string) ($m['title'] ?? 'Untitled'), (string) ($m['artist'] ?? ''), (string) ($m['album'] ?? ''),
+                db()->prepare('INSERT INTO music_tracks (code, title, artist, album, year, genre, track_no, duration, ext, size, art, lyrics, about, download, hidden, slug, sort, ready, created_at, updated_at)
+                    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,1,?,?)')->execute([$code, (string) ($m['title'] ?? 'Untitled'), (string) ($m['artist'] ?? ''), (string) ($m['album'] ?? ''),
                     (string) ($m['year'] ?? ''), (string) ($m['genre'] ?? ''), (string) ($m['track'] ?? ''), (float) ($m['duration'] ?? 0), $ext, strlen($audio), $art,
-                    (string) ($m['lyrics'] ?? ''), (string) ($m['about'] ?? ''), (int) ($m['download'] ?? 0), $min - 1, now(), now()]);
+                    (string) ($m['lyrics'] ?? ''), (string) ($m['about'] ?? ''), (int) ($m['download'] ?? 0), (int) ($m['hidden'] ?? 0), music_slug((string) ($m['title'] ?? ''), isset($m['slug']) ? (string) $m['slug'] : null), $min - 1, now(), now()]);
             }
             $z->close();
         }
