@@ -1,0 +1,6 @@
+That's Gatsby Law (NFA) - landscape music video (SMR Digital, Saf Rathor)
+Video length: 223.5 seconds (3:43.5), 1280x720, 30 fps, H.264, no audio track
+Music starts: 17.2 seconds into the video ("No days off, no losses").
+The first 17.2 s are the spoken intro (sound bites), which are part of the song's audio file, so the video lines up with the song from 0:00.
+File size: 37374866 bytes (35.6 MB), CRF 28
+Poster: thats-gatsby-law.jpg (frame at 5 s)
