@@ -150,8 +150,8 @@ function hdFinish(c, o, N, l, top, r) {
 }
 let KB = 2;
 if (document.fonts) Promise.all(['700 10px Mont', '600 10px Oswald', '700 10px Amiri'].map(f => document.fonts.load(f)).concat(window.HD_READY || [])).then(() => { bCache.clear(); hazeCache.clear(); });   // redraw buildings once the sign fonts are in   // building px per unit = exactly the on-screen size (S * BS)
-function buildingCanvas(kind, key) {
-  const id = kind + ':' + key; if (bCache.has(id)) { const v = bCache.get(id); bCache.delete(id); bCache.set(id, v); return v; }
+function buildingCanvas(kind, key, bakeAnim) {
+  const id = kind + ':' + key + (bakeAnim ? ':a' : ''); if (bCache.has(id)) { const v = bCache.get(id); bCache.delete(id); bCache.set(id, v); return v; }
   let w, draw;
   if (kind === 'lm') { const L = LANDMARKS[key]; if (!L) return null; w = L.w; const H2 = window.LANDMARKS_HD && LANDMARKS_HD[key];
     draw = H2 ? (o => { const f = (window.SCALE && SCALE[key]) || 1; o.save(); o.translate(M, LH - 6); o.scale(f, f); H2(o, 0, 0); o.restore(); }) : (o => L.d(o, M, LH - 6)); }
@@ -160,7 +160,7 @@ function buildingCanvas(kind, key) {
   const c = document.createElement('canvas'); c.width = (w + 2 * M) * N; c.height = LH * N;
   const o = c.getContext('2d', { willReadFrequently: true }); o.imageSmoothingEnabled = false; o.scale(N, N);
   try { draw(o); } catch (e) { console.warn(key, e); }
-  if (kind === 'lm' && window.LM_ANIM && LM_ANIM[key]) try { const af = key !== 'lutonhoo' && window.SCALE && SCALE[key]; if (af) { o.save(); o.translate(M, LH - 6); o.scale(af, af); LM_ANIM[key](o, 0, 0, 0); o.restore(); } else LM_ANIM[key](o, M, LH - 6, 0); } catch (e) {}
+  if (kind === 'lm' && window.LM_ANIM && LM_ANIM[key] && (bakeAnim || !LIVE_ANIM.has(key))) try { const af = key !== 'lutonhoo' && window.SCALE && SCALE[key]; if (af) { o.save(); o.translate(M, LH - 6); o.scale(af, af); LM_ANIM[key](o, 0, 0, 0); o.restore(); } else LM_ANIM[key](o, M, LH - 6, 0); } catch (e) {}
   // trim empty space (search on a 1/4 grid, then exact edges)
   const d = o.getImageData(0, 0, c.width, c.height).data; let top = c.height, l = c.width, r = 0;
   for (let y = 0; y < c.height; y += 3) { const row = y * c.width; for (let x = 0; x < c.width; x += 3) if (d[(row + x) * 4 + 3] > 8) { if (y < top) top = y; if (x < l) l = x; if (x > r) r = x; } }
@@ -862,6 +862,37 @@ function drawJet() { const now = performance.now() / 1000, dt = Math.min(.05, no
   ctx.fillStyle = '#2a5ab8'; ctx.fillRect(-8, -.3, 18, .5); ctx.fillStyle = '#3a4656'; for (let i = 0; i < 9; i++) ctx.fillRect(-6 + i * 2, -1, .7, .6); ctx.fillRect(12, -1.1, 1.8, .8);
   ctx.restore(); }
 
+/* live animations from Flappy (owner, 21 Nov): the moving parts of the buildings (Luton Hoo helicopter + fountain, Town Hall clock +
+   flags, Masjid-e-Ali flag, Wardown ducks + pedalo, the bridge water, the funfair) are drawn every frame on top of the building
+   picture, a Thameslink train runs along the station viaduct and planes take off from behind the airport */
+const LIVE_ANIM = new Set(Object.keys(window.LM_ANIM || {}).filter(k => k !== 'train' && k !== 'plane'));
+function drawTrain(b, t) { const k = BS * ((window.SCALE && SCALE.station) || 1), x0 = b.x / k, Gs = G / k; const span = 270, per = 9, ph = (t % per) / per, off = -230 + ph * (span + 460);
+  ctx.save(); ctx.scale(k, k); ctx.beginPath(); ctx.rect(x0 - 6, Gs - 150, span + 12, 58); ctx.clip();
+  const tx = x0 + off, deck = Gs - 94;
+  for (let c2 = 0; c2 < 3; c2++) { const cx = tx + c2 * 68, L2 = c2 === 2 ? 70 : 64;
+    const gr = ctx.createLinearGradient(0, deck - 30, 0, deck); gr.addColorStop(0, '#ffffff'); gr.addColorStop(.6, '#e6eaee'); gr.addColorStop(1, '#b8c0c8'); ctx.fillStyle = gr;
+    ctx.beginPath(); if (c2 === 2) { ctx.moveTo(cx, deck - 2); ctx.lineTo(cx, deck - 28); ctx.lineTo(cx + 54, deck - 28); ctx.quadraticCurveTo(cx + 66, deck - 26, cx + 70, deck - 10); ctx.lineTo(cx + 70, deck - 2); } else { ctx.roundRect ? ctx.roundRect(cx, deck - 28, L2, 26, 3) : ctx.rect(cx, deck - 28, L2, 26); } ctx.fill(); ctx.strokeStyle = 'rgba(0,0,0,.35)'; ctx.lineWidth = .4; ctx.stroke();
+    ctx.fillStyle = '#1e2a40'; ctx.fillRect(cx + 2, deck - 21, (c2 === 2 ? 52 : L2 - 4), 7); for (let i = 0; i < 6; i++) { ctx.fillStyle = 'rgba(160,190,220,.35)'; ctx.fillRect(cx + 4 + i * 9, deck - 20.4, 6, 2); }
+    ctx.fillStyle = '#4a8ad6'; for (const d of [16, 44]) if (c2 < 2 || d < 40) { ctx.fillRect(cx + d, deck - 25, 7, 21); ctx.fillStyle = '#26303a'; ctx.fillRect(cx + d + 1, deck - 23, 5, 6); ctx.fillStyle = '#4a8ad6'; }
+    ctx.fillStyle = '#f2c43a'; if (c2 === 2) { ctx.beginPath(); ctx.moveTo(cx + 56, deck - 12); ctx.quadraticCurveTo(cx + 66, deck - 11, cx + 70, deck - 4); ctx.lineTo(cx + 70, deck - 2); ctx.lineTo(cx + 56, deck - 2); ctx.fill(); ctx.fillStyle = '#26303a'; ctx.beginPath(); ctx.moveTo(cx + 56, deck - 26); ctx.lineTo(cx + 62, deck - 25); ctx.quadraticCurveTo(cx + 67, deck - 21, cx + 68, deck - 15); ctx.lineTo(cx + 56, deck - 15); ctx.fill(); ctx.fillStyle = '#fff6d0'; ctx.fillRect(cx + 66, deck - 8, 2.4, 1.6); }
+    ctx.fillStyle = '#2a2c32'; ctx.fillRect(cx + 2, deck - 3, L2 - 4, 2); for (const wx of [cx + 10, cx + L2 - 12]) { ctx.beginPath(); ctx.arc(wx, deck - 1.4, 2.2, 0, 7); ctx.fillStyle = '#1a1a1e'; ctx.fill(); }
+    ctx.fillStyle = '#5a6070'; ctx.font = '700 4px Mont, sans-serif'; ctx.textBaseline = 'middle'; if (c2 === 1) ctx.fillText('Thameslink', cx + 4, deck - 8); }
+  ctx.strokeStyle = '#3a3d44'; ctx.lineWidth = .6; for (let i = 0; i < 3; i++) { const px2 = tx + 20 + i * 68; ctx.beginPath(); ctx.moveTo(px2, deck - 28); ctx.lineTo(px2 + 6, deck - 35); ctx.lineTo(px2 + 12, deck - 35); ctx.stroke(); }
+  ctx.restore(); }
+function drawTakeoff(b, t) { const k = BS * ((window.SCALE && SCALE.airport) || 1), x0 = b.x / k, Gs = G / k, per = 16, ph = (t % per) / per; if (ph > .7) return; const p = ph / .7;
+  const px2 = x0 + 40 + p * 520, py = Gs - 120 - Math.pow(p, 1.5) * 220, a = -.22 - p * .08, sc = 1.5;
+  ctx.save(); ctx.scale(k, k);
+  for (let i = 0; i < 26; i++) { const q = p - i * .012; if (q < .1) break; const qx = x0 + 40 + q * 520 - 34, qy = Gs - 120 - Math.pow(q, 1.5) * 220 + 6, al = (1 - i / 26) * .14; ctx.fillStyle = `rgba(220,224,230,${al.toFixed(3)})`; ctx.beginPath(); ctx.ellipse(qx, qy, 3 + i * .5, 1.6 + i * .25, a, 0, 7); ctx.fill(); }
+  ctx.translate(px2, py); ctx.rotate(a); ctx.scale(sc, sc);
+  ctx.fillStyle = '#a8b2be'; ctx.beginPath(); ctx.moveTo(-3, 0); ctx.lineTo(-12, 9); ctx.lineTo(-7.6, 9); ctx.lineTo(5, .6); ctx.fill();
+  const fg = ctx.createLinearGradient(0, -3, 0, 3); fg.addColorStop(0, '#ffffff'); fg.addColorStop(1, '#c4ccd6'); ctx.fillStyle = fg; ctx.beginPath(); ctx.moveTo(-19, -1.6); ctx.quadraticCurveTo(-20, 2, -16, 2.4); ctx.lineTo(13, 2.4); ctx.quadraticCurveTo(20, 2, 21, 0); ctx.quadraticCurveTo(19, -2.4, 13, -2.4); ctx.lineTo(-16, -2.4); ctx.closePath(); ctx.fill(); ctx.strokeStyle = 'rgba(0,0,0,.25)'; ctx.lineWidth = .25; ctx.stroke();
+  ctx.fillStyle = '#e8641c'; ctx.beginPath(); ctx.moveTo(-15, -2.2); ctx.lineTo(-20, -10); ctx.lineTo(-16.6, -10); ctx.lineTo(-9, -2.2); ctx.fill(); ctx.fillRect(-12, -.4, 24, .7);
+  ctx.fillStyle = '#d8dee6'; ctx.beginPath(); ctx.moveTo(-16, 0); ctx.lineTo(-21, 3); ctx.lineTo(-19, 3); ctx.lineTo(-13, .4); ctx.fill();
+  ctx.fillStyle = '#eef0f4'; ctx.beginPath(); ctx.moveTo(-1, .8); ctx.lineTo(-9, 8.6); ctx.lineTo(-5, 8.6); ctx.lineTo(7, 1.2); ctx.fill(); ctx.fillStyle = '#8a96a6'; ctx.beginPath(); ctx.ellipse(-3.4, 4.6, 2.6, 1.1, 0, 0, 7); ctx.fill();
+  ctx.fillStyle = '#3a4656'; for (let i = 0; i < 12; i++) ctx.fillRect(-9 + i * 2, -1.4, .8, .7); ctx.fillRect(16, -1.5, 2.4, 1);
+  if (p < .25) { ctx.fillStyle = '#2a2a2e'; ctx.fillRect(-4, 2.4, .6, 2.4); ctx.fillRect(10, 2.4, .6, 2.4); }
+  ctx.restore(); }
+
 function px(v) { return Math.round(v * S) / S; }
 function draw() {
   ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
@@ -872,12 +903,16 @@ function draw() {
   drawJet();
   // far hazy skyline (smaller, slower)
   const sk = .5;
-  skyline.forEach(b => { const v = buildingCanvas(b.kind, b.key); if (!v) return; const h = hazed(b.kind + ':' + b.key + '@' + KR, v);
+  skyline.forEach(b => { const v = buildingCanvas(b.kind, b.key, true); if (!v) return; const h = hazed(b.kind + ':' + b.key + '@' + KR, v);
     ctx.drawImage(h, b.x + v.ox * sk, G - 8 + v.top * sk, v.c.width / v.k * sk, v.c.height / v.k * sk); });
   // main street buildings
   ctx.imageSmoothingEnabled = true;
+  const tA = performance.now() / 1000;
   street.forEach(b => { if (b.x > W + 40 || b.x + b.w < -40) return; const v = buildingCanvas(b.kind, b.key); if (!v) return;
-    ctx.drawImage(v.c, px(b.x + v.ox * BS), px(G + v.top * BS), v.c.width / S, v.c.height / S); });
+    if (b.key === 'airport') drawTakeoff(b, tA);
+    ctx.drawImage(v.c, px(b.x + v.ox * BS), px(G + v.top * BS), v.c.width / S, v.c.height / S);
+    if (b.kind === 'lm' && LIVE_ANIM.has(b.key)) { const af = b.key !== 'lutonhoo' && window.SCALE && SCALE[b.key] || 1, k = BS * af; ctx.save(); ctx.scale(k, k); try { LM_ANIM[b.key](ctx, b.x / k, G / k, tA); } catch (e) {} ctx.restore(); }
+    if (b.key === 'station') drawTrain(b, tA); });
   // far pavement, road, kerb
   ctx.fillStyle = '#b3a3a3'; ctx.fillRect(0, G, W, ROAD_T - G); ctx.fillStyle = '#8c7c84'; ctx.fillRect(0, ROAD_T - 2, W, 2);
   const off = (dist % 30);
