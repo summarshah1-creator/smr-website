@@ -30,7 +30,8 @@ function resize() {
   cv.width = Math.round(sw * dpr); cv.height = Math.round(sh2 * dpr);
   S = cv.height / VH; W = cv.width / S;
   const k = Math.min(4, Math.max(1, Math.round(S * 10) / 10));
-  if (Math.abs(k - KR) > .3) { KR = k; bCache.clear(); hazeCache.clear(); }
+  if (Math.abs(k - KR) > .3) { KR = k; hazeCache.clear(); }
+  const kb = Math.min(4, S * BS); if (Math.abs(kb - KB) > .02) { KB = kb; bCache.clear(); hazeCache.clear(); }
 }
 
 /* ---------------- assets ---------------- */
@@ -58,7 +59,7 @@ const M = 90, LH = 380;
 let STREET = (window.LM_ORDER || Object.keys(window.LANDMARKS || {})).filter(k => window.LANDMARKS && LANDMARKS[k]);   // every Luton building from Flappy Kabootar
 /* buildings come in a shuffled deck like Flappy Kabootar: every one shows up before any repeats; sets stay together in order */
 const SETS = [['frasers', 'station', 'hatfactory'], ['wardownfield', 'wardown', 'wardownbridge', 'funfair'], ['welcome', 'airport']];
-let deck = [], lastUnit = null, setQ = [];
+let deck = [], lastUnit = null, setQ = [], houseDeck = [], skyDeck = [];
 function buildDeck() {
   const inSet = new Set(SETS.flat());
   const units = SETS.map(u => u.filter(k => LANDMARKS[k])).filter(u => u.length).concat(STREET.filter(k => !inSet.has(k)).map(k => [k]));
@@ -68,22 +69,47 @@ function buildDeck() {
 }
 const HOUSE_K = () => Object.keys(window.HOUSES || {});
 const bCache = new Map(), hazeCache = new Map();
+/* HD buildings: drawn as true pixel art (1 px per unit), smoothed up 4x with Scale2x twice (rounded edges and curves,
+   like the hero), then fitted to the exact on-screen size so nothing gets blurred by a second resize */
+function scale2x(src, w, h) {
+  const out = new Uint32Array(w * h * 4), W2 = w * 2;
+  for (let y = 0; y < h; y++) { const ym = y > 0 ? y - 1 : y, yp = y < h - 1 ? y + 1 : y;
+    for (let x = 0; x < w; x++) { const P = src[y * w + x], A = src[ym * w + x], D = src[yp * w + x], C = src[y * w + (x > 0 ? x - 1 : x)], B = src[y * w + (x < w - 1 ? x + 1 : x)];
+      let e0 = P, e1 = P, e2 = P, e3 = P;
+      if (A !== D && C !== B) { if (C === A) e0 = A; if (A === B) e1 = B; if (D === C) e2 = C; if (B === D) e3 = D; }
+      const o = y * 2 * W2 + x * 2; out[o] = e0; out[o + 1] = e1; out[o + W2] = e2; out[o + W2 + 1] = e3; } }
+  return out;
+}
+const hdCv = document.createElement('canvas');
+function hdUp(src1x, KB) {   // src1x: trimmed 1x canvas -> canvas at KB px per unit, smoothed
+  const w = src1x.width, h = src1x.height, d = src1x.getContext('2d').getImageData(0, 0, w, h);
+  let px = new Uint32Array(d.data.buffer); px = scale2x(px, w, h); px = scale2x(px, w * 2, h * 2);
+  hdCv.width = w * 4; hdCv.height = h * 4; hdCv.getContext('2d').putImageData(new ImageData(new Uint8ClampedArray(px.buffer), w * 4, h * 4), 0, 0);
+  const t = document.createElement('canvas'); t.width = Math.max(1, Math.round(w * KB)); t.height = Math.max(1, Math.round(h * KB));
+  const o = t.getContext('2d'); o.imageSmoothingEnabled = true; o.imageSmoothingQuality = 'high'; o.drawImage(hdCv, 0, 0, t.width, t.height);
+  hdCv.width = hdCv.height = 1; return t;
+}
+let KB = 2;   // building px per unit = exactly the on-screen size (S * BS)
 function buildingCanvas(kind, key) {
   const id = kind + ':' + key; if (bCache.has(id)) { const v = bCache.get(id); bCache.delete(id); bCache.set(id, v); return v; }
   let w, draw;
   if (kind === 'lm') { const L = LANDMARKS[key]; if (!L) return null; w = L.w; draw = o => L.d(o, M, LH - 6); }
   else { const Hh = HOUSES[key]; if (!Hh) return null; w = Math.round(Hh.w * 1.35); draw = o => window.drawScaled(o, Hh.d.bind(Hh), M, LH - 6, 1.35); }
-  const c = document.createElement('canvas'); c.width = Math.ceil((w + 2 * M) * KR); c.height = Math.ceil(LH * KR);
-  const o = c.getContext('2d'); o.imageSmoothingEnabled = false; o.scale(KR, KR);
+  const N = Math.min(4, Math.ceil(KB + .2));   // drawn natively just above screen size: vector curves, lettering and the sharp sign redraws at full detail, blocks on exact pixels
+  const c = document.createElement('canvas'); c.width = (w + 2 * M) * N; c.height = LH * N;
+  const o = c.getContext('2d', { willReadFrequently: true }); o.imageSmoothingEnabled = false; o.scale(N, N);
   try { draw(o); } catch (e) { console.warn(key, e); }
   if (kind === 'lm' && window.LM_ANIM && LM_ANIM[key]) try { const af = key !== 'lutonhoo' && window.SCALE && SCALE[key]; if (af) { o.save(); o.translate(M, LH - 6); o.scale(af, af); LM_ANIM[key](o, 0, 0, 0); o.restore(); } else LM_ANIM[key](o, M, LH - 6, 0); } catch (e) {}
-  // trim empty space so drawing stays cheap
+  // trim empty space (search on a 1/4 grid, then exact edges)
   const d = o.getImageData(0, 0, c.width, c.height).data; let top = c.height, l = c.width, r = 0;
-  for (let y = 0; y < c.height; y += 2) for (let x = 0; x < c.width; x += 2) if (d[(y * c.width + x) * 4 + 3] > 8) { if (y < top) top = y; if (x < l) l = x; if (x > r) r = x; }
-  const t = document.createElement('canvas'); t.width = Math.max(1, r - l + 2); t.height = Math.max(1, c.height - top);
-  t.getContext('2d').drawImage(c, -l, -top);
-  const v = { c: t, ox: l / KR - M, w, top: top / KR - (LH - 6), h: (c.height - top) / KR };   // ox: x offset of trimmed image vs building x; top: y vs ground (negative)
-  bCache.set(id, v); while (bCache.size > 14) bCache.delete(bCache.keys().next().value);
+  for (let y = 0; y < c.height; y += 3) { const row = y * c.width; for (let x = 0; x < c.width; x += 3) if (d[(row + x) * 4 + 3] > 8) { if (y < top) top = y; if (x < l) l = x; if (x > r) r = x; } }
+  if (r < l) { l = 0; r = 4; top = c.height - 4; }
+  l = Math.max(0, l - 3); top = Math.max(0, top - 3); r = Math.min(c.width - 1, r + 4);
+  const kb = KB, f = kb / N, t = document.createElement('canvas'); t.width = Math.max(1, Math.round((r - l + 1) * f)); t.height = Math.max(1, Math.round((c.height - top) * f));
+  const q = t.getContext('2d'); q.imageSmoothingEnabled = true; q.imageSmoothingQuality = 'high'; q.drawImage(c, l, top, r - l + 1, c.height - top, 0, 0, t.width, t.height);
+  c.width = c.height = 1;
+  const v = { c: t, k: kb, ox: l / N - M, w, top: top / N - (LH - 6), h: (LH * N - top) / N };
+  bCache.set(id, v); while (bCache.size > 16) bCache.delete(bCache.keys().next().value);
   return v;
 }
 function hazed(id, v) {   // pale, sunset-tinted copy for the far skyline
@@ -171,10 +197,10 @@ function nextBuilding() {
     else { let u; do { if (!deck.length) deck = buildDeck(); u = deck.shift().filter(x => x !== myMosque); } while (!u.length); k = u.shift(); setQ = u; }
     lastLm.push(k); if (lastLm.length > 10) lastLm.shift();
     street.push({ kind: 'lm', key: k, x, w: LANDMARKS[k].w * BS, gap: setQ.length ? 0 : 6 + Math.random() * 14 }); }
-  else { const hk = HOUSE_K(); const k = hk[Math.random() * hk.length | 0]; street.push({ kind: 'hs', key: k, x, w: Math.round(HOUSES[k].w * 1.35) * BS, gap: 0, run: prev && prev.kind === 'hs' ? (prev.run || 1) + 1 : 1 }); }
+  else { if (!houseDeck.length) { houseDeck = HOUSE_K().slice(); for (let i = houseDeck.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [houseDeck[i], houseDeck[j]] = [houseDeck[j], houseDeck[i]]; } } const k = houseDeck.shift(); street.push({ kind: 'hs', key: k, x, w: Math.round(HOUSES[k].w * 1.35) * BS, gap: 0, run: prev && prev.kind === 'hs' ? (prev.run || 1) + 1 : 1 }); }
 }
 function fillStreet() { while (!street.length || street[street.length - 1].x < W + 600) { nextBuilding(); const b = street[street.length - 1]; setTimeout(() => buildingCanvas(b.kind, b.key), 0); } }   // built ~1.5 screens ahead so there's no hitch
-function fillSkyline() { let x = skyline.length ? skyline[skyline.length - 1].x + skyline[skyline.length - 1].w : -100; while (x < W * 2.2) { const k = STREET[Math.random() * STREET.length | 0]; if (!LANDMARKS[k] || k === myMosque) continue; skyline.push({ kind: 'lm', key: k, x, w: LANDMARKS[k].w * .5 }); x += LANDMARKS[k].w * .5 - 16; } }
+function fillSkyline() { let x = skyline.length ? skyline[skyline.length - 1].x + skyline[skyline.length - 1].w : -100; while (x < W * 2.2) { if (!skyDeck.length) { skyDeck = STREET.slice(); for (let i = skyDeck.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [skyDeck[i], skyDeck[j]] = [skyDeck[j], skyDeck[i]]; } } const k = skyDeck.shift(); if (!LANDMARKS[k] || k === myMosque || street.some(b => b.key === k)) continue; skyline.push({ kind: 'lm', key: k, x, w: LANDMARKS[k].w * .5 }); x += LANDMARKS[k].w * .5 - 16; } }
 
 function spawnCar(x) {
   const k = CAR_KEYS[Math.random() * CAR_KEYS.length | 0]; if (!VEHICLES[k]) return;
@@ -724,11 +750,11 @@ function draw() {
   // far hazy skyline (smaller, slower)
   const sk = .5;
   skyline.forEach(b => { const v = buildingCanvas(b.kind, b.key); if (!v) return; const h = hazed(b.kind + ':' + b.key + '@' + KR, v);
-    ctx.drawImage(h, b.x + v.ox * sk, G - 8 + v.top * sk, v.c.width / KR * sk, v.c.height / KR * sk); });
+    ctx.drawImage(h, b.x + v.ox * sk, G - 8 + v.top * sk, v.c.width / v.k * sk, v.c.height / v.k * sk); });
   // main street buildings
   ctx.imageSmoothingEnabled = true;
   street.forEach(b => { if (b.x > W + 40 || b.x + b.w < -40) return; const v = buildingCanvas(b.kind, b.key); if (!v) return;
-    ctx.drawImage(v.c, px(b.x + v.ox * BS), px(G + v.top * BS), v.c.width / KR * BS, v.c.height / KR * BS); });
+    ctx.drawImage(v.c, px(b.x + v.ox * BS), px(G + v.top * BS), v.c.width / S, v.c.height / S); });
   // far pavement, road, kerb
   ctx.fillStyle = '#b3a3a3'; ctx.fillRect(0, G, W, ROAD_T - G); ctx.fillStyle = '#8c7c84'; ctx.fillRect(0, ROAD_T - 2, W, 2);
   const off = (dist % 30);
