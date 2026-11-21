@@ -7,6 +7,7 @@ const MUSIC_MAX = 120 * 1024 * 1024;   // largest audio file (bytes)
 const MUSIC_ART_MAX = 8 * 1024 * 1024;
 const MUSIC_AUDIO = ['mp3' => 'audio/mpeg', 'm4a' => 'audio/mp4', 'aac' => 'audio/aac', 'wav' => 'audio/wav',
     'flac' => 'audio/flac', 'ogg' => 'audio/ogg', 'oga' => 'audio/ogg', 'opus' => 'audio/ogg', 'webm' => 'audio/webm'];
+const MUSIC_VIDEO_MAX = 200 * 1024 * 1024;
 const MUSIC_ART = ['jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'png' => 'image/png', 'webp' => 'image/webp', 'gif' => 'image/gif'];
 
 function music_db(): PDO {
@@ -22,11 +23,13 @@ function music_db(): PDO {
         $pdo->exec("CREATE TABLE IF NOT EXISTS music_kv (k TEXT PRIMARY KEY, v TEXT)");
         $cols = array_column($pdo->query('PRAGMA table_info(music_tracks)')->fetchAll(), 'name');
         if (!in_array('about', $cols, true)) $pdo->exec("ALTER TABLE music_tracks ADD COLUMN about TEXT DEFAULT ''");
+        if (!in_array('video', $cols, true)) $pdo->exec("ALTER TABLE music_tracks ADD COLUMN video INTEGER DEFAULT 0");
         if (!in_array('slug', $cols, true)) $pdo->exec("ALTER TABLE music_tracks ADD COLUMN slug TEXT DEFAULT ''");
         foreach ($pdo->query("SELECT code, title FROM music_tracks WHERE slug IS NULL OR slug = ''")->fetchAll() as $r)
             $pdo->prepare('UPDATE music_tracks SET slug = ? WHERE code = ?')->execute([music_slug((string) $r['title']), $r['code']]);
         $done = true;
         try { music_seed_import(); } catch (Throwable $e) {}
+        try { music_video_seed_import(); } catch (Throwable $e) {}
         // one-off text fixes for tracks that were already imported (each runs once)
         if (music_kv('fix:gatsby-about-2') === null) {
             $pdo->prepare("UPDATE music_tracks SET about = ?, updated_at = ? WHERE slug = 'thats-gatsby-law'")->execute(["That’s Gatsby Law (NFA) is Saf Rathor’s story, told from his point of view. Two brothers, two bosses: Saf and his big brother started Gatsby Law with a desk, a phone and their dad’s belief that the future was bright. Ten years on, their name is on the building.\n\nThe song goes behind the results: 3am calls from worried mums, cases nobody thought could be won, and the long nights the cameras never show. NFA stands for No Further Action, the result every client hopes for, and the promise Saf makes when the phone rings.\n\nWhat drives them is simple: every case is a life, not a number. The nice cars came later; what they’re proudest of is showing the next generation what’s possible.", now()]);
@@ -75,6 +78,8 @@ function music_public(array $t, bool $owner = false): array {
     $o = ['id' => $t['code'], 'title' => $t['title'], 'artist' => $t['artist'], 'album' => $t['album'], 'year' => $t['year'],
         'genre' => $t['genre'], 'track' => $t['track_no'], 'duration' => (float) $t['duration'],
         'slug' => (string) ($t['slug'] ?? ''), 'art' => $t['art'] !== '' ? '/music/api.php?a=art&id=' . $t['code'] . '&v=' . $t['updated_at'] : '',
+        'video' => !empty($t['video']) ? '/music/api.php?a=video&id=' . $t['code'] . '&v=' . $t['updated_at'] : '',
+        'poster' => !empty($t['video']) && is_file(music_dir($t['code']) . '/poster.jpg') ? '/music/api.php?a=poster&id=' . $t['code'] . '&v=' . $t['updated_at'] : '',
         'src' => '/music/api.php?a=play&id=' . $t['code'] . '&v=' . $t['updated_at'],
         'lyrics' => $t['lyrics'], 'about' => (string) ($t['about'] ?? ''), 'download' => (bool) $t['download'] || $s['download_all'], 'ext' => $t['ext']];
     if ($owner) { $o['hidden'] = (bool) $t['hidden']; $o['plays'] = (int) $t['plays']; $o['size'] = (int) $t['size']; $o['own_download'] = (bool) $t['download']; }
@@ -120,6 +125,40 @@ function music_sweep(): void {
 
 /* Tracks shipped with the site: demo-data/music-seed/<slug>.pack.php (PHP that exits if requested + a ZIP of audio.<ext>, art.<ext>, meta.json).
    Each is added once (remembered in music_kv 'seed:<slug>'), so deleting it in the player keeps it deleted. */
+/* Music videos shipped with the site: demo-data/music-seed/<name>.video.pack.php (PHP that exits + ZIP of video.mp4, poster.jpg,
+   meta.json {"slug"}), added once (music_kv 'vseed:<name>') to the track with that slug. The video is silent: the song plays from
+   the audio file and the player keeps the video in time with it. */
+function music_video_seed_import(): void {
+    $dir = SITE_ROOT . '/demo-data/music-seed';
+    if (!is_dir($dir) || !class_exists('ZipArchive')) return;
+    foreach (glob($dir . '/*.video.pack.php') ?: [] as $pack) {
+        $name = basename($pack, '.video.pack.php');
+        if (music_kv('vseed:' . $name) !== null) continue;
+        // stream the ZIP out of the pack (the video is big: don't load it all into memory)
+        $in = fopen($pack, 'rb'); $head = (string) fread($in, 256);
+        $at = strpos($head, '__halt_compiler();'); if ($at === false) { fclose($in); continue; }
+        fseek($in, $at + strlen('__halt_compiler();'));
+        $tmp = music_dir() . '/.vseed-' . bin2hex(random_bytes(4)) . '.zip';
+        $o = fopen($tmp, 'wb'); stream_copy_to_stream($in, $o); fclose($o); fclose($in);
+        $z = new ZipArchive(); $done = false;
+        if ($z->open($tmp) === true) {
+            $m = json_decode((string) $z->getFromName('meta.json'), true) ?: [];
+            $st = db()->prepare('SELECT code FROM music_tracks WHERE slug = ?'); $st->execute([(string) ($m['slug'] ?? '')]);
+            $code = $st->fetchColumn();
+            if ($code) {
+                $d = music_dir((string) $code);
+                if ($z->extractTo($d, ['video.mp4']) && is_file("$d/video.mp4")) {
+                    $z->extractTo($d, ['poster.jpg']);
+                    db()->prepare('UPDATE music_tracks SET video = 1, updated_at = ? WHERE code = ?')->execute([now(), $code]);
+                    $done = true;
+                }
+            } else $done = true; // track not there (deleted): nothing to attach
+            $z->close();
+        }
+        @unlink($tmp);
+        if ($done) music_kv('vseed:' . $name, (string) now());
+    }
+}
 function music_seed_import(): void {
     $dir = SITE_ROOT . '/demo-data/music-seed';
     if (!is_dir($dir) || !class_exists('ZipArchive')) return;

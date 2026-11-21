@@ -37,6 +37,13 @@ if (($a === 'play' || $a === 'dl') && $method !== 'POST') {
     }
     music_send($path, MUSIC_AUDIO[$t['ext']] ?? 'application/octet-stream');
 }
+if (($a === 'video' || $a === 'poster') && $method !== 'POST') {
+    $t = music_track((string) ($_GET['id'] ?? ''));
+    $f = $t ? music_dir($t['code']) . '/' . ($a === 'video' ? 'video.mp4' : 'poster.jpg') : '';
+    if (!$t || empty($t['video']) || !is_file($f)) { http_response_code(404); exit; }
+    music_send($f, $a === 'video' ? 'video/mp4' : 'image/jpeg');
+    exit;
+}
 if ($a === 'art' && $method !== 'POST') {
     $t = music_track((string) ($_GET['id'] ?? ''));
     if (!$t || $t['art'] === '') { http_response_code(404); exit; }
@@ -145,6 +152,37 @@ switch ($a) {
     case 'duration': {
         music_db()->prepare('UPDATE music_tracks SET duration = ? WHERE code = ? AND duration < 1')->execute([(float) ($in['duration'] ?? 0), (string) ($in['id'] ?? '')]);
         json_out(['ok' => true]);
+    }
+    case 'vid_chunk': {
+        // Music video (MP4, silent or not: the player mutes it and plays the song's audio), sent in 2 MB pieces in order.
+        $t = music_track((string) ($in['id'] ?? ''));
+        if (!$t) json_out(['error' => 'Track not found.'], 404);
+        $off = (int) ($in['off'] ?? -1); $total = (int) ($in['total'] ?? 0);
+        if ($total <= 0 || $total > MUSIC_VIDEO_MAX) json_out(['error' => 'Videos can be up to 200 MB. Compress it to 720p first.'], 400);
+        $f = $_FILES['file'] ?? null;
+        if (!$f || ($f['error'] ?? 1) !== UPLOAD_ERR_OK || !is_uploaded_file($f['tmp_name'])) json_out(['error' => 'The upload was interrupted. Try again.'], 400);
+        $dir = music_dir($t['code']); $part = "$dir/video.part";
+        if ($off === 0 && is_file($part)) @unlink($part);
+        $have = is_file($part) ? filesize($part) : 0;
+        if ($off !== $have) json_out(['error' => 'Out of order.', 'have' => $have], 409);
+        if ($have + filesize($f['tmp_name']) > $total) json_out(['error' => 'Too much data.'], 400);
+        file_put_contents($part, file_get_contents($f['tmp_name']), FILE_APPEND | LOCK_EX);
+        clearstatcache();
+        if (filesize($part) === $total) {
+            rename($part, "$dir/video.mp4");
+            if (!empty($_FILES['poster']) && ($_FILES['poster']['error'] ?? 1) === UPLOAD_ERR_OK && is_uploaded_file($_FILES['poster']['tmp_name']) && filesize($_FILES['poster']['tmp_name']) < MUSIC_ART_MAX)
+                move_uploaded_file($_FILES['poster']['tmp_name'], "$dir/poster.jpg");
+            music_db()->prepare('UPDATE music_tracks SET video = 1, updated_at = ? WHERE code = ?')->execute([now(), $t['code']]);
+            json_out(['ok' => true, 'done' => true, 'track' => music_public(music_track($t['code']), true)]);
+        }
+        json_out(['ok' => true, 'have' => filesize($part)]);
+    }
+    case 'vid_del': {
+        $t = music_track((string) ($in['id'] ?? ''));
+        if (!$t) json_out(['error' => 'Track not found.'], 404);
+        $dir = music_dir($t['code']); foreach (['video.mp4', 'video.part', 'poster.jpg'] as $x) @unlink("$dir/$x");
+        music_db()->prepare('UPDATE music_tracks SET video = 0, updated_at = ? WHERE code = ?')->execute([now(), $t['code']]);
+        json_out(['ok' => true, 'track' => music_public(music_track($t['code']), true)]);
     }
     case 'delete': {
         $t = music_track((string) ($in['id'] ?? ''));

@@ -114,6 +114,23 @@ svg{display:block}
 .paused .bigart{transform:scale(.86)}
 /* the cover always fits the space left above the title (Safari's vh ignores its toolbars) */
 @supports (width:1cqh){.bigart{width:min(100cqw,100cqh,440px)}}
+/* Song / Video switch + music video (silent, kept in time with the song) */
+.msw{position:relative;display:flex;flex:none;padding:3px;border-radius:999px;background:rgba(255,255,255,.12);margin:0 auto 6px;max-height:44px;opacity:1;overflow:hidden;transition:max-height .4s ease,opacity .35s,margin .4s}
+.msw.off{max-height:0;opacity:0;margin:0 auto;pointer-events:none}
+.msw button{position:relative;z-index:1;padding:7px 20px;font:800 13px Manrope;color:rgba(255,255,255,.78);border-radius:999px;transition:color .3s}
+.msw button.on{color:#120e1b}
+.msw i{position:absolute;top:3px;bottom:3px;left:3px;width:calc(50% - 3px);border-radius:999px;background:#fff;transition:transform .4s cubic-bezier(.3,.9,.3,1)}
+.msw.v i{transform:translateX(100%)}
+.vbox{position:absolute;left:50%;top:50%;width:84vw;aspect-ratio:16/9;transform:translate(-50%,-50%) scale(.92);opacity:0;pointer-events:none;border-radius:12px;overflow:hidden;background:#000;box-shadow:0 6px 24px rgba(0,0,0,.35);transition:opacity .45s ease,transform .5s cubic-bezier(.2,.85,.2,1)}
+@supports (width:1cqh){.vbox{width:min(100cqw,calc(100cqh * 16 / 9),900px)}}
+.vmode .vbox{opacity:1;transform:translate(-50%,-50%);pointer-events:auto}
+.full .bigart{transition:transform .55s cubic-bezier(.2,.9,.3,1.25),opacity .4s,width .4s,border-radius .4s}
+.vmode .bigart{opacity:0;pointer-events:none}
+.vbox video{width:100%;height:100%;object-fit:cover;display:block;background:#000}
+.vbox .vfs{position:absolute;right:8px;bottom:8px;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:rgba(0,0,0,.5);color:#fff}
+.vbox .vfs .ic{width:17px;height:17px}
+.vbox:fullscreen{width:100vw;height:100vh;border-radius:0;transform:none;left:0;top:0}
+.vbox:fullscreen video{object-fit:contain}
 .lyrics{position:relative;height:100%;overflow-y:auto;padding:6px 0 60%;scrollbar-width:none}
 .lyrics::-webkit-scrollbar{display:none}
 .lyrics p{font:800 clamp(22px,5.4vw,30px)/1.25 Sora;letter-spacing:-.01em;color:rgba(255,255,255,.32);margin:0 0 18px;transition:color .35s,transform .35s,filter .35s;transform-origin:left center;cursor:pointer}
@@ -355,8 +372,10 @@ svg{display:block}
   <div class="fstrip" id="fStrip"><div class="t" id="fsT"></div><button id="fsPlay" aria-label="Play"><svg class="ic" viewBox="0 0 24 24"><path id="fsPlayIc" d="M7 4.5v15l13-7.5z"/></svg></button><i><b id="fsProg"></b></i></div>
   <div class="fscroll" id="fScroll">
   <div class="fbody">
+    <div class="msw off" id="mSw" role="tablist" aria-label="Song or video"><button class="on" data-m="0" role="tab">Song</button><button data-m="1" role="tab">Video</button><i></i></div>
     <div class="stage" id="stage">
       <div class="art ph bigart" id="fArt"></div>
+      <div class="vbox" id="vBox"><video id="fVid" playsinline webkit-playsinline muted preload="none" disablepictureinpicture disableremoteplayback></video><button class="vfs" id="vFs" aria-label="Full screen"><svg class="ic" viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button></div>
     </div>
     <div class="info">
       <div class="t"><div class="tt" id="fTT"><b id="fTitle"></b></div><div class="ar" id="fArtist"></div></div>
@@ -676,7 +695,7 @@ function paintNow() {
   tint(t.art);
   $('#fsT').innerHTML = esc(t.title) + (t.artist ? ' <span>• ' + esc(t.artist) + '</span>' : '');
   $('#lbT').textContent = t.title; $('#lbA').textContent = t.artist || ''; setArt($('#lbArt'), t.art);
-  renderLyrics(); renderAbout(t);
+  renderLyrics(); renderAbout(t); videoFor(t);
   mediaSession(t);
 }
 function marquee() { const box = $('#fTT'), b = $('#fTitle'); box.classList.remove('marq'); const over = b.offsetWidth - box.clientWidth; if (over > 2) { box.style.setProperty('--mx', -(over + 12) + 'px'); box.style.setProperty('--md', Math.max(4, over / 18) + 's'); box.classList.add('marq'); } }
@@ -748,6 +767,43 @@ $('#playAll').onclick = () => { if (cur()) { toggle(); return; } S.shuffle = fal
 $('#shufAll').onclick = () => { const ids = S.tracks.map(t => t.id); startFrom(ids[Math.floor(Math.random() * ids.length)], true); openFull(); };
 $('#fDl').onclick = () => saveSheet(cur());
 
+/* ---------- music video: silent video kept in time with the song (the audio stays the source, so lock screen / CarPlay keep working) ---------- */
+const vid = $('#fVid'), mSw = $('#mSw'); let vmode = false;
+vid.muted = true;
+function videoFor(t) {
+  const has = !!(t && t.video);
+  mSw.classList.toggle('off', !has);
+  if (!has) { if (vmode) setVideo(false); if (vid.dataset.id) { vid.pause(); vid.removeAttribute('src'); vid.load(); vid.dataset.id = ''; } return; }
+  if (vid.dataset.id !== t.id) { vid.pause(); vid.removeAttribute('src'); vid.dataset.id = t.id; vid.dataset.src = t.video; vid.poster = t.poster || t.art || ''; if (vmode) { vid.src = t.video; vsync(true); } }
+}
+function setVideo(on) {
+  vmode = on; full.classList.toggle('vmode', on); mSw.classList.toggle('v', on);
+  mSw.querySelectorAll('button').forEach(b => b.classList.toggle('on', (b.dataset.m === '1') === on));
+  if (on) { if (!vid.getAttribute('src') && vid.dataset.src) vid.src = vid.dataset.src; vsync(true); }
+  else vid.pause();
+}
+mSw.addEventListener('click', e => { const b = e.target.closest('button'); if (b) setVideo(b.dataset.m === '1'); });
+function vsync(force) {
+  if (!vmode || !vid.getAttribute('src')) return;
+  if (vid.playbackRate !== au.playbackRate) vid.playbackRate = au.playbackRate;
+  const want = au.currentTime;
+  if (vid.readyState >= 1 && (force || Math.abs(vid.currentTime - want) > .3)) { try { vid.currentTime = Math.min(want, (vid.duration || want + 1) - .05); } catch (e) {} }
+  const show = full.classList.contains('show') || document.fullscreenElement || vid.webkitDisplayingFullscreen;
+  if (au.paused || !show) { if (!vid.paused) vid.pause(); }
+  else if (vid.paused) { const p = vid.play(); if (p && p.catch) p.catch(() => {}); }
+}
+['play', 'pause', 'seeked', 'ratechange', 'timeupdate'].forEach(ev => au.addEventListener(ev, () => vsync(ev !== 'timeupdate')));
+vid.addEventListener('loadedmetadata', () => vsync(true));
+vid.addEventListener('webkitendfullscreen', () => vsync(true));
+document.addEventListener('fullscreenchange', () => vsync(true));
+function videoFull() {
+  if (vid.webkitEnterFullscreen && !document.fullscreenEnabled) { try { vid.webkitEnterFullscreen(); } catch (e) {} return; }
+  const box = $('#vBox'); if (document.fullscreenElement) document.exitFullscreen(); else if (box.requestFullscreen) box.requestFullscreen().catch(() => { try { vid.webkitEnterFullscreen(); } catch (e) {} });
+  else if (vid.webkitEnterFullscreen) vid.webkitEnterFullscreen();
+}
+$('#vFs').onclick = e => { e.stopPropagation(); videoFull(); };
+vid.addEventListener('click', videoFull);
+
 /* ---------- full player open/close with art flight ---------- */
 const full = $('#full');
 function openFull() {
@@ -761,11 +817,12 @@ function openFull() {
     const sx = from.width / to.width, dx = from.left - to.left, dy = from.top - to.top - window.innerHeight;
     art.animate([{ transform: 'translate(' + dx + 'px,' + dy + 'px) scale(' + sx + ')', borderRadius: '30px' }, { transform: getComputedStyle(art).transform === 'none' ? 'none' : getComputedStyle(art).transform }], { duration: 560, easing: 'cubic-bezier(.2,.85,.25,1)' });
   });
-  setTimeout(marquee, 520); setTimeout(() => syncLyrics(true), 600);
+  setTimeout(marquee, 520); setTimeout(() => { syncLyrics(true); vsync(true); }, 600);
 }
 function closeFull(fromPop) {
   if (!full.classList.contains('show')) return;
   if (lyBigOn) lyBig(false, true);
+  vid.pause();
   full.classList.remove('show'); full.style.transform = ''; document.body.style.overflow = '';
   if (!fromPop && history.state && history.state.full) goBack();
 }
@@ -904,6 +961,7 @@ function openSheet(title, html, onReady) {
 function closeSheet(fromPop) { if (!sheetOpen) return; sheetOpen = false; $('#scrim').classList.remove('show'); $('#sheet').classList.remove('show'); if (!fromPop && history.state && history.state.sheet) goBack(); }
 $('#scrim').onclick = () => closeSheet(); $('#shClose').onclick = () => closeSheet();
 const IC = {
+  video: '<rect x="2" y="5" width="14" height="14" rx="2"/><path d="m16 10 6-3v10l-6-3"/>',
   speed: '<path d="M12 13l4-4"/><path d="M3.5 18a10 10 0 1 1 17 0"/>', moon: '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>',
   next: '<path d="M3 6h13M3 12h13M3 18h9M17 15l4 3-4 3z"/>', queue: '<path d="M3 6h13M3 12h13M3 18h9M19 15v6M16 18h6"/>',
   dl: '<path d="M12 4v12M6 10l6 6 6-6M5 20h14"/>', share: '<path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7M16 6l-4-4-4 4M12 2v13"/>',
@@ -920,7 +978,7 @@ function trackMenu(id, fromPlayer) {
   h += '<button data-x="dl">' + ico('dl') + (t.download || S.owner ? 'Download & save' : 'Save this track') + (S.owner && !t.download ? ' <span class="tag">ONLY YOU</span>' : '') + '</button>';
   h += '<button data-x="share">' + ico('share') + 'Share</button>';
   if (fromPlayer) h += '<div class="lab">Playback</div><button data-x="speed">' + ico('speed') + 'Playback speed <span class="mv">' + S.speed + '×</span></button><button data-x="sleep">' + ico('moon') + 'Sleep timer <span class="mv">' + (S.sleepEnd ? 'End of track' : S.sleepAt ? Math.max(1, Math.round((S.sleepAt - Date.now()) / 60000)) + ' min' : 'Off') + '</span></button>';
-  if (S.owner) h += '<div class="lab">Owner</div><button data-x="edit">' + ico('edit') + 'Edit details, art & lyrics</button><button data-x="mvup">' + ico('up') + 'Move up</button><button data-x="mvdn">' + ico('down') + 'Move down</button><button data-x="hide">' + ico('eye') + (t.hidden ? 'Show on the player home page' : 'Make private (link only)') + '</button><button class="red" data-x="del">' + ico('del') + 'Delete track</button>';
+  if (S.owner) h += '<div class="lab">Owner</div><button data-x="edit">' + ico('edit') + 'Edit details, art & lyrics</button><button data-x="vid">' + ico('video') + (t.video ? 'Replace music video' : 'Add music video') + '</button>' + (t.video ? '<button data-x="vidrm">' + ico('del') + 'Remove music video</button>' : '') + '<button data-x="mvup">' + ico('up') + 'Move up</button><button data-x="mvdn">' + ico('down') + 'Move down</button><button data-x="hide">' + ico('eye') + (t.hidden ? 'Show on the player home page' : 'Make private (link only)') + '</button><button class="red" data-x="del">' + ico('del') + 'Delete track</button>';
   h += '</div>';
   openSheet('Track', h, b => b.onclick = async e => {
     const x = e.target.closest('[data-x]'); if (!x) return; const a = x.dataset.x;
@@ -932,6 +990,8 @@ function trackMenu(id, fromPlayer) {
     if (a === 'speed') $('#tSpeed').click();
     if (a === 'sleep') $('#tSleep').click();
     if (a === 'edit') editTrack(t);
+    if (a === 'vid') { closeSheet(); pickVideo(t); }
+    if (a === 'vidrm') { if (!confirm('Remove the music video from "' + t.title + '"?')) return; closeSheet(); try { Object.assign(t, (await api('vid_del', { id: t.id })).track); renderList(); if (cur() && cur().id === t.id) paintNow(); toast('Video removed'); } catch (err) { toast(err.message); } }
     if (a === 'mvup' || a === 'mvdn') { const i = S.tracks.indexOf(t), j = i + (a === 'mvup' ? -1 : 1); if (j < 0 || j >= S.tracks.length) return; [S.tracks[i], S.tracks[j]] = [S.tracks[j], S.tracks[i]]; renderList(); closeSheet(); if (!S.local) api('order', { ids: S.tracks.map(x => x.id) }).catch(err => toast(err.message)); }
     if (a === 'hide') { t.hidden = !t.hidden; closeSheet(); renderList(); if (!S.local) api('update', Object.assign(formOf(t), { hidden: t.hidden })).catch(err => toast(err.message)); toast(t.hidden ? 'Private: only people with its link can play it' : 'Visible to everyone'); }
     if (a === 'del') { if (!confirm('Delete "' + t.title + '"? This can’t be undone.')) return; closeSheet(); if (!S.local) { try { await api('delete', { id }); } catch (err) { toast(err.message); return; } }
@@ -1049,6 +1109,35 @@ document.addEventListener('keydown', e => {
   else if (k === 'l') setLyr(!lyBigOn); else if (k === 's') $('#cShuf').click(); else if (k === 'r') $('#cRep').click();
   else if (k === 'Escape') { if (sheetOpen) closeSheet(); else closeFull(); }
 });
+
+/* ---------- owner: music video upload (MP4; best compressed to 720p first; sent in 2 MB pieces with a poster frame) ---------- */
+function pickVideo(t) {
+  const inp = document.createElement('input'); inp.type = 'file'; inp.accept = 'video/mp4,video/quicktime,.mp4,.m4v,.mov';
+  inp.onchange = () => { const f = inp.files[0]; if (f) uploadVideo(t, f); }; inp.click();
+}
+async function posterOf(file) {
+  return new Promise(res => {
+    const v = document.createElement('video'); v.muted = true; v.playsInline = true; v.preload = 'auto'; v.src = URL.createObjectURL(file);
+    const done = b => { URL.revokeObjectURL(v.src); res(b); };
+    v.onloadedmetadata = () => { v.currentTime = Math.min(5, (v.duration || 10) / 3); };
+    v.onseeked = () => { try { const c = document.createElement('canvas'); const k = Math.min(1, 1280 / v.videoWidth); c.width = v.videoWidth * k; c.height = v.videoHeight * k; c.getContext('2d').drawImage(v, 0, 0, c.width, c.height); c.toBlob(done, 'image/jpeg', .82); } catch (e) { done(null); } };
+    v.onerror = () => done(null); setTimeout(() => done(null), 15000);
+  });
+}
+async function uploadVideo(t, file) {
+  if (file.size > 200 * 1048576) { toast('That video is over 200 MB. Compress it to 720p first.'); return; }
+  const poster = await posterOf(file);
+  const CH = 2 * 1024 * 1024;
+  try {
+    for (let off = 0; off < file.size; off += CH) {
+      const fd = new FormData(); fd.append('id', t.id); fd.append('off', off); fd.append('total', file.size); fd.append('file', file.slice(off, off + CH), 'part');
+      if (off + CH >= file.size && poster) fd.append('poster', poster, 'poster.jpg');
+      let r, tries = 0; for (;;) { try { r = await api('vid_chunk', fd, true); break; } catch (e) { if (++tries > 3) throw e; await new Promise(w => setTimeout(w, 1200 * tries)); } }
+      toast('Uploading video… ' + Math.round(Math.min(1, (off + CH) / file.size) * 100) + '%');
+      if (r.done) { Object.assign(t, r.track); renderList(); if (cur() && cur().id === t.id) paintNow(); toast('Music video added'); }
+    }
+  } catch (e) { toast(e.message); }
+}
 
 /* ---------- owner: upload & edit ---------- */
 function editorHTML(d, i) {
