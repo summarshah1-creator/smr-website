@@ -344,7 +344,8 @@ function animPigeon(dt, flapT, vy, dead) {
 }
 
 /* ================= pipes in 3 lanes ================= */
-const LANES = [0], PR = 1.9, GAP = 7.0, ROW = 30;
+const ROAD = /[?&]road=1/.test(location.search);   // road model only: no pipes, 3 lanes, can't crash
+const LANES = ROAD ? [-3.6, 0, 3.6] : [0], PR = 1.9, GAP = 7.0, ROW = 30;
 const pipeTex = tex(512, 64, (x, w, h) => { const g = x.createLinearGradient(0, 0, w, 0); [[0, '#2f7f22'], [.15, '#4fb033'], [.3, '#8fe36a'], [.36, '#c8f7a8'], [.45, '#6fd04a'], [.7, '#4aa832'], [1, '#2f7f22']].forEach(([o, c]) => g.addColorStop(o, c)); x.fillStyle = g; x.fillRect(0, 0, w, h);
   for (let i = 0; i < 160; i++) { x.fillStyle = `rgba(${Math.random() < .5 ? '20,60,10' : '230,255,210'},${Math.random() * .12})`; x.fillRect(Math.random() * w, Math.random() * h, 1 + Math.random() * 3, 1); } }, 1, 6);
 const rimM = new THREE.MeshStandardMaterial({ color: 0x8be668, roughness: .3, side: THREE.DoubleSide }), innerM = new THREE.MeshStandardMaterial({ color: 0x1d4012, roughness: .9, side: THREE.BackSide }), boltM = mat(0x3e8a2a, { roughness: .4, metalness: .3 });
@@ -380,16 +381,16 @@ let state = 'menu', score = 0, best = +(localStorage.getItem('fk3d_best') || 0);
 const B = { x: 0, y: 5, z: 0, vy: 0, lane: 1, flapT: 0 }; let speed = 12;
 const $ = id => document.getElementById(id);
 function reset() { [...live].forEach(o => drop(o.g)); live.length = 0; rows.forEach(r => drop(r.g)); rows.length = 0;
-  sideZ = [5, 5]; planI = [0, 4]; propZ = 5; rowZ = -40; lastX = 1; Object.assign(B, { x: 0, y: 5, z: 0, vy: 0, lane: 0 }); traffic.forEach(c => scene.remove(c.g)); traffic.length = 0; trafT = 0; for (let k = 0; k < 8; k++) spawnCar(k % 2 ? 1 : -1); score = 0; speed = 12; $('score').textContent = '0'; }
+  sideZ = [5, 5]; planI = [0, 4]; propZ = 5; rowZ = -40; lastX = 1; Object.assign(B, { x: 0, y: 5, z: 0, vy: 0, lane: ROAD ? 1 : 0 }); traffic.forEach(c => scene.remove(c.g)); traffic.length = 0; trafT = 0; for (let k = 0; k < 8; k++) spawnCar(k % 2 ? 1 : -1); score = 0; speed = 12; $('score').textContent = '0'; }
 function start() { reset(); state = 'play'; $('start').classList.add('hide'); $('over').classList.add('hide'); $('score').classList.remove('hide'); flap(); }
 function flap() { if (state !== 'play') return; B.vy = 7.6; B.flapT = 0; }
-function lane(d) {}
+function lane(d) { if (!ROAD || state !== 'play') return; B.lane = Math.max(0, Math.min(2, B.lane + d)); }
 function die() { if (state !== 'play') return; state = 'dead'; if (score > best) { best = score; localStorage.setItem('fk3d_best', best); } setTimeout(() => { $('ovs').textContent = 'Score ' + score + ' · Best ' + best; $('over').classList.remove('hide'); }, 700); }
 $('go').onclick = e => { e.stopPropagation(); start(); }; $('again').onclick = e => { e.stopPropagation(); start(); };
 $('lo').textContent = 'Low detail: ' + (LOW ? 'ON' : 'OFF'); $('lo').onclick = e => { e.stopPropagation(); localStorage.setItem('fk3d_low', LOW ? '0' : '1'); location.reload(); };
 let tx = null, ty = null, tt = 0;
 addEventListener('pointerdown', e => { if (e.target.closest('button')) return; tx = e.clientX; ty = e.clientY; tt = performance.now(); });
-addEventListener('pointerup', e => { if (tx == null) return; const dx = e.clientX - tx, dy = e.clientY - ty; if (Math.abs(dx) > 35 && Math.abs(dx) > Math.abs(dy)) {} else flap(); tx = null; });
+addEventListener('pointerup', e => { if (tx == null) return; const dx = e.clientX - tx, dy = e.clientY - ty; if (Math.abs(dx) > 35 && Math.abs(dx) > Math.abs(dy)) lane(dx > 0 ? 1 : -1); else flap(); tx = null; });
 addEventListener('keydown', e => { if (e.code === 'Space' || e.code === 'ArrowUp') { if (state !== 'play') start(); else flap(); } if (e.code === 'ArrowLeft') lane(-1); if (e.code === 'ArrowRight') lane(1); });
 
 /* ================= main loop ================= */
@@ -400,7 +401,7 @@ function step(dt) {
     if (state === 'play') { speed = Math.min(19, 12 + score * .25); B.z -= speed * dt; }
     B.vy -= 20 * dt; B.y += B.vy * dt; if (B.y > 15) { B.y = 15; B.vy = Math.min(0, B.vy); }
     B.x += (LANES[B.lane] - B.x) * Math.min(1, dt * 9);
-    if (B.y < .5) { B.y = .5; B.vy = 0; die(); }
+    if (B.y < (ROAD ? 2.6 : .5)) { if (ROAD) { B.y = 2.6; B.vy = Math.max(0, B.vy); } else { B.y = .5; B.vy = 0; die(); } }
     if (state === 'play') rows.forEach(r => { const dx = 0, dz = B.z - r.z; if (dx * dx + dz * dz < (PR + .55) ** 2 && (B.y - .35 < r.lo || B.y + .35 > r.hi)) die();
       if (!r.done && r.z > B.z + PR) { r.done = true; score++; $('score').textContent = score; } });
   } else { B.y = 5 + Math.sin(t * 2) * .4; B.z -= 6 * dt; }
@@ -408,7 +409,7 @@ function step(dt) {
   while (sideZ[0] > B.z - 230) spawnSideFix(0);
   while (sideZ[1] > B.z - 230) spawnSideFix(1);
   while (propZ > B.z - 230) spawnProps();
-  if (state === 'play') while (rowZ > B.z - 200) spawnRow();
+  if (state === 'play' && !ROAD) while (rowZ > B.z - 200) spawnRow();
   for (let i = live.length - 1; i >= 0; i--) if (live[i].z1 > B.z + 40) { drop(live[i].g); live.splice(i, 1); }
   for (let i = rows.length - 1; i >= 0; i--) if (rows[i].z > B.z + 30) { drop(rows[i].g); rows.splice(i, 1); }
   trafT -= dt; if (trafT <= 0) { trafT = .5 + Math.random() * .9; spawnCar(Math.random() < .5 ? -1 : 1); }
@@ -436,6 +437,7 @@ function spawnSideFix(i) { const s = i ? 1 : -1; const kind = PLAN[planI[i]++ % 
 function loop(now) { const dt = Math.min(.05, (now - last) / 1000); last = now; step(dt); renderer.render(scene, camera);
   fpsN++; fpsT += dt; if (fpsT > 1) { $('fps').textContent = Math.round(fpsN / fpsT) + ' fps'; fpsN = 0; fpsT = 0; } requestAnimationFrame(loop); }
 window.__step = (ms, n = 1) => { for (let i = 0; i < n; i++) step(ms / 1000); renderer.render(scene, camera); };
+if (ROAD) { document.querySelector('#start h1').textContent = 'LUTON ROAD 3D'; document.querySelector('#start p').innerHTML = 'Just the street for now: no pipes. <b>Swipe left/right</b> to change lane, <b>tap</b> to hop up. You can\'t crash.'; $('score').style.display = 'none'; $('tag').textContent = 'ROAD MODEL'; }
 reset(); if (!qs.has('manual')) requestAnimationFrame(loop); else __step(16);
 </script>
 </body></html>
