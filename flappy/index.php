@@ -417,7 +417,7 @@ function drawBannerPlane(px, py, d) { const c = ctx, B = BANNER;
 }
 function pickCar() { const tot = carSprites.reduce((a, s) => a + s.wt, 0); for (let tries = 0; tries < 4; tries++) { let r = Math.random() * tot, s = carSprites.find(c => c.wt > 0); for (const c of carSprites) { r -= c.wt; if (r <= 0) { s = c; break; } } if (s.k !== lastCarK || tries === 3) { lastCarK = s.k; return s; } } }
 function spawnCar(x, key, zoom) { const sp = key ? carSprites.find(s => s.k === key) : pickCar(), far = ROAD + 14 - GY - 1, dir = sp.ht > far ? -1 : Math.random() < .5 ? 1 : -1, lane = dir > 0 ? 0 : 1, sx = x != null ? x : (dir > 0 ? -110 : W + 20);
-  if (lane === 1 && window.PWR && PWR.blockNear) return;
+  if (lane === 0 && window.PWR && PWR.blockFar) return;
   if (cars.some(c => c.lane === lane && sx < c.x + c.sp.w + 14 && c.x < sx + sp.w + 14)) return;
   if (zoom && cars.some(c => c.lane === lane && (dir > 0 ? c.x < 60 : c.x > W - 60))) return;
   const quick = !zoom && Math.random() < .15;   // some drivers are just a bit quicker than the rest
@@ -442,11 +442,11 @@ function startChase() { const ks = ['lambo', 'f40', 'p911', 'c63', 'a45', 'rs3',
    Dip low over the crate: a gold beam smashes the pipes ahead, a short shield, a lift, then double points for 15 s.
    Only on with ?power=1 (demo) for now: the truck comes every few seconds and scores aren't saved. ---------- */
 const PWR = (() => {
-  const demo = /[?&]power=1/.test(location.search), live = false, DBL = 15;
+  const demo = /[?&]power=1/.test(location.search), live = false, DBL = 15, CRAWL = 55;
   if (demo) window.__fkNoBoard = 1;
   // pixel truck (facing left, it drives towards the pigeon), 57 x 34
   const K = 1.8, TW = 57, TH = 34, cnv = document.createElement('canvas'); cnv.width = TW * 2; cnv.height = TH * 2;
-  { const c = cnv.getContext('2d'), R = (x, y, w, h, col) => { c.fillStyle = col; c.fillRect((TW - 1 - (x + w - 1)) * 2, y * 2, w * 2, h * 2); };
+  { const c = cnv.getContext('2d'), R = (x, y, w, h, col) => { c.fillStyle = col; c.fillRect(x * 2, y * 2, w * 2, h * 2); };
     R(1, 26, 54, 4, '#1b1a24'); R(1, 20, 39, 8, '#1b1a24'); R(2, 21, 37, 1, '#d0d4dc'); [2, 20, 38].forEach(x => R(x, 21, 1, 4, '#d0d4dc')); R(2, 25, 37, 2, '#4a4e57'); R(3, 27, 50, 2, '#2a2d34');
     R(39, 10, 16, 18, '#1b1a24'); R(40, 11, 14, 16, '#eef0f4'); R(40, 11, 14, 1, '#ffffff'); R(46, 13, 7, 6, '#1b1a24'); R(47, 14, 6, 5, '#7fb3d9'); R(47, 14, 2, 2, '#bfe0f5'); R(45, 13, 1, 13, '#c3cad8'); R(43, 20, 2, 1, '#5a6476');
     R(40, 22, 14, 2, '#7a4fd0'); R(54, 20, 2, 2, '#ffe27a'); R(54, 23, 2, 4, '#8a919e'); R(38, 24, 2, 2, '#e05050');
@@ -459,10 +459,10 @@ const PWR = (() => {
   const say = (txt, secs) => { tip = tip || document.getElementById('pwrTip'); if (!tip) return; tip.textContent = txt; tip.classList.add('on'); tipT = secs; };
   const sound = () => { if (!window.SFX || !SFX.on) return; try { SFX.powerup(); } catch (e) {} };
   return {
-    demo, get blockNear() { return !!truck || warnT > 0 || ((demo || live) && playT > nextT - 5 && dblT <= 0); },
+    demo, get blockFar() { return !!truck || warnT > 0 || ((demo || live) && playT > nextT - 5 && dblT <= 0); },
     safe: () => safeT > 0, mult: () => dblT > 0 ? 2 : 1, beamOn: () => beamT > 0,
     reset() { truck = null; warnT = 0; beamT = 0; safeT = 0; dblT = 0; gFlash = 0; shards = []; sparks = []; playT = 0; nextT = demo ? 3.5 : 70 + Math.random() * 50; const h = hud(); if (h) h.classList.remove('on'); document.body.classList.remove('x2on'); if (demo) say('DEMO: a gold crate truck is coming. Dip low over the glowing crate to grab it!', 5); },
-    update(dt, state, bird, pipes, W, GY, H, speed, PW) {
+    update(dt, state, bird, pipes, W, GY, H, speed, PW, nextPipe, ROAD) {
       if (tipT > 0) { tipT -= dt; if (tipT <= 0 && tip) tip.classList.remove('on'); }
       if (gFlash > 0) gFlash -= dt; if (beamT > 0) beamT -= dt; if (safeT > 0) safeT -= dt;
       shards.forEach(s => { s.x += s.vx * dt - speed * dt * .3; s.y += s.vy * dt; s.vy += 420 * dt; s.r += s.vr * dt; s.life -= dt; }); shards = shards.filter(s => s.life > 0 && s.y < H + 20);
@@ -471,15 +471,18 @@ const PWR = (() => {
       if (!(demo || live)) return;
       playT += dt;
       if (dblT > 0) { dblT -= dt; const h = hud(); if (h) { h.querySelector('i').style.width = Math.max(0, dblT / DBL * 100) + '%'; if (dblT <= 0) { h.classList.remove('on'); document.body.classList.remove('x2on'); if (window.SFX && SFX.on) try { SFX.powerdown(); } catch (e) {} } } }
-      if (!truck && warnT <= 0 && dblT <= 0 && playT >= nextT && !(window.__fk && __fk().cars.some(c => c.lane === 1 && c.x + c.sp.w > W - 150))) { warnT = 1.2; if (demo && got < 2) say('Truck coming! Fly low over the gold crate', 3); }
-      if (warnT > 0) { warnT -= dt; if (warnT <= 0) truck = { x: W + 8, v: 18 }; }
+      if (!truck && warnT <= 0 && dblT <= 0 && playT >= nextT && !(window.__fk && __fk().cars.some(c => c.lane === 0 && c.x + c.sp.w > -150 && c.x < W + 20))) {
+        // time it so the crate reaches the pigeon halfway between two pipes
+        const x0 = W + 8, T = (x0 + 20 * K - bird.x) / CRAWL + 1.2, r = pipes.length ? pipes[pipes.length - 1].x : nextPipe + 10, d = (((r - speed * T) - (bird.x - 90)) % 150 + 150) % 150;
+        warnT = 1.2 + d / speed; if (demo && got < 2) say('Truck coming! Wait for a gap, then dip into the gold light', 3); }
+      if (warnT > 0) { warnT -= dt; if (warnT <= 0) truck = { x: W + 8 }; }
       if (truck) {
-        truck.x -= (speed + truck.v) * dt;
-        const cx = truck.x + 36 * K;   // crate centre (crate sits on the flatbed behind the cab)
-        if (!truck.taken && Math.abs(bird.x - cx) < 13 && bird.y > GY - 46) {   // grabbed
+        truck.x -= CRAWL * dt;   // drives forward, slower than the scroll, so it creeps across the screen
+        const cx = truck.x + 20 * K;   // crate centre (crate sits on the flatbed behind the cab)
+        if (!truck.taken && Math.abs(bird.x - cx) < 18 && bird.y > GY - 54) {   // grabbed
           truck.taken = 1; got++; gFlash = .35; beamT = .55; beamY = bird.y; safeT = 1.4; dblT = DBL; bird.vy = -235; sound();
           pipes.forEach(p => { if (p.x + PW > bird.x - 6 && !p.broken) { p.broken = 1; for (let i = 0; i < 26; i++) { const top = i % 2 === 0, y0 = top ? Math.random() * p.top : p.top + p.gap + Math.random() * (GY - p.top - p.gap); shards.push({ x: p.x + Math.random() * PW, y: y0, w: 3 + Math.random() * 6 | 0, h: 3 + Math.random() * 8 | 0, vx: 30 + Math.random() * 150, vy: -140 + Math.random() * 120, r: 0, vr: (Math.random() - .5) * 14, life: 1.6 + Math.random() * .6, c: ['#5bbf3a', '#86dc5a', '#3f9a28', '#9be86a'][i % 4] }); } } });
-          for (let i = 0; i < 40; i++) { const a = Math.random() * 6.28, sp = 30 + Math.random() * 110; sparks.push({ x: cx, y: H - 3 - 18 * K, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 40, life: .5 + Math.random() * .6 }); }
+          for (let i = 0; i < 40; i++) { const a = Math.random() * 6.28, sp = 30 + Math.random() * 110; sparks.push({ x: cx, y: ROAD + 14 - 18 * K, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 40, life: .5 + Math.random() * .6 }); }
           const h = hud(); if (h) { h.classList.remove('on'); void h.offsetWidth; h.classList.add('on'); } document.body.classList.add('x2on');
           if (demo) say('DOUBLE POINTS for 15 seconds!', 2.5);
           if (window.moment) window.moment('power');
@@ -488,15 +491,15 @@ const PWR = (() => {
       }
     },
     newPipe(p) { if (beamT > 0) p.broken = 1; },
-    drawTruck(ctx, GY, H, t, W) {
-      if (warnT > 0 && Math.floor(t * 8) % 2 === 0) { ctx.fillStyle = '#ffd84a'; const x = W - 12, y = H - 32; ctx.fillRect(x - 1, y - 9, 6, 2); ctx.fillStyle = '#1b1a24'; ctx.fillRect(x - 2, y - 2, 8, 11); ctx.fillStyle = '#ffd84a'; ctx.fillRect(x - 1, y - 1, 6, 9); ctx.fillStyle = '#1b1a24'; ctx.fillRect(x + 1, y, 2, 5); ctx.fillRect(x + 1, y + 6, 2, 1); }
+    drawTruck(ctx, GY, H, t, W, ROAD) {
+      if (warnT > 0 && Math.floor(t * 8) % 2 === 0) { ctx.fillStyle = '#ffd84a'; const x = W - 12, y = ROAD - 10; ctx.fillRect(x - 1, y - 9, 6, 2); ctx.fillStyle = '#1b1a24'; ctx.fillRect(x - 2, y - 2, 8, 11); ctx.fillStyle = '#ffd84a'; ctx.fillRect(x - 1, y - 1, 6, 9); ctx.fillStyle = '#1b1a24'; ctx.fillRect(x + 1, y, 2, 5); ctx.fillRect(x + 1, y + 6, 2, 1); }
       if (!truck) return;
-      const x0 = Math.round(truck.x), y0 = Math.round(H - 3 - (TH - 1) * K);
-      if (window.SKY && SKY.carShadow) SKY.carShadow(ctx, x0 + 3, TW * K, H - 3);
+      const base = ROAD + 14, x0 = Math.round(truck.x), y0 = Math.round(base - (TH - 1) * K);
+      if (window.SKY && SKY.carShadow) SKY.carShadow(ctx, x0 + 3, TW * K, base);
       ctx.drawImage(cnv, x0, y0, TW * K, TH * K);
       if (window.SKY && SKY.n > .02 && SKY.carNight) { ctx.globalAlpha = Math.min(1, SKY.n); ctx.drawImage(SKY.carNight(cnv), x0, y0, TW * K, TH * K); ctx.globalAlpha = 1; }
       if (!truck.taken) {
-        const cx = x0 + 36 * K, cy = y0 + 16 * K, pul = .6 + .4 * Math.sin(t * 7);
+        const cx = x0 + 20 * K, cy = y0 + 16 * K, pul = .6 + .4 * Math.sin(t * 7);
         // light pillar rising from the crate: the grab zone
         const g = ctx.createLinearGradient(0, GY - 50, 0, cy); g.addColorStop(0, 'rgba(255,216,74,0)'); g.addColorStop(1, 'rgba(255,216,74,' + (.32 * pul).toFixed(2) + ')'); ctx.fillStyle = g; ctx.fillRect(cx - 10, GY - 50, 20, cy - GY + 50);
         const r = ctx.createRadialGradient(cx, cy, 2, cx, cy, 18); r.addColorStop(0, 'rgba(255,230,120,' + (.75 * pul).toFixed(2) + ')'); r.addColorStop(1, 'rgba(255,216,74,0)'); ctx.fillStyle = r; ctx.fillRect(cx - 18, cy - 18, 36, 36);
@@ -781,7 +784,7 @@ const LB = (() => { const api = 'api.php'; let run = '', runFor = ''; const star
 /* ---------- always the latest version, also when saved to the Home Screen ----------
    version.json is rewritten on every deploy; when it changes the page reloads itself (straight away on the menu,
    or right after the current game ends), with a cache-busting query so the phone fetches the new HTML. */
-(() => { const BUILD = '11210221'; let pending = false;
+(() => { const BUILD = '11210227'; let pending = false;
   const go = () => { let last = 0; try { last = +sessionStorage.getItem('fk_upd_t') || 0; } catch (e) {} if (Date.now() - last < 60000) return;   // never loop: at most one reload a minute
     try { sessionStorage.setItem('fk_upd_t', String(Date.now())); } catch (e) {} location.replace(location.pathname + '?u=' + Date.now() + location.hash); };
   const check = () => fetch('version.json?ts=' + Date.now(), { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(j => {
@@ -1007,7 +1010,7 @@ function update(dt) {
   if (state === 'dead') { dieT += dt; if (bird.y > GY - 6) { bird.y = GY - 6; bird.vy = 0; } if (dieT > .8) showOver(); return; }
 
   speed = Math.min(108, 72 + score * 1.1);
-  PWR.update(dt, state, bird, pipes, W, GY, H, speed, PW);
+  PWR.update(dt, state, bird, pipes, W, GY, H, speed, PW, nextPipe, ROAD);
   pipes.forEach(p => p.x -= speed * dt);
   pipes = pipes.filter(p => p.x > -PW - 10);
   nextPipe -= speed * dt;
@@ -1260,14 +1263,13 @@ function draw() {
   // an overtaking car is drawn at the depth of the lane it has pulled into: going into the far lane it slips behind the car it passes
   const across = c => c.ot && c.ot.out > .5;
   if (window.FEST && FEST.road) FEST.road(ctx, W, ROAD, H, t, SCi);   // carnival parade on the road
-  cars.filter(c => !c.crash && c.lane === 0 && !across(c)).forEach(drawC0); cars.filter(c => !c.crash && c.lane === 1 && across(c)).forEach(drawC1);
+  cars.filter(c => !c.crash && c.lane === 0 && !across(c)).forEach(drawC0); PWR.drawTruck(ctx, GY, H, t, W, ROAD); cars.filter(c => !c.crash && c.lane === 1 && across(c)).forEach(drawC1);
   cars.filter(c => c.crash).forEach(c => { const cnv = c.lane === 0 ? c.sp.c : c.sp.flip, w = cnv.width * CS, hgt = cnv.height * CS, gy = (c.lane === 0 ? ROAD + 14 : H - 3) + c.yo, cx = c.x + w / 2, cy = gy - c.sp.ht / 2;
     SKY.carShadow(ctx, Math.round(c.x) + 3, c.sp.w, gy); ctx.save(); ctx.translate(cx, cy); ctx.rotate(c.crash.rot); ctx.drawImage(cnv, -w / 2, -(c.sp.gy * CS - c.sp.ht / 2), w, hgt); if (SKY.n > .02) { ctx.globalAlpha = Math.min(1, SKY.n); ctx.drawImage(SKY.carNight(cnv), -w / 2, -(c.sp.gy * CS - c.sp.ht / 2), w, hgt); ctx.globalAlpha = 1; } ctx.restore();
     if (c.crash.fire && c.crash.done && c.crash.t < 9) { const fx = cx + (c.dir < 0 ? -w * .22 : w * .22), fy = gy - c.sp.ht * .55, fade = Math.min(1, (9 - c.crash.t) / 2);
       for (let i = 0; i < 7; i++) { const ph = t * 11 + i * 1.7, hh = (5 + 4 * Math.sin(ph) + i % 3 * 2) * fade, xx = Math.round(fx + (i - 3) * 2 + Math.sin(ph * .7)), yy = Math.round(fy);
         ctx.fillStyle = 'rgba(232,80,30,.9)'; ctx.fillRect(xx, yy - hh, 2, hh); ctx.fillStyle = 'rgba(255,200,60,.95)'; ctx.fillRect(xx, yy - hh * .55, 2, hh * .55); } } });
   cars.filter(c => !c.crash && c.lane === 1 && !across(c)).forEach(drawC1); cars.filter(c => !c.crash && c.lane === 0 && across(c)).forEach(drawC0);
-  PWR.drawTruck(ctx, GY, H, t, W);
   const rot = state === 'menu' || state === 'ready' ? 0 : Math.max(-.45, Math.min(1.3, bird.vy / 320));
   if (golden) { for (let i = 0; i < 6; i++) { const a = (t * 2.3 + i * 1.05) % 1, sx = Math.round(bird.x - 10 - a * 34 + Math.sin(t * 5 + i) * 2), sy = Math.round(bird.y + Math.sin(t * 7 + i * 2) * 5); ctx.fillStyle = 'rgba(255,' + (220 + i * 5) + ',120,' + (1 - a).toFixed(2) + ')'; ctx.fillRect(sx, sy, 1, 1); if ((i + Math.floor(t * 6)) % 3 === 0) { ctx.fillRect(sx - 1, sy, 3, 1); ctx.fillRect(sx, sy - 1, 1, 3); } }
     const gl = ctx.createRadialGradient(bird.x, bird.y, 2, bird.x, bird.y, 22); gl.addColorStop(0, 'rgba(255,220,90,.35)'); gl.addColorStop(1, 'rgba(255,220,90,0)'); ctx.fillStyle = gl; ctx.fillRect(bird.x - 22, bird.y - 22, 44, 44); }
