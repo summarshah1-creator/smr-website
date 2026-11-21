@@ -155,7 +155,7 @@ function buildingCanvas(kind, key) {
   let w, draw;
   if (kind === 'lm') { const L = LANDMARKS[key]; if (!L) return null; w = L.w; const H2 = window.LANDMARKS_HD && LANDMARKS_HD[key];
     draw = H2 ? (o => { const f = (window.SCALE && SCALE[key]) || 1; o.save(); o.translate(M, LH - 6); o.scale(f, f); H2(o, 0, 0); o.restore(); }) : (o => L.d(o, M, LH - 6)); }
-  else { const Hh = HOUSES[key]; if (!Hh) return null; w = Math.round(Hh.w * 1.35); draw = o => window.drawScaled(o, Hh.d.bind(Hh), M, LH - 6, 1.35); }
+  else { const Hh = HOUSES[key]; if (!Hh) return null; w = Math.round(Hh.w * 1.35); const HH = window.HOUSES_HD && HOUSES_HD[key]; draw = o => window.drawScaled(o, HH || Hh.d.bind(Hh), M, LH - 6, 1.35); }
   const N = Math.min(4, Math.ceil(KB + .2));   // drawn natively just above screen size: vector curves, lettering and the sharp sign redraws at full detail, blocks on exact pixels
   const c = document.createElement('canvas'); c.width = (w + 2 * M) * N; c.height = LH * N;
   const o = c.getContext('2d', { willReadFrequently: true }); o.imageSmoothingEnabled = false; o.scale(N, N);
@@ -166,7 +166,7 @@ function buildingCanvas(kind, key) {
   for (let y = 0; y < c.height; y += 3) { const row = y * c.width; for (let x = 0; x < c.width; x += 3) if (d[(row + x) * 4 + 3] > 8) { if (y < top) top = y; if (x < l) l = x; if (x > r) r = x; } }
   if (r < l) { l = 0; r = 4; top = c.height - 4; }
   l = Math.max(0, l - 3); top = Math.max(0, top - 3); r = Math.min(c.width - 1, r + 4);
-  if (!(window.LANDMARKS_HD && kind === 'lm' && LANDMARKS_HD[key])) hdFinish(c, o, N, l, top, r);   // automatic HD finishing on the Flappy art
+  if (!(window.LANDMARKS_HD && kind === 'lm' && LANDMARKS_HD[key]) && !(kind !== 'lm' && window.HOUSES_HD && HOUSES_HD[key])) hdFinish(c, o, N, l, top, r);   // automatic HD finishing on the Flappy art
   const kb = KB, f = kb / N, t = document.createElement('canvas'); t.width = Math.max(1, Math.round((r - l + 1) * f)); t.height = Math.max(1, Math.round((c.height - top) * f));
   const q = t.getContext('2d'); q.imageSmoothingEnabled = true; q.imageSmoothingQuality = 'high'; q.drawImage(c, l, top, r - l + 1, c.height - top, 0, 0, t.width, t.height);
   c.width = c.height = 1;
@@ -1168,5 +1168,5 @@ resize(); seedStars(); reset(); refreshHome(); if (myMosque) setTimeout(refreshH
 let last = performance.now();
 function frame(now) { const dt = Math.min(.05, (now - last) / 1000); last = now; update(dt); draw(); requestAnimationFrame(frame); }
 requestAnimationFrame(frame);
-window.__jd = { veh: k => startVehicle(k), laser: () => [CEIL + 40, (CEIL + FLOOR) / 2].forEach((y, i) => obs.push({ type: 'laser', x: W / 2, y, ph: 'in', pt: 0, slide: 0, d: i * .12 })), eidi: n => { eidi = n; }, kill: w => die(w), gift: k => gifts.push({ k, x: W * .6, y: 200, b: 0 }), get state() { return state; }, start, hero, get obs() { return obs; }, spawnRocket: () => obs.push({ type: "rocket", x: W + 40, y: hero.y - 30, warn: 1.5, lock: 0, v: 0 }), setHold: v => holding = v, get dist() { return dist; }, mis: (s, c) => { RUN.steamed = s; coins = c; }, get npcs() { return npcs; }, boost: m => startBoost(m), get SHOP() { return SHOP; }, bc: (k) => buildingCanvas("lm", k), get STREET() { return STREET; } };
+window.__jd = { veh: k => startVehicle(k), laser: () => [CEIL + 40, (CEIL + FLOOR) / 2].forEach((y, i) => obs.push({ type: 'laser', x: W / 2, y, ph: 'in', pt: 0, slide: 0, d: i * .12 })), eidi: n => { eidi = n; }, kill: w => die(w), gift: k => gifts.push({ k, x: W * .6, y: 200, b: 0 }), get state() { return state; }, start, hero, get obs() { return obs; }, spawnRocket: () => obs.push({ type: "rocket", x: W + 40, y: hero.y - 30, warn: 1.5, lock: 0, v: 0 }), setHold: v => holding = v, get dist() { return dist; }, mis: (s, c) => { RUN.steamed = s; coins = c; }, get npcs() { return npcs; }, boost: m => startBoost(m), get SHOP() { return SHOP; }, bc: (k, kd) => buildingCanvas(kd || "lm", k), get STREET() { return STREET; } };
 })();
