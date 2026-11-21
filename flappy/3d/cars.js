@@ -192,8 +192,11 @@ const DEFS = {
    (badges, interiors and the source plates removed; our own paint, glass and UK plates). Sources + licences are in cars/cars.json. ================= */
 const CAR_V = 2, TL = new THREE.TextureLoader(), MATC = {};
 export const MESH = {};
-const plateTex = (txt, yellow) => tex(256, 56, (x, w, h) => { x.fillStyle = yellow ? '#f4c91c' : '#f3f3ee'; x.fillRect(0, 0, w, h); x.strokeStyle = '#222'; x.lineWidth = 2; x.strokeRect(1, 1, w - 2, h - 2);
-  x.save(); x.fillStyle = '#111'; x.font = 'bold 44px sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.translate(w / 2, h / 2 + 2); x.scale(.8, 1); x.fillText(txt, 0, 0); x.restore(); });
+const plateTex = (txt, yellow) => tex(512, 112, (x, w, h) => { x.fillStyle = yellow ? '#f4c91c' : '#f3f3ee'; x.fillRect(0, 0, w, h);
+  const g = x.createLinearGradient(0, 0, 0, h); g.addColorStop(0, 'rgba(255,255,255,.18)'); g.addColorStop(.5, 'rgba(255,255,255,0)'); g.addColorStop(1, 'rgba(0,0,0,.08)'); x.fillStyle = g; x.fillRect(0, 0, w, h);   // slight sheen like the reflective film
+  x.save(); x.fillStyle = '#141414'; x.font = 'bold 88px sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.translate(w / 2, h / 2 + 4); x.scale(.8, 1); x.fillText(txt, 0, 0); x.restore();
+  [[22, h / 2], [w - 22, h / 2]].forEach(([a, b]) => { const r = x.createRadialGradient(a - 2, b - 2, 1, a, b, 7); r.addColorStop(0, '#ffffff'); r.addColorStop(.6, '#9aa0a6'); r.addColorStop(1, '#4a4f55'); x.fillStyle = r; x.beginPath(); x.arc(a, b, 7, 0, 7); x.fill(); x.strokeStyle = 'rgba(0,0,0,.45)'; x.lineWidth = 1.5; x.beginPath(); x.moveTo(a - 4, b); x.lineTo(a + 4, b); x.stroke(); });   // fixing screws
+}, 1, 1);
 const REGS = ['MP65 HHM', 'SM15 BWW', 'LT16 KBR', 'KX17 RHN', 'AJ17 CNX', 'GX69 YVJ', 'HY14 LGO', 'WG12 XYF', 'KR63 ABO', 'DH65 BHK'];
 const plateMat = (k, rear) => MATC['pl' + k + rear] || (MATC['pl' + k + rear] = new THREE.MeshStandardMaterial({ map: plateTex(REGS[Object.keys(MATC).length % REGS.length], rear), roughness: .45, polygonOffset: true, polygonOffsetFactor: -2 }));
 // SMR badges in place of every car logo (owner): front = gloss black disc with a chrome SMR across the middle; rear = the chrome SMR wordmark on its own
@@ -203,13 +206,13 @@ const chromeMark = (x, X, Y, W, H) => { const c = document.createElement('canvas
 const badgeMat = (front) => { const c = document.createElement('canvas'); c.width = front ? 256 : 512; c.height = front ? 256 : 132; const x = c.getContext('2d'), t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4;
   const draw = () => { x.clearRect(0, 0, c.width, c.height);
     if (front) { const d = x.createRadialGradient(100, 90, 8, 128, 128, 128); d.addColorStop(0, '#30343a'); d.addColorStop(.7, '#0d0e10'); d.addColorStop(1, '#050506'); x.fillStyle = d; x.beginPath(); x.arc(128, 128, 126, 0, 7); x.fill();
-      x.strokeStyle = 'rgba(255,255,255,.18)'; x.lineWidth = 3; x.beginPath(); x.arc(128, 128, 122, 0, 7); x.stroke(); if (SMR_IMG.complete && SMR_IMG.naturalWidth) chromeMark(x, 128 - 96, 128 - 25, 192, 49); }
+      const rim = x.createLinearGradient(0, 0, 0, 256); [[0, '#f2f4f6'], [.45, '#8d939a'], [.55, '#ffffff'], [1, '#7c828a']].forEach(([o, k]) => rim.addColorStop(o, k)); x.strokeStyle = rim; x.lineWidth = 9; x.beginPath(); x.arc(128, 128, 121, 0, 7); x.stroke(); /* thin chrome bezel */ if (SMR_IMG.complete && SMR_IMG.naturalWidth) chromeMark(x, 128 - 96, 128 - 25, 192, 49); }
     else if (SMR_IMG.complete && SMR_IMG.naturalWidth) chromeMark(x, 6, 2, 500, 128);
     t.needsUpdate = true; };
   draw(); SMR_IMG.addEventListener('load', draw);
   return new THREE.MeshStandardMaterial({ map: t, roughness: .16, metalness: front ? .35 : .85, alphaTest: .5, polygonOffset: true, polygonOffsetFactor: -2 }); };
 const BADGE_F = badgeMat(true), BADGE_R = badgeMat(false);
-const HOLDER = mat(0x101113, { roughness: .55 }), HOLDER_G = rboxGeo(.548, .139, .016, .012), PLATE_G = new THREE.PlaneGeometry(.52, .111), BADGE_G = new THREE.CircleGeometry(1, 28), WORD_G = new THREE.PlaneGeometry(1, 132 / 512); PLATE_G.userData.shared = BADGE_G.userData.shared = WORD_G.userData.shared = 1;
+const CORE = mat(0x070708, { roughness: 1 }), HOLDER = mat(0x0f1012, { roughness: .45 }), HOLDER_G = rboxGeo(.548, .139, .016, .012), PLATE_G = new THREE.PlaneGeometry(.52, .111), BADGE_G = new THREE.CircleGeometry(1, 28), WORD_G = new THREE.PlaneGeometry(1, 132 / 512); PLATE_G.userData.shared = BADGE_G.userData.shared = WORD_G.userData.shared = 1;
 function partMat(k, i, p) { const id = k + ':' + i; if (MATC[id]) return MATC[id];
   if (p.cls === 'tint') return MATC[id] = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(p.t[0], p.t[1], p.t[2]), transparent: true, opacity: p.t[3], roughness: .04, metalness: 0, clearcoat: 1, depthWrite: false });
   const o = { color: new THREE.Color(...p.c), roughness: Math.max(.06, p.r ?? .6), metalness: p.m ?? 0 };
@@ -222,12 +225,13 @@ function lodParts(k, M, L, buf) { const S = [0, 1, 2].map(j => L.bmax[j] - L.bmi
     const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(pos, 3)); g.setAttribute('normal', new THREE.BufferAttribute(nor, 3));
     g.setAttribute('uv', p.uv != null ? new THREE.BufferAttribute(new Float32Array(buf, p.uv, p.v * 2), 2) : new THREE.BufferAttribute(new Float32Array(p.v * 2), 2));
     g.setIndex(new THREE.BufferAttribute(p.i32 ? new Uint32Array(buf, p.ix, p.i) : new Uint16Array(buf, p.ix, p.i), 1)); g.userData.shared = 1; g.computeBoundingSphere();
-    return [g, p.cls === 'paint' ? 'paint' : p.cls === 'glass' ? GLASS : partMat(k, (L === M.lo ? 'lo' : 'hi') + i, p)]; });
+    return [g, p.cls === 'paint' ? 'paint' : p.cls === 'glass' ? GLASS : p.cls === 'holder' ? HOLDER : p.cls === 'plateF' ? plateMat(k, false) : p.cls === 'plateR' ? plateMat(k, true) : p.cls === 'word' ? BADGE_R : partMat(k, (L === M.lo ? 'lo' : 'hi') + i, p)]; });
   // plates + SMR badges as small shared quads/discs at the spots the pipeline measured
   const put = (geo, m, at, rear, sc) => { const gg = geo.clone(); gg.scale(sc, sc, 1); if (!rear) gg.rotateY(Math.PI); gg.translate(at[0], at[1], at[2]); gg.userData.shared = 1; parts.push([gg, m]); };
-  const holder = (at, rear) => { const gg = HOLDER_G.clone(); gg.translate(at[0], at[1], at[2] + (rear ? -.008 : .008)); gg.userData.shared = 1; parts.push([gg, HOLDER]); };   // black plate holder the plate sits in
-  if (M.plateF) { holder(M.plateF, false); put(PLATE_G, plateMat(k, false), M.plateF, false, 1); } if (M.plateR) { holder(M.plateR, true); put(PLATE_G, plateMat(k, true), M.plateR, true, 1); }
-  if (M.badgeF) M.badgeF[4] === 'word' ? put(WORD_G, BADGE_R, M.badgeF, false, M.badgeF[3] * 4.4) : put(BADGE_G, BADGE_F, M.badgeF, false, M.badgeF[3]); if (M.badgeR) put(WORD_G, BADGE_R, M.badgeR, true, M.badgeR[3] * 4.4);   // rear wordmark about 22 cm wide
+  if (M.badgeF && M.badgeF[4] === 'disc') put(BADGE_G, BADGE_F, M.badgeF, false, M.badgeF[3]);   // plates, holders and SMR wordmarks come curved to the bodywork from the pipeline
+  // solid dark inner body: no gap in a grille, vent or trim can ever show the road or sky through the car
+  const b0 = L.bmin, b1 = L.bmax, Wd = b1[0] - b0[0], Ln = b1[2] - b0[2], core = (w, y0, y1, l, zc, m = CORE) => { const gg = new THREE.BoxGeometry(w, y1 - y0, l); gg.translate(0, (y0 + y1) / 2, zc); gg.userData.shared = 1; parts.push([gg, m]); };
+  core(Wd * .6, .2, .62, Ln - .5, (b0[2] + b1[2]) / 2); core(Wd * .55, .62, 1.04, Ln * .38, (b0[2] + b1[2]) / 2 + Ln * .05, GLASS);   // cabin block reads as tinted glass through any small window the source mesh left open
   return parts; }
 try { const man = await (await fetch(`./cars/cars.json?v=${CAR_V}`)).json();
   await Promise.all(Object.entries(man).map(async ([k, M]) => { if (!M.hi) return; const [h, l] = await Promise.all([fetch(`./cars/${k}.bin?v=${CAR_V}`), M.lo ? fetch(`./cars/${k}_lo.bin?v=${CAR_V}`) : null]);
