@@ -24,6 +24,9 @@ function resize() {
   // always landscape: if the phone is upright, turn the whole stage 90° (the player just turns the phone)
   const st = $('stage'), port = innerHeight > innerWidth, sw = port ? innerHeight : innerWidth, sh2 = port ? innerWidth : innerHeight;
   st.style.width = sw + 'px'; st.style.height = sh2 + 'px'; st.style.transform = port ? `translateX(${innerWidth}px) rotate(90deg)` : 'none';
+  // keep the menu and HUD clear of the notch / Dynamic Island: on an upright phone the island ends up on the left of the turned stage
+  st.style.setProperty('--sl', port ? 'max(44px, env(safe-area-inset-top))' : 'max(0px, env(safe-area-inset-left))');
+  st.style.setProperty('--sr', port ? 'max(0px, env(safe-area-inset-bottom))' : 'max(0px, env(safe-area-inset-right))');
   cv.width = Math.round(sw * dpr); cv.height = Math.round(sh2 * dpr);
   S = cv.height / VH; W = cv.width / S;
   const k = Math.min(4, Math.max(1, Math.round(S * 10) / 10));
@@ -492,10 +495,39 @@ window.addEventListener('keydown', e => { if (e.code === 'Space' || e.code === '
 window.addEventListener('keyup', e => { if (e.code === 'Space' || e.code === 'ArrowUp') holding = false; });
 document.addEventListener('gesturestart', e => e.preventDefault());
 window.addEventListener('resize', resize); window.addEventListener('orientationchange', () => setTimeout(resize, 200));
-// steam puffs out of the cooker on the home-screen art
-setInterval(() => { if (state !== 'menu' || document.hidden) return; const w = $('heroWrap'); const r = w.getBoundingClientRect(); if (!r.width) return;
-  for (const [fx, fy] of [[.13, .8], [.27, .8]]) { const p = document.createElement('div'); p.className = 'puff'; const sz = 10 + Math.random() * 14;
-    p.style.cssText = `width:${sz}px;height:${sz}px;left:${w.offsetLeft + w.offsetWidth * fx - sz / 2}px;top:${w.offsetTop + w.offsetHeight * fy}px`; w.parentNode.appendChild(p); setTimeout(() => p.remove(), 1150); } }, 140);
+// home screen: smoky steam pouring out of the two cooker nozzles (drawn BEHIND the art, so it comes out of the holes and passes behind the thobe)
+(() => {
+  const sc = $('steamCv'), wrap = $('heroWrap'), o = sc.getContext('2d');
+  const NZ = [[.171, .606], [.312, .627]], AX = [-.24, .97];          // nozzle mouths (fraction of the art) + the way they point
+  const mk = (inner, outer) => { const c = document.createElement('canvas'); c.width = c.height = 64; const g = c.getContext('2d');
+    const r = g.createRadialGradient(32, 32, 0, 32, 32, 32); r.addColorStop(0, inner); r.addColorStop(.62, inner.replace(/[\d.]+\)$/, '0.9)')); r.addColorStop(.82, inner.replace(/[\d.]+\)$/, '0.35)')); r.addColorStop(1, outer); g.fillStyle = r; g.fillRect(0, 0, 64, 64); return c; };
+  const SHADE = mk('rgba(150,152,170,1)', 'rgba(150,152,170,0)'), LIGHT = mk('rgba(255,255,255,1)', 'rgba(255,255,255,0)'), CORE = mk('rgba(244,244,250,1)', 'rgba(240,240,248,0)');
+  let P = [], lastT = performance.now(), acc = 0;
+  function step(now) {
+    requestAnimationFrame(step);
+    if (state !== 'menu' || document.hidden) { P.length = 0; return; }
+    const dt = Math.min(.05, (now - lastT) / 1000); lastT = now;
+    const ww = wrap.clientWidth, wh = wrap.clientHeight; if (!ww) return;
+    const pr = Math.min(2, window.devicePixelRatio || 1), cw = Math.round(ww * 1.8 * pr), ch = Math.round(wh * 1.4 * pr);
+    if (sc.width !== cw || sc.height !== ch) { sc.width = cw; sc.height = ch; }
+    const k = ww / 300;                                                   // sizes follow the size of the art
+    acc += dt * 110;
+    while (acc > 1) { acc--; for (const [fx, fy] of NZ) {
+      const x = (.8 * ww + fx * ww), y = fy * wh, sp = (110 + Math.random() * 70) * k;
+      P.push({ x: x - AX[0] * 6 * k + (Math.random() - .5) * 8 * k, y: y - AX[1] * 6 * k, vx: AX[0] * sp + (Math.random() - .5) * 18 * k, vy: AX[1] * sp, r: (2 + Math.random() * 2) * k, g: (9 + Math.random() * 11) * k, l: 0, L: .9 + Math.random() * .8, s: Math.random() * 6.3 });
+    } }
+    o.setTransform(pr, 0, 0, pr, 0, 0); o.clearRect(0, 0, cw, ch);
+    for (let i = P.length - 1; i >= 0; i--) { const p = P[i]; p.l += dt; if (p.l > p.L) { P.splice(i, 1); continue; }
+      const drag = Math.pow(.16, dt); p.vx = p.vx * drag - 55 * k * dt; p.vy = p.vy * drag + 6 * k * dt;           // slows, gets blown back as he flies
+      p.vx += Math.sin(p.l * 5 + p.s) * 22 * k * dt; p.x += p.vx * dt; p.y += p.vy * dt; p.r += p.g * dt; }
+    // shade layer first (gives the puffs body), then highlights, then bright cores near the nozzle
+    for (const [img, dx, dy, aMul, rMul] of [[SHADE, .2, .24, .85, 1.08], [LIGHT, -.14, -.16, .95, .86], [CORE, -.05, -.06, .9, .5]]) {
+      for (const p of P) { const t = p.l / p.L, a = (t < .08 ? t / .08 : 1 - (t - .08) / .92) * aMul * (img === CORE ? Math.max(0, 1 - t * 2.2) : 1); if (a <= .01) continue;
+        const r = p.r * rMul; o.globalAlpha = a; o.drawImage(img, p.x + dx * r - r, p.y + dy * r - r, r * 2, r * 2); } }
+    o.globalAlpha = 1;
+  }
+  requestAnimationFrame(step);
+})();
 
 resize(); seedStars(); reset(); refreshHome(); if (myMosque) setTimeout(refreshHome, 300);
 let last = performance.now();
