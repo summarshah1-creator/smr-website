@@ -3,6 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<script>/* no zoom, ever (owner rule): iPhone ignores user-scalable=no, so pinch, double-tap, ctrl+wheel and ctrl+/- are all blocked here */
+(function(){var o={passive:false},p=function(e){e.preventDefault()};
+['gesturestart','gesturechange','gestureend'].forEach(function(n){document.addEventListener(n,p,o)});
+document.addEventListener('touchstart',function(e){if(e.touches.length>1)e.preventDefault()},o);
+document.addEventListener('touchmove',function(e){if(e.touches.length>1||(e.scale&&e.scale!==1))e.preventDefault()},o);
+var last=0;document.addEventListener('touchend',function(e){var n=Date.now();if(n-last<350&&e.cancelable)e.preventDefault();last=n},o);
+document.addEventListener('dblclick',p,o);
+document.addEventListener('wheel',function(e){if(e.ctrlKey||e.metaKey)e.preventDefault()},o);
+document.addEventListener('keydown',function(e){if((e.ctrlKey||e.metaKey)&&/^(\+|=|-|_|0)$/.test(e.key))e.preventDefault()});})();</script>
 <meta name="robots" content="noindex">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#120c26">
@@ -12,12 +21,13 @@
 <link rel="apple-touch-icon" href="art/icon-180.png?h=927503e725">
 <title>Jummah Dash · An SMR Original</title>
 <style>
-@font-face{font-family:Silk;src:url(silk.woff2)}
-@font-face{font-family:Silk;font-weight:700;src:url(silkb.woff2)}
-@font-face{font-family:PS;src:url(ps2p.woff2)}
+@font-face{font-family:Silk;src:url(mont-700.woff2)}
+@font-face{font-family:Silk;font-weight:700;src:url(mont-700.woff2)}
+@font-face{font-family:PS;src:url(oswald-600.woff2)}
 @font-face{font-family:Mont;font-weight:700;src:url(mont-700.woff2)}
 @font-face{font-family:Oswald;font-weight:600;src:url(oswald-600.woff2)}
 @font-face{font-family:Amiri;font-weight:700;src:url(amiri.woff2)}
+*{touch-action:pan-x pan-y}
 html,body{margin:0;height:100%;background:#0c0820;overflow:hidden;overscroll-behavior:none;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 /* the game is always landscape: on a phone held upright the whole stage is turned sideways */
 #stage{position:fixed;left:0;top:0;overflow:hidden;transform-origin:0 0}
@@ -253,7 +263,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 <div id="load"><img src="art/logo.webp?h=d69bcb982d" alt="Jummah Dash"><div class="bar"><i id="loadBar"></i></div><div class="lt" id="loadTxt">LOADING… 0%</div></div>
 <script src="landmarks.js?h=9b916dc9ee"></script>
 <script src="vehicles.js?h=565dab9723"></script>
-<script src="hd/landmarks_hd.js?h=293b1ffb02"></script>
-<script src="game.js?h=5be57fec09"></script>
+<script src="hd/landmarks_hd.js?h=44181a4fbb"></script>
+<script src="game.js?h=c69a7f66a1"></script>
 </body>
 </html>

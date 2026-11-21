@@ -1767,14 +1767,18 @@ HD.airport = (c, x, G) => {
   c.fillStyle = lg(c, 0, G - 150, 0, G - 48, [[0, '#5e6670'], [1, '#6e7680']]); c.fillRect(x, G - 150, 420, 102); c.strokeStyle = LINE; c.lineWidth = .45; c.strokeRect(x, G - 150, 420, 102);
   for (let r = 0; r < 6; r++) { rect(c, 'rgba(0,0,0,.18)', x, G - 150 + r * 17, 420, .5); for (let k = 0; k < 14; k++) rect(c, 'rgba(0,0,0,.12)', x + ((k * 30 + r * 15) % 420), G - 150 + r * 17, .4, 17); }
   rect(c, '#7a828c', x, G - 150, 420, 2.4); ribbed(c, x + 388, G - 150, 32, 102, '#7e8690', 2);
-  { // LLA mark as on the building: three glyphs that grow and step up left to right; L = two squares stacked + one beside at the
-    // bottom; the A = two squares turned 45 degrees, leaning into each other like a roof; name underneath across the whole mark
-    const sq = (qx, qy, u) => { c.fillStyle = '#ffffff'; c.fillRect(qx, qy, u, u); }, g = .7;
-    const L1 = (lx, by, u) => { sq(lx, by - 2 * u - g, u); sq(lx, by - u, u); sq(lx + u + g, by - u, u); };
-    const bx = x + 236, by = G - 112; c.save(); c.translate(bx + 30, by); c.scale(1.4, 1.4); c.translate(-bx - 30, -by); L1(bx, by, 6.4); L1(bx + 15.4, by - 3, 7.6);
-    const dia = (cx, cy, u) => { c.save(); c.translate(cx, cy); c.rotate(Math.PI / 4); c.fillStyle = '#ffffff'; c.fillRect(-u / 2, -u / 2, u, u); c.restore(); };
-    const u3 = 10.4, d = u3 * Math.SQRT1_2; dia(bx + 45, by - 13.6, u3); dia(bx + 45 + d * 1.42, by - 13.6 - d * .62, u3);
-    c.save(); c.font = '500 9px Mont, sans-serif'; c.textBaseline = 'middle'; c.textAlign = 'left'; c.fillStyle = '#ffffff'; const t2 = 'London Luton Airport', tw = c.measureText(t2).width, span = (bx + 45 + d * 1.42 + d) - bx; c.translate(bx, by + 8); c.scale(span / tw, 1); c.fillText(t2, 0, 0); c.restore(); c.restore(); }
+  { // LLA mark as on the building (owner, 21 Nov): three glyphs the same height, tops on one line and bottoms on one line.
+    // L = two squares stacked + one beside at the bottom; A = three squares turned 45 degrees (one on top, two below);
+    // "London Luton Airport" underneath, stretched across the whole mark
+    const u = 7, g = .8, H = 2 * u + g, gap = 6.5, W = (2 * u + g) * 2 + gap * 2 + H / 1.5 * 2, bx = x + 250 - W * .85 / 2, top = G - 136;
+    c.save(); c.translate(bx, top); c.scale(1.7, 1.7); c.fillStyle = '#ffffff';
+    const L1 = lx => { c.fillRect(lx, 0, u, u); c.fillRect(lx, u + g, u, u); c.fillRect(lx + u + g, u + g, u, u); };
+    L1(0); L1(2 * u + g + gap);
+    const D = H / 1.5, ax = (2 * u + g + gap) * 2, side = D * Math.SQRT1_2 - g * .8;
+    const dia = (cx, cy) => { c.save(); c.translate(cx, cy); c.rotate(Math.PI / 4); c.fillRect(-side / 2, -side / 2, side, side); c.restore(); };
+    dia(ax + D, D / 2); dia(ax + D / 2, D); dia(ax + D * 1.5, D);
+    const span = ax + 2 * D; c.font = '500 9px Mont, sans-serif'; c.textBaseline = 'middle'; c.textAlign = 'left'; const t2 = 'London Luton Airport', tw = c.measureText(t2).width;
+    c.translate(0, H + 7); c.scale(span / tw, 1); c.fillText(t2, 0, 0); c.restore(); }
   // ground floor: dark glazing with warm check-in light, mullions
   rect(c, '#2a333d', x, G - 48, 420, 48);
   for (let i = 0; i < 20; i++) { const gx = x + 2 + i * 21; c.fillStyle = (i % 4 === 1 || i % 4 === 2) ? lg(c, 0, G - 44, 0, G - 4, [[0, '#f8dc94'], [.6, '#e8b860'], [1, '#c89040']]) : lg(c, 0, G - 44, 0, G - 4, [[0, '#6a7e94'], [1, '#2e3a48']]); c.fillRect(gx, G - 44, 19, 40); }
