@@ -20,6 +20,8 @@ function music_db(): PDO {
             lyrics TEXT DEFAULT '', download INTEGER DEFAULT 0, hidden INTEGER DEFAULT 0, sort INTEGER DEFAULT 0,
             plays INTEGER DEFAULT 0, ready INTEGER DEFAULT 0, created_at INTEGER, updated_at INTEGER)");
         $pdo->exec("CREATE TABLE IF NOT EXISTS music_kv (k TEXT PRIMARY KEY, v TEXT)");
+        $cols = array_column($pdo->query('PRAGMA table_info(music_tracks)')->fetchAll(), 'name');
+        if (!in_array('about', $cols, true)) $pdo->exec("ALTER TABLE music_tracks ADD COLUMN about TEXT DEFAULT ''");
         $done = true;
         try { music_seed_import(); } catch (Throwable $e) {}
     }
@@ -52,7 +54,7 @@ function music_public(array $t, bool $owner = false): array {
         'genre' => $t['genre'], 'track' => $t['track_no'], 'duration' => (float) $t['duration'],
         'art' => $t['art'] !== '' ? 'api.php?a=art&id=' . $t['code'] . '&v=' . $t['updated_at'] : '',
         'src' => 'api.php?a=play&id=' . $t['code'] . '&v=' . $t['updated_at'],
-        'lyrics' => $t['lyrics'], 'download' => (bool) $t['download'] || $s['download_all'], 'ext' => $t['ext']];
+        'lyrics' => $t['lyrics'], 'about' => (string) ($t['about'] ?? ''), 'download' => (bool) $t['download'] || $s['download_all'], 'ext' => $t['ext']];
     if ($owner) { $o['hidden'] = (bool) $t['hidden']; $o['plays'] = (int) $t['plays']; $o['size'] = (int) $t['size']; $o['own_download'] = (bool) $t['download']; }
     return $o;
 }
@@ -116,10 +118,10 @@ function music_seed_import(): void {
                 file_put_contents("$d/audio.$ext", $audio);
                 if ($art !== '' && ($a = $z->getFromName('art.' . $art)) !== false) file_put_contents("$d/art.$art", $a); else $art = '';
                 $min = (int) db()->query('SELECT COALESCE(MIN(sort), 0) FROM music_tracks')->fetchColumn();
-                db()->prepare('INSERT INTO music_tracks (code, title, artist, album, year, genre, track_no, duration, ext, size, art, lyrics, download, sort, ready, created_at, updated_at)
-                    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,1,?,?)')->execute([$code, (string) ($m['title'] ?? 'Untitled'), (string) ($m['artist'] ?? ''), (string) ($m['album'] ?? ''),
+                db()->prepare('INSERT INTO music_tracks (code, title, artist, album, year, genre, track_no, duration, ext, size, art, lyrics, about, download, sort, ready, created_at, updated_at)
+                    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,1,?,?)')->execute([$code, (string) ($m['title'] ?? 'Untitled'), (string) ($m['artist'] ?? ''), (string) ($m['album'] ?? ''),
                     (string) ($m['year'] ?? ''), (string) ($m['genre'] ?? ''), (string) ($m['track'] ?? ''), (float) ($m['duration'] ?? 0), $ext, strlen($audio), $art,
-                    (string) ($m['lyrics'] ?? ''), (int) ($m['download'] ?? 0), $min - 1, now(), now()]);
+                    (string) ($m['lyrics'] ?? ''), (string) ($m['about'] ?? ''), (int) ($m['download'] ?? 0), $min - 1, now(), now()]);
             }
             $z->close();
         }

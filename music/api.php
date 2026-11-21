@@ -63,6 +63,7 @@ function meta_from(array $in): array {
         'album' => music_clean((string) ($in['album'] ?? ''), 200), 'year' => music_clean((string) ($in['year'] ?? ''), 10),
         'genre' => music_clean((string) ($in['genre'] ?? ''), 60), 'track_no' => music_clean((string) ($in['track'] ?? ''), 10),
         'lyrics' => mb_substr(str_replace("\r\n", "\n", (string) ($in['lyrics'] ?? '')), 0, 60000),
+        'about' => music_clean(str_replace("\r\n", "\n", (string) ($in['about'] ?? '')), 4000),
         'download' => !empty($in['download']) ? 1 : 0];
 }
 
@@ -77,9 +78,9 @@ switch ($a) {
         $code = rand_token(12);
         @mkdir(music_dir($code), 0750, true);
         $min = (int) music_db()->query('SELECT COALESCE(MIN(sort), 0) FROM music_tracks')->fetchColumn();
-        music_db()->prepare('INSERT INTO music_tracks (code, title, artist, album, year, genre, track_no, duration, ext, size, lyrics, download, sort, ready, created_at, updated_at)
-            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,0,?,?)')->execute([$code, $m['title'], $m['artist'], $m['album'], $m['year'], $m['genre'], $m['track_no'],
-            (float) ($in['duration'] ?? 0), $ext, $size, $m['lyrics'], $m['download'], $min - 1, now(), now()]);
+        music_db()->prepare('INSERT INTO music_tracks (code, title, artist, album, year, genre, track_no, duration, ext, size, lyrics, about, download, sort, ready, created_at, updated_at)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,0,?,?)')->execute([$code, $m['title'], $m['artist'], $m['album'], $m['year'], $m['genre'], $m['track_no'],
+            (float) ($in['duration'] ?? 0), $ext, $size, $m['lyrics'], $m['about'], $m['download'], $min - 1, now(), now()]);
         json_out(['ok' => true, 'id' => $code]);
     }
     case 'up_chunk': {
@@ -132,8 +133,8 @@ switch ($a) {
         $m = meta_from($in + ['title' => $t['title']]);
         if ($m['title'] === '') $m['title'] = 'Untitled';
         $hidden = !empty($in['hidden']) ? 1 : 0;
-        music_db()->prepare('UPDATE music_tracks SET title=?, artist=?, album=?, year=?, genre=?, track_no=?, lyrics=?, download=?, hidden=?, updated_at=? WHERE code=?')
-            ->execute([$m['title'], $m['artist'], $m['album'], $m['year'], $m['genre'], $m['track_no'], $m['lyrics'], $m['download'], $hidden, now(), $t['code']]);
+        music_db()->prepare('UPDATE music_tracks SET title=?, artist=?, album=?, year=?, genre=?, track_no=?, lyrics=?, about=?, download=?, hidden=?, updated_at=? WHERE code=?')
+            ->execute([$m['title'], $m['artist'], $m['album'], $m['year'], $m['genre'], $m['track_no'], $m['lyrics'], $m['about'], $m['download'], $hidden, now(), $t['code']]);
         json_out(['ok' => true, 'track' => music_public(music_track($t['code']), true)]);
     }
     case 'duration': {
