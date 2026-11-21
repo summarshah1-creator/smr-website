@@ -1,0 +1,16 @@
+{
+  "name": "Jummah Dash",
+  "short_name": "Jummah Dash",
+  "description": "Late for Jummah. Again. An SMR Original.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#0c0820",
+  "theme_color": "#120c26",
+  "icons": [
+    { "src": "art/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "art/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "art/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

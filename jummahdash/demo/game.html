@@ -6,6 +6,10 @@
 <meta name="robots" content="noindex">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#120c26">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Jummah Dash">
+<link rel="manifest" href="manifest.webmanifest?h=636eadba05">
+<link rel="apple-touch-icon" href="art/icon-180.png?h=927503e725">
 <title>Jummah Dash · An SMR Original</title>
 <style>
 @font-face{font-family:Silk;src:url(silk.woff2)}
@@ -71,7 +75,16 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .go{margin-top:12px;font-family:PS,monospace;font-size:12px;background:#2fbf4a;color:#fff;border:0;border-radius:12px;padding:12px 16px;box-shadow:0 5px 0 #1b7a2c;cursor:pointer}
 .go.alt{background:#3a3168;box-shadow:0 5px 0 #1a1438}
 .ovCols{display:flex;gap:22px;align-items:flex-start;text-align:left}
-#over .card{padding:10px 20px 12px;max-height:94%;overflow:auto}#over .card h2{margin:0 0 2px}#over .why{margin-bottom:4px}#over .row{margin:6px 0}#over .row.sm{margin:3px 0}#over .go{margin-top:8px}#over .mrow{padding:4px 8px;margin:4px 0}
+#over .card{padding:10px 20px 12px;max-height:94%;overflow:auto}#over .card h2{margin:0 0 2px}#over .why{margin-bottom:4px}#over .row{margin:6px 0}#over #load{position:fixed;inset:0;z-index:99;background:#0c0820;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;transition:opacity .45s;font-family:PS,monospace;color:#ffd75a}
+#load.done{opacity:0;pointer-events:none}
+#load img{width:min(46vmin,260px);animation:bob 1s ease-in-out infinite alternate}
+@keyframes bob{to{transform:translateY(-8px)}}
+#load .bar{width:min(60vmin,320px);height:10px;border-radius:6px;background:#2a2252;overflow:hidden;border:2px solid #ffd75a}
+#load .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ffb52e,#ffe27a);transition:width .2s}
+#load .lt{font-size:11px;letter-spacing:1px}
+.instSteps{font-family:Silk;font-size:12px;color:#efeaff;text-align:left;line-height:1.6;margin:6px 0 4px;padding-left:20px}
+.instSteps b{color:#ffd75a}
+.row.sm{margin:3px 0}#over .go{margin-top:8px}#over .mrow{padding:4px 8px;margin:4px 0}
 .mdone div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ovA{min-width:210px}.ovB{width:300px}
 .mrow{display:flex;gap:8px;align-items:center;background:rgba(255,255,255,.06);border:2px solid rgba(255,215,90,.25);border-radius:10px;padding:6px 8px;margin:6px 0}
@@ -120,15 +133,16 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
       <button class="tile gold" id="bMos"><span class="mos"><canvas id="mosThumb" width="92" height="62"></canvas><span>MY MASJID<br><small id="mosName">Pick one</small></span></span></button>
       <button class="tile" id="bShare">SHARE <small>with friends</small></button>
       <button class="tile" id="bHow">HOW TO PLAY</button>
+      <button class="tile" id="bInst">GET THE APP <small>free</small></button>
       <button class="tile lock">POWER-UPS <small>soon</small></button>
       <button class="tile lock">COSTUMES <small>soon</small></button>
       <button class="tile" id="bMis">MISSIONS <small id="misStars"></small></button>
     </div>
     <div class="main">
       <div class="title"><div class="badge">AN SMR ORIGINAL</div>
-      <img class="logo" src="art/logo.webp" alt="Jummah Dash">
+      <img class="logo" src="art/logo.webp?h=d69bcb982d" alt="Jummah Dash">
       <div class="tag">LATE FOR <b>JUMMAH</b>. AGAIN.</div></div>
-      <div class="heroWrap" id="heroWrap"><canvas id="steamCv"></canvas><img class="hero" src="art/hero_hd.webp" alt=""></div>
+      <div class="heroWrap" id="heroWrap"><canvas id="steamCv"></canvas><img class="hero" src="art/hero_hd.webp?h=198cf84203" alt=""></div>
       <div class="stats"><div>BEST <span id="hBest">0m</span></div><div class="gold"><span class="coin">£</span><span id="hBank">£0</span></div></div>
       <div class="mine">Heading to <b id="mineName">your masjid</b></div>
       <div class="play">TOUCH ANYWHERE TO PLAY</div>
@@ -151,6 +165,15 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
     </div>
   </div>
 
+  <div class="sheet hide" id="inst">
+    <div class="box mbox">
+      <h2>PUT IT ON YOUR PHONE</h2>
+      <p>Opens straight away, full screen, even with no signal. Updates come in by themselves.</p>
+      <ol class="instSteps" id="instSteps"></ol>
+      <button class="go" id="instGo" style="display:none">INSTALL</button>
+      <button class="go alt" id="instClose">OK</button>
+    </div>
+  </div>
   <div class="sheet hide" id="mis">
     <div class="box mbox">
       <h2>MISSIONS</h2>
@@ -187,8 +210,9 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
   <div id="toast" class="hide"></div>
 </div>
 </div>
-<script src="landmarks.js?v=1795286980"></script>
-<script src="vehicles.js?v=1795286980"></script>
-<script src="game.js?v=1795286980"></script>
+<div id="load"><img src="art/logo.webp?h=d69bcb982d" alt="Jummah Dash"><div class="bar"><i id="loadBar"></i></div><div class="lt" id="loadTxt">LOADING… 0%</div></div>
+<script src="landmarks.js?h=9b916dc9ee"></script>
+<script src="vehicles.js?h=d0ceac4756"></script>
+<script src="game.js?h=864c7a5066"></script>
 </body>
 </html>

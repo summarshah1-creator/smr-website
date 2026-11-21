@@ -34,13 +34,18 @@ function resize() {
 }
 
 /* ---------------- assets ---------------- */
-const img = src => { const i = new Image(); i.src = src; return i; };
-const heroImg = img('art/hero3.png?v=1'), HX4 = 3;   // hero redrawn at 3x the pixels (smooth curves, finer detail)
+/* loading screen: waits for every picture + the fonts, then fades out */
+const LOAD = { n: 0, ok: 0, done: false };
+const loadStep = () => { const p = LOAD.n ? LOAD.ok / LOAD.n : 1, b = document.getElementById('loadBar'), t = document.getElementById('loadTxt'); if (b) b.style.width = Math.round(p * 100) + '%'; if (t) t.textContent = 'LOADING… ' + Math.round(p * 100) + '%'; if (p >= 1 && !LOAD.done) { LOAD.done = true; (document.fonts ? document.fonts.ready : Promise.resolve()).then(() => setTimeout(() => document.getElementById('load').classList.add('done'), 250)); } };
+const img = src => { const i = new Image(); LOAD.n++; const f = () => { LOAD.ok++; loadStep(); }; i.onload = f; i.onerror = f; i.src = src; return i; };
+setTimeout(() => { LOAD.ok = LOAD.n; loadStep(); }, 12000);   // never stuck on the loading screen
+addEventListener('load', loadStep);
+const heroImg = img('art/hero3.png?h=caeb9ee8fd'), HX4 = 3;   // hero redrawn at 3x the pixels (smooth curves, finer detail)
 const HERO_FR = ['run0_normal', 'run1_normal', 'run2_normal', 'run3_normal', 'run4_normal', 'run5_normal', 'fly0_effort', 'fly1_effort', 'fly2_effort', 'fly0_panic', 'fly1_panic', 'fly2_panic', 'glide0_normal', 'glide1_normal', 'land0_effort', 'glide0_ko', 'run0_happy', 'run0_blink'];
 const FR = n => HERO_FR.indexOf(n);
 const NPC_META = {"pc_m":{"w":95,"h":175,"n":15,"type":"walk","k":2},"pc_f":{"w":95,"h":149,"n":15,"type":"walk","k":2},"pcso":{"w":98,"h":147,"n":15,"type":"walk","k":2},"warden":{"w":98,"h":147,"n":15,"type":"walk","k":2},"fan_dad":{"w":87,"h":204,"n":15,"type":"walk","k":2},"fan_f":{"w":95,"h":136,"n":15,"type":"walk","k":2},"fan_kid":{"w":101,"h":147,"n":15,"type":"walk","k":2},"blonde":{"w":95,"h":139,"n":15,"type":"walk","k":2},"abaya":{"w":97,"h":139,"n":15,"type":"walk","k":2},"teen":{"w":95,"h":139,"n":15,"type":"walk","k":2},"aunty":{"w":95,"h":144,"n":15,"type":"walk","k":2},"uncle":{"w":95,"h":139,"n":15,"type":"walk","k":2},"nurse":{"w":95,"h":152,"n":15,"type":"walk","k":2},"elder":{"w":97,"h":144,"n":15,"type":"walk","k":2},"builder":{"w":97,"h":152,"n":15,"type":"walk","k":2},"rider":{"w":101,"h":134,"n":15,"type":"walk","k":2},"rider_g":{"w":107,"h":147,"n":15,"type":"walk","k":2},"rider_o":{"w":107,"h":147,"n":15,"type":"walk","k":2},"schoolboy":{"w":95,"h":134,"n":15,"type":"walk","k":2},"shop":{"w":95,"h":134,"n":15,"type":"walk","k":2},"lad":{"w":95,"h":134,"n":15,"type":"walk","k":2},"esc_a":{"w":108,"h":155,"n":5,"type":"esc","k":2},"esc_b":{"w":147,"h":163,"n":5,"type":"esc","k":2},"esc_c":{"w":147,"h":150,"n":5,"type":"esc","k":2},"esc_d":{"w":147,"h":155,"n":5,"type":"esc","k":2},"esc_e":{"w":108,"h":163,"n":5,"type":"esc","k":2}};   // sprite sheets: walkers = walk0-3, blink0-3, shock, cheer, dizzy; e-scooters = ride0-2, shock, cheer
 const NPC_KEYS = Object.keys(NPC_META).filter(k => NPC_META[k].type === 'walk'), ESC_KEYS = Object.keys(NPC_META).filter(k => NPC_META[k].type === 'esc');
-const npcImg = {}; Object.keys(NPC_META).forEach(k => npcImg[k] = img('art/npc_' + k + '.png?v=5'));
+const NPC_H = {"pc_m": "98290b7f51", "pc_f": "70a6bfd549", "pcso": "fc602db7dd", "warden": "75867b8daa", "fan_dad": "a9642f2a08", "fan_f": "b387ec4bb1", "fan_kid": "aef5fc16b2", "blonde": "5b39e71690", "abaya": "bce3b60a35", "teen": "e8fcb51229", "aunty": "431f5af09d", "uncle": "df473e4a34", "nurse": "0933731d42", "elder": "b135c3a3d6", "builder": "e32384ac28", "rider": "fe467b60d8", "rider_g": "ba2ef9d0ff", "rider_o": "b2b7284d54", "schoolboy": "1b412221a6", "shop": "ad136093ef", "lad": "84149e2efd", "esc_a": "c9a4f048dc", "esc_b": "991980ba7e", "esc_c": "b861ab124e", "esc_d": "04bca54c95", "esc_e": "78ccb20f44"}; const npcImg = {}; Object.keys(NPC_META).forEach(k => npcImg[k] = img('art/npc_' + k + '.png?h=' + (NPC_H[k] || 1)));
 
 /* buildings: Flappy landmarks + house runs, drawn at KR px per unit, trimmed, cached (LRU) */
 const M = 90, LH = 380;
@@ -766,6 +771,27 @@ const tap = (id, fn) => $(id).addEventListener('pointerdown', e => { e.preventDe
 tap('home', e => { if (e.target.closest('.tile')) return; start(); });
 tap('bMos', openPick); tap('pickClose', () => $('pick').classList.add('hide'));
 tap('bHow', () => $('how').classList.remove('hide'));
+/* Get the app: Android/Chrome install prompt, iPhone steps; hidden once it's installed */
+let instEvt = null; addEventListener('beforeinstallprompt', e => { e.preventDefault(); instEvt = e; });
+const isApp = matchMedia('(display-mode: fullscreen), (display-mode: standalone)').matches || navigator.standalone;
+if (isApp) $('bInst').style.display = 'none';
+tap('bInst', () => {
+  const ios = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  $('instGo').style.display = instEvt ? '' : 'none';
+  $('instSteps').innerHTML = instEvt ? '<li>Tap <b>INSTALL</b> below</li><li>Jummah Dash goes on your Home Screen</li>'
+    : ios ? '<li>Open this page in <b>Safari</b></li><li>Tap the <b>Share</b> button (square with an arrow)</li><li>Tap <b>Add to Home Screen</b>, then <b>Add</b></li>'
+    : '<li>Tap the <b>⋮</b> menu in your browser</li><li>Tap <b>Install app</b> or <b>Add to Home screen</b></li>';
+  $('inst').classList.remove('hide');
+});
+tap('instGo', async () => { if (!instEvt) return; instEvt.prompt(); const r = await instEvt.userChoice; instEvt = null; if (r.outcome === 'accepted') { $('inst').classList.add('hide'); $('bInst').style.display = 'none'; } });
+tap('instClose', () => $('inst').classList.add('hide'));
+/* keep the game on the phone (service worker); a new version takes over next time the home screen is showing */
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+  let had = !!navigator.serviceWorker.controller, want = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => { if (!had) { had = true; return; } want = true; });
+  setInterval(() => { if (want && state === 'menu' && $('home') && !$('home').classList.contains('hide')) location.reload(); }, 1000);
+}
 tap('bMis', () => { $('misRank').innerHTML = rankHtml(); missionRows($('misRows')); $('mis').classList.remove('hide'); }); tap('misClose', () => $('mis').classList.add('hide')); tap('howClose', () => $('how').classList.add('hide'));
 tap('bShare', () => share('Late for Jummah? Play Jummah Dash – an SMR Original 🕌💨'));
 tap('again', start); tap('ovHome', goHome);
@@ -785,7 +811,7 @@ window.addEventListener('resize', resize); window.addEventListener('orientationc
 // nozzle openings) is cut back out of it every frame, so the steam shows inside the openings, disappears behind the front lip,
 // then reappears below it: it looks like it comes from inside the holes, and it still passes behind the cooker, thobe and legs.
 (() => {
-  const sc = $('steamCv'), wrap = $('heroWrap'), o = sc.getContext('2d'), occ = img('art/hero_occ.png?v=2');
+  const sc = $('steamCv'), wrap = $('heroWrap'), o = sc.getContext('2d'), occ = img('art/hero_occ.png?h=893c2284b9');
   const NZ = [[.1708, .6063], [.3124, .6278]], AX = [-.24, .97];
   const mk = (inner, outer) => { const c = document.createElement('canvas'); c.width = c.height = 64; const g = c.getContext('2d');
     const r = g.createRadialGradient(32, 32, 0, 32, 32, 32); r.addColorStop(0, inner); r.addColorStop(.62, inner.replace(/[\d.]+\)$/, '0.9)')); r.addColorStop(.82, inner.replace(/[\d.]+\)$/, '0.35)')); r.addColorStop(1, outer); g.fillStyle = r; g.fillRect(0, 0, 64, 64); return c; };
