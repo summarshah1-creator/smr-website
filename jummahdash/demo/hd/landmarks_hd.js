@@ -114,17 +114,17 @@ HD.townhall = (c, x, G) => {
   c.fillStyle = lg(c, 0, G - 54, 0, G - 24, [[0, '#3f3a33'], [1, '#5c5548']]); c.fillRect(x + 80, G - 52, 40, 30);
   poly(c, ST, [[x + 74, G - 53], [x + 100, G - 67], [x + 126, G - 53]], LINE, .5); poly(c, '#e2d9c4', [[x + 80, G - 54.5], [x + 100, G - 64.5], [x + 120, G - 54.5]]);
   rect(c, ST, x + 75, G - 55, 50, 2.8, LINE, .4); for (let i = 0; i < 24; i++) rect(c, 'rgba(90,80,60,.25)', x + 76 + i * 2, G - 52.2, 1, .8);
-  for (let i = 0; i < 4; i++) { const cx = x + 82 + i * 11;
-    rect(c, ST, cx - .8, G - 51.6, 5.6, 2, LINE, .3);                                       // capital
-    c.fillStyle = lg(c, cx, 0, cx + 4, 0, [[0, '#d8cfba'], [.4, '#fbf8f1'], [1, '#cfc5ae']]); c.fillRect(cx, G - 49.6, 4, 40.6); c.strokeStyle = LINE; c.lineWidth = .35; c.strokeRect(cx, G - 49.6, 4, 40.6);
-    for (const f of [1, 2, 3]) line(c, 'rgba(120,105,80,.35)', .25, [[cx + f, G - 49], [cx + f, G - 9.4]]);
-    rect(c, ST, cx - .8, G - 9, 5.6, 2, LINE, .3); }
   rect(c, '#2e2924', x + 93, G - 31, 14, 24); c.beginPath(); c.arc(x + 100, G - 31, 7, Math.PI, 0); c.fillStyle = '#2e2924'; c.fill();
   c.beginPath(); c.arc(x + 100, G - 31, 6, Math.PI, 0); c.fillStyle = lg(c, x + 94, G - 37, x + 106, G - 31, [[0, '#cfe0ee'], [1, '#55718a']]); c.fill();
   for (let i = 1; i < 5; i++) { const a = Math.PI + i * Math.PI / 5; line(c, '#f4f2ec', .3, [[x + 100, G - 31], [x + 100 + Math.cos(a) * 6, G - 31 + Math.sin(a) * 6]]); }
   c.fillStyle = lg(c, x + 94, 0, x + 106, 0, [[0, '#7a3f22'], [.5, '#9a5530'], [1, '#6c381e']]); c.fillRect(x + 94, G - 30, 12, 23);
   c.strokeStyle = 'rgba(40,20,10,.6)'; c.lineWidth = .35; [[95, -29], [101, -29], [95, -18], [101, -18]].forEach(([dx, dy]) => c.strokeRect(x + dx, G + dy, 4, 9)); line(c, '#3a1e10', .5, [[x + 100, G - 30], [x + 100, G - 7]]);
   rect(c, '#d9b44a', x + 98.6, G - 19, .8, 1.6);
+  for (let i = 0; i < 4; i++) { const cx = x + 82 + i * 11;
+    rect(c, ST, cx - .8, G - 51.6, 5.6, 2, LINE, .3);                                       // capital
+    c.fillStyle = lg(c, cx, 0, cx + 4, 0, [[0, '#d8cfba'], [.4, '#fbf8f1'], [1, '#cfc5ae']]); c.fillRect(cx, G - 49.6, 4, 40.6); c.strokeStyle = LINE; c.lineWidth = .35; c.strokeRect(cx, G - 49.6, 4, 40.6);
+    for (const f of [1, 2, 3]) line(c, 'rgba(120,105,80,.35)', .25, [[cx + f, G - 49], [cx + f, G - 9.4]]);
+    rect(c, ST, cx - .8, G - 9, 5.6, 2, LINE, .3); }
   for (let s = 0; s < 3; s++) rect(c, s % 2 ? '#e2d9c4' : '#ece5d5', x + 76 - s * 2, G - 7 + s * 2.3, 48 + s * 4, 2.4, LINE, .3);
   // --- flower beds along the front
   for (const fx of [x + 20, x + 128]) { rect(c, '#8a8070', fx, G - 4, 44, 4, LINE, .35); for (let i = 0; i < 26; i++) { const px = fx + 1.5 + i * 1.6; c.fillStyle = '#3f7a3a'; c.beginPath(); c.arc(px, G - 4.4, 1.1, 0, 7); c.fill(); c.fillStyle = ['#e0453a', '#f2c230', '#f07aa0', '#ffffff'][i % 4]; c.beginPath(); c.arc(px + .3, G - 5.3, .55, 0, 7); c.fill(); } }
@@ -153,23 +153,29 @@ HD.masjid = (c, x, G) => {
   const X = x + 50, B = '#b9503d', B2 = '#a8442f', TW = 130;
   // dome (behind everything): copper-green with a soft highlight and a gold crescent finial
   c.beginPath(); c.arc(X + 192, G - 100, 43, Math.PI, 0); c.closePath(); c.fillStyle = lg(c, X + 150, G - 143, X + 230, G - 100, [[0, '#9cc09a'], [.35, '#6f9a6a'], [1, '#4a7048']]); c.fill(); c.strokeStyle = LINE; c.lineWidth = .5; c.stroke();
-  for (let i = -3; i <= 3; i++) { c.beginPath(); c.ellipse(X + 192 + i * 9, G - 100, 2.5, 42.5 - Math.abs(i) * 2.5, 0, Math.PI, 2 * Math.PI); c.strokeStyle = 'rgba(40,70,40,.22)'; c.lineWidth = .3; c.stroke(); }
+  for (let i = 1; i < 36; i++) { const a = Math.PI + i * Math.PI / 36, bx = X + 192 + Math.cos(a) * 43, by = G - 100;   // copper seams rising from the rim to the top
+    c.beginPath(); c.moveTo(bx, by); c.quadraticCurveTo(X + 192 + Math.cos(a) * 30, G - 100 - 30, X + 192 + Math.cos(a) * 3, G - 142.4); c.strokeStyle = i % 2 ? 'rgba(30,60,30,.28)' : 'rgba(200,235,200,.22)'; c.lineWidth = .28; c.stroke(); }
+  for (let k = 1; k < 5; k++) { c.beginPath(); c.ellipse(X + 192, G - 100, 43 * Math.cos(k * .3), 6, 0, Math.PI, 2 * Math.PI); c.strokeStyle = 'rgba(30,60,30,.12)'; c.lineWidth = .25; }
   rect(c, '#d7c79a', X + 189, G - 104, 6, 4, LINE, .3);
   rect(c, '#e8e0cf', X + 191.3, G - 156, 1.4, 14); c.beginPath(); c.arc(X + 192, G - 159, 3, 0, 7); c.fillStyle = '#d9b44a'; c.fill(); c.beginPath(); c.arc(X + 193.2, G - 159.6, 2.5, 0, 7); c.fillStyle = '#9cc4e8'; c.fill();
   // front block (continues left over the widening) with tall arched recesses
   brick(c, x, G - 120, 50 + TW, 120, B); c.strokeStyle = LINE; c.lineWidth = .5; c.strokeRect(x + .25, G - 120, 50 + TW - .5, 120);
   rect(c, shade(B, 1.15), x, G - 121, 50 + TW, 2.6, LINE, .35);
-  for (let rx = x + 6; rx + 14 < X + TW - 4; rx += 19.5) { if (rx > X + 46 && rx < X + 74) continue;   // keep the entrance clear
+  const AR = [], aN = 9, aStep = (50 + TW - 10) / aN; for (let i = 0; i < aN; i++) AR.push(x + 5 + i * aStep + (aStep - 14) / 2);   // evenly spaced from one end of the block to the other
+  for (const rx of AR) {
     c.beginPath(); c.moveTo(rx, G - 26); c.lineTo(rx, G - 92); c.arc(rx + 7, G - 92, 7, Math.PI, 0); c.lineTo(rx + 14, G - 26); c.closePath(); c.fillStyle = 'rgba(60,15,5,.30)'; c.fill();
     c.save(); c.clip(); brick(c, rx, G - 99, 14, 74, shade(B, .86)); c.fillStyle = 'rgba(0,0,0,.18)'; c.fillRect(rx, G - 99, 2, 74); c.restore();
     line(c, 'rgba(255,220,200,.35)', .4, [[rx + 14.2, G - 92], [rx + 14.2, G - 26]]); rect(c, shade(B, .72), rx - .5, G - 26, 15, 1.4); }
   // green name board with the two round plaques either side (as on the building)
-  rect(c, '#1d5a43', X + 3, G - 118, 116, 17, '#0e2e22', .5); rect(c, 'rgba(255,255,255,.12)', X + 3.5, G - 117.5, 115, 1);
-  txt(c, 'مرکزی جامع مسجد غوثیہ', X + 61, G - 113.6, 6.2, '#f4f2ec', { f: 'Amiri', rtl: 1 });
-  txt(c, 'Luton Central Mosque', X + 61, G - 106.4, 5.6, '#f4f2ec', { f: 'Mont, sans-serif' });
+  rect(c, 'rgba(0,0,0,.25)', X + 3.8, G - 117, 116, 18);   // signboard: shadow, thick frame, inner panel, fixings
+  rect(c, '#0f3a2b', X + 2, G - 119, 118, 19); rect(c, '#1d5a43', X + 3.6, G - 117.4, 114.8, 15.8); c.strokeStyle = '#e8dcc0'; c.lineWidth = .45; c.strokeRect(X + 4.6, G - 116.4, 112.8, 13.8);
+  rect(c, 'rgba(255,255,255,.10)', X + 3.6, G - 117.4, 114.8, 3);
+  for (const [fx, fy] of [[X + 5.6, G - 115.4], [X + 116.4, G - 115.4], [X + 5.6, G - 104.2], [X + 116.4, G - 104.2]]) { c.beginPath(); c.arc(fx, fy, .45, 0, 7); c.fillStyle = '#c9bfa5'; c.fill(); }
+  txt(c, 'مرکزی جامع مسجد غوثیہ', X + 61, G - 111.6, 6, '#f4f2ec', { f: 'Amiri', rtl: 1 });
+  txt(c, 'Luton Central Mosque', X + 61, G - 105.6, 4.6, '#f4f2ec', { f: 'Mont, sans-serif' });
   for (const px of [X - 9, X + 123]) { rect(c, '#1d5a43', px, G - 117, 8, 10, '#0e2e22', .4); txt(c, 'الله', px + 4, G - 112, 4, '#f4f2ec', { f: 'Amiri', rtl: 1 }); }
   // arched windows in the front block
-  for (const wx of [x + 18, X + 6, X + 104]) archWin(c, wx, G - 50, 12, 28, { frame: '#efe9dc', g0: '#d8e6e0', g1: '#9db5ab', g2: '#5b7268' });
+  for (const i of [0, 2, 6, 8]) archWin(c, AR[i] + 1, G - 50, 12, 28, { frame: '#efe9dc', g0: '#d8e6e0', g1: '#9db5ab', g2: '#5b7268' });
   // main entrance: brick arch, green arched sign, light oak double doors
   { const dx = X + 61;
     c.beginPath(); c.moveTo(dx - 15, G); c.lineTo(dx - 15, G - 34); c.arc(dx, G - 34, 15, Math.PI, 0); c.lineTo(dx + 15, G); c.closePath(); c.fillStyle = shade(B, .8); c.fill();
@@ -200,7 +206,7 @@ HD.masjid = (c, x, G) => {
     if (i === 2) { const gx = X - 4 + 54; for (const [ax, bx] of [[gx, gx + 6], [gx + 21, gx + 15]]) { c.strokeStyle = '#1f4a34'; c.lineWidth = .6; c.beginPath(); for (const yy of [21, 12, 2]) { c.moveTo(ax, G - yy); c.lineTo(bx, G - yy + 1.2); } for (let k = 0; k <= 4; k++) { const t = k / 4; c.moveTo(ax + (bx - ax) * t, G - 21 + t * 1.2); c.lineTo(ax + (bx - ax) * t, G - 2 + t * 1.2); } c.stroke(); } continue; }
     if (i < 10 && px + 27 < x + 330) { brick(c, px + 6, G - 11, 21, 11, '#c4553f'); rect(c, '#efe4d0', px + 6, G - 12, 21, 1.2); railing(c, px + 6, G - 22, 21, 10.5, { gap: 1.7, tips: '#d9b44a' }); } }
   // tree in front of the left corner and a few people heading in
-  tree(c, x + 24, G, 1.25); person(c, x + 122, G, '#f4f2ec', '#f4f2ec', '#c58c5c', '#f4f2ec'); person(c, x + 130, G, '#3a6e5a', '#2a2a33', '#c58c5c', '#f4f2ec'); person(c, x + 246, G, '#2a2a33', '#f4f2ec', '#9a6a44', '#1a1a1e');
+  tree(c, x + 24, G, 1.25);
   c.restore();
 };
 
@@ -298,7 +304,7 @@ HD.galaxy = (c, x0, G) => {
     rect(c, '#cdbca8', x, G - 104, WW, 104, LINE, .5); rect(c, '#dcd5c8', x - 2, G - 110, WW + 4, 6, LINE, .45); rect(c, 'rgba(0,0,0,.12)', x - 2, G - 104.6, WW + 4, .8);
     c.fillStyle = lg(c, 0, G - 96, 0, G - 70, [[0, '#c3ced8'], [1, '#8e9ba7']]); c.fillRect(x, G - 96, WW, 26);
     for (let i = 0; i < 6; i++) { c.fillStyle = lg(c, x + 2 + i * 20, G - 94, x + 20 + i * 20, G - 72, [[0, '#d9e3ea'], [.6, '#a8b6c2'], [1, '#8a99a6']]); c.fillRect(x + 2 + i * 20, G - 94, 18, 22); c.strokeStyle = '#6f7a84'; c.lineWidth = .4; c.strokeRect(x + 2 + i * 20, G - 94, 18, 22); }
-    'GALAXY'.split('').forEach((ch, i) => txt(c, ch, x + 11 + i * 20, G - 83, 11, '#ffffff', { f: 'Oswald, sans-serif', w: 600, sh: 'rgba(80,90,100,.55)' }));
+    'GALAXY'.split('').forEach((ch, i) => txt(c, ch, x + 11 + i * 20, G - 82.4, 14, '#ffffff', { f: 'Silk, monospace', w: 700, sh: 'rgba(80,90,100,.6)' }));
     rect(c, '#6f7a84', x, G - 70, WW, 1.6);
     for (let i = 0; i < 5; i++) { const bx = x + 12 + i * 24;
       rect(c, '#efe4c9', bx, G - 66, 12, 8, LINE, .35); rect(c, '#1a1c21', bx, G - 58, 12, 30); for (let k = 0; k < 3; k++) rect(c, '#2a2d35', bx, G - 50 + k * 8, 12, .5);
@@ -314,7 +320,9 @@ HD.galaxy = (c, x0, G) => {
   for (let i = 16; i < 192; i += 16) { rect(c, 'rgba(70,60,50,.35)', x + 4 + i, G - 140, .7, 96); rect(c, 'rgba(255,255,255,.18)', x + 4.7 + i, G - 140, .4, 96); }
   for (let yy = G - 132; yy < G - 46; yy += 8) rect(c, 'rgba(70,60,50,.12)', x + 4, yy, 192, .4);
   rect(c, '#e3dacb', x - 2, G - 150, 204, 10, LINE, .5); rect(c, '#c7bdab', x - 2, G - 143, 204, 3); for (let i = 0; i < 50; i++) rect(c, 'rgba(120,110,95,.4)', x + i * 4, G - 140, 1.2, 2.4);
-  txt(c, 'G A L A X Y', x + 55, G - 126, 9.6, '#ffffff', { f: 'Oswald, sans-serif', w: 600, sh: 'rgba(90,80,65,.7)' }); rect(c, '#f4f2ee', x + 100, G - 131, .8, 10); txt(c, 'G A L A X Y', x + 146, G - 126, 9.6, '#ffffff', { f: 'Oswald, sans-serif', w: 600, sh: 'rgba(90,80,65,.7)' });
+  { c.font = '700 15px Silk, monospace'; const tw = c.measureText('GALAXY').width, e2 = x + 194, s2 = e2 - tw, dv = s2 - 5;   // boxy lettering, the second GALAXY runs to the right edge
+    txt(c, 'GALAXY', s2, G - 125, 15, '#ffffff', { f: 'Silk, monospace', a: 'left', sh: 'rgba(90,80,65,.75)' }); rect(c, '#f4f2ee', dv, G - 133, 1, 16); rect(c, 'rgba(90,80,65,.6)', dv + 1, G - 133, .6, 16);
+    txt(c, 'GALAXY', dv - 5, G - 125, 15, '#ffffff', { f: 'Silk, monospace', a: 'right', sh: 'rgba(90,80,65,.75)' }); }
   // logo panels
   const P1 = [[x + 14, 20, '#1f8fd6'], [x + 38, 28, '#d8262f'], [x + 70, 34, '#ffffff'], [x + 112, 36, '#f4f2f2'], [x + 154, 32, '#2a2a2e']];
   P1.forEach(([bx, w, col]) => { rect(c, 'rgba(0,0,0,.2)', bx + 1, G - 91, w, 36); rect(c, col, bx, G - 92, w, 36, 'rgba(0,0,0,.45)', .4); });
@@ -327,7 +335,7 @@ HD.galaxy = (c, x0, G) => {
   rect(c, 'rgba(0,0,0,.14)', x + 4, G - 140, 14, 96); rect(c, 'rgba(0,0,0,.16)', x + 180, G - 140, 16, 96); rect(c, 'rgba(255,255,255,.10)', x + 60, G - 140, 30, 96);
   { const sx = x + 92; rect(c, '#8a9098', sx, G - 22, 30, 1.6); rect(c, '#8a9098', sx, G - 22, .9, 22); rect(c, '#8a9098', sx + 29, G - 22, .9, 22); rect(c, 'rgba(190,215,235,.5)', sx + 1, G - 20, 28, 14); rect(c, '#c8202a', sx + 6, G - 7, 18, 1.8); }
   rect(c, '#c8202a', x + 132, G - 14, 7, 14, '#6a0e14', .35); rect(c, '#8a141b', x + 131.6, G - 15, 7.8, 1.6); rect(c, '#2a0a0a', x + 133.5, G - 11, 4, .7);
-  tree(c, x + 186, G, 1.2); person(c, x + 22, G, '#d8262f'); person(c, x + 170, G, '#6a4c93');
+  tree(c, x + 186, G, 1.2);
   c.restore();
 };
 
@@ -408,7 +416,7 @@ HD.gurdwara = (c, x, G) => {
   txt(c, 'GURU NANAK GURDWARA', x + 220, G - 42.4, 6.6, '#1f2f6a', { f: 'Oswald, sans-serif', w: 600, ls: .4 }); txt(c, 'LUTON', x + 220, G - 33.4, 6.4, '#1f2f6a', { f: 'Oswald, sans-serif', w: 600, ls: 1.2 });
   for (const kx of [x + 152, x + 288]) { c.beginPath(); c.arc(kx, G - 38, 3.6, 0, 7); c.strokeStyle = '#1f3f8a'; c.lineWidth = .8; c.stroke(); rect(c, '#1f3f8a', kx - .5, G - 45, 1, 12); }
   for (const [sx, dir] of [[x + 120, 1], [x + 290, -1]]) for (let i = 0; i < 10; i++) rect(c, i % 2 ? '#bfc2c6' : '#a8abb0', sx + (dir > 0 ? i * 3 : 30 - i * 3), G - 44 + i * 4.4, 30, 4.4, 'rgba(0,0,0,.25)', .2);
-  rect(c, '#bcb6a9', x - 6, G - 3, 452, 3); person(c, x + 200, G, '#1a1a1e', '#1a1a1e', '#a86c44', '#f08a1c'); person(c, x + 212, G, '#2a2a33', '#9aa3ad', '#c58c5c', '#1f3f8a');
+  rect(c, '#bcb6a9', x - 6, G - 3, 452, 3);
   c.restore();
 };
 
