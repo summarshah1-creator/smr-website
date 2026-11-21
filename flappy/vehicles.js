@@ -319,16 +319,32 @@ V.pickup = { n: 'Pickup truck', w: 70, h: 27, weight: 0.25, speed: [30, 50], col
   wheel(c, x + 13, G, 6, '#2a2c31', null, 6); wheel(c, x + 56, G, 6, '#2a2c31', null, 6);
 } };
 
-/* Toyota Prius taxi (Luton private hire) */
-V.taxi = { n: 'Prius taxi', w: 60, h: 24, weight: 4, speed: [30, 50], colours: [['Silver', '#b9bec6'], ['White', '#eceef2'], ['Black', '#1e2024'], ['Grey', '#6e737b']],
-  d(c, x, G, [, B]) { const D = SH(B, .8);
-  arch(c, x + 12, G, 5.3); arch(c, x + 48, G, 5.3);
-  fill(c, B, [[x + 1, G - 5], [x + 1, G - 13], [x + 3, G - 15.5], [x + 10, G - 17], [x + 22, G - 22], [x + 33, G - 22], [x + 43, G - 15], [x + 57, G - 13], [x + 59, G - 10], [x + 59, G - 5]]);
-  glass(c, [[x + 12, G - 16.5], [x + 22.5, G - 20.6], [x + 32.4, G - 20.6], [x + 40, G - 15.4], [x + 12, G - 15.4]], '#26303a'); R(c, B, x + 26, G - 20.8, 1.4, 5.4);
-  fill(c, '#f6d21a', [[x + 24, G - 22], [x + 25, G - 24.5], [x + 31, G - 24.5], [x + 32, G - 22]]); R(c, '#1b1a24', x + 26, G - 23.8, 4, .8);
-  R(c, D, x + 1.5, G - 8, 57, 2.4); shine(c, x + 4, G - 13.6, 52); R(c, '#2a6fd8', x + 20, G - 12.5, 14, 1.4);
-  R(c, '#d42a2a', x + 1, G - 13, 2, 2.6); R(c, '#e8ecf0', x + 54, G - 12.2, 4, 1.3); R(c, '#2a2c31', x + 56.5, G - 9.5, 2.5, 3.5);
-  wheel(c, x + 12, G, 5, '#9aa2ab', null, 5); wheel(c, x + 48, G, 5, '#9aa2ab', null, 5);
+/* Toyota Prius taxi (Luton private hire, owner's photos 21 Nov): low pointed nose, long raked screen, roof peaks over the front seats and
+   slopes all the way down to a high cut-off tail with a spoiler; black pillars, rising crease, boomerang tail lamp, roof TAXI sign, silver alloys */
+V.taxi = { n: 'Prius taxi', w: 60, h: 25, weight: 4, speed: [30, 50], colours: [['Black', '#1c1e22'], ['White', '#eef0f3'], ['Silver', '#b9bec6'], ['Grey', '#6e737b'], ['Dark blue', '#22304e']],
+  d(c, x, G, [, B]) { const D = SH(B, .78), L = SH(B, 1.18);
+  arch(c, x + 12.5, G, 5.4); arch(c, x + 47, G, 5.4);
+  fill(c, B, [[x + 2, G - 4.6], [x + 1, G - 8], [x + 1.2, G - 14.4], [x + 3.6, G - 16.6], [x + 9, G - 17.6], [x + 18, G - 20.6], [x + 26, G - 22.2], [x + 31, G - 22], [x + 36, G - 19.6], [x + 45, G - 14.6], [x + 54, G - 12.6], [x + 58.4, G - 11.2], [x + 60, G - 8.6], [x + 59.4, G - 4.6]]);
+  // glass: one long glasshouse with black pillars (Prius style), small rear quarter light
+  glass(c, [[x + 44.2, G - 14.6], [x + 35.6, G - 19.4], [x + 31, G - 21.2], [x + 26, G - 21.4], [x + 18, G - 19.8], [x + 10.4, G - 17.2], [x + 10.6, G - 15.4], [x + 44.2, G - 14.6]], '#1f2731');
+  R(c, '#121318', x + 28.6, G - 21.4, 1.6, 6.6); R(c, '#121318', x + 17, G - 19.8, 1.4, 4.6); R(c, '#121318', x + 10.4, G - 15.8, 34, .9);
+  fill(c, '#121318', [[x + 44.2, G - 14.6], [x + 47, G - 14], [x + 41.6, G - 16.4]], false);   // black A-pillar triangle
+  R(c, 'rgba(255,255,255,.22)', x + 20, G - 20.3, 8, .5); R(c, 'rgba(255,255,255,.18)', x + 32, G - 20.6, 4, .5);
+  fill(c, '#121318', [[x + 1.4, G - 16], [x + 9.6, G - 17.4], [x + 9.4, G - 16.2], [x + 1.4, G - 15]], false);   // spoiler + split glass
+  // bodywork: rising crease, darker sill, door shuts, handles, fuel cap
+  c.strokeStyle = D; c.lineWidth = .7; c.beginPath(); c.moveTo(x + 52, G - 10.4); c.quadraticCurveTo(x + 28, G - 11.4, x + 4, G - 13.4); c.stroke();
+  R(c, 'rgba(255,255,255,.22)', x + 6, G - 14.2, 44, .5); R(c, D, x + 4, G - 6.6, 52, 2); R(c, SH(B, .55), x + 17.6, G - 5.4, 25, 1);
+  R(c, 'rgba(0,0,0,.35)', x + 29.4, G - 14.4, .6, 9); R(c, 'rgba(0,0,0,.35)', x + 42.6, G - 14.2, .6, 8.6); R(c, 'rgba(0,0,0,.3)', x + 17.4, G - 15, .6, 8.6);
+  R(c, L, x + 36, G - 12.6, 2.6, .8); R(c, L, x + 23.6, G - 13, 2.6, .8); R(c, 'rgba(0,0,0,.25)', x + 6.4, G - 13, 2.2, 1.6);
+  // lamps: slim swept headlamp, foglight, boomerang tail lamp, mirror
+  fill(c, '#eef6ff', [[x + 51.6, G - 12.6], [x + 57.8, G - 11.3], [x + 58.8, G - 10.2], [x + 53.4, G - 10.8]], false); R(c, '#fff3c8', x + 57, G - 10.9, 1.4, .8);
+  R(c, '#121318', x + 55.8, G - 7.6, 3.6, 1.6); R(c, '#fff8d8', x + 57.6, G - 7.2, 1.2, .8);
+  fill(c, '#c81e2a', [[x + 1.2, G - 14.6], [x + 4.6, G - 15], [x + 3.4, G - 13.2], [x + 2, G - 10.8], [x + 1.1, G - 10.8]], false); R(c, '#ff7a6a', x + 1.6, G - 14.4, 2.2, .6);
+  fill(c, B, [[x + 41.4, G - 15.4], [x + 44.2, G - 15.8], [x + 44.4, G - 14.2], [x + 41.6, G - 14.2]]);
+  // roof sign
+  fill(c, '#fbf8e6', [[x + 22, G - 22], [x + 22.6, G - 25.6], [x + 31.4, G - 25.6], [x + 32, G - 22]]); R(c, '#e8c21a', x + 22.2, G - 22.8, 9.6, .8);
+  c.save(); c.fillStyle = '#16171c'; c.font = '700 2.6px Arial, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('TAXI', x + 27, G - 24.2); c.restore();
+  wheel(c, x + 12.5, G, 5.2, '#c3c8cf', null, 5, '#8a9099'); wheel(c, x + 47, G, 5.2, '#c3c8cf', null, 5, '#8a9099');
 } };
 
 /* Luton single-deck town bus: teal, dark window band, white swoosh behind the front door, gold skirt line, orange destination screen */

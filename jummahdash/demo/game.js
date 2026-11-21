@@ -45,8 +45,8 @@ addEventListener('load', loadStep);
 let SHOP = (() => { try { return JSON.parse(localStorage.getItem('jd_shop')) || null; } catch (e) { return null; } })() || { own: { classic: 1 }, eq: [], slots: 2, outfit: 'classic', hs500: 0, hs1000: 0, save: 0 };
 const saveShop = () => { try { localStorage.setItem('jd_shop', JSON.stringify(SHOP)); } catch (e) {} };
 const OUTFIT_KEYS = ['classic', 'eid', 'luton', 'puffer', 'moroccan'];
-const heroImgs = {}; OUTFIT_KEYS.forEach(k => heroImgs[k] = img(k === 'classic' ? 'art/hero3.png?h=a6281e09c8' : 'art/hero3_' + k + '.png?v=2'));
-let heroImg = heroImgs[SHOP.outfit] || heroImgs.classic; const HX4 = 3;
+const heroImgs = {}; OUTFIT_KEYS.forEach(k => heroImgs[k] = img(k === 'classic' ? 'art/hero3.webp?h=effe439347' : 'art/hero3_' + k + '.webp?v=4'));
+let heroImg = heroImgs[SHOP.outfit] || heroImgs.classic; const HX4 = 6;   // sheet = 6 px per cell unit (smooth cartoon hero, hd/hero_rig.js)
 const hasG = id => SHOP.eq.includes(id);   // hero redrawn at 3x the pixels (smooth curves, finer detail)
 const HERO_FR = ['run0_normal', 'run1_normal', 'run2_normal', 'run3_normal', 'run4_normal', 'run5_normal', 'fly0_effort', 'fly1_effort', 'fly2_effort', 'fly0_panic', 'fly1_panic', 'fly2_panic', 'glide0_normal', 'glide1_normal', 'land0_effort', 'glide0_ko', 'run0_happy', 'run0_blink', 'hang0_happy', 'hang1_happy', 'hang2_happy', 'hang3_happy', 'fall0_panic', 'fall1_panic', 'fall2_panic', 'fall0_ko', 'sit0_happy', 'sit1_happy'];
 const FR = n => HERO_FR.indexOf(n);
@@ -859,15 +859,15 @@ function vehCrash() {
 function drawVehicle() {
   const x = hero.x, y = hero.y, k = veh.k;
   if (k === 'kabootar') {   // the exact Flappy pigeon (small); one arm reaches up over his head and his fist grips its tail
-    const f = veh.flap > .14 ? 2 : veh.flap > 0 ? 1 : Math.floor(t * 4) % 2 ? 0 : 1, SX = 1.5, SY = -43, GX = 8, GY = -91;   // shoulder (in the sprite) + grip, feet-relative
+    const f = veh.flap > .14 ? 2 : veh.flap > 0 ? 1 : Math.floor(t * 4) % 2 ? 0 : 1, SX = 1.4, SY = -40, GX = 3, GY = -93;   // shoulder (in the sprite) + grip, feet-relative
     const col = { luton: ['#f67a20', '#d65c10'], puffer: ['#2c2c34', '#1c1c22'], moroccan: ['#963a2e', '#74281f'], eid: ['#fcf0ce', '#e8d4a2'] }[SHOP.outfit] || ['#f8f6fa', '#d4d4e4'];
     ctx.save(); ctx.translate(x, y); ctx.rotate(hero.rot * .5);
     ctx.save(); ctx.translate(GX, GY); ctx.rotate(Math.sin(t * 5) * .05); ctx.translate(-GX, -GY); ctx.imageSmoothingEnabled = true; const hf = 'hang' + (Math.floor(t * 8) % 4) + '_happy';
     ctx.drawImage(heroImg, FR(hf) * HW * HX4, 0, HW * HX4, HH0 * HX4, -HW * HS / 2, -HH, HW * HS, HH);
     // sleeve: from inside the shoulder, up across his ear and over the top of his head (black outline, white sleeve, no joint showing)
-    const arm = () => { ctx.beginPath(); ctx.moveTo(SX - 2, SY + 6); ctx.quadraticCurveTo(SX + 12, SY - 26, GX, GY + 4); };
+    const arm = () => { ctx.beginPath(); ctx.moveTo(SX - 2, SY + 6); ctx.quadraticCurveTo(SX - 7, SY - 30, GX, GY + 4); };
     ctx.lineCap = 'butt'; ctx.lineJoin = 'round'; ctx.strokeStyle = '#1a161e'; ctx.lineWidth = 9; arm(); ctx.stroke(); ctx.strokeStyle = col[0]; ctx.lineWidth = 6; arm(); ctx.stroke();
-    ctx.strokeStyle = col[1]; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(SX + 1, SY + 4); ctx.quadraticCurveTo(SX + 14, SY - 24, GX + 2, GY + 6); ctx.stroke();
+    ctx.strokeStyle = col[1]; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(SX + 1, SY + 4); ctx.quadraticCurveTo(SX - 4, SY - 28, GX + 2, GY + 6); ctx.stroke();
     ctx.restore();
     ctx.save(); ctx.translate(GX, GY); ctx.rotate(-.38 - hero.rot * .4); ctx.imageSmoothingEnabled = false; ctx.drawImage(pigCv[f], -3.5 * PK, -20.5 * PK); ctx.imageSmoothingEnabled = true; ctx.restore();
     ctx.fillStyle = '#d48a58'; ctx.strokeStyle = '#1a161e'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.ellipse(GX, GY + 1, 4.4, 3.8, 0, 0, 7); ctx.fill(); ctx.stroke();
