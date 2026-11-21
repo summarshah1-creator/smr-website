@@ -45,7 +45,7 @@ addEventListener('load', loadStep);
 let SHOP = (() => { try { return JSON.parse(localStorage.getItem('jd_shop')) || null; } catch (e) { return null; } })() || { own: { classic: 1 }, eq: [], slots: 2, outfit: 'classic', hs500: 0, hs1000: 0, save: 0 };
 const saveShop = () => { try { localStorage.setItem('jd_shop', JSON.stringify(SHOP)); } catch (e) {} };
 const OUTFIT_KEYS = ['classic', 'eid', 'luton', 'puffer', 'moroccan'];
-const heroImgs = {}; OUTFIT_KEYS.forEach(k => heroImgs[k] = img(k === 'classic' ? 'art/hero3.png?h=3159ddfc2e' : 'art/hero3_' + k + '.png?v=2'));
+const heroImgs = {}; OUTFIT_KEYS.forEach(k => heroImgs[k] = img(k === 'classic' ? 'art/hero3.png?h=a6281e09c8' : 'art/hero3_' + k + '.png?v=2'));
 let heroImg = heroImgs[SHOP.outfit] || heroImgs.classic; const HX4 = 3;
 const hasG = id => SHOP.eq.includes(id);   // hero redrawn at 3x the pixels (smooth curves, finer detail)
 const HERO_FR = ['run0_normal', 'run1_normal', 'run2_normal', 'run3_normal', 'run4_normal', 'run5_normal', 'fly0_effort', 'fly1_effort', 'fly2_effort', 'fly0_panic', 'fly1_panic', 'fly2_panic', 'glide0_normal', 'glide1_normal', 'land0_effort', 'glide0_ko', 'run0_happy', 'run0_blink', 'hang0_happy', 'hang1_happy', 'hang2_happy', 'hang3_happy', 'fall0_panic', 'fall1_panic', 'fall2_panic', 'fall0_ko', 'sit0_happy', 'sit1_happy'];
@@ -731,7 +731,7 @@ const RIDES = ['tuktuk', 'carpet', 'kabootar', 'sandals'];
 const PIG_COL = { o: '#1b1a24', h: '#7f899e', e: '#f08a2a', k: '#1b1a24', c: '#eef0f4', b: '#3a3d44', n: '#4fa36a', p: '#8a5fb0', l: '#c3cad8', g: '#9aa3b5', d: '#7d8698', t: '#5a6476', f: '#e88a7a', w: '#d4dae4', K: '#2e3442' };
 const PIG_BODY = ['...................ooo...', '..................ohhhoo.', '..................ohekhho', '.................oohhhhcbb', '...ooooooooooooonnhhhooo.', '..otlllllllllllnnnhho....', '.ottgglllllllllppnno.....', 'oKttggggggggggppnnno.....', 'oKttgggggggggggppgo......', '.ooKdgggggggggggggo......', '...odddgggggggggggo......', '....oodddddddddddo.......', '......ooooffoffoo........'];
 const PIG_WINGS = [['.oooo.......', 'owwwwoo.....', '.oggwwwoo...', '..oKgggwwo..', '...ogKKggwo.', '....oggKKggo'], ['oooooooooo..', 'owwwwwwwwwoo', 'oggggggggggo', 'oKKKgKKKgggo', '.ogggggggoo.', '..ooooooo...'], ['oooooooooo..', 'owwwwwwwwwoo', '.oggggggggo.', '..oKKgKKgo..', '...oggggo...', '....oggo....', '.....oo.....']];
-const PK = 3.2, pigCv = [0, 1, 2].map(f => { const c = document.createElement('canvas'); c.width = 30 * PK; c.height = 26 * PK; const x = c.getContext('2d');
+const PK = 2.4, pigCv = [0, 1, 2].map(f => { const c = document.createElement('canvas'); c.width = 30 * PK; c.height = 26 * PK; const x = c.getContext('2d');
   const paint = (rows, ox, oy) => rows.forEach((r, j) => { for (let i = 0; i < r.length; i++) { const ch = r[i]; if (ch === '.') continue; x.fillStyle = PIG_COL[ch]; x.fillRect((ox + i) * PK, (oy + j) * PK, PK, PK); } });
   paint(PIG_BODY, 2, 12); paint(PIG_WINGS[f], 7, 12 + [-9, -4, -3][f] + 7); x.fillStyle = 'rgba(140,255,190,.35)'; x.fillRect(19 * PK, 16 * PK, 2 * PK, 2 * PK); return c; });
 function runStarted() {   // start of the run proper: offer head starts (like their HEAD START buttons), golden misbaha ride
@@ -799,7 +799,7 @@ function startVehicle(k) {
   tone(523, .1, 'square', .06); setTimeout(() => tone(659, .1, 'square', .06), 90); setTimeout(() => tone(784, .2, 'square', .06), 180);
 }
 function vehCircles() { const x = hero.x, y = hero.y;
-  if (veh.k === 'kabootar') return [[x + 2, y - 30, 13], [x, y - 62, 11], [x + 18, y - 100, 16]];
+  if (veh.k === 'kabootar') return [[x + 2, y - 30, 13], [x, y - 62, 11], [x + 22, y - 106, 11]];
   if (veh.k === 'sandals') { const sg = veh.s < 0 ? -1 : 1; return [[x + 3, y - 31 * sg, 10], [x + 7, y - 58 * sg, 9]]; }
   return veh.k === 'tuktuk' ? [[x - 4, y - 22, 18], [x + 16, y - 16, 12], [x - 2, y - 48, 12]] : [[x, y - 8, 16], [x + 4, y - 36, 12]]; }
 function vehUpdate(dt) {
@@ -809,7 +809,7 @@ function vehUpdate(dt) {
     if (press) { hero.vy = -270; veh.flap = .28; veh.tip = 0; RUN.flaps++; tone(700, .05, 'square', .04, 1.4); for (let i = 0; i < 4; i++) sparks.push({ x: hero.x - 10, y: hero.y - 90, vx: -80 - Math.random() * 60, vy: 40 + Math.random() * 60, l: .4, c: '#e8ecf4' }); }
     hero.vy += 860 * dt; hero.y += hero.vy * dt;
     if (hero.y >= FLOOR) { hero.y = FLOOR; hero.vy = 0; }
-    if (hero.y - 120 < CEIL) { hero.y = CEIL + 120; hero.vy = Math.max(0, hero.vy); }
+    if (hero.y - 107 < CEIL) { hero.y = CEIL + 107; hero.vy = Math.max(0, hero.vy); }   // the pigeon can fly right up to the top of the screen
     hero.rot = Math.max(-.35, Math.min(.5, hero.vy / 700));
     return;
   }
@@ -858,15 +858,20 @@ function vehCrash() {
 }
 function drawVehicle() {
   const x = hero.x, y = hero.y, k = veh.k;
-  if (k === 'kabootar') {   // the exact Flappy pigeon (smaller); he hangs under it with both fists round its tail feathers
-    const f = veh.flap > .14 ? 2 : veh.flap > 0 ? 1 : Math.floor(t * 4) % 2 ? 0 : 1, FX = 10.5, FY = -83;   // FX/FY = his fist in the hang frame
-    ctx.save(); ctx.translate(x + FX, y + FY); ctx.rotate(hero.rot);
-    ctx.save(); ctx.rotate(-hero.rot * .6 + Math.sin(t * 5) * .05); ctx.imageSmoothingEnabled = true; const hf = 'hang' + (Math.floor(t * 8) % 4) + '_happy';
-    ctx.drawImage(heroImg, FR(hf) * HW * HX4, 0, HW * HX4, HH0 * HX4, -HW * HS / 2 - FX, -FY - HH, HW * HS, HH); ctx.restore();
-    { const gx = 2, gy = -17;   // his arm reaches up to the tail: sleeve, then the pigeon, then his fist wrapped round the tail feathers
-      ctx.lineCap = 'round'; ctx.strokeStyle = '#1a161e'; ctx.lineWidth = 6.5; ctx.beginPath(); ctx.moveTo(0, 4); ctx.lineTo(gx, gy + 3); ctx.stroke(); ctx.strokeStyle = SHOP.outfit === 'luton' ? '#f67a20' : SHOP.outfit === 'puffer' ? '#2c2c34' : SHOP.outfit === 'moroccan' ? '#963a2e' : SHOP.outfit === 'eid' ? '#fcf0ce' : '#f8f6fa'; ctx.lineWidth = 4; ctx.stroke();
-      ctx.save(); ctx.translate(gx, gy); ctx.rotate(-.42 - hero.rot * .4); ctx.imageSmoothingEnabled = false; ctx.drawImage(pigCv[f], -3.5 * PK, -20.5 * PK); ctx.imageSmoothingEnabled = true; ctx.restore();
-      ctx.fillStyle = '#d48a58'; ctx.strokeStyle = '#1a161e'; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.ellipse(gx, gy + 1, 4.2, 3.6, 0, 0, 7); ctx.fill(); ctx.stroke(); ctx.strokeStyle = '#a8643c'; ctx.lineWidth = .8; ctx.beginPath(); ctx.moveTo(gx - 2.6, gy + 1.5); ctx.lineTo(gx + 2.6, gy + 1.5); ctx.stroke(); }
+  if (k === 'kabootar') {   // the exact Flappy pigeon (small); one arm reaches up over his head and his fist grips its tail
+    const f = veh.flap > .14 ? 2 : veh.flap > 0 ? 1 : Math.floor(t * 4) % 2 ? 0 : 1, SX = 1.5, SY = -43, GX = 8, GY = -91;   // shoulder (in the sprite) + grip, feet-relative
+    const col = { luton: ['#f67a20', '#d65c10'], puffer: ['#2c2c34', '#1c1c22'], moroccan: ['#963a2e', '#74281f'], eid: ['#fcf0ce', '#e8d4a2'] }[SHOP.outfit] || ['#f8f6fa', '#d4d4e4'];
+    ctx.save(); ctx.translate(x, y); ctx.rotate(hero.rot * .5);
+    ctx.save(); ctx.translate(GX, GY); ctx.rotate(Math.sin(t * 5) * .05); ctx.translate(-GX, -GY); ctx.imageSmoothingEnabled = true; const hf = 'hang' + (Math.floor(t * 8) % 4) + '_happy';
+    ctx.drawImage(heroImg, FR(hf) * HW * HX4, 0, HW * HX4, HH0 * HX4, -HW * HS / 2, -HH, HW * HS, HH);
+    // sleeve: from inside the shoulder, up across his ear and over the top of his head (black outline, white sleeve, no joint showing)
+    const arm = () => { ctx.beginPath(); ctx.moveTo(SX - 2, SY + 6); ctx.quadraticCurveTo(SX + 12, SY - 26, GX, GY + 4); };
+    ctx.lineCap = 'butt'; ctx.lineJoin = 'round'; ctx.strokeStyle = '#1a161e'; ctx.lineWidth = 9; arm(); ctx.stroke(); ctx.strokeStyle = col[0]; ctx.lineWidth = 6; arm(); ctx.stroke();
+    ctx.strokeStyle = col[1]; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(SX + 1, SY + 4); ctx.quadraticCurveTo(SX + 14, SY - 24, GX + 2, GY + 6); ctx.stroke();
+    ctx.restore();
+    ctx.save(); ctx.translate(GX, GY); ctx.rotate(-.38 - hero.rot * .4); ctx.imageSmoothingEnabled = false; ctx.drawImage(pigCv[f], -3.5 * PK, -20.5 * PK); ctx.imageSmoothingEnabled = true; ctx.restore();
+    ctx.fillStyle = '#d48a58'; ctx.strokeStyle = '#1a161e'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.ellipse(GX, GY + 1, 4.4, 3.8, 0, 0, 7); ctx.fill(); ctx.stroke();
+    ctx.strokeStyle = '#a8643c'; ctx.lineWidth = .8; ctx.beginPath(); ctx.moveTo(GX - 2.8, GY + 1.6); ctx.lineTo(GX + 2.8, GY + 1.6); ctx.stroke(); ctx.fillStyle = '#ecaa74'; ctx.fillRect(GX - 2.5, GY - 1.2, 2, 1.2);
     ctx.restore();
     if (veh.t < 3.2) { const a = Math.min(1, veh.t * 3, (3.2 - veh.t) * 2), s = 1 + Math.sin(t * 9) * .06; ctx.save(); ctx.globalAlpha = a; ctx.translate(W / 2, VH * .3); ctx.scale(s, s); ctx.font = '700 26px Silk'; ctx.textAlign = 'center'; ctx.lineJoin = 'round';
       ctx.lineWidth = 6; ctx.strokeStyle = '#1b1a24'; ctx.strokeText('TAP TO FLAP', 0, 0); ctx.fillStyle = '#fff'; ctx.fillText('TAP TO FLAP', 0, 0); ctx.restore(); }
