@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-15",
+ "updated": "2026-11-21",
  "categories": {
   "mosques": "Mosques & Islamic centres",
   "schools": "Schools & colleges",
@@ -2791,7 +2791,7 @@
    "original_vector": false,
    "quality": "hd",
    "details": {
-    "address": "126\u2013130 Oak Road, Luton",
+    "address": "126–130 Oak Road, Luton",
     "postcode": "LU4 8AD",
     "note": "UKIM logo is national; the lockups add the local name"
    },
@@ -3179,7 +3179,7 @@
    "original_vector": false,
    "quality": "hd",
    "details": {
-    "address": "12\u201316 Portland Road, Luton",
+    "address": "12–16 Portland Road, Luton",
     "postcode": "LU4 8AX"
    },
    "signed_off": false,
@@ -8024,7 +8024,7 @@
    "original_vector": false,
    "quality": "hd",
    "details": {
-    "address": "12\u201316 Portland Road, Luton",
+    "address": "12–16 Portland Road, Luton",
     "postcode": "LU4 8AX",
     "note": "Covers Rabia Girls' School, Rabia Boys' School and Madrasa Islamia Primary"
    },
@@ -12948,7 +12948,7 @@
   },
   {
    "slug": "lantern",
-   "name": "Lantern \u00b7 Muslim Women's Voices",
+   "name": "Lantern · Muslim Women's Voices",
    "aliases": [
     "Lantern"
    ],
@@ -19495,7 +19495,7 @@
   },
   {
    "slug": "girlguiding",
-   "name": "Girlguiding (Bedfordshire \u00b7 Luton South)",
+   "name": "Girlguiding (Bedfordshire · Luton South)",
    "aliases": [
     "Girlguiding Luton"
    ],
@@ -22223,7 +22223,7 @@
    "original_vector": true,
    "quality": "redrawn",
    "details": {
-    "address": "The Hat Factory Arts Centre, 65\u201367 Bute Street, Luton",
+    "address": "The Hat Factory Arts Centre, 65–67 Bute Street, Luton",
     "postcode": "LU1 2EY",
     "website": "https://ngyt.co.uk"
    },
@@ -26726,7 +26726,7 @@
    "original_vector": true,
    "quality": "vector",
    "details": {
-    "address": "Bennett\u2019s Recreation Ground, Dunstable",
+    "address": "Bennett’s Recreation Ground, Dunstable",
     "postcode": "LU6 1PJ",
     "website": "https://www.dunstable.gov.uk"
    },
@@ -28338,7 +28338,7 @@
    "original_vector": true,
    "quality": "vector",
    "details": {
-    "last_event_at": "Luton Library Theatre, St George\u2019s Square LU1 2NG"
+    "last_event_at": "Luton Library Theatre, St George’s Square LU1 2NG"
    },
    "signed_off": false,
    "files": [
@@ -33392,6 +33392,48 @@
      "style": "logo",
      "w": 1800,
      "h": 292,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "smr-plates",
+   "name": "SMR Plates",
+   "aliases": [
+    "SMR Plates logo",
+    "smr.plates"
+   ],
+   "category": "smr",
+   "category_name": "SMR",
+   "path": "smr/smr-plates/",
+   "styles": [
+    "logo",
+    "icon-square"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {
+    "address": "Luton",
+    "website": "https://smrgraphics.co.uk/plates",
+    "email": "summar@smrgraphics.co.uk",
+    "instagram": "@smr.plates"
+   },
+   "signed_off": true,
+   "note": "Owner-approved SMR Plates badge logo (Nov 2026). Works on light and dark backgrounds; use as is, do not redraw.",
+   "files": [
+    {
+     "file": "smr-plates-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1641,
+     "h": 936
+    },
+    {
+     "file": "smr-plates-icon-square.png",
+     "variant": "icon-square",
+     "style": "icon",
+     "w": 1024,
+     "h": 1024,
      "made": true
     }
    ]
