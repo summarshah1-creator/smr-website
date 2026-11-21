@@ -33,5 +33,6 @@ if ($t && $t['art'] !== '') { // the track's cover as the page icon: iPhone's sh
     $ico = '/music/og.php?t=' . rawurlencode($t['slug']) . '&sq=1&v=' . $t['updated_at'];
     $html = str_replace('<link rel="apple-touch-icon" href="/assets/icon-512.png">', '<link rel="apple-touch-icon" href="' . $h($ico) . '"><link rel="icon" type="image/jpeg" href="' . $h($ico) . '">', $html);
 }
+if ($t) $html = str_replace('<meta name="apple-mobile-web-app-title" content="SMR Player">', '<meta name="apple-mobile-web-app-title" content="' . $h($t['title'] . ' - SMR Digital') . '">', $html); // Home Screen name
 $html = str_replace('<title>SMR Music</title>', '<title>' . $h($t ? $t['title'] . ' · SMR Player' : 'SMR Player') . '</title>', $html);
 echo $html;
