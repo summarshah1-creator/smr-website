@@ -862,15 +862,15 @@ function vehCrash() {
 function drawVehicle() {
   const x = hero.x, y = hero.y, k = veh.k;
   if (k === 'kabootar') {   // the exact Flappy pigeon (small); one arm reaches up over his head and his fist grips its tail
-    const f = veh.flap > .14 ? 2 : veh.flap > 0 ? 1 : Math.floor(t * 4) % 2 ? 0 : 1, SX = 1.4, SY = -40, GX = -1, GY = -88, EX = -13, EY = -62;   // shoulder (in the sprite) + grip, feet-relative
+    const f = veh.flap > .14 ? 2 : veh.flap > 0 ? 1 : Math.floor(t * 4) % 2 ? 0 : 1, SX = -3, SY = -47, GX = -1, GY = -88, EX = -13, EY = -64;   // shoulder at the top of the thobe, not on his chest   // shoulder (in the sprite) + grip, feet-relative
     const col = { luton: ['#f67a20', '#d65c10'], puffer: ['#2c2c34', '#1c1c22'], moroccan: ['#963a2e', '#74281f'], eid: ['#fcf0ce', '#e8d4a2'] }[SHOP.outfit] || ['#f8f6fa', '#d4d4e4'];
     ctx.save(); ctx.translate(x, y); ctx.rotate(hero.rot * .5);
     ctx.save(); ctx.translate(GX, GY); ctx.rotate(Math.sin(t * 5) * .05); ctx.translate(-GX, -GY); ctx.imageSmoothingEnabled = true; const hf = 'hang' + (Math.floor(t * 8) % 4) + '_happy';
     ctx.drawImage(heroImg, FR(hf) * HW * HX4, 0, HW * HX4, HH0 * HX4, -HW * HS / 2, -HH, HW * HS, HH);
     // sleeve: from inside the shoulder, up across his ear and over the top of his head (black outline, white sleeve, no joint showing)
-    const arm = () => { ctx.beginPath(); ctx.moveTo(SX - 2, SY + 6); ctx.lineTo(EX, EY); ctx.lineTo(GX, GY + 3); };   // bent arm: elbow out behind his head, hand just above his hair
+    const arm = () => { ctx.beginPath(); ctx.moveTo(SX, SY); ctx.lineTo(EX, EY); ctx.lineTo(GX, GY + 3); };   // bent arm: elbow out behind his head, hand just above his hair
     ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = '#1a161e'; ctx.lineWidth = 9; arm(); ctx.stroke(); ctx.strokeStyle = col[0]; ctx.lineWidth = 6; arm(); ctx.stroke();
-    ctx.strokeStyle = col[1]; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(SX, SY + 3); ctx.lineTo(EX + 2, EY + 1); ctx.lineTo(GX + 2, GY + 5); ctx.stroke();
+    ctx.strokeStyle = col[1]; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(SX + 1, SY - 1); ctx.lineTo(EX + 2, EY + 1); ctx.lineTo(GX + 2, GY + 5); ctx.stroke();
     ctx.restore();
     ctx.save(); ctx.translate(GX, GY); ctx.rotate(-.08 - hero.rot * .3); ctx.imageSmoothingEnabled = false; ctx.drawImage(pigCv[f], -14 * PK, -24.6 * PK);   // its feet (14, 24.6) in his fist
      ctx.imageSmoothingEnabled = true; ctx.restore();
