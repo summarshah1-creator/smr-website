@@ -948,8 +948,8 @@ function download(t) {
 }
 async function share(t) {
   const url = trackUrl(t);
-  const text = t.title + (t.artist ? ' by ' + t.artist : '');
-  if (navigator.share) { try { await navigator.share({ title: text, text, url }); return; } catch (e) { if (e.name === 'AbortError') return; } }
+  // share only the link: iPhone's Copy then copies the link, and the share sheet header shows the track's own title + cover (read from the page's tags and icon)
+  if (navigator.share) { try { await navigator.share({ url }); return; } catch (e) { if (e.name === 'AbortError') return; } }
   try { await navigator.clipboard.writeText(url); toast('Link copied'); } catch (e) { prompt('Copy this link', url); }
 }
 

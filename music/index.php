@@ -29,5 +29,9 @@ $meta = '<meta property="og:site_name" content="SMR Player"><meta property="og:t
     . '<meta property="og:image:alt" content="' . $h($title) . '"><meta property="og:url" content="' . $h($url) . '"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="' . $h($img) . '"><link rel="canonical" href="' . $h($url) . '">';
 $html = (string) file_get_contents(__DIR__ . '/player.html');
 $html = str_replace('<link rel="manifest" href="manifest.webmanifest">', '<link rel="manifest" href="/music/manifest.php' . ($t ? '?t=' . $h($t['slug']) : '') . '">' . $meta, $html);
+if ($t && $t['art'] !== '') { // the track's cover as the page icon: iPhone's share sheet header and the Home Screen icon
+    $ico = '/music/og.php?t=' . rawurlencode($t['slug']) . '&sq=1&v=' . $t['updated_at'];
+    $html = str_replace('<link rel="apple-touch-icon" href="/assets/icon-512.png">', '<link rel="apple-touch-icon" href="' . $h($ico) . '"><link rel="icon" type="image/jpeg" href="' . $h($ico) . '">', $html);
+}
 $html = str_replace('<title>SMR Music</title>', '<title>' . $h($t ? $t['title'] . ' · SMR Player' : 'SMR Player') . '</title>', $html);
 echo $html;

@@ -12,7 +12,18 @@ if (!$t || $t['art'] === '' || !function_exists('imagecreatetruecolor')) {
     header('Cache-Control: public, max-age=86400');
     readfile($p); exit;
 }
-$cache = music_dir($t['code']) . '/og-' . $t['updated_at'] . '.jpg';
+$sq = !empty($_GET['sq']); // sq=1: 512×512 cover for the page icon (share sheet header, Home Screen icon)
+$cache = music_dir($t['code']) . '/' . ($sq ? 'sq-' : 'og-') . $t['updated_at'] . '.jpg';
+if (!is_file($cache) && $sq) {
+    $raw = @file_get_contents(music_dir($t['code']) . '/art.' . $t['art']);
+    $im = $raw !== false ? @imagecreatefromstring($raw) : false;
+    if (!$im) { header('Content-Type: image/png'); readfile($fallback); exit; }
+    $sw = imagesx($im); $sh = imagesy($im); $side = min($sw, $sh);
+    $out = imagecreatetruecolor(512, 512);
+    imagecopyresampled($out, $im, 0, 0, (int) (($sw - $side) / 2), (int) (($sh - $side) / 2), 512, 512, $side, $side);
+    foreach (glob(music_dir($t['code']) . '/sq-*.jpg') ?: [] as $old) @unlink($old);
+    imagejpeg($out, $cache, 86);
+}
 if (!is_file($cache)) {
     $src = music_dir($t['code']) . '/art.' . $t['art'];
     $raw = @file_get_contents($src);
