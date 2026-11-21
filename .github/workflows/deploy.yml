@@ -10,6 +10,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Stamp 3D game file versions (phones only re-download changed files)
+        run: |
+          python3 - <<'P'
+          import hashlib, re
+          d = 'flappy/3d/'; h = open(d + 'index.html').read()
+          h = re.sub(r'\./([\w]+)\.js\?v=dev', lambda m: './%s.js?v=%s' % (m.group(1), hashlib.md5(open(d + m.group(1) + '.js', 'rb').read()).hexdigest()[:8]), h)
+          open(d + 'index.html', 'w').write(h)
+          P
       - name: Upload site over FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
