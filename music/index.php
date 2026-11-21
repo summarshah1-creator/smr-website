@@ -16,15 +16,17 @@ try { $t = $slug !== '' ? music_by_slug($slug) : null; } catch (Throwable $e) {}
 $host = 'https://' . ($_SERVER['HTTP_HOST'] ?? 'smrgraphics.co.uk');
 if ($t) {
     $title = $t['title'] . ($t['artist'] !== '' ? ' · ' . $t['artist'] : '');
-    $desc = 'Exclusive preview on SMR Player. Designed & built by SMR Digital.';
-    $img = $t['art'] !== '' ? $host . '/music/api.php?a=art&id=' . $t['code'] . '&v=' . $t['updated_at'] : $host . '/assets/icon-512.png';
+    $about = trim((string) preg_split('/\n\s*\n/', (string) ($t['about'] ?? ''))[0]);
+    $desc = 'Exclusive preview · Tap to listen on SMR Player' . ($about !== '' ? '. ' . mb_strimwidth($about, 0, 140, '…') : '');
+    $img = $host . '/music/og.php?t=' . rawurlencode($t['slug']) . '&v=' . $t['updated_at'];
     $url = $host . '/player/' . $t['slug'];
 } else {
     $title = 'SMR Player'; $desc = 'Music on SMR Player. Designed & built by SMR Digital.';
     $img = $host . '/assets/icon-512.png'; $url = $host . '/player';
 }
-$meta = '<meta property="og:type" content="music.song"><meta property="og:title" content="' . $h($title) . '"><meta property="og:description" content="' . $h($desc) . '">'
-    . '<meta property="og:image" content="' . $h($img) . '"><meta property="og:url" content="' . $h($url) . '"><meta name="twitter:card" content="summary_large_image">';
+$meta = '<meta property="og:site_name" content="SMR Player"><meta property="og:type" content="music.song"><meta property="og:title" content="' . $h($title) . '"><meta property="og:description" content="' . $h($desc) . '"><meta name="description" content="' . $h($desc) . '">'
+    . '<meta property="og:image" content="' . $h($img) . '">' . ($t ? '<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:type" content="image/jpeg">' : '')
+    . '<meta property="og:image:alt" content="' . $h($title) . '"><meta property="og:url" content="' . $h($url) . '"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="' . $h($img) . '"><link rel="canonical" href="' . $h($url) . '">';
 $html = (string) file_get_contents(__DIR__ . '/player.html');
 $html = str_replace('<link rel="manifest" href="manifest.webmanifest">', '<link rel="manifest" href="/music/manifest.php' . ($t ? '?t=' . $h($t['slug']) : '') . '">' . $meta, $html);
 $html = str_replace('<title>SMR Music</title>', '<title>' . $h($t ? $t['title'] . ' · SMR Player' : 'SMR Player') . '</title>', $html);
