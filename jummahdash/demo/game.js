@@ -28,8 +28,9 @@ const img = src => { const i = new Image(); i.src = src; return i; };
 const heroImg = img('art/hero.png');
 const HERO_FR = ['run0_normal', 'run1_normal', 'run2_normal', 'run3_normal', 'run4_normal', 'run5_normal', 'fly0_effort', 'fly1_effort', 'fly2_effort', 'fly0_panic', 'fly1_panic', 'fly2_panic', 'glide0_normal', 'glide1_normal', 'land0_effort', 'glide0_ko', 'run0_happy', 'run0_blink'];
 const FR = n => HERO_FR.indexOf(n);
-const NPC_KEYS = ['pc_m', 'pc_f', 'pcso', 'warden', 'fan_dad', 'fan_f', 'fan_kid', 'blonde', 'abaya', 'teen', 'aunty', 'uncle', 'nurse', 'elder', 'builder', 'rider', 'rider_g', 'rider_o', 'schoolboy', 'shop', 'lad'];
-const npcImg = {}; NPC_KEYS.forEach(k => npcImg[k] = img('art/npc_' + k + '.png'));
+const NPC_META = {"pc_m":{"w":47,"h":88,"n":9,"type":"walk"},"pc_f":{"w":47,"h":75,"n":9,"type":"walk"},"pcso":{"w":50,"h":74,"n":9,"type":"walk"},"warden":{"w":50,"h":74,"n":9,"type":"walk"},"fan_dad":{"w":43,"h":102,"n":9,"type":"walk"},"fan_f":{"w":47,"h":69,"n":9,"type":"walk"},"fan_kid":{"w":51,"h":74,"n":9,"type":"walk"},"blonde":{"w":47,"h":70,"n":9,"type":"walk"},"abaya":{"w":49,"h":70,"n":9,"type":"walk"},"teen":{"w":47,"h":70,"n":9,"type":"walk"},"aunty":{"w":47,"h":72,"n":9,"type":"walk"},"uncle":{"w":47,"h":70,"n":9,"type":"walk"},"nurse":{"w":47,"h":76,"n":9,"type":"walk"},"elder":{"w":49,"h":72,"n":9,"type":"walk"},"builder":{"w":49,"h":76,"n":9,"type":"walk"},"rider":{"w":50,"h":67,"n":9,"type":"walk"},"rider_g":{"w":54,"h":74,"n":9,"type":"walk"},"rider_o":{"w":54,"h":74,"n":9,"type":"walk"},"schoolboy":{"w":47,"h":67,"n":9,"type":"walk"},"shop":{"w":47,"h":67,"n":9,"type":"walk"},"lad":{"w":47,"h":67,"n":9,"type":"walk"},"esc_a":{"w":54,"h":78,"n":4,"type":"esc"},"esc_b":{"w":74,"h":82,"n":4,"type":"esc"},"esc_c":{"w":74,"h":75,"n":4,"type":"esc"},"esc_d":{"w":74,"h":78,"n":4,"type":"esc"},"esc_e":{"w":54,"h":82,"n":4,"type":"esc"}};   // sprite sheets: walkers = walk0-3, blink0-3, shock; e-scooters = ride0-2, shock
+const NPC_KEYS = Object.keys(NPC_META).filter(k => NPC_META[k].type === 'walk'), ESC_KEYS = Object.keys(NPC_META).filter(k => NPC_META[k].type === 'esc');
+const npcImg = {}; Object.keys(NPC_META).forEach(k => npcImg[k] = img('art/npc_' + k + '.png?v=2'));
 
 /* buildings: Flappy landmarks + house runs, drawn at KR px per unit, trimmed, cached (LRU) */
 const M = 90, LH = 380;
@@ -143,9 +144,10 @@ function spawnCar(x) {
   cars.push({ k, ci: Math.random() * 10 | 0, far, x: x !== undefined ? x : (far ? W + 30 : -160), v: far ? -v : v });
 }
 function spawnNpc(x) {
-  const k = NPC_KEYS[Math.random() * NPC_KEYS.length | 0];
+  const esc = Math.random() < .16, k = esc ? ESC_KEYS[Math.random() * ESC_KEYS.length | 0] : NPC_KEYS[Math.random() * NPC_KEYS.length | 0];
   const dir = Math.random() < .5 ? -1 : 1;
-  npcs.push({ k, x: x !== undefined ? x : W + 40, y: PAVE_T + 18 + Math.random() * 26, dir, v: 10 + Math.random() * 16, ph: Math.random() * 6, react: 0, hop: 0, look: 0 });
+  npcs.push({ k, esc, x: x !== undefined ? x : (dir > 0 && esc ? -90 : W + 60), y: PAVE_T + 18 + Math.random() * 26, dir, v: esc ? 70 + Math.random() * 50 : 16 + Math.random() * 14,
+    ph: Math.random() * 4, react: 0, hop: 0, look: 0, blink: 1 + Math.random() * 4 });
 }
 
 /* ---------------- obstacles + coins ---------------- */
@@ -204,11 +206,11 @@ function update(dt) {
   if ((nextCar -= dt) <= 0) { spawnCar(); nextCar = 1.2 + Math.random() * 2.6; }
 
   // people on the front pavement
-  npcs.forEach(p => { p.x += (p.dir * p.v * (p.react > 0 ? 0 : 1)) * dt - dx; p.ph += dt * 7;
+  npcs.forEach(p => { p.x += (p.dir * p.v * (p.react > 0 && !p.esc ? .15 : 1)) * dt - dx; p.ph += dt * (p.esc ? 14 : p.v * .32); p.blink -= dt; if (p.blink < -.13) p.blink = 1.5 + Math.random() * 4;
     const near = !hero.dead && Math.abs(p.x - hero.x) < 80 && state !== 'menu';
     if (near && p.react <= 0 && (hero.y > FLOOR - 120 || speed > 200)) { p.react = 1.1; p.hop = 1; p.look = hero.x > p.x ? 1 : -1; }
     if (p.react > 0) p.react -= dt; if (p.hop > 0) p.hop = Math.max(0, p.hop - dt * 3); });
-  npcs = npcs.filter(p => p.x > -80 && p.x < W + 120);
+  npcs = npcs.filter(p => p.x > -140 && p.x < W + 160);
   if ((nextNpc -= dt) <= 0) { spawnNpc(); nextNpc = .9 + Math.random() * 2.2; }
 
   // hero
@@ -346,15 +348,18 @@ function drawHero() {
   ctx.restore(); ctx.imageSmoothingEnabled = true;
 }
 function drawNpc(p) {
-  const im = npcImg[p.k]; if (!im.complete || !im.naturalWidth) return;
-  const sc = .9, w = im.naturalWidth * sc, h = im.naturalHeight * sc;
-  const facing = p.react > 0 ? p.look : p.dir;
-  const bob = p.react > 0 ? 0 : Math.abs(Math.sin(p.ph)) * 1.4, hop = Math.sin(p.hop * Math.PI) * 9;
+  const im = npcImg[p.k], M = NPC_META[p.k]; if (!im.complete || !im.naturalWidth) return;
+  const sc = .9, w = M.w * sc, h = M.h * sc;
+  const facing = p.react > 0 && !p.esc ? p.look : p.dir;
+  let f;
+  if (p.esc) f = p.react > 0 ? 3 : Math.floor(p.ph) % 3;
+  else if (p.react > 0) f = 8;
+  else f = (Math.floor(p.ph) % 4) + (p.blink < 0 ? 4 : 0);
+  const bob = p.esc ? (Math.floor(p.ph * .5) % 2) * .6 : (p.react > 0 ? 0 : (Math.floor(p.ph) % 2) * 1.2), hop = Math.sin(p.hop * Math.PI) * (p.esc ? 0 : 9);
   ctx.fillStyle = 'rgba(30,10,30,.25)'; ctx.beginPath(); ctx.ellipse(p.x, p.y, w * .36, 2, 0, 0, 7); ctx.fill();
-  ctx.save(); ctx.translate(p.x, p.y - bob - hop); if (facing < 0) ctx.scale(-1, 1);
-  const tilt = p.react > 0 ? 0 : Math.sin(p.ph) * .04; ctx.rotate(tilt); ctx.imageSmoothingEnabled = false;
-  ctx.drawImage(im, -w / 2, -h, w, h); ctx.restore(); ctx.imageSmoothingEnabled = true;
-  if (p.react > 0) { const y = p.y - h - 10 - hop; ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(p.x, y, 6, 0, 7); ctx.fill(); ctx.strokeStyle = '#1a1024'; ctx.lineWidth = .8; ctx.stroke();
+  ctx.save(); ctx.translate(p.x, p.y - bob - hop); if (facing < 0) ctx.scale(-1, 1); ctx.imageSmoothingEnabled = false;
+  ctx.drawImage(im, f * M.w, 0, M.w, M.h, -w / 2, -h, w, h); ctx.restore(); ctx.imageSmoothingEnabled = true;
+  if (p.react > 0 && !p.esc) { const y = p.y - h - 10 - hop; ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(p.x, y, 6, 0, 7); ctx.fill(); ctx.strokeStyle = '#1a1024'; ctx.lineWidth = .8; ctx.stroke();
     ctx.fillStyle = '#e8352a'; ctx.font = '700 9px Silk'; ctx.textAlign = 'center'; ctx.fillText('!', p.x, y + 3.5); }
 }
 function drawZap(o) {
