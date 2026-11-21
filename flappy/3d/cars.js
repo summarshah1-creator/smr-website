@@ -4,6 +4,8 @@
    are W205, same family look), Prius Mk3, Audi A1/S1 Sportback. Sources + licences are listed in cars/cars.json (owner reviews licences
    before release). Each model loads ONCE and every copy shares its geometry + materials; colour only swaps the paint material; own UK
    plates (white front, yellow rear). If the meshes fail to load, the coded A-/C-Class shapes (DEFS) and the 3 generic profiles stand in.
+   Two detail levels per model (hi near traffic < 16 m, lo far + parked). SMR badges only where the original logo came off cleanly: Mercedes = black disc
+   with chrome SMR (front), chrome SMR wordmark (rear); Audi front rings are part of the grille mesh so they stay. Exhaust insides dark, black plate holders.
    Still to find: Polo Mk5, Yaris Mk3, Qashqai, BMW F30/F20, Fiesta Mk7, Corsa E, Jazz, Audi A3 (generic shapes meanwhile).
    Traffic: outgoing lane x -3.6 (nose -z), oncoming x +3.6 turned round; groups pooled. Paint: SMMT 2024 UK colour shares for now. */
 import * as THREE from 'three';
@@ -188,26 +190,49 @@ const DEFS = {
         c.globalCompositeOperation = 'source-over'; c.strokeStyle = '#d9dbde'; c.lineWidth = 3; c.beginPath(); c.arc(0, 0, 59, 0, 7); c.stroke(); c.fillStyle = '#8d9095'; c.beginPath(); c.arc(0, 0, 13, 0, 7); c.fill(); }); } } };
 /* ================= real meshes (flappy/3d/cars/): cleaned + decimated + scaled to published dimensions by the car mesh pipeline
    (badges, interiors and the source plates removed; our own paint, glass and UK plates). Sources + licences are in cars/cars.json. ================= */
-const CAR_V = 1, TL = new THREE.TextureLoader(), MATC = {};
+const CAR_V = 2, TL = new THREE.TextureLoader(), MATC = {};
 export const MESH = {};
 const plateTex = (txt, yellow) => tex(256, 56, (x, w, h) => { x.fillStyle = yellow ? '#f4c91c' : '#f3f3ee'; x.fillRect(0, 0, w, h); x.strokeStyle = '#222'; x.lineWidth = 2; x.strokeRect(1, 1, w - 2, h - 2);
   x.save(); x.fillStyle = '#111'; x.font = 'bold 44px sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.translate(w / 2, h / 2 + 2); x.scale(.8, 1); x.fillText(txt, 0, 0); x.restore(); });
 const REGS = ['MP65 HHM', 'SM15 BWW', 'LT16 KBR', 'KX17 RHN', 'AJ17 CNX', 'GX69 YVJ', 'HY14 LGO', 'WG12 XYF', 'KR63 ABO', 'DH65 BHK'];
-const plateMat = (k, rear) => MATC[k + rear] || (MATC[k + rear] = new THREE.MeshStandardMaterial({ map: plateTex(REGS[Object.keys(MATC).length % REGS.length], rear), roughness: .45, polygonOffset: true, polygonOffsetFactor: -2 }));
+const plateMat = (k, rear) => MATC['pl' + k + rear] || (MATC['pl' + k + rear] = new THREE.MeshStandardMaterial({ map: plateTex(REGS[Object.keys(MATC).length % REGS.length], rear), roughness: .45, polygonOffset: true, polygonOffsetFactor: -2 }));
+// SMR badges in place of every car logo (owner): front = gloss black disc with a chrome SMR across the middle; rear = the chrome SMR wordmark on its own
+const SMR_IMG = new Image(); SMR_IMG.src = '../smr-mark.svg';
+const chromeMark = (x, X, Y, W, H) => { const c = document.createElement('canvas'); c.width = W; c.height = H; const y = c.getContext('2d'); y.drawImage(SMR_IMG, 0, 0, W, H); y.globalCompositeOperation = 'source-in';
+  const g = y.createLinearGradient(0, 0, 0, H); [[0, '#ffffff'], [.38, '#c9ced4'], [.5, '#6e757d'], [.62, '#e8ebee'], [1, '#9aa1a8']].forEach(([o, k]) => g.addColorStop(o, k)); y.fillStyle = g; y.fillRect(0, 0, W, H); x.drawImage(c, X, Y); };
+const badgeMat = (front) => { const c = document.createElement('canvas'); c.width = front ? 256 : 512; c.height = front ? 256 : 132; const x = c.getContext('2d'), t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4;
+  const draw = () => { x.clearRect(0, 0, c.width, c.height);
+    if (front) { const d = x.createRadialGradient(100, 90, 8, 128, 128, 128); d.addColorStop(0, '#30343a'); d.addColorStop(.7, '#0d0e10'); d.addColorStop(1, '#050506'); x.fillStyle = d; x.beginPath(); x.arc(128, 128, 126, 0, 7); x.fill();
+      x.strokeStyle = 'rgba(255,255,255,.18)'; x.lineWidth = 3; x.beginPath(); x.arc(128, 128, 122, 0, 7); x.stroke(); if (SMR_IMG.complete && SMR_IMG.naturalWidth) chromeMark(x, 128 - 96, 128 - 25, 192, 49); }
+    else if (SMR_IMG.complete && SMR_IMG.naturalWidth) chromeMark(x, 6, 2, 500, 128);
+    t.needsUpdate = true; };
+  draw(); SMR_IMG.addEventListener('load', draw);
+  return new THREE.MeshStandardMaterial({ map: t, roughness: .16, metalness: front ? .35 : .85, alphaTest: .5, polygonOffset: true, polygonOffsetFactor: -2 }); };
+const BADGE_F = badgeMat(true), BADGE_R = badgeMat(false);
+const HOLDER = mat(0x101113, { roughness: .55 }), HOLDER_G = rboxGeo(.548, .139, .016, .012), PLATE_G = new THREE.PlaneGeometry(.52, .111), BADGE_G = new THREE.CircleGeometry(1, 28), WORD_G = new THREE.PlaneGeometry(1, 132 / 512); PLATE_G.userData.shared = BADGE_G.userData.shared = WORD_G.userData.shared = 1;
 function partMat(k, i, p) { const id = k + ':' + i; if (MATC[id]) return MATC[id];
-  const o = { color: new THREE.Color(...p.c), roughness: Math.max(.08, p.r ?? .6), metalness: p.m ?? 0 };
+  if (p.cls === 'tint') return MATC[id] = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(p.t[0], p.t[1], p.t[2]), transparent: true, opacity: p.t[3], roughness: .04, metalness: 0, clearcoat: 1, depthWrite: false });
+  const o = { color: new THREE.Color(...p.c), roughness: Math.max(.06, p.r ?? .6), metalness: p.m ?? 0 };
+  if (o.metalness > .7) { o.roughness = Math.max(o.roughness, .3); o.color.multiplyScalar(.78); }   // chrome reads as polished metal, not a mirror (exhaust tips, trims)
   if (p.map) { const t = TL.load(`./cars/${p.map}?v=${CAR_V}`); t.flipY = false; t.colorSpace = THREE.SRGBColorSpace; t.wrapS = t.wrapT = THREE.RepeatWrapping; t.anisotropy = 4; o.map = t; if (p.a) o.alphaTest = .5; if (p.e) { o.emissiveMap = t; o.emissive = new THREE.Color(1, 1, 1); o.emissiveIntensity = .35; } }
   return MATC[id] = new THREE.MeshStandardMaterial(o); }
-function meshModel(k, M, buf) { const S = [0, 1, 2].map(j => M.bmax[j] - M.bmin[j]);
-  const parts = M.parts.map((p, i) => { const q = new Int16Array(buf, p.p, p.v * 3), nq = new Int8Array(buf, p.nr, p.v * 4), pos = new Float32Array(p.v * 3), nor = new Float32Array(p.v * 3);
-    for (let a = 0; a < p.v * 3; a++) { const j = a % 3; pos[a] = M.bmin[j] + (q[a] + 32768) / 65535 * S[j]; } for (let a = 0; a < p.v; a++) for (let j = 0; j < 3; j++) nor[a * 3 + j] = nq[a * 4 + j] / 127;
+function lodParts(k, M, L, buf) { const S = [0, 1, 2].map(j => L.bmax[j] - L.bmin[j]);
+  const parts = L.parts.map((p, i) => { const q = new Int16Array(buf, p.p, p.v * 3), nq = new Int8Array(buf, p.nr, p.v * 4), pos = new Float32Array(p.v * 3), nor = new Float32Array(p.v * 3);
+    for (let a = 0; a < p.v * 3; a++) { const j = a % 3; pos[a] = L.bmin[j] + (q[a] + 32768) / 65535 * S[j]; } for (let a = 0; a < p.v; a++) for (let j = 0; j < 3; j++) nor[a * 3 + j] = nq[a * 4 + j] / 127;
     const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(pos, 3)); g.setAttribute('normal', new THREE.BufferAttribute(nor, 3));
-    if (p.uv != null) g.setAttribute('uv', new THREE.BufferAttribute(new Float32Array(buf, p.uv, p.v * 2), 2)); else g.setAttribute('uv', new THREE.BufferAttribute(new Float32Array(p.v * 2), 2));
+    g.setAttribute('uv', p.uv != null ? new THREE.BufferAttribute(new Float32Array(buf, p.uv, p.v * 2), 2) : new THREE.BufferAttribute(new Float32Array(p.v * 2), 2));
     g.setIndex(new THREE.BufferAttribute(p.i32 ? new Uint32Array(buf, p.ix, p.i) : new Uint16Array(buf, p.ix, p.i), 1)); g.userData.shared = 1; g.computeBoundingSphere();
-    const m = p.cls === 'paint' ? 'paint' : p.cls === 'glass' ? GLASS : p.cls === 'plateF' ? plateMat(k, false) : p.cls === 'plateR' ? plateMat(k, true) : partMat(k, i, p); return [g, m]; });
-  return { key: k, name: M.name, paints: UK_PAINT, parts, tris: M.tris, src: M.src, mesh: 1 }; }
+    return [g, p.cls === 'paint' ? 'paint' : p.cls === 'glass' ? GLASS : partMat(k, (L === M.lo ? 'lo' : 'hi') + i, p)]; });
+  // plates + SMR badges as small shared quads/discs at the spots the pipeline measured
+  const put = (geo, m, at, rear, sc) => { const gg = geo.clone(); gg.scale(sc, sc, 1); if (!rear) gg.rotateY(Math.PI); gg.translate(at[0], at[1], at[2]); gg.userData.shared = 1; parts.push([gg, m]); };
+  const holder = (at, rear) => { const gg = HOLDER_G.clone(); gg.translate(at[0], at[1], at[2] + (rear ? -.008 : .008)); gg.userData.shared = 1; parts.push([gg, HOLDER]); };   // black plate holder the plate sits in
+  if (M.plateF) { holder(M.plateF, false); put(PLATE_G, plateMat(k, false), M.plateF, false, 1); } if (M.plateR) { holder(M.plateR, true); put(PLATE_G, plateMat(k, true), M.plateR, true, 1); }
+  if (M.badgeF) M.badgeF[4] === 'word' ? put(WORD_G, BADGE_R, M.badgeF, false, M.badgeF[3] * 4.4) : put(BADGE_G, BADGE_F, M.badgeF, false, M.badgeF[3]); if (M.badgeR) put(WORD_G, BADGE_R, M.badgeR, true, M.badgeR[3] * 4.4);   // rear wordmark about 22 cm wide
+  return parts; }
 try { const man = await (await fetch(`./cars/cars.json?v=${CAR_V}`)).json();
-  await Promise.all(Object.entries(man).map(async ([k, M]) => { const r = await fetch(`./cars/${k}.bin?v=${CAR_V}`); if (r.ok) MESH[k] = meshModel(k, M, await r.arrayBuffer()); }));
+  await Promise.all(Object.entries(man).map(async ([k, M]) => { if (!M.hi) return; const [h, l] = await Promise.all([fetch(`./cars/${k}.bin?v=${CAR_V}`), M.lo ? fetch(`./cars/${k}_lo.bin?v=${CAR_V}`) : null]);
+    if (!h.ok) return; const hi = lodParts(k, M, M.hi, await h.arrayBuffer()), lo = l && l.ok ? lodParts(k, M, M.lo, await l.arrayBuffer()) : hi;
+    MESH[k] = { key: k, name: M.name, paints: UK_PAINT, parts: lo, hi, tris: M.hi.tris, trisLo: M.lo ? M.lo.tris : M.hi.tris, src: M.src, mesh: 1 }; }));
 } catch (err) { console.warn('car meshes not loaded, using the built-in shapes', err); }
 export const MODELS = { ...MESH }; for (const k in DEFS) if (!MODELS[k]) MODELS[k] = buildModel(DEFS[k]);
 
@@ -233,9 +258,11 @@ function genericCar(k, pm) { const o = new THREE.Group(), g = new THREE.Group();
 export const CAR_MIX = [['aclass', 2.2], ['cclass', 1.6], ['prius', 1.2], ['audi', 1.6], ['gen0', .8], ['gen1', 1.4], ['gen2', 1]].filter(([k]) => k.startsWith('gen') || MODELS[k]);
 const POOL = {};
 function setPaint(g, pm) { g.traverse(o => { if (o.userData.paint) o.material = pm; }); }
-export function makeCar(key, p = null) { const M = MODELS[key], pp = p || pick(M ? M.paints : UK_PAINT), pm = paintM(pp[0], pp[1]);
+const partsGroup = (parts, pm) => { const g = new THREE.Group(); parts.forEach(([geo, m]) => { const me = new THREE.Mesh(geo, m === 'paint' ? pm : m); if (m === 'paint') me.userData.paint = 1; me.castShadow = !LOW && (m === 'paint' || m === TYRE || m === GLASS); me.receiveShadow = true; g.add(me); }); return g; };
+export function makeCar(key, p = null, near = false) { const M = MODELS[key], pp = p || pick(M ? M.paints : UK_PAINT), pm = paintM(pp[0], pp[1]);
   if (!M) return genericCar(+key.slice(3), pm);
-  const g = new THREE.Group(); g.userData.key = key; M.parts.forEach(([geo, m]) => { const me = new THREE.Mesh(geo, m === 'paint' ? pm : m); if (m === 'paint') me.userData.paint = 1; me.castShadow = !LOW && (m === 'paint' || m === TYRE || m === GLASS); me.receiveShadow = true; g.add(me); }); return g; }
+  if (near && M.hi && !LOW) { const L = new THREE.LOD(); L.addLevel(partsGroup(M.hi, pm), 0); L.addLevel(partsGroup(M.parts, pm), 16); L.userData.key = key; return L; }   // traffic: full detail close up, light version beyond 16 m
+  const g = partsGroup(M.parts, pm); g.userData.key = key; return g; }
 export const carG = () => makeCar(pick(CAR_MIX)[0]);   // parked cars (houses, lots): the colour argument is ignored, each model picks its own paint
 
 /* ================= vans, buses ================= */
@@ -246,7 +273,7 @@ export const busG = () => { const g = new THREE.Group(), tm = mat(0x1d8a8a, { ro
 
 /* ================= traffic: outgoing on the left (nose -z), oncoming on the right (turned round) ================= */
 export const traffic = []; export let trafT = 0;
-function take(key) { const p = POOL[key]; if (p && p.length) return p.pop(); if (key === 'bus') { const g = busG(); g.userData.key = 'bus'; return g; } if (key === 'van') { const g = vanG(); g.userData.key = 'van'; return g; } return makeCar(key); }
+function take(key) { const p = POOL[key]; if (p && p.length) return p.pop(); if (key === 'bus') { const g = busG(); g.userData.key = 'bus'; return g; } if (key === 'van') { const g = vanG(); g.userData.key = 'van'; return g; } return makeCar(key, null, true); }
 function give(g) { scene.remove(g); (POOL[g.userData.key] || (POOL[g.userData.key] = [])).push(g); }
 export function spawnCar(dir, B) { const r = Math.random(), key = r < .08 ? 'bus' : r < .13 ? 'van' : pick(CAR_MIX)[0];
   const x = dir < 0 ? -3.6 : 3.6, z = dir < 0 ? B.z - 30 - Math.random() * 70 : B.z - 140 - Math.random() * 60;
