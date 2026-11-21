@@ -1,12 +1,12 @@
 /* Jummah Dash: keeps the whole game on the phone. First visit downloads it once;
    after that it opens from the phone, and an update only downloads the files that changed. */
-const BUILD = '20261121230712';
+const BUILD = '20261121231825';
 const FILES = {
 "hd/landmarks_hd.js": "44181a4fbb",
 "hd/foodbank.png": "8f4400d5e6",
-"game.js": "d208507f96",
+"game.js": "aa3923ed84",
 "landmarks.js": "9b916dc9ee",
-"vehicles.js": "1f746d7000",
+"vehicles.js": "32fdac20ce",
 "manifest.webmanifest": "636eadba05",
 "silk.woff2": "c40ed2272b",
 "silkb.woff2": "67996e4e8c",
@@ -14,11 +14,11 @@ const FILES = {
 "amiri.woff2": "d4fcd1fe15",
 "mont-700.woff2": "ae5da15d66",
 "oswald-600.woff2": "6155c38f9c",
-"art/hero3.webp": "effe439347",
-"art/hero3_eid.webp": "4c305bf9c7",
-"art/hero3_luton.webp": "bfa33ca5bf",
-"art/hero3_puffer.webp": "e2cd1eb804",
-"art/hero3_moroccan.webp": "e5a9911f42",
+"art/hero3.webp": "238b48ed63",
+"art/hero3_eid.webp": "8098b9fd6d",
+"art/hero3_luton.webp": "8d2a0c647f",
+"art/hero3_puffer.webp": "9e80e7b2ee",
+"art/hero3_moroccan.webp": "9456b94af8",
 "art/hero_occ.png": "893c2284b9",
 "art/hero_hd.webp": "198cf84203",
 "art/logo.webp": "d69bcb982d",

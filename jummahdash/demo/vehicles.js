@@ -347,6 +347,58 @@ V.taxi = { n: 'Prius taxi', w: 60, h: 25, weight: 4, speed: [30, 50], colours: [
   wheel(c, x + 12.5, G, 5.2, '#c3c8cf', null, 5, '#8a9099'); wheel(c, x + 47, G, 5.2, '#c3c8cf', null, 5, '#8a9099');
 } };
 
+/* Big panel van (owner's photo 21 Nov, Sprinter-shaped, generic, no badges): long flat-roofed load box, short sloping bonnet,
+   black bumpers + lower cladding, sliding door, slim upright tail lamps, silver steel wheels */
+V.bigvan = { n: 'Big panel van', w: 88, h: 33, weight: 2, speed: [26, 44], colours: [['White', '#f0f2f4'], ['Silver', '#b9bec6'], ['Grey', '#7a7f87'], ['Black', '#1e2024'], ['Blue', '#244f96']],
+  d(c, x, G, [, B]) { const D = SH(B, .8), L = SH(B, 1.12);
+  arch(c, x + 16, G, 6.6); arch(c, x + 71, G, 6.6);
+  fill(c, B, [[x + 1.6, G - 6], [x + 1, G - 30], [x + 3, G - 32], [x + 64, G - 32], [x + 67, G - 31], [x + 76, G - 20.6], [x + 83, G - 18.4], [x + 86.4, G - 15.6], [x + 87, G - 9], [x + 86, G - 6]]);
+  R(c, 'rgba(255,255,255,.35)', x + 4, G - 31.2, 60, .8); R(c, 'rgba(0,0,0,.08)', x + 3, G - 18, 60, 10);
+  // cab: windscreen + door window, A pillar, mirror
+  glass(c, [[x + 66.4, G - 30.4], [x + 75, G - 21], [x + 75.4, G - 19.4], [x + 66, G - 19.4]], '#1f2731');
+  glass(c, [[x + 57, G - 29.4], [x + 64.6, G - 29.4], [x + 64.6, G - 19.4], [x + 57, G - 19.4]], '#26303a');
+  R(c, '#121318', x + 64.6, G - 30, 1.6, 11); fill(c, '#16171c', [[x + 74.6, G - 22], [x + 77.6, G - 22.4], [x + 77.8, G - 19.6], [x + 74.6, G - 19.4]], false);
+  // panel lines: cab door, sliding door + rail, handles, fuel cap
+  R(c, 'rgba(0,0,0,.3)', x + 56.4, G - 30, .7, 22); R(c, 'rgba(0,0,0,.3)', x + 66.4, G - 18.6, .7, 10.6); R(c, 'rgba(0,0,0,.28)', x + 31, G - 30, .7, 22); R(c, 'rgba(0,0,0,.22)', x + 3, G - 29.6, 53, .6);
+  R(c, D, x + 58.6, G - 17.2, 3, .9); R(c, D, x + 51, G - 17.2, 3, .9); R(c, 'rgba(0,0,0,.2)', x + 11, G - 16, 2.4, 2);
+  // bonnet + grille + lamps
+  R(c, 'rgba(0,0,0,.18)', x + 76, G - 19.6, 9, .6); fill(c, '#eaf2ff', [[x + 80.6, G - 17.2], [x + 86, G - 15.4], [x + 86.4, G - 13.6], [x + 81.4, G - 14.4]], false);
+  R(c, '#16171c', x + 85.6, G - 13, 1.6, 4); R(c, '#e8a33c', x + 79.6, G - 15.6, 1.4, .8);
+  // black bumpers + cladding
+  fill(c, '#1b1c20', [[x + 1.4, G - 9], [x + 87.2, G - 9], [x + 87.4, G - 5.6], [x + 86, G - 4.6], [x + 2.2, G - 4.6], [x + 1, G - 6]], false); R(c, '#2e3036', x + 2, G - 8.8, 85, .6);
+  fill(c, '#c81e2a', [[x + 1, G - 22], [x + 2.6, G - 22], [x + 2.6, G - 13], [x + 1, G - 13]], false); R(c, '#ff7a6a', x + 1.2, G - 21.6, 1.2, 2);
+  wheel(c, x + 16, G, 6.2, '#c7ccd3', null, 6, '#8a9099'); wheel(c, x + 71, G, 6.2, '#c7ccd3', null, 6, '#8a9099');
+} };
+
+/* Mobility scooter with an older gent (owner's photo): silver four-wheeler, tall tiller with a basket, black seat with a high back,
+   orange flag on a pole; flat cap, glasses, yellow jacket, beige trousers. Rides on the pavement, slowly */
+V.mobility = { n: 'Mobility scooter', w: 36, h: 34, weight: 0, speed: [9, 13], colours: [['Silver', '#9aa2ac'], ['Red', '#b8252a'], ['Blue', '#2c5aa0']],
+  d(c, x, G, [, B]) { const D = SH(B, .72), L = SH(B, 1.25);
+  // flag pole + flag at the back
+  R(c, '#9aa0a8', x + 2, G - 34, .7, 26); fill(c, '#ff7a1a', [[x + 2.6, G - 34], [x + 7, G - 32.4], [x + 2.6, G - 30.6]], false);
+  // rear cowling + deck + front fairing
+  fill(c, B, [[x + 3, G - 6], [x + 3.4, G - 11], [x + 7, G - 13], [x + 13, G - 12.4], [x + 14, G - 7], [x + 26, G - 7], [x + 27, G - 16], [x + 29.6, G - 24], [x + 31.2, G - 23.6], [x + 30, G - 15], [x + 33.6, G - 11], [x + 34.6, G - 6]]);
+  R(c, L, x + 5, G - 12.2, 7, .7); R(c, D, x + 13.6, G - 7.4, 13, 1.6); R(c, 'rgba(255,255,255,.35)', x + 28.4, G - 22.6, .6, 8);
+  R(c, '#c81e2a', x + 3, G - 10.4, 1.4, 2.4); R(c, '#e8a33c', x + 22, G - 6.6, 1.6, .8);
+  // seat with high back
+  fill(c, '#1e1f24', [[x + 9.6, G - 13], [x + 18.6, G - 13], [x + 19, G - 15.6], [x + 9.6, G - 15.6]]); fill(c, '#1e1f24', [[x + 7.4, G - 15], [x + 9.8, G - 15], [x + 10.6, G - 28], [x + 7.6, G - 28.6]]); R(c, '#3a3c44', x + 8.2, G - 27.6, 1, 11);
+  R(c, '#2a2c32', x + 13.6, G - 13, 1.4, 6); 
+  // basket on the tiller
+  fill(c, '#2a2c32', [[x + 30.4, G - 21], [x + 35.6, G - 21], [x + 35, G - 15.4], [x + 31, G - 15.4]]); c.strokeStyle = '#55585f'; c.lineWidth = .35; for (let i = 0; i < 4; i++) { c.beginPath(); c.moveTo(x + 31 + i * 1.3, G - 21); c.lineTo(x + 31.4 + i * 1.2, G - 15.6); c.stroke(); }
+  R(c, '#9fd4f0', x + 31.6, G - 23, 2.4, 2.4);
+  // rider: trousers, jacket, arm to the tiller, head, cap, glasses
+  fill(c, '#b8a07a', [[x + 11, G - 16], [x + 21, G - 16.6], [x + 22.6, G - 15], [x + 22, G - 8.6], [x + 19.6, G - 8.6], [x + 19.8, G - 13.4], [x + 11, G - 13.4]]);
+  fill(c, '#2a2420', [[x + 18.4, G - 9], [x + 24, G - 9], [x + 24.4, G - 7.4], [x + 18.4, G - 7.4]]);
+  fill(c, '#f2b81e', [[x + 10.4, G - 15.4], [x + 10.2, G - 25], [x + 12.4, G - 27.4], [x + 16.6, G - 27.2], [x + 18, G - 24.6], [x + 17.6, G - 15.4]]); R(c, '#d4960e', x + 10.6, G - 21, 7, .7);
+  c.strokeStyle = OUT; c.lineWidth = 2.6; c.lineCap = 'round'; c.beginPath(); c.moveTo(x + 15, G - 24.6); c.lineTo(x + 20, G - 20); c.lineTo(x + 27.6, G - 21.6); c.stroke();
+  c.strokeStyle = '#f2b81e'; c.lineWidth = 1.8; c.beginPath(); c.moveTo(x + 15, G - 24.6); c.lineTo(x + 20, G - 20); c.lineTo(x + 27, G - 21.5); c.stroke();
+  disc(c, '#e8b48a', x + 28.4, G - 21.6, 1.1); R(c, '#1e1f24', x + 28.6, G - 25, 1, 3.4);
+  disc(c, OUT, x + 15.4, G - 29.6, 3); disc(c, '#e8b48a', x + 15.4, G - 29.6, 2.5); R(c, '#e8e6e0', x + 13, G - 29.4, 1.2, 2);
+  fill(c, '#8f8a80', [[x + 12.2, G - 31], [x + 13, G - 33.2], [x + 17.4, G - 33], [x + 19, G - 31.4]]); R(c, '#6e6a62', x + 12.4, G - 31.2, 6.6, .6);
+  R(c, '#2a2c32', x + 16.4, G - 30, 2, .5); R(c, '#2a2c32', x + 17.4, G - 30.2, .4, 1.2); R(c, '#c07a5a', x + 17.6, G - 28.4, .6, .5);
+  wheel(c, x + 7, G, 3.4, '#c7ccd3', null, 5); wheel(c, x + 30, G, 3.4, '#c7ccd3', null, 5);
+} };
+
 /* Luton single-deck town bus: teal, dark window band, white swoosh behind the front door, gold skirt line, orange destination screen */
 V.bus = { n: 'Luton bus', w: 112, h: 44, weight: 1.6, speed: [20, 32], colours: [['Teal', '#17a3b5']],
   d(c, x, G, [, B]) { const D = SH(B, .8);
@@ -497,5 +549,5 @@ V.postvan = { n: 'Post van', w: 70, h: 30, weight: 1.6, speed: [28, 46], colours
   wheel(c, x + 13, G, 5.3, '#b8bec6', null, 8, '#8a9098'); wheel(c, x + 56, G, 5.3, '#b8bec6', null, 8, '#8a9098');
 } };
 
-window.VEHICLES = V; window.VEHICLE_ORDER = ['police', 'ambulance', 'fire', 'phantom', 'c63', 'gwagon', 'golf', 'a45', 'rs3', 'p911', 'f40', 'lambo', 'taxi', 'pickup', 'van', 'postvan', 'smallvan', 'binlorry', 'lorry', 'bus', 'coach', 'mrrushed', 'motorbike', 'moped', 'bike', 'escooter'];
+window.VEHICLES = V; window.VEHICLE_ORDER = ['police', 'ambulance', 'fire', 'phantom', 'c63', 'gwagon', 'golf', 'a45', 'rs3', 'p911', 'f40', 'lambo', 'taxi', 'pickup', 'van', 'bigvan', 'postvan', 'smallvan', 'binlorry', 'lorry', 'bus', 'coach', 'mrrushed', 'motorbike', 'moped', 'bike', 'escooter'];
 })();
