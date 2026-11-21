@@ -606,7 +606,7 @@ HD.topspizza = (c, x, G) => {
     c.beginPath(); c.moveTo(hx - 5.6, G - 67); c.lineTo(hx + 5.6, G - 67); c.lineTo(hx + 4.4, G - 56); c.lineTo(hx - 4.4, G - 56); c.closePath(); c.fill(); c.strokeStyle = '#f4f2ec'; c.lineWidth = .5; c.stroke();
     rect(c, '#e0262a', hx - 4.5, G - 59, 9, 2);
     c.beginPath(); c.moveTo(hx - 11.4, G - 57.6); c.quadraticCurveTo(hx - 10.4, G - 54, hx - 6, G - 54.6); c.lineTo(hx + 6, G - 54.6); c.quadraticCurveTo(hx + 10.4, G - 54, hx + 11.4, G - 57.6); c.quadraticCurveTo(hx + 10, G - 52, hx, G - 52); c.quadraticCurveTo(hx - 10, G - 52, hx - 11.4, G - 57.6); c.fillStyle = '#121216'; c.fill(); c.strokeStyle = '#f4f2ec'; c.lineWidth = .5; c.stroke(); }
-  txt(c, 'Tops Pizza', x + 117, G - 60.4, 13, '#f2e6c4', { f: 'Georgia, serif', w: 700, sh: 'rgba(0,0,0,.6)' }); txt(c, 'DELIVERY', x + 150, G - 50.4, 4.6, '#e0262a', { f: 'Mont, sans-serif', ls: .6 });
+  txt(c, 'Tops Pizza', x + 117, G - 58.6, 16, '#f2e6c4', { f: 'Georgia, serif', w: 700, sh: 'rgba(0,0,0,.6)' }); txt(c, 'DELIVERY', x + 152, G - 49.6, 4.6, '#e0262a', { f: 'Mont, sans-serif', ls: .6 });
   // shopfront
   rect(c, '#1c1830', x, G - 46, 180, 46); rect(c, '#e0262a', x, G - 46, 180, .8); rect(c, '#5a7cff', x + 1, G - 45, 178, 1.4); rect(c, '#5a7cff', x + 1, G - 45, 1.4, 44); rect(c, '#5a7cff', x + 177.6, G - 45, 1.4, 44);
   { const g = c.createLinearGradient(0, G - 46, 0, G - 40); g.addColorStop(0, 'rgba(120,150,255,.5)'); g.addColorStop(1, 'rgba(120,150,255,0)'); c.fillStyle = g; c.fillRect(x + 2, G - 44, 176, 6); }
@@ -767,14 +767,15 @@ HD.miamicrispy = (c, x, G) => {
     for (let i = 0; i < 700; i++) { c.beginPath(); c.arc(x + (i * 53.71) % 152, RT + (i * 17.33) % 20, .45 + (i % 3) * .3, 0, 7); c.fillStyle = ['#5f7a34', '#7a943e', '#4a6028', '#8aa448'][i % 4]; c.fill(); } c.restore(); rect(c, '#c8c2b4', x, G - 63, 150, 1.4); }
   // fascia
   c.fillStyle = lg(c, 0, G - 62, 0, G - 40, [[0, '#ff7a3a'], [.08, OR], [1, '#c8401a']]); c.fillRect(x - 2, G - 62, 154, 22); for (let i = 0; i < 6; i++) rect(c, 'rgba(120,30,0,.25)', x - 2, G - 58 + i * 3.4, 154, .35); c.strokeStyle = '#8a2a0c'; c.lineWidth = .4; c.strokeRect(x - 2, G - 62, 154, 22);
-  c.save(); c.font = '800 12.4px Oswald, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.letterSpacing = '1px'; c.lineJoin = 'round'; c.lineWidth = 1.6; c.strokeStyle = '#9a2a10'; c.strokeText('MIAMI CRISPY', x + 75, G - 50.6); c.fillStyle = '#ffffff'; c.fillText('MIAMI CRISPY', x + 75, G - 50.6); c.restore();
+  c.save(); c.font = '900 17px Mont, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.letterSpacing = '.4px'; c.lineJoin = 'round'; c.lineCap = 'round';   // big rounded white letters like the real sign
+  c.lineWidth = 3; c.strokeStyle = 'rgba(120,30,6,.55)'; c.strokeText('MIAMI CRISPY', x + 75.6, G - 49.8); c.fillStyle = '#ffffff'; c.fillText('MIAMI CRISPY', x + 75, G - 50.6); c.restore();
   rect(c, OR, x, G - 40, 150, 36, '#8a2a0c', .4);
   for (const [gx, gw] of [[x + 4, 44], [x + 70, 76]]) { c.fillStyle = lg(c, 0, G - 37, 0, G - 6, [[0, '#f4f6f7'], [.45, '#dfe6ea'], [1, '#c4ccd2']]); c.fillRect(gx, G - 37, gw, 31);
     for (let k = 0; k * 14 < gw - 12; k++) { rect(c, '#1f2228', gx + 3 + k * 14, G - 36, 12, 6, '#000', .2); rect(c, OR, gx + 4 + k * 14, G - 35, 10, .8); rect(c, '#fff', gx + 4 + k * 14, G - 33.4, 7, .5); }
     rect(c, '#c9ced4', gx, G - 20, gw, 1.6); for (let k = 0; k * 10 < gw - 6; k++) { c.fillStyle = OR; c.beginPath(); c.roundRect ? c.roundRect(gx + 3 + k * 10, G - 25, 6, 9, 1) : c.rect(gx + 3 + k * 10, G - 25, 6, 9); c.fill(); rect(c, '#2a2a2e', gx + 4 + k * 10, G - 16, .6, 9); rect(c, '#2a2a2e', gx + 7.4 + k * 10, G - 16, .6, 9); }
     glare(c, gx, G - 37, gw, 31); }
   c.fillStyle = lg(c, 0, G - 37, 0, G - 4, [[0, '#9a7a56'], [1, '#6a4a30']]); c.fillRect(x + 52, G - 37, 15, 33); rect(c, OR, x + 58.6, G - 37, .8, 33); rect(c, '#e0e0e0', x + 56, G - 20, .6, 4); rect(c, '#e0e0e0', x + 61.6, G - 20, .6, 4);
-  txt(c, 'Luton', x + 122, G - 22, 8, OR, { f: 'Georgia, serif', w: 700 }); c.fillStyle = OR; c.beginPath(); c.moveTo(x + 92, G - 18); c.bezierCurveTo(x + 84, G - 24, x + 87, G - 30, x + 92, G - 26); c.bezierCurveTo(x + 97, G - 30, x + 100, G - 24, x + 92, G - 18); c.fill();
+  txt(c, 'Luton', x + 122, G - 22, 8, OR, { f: 'Mont, sans-serif', w: 900 }); c.fillStyle = OR; c.beginPath(); c.moveTo(x + 92, G - 18); c.bezierCurveTo(x + 84, G - 24, x + 87, G - 30, x + 92, G - 26); c.bezierCurveTo(x + 97, G - 30, x + 100, G - 24, x + 92, G - 18); c.fill();
   rect(c, '#4a4e56', x, G - 4, 150, 4);
   c.restore();
 };
@@ -800,7 +801,7 @@ HD.chaiiwala = (c, x, G) => {
   const N = x - 50;
   rect(c, '#3a3d44', N + 180, G - 110, 158, 110, LINE, .45);
   for (let i = 0; i < 36; i++) { c.fillStyle = lg(c, 0, G - 106, 0, G - 72, [[0, ['#a58258', '#8a6a4a', '#b08c60', '#7a5a3c'][i % 4]], [1, ['#7a5a3c', '#6a4e34', '#8a6a46', '#5e4430'][i % 4]]]); c.fillRect(N + 184 + i * 3, G - 106, 2.4, 34); }
-  rect(c, 'rgba(20,14,10,.55)', N + 196, G - 97, 84, 16); c.save(); c.font = '700 14px Georgia, serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.lineJoin = 'round'; c.lineWidth = 1.6; c.strokeStyle = '#f6efe2'; c.strokeText("Nando's", N + 238, G - 89); c.fillStyle = '#e0262a'; c.fillText("Nando's", N + 238, G - 89); c.restore();
+  rect(c, 'rgba(20,14,10,.55)', N + 190, G - 100, 96, 22); c.save(); c.font = '700 19px Georgia, serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.lineJoin = 'round'; c.lineWidth = 1.6; c.strokeStyle = '#f6efe2'; c.strokeText("Nando's", N + 238, G - 89); c.fillStyle = '#e0262a'; c.fillText("Nando's", N + 238, G - 89); c.restore();
   c.fillStyle = lg(c, 0, G - 72, 0, G, [[0, '#9ab6cc'], [.5, '#6a8aa6'], [1, '#3e5468']]); c.fillRect(N + 184, G - 72, 108, 72); for (let i = 1; i < 6; i++) rect(c, '#2a2c30', N + 184 + i * 18, G - 72, 1, 72); rect(c, '#2a2c30', N + 184, G - 50, 108, .8); glare(c, N + 184, G - 72, 108, 72);
   rect(c, '#2a2c30', N + 196, G - 40, 16, 40); c.fillStyle = lg(c, 0, G - 38, 0, G, [[0, '#cfe0ee'], [1, '#7f9ab0']]); c.fillRect(N + 198, G - 38, 12, 38);
   rect(c, '#5a3d2a', N + 232, G - 24, 2, 24); rect(c, '#3a3d44', N + 228, G - 6, 10, 6); tree(c, N + 233, G - 22, .45, { d: '#3a6b2c', m: '#4f8a3c', l: '#86c060' });
@@ -889,7 +890,7 @@ HD.kaya = (c, x, G) => {
   txt(c, 'KAYA', x + 62, G - 84, 15, '#f2f0ea', { f: 'Mont, sans-serif', w: 700, ls: 1 }); txt(c, 'L  O  U  N  G  E', x + 62, G - 71.4, 4.6, '#e8e4dc', { f: 'Mont, sans-serif', w: 400 });
   c.save(); c.strokeStyle = '#c9a050'; c.lineWidth = .55; c.beginPath(); c.ellipse(x + 62, G - 80, 4.6, 7, 0, 0, 7); c.stroke(); c.beginPath(); c.moveTo(x + 62, G - 94); c.lineTo(x + 62, G - 66); c.stroke(); c.beginPath(); c.moveTo(x + 58, G - 68); c.quadraticCurveTo(x + 62, G - 64, x + 68, G - 68); c.stroke(); poly(c, '#c9a050', [[x + 68, G - 68], [x + 66, G - 69.6], [x + 66.4, G - 66.6]]); c.restore();
   c.beginPath(); c.arc(x + 16, G - 86, 6, 0, 7); c.fillStyle = '#c83a6a'; c.fill(); c.beginPath(); c.arc(x + 16, G - 86, 4.8, 0, 7); c.fillStyle = '#1c1b1e'; c.fill(); txt(c, '18', x + 16, G - 85.8, 4.6, '#fff', { f: 'Mont, sans-serif' });
-  rect(c, '#e8262f', x + 109, G - 92, 3, 14); poly(c, '#e8262f', [[x + 104.4, G - 79], [x + 116.6, G - 79], [x + 110.5, G - 70]]);
+  rect(c, '#ffffff', x + 109, G - 92, 3, 14); poly(c, '#ffffff', [[x + 104.4, G - 79], [x + 116.6, G - 79], [x + 110.5, G - 70]]);   // white arrow (owner)
   c.restore();
 };
 
@@ -907,9 +908,9 @@ HD.barak = (c, x, G) => {
     c.beginPath(); c.ellipse(bx, by + 3.6, 2.4, 1.2, 0, 0, 7); c.fillStyle = '#e8dccb'; c.fill(); for (const d of [-1.8, 1.8]) { c.beginPath(); c.arc(bx + d, by - 1.4, .5, 0, 7); c.fillStyle = NV; c.fill(); } }
   { const cx = x + 90, cy = PL - 18; c.beginPath(); c.arc(cx, cy, 7.6, 0, 7); c.strokeStyle = GD; c.lineWidth = .8; c.stroke(); line(c, GD, .9, [[cx - 4.6, cy - 4.6], [cx + 4.6, cy + 4.6]]); line(c, '#e8dccb', .9, [[cx + 4.6, cy - 4.6], [cx - 4.6, cy + 4.6]]); }
   // sign board
-  c.fillStyle = lg(c, 0, PL - 35, 0, PL - 21, [[0, '#1e2228'], [1, '#0c0e12']]); c.fillRect(x + 104, PL - 35, 74, 14); c.strokeStyle = GD; c.lineWidth = .5; c.strokeRect(x + 105.4, PL - 33.6, 71.2, 11.2);
-  for (const [ex, d] of [[x + 107.6, 1], [x + 174.4, -1]]) { c.beginPath(); c.moveTo(ex, PL - 28); c.quadraticCurveTo(ex + d * 2, PL - 31, ex + d * 3.4, PL - 28); c.quadraticCurveTo(ex + d * 2, PL - 25, ex, PL - 28); c.fillStyle = GD; c.fill(); }
-  txt(c, 'THE BARAK', x + 141, PL - 27.8, 7.2, GD, { f: 'Georgia, serif', w: 400, ls: .6 });
+  c.fillStyle = lg(c, 0, PL - 36, 0, PL - 20.5, [[0, '#1e2228'], [1, '#0c0e12']]); c.fillRect(x + 97, PL - 36, 88, 15.5); c.strokeStyle = GD; c.lineWidth = .6; c.strokeRect(x + 98.6, PL - 34.6, 84.8, 12.7);   // bigger board (owner), kept under the eaves
+  for (const [ex, d] of [[x + 100.6, 1], [x + 181.4, -1]]) { c.beginPath(); c.moveTo(ex, PL - 28.2); c.quadraticCurveTo(ex + d * 2.4, PL - 32, ex + d * 4.2, PL - 28.2); c.quadraticCurveTo(ex + d * 2.4, PL - 24.4, ex, PL - 28.2); c.fillStyle = GD; c.fill(); }
+  txt(c, 'THE BARAK', x + 141, PL - 28, 9.8, GD, { f: 'Georgia, serif', w: 400, ls: .8 });
   rect(c, '#3a3d44', x + 124, PL - 20, 26, 20, '#1a1c20', .4); for (const dx of [x + 126, x + 138]) { c.fillStyle = lg(c, 0, PL - 18, 0, PL, [[0, '#cfe0ee'], [1, '#6f8aa2']]); c.fillRect(dx, PL - 18, 10, 18); glare(c, dx, PL - 18, 10, 18); } rect(c, '#c9ced4', x + 134.6, PL - 12, .6, 4); rect(c, '#c9ced4', x + 139, PL - 12, .6, 4);
   rect(c, '#3a3d44', x + 182, PL - 26, 10, 12, '#1a1c20', .3); rect(c, '#f4f2ec', x + 183, PL - 25, 8, 10); for (let i = 0; i < 3; i++) rect(c, '#9aa0a8', x + 184, PL - 23 + i * 2.6, 6 - i, .5);
   slate(c, [[x + 6, PL - 37], [x + 216, PL - 37], [x + 190, PL - 68], [x + 32, PL - 68]], '#4a4b52'); rect(c, '#f6f4ee', x + 6, PL - 39, 210, 3, LINE, .35); rect(c, '#d8d6d0', x + 6, PL - 36.4, 210, .6);
@@ -920,6 +921,243 @@ HD.barak = (c, x, G) => {
   for (const px of [x + 12, x + 52, x + 92]) { const t = (px - x + 4) / 124, py = G - 11 - t * 6; rect(c, '#f4f4f2', px - .5, py, 1, (G - 3 - t * 13) - py, '#8a8a88', .2); }
   c.lineCap = 'round'; line(c, '#6a6a68', 2, [[x - 2, G - 10], [x + 122, PL - 9]]); line(c, '#f6f6f4', 1.3, [[x - 2, G - 10.2], [x + 122, PL - 9.2]]);
   for (let i = 0; i < 5; i++) { const sy = G - 3.6 * (i + 1); c.fillStyle = lg(c, 0, sy, 0, sy + 3.6, [[0, '#d8dbe0'], [1, '#a8acb2']]); c.fillRect(x + 150 + i * 6, sy, 44 - i * 6, 3.6); c.strokeStyle = '#5a5e64'; c.lineWidth = .3; c.strokeRect(x + 150 + i * 6, sy, 44 - i * 6, 3.6); }
+  c.restore();
+};
+
+// ---------- big-store kit ----------
+const ribbed = (c, x, y, w, h, col, step = 2.4) => { c.fillStyle = col; c.fillRect(x, y, w, h); for (let k = x; k < x + w; k += step) { rect(c, 'rgba(255,255,255,.16)', k, y, step * .35, h); rect(c, 'rgba(0,0,0,.14)', k + step * .62, y, step * .2, h); } c.strokeStyle = LINE; c.lineWidth = .45; c.strokeRect(x, y, w, h); };
+const panels = (c, x, y, w, h, col, ph = 6) => { c.fillStyle = lg(c, 0, y, 0, y + h, [[0, shade(col, 1.06)], [1, shade(col, .93)]]); c.fillRect(x, y, w, h); for (let yy = y + ph; yy < y + h; yy += ph) rect(c, 'rgba(0,0,0,.13)', x, yy, w, .4); c.strokeStyle = LINE; c.lineWidth = .45; c.strokeRect(x, y, w, h); };
+const curtain = (c, x, y, w, h, cols = 6, rows = 2, tint = ['#cfe0ec', '#6f8ea8', '#3e566c']) => { c.fillStyle = lg(c, 0, y, 0, y + h, [[0, tint[0]], [.45, tint[1]], [1, tint[2]]]); c.fillRect(x, y, w, h); for (let i = 1; i < cols; i++) rect(c, '#2a3038', x + i * w / cols - .5, y, 1, h); for (let j = 1; j < rows; j++) rect(c, '#2a3038', x, y + j * h / rows - .4, w, .8); c.strokeStyle = '#2a3038'; c.lineWidth = .9; c.strokeRect(x, y, w, h); glare(c, x, y, w, h); };
+const bollard = (c, x, G, col = '#2a2c30', band = '#e8e8e8') => { c.fillStyle = lg(c, x - 2, 0, x + 2, 0, [[0, shade(col, .7)], [.5, shade(col, 1.5)], [1, shade(col, .6)]]); c.fillRect(x - 1.8, G - 12, 3.6, 12); rect(c, band, x - 1.8, G - 10, 3.6, 1); c.beginPath(); c.arc(x, G - 12, 1.8, Math.PI, 0); c.fillStyle = col; c.fill(); };
+const hatch = (c, x, G, col) => {   // small parked hatchback side-on, 30 long
+  c.fillStyle = lg(c, 0, G - 13, 0, G - 3, [[0, shade(col, 1.15)], [1, shade(col, .8)]]); c.beginPath(); c.moveTo(x + 1, G - 4); c.lineTo(x + 1, G - 8); c.quadraticCurveTo(x + 2, G - 10, x + 6, G - 10.4); c.lineTo(x + 9, G - 14.6); c.quadraticCurveTo(x + 10, G - 15.4, x + 12, G - 15.4); c.lineTo(x + 22, G - 15.4); c.quadraticCurveTo(x + 25, G - 15, x + 27, G - 10.6); c.quadraticCurveTo(x + 30, G - 10, x + 30, G - 7); c.lineTo(x + 30, G - 4); c.closePath(); c.fill(); c.strokeStyle = 'rgba(0,0,0,.45)'; c.lineWidth = .35; c.stroke();
+  c.fillStyle = lg(c, 0, G - 15, 0, G - 10, [[0, '#a8c0d0'], [1, '#3a4a58']]); c.beginPath(); c.moveTo(x + 9.6, G - 10.8); c.lineTo(x + 12.4, G - 14.4); c.lineTo(x + 17.6, G - 14.4); c.lineTo(x + 17.6, G - 10.8); c.fill(); c.beginPath(); c.moveTo(x + 18.6, G - 10.8); c.lineTo(x + 18.6, G - 14.4); c.lineTo(x + 22.4, G - 14.4); c.lineTo(x + 25.4, G - 10.8); c.fill();
+  rect(c, 'rgba(0,0,0,.25)', x + 18, G - 10.6, .5, 6); rect(c, '#f4f0d0', x + 28.6, G - 9, 1.4, 1.2); rect(c, '#c02020', x + 1, G - 8.6, 1, 1.6); rect(c, 'rgba(0,0,0,.35)', x, G - 1, 31, 1);
+  for (const wx of [x + 7, x + 24]) { c.beginPath(); c.arc(wx, G - 3.4, 3.2, 0, 7); c.fillStyle = '#141416'; c.fill(); c.beginPath(); c.arc(wx, G - 3.4, 1.7, 0, 7); c.fillStyle = '#b8bec6'; c.fill(); } };
+
+// Tesco Extra: long red-brick store under a dark hipped roof (the WIDEN part), raised middle roof with the TESCO Extra board,
+// clock tower with TESCO + clock, red-framed entrance (Welcome), dark glazed canopy bay, trolley bay, blue fire door, cash machine, cones
+HD.tesco = (c, x, G) => {
+  c.save(); c.lineJoin = 'round';
+  slate(c, [[x - 4, G - 66], [x + 384, G - 66], [x + 370, G - 96], [x + 10, G - 96]], '#3d3f45');
+  brick(c, x, G - 66, 380, 66, '#a8503a'); c.strokeStyle = LINE; c.lineWidth = .5; c.strokeRect(x, G - 66, 380, 66); rect(c, '#efeee9', x - 4, G - 70, 388, 4, LINE, .4);
+  rect(c, '#2a2f3a', x + 4, G - 50, 60, 50); for (let i = 0; i < 5; i++) rect(c, '#ecebe7', x + 6 + i * 13, G - 50, 2.4, 50, '#8a8880', .25);
+  for (let i = 0; i < 12; i++) { line(c, '#a8b0ba', .6, [[x + 8 + i * 4.5, G - 12], [x + 12 + i * 4.5, G - 12], [x + 12 + i * 4.5, G - 3]]); rect(c, '#1f4fa8', x + 8 + i * 4.5, G - 4, 3.4, 1.2); }
+  rect(c, '#c8202a', x + 20, G - 62, 10, 8, '#6a1010', .3);
+  ribbed(c, x + 320, G - 54, 40, 54, '#a2aab4', 1.8); rect(c, '#d64545', x + 300, G - 50, 6, 10);
+  const X = x + 50;
+  brick(c, X + 72, G - 150, 30, 40, '#a8503a'); c.strokeStyle = LINE; c.strokeRect(X + 72, G - 150, 30, 40);
+  slate(c, [[X + 66, G - 150], [X + 108, G - 150], [X + 98, G - 164], [X + 76, G - 164]], '#3a3a3e'); rect(c, '#f6f4ee', X + 72, G - 148.6, 30, 7, LINE, .3); txt(c, 'TESCO', X + 87, G - 145, 5.2, '#d8262f', { f: 'Mont, sans-serif', w: 800 });
+  { const cx = X + 87, cy = G - 128; c.beginPath(); c.arc(cx, cy, 7.4, 0, 7); c.fillStyle = '#1b1a24'; c.fill(); c.beginPath(); c.arc(cx, cy, 6.4, 0, 7); c.fillStyle = '#fbfaf6'; c.fill(); for (let i = 0; i < 12; i++) { const a = i * Math.PI / 6; rect(c, '#1b1a24', cx + Math.cos(a) * 5.2 - .3, cy + Math.sin(a) * 5.2 - .3, .6, .6); } line(c, '#1b1a24', .7, [[cx, cy], [cx, cy - 4.4]]); line(c, '#1b1a24', .7, [[cx, cy], [cx + 3, cy]]); }
+  slate(c, [[X + 16, G - 66], [X + 224, G - 66], [X + 206, G - 116], [X + 34, G - 116]], '#3d3f45');
+  brick(c, X + 20, G - 66, 200, 66, '#a8503a'); c.strokeStyle = LINE; c.strokeRect(X + 20, G - 66, 200, 66); rect(c, '#efeee9', X + 16, G - 70, 208, 4, LINE, .4);
+  rect(c, '#f8f6f0', X + 52, G - 101, 128, 18, '#8a8880', .4);
+  c.save(); c.font = '900 13px Mont, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = '#d8262f'; c.fillText('TESCO', X + 96, G - 92); c.font = 'italic 700 11px Georgia, serif'; c.fillStyle = '#1f4fa8'; c.fillText('Extra', X + 148, G - 92.4); c.restore();
+  for (let i = 0; i < 5; i++) rect(c, '#1f4fa8', X + 76 + i * 8, G - 85, 5, .7);
+  rect(c, '#c8202a', X + 40, G - 62, 70, 11, '#6a1010', .35);
+  curtain(c, X + 40, G - 52, 70, 52, 5, 2); for (let i = 0; i < 4; i++) { c.beginPath(); c.arc(X + 52 + i * 15, G - 30, 4, 0, 7); c.fillStyle = ['#d84b3c', '#e8a33c', '#7fae4e', '#d84b3c'][i]; c.fill(); }
+  rect(c, '#2a2f3a', X + 112, G - 52, 80, 52); for (let i = 0; i < 4; i++) { c.beginPath(); c.arc(X + 122 + i * 20, G - 50, 1.2, 0, 7); c.fillStyle = '#fff6c8'; c.fill(); }
+  for (let i = 0; i < 9; i++) { line(c, '#a8b0ba', .6, [[X + 116 + i * 7, G - 14], [X + 122 + i * 7, G - 14], [X + 122 + i * 7, G - 4]]); rect(c, '#2f4fa8', X + 116 + i * 7, G - 6, 6, 1.6); }
+  rect(c, '#1f4fa8', X + 160, G - 40, 30, 40, '#0e2a6a', .4); rect(c, '#3a3d44', X + 166, G - 32, 8, 10); rect(c, '#3a3d44', X + 178, G - 32, 8, 10);
+  rect(c, '#1a1a1e', X + 200, G - 52, 20, 52); c.fillStyle = lg(c, 0, G - 48, 0, G - 22, [[0, '#e2f0f8'], [1, '#8ab0c8']]); c.fillRect(X + 203, G - 48, 14, 26); rect(c, '#e8c766', X + 205, G - 30, 10, 6);
+  for (let i = 0; i < 4; i++) rect(c, '#d2ccc0', X + 24 + i * 4, G - 52, .8, 52);
+  // welcome board (crisp), cones, bollards
+  rect(c, '#c8202a', X + 45, G - 61, 60, 9); txt(c, 'Welcome', X + 75, G - 56.4, 5.6, '#ffffff', { f: 'Georgia, serif', w: 700 });
+  for (const cx of [x + 4, x + 24, x + 120, x + 176]) { c.fillStyle = lg(c, cx, 0, cx + 6, 0, [[0, '#c8501a'], [.5, '#ff8a3c'], [1, '#b8441a']]); c.beginPath(); c.moveTo(cx, G); c.lineTo(cx + 2.4, G - 12); c.lineTo(cx + 3.6, G - 12); c.lineTo(cx + 6, G); c.fill(); rect(c, '#fff', cx + 1, G - 6.6, 4, 1.6); }
+  for (const bx of [x + 98, x + 188, x + 194]) bollard(c, bx, G);
+  c.restore();
+};
+
+// Currys: white central entrance block with a curved roof edge, the new purple standalone Currys board (ring + lowercase name),
+// tall glazed entrance, sand-brick wings with blue Carphone Warehouse boards, trees, green bike stands, bollards, the two vans
+HD.currys = (c, x, G) => {
+  c.save(); c.lineJoin = 'round';
+  for (const wx of [x, x + 260]) { brick(c, wx, G - 104, 100, 104, '#d6aa70'); c.strokeStyle = LINE; c.lineWidth = .5; c.strokeRect(wx, G - 104, 100, 104); panels(c, wx, G - 118, 100, 14, '#eeeeea', 7); rect(c, '#3a3d44', wx, G - 10, 100, 10);
+    c.fillStyle = lg(c, 0, G - 98, 0, G - 76, [[0, '#2c4ea0'], [1, '#1c3478']]); c.fillRect(wx + 8, G - 98, 76, 22); c.strokeStyle = '#0e1e4a'; c.strokeRect(wx + 8, G - 98, 76, 22);
+    txt(c, 'Carphone', wx + 46, G - 90.4, 7, '#fff', { f: 'Mont, sans-serif', w: 700 }); txt(c, 'Warehouse', wx + 46, G - 82.6, 7, '#fff', { f: 'Mont, sans-serif', w: 700 }); }
+  c.fillStyle = lg(c, x + 84, 0, x + 276, 0, [[0, '#e6e6e2'], [.5, '#fafaf8'], [1, '#e2e2de']]); c.fillRect(x + 84, G - 166, 192, 166); c.strokeStyle = LINE; c.strokeRect(x + 84, G - 166, 192, 166);
+  c.beginPath(); c.moveTo(x + 78, G - 166); c.quadraticCurveTo(x + 180, G - 192, x + 282, G - 166); c.closePath(); c.fillStyle = lg(c, 0, G - 186, 0, G - 166, [[0, '#ffffff'], [1, '#dcdcd8']]); c.fill(); c.strokeStyle = LINE; c.stroke(); rect(c, '#c8c8c4', x + 78, G - 167, 204, 1.6);
+  for (let i = 0; i < 12; i++) rect(c, 'rgba(0,0,0,.08)', x + 92 + i * 16, G - 160, .6, 54);
+  c.fillStyle = lg(c, 0, G - 154, 0, G - 106, [[0, '#4c36b0'], [1, '#33238a']]); c.fillRect(x + 92, G - 154, 176, 48); c.strokeStyle = '#1e1458'; c.strokeRect(x + 92, G - 154, 176, 48);
+  c.beginPath(); c.arc(x + 180, G - 130, 19, 0, 7); c.strokeStyle = '#ece8fa'; c.lineWidth = 1; c.stroke(); txt(c, 'currys', x + 180, G - 131, 11, '#ffffff', { f: 'Mont, sans-serif', w: 600 });
+  curtain(c, x + 96, G - 104, 168, 104, 8, 3); rect(c, '#d4d8dc', x + 92, G - 68, 176, 4, '#8a9098', .35);
+  c.fillStyle = 'rgba(30,40,50,.5)'; c.fillRect(x + 150, G - 40, 60, 40); for (const dx of [x + 152, x + 181]) { c.fillStyle = lg(c, 0, G - 38, 0, G, [[0, '#cfe0ec'], [1, '#6a8aa4']]); c.fillRect(dx, G - 38, 27, 38); } glare(c, x + 150, G - 40, 60, 40);
+  for (const bx of [x + 92, x + 106, x + 246, x + 260]) { rect(c, '#1f6f3f', bx, G - 26, 9, 14, '#0e3a20', .3); txt(c, 'P', bx + 4.5, G - 19, 6, '#fff'); rect(c, '#d8d8d8', bx + 4, G - 12, 1, 12); }
+  tree(c, x + 60, G, 1.1, { d: '#4f8a2c', m: '#6faa3e', l: '#9ccc66' }); tree(c, x + 300, G, 1.4, { d: '#5a8a34', m: '#7fb04a', l: '#a8d070' }); for (let i = 0; i < 6; i++) bollard(c, x + 6 + i * 10, G);
+  const V = window.VEHICLES; if (V && V.mrrushed && V.mrrushed.parked) { V.mrrushed.parked(c, x + 94, G, .79, null); if (V.donner) V.donner.parked(c, x + 226, G, .81); }
+  c.restore();
+};
+
+// B&Q: long grey clad warehouse with an orange top band, loading doors, central glazed tower with the orange B&Q board, entrance
+// canopy, trees, a lamp column and two parked cars
+HD.bandq = (c, x, G) => {
+  c.save(); c.lineJoin = 'round'; const OR = '#ee6a1c';
+  panels(c, x, G - 76, 440, 76, '#cdd2da', 9); rect(c, OR, x - 2, G - 82, 444, 6, '#9a3e08', .4); rect(c, '#c94e10', x - 2, G - 77.4, 444, 1.4);
+  for (const bx of [x + 10, x + 330]) { rect(c, '#3a3f4a', bx, G - 30, 100, 30); for (let i = 0; i < 8; i++) { c.fillStyle = lg(c, 0, G - 28, 0, G, [[0, '#4a505c'], [1, '#2e333c']]); c.fillRect(bx + 4 + i * 12, G - 28, 10, 28); for (let k = 0; k < 9; k++) rect(c, 'rgba(0,0,0,.25)', bx + 4 + i * 12, G - 26 + k * 3, 10, .3); } }
+  panels(c, x + 150, G - 150, 140, 150, '#cdd2da', 10); rect(c, OR, x + 146, G - 158, 148, 10, '#9a3e08', .4);
+  curtain(c, x + 154, G - 146, 132, 104, 6, 4);
+  c.fillStyle = lg(c, 0, G - 140, 0, G - 96, [[0, '#ff8a3c'], [.1, OR], [1, '#d45a10']]); c.fillRect(x + 166, G - 140, 108, 44); c.strokeStyle = '#9a3e08'; c.lineWidth = .6; c.strokeRect(x + 166, G - 140, 108, 44);
+  c.save(); c.font = '900 30px Mont, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.lineJoin = 'round'; c.lineWidth = 2; c.strokeStyle = '#8a3208'; c.strokeText('B&Q', x + 220, G - 117); c.fillStyle = '#ffffff'; c.fillText('B&Q', x + 220, G - 117); c.restore();
+  rect(c, OR, x + 154, G - 42, 132, 8, '#9a3e08', .35); txt(c, 'HOW DIY GETS DONE', x + 220, G - 38, 3.6, '#fff', { f: 'Mont, sans-serif', ls: .6 });
+  rect(c, '#2a3036', x + 170, G - 34, 100, 34); for (const dx of [x + 186, x + 224]) { c.fillStyle = lg(c, 0, G - 30, 0, G, [[0, '#d4e4f0'], [1, '#6f8ea8']]); c.fillRect(dx, G - 30, 30, 30); glare(c, dx, G - 30, 30, 30); }
+  tree(c, x + 40, G, 1.2, { d: '#4f8a2c', m: '#6faa3e', l: '#9ccc66' }); tree(c, x + 410, G, 1.1, { d: '#4f8a2c', m: '#6faa3e', l: '#9ccc66' });
+  rect(c, '#9aa3ad', x + 136, G - 70, 1.6, 70); rect(c, '#ecebe7', x + 128, G - 72, 18, 2.4, '#8a8880', .3);
+  hatch(c, x + 300, G, '#f2f2f2'); hatch(c, x + 116, G, '#7a8290');
+  c.restore();
+};
+
+// Lidl: shallow-pitched silver roof edge, mixed timber/silver vertical cladding band with the Lidl logo square, full-height glass
+// shop window (bright shelves, fruit & veg crates), dark wing with the green circles, blue trolley shelters, tree
+HD.lidl = (c, x, G) => {
+  c.save(); c.lineJoin = 'round';
+  poly(c, lg(c, 0, G - 128, 0, G - 118, [[0, '#eef0f2'], [1, '#c4c8ce']]), [[x - 8, G - 118], [x + 268, G - 118], [x + 260, G - 128], [x, G - 128]], LINE, .4);
+  for (let i = 0; i < 104; i++) { c.fillStyle = lg(c, 0, G - 118, 0, G - 66, [[0, ['#c4b6a2', '#d8ccb8', '#b0a28e', '#cfc2ae', '#a8aeb4', '#c0c6cc'][(i * 7) % 6]], [1, ['#b0a28e', '#c4b8a4', '#9a8c78', '#bcae9a', '#949aa0', '#aab0b6'][(i * 7) % 6]]]); c.fillRect(x + i * 2.5, G - 118, 2.2, 52); }
+  c.strokeStyle = LINE; c.lineWidth = .45; c.strokeRect(x, G - 118, 260, 52);
+  const LOGO = (lx, ly, sz) => { rect(c, '#1f52b0', lx, ly, sz, sz, '#0e2a6a', .4); c.beginPath(); c.arc(lx + sz / 2, ly + sz / 2, sz / 2 - 3, 0, 7); c.fillStyle = '#d32f2f'; c.fill(); c.beginPath(); c.arc(lx + sz / 2, ly + sz / 2, sz / 2 - 4.6, 0, 7); c.fillStyle = '#ffe23a'; c.fill(); c.save(); c.font = `900 ${sz * .3}px Mont, sans-serif`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = '#1f52b0'; c.fillText('LIDL', lx + sz / 2, ly + sz / 2 + .6); c.restore(); c.beginPath(); c.arc(lx + sz * .44, ly + sz * .36, sz * .035, 0, 7); c.fillStyle = '#d32f2f'; c.fill(); };
+  LOGO(x + 108, G - 116, 44);
+  rect(c, '#3a4a5a', x, G - 66, 170, 66); c.fillStyle = lg(c, 0, G - 62, 0, G - 4, [[0, '#f6f8fa'], [1, '#dfe4e8']]); c.fillRect(x + 2, G - 64, 166, 60);
+  for (let k = 0; k < 3; k++) { const sy = G - 60 + k * 13; rect(c, '#9aa3ad', x + 4, sy + 9, 162, 1.4); for (let i = 0; i < 80; i++) rect(c, ['#d84b3c', '#1f52b0', '#f2c43a', '#2f8a4a', '#e8a33c', '#ffffff', '#b8292f'][(i * 3 + k * 5) % 7], x + 5 + i * 2, sy + 2 + ((i + k) % 3), 1.6, 7 - ((i + k) % 3)); }
+  for (let i = 0; i < 6; i++) { const cx = x + 8 + i * 27; rect(c, '#8a6a42', cx, G - 18, 22, 6, '#4a3420', .3); for (let k = 0; k < 9; k++) { c.beginPath(); c.arc(cx + 2 + k * 2.3, G - 19.4 - (k % 2), 1.4, 0, 7); c.fillStyle = ['#2f8a4a', '#d84b3c', '#e8a33c', '#f2d23a', '#7fbf4a', '#d84b6a'][i]; c.fill(); } }
+  for (let i = 0; i < 9; i++) rect(c, '#3a4a5a', x + i * 21, G - 66, 1.4, 66); glare(c, x + 2, G - 64, 166, 60);
+  rect(c, '#2a3036', x + 170, G - 66, 90, 66); for (let i = 0; i < 4; i++) { c.beginPath(); c.arc(x + 186 + i * 20, G - 40, 6, 0, 7); c.fillStyle = '#7fbf4a'; c.fill(); c.beginPath(); c.arc(x + 186 + i * 20, G - 40, 3, 0, 7); c.fillStyle = '#f4f2ec'; c.fill(); } for (const px of [x + 172, x + 214, x + 256]) rect(c, '#efeee9', px, G - 66, 3, 66, '#8a8880', .25);
+  for (let i = 0; i < 8; i++) { rect(c, '#efeee9', x + 14 + i * 20, G - 16, 1.4, 16); rect(c, '#9aa3ad', x + 14 + i * 20, G - 12, 20, .8); }
+  tree(c, x - 10, G, 1.5, { d: '#3a6b2c', m: '#4f8a3c', l: '#7ab858' });
+  for (const bx of [x + 150, x + 236]) { rect(c, '#1f52b0', bx, G - 30, 10, 26, '#0e2a6a', .3); rect(c, '#ffe23a', bx + 2, G - 24, 6, 6); }
+  c.restore();
+};
+
+// Matalan: tall red-brick entrance block with a red pyramid canopy roof and MATALAN board, two tall glass curtain walls (one with
+// red doors), white wings with brick piers and a red top band, brick plinth, red bollards along the front
+HD.matalan = (c, x, G) => {
+  c.save(); c.lineJoin = 'round'; const RD = '#d2232a', X = x - 40;
+  for (const [bx, bw] of [[X + 40, 110], [X + 290, 110]]) { panels(c, bx, G - 78, bw, 78, '#f3f1eb', 8); rect(c, RD, bx - 2, G - 84, bw + 4, 6, '#7a1014', .35);
+    for (let i = 0; i < 3; i++) { const px = bx + 6 + i * (bw - 12) / 3; brick(c, px, G - 78, 12, 78, '#a8503a'); c.strokeStyle = LINE; c.lineWidth = .35; c.strokeRect(px, G - 78, 12, 78); }
+    brick(c, bx, G - 30, bw, 30, '#a8503a'); rect(c, RD, bx, G - 31, bw, 1.6); }
+  curtain(c, X + 62, G - 74, 36, 44, 2, 3); for (let j = 0; j < 3; j++) rect(c, RD, X + 62, G - 74 + j * 14.6, 36, 1.4); rect(c, RD, X + 79, G - 74, 1.4, 44);
+  rect(c, RD, X + 352, G - 44, 30, 44, '#7a1014', .4); rect(c, '#a81a20', X + 366, G - 44, 1.4, 44);
+  for (const [px, col] of [[X + 106, '#f4f2ec'], [X + 126, '#2a6fa8'], [X + 316, '#2a6fa8'], [X + 334, '#f4f2ec']]) { rect(c, col, px, G - 28, 14, 20, '#3a3a3a', .3); rect(c, 'rgba(0,0,0,.15)', px + 2, G - 25, 10, 1); rect(c, 'rgba(0,0,0,.15)', px + 2, G - 22, 7, 1); }
+  brick(c, X + 150, G - 130, 140, 130, '#a8503a'); c.strokeStyle = LINE; c.lineWidth = .5; c.strokeRect(X + 150, G - 130, 140, 130);
+  poly(c, lg(c, 0, G - 166, 0, G - 150, [[0, '#e8424a'], [1, '#b01a20']]), [[X + 132, G - 158], [X + 308, G - 158], [X + 298, G - 150], [X + 142, G - 150]], '#6a0e10', .4);
+  poly(c, '#a8181e', [[X + 132, G - 158], [X + 308, G - 158], [X + 290, G - 166], [X + 150, G - 166]], '#6a0e10', .4);
+  c.fillStyle = lg(c, 0, G - 150, 0, G - 124, [[0, '#e0323a'], [1, '#b81c22']]); c.fillRect(X + 154, G - 150, 132, 26); c.strokeStyle = '#6a0e10'; c.strokeRect(X + 154, G - 150, 132, 26);
+  txt(c, 'MATALAN', X + 220, G - 136.6, 13, '#ffffff', { f: 'Mont, sans-serif', w: 400, ls: 1.6 });
+  for (const [gx, red] of [[X + 158, false], [X + 224, true]]) { curtain(c, gx, G - 118, 58, red ? 74 : 118, 4, red ? 4 : 6); rect(c, RD, gx, G - 46, 58, 2.4);
+    if (red) { c.fillStyle = lg(c, 0, G - 44, 0, G, [[0, '#e0323a'], [1, '#a81a20']]); c.fillRect(gx, G - 44, 58, 44); for (const d of [14.5, 29, 43.5]) rect(c, '#7a1014', gx + d, G - 44, .8, 44); for (const d of [12, 26, 40]) rect(c, '#f0e0e0', gx + d, G - 24, .8, 6); } }
+  for (let i = 0; i < 13; i++) bollard(c, X + 48 + i * 28, G, RD, '#ffffff');
+  c.restore();
+};
+
+// JD Gyms: grey clad wings with dark roof bands, tall central block with a canopy on silver posts, navy sign with the white JD disc,
+// GYMS and lime corner brackets, second canopy over the glazed front, black WELCOME JD GYMS LUTON band, glass doors; brick paving
+HD.jdgyms = (c, x0, G) => {
+  c.save(); c.lineJoin = 'round'; const x = x0 - 36;
+  for (const bx of [x0, x0 + 204]) { panels(c, bx, G - 104, 84, 104, '#cdd2da', 14); rect(c, '#3a3f4a', bx - 2, G - 112, 88, 10, '#1a1e24', .4); rect(c, '#4a505c', bx - 2, G - 107, 88, .8); curtain(c, bx + 6, G - 50, 72, 50, 4, 1, ['#5a6878', '#2e3844', '#1e262e']); }
+  panels(c, x + 112, G - 144, 136, 144, '#d6dae0', 12);
+  poly(c, lg(c, 0, G - 162, 0, G - 152, [[0, '#e2e5e9'], [1, '#b8bec6']]), [[x + 96, G - 152], [x + 264, G - 152], [x + 256, G - 162], [x + 104, G - 162]], LINE, .4); for (const px of [x + 104, x + 252]) { c.fillStyle = lg(c, px, 0, px + 4, 0, [[0, '#8a929c'], [.5, '#e4e8ec'], [1, '#7a828c']]); c.fillRect(px, G - 152, 4, 152); }
+  c.fillStyle = lg(c, 0, G - 148, 0, G - 102, [[0, '#384660'], [1, '#26303f']]); c.fillRect(x + 112, G - 148, 136, 46); c.strokeStyle = '#141a24'; c.lineWidth = .5; c.strokeRect(x + 112, G - 148, 136, 46);
+  c.beginPath(); c.arc(x + 140, G - 125, 15, 0, 7); c.fillStyle = '#ffffff'; c.fill(); txt(c, 'JD', x + 140, G - 124.4, 14, '#26303f', { f: 'Mont, sans-serif', w: 900 });
+  txt(c, 'GYMS', x + 204, G - 124.4, 18, '#ffffff', { f: 'Mont, sans-serif', w: 600, ls: 1 });
+  const BR = (bx, by, sx, sy) => { rect(c, '#8be03a', sx < 0 ? bx - 9 : bx, by, 9, 2.2); rect(c, '#8be03a', sx < 0 ? bx - 2.2 : bx, sy < 0 ? by - 7 : by, 2.2, 9); };
+  BR(x + 168, G - 142, 1, 1); BR(x + 240, G - 142, -1, 1); BR(x + 168, G - 109.2, 1, -1); BR(x + 240, G - 109.2, -1, -1);
+  poly(c, lg(c, 0, G - 102, 0, G - 92, [[0, '#e2e5e9'], [1, '#b8bec6']]), [[x + 98, G - 92], [x + 262, G - 92], [x + 254, G - 102], [x + 106, G - 102]], LINE, .4); rect(c, '#9aa3ad', x + 106, G - 92, 148, 1.6);
+  curtain(c, x + 116, G - 90, 128, 37, 6, 1, ['#6a7c90', '#3a4858', '#26303d']);
+  rect(c, '#121418', x + 112, G - 53, 136, 12); txt(c, 'WELCOME  JD GYMS  LUTON', x + 180, G - 47, 6, '#ffffff', { f: 'Mont, sans-serif', ls: .8 });
+  curtain(c, x + 116, G - 41, 128, 41, 6, 1, ['#5a6a7c', '#3a4858', '#232c38']); c.fillStyle = lg(c, 0, G - 40, 0, G, [[0, '#d4e4f0'], [1, '#7aa0bc']]); c.fillRect(x + 150, G - 40, 60, 40); rect(c, '#26303d', x + 179.4, G - 40, 1.2, 40); glare(c, x + 150, G - 40, 60, 40);
+  rect(c, '#b98a62', x0 - 6, G - 3, 300, 3); for (let i = 0; i < 75; i++) rect(c, '#a8784f', x0 - 4 + i * 4, G - 3, .4, 3);
+  c.restore();
+};
+
+// Big Yellow Self Storage: tall box in bright yellow ribbed cladding, black signs (THE BIG YELLOW SELF STORAGE stack, SELF STORAGE,
+// BOXES & PACKING), white band, dark ground floor with the reception (glass + red Reception), black fence, white posts, tree
+HD.bigyellow = (c, x, G) => {
+  c.save(); c.lineJoin = 'round'; const Y = '#f8d418';
+  ribbed(c, x, G - 150, 300, 110, Y, 2.4); rect(c, '#d9b70c', x, G - 96, 300, 1.2); rect(c, '#2a2a2e', x, G - 151.4, 300, 2);
+  const SG = (sx, sy, w, h, l1, l2) => { rect(c, '#141416', sx, sy, w, h, '#000', .4); txt(c, l1, sx + w / 2, sy + h * .32, 6.4, '#ffffff', { f: 'Mont, sans-serif', w: 900 }); if (l2) txt(c, l2, sx + w / 2, sy + h * .72, 6.4, Y, { f: 'Mont, sans-serif', w: 900 }); };
+  SG(x + 14, G - 132, 56, 22, 'SELF', 'STORAGE'); SG(x + 196, G - 132, 90, 22, 'BOXES &', 'PACKING');
+  rect(c, '#141416', x + 102, G - 146, 62, 42, '#000', .4); [['THE BIG', '#fff'], ['YELLOW', Y], ['SELF', Y], ['STORAGE', '#fff']].forEach(([t, col], i) => txt(c, t, x + 133, G - 140.6 + i * 9.6, 7.6, col, { f: 'Mont, sans-serif', w: 900 }));
+  rect(c, '#f4f4f0', x + 4, G - 42, 256, 8, '#8a8880', .3); rect(c, '#3a3d44', x, G - 40, 300, 40); for (let i = 0; i < 60; i++) rect(c, 'rgba(0,0,0,.18)', x + i * 5, G - 40, .4, 40);
+  rect(c, '#f6f6f4', x + 6, G - 34, 70, 34, '#8a8880', .35); txt(c, 'Reception', x + 28, G - 29, 6, '#c8202a', { f: 'Mont, sans-serif', w: 800 }); c.fillStyle = lg(c, 0, G - 24, 0, G, [[0, '#d4e4f0'], [1, '#7aa0bc']]); c.fillRect(x + 50, G - 24, 22, 24); rect(c, '#2a2a2e', x + 60.6, G - 24, .8, 24); glare(c, x + 50, G - 24, 22, 24);
+  for (let i = 0; i < 44; i++) rect(c, '#1a1a1e', x + 84 + i * 5, G - 22, .7, 22); rect(c, '#1a1a1e', x + 84, G - 22, 216, 1); rect(c, '#1a1a1e', x + 84, G - 4, 216, .8);
+  rect(c, '#f4f2ec', x + 250, G - 34, 16, 12, '#8a8880', .3); rect(c, '#c8202a', x + 252, G - 32, 12, 3); rect(c, '#9aa3ad', x + 257, G - 22, 1.6, 22);
+  for (let i = 0; i < 9; i++) { rect(c, '#f4f2ec', x + 10 + i * 8, G - 10, 3, 10, '#8a8880', .2); rect(c, Y, x + 10 + i * 8, G - 6, 3, 2); } rect(c, '#e8c84a', x + 80, G - 14, 8, 10, '#6a5a10', .3);
+  tree(c, x + 300, G, .6, { d: '#3a6b2c', m: '#4f8a3c', l: '#7ab858' });
+  c.restore();
+};
+
+// Orbital Trampoline Park: long grey ribbed shed, ribbon of windows near the roof, slanted two-tone green ORBITAL board + white
+// TRAMPOLINE PARK board, low lime ground floor with blinds and a side door, red COSTA board, dark entrance block (canopy, lamps,
+// TRAMPOLINE fin, 4 glass panes, green BOUNCE THIS WAY panel with arrows), brick pillar, little blue sign
+HD.orbital = (c, x, G) => {
+  c.save(); c.lineJoin = 'round'; const LM = '#a9c935', DK = '#363b43', GN = '#8cc63f', MW = 450, E = x + MW;
+  poly(c, '#a4acb6', [[x - 2, G - 150], [x + 622, G - 150], [x + 616, G - 156], [x + 4, G - 156]], LINE, .4);
+  ribbed(c, x, G - 150, MW, 106, '#8c949e', 2.6); for (const yy of [G - 122, G - 76]) rect(c, '#6c737c', x, yy, MW, .8);
+  rect(c, '#cfd4da', x + 6, G - 142, MW - 12, 16, '#6c737c', .4); for (let i = 0; i < 28; i++) { c.fillStyle = lg(c, 0, G - 140, 0, G - 128, [[0, '#a8c4d8'], [1, '#4f6a82']]); c.fillRect(x + 8 + i * 15.6, G - 140, 13, 12); glare(c, x + 8 + i * 15.6, G - 140, 13, 12); }
+  rect(c, DK, x + 10, G - 112, 190, 32, '#14161a', .4); rect(c, DK, x + 212, G - 108, 228, 24, '#14161a', .4);
+  c.save(); c.translate(x + 105, G - 96); c.transform(1, 0, -.25, 1, 0, 0); c.font = '900 25px Mont, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = '#4f7a1c'; c.fillText('ORBITAL', 1, 1.2); c.fillStyle = lg(c, 0, -12, 0, 12, [[0, '#b8e86a'], [.5, GN], [.51, '#6fae2a'], [1, '#5a9a20']]); c.fillText('ORBITAL', 0, 0); c.restore();
+  txt(c, 'TRAMPOLINE PARK', x + 326, G - 96, 13, '#f2f4f6', { f: 'Mont, sans-serif', w: 800, ls: 1.4 });
+  c.fillStyle = lg(c, 0, G - 44, 0, G, [[0, '#b8d84a'], [1, '#93b12a']]); c.fillRect(x, G - 44, MW, 44); for (let i = 0; i < MW; i += 30) rect(c, '#88a428', x + i, G - 44, .6, 44); c.strokeStyle = LINE; c.lineWidth = .45; c.strokeRect(x, G - 44, MW, 44);
+  for (let k = 0; k < 7; k++) { const wx = x + 14 + k * 56; rect(c, '#2a2d34', wx, G - 36, 34, 18); for (let n = 0; n < 8; n++) rect(c, n % 2 ? '#d8dce0' : '#eef0f2', wx + 1.6, G - 34.4 + n * 1.9, 30.8, 1.9); rect(c, '#9aa3ad', wx + 16.6, G - 36, .8, 18); }
+  rect(c, '#b0182a', E - 46, G - 62, 40, 14, '#600a14', .4); txt(c, 'COSTA', E - 26, G - 55, 7, '#f6efe4', { f: 'Georgia, serif', w: 700, ls: 1 });
+  rect(c, '#1f2228', E - 38, G - 40, 22, 40); rect(c, '#9aa3ad', E - 20, G - 24, .8, 6); rect(c, '#2a6fd8', E - 34, G - 40, 6, 4);
+  rect(c, '#4a5058', E, G - 150, 170, 20, '#1a1d22', .4); rect(c, '#5d646d', E, G - 150, 170, 1.4);
+  rect(c, '#24272d', E + 1, G - 130, 168, 130); for (let i = 0; i < 168; i += 3) rect(c, '#2b2f36', E + 1 + i, G - 130, .8, 70);
+  for (const lx of [E + 44, E + 104]) { rect(c, '#55595f', lx, G - 128, .8, 10); rect(c, '#6d737b', lx - 3, G - 119, 7, 2.6); rect(c, '#fff6d8', lx - 2, G - 116.6, 5, .8); }
+  rect(c, DK, E + 4, G - 62, 12, 62); 'TRAMPOLINE'.split('').forEach((ch, i) => txt(c, ch, E + 10, G - 58 + i * 5.6, 4.2, '#d4d8dc', { f: 'Mont, sans-serif' }));
+  rect(c, '#2c3138', E + 18, G - 62, 104, 62); for (let i = 0; i < 4; i++) { c.fillStyle = lg(c, 0, G - 60, 0, G, [[0, '#a8c0d4'], [1, '#56728a']]); c.fillRect(E + 20 + i * 15, G - 60, 13, 60); glare(c, E + 20 + i * 15, G - 60, 13, 60); }
+  c.fillStyle = lg(c, 0, G - 60, 0, G, [[0, '#9ad44a'], [1, '#6fae2a']]); c.fillRect(E + 82, G - 60, 38, 60); ['BOUNCE', 'THIS', 'WAY'].forEach((t, i) => txt(c, t, E + 101, G - 52 + i * 8, 6.4, '#fff', { f: 'Mont, sans-serif', w: 900 }));
+  for (let k = 0; k < 2; k++) poly(c, '#e8ffb0', [[E + 87 + k * 12, G - 22], [E + 93 + k * 12, G - 16], [E + 87 + k * 12, G - 10], [E + 91 + k * 12, G - 10], [E + 97 + k * 12, G - 16], [E + 91 + k * 12, G - 22]]);
+  brick(c, E + 136, G - 130, 22, 130, '#8a6a52'); c.strokeStyle = LINE; c.strokeRect(E + 136, G - 130, 22, 130);
+  rect(c, '#f2f4f6', E + 126, G - 50, 8, 8, '#8a8880', .3); rect(c, '#1f5fb0', E + 128, G - 48, 4, 4);
+  c.restore();
+};
+
+// Grand Bazar Supermarket: long grey shed, sloping roof edge, navy fascia with the GB badge and GRAND BAZAR SUPERMARKET (lime/white),
+// glass doors, white FRESH poster with badge + green swoosh, seven produce-photo window panes, lime end panel
+HD.grandbazar = (c, x, G) => {
+  c.save(); c.lineJoin = 'round'; const NV = '#243a6a', LM = '#a6cf2a';
+  poly(c, '#a8aeb5', [[x - 2, G - 106], [x + 302, G - 106], [x + 296, G - 114], [x + 4, G - 114]], LINE, .4); for (let i = 8; i < 296; i += 3) rect(c, 'rgba(0,0,0,.14)', x + i, G - 113, .4, 7);
+  ribbed(c, x, G - 106, 300, 30, '#cfd4db', 3);
+  c.fillStyle = lg(c, 0, G - 102, 0, G - 80, [[0, '#2f4a82'], [1, '#1b2c52']]); c.fillRect(x + 2, G - 102, 296, 22); c.strokeStyle = '#0e1a34'; c.lineWidth = .4; c.strokeRect(x + 2, G - 102, 296, 22);
+  const LOGO = (cx, cy, r) => { c.beginPath(); c.arc(cx, cy, r + .8, 0, 7); c.fillStyle = '#ffffff'; c.fill(); c.beginPath(); c.arc(cx, cy, r - 1.2, 0, 7); c.fillStyle = NV; c.fill(); c.save(); c.font = `900 ${r * 1.1}px Mont, sans-serif`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = LM; c.fillText('G', cx - r * .32, cy + r * .05); c.fillStyle = '#fff'; c.fillText('B', cx + r * .38, cy + r * .05); c.restore(); };
+  LOGO(x + 92, G - 92, 12.4);
+  c.save(); c.font = '900 10px Mont, sans-serif'; c.textBaseline = 'middle'; c.textAlign = 'left'; let tx = x + 110; c.fillStyle = LM; c.fillText('GRAND', tx, G - 91); tx += c.measureText('GRAND ').width; c.fillStyle = '#fff'; c.fillText('BAZAR', tx, G - 91); tx += c.measureText('BAZAR ').width; c.font = '700 7px Mont, sans-serif'; c.fillStyle = LM; c.fillText('SUPERMARKET', tx, G - 90.4); c.restore();
+  rect(c, '#2a2d34', x + 40, G - 78, 3, 2.4); rect(c, '#2a2d34', x + 220, G - 78, 3, 2.4);
+  rect(c, '#3a4250', x + 2, G - 76, 296, 76); rect(c, '#9aa2ac', x + 2, G - 76, 296, 2.4);
+  rect(c, '#2a303a', x + 6, G - 70, 34, 70); for (const dx of [x + 8, x + 24]) { c.fillStyle = lg(c, 0, G - 68, 0, G, [[0, '#c4d8e6'], [1, '#6a88a0']]); c.fillRect(dx, G - 68, 14, 68); glare(c, dx, G - 68, 14, 68); } rect(c, '#c9ced4', x + 20.6, G - 40, 1, 8); rect(c, '#c9ced4', x + 24.4, G - 40, 1, 8);
+  rect(c, '#f8f8f4', x + 44, G - 72, 50, 72); txt(c, 'Fresh Everyday', x + 69, G - 66, 4.4, NV, { f: 'Georgia, serif', w: 700 }); LOGO(x + 69, G - 50, 9.4); txt(c, 'GRAND BAZAR', x + 69, G - 36.4, 4.4, NV, { f: 'Mont, sans-serif', w: 900 }); txt(c, 'SUPERMARKET', x + 69, G - 32, 3, LM, { f: 'Mont, sans-serif', w: 700 });
+  c.fillStyle = LM; c.beginPath(); c.moveTo(x + 44, G - 12); c.quadraticCurveTo(x + 70, G - 30, x + 94, G - 24); c.lineTo(x + 94, G); c.lineTo(x + 44, G); c.fill(); rect(c, NV, x + 50, G - 8, 38, .8);
+  const pics = [['#e86a2a', '#f2c14e', '#6fae3a'], ['#c8402e', '#e8a33c', '#3f7a2e'], ['#7fae4e', '#d84b3c', '#f4d35e'], ['#d8462e', '#f08a3c', '#a83a2a'], ['#5f9a3a', '#e8c24a', '#c8402e'], ['#e8a33c', '#7a3a8a', '#6fae3a'], ['#c83a3a', '#f2c14e', '#4f8a3c']];
+  for (let i = 0; i < 7; i++) { const px = x + 98 + i * 26, [a1, a2, a3] = pics[i]; rect(c, '#2a303a', px - 2, G - 72, 2, 72); c.fillStyle = lg(c, 0, G - 70, 0, G - 2, [[0, shade(a1, .9)], [1, shade(a1, .55)]]); c.fillRect(px, G - 70, 24, 68);
+    for (let k = 0; k < 22; k++) { const fx = px + 3 + (k * 7.3) % 18, fy = G - 64 + (k * 11.7) % 58, r = 2.2 + (k % 3); c.beginPath(); c.arc(fx, fy, r, 0, 7); c.fillStyle = [a2, a3, a1, '#f6f0e0'][k % 4]; c.fill(); c.beginPath(); c.arc(fx - r * .3, fy - r * .3, r * .35, 0, 7); c.fillStyle = 'rgba(255,255,255,.35)'; c.fill(); }
+    glare(c, px, G - 70, 24, 68); }
+  rect(c, '#2a303a', x + 280, G - 72, 2, 72); rect(c, LM, x + 283, G - 70, 13, 68); LOGO(x + 289.5, G - 54, 4); rect(c, '#ffffff', x + 285, G - 40, 9, .8); rect(c, '#ffffff', x + 285, G - 36, 7, .8);
+  c.restore();
+};
+
+// Frasers Plus Luton: tall glass cube (sky-blue top rows, purple band with the rainbow tile + FRASERSPLUS LUTON, teal lower rows),
+// blue entrance canopy, glass doors, bollards; TK Maxx block behind on the right with striped cladding, purple tiles, red fascia, trees
+HD.frasers = (c, x, G) => {
+  c.save(); c.lineJoin = 'round'; const tx = x + 124, tw = 168, th = 112;
+  rect(c, '#8a9098', tx + 2, G - th - 7, tw - 4, .8); for (let i = 0; i <= 27; i++) rect(c, '#8a9098', tx + 2 + i * 6, G - th - 7, .6, 7);
+  rect(c, '#ebe6de', tx, G - th, tw, th, LINE, .45);
+  const CL = ['#ece7df', '#d9c6c2', '#c9c0b9', '#f3efe8', '#beb7b1', '#e2cfd0', '#d6d0c8'];
+  for (let row = 0, yy = G - th + 3; yy < G - 40; row++, yy += 2.5) { let xx = tx + 1, k = 0; while (xx < tx + tw - 1) { const len = Math.min(10 + ((row * 31 + k * 17) % 7) * 6, tx + tw - 1 - xx); rect(c, CL[(row * 3 + k * 5) % CL.length], xx, yy, len - .4, 2.1); xx += len; k++; } }
+  for (const [px, py] of [[tx + 112, G - 104], [tx + 40, G - 92], [tx + 150, G - 86], [tx + 70, G - 76], [tx + 128, G - 62], [tx + 20, G - 58]]) rect(c, '#6b35b8', px, py, 7, 4, '#3a1a6a', .25);
+  for (const [wx, wy, w, h] of [[tx + 78, G - 92, 32, 14], [tx + 128, G - 98, 34, 22], [tx + 56, G - 66, 22, 8], [tx + 92, G - 62, 34, 12], [tx + 132, G - 64, 26, 14]]) curtain(c, wx, wy, w, h, Math.max(2, Math.round(w / 8)), 1, ['#7ab0b6', '#3e6a70', '#2a4a50']);
+  c.save(); c.font = '900 13px Mont, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.letterSpacing = '-.5px'; c.fillStyle = '#ffffff'; c.fillText('TK maxx', tx + 51, G - th + 13.6); c.fillStyle = '#6a6460'; c.fillText('TK maxx', tx + 50, G - th + 12.6); c.restore();
+  rect(c, '#8e1f2a', tx, G - 40, tw, 6); rect(c, '#b3262f', tx + 60, G - 40, tw - 60, 6);
+  rect(c, '#2a3038', tx, G - 34, tw, 34); for (let i = 0; i < 6; i++) { curtain(c, tx + 3 + i * 27, G - 31, 24, 28, 2, 1, ['#8a9ca8', '#4d5c66', '#36424a']); rect(c, '#e7c97a', tx + 9 + i * 27, G - 22, 12, .8); }
+  for (let i = 0; i <= 6; i++) rect(c, '#ddd7cd', tx + i * 27, G - 34, 1.6, 34);
+  const fw = 128, fh = 152; rect(c, '#22333a', x, G - fh, fw, fh); rect(c, '#9aa6ae', x - 1, G - fh - 3, fw + 2, 3, LINE, .3);
+  const rows = 10, cols = 8, ph = (fh - 2) / rows, pw = (fw - 2) / cols;
+  for (let r = 0; r < rows; r++) for (let q = 0; q < cols; q++) { const T3 = r < 3 ? ['#a8d4e8', '#5ea0c4'] : r < 6 ? ['#5a4a8e', '#2e245a'] : ['#6aa8ae', '#2e6a70']; c.fillStyle = lg(c, 0, G - fh + r * ph, 0, G - fh + (r + 1) * ph, [[0, T3[0]], [1, T3[1]]]); c.fillRect(x + 1 + q * pw, G - fh + 1 + r * ph, pw - 1, ph - 1); }
+  glare(c, x, G - fh, fw, fh); rect(c, '#9aa6ae', x - 1, G - fh, 1.4, fh); rect(c, '#9aa6ae', x + fw - .4, G - fh, 1.4, fh);
+  { const lx = x + 14, ly = G - 106; const RB = ['#e8417a', '#f08a2a', '#f2d23a', '#3fc27a', '#3a8fe0', '#8a4fd8']; for (let i = 0; i < 6; i++) rect(c, RB[i], lx + i * 2.2, ly, 2.2, 13); rect(c, '#fff', lx + 5.4, ly + 3, 2, 7); rect(c, '#fff', lx + 3, ly + 5.6, 7, 2);
+    txt(c, 'FRASERSPLUS', x + 70, ly + 6.6, 11, '#ffffff', { f: 'Mont, sans-serif', w: 400, ls: .2 }); txt(c, 'LUTON', x + 112, ly + 17, 6, '#ffffff', { f: 'Mont, sans-serif', w: 700, a: 'right' }); }
+  rect(c, '#1f4fa8', x + 6, G - 36, fw - 12, 9, '#0e2a6a', .35); txt(c, 'FRASERSPLUS LUTON', x + 64, G - 31.4, 4.8, '#ffffff', { f: 'Mont, sans-serif', w: 700, ls: .6 });
+  rect(c, '#26313a', x + 8, G - 27, fw - 16, 27); for (let i = 0; i < 7; i++) { c.fillStyle = lg(c, 0, G - 25, 0, G, [[0, '#c4dce6'], [1, '#6a96a8']]); c.fillRect(x + 10 + i * 16, G - 25, 14, 25); } glare(c, x + 10, G - 25, 110, 25);
+  for (let i = 0; i < 9; i++) bollard(c, x - 4.5 + i * 18, G, '#2a2c30', '#5a5e66');
+  for (const [k, s2] of [[24, .95], [92, .85], [152, .95]]) tree(c, tx + k, G, s2, { d: '#4f8a2c', m: '#6aa83a', l: '#9ccc66' });
   c.restore();
 };
 })();
