@@ -35,12 +35,12 @@ function resize() {
 
 /* ---------------- assets ---------------- */
 const img = src => { const i = new Image(); i.src = src; return i; };
-const heroImg = img('art/hero4.png'), HX4 = 4;   // hero sheet upscaled 4x with Scale2x (rounder edges, still crisp)
+const heroImg = img('art/hero3.png?v=1'), HX4 = 3;   // hero redrawn at 3x the pixels (smooth curves, finer detail)
 const HERO_FR = ['run0_normal', 'run1_normal', 'run2_normal', 'run3_normal', 'run4_normal', 'run5_normal', 'fly0_effort', 'fly1_effort', 'fly2_effort', 'fly0_panic', 'fly1_panic', 'fly2_panic', 'glide0_normal', 'glide1_normal', 'land0_effort', 'glide0_ko', 'run0_happy', 'run0_blink'];
 const FR = n => HERO_FR.indexOf(n);
-const NPC_META = {"pc_m":{"w":95,"h":175,"n":11,"type":"walk","k":2},"pc_f":{"w":95,"h":149,"n":11,"type":"walk","k":2},"pcso":{"w":98,"h":147,"n":11,"type":"walk","k":2},"warden":{"w":98,"h":147,"n":11,"type":"walk","k":2},"fan_dad":{"w":87,"h":204,"n":11,"type":"walk","k":2},"fan_f":{"w":95,"h":136,"n":11,"type":"walk","k":2},"fan_kid":{"w":101,"h":147,"n":11,"type":"walk","k":2},"blonde":{"w":95,"h":139,"n":11,"type":"walk","k":2},"abaya":{"w":97,"h":139,"n":11,"type":"walk","k":2},"teen":{"w":95,"h":139,"n":11,"type":"walk","k":2},"aunty":{"w":95,"h":144,"n":11,"type":"walk","k":2},"uncle":{"w":95,"h":139,"n":11,"type":"walk","k":2},"nurse":{"w":95,"h":152,"n":11,"type":"walk","k":2},"elder":{"w":97,"h":144,"n":11,"type":"walk","k":2},"builder":{"w":97,"h":152,"n":11,"type":"walk","k":2},"rider":{"w":101,"h":134,"n":11,"type":"walk","k":2},"rider_g":{"w":107,"h":147,"n":11,"type":"walk","k":2},"rider_o":{"w":107,"h":147,"n":11,"type":"walk","k":2},"schoolboy":{"w":95,"h":134,"n":11,"type":"walk","k":2},"shop":{"w":95,"h":134,"n":11,"type":"walk","k":2},"lad":{"w":95,"h":134,"n":11,"type":"walk","k":2},"esc_a":{"w":108,"h":155,"n":5,"type":"esc","k":2},"esc_b":{"w":147,"h":163,"n":5,"type":"esc","k":2},"esc_c":{"w":147,"h":150,"n":5,"type":"esc","k":2},"esc_d":{"w":147,"h":155,"n":5,"type":"esc","k":2},"esc_e":{"w":108,"h":163,"n":5,"type":"esc","k":2}};   // sprite sheets: walkers = walk0-3, blink0-3, shock, cheer, dizzy; e-scooters = ride0-2, shock, cheer
+const NPC_META = {"pc_m":{"w":95,"h":175,"n":15,"type":"walk","k":2},"pc_f":{"w":95,"h":149,"n":15,"type":"walk","k":2},"pcso":{"w":98,"h":147,"n":15,"type":"walk","k":2},"warden":{"w":98,"h":147,"n":15,"type":"walk","k":2},"fan_dad":{"w":87,"h":204,"n":15,"type":"walk","k":2},"fan_f":{"w":95,"h":136,"n":15,"type":"walk","k":2},"fan_kid":{"w":101,"h":147,"n":15,"type":"walk","k":2},"blonde":{"w":95,"h":139,"n":15,"type":"walk","k":2},"abaya":{"w":97,"h":139,"n":15,"type":"walk","k":2},"teen":{"w":95,"h":139,"n":15,"type":"walk","k":2},"aunty":{"w":95,"h":144,"n":15,"type":"walk","k":2},"uncle":{"w":95,"h":139,"n":15,"type":"walk","k":2},"nurse":{"w":95,"h":152,"n":15,"type":"walk","k":2},"elder":{"w":97,"h":144,"n":15,"type":"walk","k":2},"builder":{"w":97,"h":152,"n":15,"type":"walk","k":2},"rider":{"w":101,"h":134,"n":15,"type":"walk","k":2},"rider_g":{"w":107,"h":147,"n":15,"type":"walk","k":2},"rider_o":{"w":107,"h":147,"n":15,"type":"walk","k":2},"schoolboy":{"w":95,"h":134,"n":15,"type":"walk","k":2},"shop":{"w":95,"h":134,"n":15,"type":"walk","k":2},"lad":{"w":95,"h":134,"n":15,"type":"walk","k":2},"esc_a":{"w":108,"h":155,"n":5,"type":"esc","k":2},"esc_b":{"w":147,"h":163,"n":5,"type":"esc","k":2},"esc_c":{"w":147,"h":150,"n":5,"type":"esc","k":2},"esc_d":{"w":147,"h":155,"n":5,"type":"esc","k":2},"esc_e":{"w":108,"h":163,"n":5,"type":"esc","k":2}};   // sprite sheets: walkers = walk0-3, blink0-3, shock, cheer, dizzy; e-scooters = ride0-2, shock, cheer
 const NPC_KEYS = Object.keys(NPC_META).filter(k => NPC_META[k].type === 'walk'), ESC_KEYS = Object.keys(NPC_META).filter(k => NPC_META[k].type === 'esc');
-const npcImg = {}; Object.keys(NPC_META).forEach(k => npcImg[k] = img('art/npc_' + k + '.png?v=4'));
+const npcImg = {}; Object.keys(NPC_META).forEach(k => npcImg[k] = img('art/npc_' + k + '.png?v=5'));
 
 /* buildings: Flappy landmarks + house runs, drawn at KR px per unit, trimmed, cached (LRU) */
 const M = 90, LH = 380;
@@ -130,6 +130,7 @@ const stats = { steamed: 0, dodged: 0, missed: 0 };
 function seedStars() { stars = []; for (let i = 0; i < 90; i++) stars.push({ x: Math.random(), y: Math.random() * .55, r: Math.random() < .2 ? 1.2 : .7, p: Math.random() * 6 }); }
 function reset() {
   t = 0; dist = 0; speed = 0; coins = 0; obs = []; coinList = []; steam = []; sparks = []; panicT = 0; deadT = 0;
+  RUN = newRun(); lastCoin = 0; mtQueue = [];
   flashT = 0; shake = 0; banner = null; rings = []; veh = null; inv = 0; gifts = []; eidi = 0; pops = []; dust = []; revived = 0; nextGift = 2200; nextEidi = 1600; stats.steamed = stats.dodged = stats.missed = 0;
   Object.assign(hero, { x: -40, y: FLOOR, vy: 0, thrust: false, ground: true, landT: 0, rot: 0, run: 0, dead: false, vx: 0, bounce: 0 });
   nextObs = 380; nextNpc = 0; nextCar = 0;
@@ -239,17 +240,17 @@ function update(dt) {
     p.blink -= dt; if (p.blink < -.13) p.blink = 1.5 + Math.random() * 4;
     if (!p.esc) { p.idle -= dt; if (p.idle < -1.6) p.idle = 4 + Math.random() * 8; }   // now and then stop and look round
     if (p.react > 0) p.react -= dt; if (p.moodT > 0) p.moodT -= dt; if (p.hop > 0) p.hop = Math.max(0, p.hop - dt * 2.6);
-    if (p.fall > 0) { p.fall -= dt; }
+    if (p.fall > 0) { p.fall -= dt; if (!p.landed && p.fall0 - p.fall > .2) { p.landed = 1; for (let i = 0; i < 5; i++) dust.push({ x: p.x + p.fallDir * 14 + (Math.random() - .5) * 18, y: p.y, vx: (Math.random() - .5) * 70, vy: -Math.random() * 20, r: 2, l: .4 }); } }
     if (state === 'menu' || p.fall > 0) return;
     const ddx = hero.x - p.x, ad = Math.abs(ddx), up = FLOOR - hero.y;
     if (hero.dead) {   // he tumbles into people: they go over (cartoon), see stars, get back up
-      if (!p.esc && ad < 26 && up < 40 && Math.abs(hero.vx) > 20 && !p.done) { p.fall = 1.9; p.fallDir = ddx > 0 ? -1 : 1; p.done = 1; SFX.thud(); }
+      if (!p.esc && ad < 26 && up < 40 && Math.abs(hero.vx) > 20 && !p.done) { p.fall = 99; p.fall0 = 99; p.landed = 0; p.fallDir = ddx > 0 ? -1 : 1; p.done = 1; SFX.thud(); }
       return;
     }
     if (state !== 'play') return;
     // the steam blast from the cooker knocks people over (Jetpack Joyride's bullets): only right under the nozzle, close to the ground
     if (hero.thrust && !veh && !p.esc && p.fall <= 0 && Math.abs(p.x - nozzle()[0] + 4) < 11 && FLOOR - hero.y < 210) {
-      p.fall = 1.5; p.fallDir = Math.random() < .5 ? -1 : 1; p.done = 1; stats.steamed++; tone(220, .12, 'triangle', .07, .6);
+      p.fall = 99; p.fall0 = 99; p.landed = 0; p.fallDir = p.x < hero.x ? -1 : 1; p.done = 1; stats.steamed++; RUN.steamed++; tone(220, .12, 'triangle', .07, .6);
       for (let i = 0; i < 8; i++) steam.push({ x: p.x + (Math.random() - .5) * 14, y: p.y - Math.random() * 24, vx: (Math.random() - .5) * 90, vy: -Math.random() * 40, r: 3 + Math.random() * 3, l: .5, l0: .7 });
       return;
     }
@@ -257,7 +258,7 @@ function update(dt) {
     if (!p.done && hero.ground && ddx < 0 && ad < 70) { p.done = 1; p.react = .7; p.hop = 1; p.hopH = 24; p.look = -1; }          // jump out of his way
     else if (!p.done && ad < 80 && up < 130) { p.done = 1; p.react = 1.1; p.hop = 1; p.hopH = 9; p.look = ddx > 0 ? 1 : -1; }    // he whooshes past low: shocked
     else if (!p.done && ad < 60 && up >= 130) { const fan = /fan/.test(p.k);                                                       // he flies over high
-      if (fan || Math.random() < .45) { p.done = 1; p.mood = 'cheer'; p.moodT = 1.3; p.look = ddx > 0 ? 1 : -1; p.hop = 1; p.hopH = 6; } else p.done = 1; }
+      if (fan || Math.random() < .45) { p.done = 1; p.mood = 'cheer'; p.moodT = 1.3; RUN.cheer++; p.look = ddx > 0 ? 1 : -1; p.hop = 1; p.hopH = 6; } else p.done = 1; }
     if (p.done && ad > 160) p.done = 0;
   });
   npcs = npcs.filter(p => p.x > -140 && p.x < W + 160);
@@ -304,7 +305,7 @@ function update(dt) {
     if (o.type === 'laser') { if (o.d > 0) { o.d -= dt; return; } o.pt += dt;
       if (o.ph === 'in') { o.slide = Math.min(1, o.pt / .4); if (o.pt > .4) { o.ph = 'warn'; o.pt = 0; } }
       else if (o.ph === 'warn') { if ((o.pt * 5 | 0) !== ((o.pt - dt) * 5 | 0)) tone(1200, .05, 'square', .03); if (o.pt > 1.45) { o.ph = 'fire'; o.pt = 0; tone(140, 1, 'sawtooth', .07, .9); shake = Math.max(shake, .1); } }
-      else if (o.ph === 'fire') { if (o.pt > 1.15) { o.ph = 'out'; o.pt = 0; if (!hero.dead) stats.dodged++; } }
+      else if (o.ph === 'fire') { if (o.pt > 1.15) { o.ph = 'out'; o.pt = 0; if (!hero.dead) { stats.dodged++; RUN.lasers++; } } }
       else if (o.ph === 'out') { o.slide = 1 - Math.min(1, o.pt / .4); if (o.pt > .4) o.x = -999; } }
     if (o.type === 'rocket') {
       if (o.warn > 0) { o.warn -= dt; o.y += (hero.y - 30 - o.y) * Math.min(1, dt * 3); panicT = .3; if ((o.warn * 6 | 0) !== ((o.warn + dt) * 6 | 0)) SFX.warn(); if (o.warn <= 0) { o.lock = .45; } }
@@ -326,17 +327,70 @@ function update(dt) {
   dust.forEach(p => { p.x += p.vx * dt - dx; p.y += p.vy * dt; p.vy += 60 * dt; p.r += dt * 9; p.l -= dt; }); dust = dust.filter(p => p.l > 0);
   if (flashT > 0) flashT -= dt; if (shake > 0) shake -= dt; if (banner) { banner.t += dt; if (banner.t > 1.8) banner = null; }
   // coins
-  coinList.forEach(c => { c.x -= dx; if (!c.got && !hero.dead && state === 'play') { const hc = heroCircles(); if (hc.some(([x, y, r]) => Math.hypot(x - c.x, y - c.y) < r + COIN_R + 2)) { c.got = 1; coins++; SFX.coin(); for (let i = 0; i < 5; i++) sparks.push({ x: c.x, y: c.y, vx: (Math.random() - .5) * 90, vy: (Math.random() - .5) * 90, l: .3, c: '#fff3b0' }); } } });
+  coinList.forEach(c => { c.x -= dx; if (!c.got && !hero.dead && state === 'play') { const hc = heroCircles(); if (hc.some(([x, y, r]) => Math.hypot(x - c.x, y - c.y) < r + COIN_R + 2)) { c.got = 1; coins++; lastCoin = dist; SFX.coin(); for (let i = 0; i < 5; i++) sparks.push({ x: c.x, y: c.y, vx: (Math.random() - .5) * 90, vy: (Math.random() - .5) * 90, l: .3, c: '#fff3b0' }); } } });
   coinList.forEach(c => { if (!c.got && c.x < -18 && !c.m) { c.m = 1; stats.missed++; } });
   coinList = coinList.filter(c => c.x > -20 && !c.got);
   // particles
   steam.forEach(p => { p.x += p.vx * dt; p.y += p.vy * dt; p.vy *= Math.pow(.25, dt); p.vx *= Math.pow(.6, dt); p.r += dt * 16; p.l -= dt; if (p.y > FLOOR + 4) { p.y = FLOOR + 4; p.vy = -p.vy * .2; p.vx -= 40 * dt * 10; } });
   steam = steam.filter(p => p.l > 0);
   sparks.forEach(p => { p.x += p.vx * dt - dx * .3; p.y += p.vy * dt; p.vy += 300 * dt; p.l -= dt; }); sparks = sparks.filter(p => p.l > 0);
+  if (state === 'play') { if (hero.ground && !veh) RUN.groundm += dx / 10; RUN.nocoin = Math.max(RUN.nocoin, (dist - lastCoin) / 10); missionsTick(dt); }
+  if (state === 'dead' && hero.slide) RUN.slide += dx / 10;
   if (state === 'play' || state === 'dead') { $('dist').textContent = Math.floor(dist / 10) + 'm'; $('coins').textContent = '£' + coins; }
 }
 function nozzle() { const c = Math.cos(hero.rot), s = Math.sin(hero.rot), lx = -14 * HS, ly = -16 * HS; return [hero.x + lx * c - ly * s, hero.y + lx * s + ly * c]; }
 
+
+
+/* ================= missions (3 at a time, stars, ranks), like Jetpack Joyride ================= */
+const MISSIONS = [
+  ['run500', 'Fly 500m in one run', 'dist', 500, 1], ['coins50', 'Collect £50 in one run', 'coins', 50, 1], ['steam3', 'Steam 3 people in one run', 'steamed', 3, 1],
+  ['tuktuk', 'Ride a tuk-tuk', 'tuktuk', 1, 0], ['cheer5', 'Make 5 people cheer in one run', 'cheer', 5, 1], ['games3', 'Play 3 games', 'games', 3, 0],
+  ['dodge15', 'Dodge 15 hazards in one run', 'dodged', 15, 1], ['masjid2', 'Fly past 2 other masjids in one run', 'masjids', 2, 1], ['carpet', 'Ride the magic carpet', 'carpet', 1, 0],
+  ['eidi2', 'Grab 2 Eidi envelopes in one run', 'eidi', 2, 1], ['slide50', 'Slide 50m on your face in total', 'slide', 50, 0], ['ground200', 'Run 200m along the pavement in one run', 'groundm', 200, 1],
+  ['steam10', 'Steam 10 people in one run', 'steamed', 10, 1], ['run1000', 'Fly 1,000m in one run', 'dist', 1000, 1], ['nocoin300', 'Fly 300m without grabbing a £1', 'nocoin', 300, 1],
+  ['jump5', 'Jump 5 times in the tuk-tuk in one run', 'jumps', 5, 1], ['laser5', 'Survive 5 speed-camera lasers in one run', 'lasers', 5, 1], ['bank1000', 'Collect £1,000 in total', 'coinsT', 1000, 0],
+  ['coins150', 'Collect £150 in one run', 'coins', 150, 1], ['steam25', 'Steam 25 people in one run', 'steamed', 25, 1], ['run2000', 'Fly 2,000m in one run', 'dist', 2000, 1],
+  ['cheer20', 'Make 20 people cheer in one run', 'cheer', 20, 1], ['games25', 'Play 25 games', 'games', 25, 0], ['slide300', 'Slide 300m on your face in total', 'slide', 300, 0],
+];
+const RANKS = ['Beginner', 'Learner', 'Regular', 'Front Row', 'Early Bird', 'Back Row Legend', 'Imam\'s Favourite', 'Jummah Legend'];
+let RUN = null, lastCoin = 0, mtQueue = [], mtT = 0;
+function newRun() { return { dist: 0, coins: 0, steamed: 0, cheer: 0, dodged: 0, masjids: 0, eidi: 0, jumps: 0, groundm: 0, nocoin: 0, lasers: 0, tuktuk: 0, carpet: 0, slide: 0 }; }
+RUN = newRun();
+let MS = (() => { try { return JSON.parse(localStorage.getItem('jd_ms')) || null; } catch (e) { return null; } })() || { active: ['run500', 'coins50', 'steam3'], done: [], prog: {}, stars: 0, rank: 0, newDone: [] };
+const saveMS = () => { try { localStorage.setItem('jd_ms', JSON.stringify(MS)); } catch (e) {} };
+const mDef = id => MISSIONS.find(m => m[0] === id);
+function mValue(m) {   // current value of a mission (this run, or running total)
+  const [, , k, , perRun] = m; const r = { ...RUN, dist: dist / 10, coins, dodged: stats.dodged, masjids: passed };
+  if (perRun) return r[k] || 0;
+  if (k === 'games') return (MS.prog.games || 0);
+  if (k === 'coinsT') return (MS.prog.coinsT || 0) + coins;
+  return (MS.prog[k] || 0) + (r[k] || 0);
+}
+function missionsTick(dt) {
+  MS.active.forEach(id => { if (MS.newDone.includes(id) || MS.done.includes(id)) return; const m = mDef(id); if (m && mValue(m) >= m[3]) { MS.newDone.push(id); mtQueue.push(m[1]); tone(784, .1, 'square', .05); setTimeout(() => tone(1046, .18, 'square', .05), 100); } });
+  const el = $('mtoast'); if (mtT > 0) { mtT -= dt; if (mtT <= 0) el.classList.remove('on'); }
+  else if (mtQueue.length) { $('mtTxt').textContent = mtQueue.shift(); el.classList.add('on'); mtT = 2.6; }
+}
+function missionsEndRun() {   // bank running totals, award stars, swap finished missions for new ones, rank up every 3 stars
+  MS.prog.games = (MS.prog.games || 0) + 1; MS.prog.coinsT = (MS.prog.coinsT || 0) + coins;
+  ['slide', 'tuktuk', 'carpet'].forEach(k => MS.prog[k] = (MS.prog[k] || 0) + (RUN[k] || 0));
+  MS.active.forEach(id => { const m = mDef(id); if (!MS.newDone.includes(id) && m && mValue(m) >= m[3]) MS.newDone.push(id); });
+  const got = MS.newDone.slice(); let rankUp = null, reward = 0;
+  got.forEach(id => { if (!MS.done.includes(id)) { MS.done.push(id); MS.stars++; reward += 25; } });
+  while (MS.stars >= 3) { MS.stars -= 3; MS.rank++; rankUp = RANKS[Math.min(MS.rank, RANKS.length - 1)]; reward += 100 * MS.rank; }
+  bank += reward;
+  lastMissions = { got: got.map(id => mDef(id)[1]), rankUp, reward };
+  MS.active = MS.active.filter(id => !got.includes(id));
+  while (MS.active.length < 3) { const next = MISSIONS.find(m => !MS.done.includes(m[0]) && !MS.active.includes(m[0])); if (!next) break; MS.active.push(next[0]); }
+  MS.newDone = []; saveMS();
+}
+let lastMissions = null;
+function missionRows(el) {
+  el.innerHTML = MS.active.map(id => { const m = mDef(id); if (!m) return ''; const v = Math.min(m[3], Math.floor(mValue(m))), doneNow = MS.newDone.includes(id) || v >= m[3];
+    return `<div class="mrow${doneNow ? ' ok' : ''}"><span class="mi">${doneNow ? '✔' : '★'}</span><span class="mt">${m[1]}<em>${doneNow ? 'Done!' : (m[3] > 1 ? v + ' / ' + m[3] : '')}</em><i style="width:${Math.round(v / m[3] * 100)}%"></i></span></div>`; }).join('');
+}
+function rankHtml() { const n = RANKS[Math.min(MS.rank, RANKS.length - 1)]; return `<div class="rank"><b>${MS.rank + 1}. ${n.toUpperCase()}</b><span>${'★'.repeat(MS.stars)}${'☆'.repeat(3 - MS.stars)}</span></div>`; }
 
 /* ================= Jetpack Joyride systems, our way ================= */
 /* gift box (= their vehicle token): rainbow box with a ?, gives a ride. Eidi envelopes (= spin tokens): opened at the end of a run. */
@@ -347,7 +401,7 @@ function giftsUpdate(dt, dx) {
     if (!gf.got && !hero.dead && state === 'play' && heroCircles().some(([x, y, r]) => Math.hypot(x - gf.x, y - gf.y) < r + 13)) {
       gf.got = 1;
       if (gf.k === 'box') startVehicle(Math.random() < .5 ? 'tuktuk' : 'carpet');
-      else { eidi++; pops.push({ x: gf.x, y: gf.y - 12, txt: 'EIDI!', col: '#7dffa0', t: 0 }); tone(988, .1, 'square', .05); setTimeout(() => tone(1318, .16, 'square', .05), 90); for (let i = 0; i < 10; i++) sparks.push({ x: gf.x, y: gf.y, vx: (Math.random() - .5) * 140, vy: (Math.random() - .5) * 140, l: .4, c: i % 2 ? '#ffd75a' : '#7dffa0' }); }
+      else { eidi++; RUN.eidi++; pops.push({ x: gf.x, y: gf.y - 12, txt: 'EIDI!', col: '#7dffa0', t: 0 }); tone(988, .1, 'square', .05); setTimeout(() => tone(1318, .16, 'square', .05), 90); for (let i = 0; i < 10; i++) sparks.push({ x: gf.x, y: gf.y, vx: (Math.random() - .5) * 140, vy: (Math.random() - .5) * 140, l: .4, c: i % 2 ? '#ffd75a' : '#7dffa0' }); }
     } });
   gifts = gifts.filter(gf => gf.x > -40 && !gf.got);
 }
@@ -375,6 +429,7 @@ function roundRect(x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.a
 /* rides: tuk-tuk (drives on the pavement, tap to jump) and magic carpet (hold to rise, glides down). One hit = the ride blows up and he's thrown clear. */
 const VEH_NAME = { tuktuk: 'TUK-TUK', carpet: 'MAGIC CARPET' };
 function startVehicle(k) {
+  RUN[k] = 1;
   veh = { k, t: 0, vy: 0, jumps: 0, held: false, wob: 0 }; hero.thrust = false;
   banner = { k, t: 0 }; rings.push({ x: hero.x, y: hero.y - 30, t: 0 }); flashT = .12; flashCol = '255,255,255';
   tone(523, .1, 'square', .06); setTimeout(() => tone(659, .1, 'square', .06), 90); setTimeout(() => tone(784, .2, 'square', .06), 180);
@@ -384,7 +439,7 @@ function vehUpdate(dt) {
   veh.t += dt; hero.run += dt * (6 + speed / 22); if (hissG) hissG.gain.setTargetAtTime(0, AC.currentTime, .06);
   if (veh.k === 'tuktuk') {
     const press = holding && !veh.held; veh.held = holding;
-    if (press && hero.y >= FLOOR - .5) { hero.vy = -520; tone(330, .12, 'triangle', .07, 1.6); for (let i = 0; i < 6; i++) dust.push({ x: hero.x - 20 + Math.random() * 30, y: FLOOR, vx: -60 - Math.random() * 80, vy: -Math.random() * 30, r: 2.5, l: .5 }); }
+    if (press && hero.y >= FLOOR - .5) { hero.vy = -520; RUN.jumps++; tone(330, .12, 'triangle', .07, 1.6); for (let i = 0; i < 6; i++) dust.push({ x: hero.x - 20 + Math.random() * 30, y: FLOOR, vx: -60 - Math.random() * 80, vy: -Math.random() * 30, r: 2.5, l: .5 }); }
     hero.vy += 1500 * dt; hero.y += hero.vy * dt;
     if (hero.y >= FLOOR) { if (hero.vy > 200) { shake = .12; tone(120, .15, 'triangle', .1); for (let i = 0; i < 8; i++) dust.push({ x: hero.x + (Math.random() - .5) * 50, y: FLOOR, vx: (Math.random() - .5) * 160, vy: -Math.random() * 40, r: 3, l: .5 }); npcs.forEach(p => { if (!p.esc && Math.abs(p.x - hero.x) < 90 && p.fall <= 0) { p.react = .9; p.hop = 1; p.hopH = 16; p.look = hero.x > p.x ? 1 : -1; } }); }
       hero.y = FLOOR; hero.vy = 0; }
@@ -477,6 +532,7 @@ function drawLaser(o) {   // speed-camera emitters both sides; thin flickering w
 
 /* end of a run: Eidi envelopes first (their Final Spin, without the slot machine), then the results */
 function endRun() {
+  missionsEndRun(); mtQueue = []; mtT = 0; $('mtoast').classList.remove('on');
   if (eidi > 0) openEidi(); else showOver();
 }
 function openEidi() {
@@ -606,8 +662,8 @@ function drawNpc(p) {
   else if (p.idle < 0 && !p.esc) facing = (p.idle < -.8 ? -p.dir : p.dir);      // looks back over the shoulder
   let f;
   if (p.esc) f = p.react > 0 ? 3 : p.moodT > 0 ? 4 : Math.floor(p.ph) % 3;
-  else if (p.fall > 0) f = 10;
-  else if (p.flee > 0) f = (Math.floor(t * 12) % 2) ? 8 : Math.floor(p.ph) % 4;
+  else if (p.fall > 0) f = (p.fall0 || 1.9) - p.fall < .2 ? 8 : 10;
+  else if (p.flee > 0) f = M.n > 11 ? 11 + Math.floor(p.ph) % 4 : 8;      // panic run: legs going, arms up
   else if (p.react > 0) f = 8;
   else if (p.moodT > 0) f = 9;
   else { const still = p.idle < 0; f = (still ? 0 : Math.floor(p.ph) % 4) + (p.blink < 0 ? 4 : 0); }
@@ -615,9 +671,13 @@ function drawNpc(p) {
   const bob = p.esc ? (Math.floor(p.ph * .5) % 2) * .6 : walking ? (Math.floor(p.ph) % 2) * 1.2 : 0, hop = Math.sin(p.hop * Math.PI) * p.hopH;
   ctx.fillStyle = 'rgba(30,10,30,.25)'; ctx.beginPath(); ctx.ellipse(p.x, p.y, w * (p.fall > 0 ? .6 : .36), 2, 0, 0, 7); ctx.fill();
   ctx.save(); ctx.translate(p.x, p.y - bob - hop);
-  if (p.fall > 0) {   // tip over backwards, lie there, then pop back up
-    const T = 1.9 - p.fall, k = T < .25 ? T / .25 : p.fall < .35 ? p.fall / .35 : 1;
-    ctx.rotate(p.fallDir * k * Math.PI / 2 * .92); ctx.translate(0, k * 2);
+  if (p.fall > 0) {   // knocked flat like Jetpack Joyride's scientists: snap back, slam down, small bounce, then lie there
+    const T = (p.fall0 || 1.9) - p.fall; let a, lift = 0;
+    if (T < .06) { a = -.35 * (T / .06); lift = 5 * (T / .06); }
+    else if (T < .2) { const k = (T - .06) / .14; a = -.35 + (Math.PI / 2 + .35) * k * k; lift = 5 * (1 - k); }
+    else if (T < .34) { const k = (T - .2) / .14; a = Math.PI / 2 - .16 * Math.sin(k * Math.PI); lift = 3 * Math.sin(k * Math.PI); }
+    else a = Math.PI / 2;
+    ctx.translate(0, -lift); ctx.rotate(p.fallDir * a); if (T > .2) ctx.translate(0, 3);
   }
   if (facing < 0) ctx.scale(-1, 1); ctx.imageSmoothingEnabled = true;
   ctx.drawImage(im, f * M.w, 0, M.w, M.h, -w / 2, -h, w, h); ctx.restore(); ctx.imageSmoothingEnabled = true;
@@ -669,7 +729,7 @@ function thumb(cnv, key) {   // a masjid drawn small for the picker / the home t
   o.drawImage(v.c, (cnv.width - v.c.width * k) / 2, cnv.height - v.c.height * k - 2, v.c.width * k, v.c.height * k);
 }
 function refreshHome() {
-  $('hBest').textContent = best + 'm'; $('hBank').textContent = '£' + bank.toLocaleString('en-GB');
+  $('hBest').textContent = best + 'm'; $('hBank').textContent = '£' + bank.toLocaleString('en-GB'); $('misStars').textContent = '★'.repeat(MS.stars) + '☆'.repeat(3 - MS.stars);
   $('mosName').textContent = myMosque ? mosName() : 'Pick one'; $('mineName').textContent = mosName();
   if (myMosque) thumb($('mosThumb'), myMosque);
 }
@@ -699,11 +759,14 @@ function showOver() { const m = Math.floor(dist / 10); if (m > best) { best = m;
   $('ovT').textContent = ['MISSED THE KHUTBAH!', 'SO CLOSE, AKHI!', 'THE IMAM STARTED!', 'BACK OF THE SAFF FOR YOU'][Math.random() * 4 | 0];
   $('ovWhy').textContent = `Still no sign of ${mosName()}…` + (passed ? ` You flew past ${passed} other masjid${passed > 1 ? 's' : ''}.` : '');
   $('oS').textContent = stats.steamed; $('oZ').textContent = stats.dodged; $('oM').textContent = stats.missed;
+  const lm = lastMissions; $('ovMis').innerHTML = (lm && lm.got.length ? `<div class="mdone">${lm.got.map(x => '<div>✔ MISSION COMPLETE · ' + x + '</div>').join('')}${lm.rankUp ? '<div class="lvl">RANK UP! ' + lm.rankUp.toUpperCase() + '</div>' : ''}<div class="rew">+£${lm.reward} to your bank</div></div>` : '') + rankHtml() + '<div id="ovRows"></div>';
+  missionRows($('ovRows'));
   $('over').classList.remove('hide'); }
 const tap = (id, fn) => $(id).addEventListener('pointerdown', e => { e.preventDefault(); e.stopPropagation(); fn(e); });
 tap('home', e => { if (e.target.closest('.tile')) return; start(); });
 tap('bMos', openPick); tap('pickClose', () => $('pick').classList.add('hide'));
-tap('bHow', () => $('how').classList.remove('hide')); tap('howClose', () => $('how').classList.add('hide'));
+tap('bHow', () => $('how').classList.remove('hide'));
+tap('bMis', () => { $('misRank').innerHTML = rankHtml(); missionRows($('misRows')); $('mis').classList.remove('hide'); }); tap('misClose', () => $('mis').classList.add('hide')); tap('howClose', () => $('how').classList.add('hide'));
 tap('bShare', () => share('Late for Jummah? Play Jummah Dash – an SMR Original 🕌💨'));
 tap('again', start); tap('ovHome', goHome);
 tap('eidiGo', () => { if ($('eidiGo').dataset.life) revive(); else { $('eidiBox').classList.add('hide'); eidi = 0; showOver(); } });
@@ -722,7 +785,7 @@ window.addEventListener('resize', resize); window.addEventListener('orientationc
 // nozzle openings) is cut back out of it every frame, so the steam shows inside the openings, disappears behind the front lip,
 // then reappears below it: it looks like it comes from inside the holes, and it still passes behind the cooker, thobe and legs.
 (() => {
-  const sc = $('steamCv'), wrap = $('heroWrap'), o = sc.getContext('2d'), occ = img('art/hero_occ.png');
+  const sc = $('steamCv'), wrap = $('heroWrap'), o = sc.getContext('2d'), occ = img('art/hero_occ.png?v=2');
   const NZ = [[.1708, .6063], [.3124, .6278]], AX = [-.24, .97];
   const mk = (inner, outer) => { const c = document.createElement('canvas'); c.width = c.height = 64; const g = c.getContext('2d');
     const r = g.createRadialGradient(32, 32, 0, 32, 32, 32); r.addColorStop(0, inner); r.addColorStop(.62, inner.replace(/[\d.]+\)$/, '0.9)')); r.addColorStop(.82, inner.replace(/[\d.]+\)$/, '0.35)')); r.addColorStop(1, outer); g.fillStyle = r; g.fillRect(0, 0, 64, 64); return c; };
@@ -758,5 +821,5 @@ resize(); seedStars(); reset(); refreshHome(); if (myMosque) setTimeout(refreshH
 let last = performance.now();
 function frame(now) { const dt = Math.min(.05, (now - last) / 1000); last = now; update(dt); draw(); requestAnimationFrame(frame); }
 requestAnimationFrame(frame);
-window.__jd = { veh: k => startVehicle(k), laser: () => [CEIL + 40, (CEIL + FLOOR) / 2].forEach((y, i) => obs.push({ type: 'laser', x: W / 2, y, ph: 'in', pt: 0, slide: 0, d: i * .12 })), eidi: n => { eidi = n; }, kill: w => die(w), gift: k => gifts.push({ k, x: W * .6, y: 200, b: 0 }), get state() { return state; }, start, hero, get obs() { return obs; }, spawnRocket: () => obs.push({ type: "rocket", x: W + 40, y: hero.y - 30, warn: 1.5, lock: 0, v: 0 }), setHold: v => holding = v, get dist() { return dist; } };
+window.__jd = { veh: k => startVehicle(k), laser: () => [CEIL + 40, (CEIL + FLOOR) / 2].forEach((y, i) => obs.push({ type: 'laser', x: W / 2, y, ph: 'in', pt: 0, slide: 0, d: i * .12 })), eidi: n => { eidi = n; }, kill: w => die(w), gift: k => gifts.push({ k, x: W * .6, y: 200, b: 0 }), get state() { return state; }, start, hero, get obs() { return obs; }, spawnRocket: () => obs.push({ type: "rocket", x: W + 40, y: hero.y - 30, warn: 1.5, lock: 0, v: 0 }), setHold: v => holding = v, get dist() { return dist; }, mis: (s, c) => { RUN.steamed = s; coins = c; }, get npcs() { return npcs; } };
 })();
