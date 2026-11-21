@@ -93,7 +93,8 @@ let KB = 2;   // building px per unit = exactly the on-screen size (S * BS)
 function buildingCanvas(kind, key) {
   const id = kind + ':' + key; if (bCache.has(id)) { const v = bCache.get(id); bCache.delete(id); bCache.set(id, v); return v; }
   let w, draw;
-  if (kind === 'lm') { const L = LANDMARKS[key]; if (!L) return null; w = L.w; draw = o => L.d(o, M, LH - 6); }
+  if (kind === 'lm') { const L = LANDMARKS[key]; if (!L) return null; w = L.w; const H2 = window.LANDMARKS_HD && LANDMARKS_HD[key];
+    draw = H2 ? (o => { const f = (window.SCALE && SCALE[key]) || 1; o.save(); o.translate(M, LH - 6); o.scale(f, f); H2(o, 0, 0); o.restore(); }) : (o => L.d(o, M, LH - 6)); }
   else { const Hh = HOUSES[key]; if (!Hh) return null; w = Math.round(Hh.w * 1.35); draw = o => window.drawScaled(o, Hh.d.bind(Hh), M, LH - 6, 1.35); }
   const N = Math.min(4, Math.ceil(KB + .2));   // drawn natively just above screen size: vector curves, lettering and the sharp sign redraws at full detail, blocks on exact pixels
   const c = document.createElement('canvas'); c.width = (w + 2 * M) * N; c.height = LH * N;
