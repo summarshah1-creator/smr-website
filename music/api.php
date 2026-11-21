@@ -37,6 +37,32 @@ if (($a === 'play' || $a === 'dl') && $method !== 'POST') {
     }
     music_send($path, MUSIC_AUDIO[$t['ext']] ?? 'application/octet-stream');
 }
+/* analytics event from the player (public). Owner devices: any device seen with the SMR Admin cookie, or opened once with ?me=1, is flagged and never counted. */
+if ($a === 'ev' && $method === 'POST') {
+    $in = json_decode((string) file_get_contents('php://input'), true) ?: [];
+    $ev = (string) ($in['ev'] ?? '');
+    $ua = substr((string) ($_SERVER['HTTP_USER_AGENT'] ?? ''), 0, 200);
+    $vid = preg_replace('/[^a-z0-9]/i', '', substr((string) ($in['vid'] ?? ''), 0, 24));
+    if ((!in_array($ev, MUSIC_EVENTS, true) && $ev !== 'me') || $vid === '' || music_is_bot($ua)) json_out(['ok' => false], 400);
+    $k = 'mu_ev:' . client_ip(); if (too_many($k, 600, 3600)) json_out(['ok' => false], 429); note_fail($k);
+    $db = music_db();
+    $dev = preg_replace('/[^a-z ]/i', '', substr((string) ($in['dev'] ?? ''), 0, 24));
+    $db->prepare('INSERT OR IGNORE INTO music_devices (vid, first_at, last_at, dev, ua) VALUES (?, ?, ?, ?, ?)')->execute([$vid, now(), now(), $dev, $ua]);
+    $db->prepare('UPDATE music_devices SET last_at = ?, dev = ?, ua = ? WHERE vid = ?')->execute([now(), $dev, $ua, $vid]);
+    if ($owner || $ev === 'me') { $db->prepare("UPDATE music_devices SET owner = 1, label = CASE WHEN label = '' THEN 'Mine' ELSE label END WHERE vid = ?")->execute([$vid]); json_out(['ok' => true, 'me' => true]); }
+    $st = $db->prepare('SELECT owner FROM music_devices WHERE vid = ?'); $st->execute([$vid]);
+    if ((int) $st->fetchColumn() === 1) json_out(['ok' => true, 'me' => true]);
+    $track = preg_replace('/[^a-z0-9_-]/i', '', substr((string) ($in['t'] ?? ''), 0, 24));
+    $src = preg_replace('/[^a-z0-9_.-]/i', '', substr((string) ($in['src'] ?? ''), 0, 30));
+    $db->prepare('INSERT INTO music_events (at, day, vid, track, ev, src, dev, app, val) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)')
+        ->execute([now(), music_today(), $vid, $track, $ev, $src, $dev, empty($in['app']) ? 0 : 1, max(0, min(86400, (int) ($in['val'] ?? 0)))]);
+    json_out(['ok' => true]);
+}
+if ($a === 'stats' && $method !== 'POST') {
+    if (!$owner) json_out(['error' => 'Log in to SMR Admin first.'], 401);
+    header('Cache-Control: no-store');
+    json_out(music_stats((string) ($_GET['track'] ?? ''), (string) ($_GET['from'] ?? ''), (string) ($_GET['to'] ?? ''), (int) ($_GET['since'] ?? 0)));
+}
 if (($a === 'video' || $a === 'poster') && $method !== 'POST') {
     $t = music_track((string) ($_GET['id'] ?? ''));
     $f = $t ? music_dir($t['code']) . '/' . ($a === 'video' ? 'video.mp4' : 'poster.jpg') : '';
@@ -183,6 +209,11 @@ switch ($a) {
         $dir = music_dir($t['code']); foreach (['video.mp4', 'video.part', 'poster.jpg'] as $x) @unlink("$dir/$x");
         music_db()->prepare('UPDATE music_tracks SET video = 0, updated_at = ? WHERE code = ?')->execute([now(), $t['code']]);
         json_out(['ok' => true, 'track' => music_public(music_track($t['code']), true)]);
+    }
+    case 'dev_mine': {
+        $vid = preg_replace('/[^a-z0-9]/i', '', (string) ($in['vid'] ?? ''));
+        music_db()->prepare('UPDATE music_devices SET owner = ?, label = ? WHERE vid = ?')->execute([!empty($in['mine']) ? 1 : 0, music_clean((string) ($in['label'] ?? ''), 40), $vid]);
+        json_out(['ok' => true]);
     }
     case 'delete': {
         $t = music_track((string) ($in['id'] ?? ''));

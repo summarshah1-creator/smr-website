@@ -21,6 +21,11 @@ function music_db(): PDO {
             lyrics TEXT DEFAULT '', download INTEGER DEFAULT 0, hidden INTEGER DEFAULT 0, sort INTEGER DEFAULT 0,
             plays INTEGER DEFAULT 0, ready INTEGER DEFAULT 0, created_at INTEGER, updated_at INTEGER)");
         $pdo->exec("CREATE TABLE IF NOT EXISTS music_kv (k TEXT PRIMARY KEY, v TEXT)");
+        // analytics: one row per event; devices = random id kept on each phone/browser (owner's own devices are flagged and left out of every figure)
+        $pdo->exec("CREATE TABLE IF NOT EXISTS music_events (id INTEGER PRIMARY KEY, at INTEGER, day TEXT, vid TEXT, track TEXT, ev TEXT, src TEXT, dev TEXT, app INTEGER DEFAULT 0, val INTEGER DEFAULT 0)");
+        $pdo->exec("CREATE INDEX IF NOT EXISTS music_ev_tr ON music_events (track, at)");
+        $pdo->exec("CREATE INDEX IF NOT EXISTS music_ev_vid ON music_events (vid)");
+        $pdo->exec("CREATE TABLE IF NOT EXISTS music_devices (vid TEXT PRIMARY KEY, first_at INTEGER, last_at INTEGER, dev TEXT, ua TEXT, owner INTEGER DEFAULT 0, label TEXT DEFAULT '')");
         $cols = array_column($pdo->query('PRAGMA table_info(music_tracks)')->fetchAll(), 'name');
         if (!in_array('about', $cols, true)) $pdo->exec("ALTER TABLE music_tracks ADD COLUMN about TEXT DEFAULT ''");
         if (!in_array('video', $cols, true)) $pdo->exec("ALTER TABLE music_tracks ADD COLUMN video INTEGER DEFAULT 0");
@@ -52,6 +57,9 @@ function music_by_slug(string $slug): ?array {
     $st = music_db()->prepare('SELECT * FROM music_tracks WHERE slug = ? AND ready = 1'); $st->execute([strtolower($slug)]);
     return $st->fetch() ?: null;
 }
+const MUSIC_EVENTS = ['open', 'play', 'listen', 'p25', 'p50', 'p75', 'done', 'time', 'dl', 'home', 'install', 'fav', 'copy', 'share', 'video', 'fs', 'lyrics', 'keep'];
+function music_today(?int $at = null): string { $d = new DateTime('@' . ($at ?? time())); $d->setTimezone(new DateTimeZone('Europe/London')); return $d->format('Y-m-d'); }
+function music_is_bot(string $ua): bool { return $ua === '' || (bool) preg_match('/bot|crawl|spider|slurp|preview|facebookexternalhit|whatsapp|telegram|discord|skype|curl|wget|python|headless|lighthouse/i', $ua); }
 function music_dir(?string $code = null): string {
     $d = private_dir() . '/music';
     if (!is_dir($d)) @mkdir($d, 0750, true);
@@ -190,3 +198,51 @@ function music_seed_import(): void {
         music_kv('seed:' . $slug, (string) now());
     }
 }
+
+/* Analytics for the owner (SMR Admin → Analytics). $track = track code or '' for all; $from/$to = Y-m-d (London days, inclusive);
+   $since = unix time of the owner's last look (for "since you last checked"). Owner devices are left out of every figure. */
+function music_stats(string $track, string $from, string $to, int $since): array {
+    $db = music_db();
+    $ok = fn($d) => preg_match('/^\d{4}-\d{2}-\d{2}$/', $d);
+    if (!$ok($to)) $to = music_today();
+    if (!$ok($from)) $from = '2000-01-01';
+    $track = preg_replace('/[^a-z0-9_-]/i', '', $track);
+    $base = "vid <> '' AND vid NOT IN (SELECT vid FROM music_devices WHERE owner = 1)" . ($track !== '' ? ' AND track = ' . $db->quote($track) : '');
+    $rng = "$base AND day >= " . $db->quote($from) . ' AND day <= ' . $db->quote($to);
+    $one = function (string $sql) use ($db) { return (int) $db->query($sql)->fetchColumn(); };
+    // totals per event (count + different devices)
+    $ev = [];
+    foreach ($db->query("SELECT ev, COUNT(*) n, COUNT(DISTINCT vid) u, SUM(val) v FROM music_events WHERE $rng GROUP BY ev")->fetchAll() as $r) $ev[$r['ev']] = ['n' => (int) $r['n'], 'u' => (int) $r['u'], 'v' => (int) $r['v']];
+    $people = $one("SELECT COUNT(DISTINCT vid) FROM music_events WHERE $rng");
+    // first time each device ever showed up (for this track / all tracks)
+    $firsts = "SELECT vid, MIN(at) f, MIN(day) fd FROM music_events WHERE $base GROUP BY vid";
+    $new = $one("SELECT COUNT(*) FROM ($firsts) WHERE fd >= " . $db->quote($from) . ' AND fd <= ' . $db->quote($to));
+    $listeners = $one("SELECT COUNT(DISTINCT vid) FROM music_events WHERE $rng AND ev = 'play'");
+    $hsopen = $one("SELECT COUNT(*) FROM music_events WHERE $rng AND ev = 'open' AND app = 1");
+    $hsdev = $one("SELECT COUNT(DISTINCT vid) FROM music_events WHERE $rng AND app = 1");
+    // per day
+    $days = [];
+    foreach ($db->query("SELECT day, SUM(ev='play') plays, SUM(ev='open') opens, COUNT(DISTINCT CASE WHEN ev='play' THEN vid END) lis, COUNT(DISTINCT vid) ppl FROM music_events WHERE $rng GROUP BY day ORDER BY day")->fetchAll() as $r)
+        $days[$r['day']] = ['plays' => (int) $r['plays'], 'opens' => (int) $r['opens'], 'listeners' => (int) $r['lis'], 'people' => (int) $r['ppl'], 'new' => 0];
+    foreach ($db->query("SELECT fd, COUNT(*) n FROM ($firsts) WHERE fd >= " . $db->quote($from) . ' AND fd <= ' . $db->quote($to) . ' GROUP BY fd')->fetchAll() as $r)
+        if (isset($days[$r['fd']])) $days[$r['fd']]['new'] = (int) $r['n'];
+    $grp = function (string $col) use ($db, $rng) { $o = []; foreach ($db->query("SELECT $col k, COUNT(DISTINCT vid) n FROM music_events WHERE $rng GROUP BY $col ORDER BY n DESC LIMIT 12")->fetchAll() as $r) $o[] = ['k' => (string) $r['k'], 'n' => (int) $r['n']]; return $o; };
+    // since the owner last looked (all time, not limited by the range)
+    $sinceOut = null;
+    if ($since > 0) {
+        $sb = "$base AND at > " . (int) $since;
+        $sinceOut = ['plays' => $one("SELECT COUNT(*) FROM music_events WHERE $sb AND ev = 'play'"), 'listens' => $one("SELECT COUNT(*) FROM music_events WHERE $sb AND ev = 'listen'"),
+            'opens' => $one("SELECT COUNT(*) FROM music_events WHERE $sb AND ev = 'open'"), 'people' => $one("SELECT COUNT(DISTINCT vid) FROM music_events WHERE $sb"),
+            'new' => $one("SELECT COUNT(*) FROM ($firsts) WHERE f > " . (int) $since), 'dl' => $one("SELECT COUNT(*) FROM music_events WHERE $sb AND ev = 'dl'")];
+    }
+    // recent log + devices
+    $log = $db->query("SELECT at, vid, track, ev, src, dev, app, val FROM music_events WHERE $rng ORDER BY id DESC LIMIT 150")->fetchAll();
+    $devTr = $track !== '' ? ' AND e.track = ' . $db->quote($track) : '';
+    $devices = $db->query("SELECT d.vid, d.dev, d.owner, d.label, d.first_at, d.last_at, SUM(e.ev='play') plays, SUM(e.ev='listen') listens, SUM(e.ev='open') opens, SUM(e.ev='dl') dls, SUM(CASE WHEN e.ev='time' THEN e.val ELSE 0 END) secs
+        FROM music_devices d LEFT JOIN music_events e ON e.vid = d.vid$devTr GROUP BY d.vid HAVING d.owner = 1 OR plays > 0 OR opens > 0 ORDER BY d.last_at DESC LIMIT 200")->fetchAll();
+    $tracks = $db->query("SELECT code, title, slug, hidden FROM music_tracks WHERE ready = 1 ORDER BY sort ASC, id DESC")->fetchAll();
+    return ['from' => $from, 'to' => $to, 'track' => $track, 'ev' => $ev, 'people' => $people, 'listeners' => $listeners, 'new' => $new,
+        'returning' => max(0, $people - $new), 'hsopen' => $hsopen, 'hsdev' => $hsdev, 'days' => $days, 'src' => $grp('src'), 'dev' => $grp('dev'), 'app' => $grp('app'),
+        'since' => $sinceOut, 'log' => $log, 'devices' => $devices, 'tracks' => $tracks, 'now' => time(), 'today' => music_today()];
+}
+

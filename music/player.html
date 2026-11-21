@@ -777,6 +777,7 @@ function videoFor(t) {
   if (vid.dataset.id !== t.id) { vid.pause(); vid.removeAttribute('src'); vid.dataset.id = t.id; vid.dataset.src = t.video; vid.poster = t.poster || t.art || ''; if (vmode) { vid.src = t.video; vsync(true); } }
 }
 function setVideo(on) {
+  if (on && !vmode) AN.send('video', cur() && cur().id);
   vmode = on; full.classList.toggle('vmode', on); mSw.classList.toggle('v', on);
   mSw.querySelectorAll('button').forEach(b => b.classList.toggle('on', (b.dataset.m === '1') === on));
   if (on) { if (!vid.getAttribute('src') && vid.dataset.src) vid.src = vid.dataset.src; vsync(true); }
@@ -797,6 +798,7 @@ vid.addEventListener('loadedmetadata', () => vsync(true));
 vid.addEventListener('webkitendfullscreen', () => vsync(true));
 document.addEventListener('fullscreenchange', () => vsync(true));
 function videoFull() {
+  AN.send('fs', cur() && cur().id);
   if (vid.webkitEnterFullscreen && !document.fullscreenEnabled) { try { vid.webkitEnterFullscreen(); } catch (e) {} return; }
   const box = $('#vBox'); if (document.fullscreenElement) document.exitFullscreen(); else if (box.requestFullscreen) box.requestFullscreen().catch(() => { try { vid.webkitEnterFullscreen(); } catch (e) {} });
   else if (vid.webkitEnterFullscreen) vid.webkitEnterFullscreen();
@@ -904,6 +906,7 @@ $('#lyr').addEventListener('click', e => { const p = e.target.closest('p[data-i]
 let lyBigOn = false;
 function lyBig(on, fromPop) {
   if (on === lyBigOn) return; lyBigOn = on;
+  if (on) AN.send('lyrics', cur() && cur().id);
   const box = $('#lyr'); (on ? $('#lbBody') : $('#lyHome')).appendChild(box);
   $('#lyBig').classList.toggle('show', on); lyUser = 0;
   if (on) history.pushState({ lyr: 1 }, ''); else if (!fromPop && history.state && history.state.lyr) goBack();
@@ -1000,14 +1003,54 @@ function trackMenu(id, fromPlayer) {
 }
 $('#fMore').onclick = () => { const t = cur(); if (t) trackMenu(t.id, true); };
 function formOf(t) { return { id: t.id, title: t.title, artist: t.artist, album: t.album, year: t.year, genre: t.genre, track: t.track, lyrics: t.lyrics, about: t.about || '', download: t.own_download ?? t.download, hidden: t.hidden }; }
+/* ---------- analytics (anonymous: a random device id kept on the phone; owner devices are never counted) ---------- */
+const AN = (() => {
+  const get = () => { try { return localStorage.getItem('smr_vid') || (document.cookie.match(/(?:^|; )smr_vid=([a-z0-9]+)/) || [])[1] || ''; } catch (e) { return ''; } };
+  let vid = get();
+  if (!vid) { vid = Array.from(crypto.getRandomValues(new Uint8Array(8)), b => b.toString(16).padStart(2, '0')).join(''); }
+  try { localStorage.setItem('smr_vid', vid); } catch (e) {}
+  document.cookie = 'smr_vid=' + vid + '; path=/; max-age=63072000; SameSite=Lax';
+  const ua = navigator.userAgent;
+  const dev = /iPad|Macintosh.*Mobile|Macintosh(?=.*Safari)(?!.*Chrome)/.test(ua) && navigator.maxTouchPoints > 1 ? 'iPad' : /iPhone/.test(ua) ? 'iPhone' : /Android/.test(ua) ? (/Mobile/.test(ua) ? 'Android' : 'Android tablet') : /Mac/.test(ua) ? 'Mac' : /Windows/.test(ua) ? 'Windows' : 'Other';
+  const app = !!(window.navigator.standalone || (window.matchMedia && matchMedia('(display-mode: standalone)').matches));
+  const q = new URLSearchParams(location.search);
+  let src = q.get('s') || q.get('src') || q.get('utm_source') || '';
+  if (!src) src = /Instagram/i.test(ua) ? 'instagram' : /FBAN|FBAV/i.test(ua) ? 'facebook' : /TikTok|musical_ly|BytedanceWebview/i.test(ua) ? 'tiktok' : /Snapchat/i.test(ua) ? 'snapchat' : /LinkedInApp/i.test(ua) ? 'linkedin' : '';
+  if (!src && document.referrer) { try { const h = new URL(document.referrer).hostname.replace(/^www\./, ''); src = h === location.hostname ? 'site' : /google\./.test(h) ? 'google' : h.split('.').slice(-2, -1)[0] || 'other'; } catch (e) {} }
+  if (!src) src = app ? 'homescreen' : 'direct';
+  const live = () => !S.local && !MANAGE;
+  const send = (ev, t, val) => { if (!live()) return; try { fetch('/music/api.php?a=ev', { method: 'POST', keepalive: true, credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ev, vid, t: t || '', src, dev, app: app ? 1 : 0, val: val || 0 }) }).catch(() => {}); } catch (e) {} };
+  // listening time + how far through: counted per track while it plays, sent when the track changes or the page is left
+  let curT = '', secs = 0, lastTick = 0, marks = {}, started = {}, heard = {};
+  const flush = () => { if (curT && secs >= 1) send('time', curT, Math.round(secs)); secs = 0; };
+  const tick = () => {
+    const t = cur(); if (!t) return;
+    if (t.id !== curT) { flush(); curT = t.id; marks = {}; }
+    const n = performance.now(); if (!au.paused && lastTick) { const dt = Math.min(2, (n - lastTick) / 1000) * (au.playbackRate || 1); secs += dt; heard[t.id] = (heard[t.id] || 0) + dt; } lastTick = au.paused ? 0 : n;
+    if (heard[t.id] >= 30 && !marks.listen) { marks.listen = 1; send('listen', t.id); }
+    const d = au.duration || t.duration || 0; if (!d) return;
+    const f = au.currentTime / d;
+    [['p25', .25], ['p50', .5], ['p75', .75], ['done', .95]].forEach(([k, v]) => { if (f >= v && !marks[k]) { marks[k] = 1; send(k, t.id); } });
+  };
+  au.addEventListener('timeupdate', tick);
+  au.addEventListener('play', () => { lastTick = performance.now(); const t = cur(); if (t && !started[t.id]) { started[t.id] = 1; send('play', t.id); } });
+  au.addEventListener('pause', tick);
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') { tick(); flush(); } });
+  window.addEventListener('pagehide', () => { tick(); flush(); });
+  window.addEventListener('appinstalled', () => send('install', cur() && cur().id));
+  return { send, vid, me: () => send('me') };
+})();
+
 function download(t) {
   if (!t) return;
+  AN.send('dl', t.id);
   const a = document.createElement('a');
   a.href = S.local ? t.src : '/music/api.php?a=dl&id=' + encodeURIComponent(t.id);
   a.download = ((t.artist ? t.artist + ' - ' : '') + t.title + '.' + (t.ext || 'mp3')).replace(/[\\/:*?"<>|]/g, '');
   document.body.appendChild(a); a.click(); a.remove(); toast('Downloading…');
 }
 async function share(t) {
+  AN.send('share', t && t.id);
   const url = trackUrl(t);
   // share only the link: iPhone's Copy then copies the link, and the share sheet header shows the track's own title + cover (read from the page's tags and icon)
   if (navigator.share) { try { await navigator.share({ url }); return; } catch (e) { if (e.name === 'AbortError') return; } }
@@ -1025,6 +1068,7 @@ const PATH_SLUG = (location.pathname.match(/^\/player\/([A-Za-z0-9-]+)\/?$/) || 
 function trackUrl(t) { return t.slug && !S.local ? location.origin + '/player/' + t.slug : location.origin + location.pathname + '#t=' + encodeURIComponent(t.id); }
 function saveSheet(t) {
   if (!t) return;
+  AN.send('keep', t.id);
   try { history.replaceState(history.state, '', t.slug && !S.local ? '/player/' + t.slug : '#t=' + encodeURIComponent(t.id)); } catch (e) {}
   const art = t.art ? ' style="background-image:url(\'' + esc(t.art) + '\')"' : '';
   const canDl = t.download || S.owner;
@@ -1045,6 +1089,9 @@ function saveSheet(t) {
     const x = e.target.closest('[data-x]'); if (!x) return;
     const a = x.dataset.x;
     if (a === 'dl') { download(t); }
+    if (a === 'home') AN.send('home', t.id);
+    if (a === 'fav') AN.send('fav', t.id);
+    if (a === 'copy') AN.send('copy', t.id);
     if (a === 'home') { if (installEvt) { installEvt.prompt(); try { await installEvt.userChoice; } catch (er) {} installEvt = null; return; } b.querySelector('#xHome').classList.toggle('on'); }
     if (a === 'fav') b.querySelector('#xFav').classList.toggle('on');
     if (a === 'copy') { const u = trackUrl(t); try { await navigator.clipboard.writeText(u); toast('Link copied'); } catch (er) { toast(u); } }
@@ -1302,6 +1349,9 @@ async function boot() {
   const h = location.hash.match(/t=([^&]+)/); const bySlug = PATH_SLUG && S.tracks.find(t => t.slug === PATH_SLUG.toLowerCase());
   const want = bySlug ? bySlug.id : h ? decodeURIComponent(h[1]) : (store.get('last', {}) || {}).id;
   if (want && byId(want)) { S.queue = S.tracks.map(t => t.id); S.qi = S.queue.indexOf(want); load(false); if (h || bySlug) openFull(); }
+  // analytics: one 'open' per page load (the track when it's a track link); ?me=1 marks this device as the owner's so it's never counted
+  if (/[?&]me=1/.test(location.search)) { AN.me(); toast('This device is yours: it won\u2019t be counted in Analytics'); try { history.replaceState(history.state, '', location.pathname + location.hash); } catch (e) {} }
+  else AN.send('open', bySlug ? bySlug.id : (h && want) || '');
 }
 document.addEventListener('gesturestart', e => e.preventDefault());
 boot();
