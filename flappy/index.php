@@ -220,7 +220,7 @@ body.x2on #place{opacity:0!important}#pwrTip{position:absolute;left:12px;right:1
   <div id="tap" class="hide">TAP TO FLAP</div>
 </div>
 <script src="landmarks.js?v=1119c"></script>
-<script src="vehicles.js?v=1119"></script>
+<script src="vehicles.js?v=1121"></script>
 <script src="namecheck.js"></script>
 <script src="sky.js?v=1119d"></script>
 <script src="fest.js?v=4"></script>
@@ -428,9 +428,9 @@ function spawnCar(x, key, zoom) { const sp = key ? carSprites.find(s => s.k === 
   return true; }
 const EMK = { police: 108, ambulance: 96, fire: 82 };
 // now and then a supercar or a motorbike flies past, flat out, with a roar and a puff of exhaust
-const critters = [], flags = []; let fanCD = 0, fanOak = null, fanPass = 0, fallCD = 0, kidCD = 8 + Math.random() * 30, foxCD = 25, snowmanCD = 3, flagT = 2, flagDue = false;
+const critters = [], flags = []; let postCD = 20 + Math.random() * 40, fanCD = 0, fanOak = null, fanPass = 0, fallCD = 0, kidCD = 8 + Math.random() * 30, foxCD = 25, snowmanCD = 3, flagT = 2, flagDue = false;
 window.__flag = () => { flags.push({ x: W * .7 }); }; window.__fl = () => ({ f: flags.map(f => Math.round(f.x)), flagDue, flagT: Math.round(flagT) });
-window.__crit = (k, o) => { if (o) { critters.push(o); return; } if (k === 'fox') foxCD = 0; else if (k === 'kid') kidCD = 0; else snowmanCD = 0; };
+window.__crit = (k, o) => { if (o) { critters.push(o); return; } if (k === 'postie') postCD = 0; else if (k === 'fox') foxCD = 0; else if (k === 'kid') kidCD = 0; else snowmanCD = 0; };
 const roadShut = () => !!(window.FEST && FEST.kind && FEST.kind() === 'carnival');   // carnival: road closed for the parade
 let wxSndT = 0; let zoomCD = 20, crashCD = 60, otCD = 6, headCD = 120, jamT = 0, chaseCD = 90, hornT = 2;
 function startChase() { const ks = ['lambo', 'f40', 'p911', 'c63', 'a45', 'rs3', 'golf', 'gwagon'], k = ks[Math.random() * ks.length | 0];
@@ -925,6 +925,7 @@ function update(dt) {
   // very rarely (about 1 in 60 speeding drivers, and never twice close together) a car on the near side loses it and ends up on the verge.
   // every one is a bit different: flat spin, roll onto the roof, onto its side or a sideways slide; where it stops; the sounds; sometimes a small fire
   // a fox trots along the pavement now and then at night; snowmen appear on the verge once snow has settled
+  postCD -= dt; if (moving && postCD <= 0) { postCD = 45 + Math.random() * 60; if (SKY.n < .5 && !critters.some(c => c.k === 'postie')) { const d = Math.random() < .5 ? -1 : 1; critters.push({ k: 'postie', d, x: d < 0 ? W + 24 : -24, y: GY + 6 + Math.random() * 4, v: 13 + Math.random() * 5, ph: 0, s: 1 }); } }   // postman with his trolley (owner, 21 Nov)
   foxCD -= dt; if (moving && foxCD <= 0) { foxCD = 60 + Math.random() * 90; if (SKY.n > .6 && !critters.some(c => c.k === 'fox')) { const d = Math.random() < .5 ? -1 : 1; critters.push({ k: 'fox', x: d < 0 ? W + 20 : -24, d, v: 14 + Math.random() * 8, y: GY + 4 + Math.random() * 3, ph: 0, stop: Math.random() < .5 ? 1.5 + Math.random() * 2 : 0, stopAt: W * (.3 + Math.random() * .4) }); } }
   // kids whizzing along the pavement on kick scooters, either way, on their own or in a little group: at random, but at least once a minute (not late at night)
   fallCD -= dt; kidCD -= dt; if (moving && kidCD <= 0) { kidCD = 12 + Math.random() * 46; if (SKY.n < .85 && !critters.some(c => c.k === 'kid')) { const d = Math.random() < .5 ? -1 : 1, n = Math.random() < .45 ? 1 : Math.random() < .7 ? 2 : 3, v = 46 + Math.random() * 30;
@@ -954,7 +955,7 @@ function update(dt) {
         if (F.t < 3.4) { c.v = Math.max(0, F.v0 * (1 - F.t / .45)); F.sv = Math.max(0, F.sv - dt * 70); F.sx += c.d * F.sv * dt; if (!F.th && F.t > .3) { F.th = 1; SFX.thud(.2); } }
         else { if (!F.up) { F.up = 1; c.x += F.sx; F.sx = 0; } c.v = 16; c.walk = 1; }   // picks the scooter up and walks it off
       }
-      c.x += c.d * c.v * dt; c.ph += dt * (c.walk ? 1.4 : 2.2); c.dist = (c.dist || 0) + (c.walk ? 0 : c.v * dt / 1.7); } else if (c.k === 'fox') { const stopping = c.stop > 0 && Math.abs(c.x - c.stopAt) < 3; if (stopping) { c.stop -= dt; c.ph = 0; } else { c.x += c.d * c.v * dt; c.ph += dt * c.v * .35; } }
+      c.x += c.d * c.v * dt; c.ph += dt * (c.walk ? 1.4 : 2.2); c.dist = (c.dist || 0) + (c.walk ? 0 : c.v * dt / 1.7); } else if (c.k === 'postie') { c.x += c.d * c.v * dt; c.ph += dt * c.v * .3; } else if (c.k === 'fox') { const stopping = c.stop > 0 && Math.abs(c.x - c.stopAt) < 3; if (stopping) { c.stop -= dt; c.ph = 0; } else { c.x += c.d * c.v * dt; c.ph += dt * c.v * .35; } }
     c.x -= moving ? step : 0; if (c.x < (c.k === 'kid' ? -140 : -60) || c.x > W + (c.k === 'kid' ? 140 : 80)) critters.splice(i, 1); }
   // a tall flagpole with the Palestine flag comes past about every 30 seconds
   if (moving) { flagT -= dt; if (flagT <= 0) { flagT = 30; flagDue = true; } }
@@ -1075,6 +1076,21 @@ function drawFan(p) { const X = Math.round(p.x), Y = Math.round(p.y), s = p.s, a
   else if (p.hat === 'cap') { P('#1b1a24', -3, -30, 6.6, 3); P('#22336e', -2.6, -29.6, 5.8, 2.4); P('#22336e', 2, -27.6, 3.4, 1); }
   else P('#2a1a12', -2.2, -28.4, 5, 1.6);
   if (p.scarf) { for (let i = 0; i < 6; i++) P(i % 2 ? '#22336e' : '#f47920', -3 + i, -22.4, 1, 2); const fl = Math.round(Math.sin(p.ph * 6)); for (let i = 0; i < 5; i++) P(i % 2 ? '#22336e' : '#f47920', -4 - i + fl * (i > 2 ? 1 : 0), -21 + (i > 2 ? 1 : 0), 1, 2); }
+  ctx.restore(); }
+// postman: red polo with white sleeve bands, grey shorts, white socks, black shoes, grey cap, red satchel on a dark strap, pushing
+// a red trolley on two wheels (owner, 21 Nov)
+function drawPostie(p) { const X = Math.round(p.x), Y = Math.round(p.y); ctx.save(); ctx.translate(X, Y); ctx.scale(p.d, 1); const P = (cl, x, y, w, h) => { ctx.fillStyle = cl; ctx.fillRect(x, y, w, h); }, L = Math.sin(p.ph * 2) > 0 ? 1 : 0, RD = '#d8231f', OL = '#1b1a24';
+  ctx.fillStyle = 'rgba(0,0,0,.16)'; ctx.fillRect(-5, 0, 19, 1);
+  P(OL, 5, -15, 9, 13); P(RD, 6, -14, 7, 11); P('#a8181a', 11, -14, 2, 11); P('#f4f2ec', 7, -11, 3, 1.4); P(OL, 5, -2, 9, 1);   // trolley
+  P(OL, 5.5, -2, 3, 3); P('#5a5d66', 6.3, -1.2, 1.4, 1.4); P(OL, 10.5, -2, 3, 3); P('#5a5d66', 11.3, -1.2, 1.4, 1.4); P('#3a3d44', 3, -15, 3, 1);
+  P(OL, -3, -11, 7, 11); P('#e8b896', -2.5, -8, 2.6, 7 - L); P('#e8b896', .6, -8, 2.6, 6 + L); P('#f4f4f2', -2.5, -3 - L, 2.6, 1.6); P('#f4f4f2', .6, -4 + L, 2.6, 1.6); P(OL, -3, -1 - L, 3.6, 1.2); P(OL, .4, -2 + L, 3.6, 1.2);   // legs, socks, shoes
+  P('#5e626c', -3, -11, 7, 4);   // grey shorts
+  P(OL, -4, -22, 9, 12); P(RD, -3.5, -21.5, 8, 11); P('#a8181a', -1, -21.5, 3, 2); P('#f4f2ec', -3.5, -19, 1.6, .8); P('#f4f2ec', 3, -19, 1.6, .8);   // polo, collar, sleeve bands
+  P('#e8b896', 3.6, -18, 2, 5); P('#e8b896', 4.2, -15, 2.4, 2);   // arm out to the trolley handle
+  for (let i = 0; i < 9; i++) P('#26262c', 2.6 - i * .7, -21 + i * 1.1, 1, 1);   // satchel strap
+  P(OL, -6.5, -14, 6, 7); P(RD, -6, -13.5, 5, 6); P('#e8e4d4', -5.4, -9.4, 2.4, 1.4);   // satchel
+  P(OL, -3, -30, 8, 8); P('#e8b896', -2.5, -29.5, 7, 7); P(OL, 2.4, -27, 1, 1.4); P('#c0806a', 3.6, -24.6, 1.6, .7);   // head
+  P(OL, -3.4, -31.6, 8.6, 3.4); P('#5a5e68', -3, -31, 7.6, 2.6); P('#4a4e58', 4, -29.6, 4.4, 1.4); P(RD, 0, -30.4, 1.6, 1.2);   // cap
   ctx.restore(); }
 function drawFox(f) { const X = Math.round(f.x), Y = Math.round(f.y), d = f.d, dim = 1, col = h => { const v = parseInt(h.slice(1), 16), r = (v >> 16) * dim | 0, g = (v >> 8 & 255) * dim | 0, b = (v & 255) * dim | 0; return 'rgb(' + r + ',' + g + ',' + b + ')'; };
   const P = (cl, a, b, w, h) => { ctx.fillStyle = col(cl); ctx.fillRect(d > 0 ? X + a : X + 16 - a - w, Y + b, w, h); }, st = Math.floor(f.ph) % 2;
@@ -1237,7 +1253,7 @@ function draw() {
   if (BE > 0) { ctx.fillStyle = '#8f8a7e'; ctx.fillRect(0, H, W, 2); ctx.fillStyle = '#c9c4b8'; ctx.fillRect(0, H + 2, W, 12); ctx.fillStyle = '#b3ad9f'; for (let x = -po; x < W; x += 12) ctx.fillRect(Math.round(x), H + 2, 1, 12);
     ctx.fillStyle = DRYC('#5f9e44', .2); ctx.fillRect(0, H + 14, W, BE); ctx.fillStyle = DRYC('#4f8a36', .75); const go = SCi % 16; for (let y = H + 18; y < H + BE; y += 8) for (let x = -go + ((y / 8) % 2) * 8; x < W; x += 16) ctx.fillRect(Math.round(x), y, 2, 2);
     ctx.fillStyle = DRYC('#3f7d33', .5); for (let x = -go; x < W; x += 16) ctx.fillRect(Math.round(x), H + 14, 14, 4); }
-  SKY.drawGround(ctx, W, GY, ROAD, H, BE, SCi, () => { if (window.FEST) FEST.ground(ctx, W, GY, t, SCi, fdt, fstep); critters.forEach(c => { if (c.k === 'fox') drawFox(c); else if (c.k === 'kid') drawKid(c); else if (c.k === 'fan') drawFan(c); else drawSnowman(c); }); });
+  SKY.drawGround(ctx, W, GY, ROAD, H, BE, SCi, () => { if (window.FEST) FEST.ground(ctx, W, GY, t, SCi, fdt, fstep); critters.forEach(c => { if (c.k === 'fox') drawFox(c); else if (c.k === 'kid') drawKid(c); else if (c.k === 'fan') drawFan(c); else if (c.k === 'postie') drawPostie(c); else drawSnowman(c); }); });
 
   SKY.drawPrecip(ctx, S);
   pipes.forEach(p => { if (!p.broken) SKY.pipeShadow(ctx, p.x, PW, ROAD, GY); }); pipes.forEach(p => { if (p.broken) return; pipe(p.x, -OY, p.top + OY, 'top'); pipe(p.x, p.top + p.gap, ROAD - 4 - p.top - p.gap, 'bottom'); });

@@ -1,12 +1,12 @@
 /* Jummah Dash: keeps the whole game on the phone. First visit downloads it once;
    after that it opens from the phone, and an update only downloads the files that changed. */
-const BUILD = '20261121221801';
+const BUILD = '20261121222218';
 const FILES = {
-"hd/landmarks_hd.js": "8506bb9d8f",
+"hd/landmarks_hd.js": "293b1ffb02",
 "hd/foodbank.png": "8f4400d5e6",
-"game.js": "5527a30a0e",
+"game.js": "a4e16357ec",
 "landmarks.js": "9b916dc9ee",
-"vehicles.js": "d0ceac4756",
+"vehicles.js": "565dab9723",
 "manifest.webmanifest": "636eadba05",
 "silk.woff2": "c40ed2272b",
 "silkb.woff2": "67996e4e8c",
@@ -50,7 +50,8 @@ const FILES = {
 "art/npc_esc_b.png": "991980ba7e",
 "art/npc_esc_c.png": "b861ab124e",
 "art/npc_esc_d.png": "04bca54c95",
-"art/npc_esc_e.png": "78ccb20f44"
+"art/npc_esc_e.png": "78ccb20f44",
+"art/npc_postie.png": "0fb50af78e"
 };          // { path: hash } for every file the game uses
 const CACHE = 'jd-' + BUILD;
 

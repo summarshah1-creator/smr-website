@@ -465,5 +465,21 @@ V.donner = { n: 'Donner Rush food truck', w: 100, h: 66, weight: 0, speed: [16, 
     c.font = '700 8px Silk'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.lineJoin = 'round'; c.lineWidth = 2.4; c.strokeStyle = '#1b1a24';
     c.strokeText('DONNER', X(52), Y(-36)); c.fillStyle = '#ffd56a'; c.fillText('DONNER', X(52), Y(-36)); c.fillStyle = '#e8308c'; c.fillRect(X(52) - 15, Y(-36) + 4, 30, 1);
     c.strokeText('RUSH', X(52), Y(-36) + 9); c.fillStyle = '#ffd56a'; c.fillText('RUSH', X(52), Y(-36) + 9); }; }
-window.VEHICLES = V; window.VEHICLE_ORDER = ['police', 'ambulance', 'fire', 'phantom', 'c63', 'gwagon', 'golf', 'a45', 'rs3', 'p911', 'f40', 'lambo', 'taxi', 'pickup', 'van', 'smallvan', 'binlorry', 'lorry', 'bus', 'coach', 'mrrushed', 'motorbike', 'moped', 'bike', 'escooter'];
+
+
+/* post van (owner, 21 Nov): mid-size red panel van like the postal fleet's, black bumpers + lower trim, sliding door, steel wheels,
+   a cream "POST" panel on the side (generic, no real logo) */
+V.postvan = { n: 'Post van', w: 70, h: 30, weight: 1.6, speed: [28, 46], colours: [['Post red', '#d8231f']],
+  d(c, x, G, [, B]) { const D = SH(B, .8);
+  arch(c, x + 13, G, 5.6); arch(c, x + 56, G, 5.6);
+  fill(c, B, [[x + 1, G - 5], [x + 1, G - 27], [x + 3, G - 29.5], [x + 46, G - 29.5], [x + 50, G - 28], [x + 57, G - 18.5], [x + 66, G - 16.5], [x + 68.5, G - 13], [x + 68.5, G - 5]]);
+  glass(c, [[x + 46.5, G - 19], [x + 46.5, G - 27.6], [x + 49.6, G - 27.6], [x + 55.4, G - 19]], '#26303a'); R(c, 'rgba(0,0,0,.25)', x + 45, G - 28, .7, 22); R(c, 'rgba(0,0,0,.2)', x + 30, G - 27, .7, 21); R(c, 'rgba(0,0,0,.25)', x + 6, G - 27, 22, .6);
+  R(c, '#2a2c31', x + 31, G - 18, 3.4, 1.6); R(c, '#2a2c31', x + 42, G - 18, 3, 1.6);
+  R(c, '#fff8e8', x + 10, G - 24, 18, 7); R(c, B, x + 11, G - 23, 16, 5); c.font = '700 4.6px Arial, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = '#ffd23a'; c.fillText('POST', x + 19, G - 20.4);
+  R(c, '#1c1d22', x + 1, G - 8.5, 67.5, 3.5); R(c, '#1c1d22', x + 60, G - 13, 8.5, 4.5); shine(c, x + 3, G - 29, 42);
+  R(c, '#e8ecf0', x + 62, G - 16, 5, 2); R(c, '#f2a33a', x + 64.5, G - 14, 2, 1); R(c, '#d42a2a', x + 1, G - 26, 1.6, 7);
+  wheel(c, x + 13, G, 5.3, '#b8bec6', null, 8, '#8a9098'); wheel(c, x + 56, G, 5.3, '#b8bec6', null, 8, '#8a9098');
+} };
+
+window.VEHICLES = V; window.VEHICLE_ORDER = ['police', 'ambulance', 'fire', 'phantom', 'c63', 'gwagon', 'golf', 'a45', 'rs3', 'p911', 'f40', 'lambo', 'taxi', 'pickup', 'van', 'postvan', 'smallvan', 'binlorry', 'lorry', 'bus', 'coach', 'mrrushed', 'motorbike', 'moped', 'bike', 'escooter'];
 })();
