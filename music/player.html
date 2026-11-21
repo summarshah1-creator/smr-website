@@ -1026,7 +1026,8 @@ $('#tSleep').onclick = () => {
 /* ---------- media session (lock screen) ---------- */
 function mediaSession(t) {
   if (!('mediaSession' in navigator)) return;
-  const art = t.art ? [{ src: new URL(t.art, location.href).href, sizes: '512x512' }] : [];
+  // exact square sizes (declared size = real size), so CarPlay and the lock screen centre the cover properly
+  const art = !t.art ? [] : t.slug && !S.local ? [256, 512, 1024].map(n => ({ src: location.origin + '/music/og.php?t=' + encodeURIComponent(t.slug) + '&sq=1&s=' + n + '&v=' + encodeURIComponent((t.art.match(/[?&]v=(\d+)/) || [])[1] || ''), sizes: n + 'x' + n, type: 'image/jpeg' })) : [{ src: new URL(t.art, location.href).href }];
   try { navigator.mediaSession.metadata = new MediaMetadata({ title: t.title, artist: t.artist || S.settings.title, album: t.album || '', artwork: art }); } catch (e) {}
   const set = (a, f) => { try { navigator.mediaSession.setActionHandler(a, f); } catch (e) {} };
   set('play', play); set('pause', () => au.pause()); set('previoustrack', prev); set('nexttrack', () => next());

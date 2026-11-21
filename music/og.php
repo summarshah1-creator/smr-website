@@ -12,16 +12,17 @@ if (!$t || $t['art'] === '' || !function_exists('imagecreatetruecolor')) {
     header('Cache-Control: public, max-age=86400');
     readfile($p); exit;
 }
-$sq = !empty($_GET['sq']); // sq=1: 512×512 cover for the page icon (share sheet header, Home Screen icon)
-$cache = music_dir($t['code']) . '/' . ($sq ? 'sq-' : 'og-') . $t['updated_at'] . '.jpg';
+$sq = !empty($_GET['sq']); // sq=1: square cover (page icon, lock screen / CarPlay artwork); s = 256 / 512 / 1024, default 512
+$px = in_array((int) ($_GET['s'] ?? 512), [256, 512, 1024], true) ? (int) ($_GET['s'] ?? 512) : 512;
+$cache = music_dir($t['code']) . '/' . ($sq ? 'sq' . ($px === 512 ? '' : $px) . '-' : 'og-') . $t['updated_at'] . '.jpg';
 if (!is_file($cache) && $sq) {
     $raw = @file_get_contents(music_dir($t['code']) . '/art.' . $t['art']);
     $im = $raw !== false ? @imagecreatefromstring($raw) : false;
     if (!$im) { header('Content-Type: image/png'); readfile($fallback); exit; }
     $sw = imagesx($im); $sh = imagesy($im); $side = min($sw, $sh);
-    $out = imagecreatetruecolor(512, 512);
-    imagecopyresampled($out, $im, 0, 0, (int) (($sw - $side) / 2), (int) (($sh - $side) / 2), 512, 512, $side, $side);
-    foreach (glob(music_dir($t['code']) . '/sq-*.jpg') ?: [] as $old) @unlink($old);
+    $out = imagecreatetruecolor($px, $px);
+    imagecopyresampled($out, $im, 0, 0, (int) (($sw - $side) / 2), (int) (($sh - $side) / 2), $px, $px, $side, $side);
+    foreach (glob(music_dir($t['code']) . '/sq' . ($px === 512 ? '' : $px) . '-*.jpg') ?: [] as $old) if ($old !== $cache) @unlink($old);
     imagejpeg($out, $cache, 86);
 }
 if (!is_file($cache)) {
