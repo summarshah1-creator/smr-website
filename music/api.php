@@ -8,6 +8,8 @@ $a = (string) ($_GET['a'] ?? '');
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 $tok = admin_token();
 $owner = $tok !== null;
+// The public page (/player) always asks as a visitor, so the owner sees exactly what everyone sees; the tools live in SMR Admin → Music (/music/?manage=1).
+$asVisitor = ($_GET['view'] ?? '') === 'public';
 
 /* ---------- public ---------- */
 if ($a === 'list') {
@@ -16,9 +18,10 @@ if ($a === 'list') {
     $out = [];
     // Hidden tracks are private: left off the list, but anyone with the track's own link (/player/<slug>) gets that one.
     $want = strtolower((string) ($_GET['t'] ?? ''));
-    foreach ($rows as $t) { if ($t['hidden'] && !$owner && ($want === '' || $t['slug'] !== $want)) continue; $out[] = music_public($t, $owner); }
-    $res = ['tracks' => $out, 'settings' => music_settings(), 'owner' => $owner];
-    if ($owner) $res['csrf'] = $tok['csrf'];
+    $own = $owner && !$asVisitor;
+    foreach ($rows as $t) { if ($t['hidden'] && !$own && ($want === '' || $t['slug'] !== $want)) continue; $out[] = music_public($t, $own); }
+    $res = ['tracks' => $out, 'settings' => music_settings(), 'owner' => $own];
+    if ($own) $res['csrf'] = $tok['csrf'];
     json_out($res);
 }
 if (($a === 'play' || $a === 'dl') && $method !== 'POST') {

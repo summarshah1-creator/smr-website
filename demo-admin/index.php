@@ -313,6 +313,7 @@ document.addEventListener('keydown',function(e){if(/^\d$/.test(e.key))press(e.ke
     <nav class="tabs" role="tablist">
       <button data-grp="mail" role="tab">Email<span class="cnt" id="mailcnt"></span></button>
       <button data-grp="flappy" role="tab">Flappy<span class="cnt" id="fkcnt"></span></button>
+      <button data-grp="music" role="tab">Music</button>
       <button data-grp="demos" role="tab">Demos</button>
     </nav>
     <nav class="subtabs" id="subtabs" role="tablist">
@@ -391,6 +392,12 @@ document.addEventListener('keydown',function(e){if(/^\d$/.test(e.key))press(e.ke
   <section id="tab-flappy" class="tab hidden">
     <div class="bar"><div><h1>Flappy Kabootar</h1><p class="sub">Places people want in the game, and the leaderboard.</p></div></div>
     <iframe id="fkframe" title="Flappy Kabootar inbox" style="width:100%;height:calc(100vh - 210px);min-height:480px;border:0;background:transparent" loading="lazy"></iframe>
+  </section>
+
+  <!-- MUSIC: SMR Player tracks (upload, edit, private/public) = /music/?manage=1 -->
+  <section id="tab-music" class="tab hidden">
+    <div class="bar"><div><h1>Music</h1><p class="sub">Upload and manage tracks on SMR Player. Visitors never see these tools. <a href="/player" target="_blank" rel="noopener" style="color:inherit">Open the player</a></p></div></div>
+    <iframe id="muframe" title="SMR Player tracks" allow="autoplay" style="width:100%;height:calc(100vh - 210px);min-height:480px;border:0;background:transparent;border-radius:14px" loading="lazy"></iframe>
   </section>
 
   <!-- EMAIL -->
@@ -510,8 +517,8 @@ var ICON={dots:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="
 
 /* ---------- tabs (hash) ---------- */
 var lastDemoTab='demos';
-var showTab=function(t){if(['demos','send','live','designs','flappy','mail'].indexOf(t)<0)t='demos';if(t==='flappy'){var ff=document.getElementById('fkframe');if(ff&&!ff.src)ff.src='/flappy/admin.php'}
-  var grp=(t==='mail'||t==='flappy')?t:'demos';if(grp==='demos')lastDemoTab=t;
+var showTab=function(t){if(['demos','send','live','designs','flappy','mail','music'].indexOf(t)<0)t='demos';if(t==='music'){var mf=document.getElementById('muframe');if(mf&&!mf.src)mf.src='/music/?manage=1'}if(t==='flappy'){var ff=document.getElementById('fkframe');if(ff&&!ff.src)ff.src='/flappy/admin.php'}
+  var grp=(t==='mail'||t==='flappy'||t==='music')?t:'demos';if(grp==='demos')lastDemoTab=t;
   document.querySelectorAll('[data-tab]').forEach(function(b){b.classList.toggle('on',b.dataset.tab===t)});document.querySelectorAll('[data-grp]').forEach(function(b){b.classList.toggle('on',b.dataset.grp===grp)});document.getElementById('subtabs').classList.toggle('hidden',grp!=='demos');
   document.querySelectorAll('.tab').forEach(function(s){s.classList.toggle('hidden',s.id!=='tab-'+t)});window.scrollTo(0,0);if(t==='live'&&typeof load==='function'&&D.length)load();if(t!=='send'&&$('created').dataset.used&&typeof resetSend==='function')resetSend();if(t==='mail'&&typeof mailOpen==='function')mailOpen();if(t==='designs'&&typeof dLoad==='function')dLoad()};
 document.querySelectorAll('[data-tab]').forEach(function(b){b.addEventListener('click',function(){if(location.hash!=='#'+b.dataset.tab)history.replaceState(null,'','#'+b.dataset.tab);showTab(b.dataset.tab)})});

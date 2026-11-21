@@ -108,7 +108,7 @@ svg{display:block}
 .grab{width:38px;height:5px;border-radius:3px;background:rgba(255,255,255,.3);margin:8px auto 0}
 .fscroll{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;scrollbar-width:none}
 .fscroll::-webkit-scrollbar{display:none}
-.fbody{display:flex;flex-direction:column;align-items:center;height:calc(100vh - 58px - env(safe-area-inset-top,0px) - 74px);height:calc(100dvh - 58px - env(safe-area-inset-top,0px) - 74px);min-height:470px;padding:0 24px 10px;max-width:560px;width:100%;margin:0 auto}
+.fbody{display:flex;flex-direction:column;align-items:center;height:calc(100vh - 58px - env(safe-area-inset-top,0px) - 50px);height:calc(100dvh - 58px - env(safe-area-inset-top,0px) - 50px);min-height:470px;padding:0 24px 10px;max-width:560px;width:100%;margin:0 auto}
 .stage{flex:1;min-height:0;width:100%;display:flex;align-items:center;justify-content:center;position:relative;container-type:size;padding:6px 0}
 .bigart{width:min(84vw,40vh,440px);width:min(84vw,44dvh,440px);aspect-ratio:1;border-radius:14px;box-shadow:0 4px 16px rgba(0,0,0,.25);transition:transform .55s cubic-bezier(.2,.9,.3,1.25),opacity .3s,width .4s,border-radius .4s}
 .paused .bigart{transform:scale(.86)}
@@ -135,11 +135,12 @@ svg{display:block}
 .cards{max-width:560px;margin:0 auto;padding:0 16px calc(28px + var(--safe));display:flex;flex-direction:column;gap:16px}
 .card{border-radius:18px;background:rgba(255,255,255,.08);overflow:hidden;position:relative}
 .lycard{background:rgb(var(--tint));background:color-mix(in srgb,rgb(var(--tint)) 55%,#16101f);cursor:pointer}
-.lycard .ch{display:flex;align-items:center;gap:10px;padding:16px 16px 6px 22px}
-.lycard .ch b{flex:1;font:800 19px Sora}
+.lycard .ch{display:flex;align-items:center;gap:10px;padding:9px 10px 8px 18px}
+.lycard .ch b{flex:1;font:800 15px Sora}
+.lycard .ch .cbtn{width:32px;height:32px}.lycard .ch .cbtn .ic{width:16px;height:16px}
 .cbtn{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:rgba(0,0,0,.22);color:#fff}
 .cbtn .ic{width:19px;height:19px}
-.lycard .lyrics{height:330px;overflow:hidden;padding:4px 22px 60%;pointer-events:none}
+.lycard .lyrics{height:330px;overflow:hidden;padding:12px 18px 60%;pointer-events:none}
 .lycard .lyrics p{font-size:21px;margin-bottom:12px;transform:none!important}
 .lycard .lyrics .src{display:none}
 .lycard .lymore{position:absolute;left:0;right:0;bottom:0;height:70px;background:linear-gradient(transparent,color-mix(in srgb,rgb(var(--tint)) 55%,#16101f));pointer-events:none}
@@ -958,6 +959,7 @@ window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); instal
 const UA = navigator.userAgent, isIOS = /iPad|iPhone|iPod/.test(UA) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1), isAndroid = /Android/.test(UA);
 const SHARE_I = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7M16 6l-4-4-4 4M12 2v13"/></svg>';
 const DOTS_I = '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>';
+const MANAGE = /[?&]manage=1/.test(location.search); // owner tools only inside SMR Admin → Music
 const PATH_SLUG = (location.pathname.match(/^\/player\/([A-Za-z0-9-]+)\/?$/) || [])[1] || '';
 function trackUrl(t) { return t.slug && !S.local ? location.origin + '/player/' + t.slug : location.origin + location.pathname + '#t=' + encodeURIComponent(t.id); }
 function saveSheet(t) {
@@ -1186,7 +1188,7 @@ $('#setBtn').onclick = () => {
 /* ---------- start ---------- */
 async function reload() {
   if (S.local) { renderList(); return; }
-  const r = await fetch('/music/api.php?a=list' + (PATH_SLUG ? '&t=' + encodeURIComponent(PATH_SLUG.toLowerCase()) : ''), { credentials: 'same-origin', cache: 'no-store' });
+  const r = await fetch('/music/api.php?a=list' + (MANAGE ? '' : '&view=public') + (PATH_SLUG ? '&t=' + encodeURIComponent(PATH_SLUG.toLowerCase()) : ''), { credentials: 'same-origin', cache: 'no-store' });
   if (!r.ok) throw new Error('no api');
   const j = await r.json();
   const keep = new Map(S.tracks.map(t => [t.id, t]));
