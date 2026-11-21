@@ -214,6 +214,16 @@ function carSprite(k, ci, flip) {
   const v = { c: out, w: (V.w + 6) * SC, h: 90 * SC, gy: 86 * SC, sp: V.speed, wh };
   carCache.set(id, v); if (carCache.size > 40) carCache.delete(carCache.keys().next().value); return v;
 }
+function drawTrafficCar(c) { const far = c.lane === 0, sp = carSprite(c.k, c.ci, far), gy = (far ? ROAD_T + 19 : ROAD_B - 3) + c.yo, X = px(c.x), Y = px(gy - sp.gy), k = c.crash;
+  ctx.fillStyle = 'rgba(0,0,0,.24)'; ctx.beginPath(); ctx.ellipse(c.x + sp.w / 2, gy, sp.w * .44, 2.8, 0, 0, 7); ctx.fill();
+  ctx.save(); if (k && k.rot) { const cx = c.x + sp.w / 2, cy = gy - 10; ctx.translate(cx, cy); ctx.rotate(k.rot); ctx.translate(-cx, -cy); }
+  else if (!k) { const b = Math.sin((c.roll || 0) * .09) * .35; ctx.translate(0, b); }   // a little suspension bob
+  ctx.drawImage(sp.c, X, Y, sp.w, sp.h); if (sp.wh.length) drawWheels(sp, X, Y, (c.roll || 0) * (far ? -1 : 1));
+  if (c.run || c.police) { const on = Math.floor(performance.now() / 120) % 2, lx = c.x + sp.w / 2, ly = gy - (VEHICLES[c.k].h || 24) * CSC * .9; ctx.globalCompositeOperation = 'lighter';
+    [[-4, on], [4, !on]].forEach(([o, lit]) => { if (!lit) return; const r = ctx.createRadialGradient(lx + o * 2, ly, 0, lx + o * 2, ly, 34); r.addColorStop(0, 'rgba(200,225,255,1)'); r.addColorStop(.15, 'rgba(70,130,255,.85)'); r.addColorStop(1, 'rgba(40,80,255,0)'); ctx.fillStyle = r; ctx.fillRect(lx + o * 2 - 34, ly - 34, 68, 68); });
+    ctx.globalCompositeOperation = 'source-over'; }
+  if (k && k.fire && k.t < 9) { ctx.globalCompositeOperation = 'lighter'; for (let i = 0; i < 4; i++) { const fx = c.x + sp.w * (.35 + Math.random() * .3), fy = gy - 14 - Math.random() * 10, r = ctx.createRadialGradient(fx, fy, 0, fx, fy, 9); r.addColorStop(0, 'rgba(255,220,120,.9)'); r.addColorStop(1, 'rgba(255,80,0,0)'); ctx.fillStyle = r; ctx.fillRect(fx - 9, fy - 9, 18, 18); } ctx.globalCompositeOperation = 'source-over'; }
+  ctx.restore(); }
 // turning wheels: the rim + spokes are redrawn over each wheel every frame, rotated by how far the car has rolled
 function drawWheels(sp, x0, y0, roll) { for (const w of sp.wh) { const cx = x0 + w.x, cy = y0 + w.y, r = w.r * .64; if (r < 1.2) continue;
   ctx.save(); ctx.translate(cx, cy); ctx.beginPath(); ctx.arc(0, 0, r, 0, 7); ctx.fillStyle = w.rim || '#9aa2ab'; ctx.fill(); ctx.beginPath(); ctx.arc(-r * .2, -r * .2, r * .55, 0, 7); ctx.fillStyle = 'rgba(255,255,255,.25)'; ctx.fill();
@@ -258,6 +268,45 @@ const SFX = { coin() { tone(1320, .09, 'square', .05); setTimeout(() => tone(176
   zap() { tone(120, .5, 'sawtooth', .16, .5); tone(900, .25, 'square', .06, .3); }, thud() { tone(140, .25, 'triangle', .3, .4); },
   warn() { tone(880, .08, 'square', .05); }, whoosh() { tone(500, .5, 'sawtooth', .05, .3); }, boom() { tone(90, .6, 'sawtooth', .22, .3); } };
 
+/* traffic sounds, ported from Flappy Kabootar (engine model, siren/wail/nee-naw, horns, skids, crashes) */
+Object.assign(SFX, (() => {
+  const A = () => { if (!sndOn) return null; audio(); if (AC && AC.state === 'suspended') AC.resume(); return AC; };
+  const tn = (f0, f1, dur, type = 'square', vol = .12, delay = 0) => { const a = A(); if (!a) return; const t0 = a.currentTime + delay, o = a.createOscillator(), g = a.createGain(); o.type = type; o.frequency.setValueAtTime(f0, t0); o.frequency.exponentialRampToValueAtTime(Math.max(30, f1), t0 + dur); g.gain.setValueAtTime(vol, t0); g.gain.exponentialRampToValueAtTime(.0008, t0 + dur); o.connect(g).connect(a.destination); o.start(t0); o.stop(t0 + dur + .02); };
+  const nz = (dur, f0, f1, vol = .18, delay = 0) => { const a = A(); if (!a) return; const t0 = a.currentTime + delay, n = a.createBufferSource(), b = a.createBuffer(1, Math.ceil(a.sampleRate * dur), a.sampleRate), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; n.buffer = b; const fl = a.createBiquadFilter(); fl.type = 'bandpass'; fl.Q.value = 1.2; fl.frequency.setValueAtTime(f0, t0); fl.frequency.exponentialRampToValueAtTime(f1, t0 + dur); const g = a.createGain(); g.gain.setValueAtTime(vol, t0); g.gain.exponentialRampToValueAtTime(.001, t0 + dur); n.connect(fl).connect(g).connect(a.destination); n.start(t0); };
+  const engine = (D, f, vol, bike) => { const a = A(); if (!a) return; const t0 = a.currentTime, N = 28, re = new Float32Array(N), im = new Float32Array(N);
+    for (let h = 1; h < N; h++) im[h] = Math.pow(h, bike ? -.75 : -.9) * (h % 2 ? 1 : (bike ? .55 : .8)) * (1 + .35 * Math.sin(h * 1.7));
+    const wave = a.createPeriodicWave(re, im), o = a.createOscillator(), o2 = a.createOscillator(); o.setPeriodicWave(wave); o2.setPeriodicWave(wave);
+    const set = (p, k) => { p.setValueAtTime(f[0] * k, t0); p.exponentialRampToValueAtTime(f[1] * k, t0 + D * .45); p.exponentialRampToValueAtTime(f[2] * k, t0 + D); }; set(o.frequency, 1); set(o2.frequency, 1.006);
+    const am = a.createGain(), lfo = a.createOscillator(), lg = a.createGain(); am.gain.value = .65; lfo.type = 'triangle'; set(lfo.frequency, .5); lg.gain.value = .35; lfo.connect(lg); lg.connect(am.gain);
+    const sh = a.createWaveShaper(), cv = new Float32Array(1024); for (let i = 0; i < 1024; i++) cv[i] = Math.tanh((i / 511.5 - 1) * (bike ? 3.2 : 2.6)); sh.curve = cv;
+    const lp = a.createBiquadFilter(); lp.type = 'lowpass'; lp.Q.value = 1.4; lp.frequency.setValueAtTime(bike ? 1200 : 700, t0); lp.frequency.exponentialRampToValueAtTime(bike ? 4200 : 2600, t0 + D * .45); lp.frequency.exponentialRampToValueAtTime(bike ? 1400 : 650, t0 + D);
+    const g = a.createGain(); g.gain.setValueAtTime(vol * .04, t0); g.gain.exponentialRampToValueAtTime(vol, t0 + D * .45); g.gain.exponentialRampToValueAtTime(vol * .03, t0 + D); g.gain.linearRampToValueAtTime(0, t0 + D + .04);
+    const og = a.createGain(); og.gain.value = .5; o.connect(og); o2.connect(og); og.connect(am); am.connect(sh); sh.connect(lp); lp.connect(g); g.connect(a.destination);
+    [o, o2, lfo].forEach(x => { x.start(t0); x.stop(t0 + D + .05); }); };
+  const sir = (D, base, lfoF, dep, types, peak, glide) => { const a = A(); if (!a) return; const t0 = a.currentTime, o = a.createOscillator(), o2 = a.createOscillator(), l = a.createOscillator(), lg = a.createGain(), g = a.createGain(), f = a.createBiquadFilter();
+    o.type = types[0]; o2.type = types[1]; l.type = 'triangle'; l.frequency.value = lfoF; lg.gain.value = dep; l.connect(lg); lg.connect(o.frequency); lg.connect(o2.frequency);
+    [o, o2].forEach(x => { x.frequency.setValueAtTime(base, t0); x.frequency.linearRampToValueAtTime(base + glide, t0 + D * .42); x.frequency.linearRampToValueAtTime(base - glide, t0 + D); });
+    f.type = 'lowpass'; f.frequency.value = 2500; const m = a.createGain(); m.gain.value = .22; o.connect(f); o2.connect(m); m.connect(f); f.connect(g); g.connect(a.destination);
+    g.gain.setValueAtTime(.0001, t0); g.gain.exponentialRampToValueAtTime(peak, t0 + D * .45); g.gain.exponentialRampToValueAtTime(.0001, t0 + D); [o, o2, l].forEach(x => { x.start(t0); x.stop(t0 + D + .05); }); };
+  return {
+    zoom(bike) { engine(bike ? 1.6 : 1.9, bike ? [150, 265, 120] : [62, 108, 48], bike ? .16 : .2, bike); nz(1.2, 300, 1500, .03, .3); },
+    rev(bike) { engine(1.1, bike ? [110, 210, 170] : [45, 82, 66], bike ? .09 : .11, bike); },
+    siren() { sir(5.5, 930, 3, 340, ['triangle', 'sawtooth'], .036, 70); },
+    wail() { sir(6, 1050, .55, 380, ['triangle', 'square'], .033, 60); },
+    neenaw() { const a = A(); if (!a) return; const t0 = a.currentTime, D = 6.5, o = a.createOscillator(), g = a.createGain(), f = a.createBiquadFilter(); o.type = 'sawtooth'; for (let k = 0, tt = 0; tt < D; k++, tt += .55) o.frequency.setValueAtTime(k % 2 ? 640 : 790, t0 + tt);
+      f.type = 'lowpass'; f.frequency.value = 1900; o.connect(f); f.connect(g); g.connect(a.destination); g.gain.setValueAtTime(.0001, t0); g.gain.exponentialRampToValueAtTime(.03, t0 + D * .45); g.gain.exponentialRampToValueAtTime(.0001, t0 + D); o.start(t0); o.stop(t0 + D + .05); },
+    airhorn(at) { [0, .45].forEach(d => { tn(233, 228, .38, 'sawtooth', .042, (at || 0) + d); tn(294, 290, .38, 'sawtooth', .036, (at || 0) + d); }); },
+    horn(v) { v = v == null ? .5 : v; const n = v < .5 ? 1 : 2, f = 380 + v * 140; for (let i = 0; i < n; i++) { tn(f, f, .18 + (v > .8 ? .35 : 0), 'square', .021, i * .28); tn(f * 1.26, f * 1.26, .18 + (v > .8 ? .35 : 0), 'square', .015, i * .28); } },
+    skid(v) { v = v == null ? .5 : v; const a = A(); if (!a) return; const t0 = a.currentTime, D = .9 + v * .5, n = a.createBufferSource(), b = a.createBuffer(1, Math.ceil(a.sampleRate * D), a.sampleRate), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+      n.buffer = b; const f = a.createBiquadFilter(); f.type = 'bandpass'; f.Q.value = 9; f.frequency.setValueAtTime(1900 + v * 900, t0); f.frequency.linearRampToValueAtTime(1300 + v * 500, t0 + D); const g = a.createGain(); g.gain.setValueAtTime(0, t0); g.gain.linearRampToValueAtTime(.2, t0 + .06); g.gain.exponentialRampToValueAtTime(.001, t0 + D); n.connect(f); f.connect(g); g.connect(a.destination); n.start(t0); n.stop(t0 + D); },
+    bump() { nz(.12, 900, 300, .14); tn(160, 70, .12, 'square', .05); },
+    crash() { const a = A(); if (!a) return; const t0 = a.currentTime, sr = a.sampleRate, nb = a.createBufferSource(), b = a.createBuffer(1, Math.ceil(sr * 1.1), sr), d = b.getChannelData(0);
+      for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.exp(-i / sr * 9);
+      for (let k = 0; k < 36; k++) { const p = Math.floor((.05 + Math.pow(Math.random(), 1.6) * .9) * sr), f = 3000 + Math.random() * 4500, Am = .1 + Math.random() * .35; for (let i = 0; i < sr * .05 && p + i < d.length; i++) d[p + i] += Math.sin(2 * Math.PI * f * i / sr) * Math.exp(-i / sr * 90) * Am; }
+      nb.buffer = b; const f = a.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 1600; f.Q.value = .45; const g = a.createGain(); g.gain.value = .22; nb.connect(f); f.connect(g); g.connect(a.destination); nb.start(t0); tn(70, 40, .35, 'sine', .3); },
+    thudBig(v) { v = v == null ? .5 : v; nz(.3 + v * .25, 1200 + v * 500, 160, .22); tn(120, 45, .3, 'triangle', .16); tn(420, 300, .25, 'square', .03, .02); nz(.5, 5000, 3000, .03, .08); }
+  }; })());
+
 /* ---------------- game state ---------------- */
 let state = 'menu', t = 0, dist = 0, speed = 0, coins = 0, best = +(localStorage.getItem('jd_best') || 0);
 const hero = { x: 0, y: FLOOR, vy: 0, thrust: false, ground: true, landT: 0, rot: 0, run: 0, dead: false, vx: 0, bounce: 0, blink: 0 };
@@ -275,7 +324,7 @@ function reset() {
   Object.assign(hero, { x: -40, y: FLOOR, vy: 0, thrust: false, ground: true, landT: 0, rot: 0, run: 0, dead: false, vx: 0, bounce: 0 });
   nextObs = 380; nextNpc = 0; nextCar = 0;
   if (!street.length) fillStreet(); if (!skyline.length) fillSkyline();
-  if (!cars.length) for (let i = 0; i < 4; i++) spawnCar(Math.random() * W);
+  if (!cars.length) for (let i = 0; i < 6; i++) spawnCar(Math.random() * W);
   if (!npcs.length) for (let i = 0; i < 5; i++) spawnNpc(60 + Math.random() * (W - 60));
 }
 
@@ -313,11 +362,92 @@ function fillStreet() { while (!street.length || street[street.length - 1].x < W
 function bakeOne() { const b = bakeQ.shift(); if (b) buildingCanvas(b.kind, b.key); }   // one picture per frame, well before it scrolls on   // built ~1.5 screens ahead so there's no hitch
 function fillSkyline() { let x = skyline.length ? skyline[skyline.length - 1].x + skyline[skyline.length - 1].w : -100; while (x < W * 2.2) { if (!skyDeck.length) { skyDeck = STREET.slice(); for (let i = skyDeck.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [skyDeck[i], skyDeck[j]] = [skyDeck[j], skyDeck[i]]; } } const k = skyDeck.shift(); if (!LANDMARKS[k] || k === myMosque || street.some(b => b.key === k)) continue; skyline.push({ kind: 'lm', key: k, x, w: LANDMARKS[k].w * .5 }); x += LANDMARKS[k].w * .5 - 16; } }
 
-function spawnCar(x) {
-  const k = CAR_KEYS[Math.random() * CAR_KEYS.length | 0]; if (!VEHICLES[k]) return;
-  const far = Math.random() < .5, V = VEHICLES[k];
-  const v = (V.speed ? (V.speed[0] + Math.random() * (V.speed[1] - V.speed[0])) : 30) * 2.2;
-  cars.push({ k, ci: Math.random() * 10 | 0, far, x: x !== undefined ? x : (far ? W + 30 : -160), v: far ? -v : v });
+/* ---------- traffic (ported from Flappy Kabootar, owner 21 Nov): two lanes, far lane drives left, near lane drives right.
+   One car per lane space (they queue behind slower ones), overtaking when the other lane is clear, fly-pasts, police chases,
+   blue-light runs (traffic pulls in), rare spin-outs and head-ons with a jam and horns. All with sound. ---------- */
+const LD = (ROAD_B - 3) - (ROAD_T + 19), EMK = { police: 108, ambulance: 96, fire: 82 }, CSC = 1.6, VK = 2.2;
+let zoomCD = 20, crashCD = 60, otCD = 6, headCD = 120, jamT = 0, chaseCD = 90, hornT = 2, lastCarK = '';
+const cBody = c => { const L = VEHICLES[c.k].w * CSC; return [c.x + 3 * CSC, c.x + 3 * CSC + L]; };
+function pickCarK() { const ks = CAR_KEYS.filter(k => VEHICLES[k]), tot = ks.reduce((a, k) => a + (VEHICLES[k].weight || 1), 0);
+  for (let n = 0; n < 4; n++) { let r = Math.random() * tot; for (const k of ks) { r -= VEHICLES[k].weight || 1; if (r <= 0) { if (k !== lastCarK || n === 3) { lastCarK = k; return k; } break; } } } return ks[0]; }
+function spawnCar(x, key, zoom, laneF) {
+  const k = key || pickCarK(), V = VEHICLES[k]; if (!V) return false;
+  const lane = laneF != null ? laneF : V.w > 105 ? 1 : Math.random() < .5 ? 0 : 1, dir = lane ? 1 : -1, L = V.w * CSC;
+  const quick = !zoom && Math.random() < .15, v = zoom ? (130 + Math.random() * 110) * VK : ((V.speed ? V.speed[0] + Math.random() * (V.speed[1] - V.speed[0]) : 30) * VK) * (quick ? 1.35 : 1);
+  const sv = dir * v - speed * .92, sx = x != null ? x : (sv > 0 ? -L - 30 : W + 30);
+  if (cars.some(c => c.lane === lane && sx < c.x + c.L + 24 && c.x < sx + L + 24)) return false;
+  const c = { k, ci: Math.random() * 10 | 0, lane, dir, x: sx, v, cv: v, yo: 0, L, zoom: !!zoom }; cars.push(c);
+  if (zoom) SFX.zoom(k === 'motorbike');
+  if (EMK[k] && !zoom) { c.emerg = 1; c.rolled = c.headRolled = c.otRolled = 1;
+    if (jamT <= 0 && k !== 'police' && Math.random() < .35) { c.run = 1; c.v = c.cv = EMK[k] * VK; if (k === 'fire') { SFX.neenaw(); SFX.airhorn(1.2); } else if (k === 'ambulance') SFX.wail(); else SFX.siren(); } }
+  return c;
+}
+function startChase() { const ks = ['lambo', 'f40', 'p911', 'c63', 'a45', 'rs3', 'golf', 'gwagon'], f = spawnCar(null, ks[Math.random() * ks.length | 0], true); if (!f) return;
+  f.v = f.cv = (150 + Math.random() * 50) * VK; f.flee = 1; const PL = VEHICLES.police.w * CSC;
+  cars.push({ k: 'police', ci: 0, lane: f.lane, dir: f.dir, x: f.dir > 0 ? f.x - PL - 50 - Math.random() * 30 : f.x + f.L + 50 + Math.random() * 30, v: f.v + 6 * VK, cv: f.v + 6 * VK, yo: 0, L: PL, zoom: true, police: 1, run: 1, emerg: 1, rolled: 1, headRolled: 1 });
+  chaseCD = 240 + Math.random() * 300; zoomCD = Math.max(zoomCD, 20); SFX.siren(); }
+function hitCar(car, sp, fire) { car.crash = { t: 0, rot: 0, st: 'hit', road: true, spin: sp, v0: car.cv, len: .35, ty: car.yo, fire, snd: .9 }; car.ot = null; car.drift = null; }
+function startJam(cx, T) { jamT = T; cars.forEach(o => { if (!o.crash) o.free = o.dir > 0 ? o.x > cx : o.x + o.L < cx; }); }
+let csmoke = [];
+function smokeAt(x, y, dark) { if (csmoke.length < 90) csmoke.push({ x, y, vx: (Math.random() - .5) * 20, vy: -14 - Math.random() * 12, r: 3, a: dark ? .6 : .45, dark }); }
+window.__cars = () => cars;
+function updateTraffic(dt, dx) {
+  const moving = state !== 'dead' || speed > 5, scroll = dx * .92;
+  cars.forEach(c => { let ahead = null, gap = 1e9;
+    cars.forEach(o => { if (o === c || (o.crash && !o.crash.road) || (o.lane !== c.lane && !(o.crash && o.crash.road)) || (o.ot && o.ot.out > .5)) return; const d = c.dir > 0 ? o.x - (c.x + c.L) : c.x - (o.x + o.L); if (d > -4 && d < gap) { gap = d; ahead = o; } });
+    if (!c.ot && !c.emerg && !c.crash && jamT <= 0 && ahead && gap < 60 && ((c.zoom && !(c.police && ahead.flee)) || (c.v > ahead.cv + 6 * VK && !c.otRolled && (c.otRolled = 1) && otCD <= 0 && Math.random() < .35)) && c.L < 140) {
+      const vo = c.zoom ? c.v : Math.max(c.v, ahead.cv + 34 * VK) * 1.35, rel = Math.max(20, vo - ahead.cv), Tp = (gap + ahead.L + c.L + 40) / rel + .9;
+      const need = vo * Tp + 60, x0 = c.dir > 0 ? c.x - 10 : c.x - need, x1 = c.dir > 0 ? c.x + c.L + need : c.x + c.L + 10;
+      const clear = !cars.some(o => { if (o === c || o.crash) return false; if (o.lane === c.lane && !(o.ot && o.ot.out > .2)) return false; const reach = o.dir === c.dir ? 0 : o.cv * Tp;
+        return c.dir > 0 ? o.x < x1 + reach && o.x + o.L > c.x - 10 : o.x + o.L > x0 - reach && o.x < c.x + c.L + 10; });
+      if (clear) { c.ot = { out: 0, past: ahead }; if (!c.zoom) otCD = 14 + Math.random() * 22; if (c.x > -40 && c.x < W + 40) SFX.rev(c.k === 'motorbike'); }
+    }
+    if (c.crash) return;
+    if (c.ot) { const o = c.ot, side = c.lane ? -1 : 1;
+      if (!o.abort && o.out > .2) { const fx = c.dir > 0 ? c.x + c.L : c.x; if (cars.some(q => q !== c && !q.crash && q.lane !== c.lane && (c.dir > 0 ? q.x > fx - 4 && q.x < fx + 90 : q.x + q.L < fx + 4 && q.x + q.L > fx - 90))) o.abort = true; }
+      if (o.abort) { o.out = Math.max(0, o.out - dt * 3); c.yo = side * LD * (o.out * o.out * (3 - 2 * o.out)); c.cv = Math.min(c.v, o.past.cv) * .8; if (o.out <= 0) { c.ot = null; c.yo = 0; } return; }
+      const passed = !cars.includes(o.past) || (c.dir > 0 ? c.x > o.past.x + o.past.L + 20 : c.x + c.L < o.past.x - 20);
+      o.out = Math.max(0, Math.min(1, o.out + (passed ? -dt * 2.2 : dt * 2.4))); c.yo = side * LD * (o.out * o.out * (3 - 2 * o.out));
+      c.cv = c.zoom ? c.v : Math.max(c.v, o.past.cv + 34 * VK) * 1.35; if (passed && o.out <= 0) { c.ot = null; c.yo = 0; } return; }
+    let tg = ahead && gap < 40 ? Math.min(c.v, ahead.crash ? 0 : ahead.cv) * (gap < 14 ? .85 : 1) : c.v;
+    if (jamT > 0 && !c.free && !ahead && c.x > -10 && c.x + c.L < W + 10 && (c.dir > 0 ? c.x > W * .25 : c.x < W * .75)) tg = 0;
+    if (c.drift) tg = c.v; if (c.pull) tg *= 1 - .65 * c.pull; if (c.run) tg = c.v * (c.out > .5 || !ahead ? 1 : .55);
+    c.cv = c.cv + (tg - c.cv) * Math.min(1, dt * (tg < c.cv ? 5 : 1.1)); if (ahead && gap < 4 && !(c.run && c.out > .4)) c.cv = Math.min(c.cv, ahead.cv); });
+  // blue lights: others slow and tuck in to the kerb, the emergency vehicle goes down the middle
+  const RUNS = cars.filter(e => e.run && !e.crash);
+  cars.forEach(c => { if (c.run || c.crash || c.drift || c.flee || c.zoom) return; let near = false;
+    RUNS.forEach(e => { const dd = e.dir > 0 ? c.x - (e.x + e.L) : e.x - (c.x + c.L); if (dd > -c.L - e.L && dd < (e.lane === c.lane ? 220 : 160)) near = true; });
+    c.pull = (c.pull || 0) + ((near ? 1 : 0) - (c.pull || 0)) * Math.min(1, dt * 2.5); if (c.pull < .01) c.pull = 0; if (!c.ot && c.pull) c.yo = (c.lane ? 1 : -1) * 4 * c.pull; });
+  RUNS.forEach(e => { if (e.police && e.zoom) return; const blk = cars.some(o => o !== e && !o.crash && o.lane === e.lane && (() => { const q = e.dir > 0 ? o.x - (e.x + e.L) : e.x - (o.x + o.L); return q > -o.L && q < 100; })());
+    e.out = (e.out || 0) + ((blk ? 1 : 0) - (e.out || 0)) * Math.min(1, dt * 2); e.yo = (e.lane ? -1 : 1) * LD * .5 * e.out; });
+  if (jamT > 0 && jamT < 60) { hornT -= dt; if (hornT <= 0) { hornT = 1.5 + Math.random() * 4; SFX.horn(Math.random()); } }
+  otCD -= dt; crashCD -= dt; headCD -= dt; if (jamT > 0) { jamT -= dt; if (jamT <= 0) cars.forEach(c => c.free = 0); }
+  // head-on: about 1 in 200 meetings, never twice close together
+  if (moving && (headCD <= 0 && jamT <= 0 || window.__headOn)) cars.forEach(c => { if ((headCD > 0 && !window.__headOn) || c.headRolled || c.crash || c.ot || c.drift || /bike|moped|escooter/.test(c.k)) return;
+    const q = cars.find(o => o.lane !== c.lane && !o.crash && !o.ot && !o.police && !o.flee && !o.run && (() => { const d = c.dir > 0 ? o.x - (c.x + c.L) : c.x - (o.x + o.L); return d > 80 && d < 260; })());
+    if (!q || c.x < 0 || c.x + c.L > W) return; c.headRolled = 1; if (Math.random() < (window.__headOn ? 1 : .005)) { c.drift = { q, out: 0 }; headCD = 300; } });
+  cars.forEach(c => { const d = c.drift; if (!d) return; const q = d.q; if (!cars.includes(q) || q.crash) { c.drift = null; c.yo = 0; return; }
+    d.out = Math.min(.62, d.out + dt * .45); c.yo = (c.lane ? -1 : 1) * LD * d.out;
+    if (d.out > .35 && c.x < q.x + q.L && q.x < c.x + c.L) { hitCar(c, (Math.random() < .5 ? 1 : -1) * (1 + Math.random() * 1.5), window.__headOn || Math.random() < .25); hitCar(q, (Math.random() < .5 ? 1 : -1) * (.8 + Math.random() * 1.2), false); window.__headOn = 0;
+      SFX.crash(); SFX.thudBig(1); SFX.bump(); shake = Math.max(shake, .25); const cx = c.x + c.L / 2; startJam(cx, 45 + Math.random() * 30); for (let i = 0; i < 10; i++) smokeAt(cx + (Math.random() - .5) * 30, ROAD_T + 19 + LD * .5 - 8); } });
+  // spin-outs: a fast car loses it (far side: stops in the road and causes a jam; near side: ends up against the kerb)
+  cars.forEach(c => { if (c.rolled || c.police || c.crash || c.drift || c.ot || c.L > 145 || /bike|moped|escooter/.test(c.k) || !(c.zoom || c.v > 62 * VK) || c.x < W * .35 || c.x > W * .8 || !moving) return; c.rolled = 1;
+    if ((crashCD > 0 || Math.random() > .017) && !window.__spin) return; window.__spin = 0;
+    const st = ['spin', 'spin', 'slide', 'side'][Math.random() * 4 | 0];
+    c.crash = { t: 0, rot: 0, st, spin: (Math.random() < .5 ? 1 : -1) * (st === 'slide' ? 1.6 : st === 'spin' ? 4 : 6 + Math.random() * 4), v0: c.cv, len: 1 + Math.random() * .7, ty: c.lane ? 5 : LD * (.3 + Math.random() * .35), road: !c.lane, fire: Math.random() < .3, snd: Math.random() };
+    crashCD = 240; SFX.skid(c.crash.snd); if (!c.lane) startJam(c.x + c.L / 2, 25 + Math.random() * 25); });
+  cars.forEach(c => { const k = c.crash; if (k) { k.t += dt; const sl = Math.max(0, 1 - k.t / k.len); c.cv = k.v0 * sl * sl; c.yo += (k.ty - c.yo) * Math.min(1, dt * 2.2); if (k.st === 'hit') k.rot = k.spin * .12 * Math.min(1, k.t / k.len);
+      if (sl > 0) k.rot += k.spin * dt * sl; else if (!k.done) { k.done = true; SFX.thudBig(k.snd); }
+      if (k.st === 'side' && !k.b1 && k.t > k.len * .4) { k.b1 = 1; SFX.bump(); }
+      if (k.done && k.st !== 'hit') { const want = k.st === 'side' ? Math.PI / 2 * Math.sign(k.spin) : 0, cur = ((k.rot % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI); let dl = want - cur; dl = ((dl + Math.PI) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI) - Math.PI; k.rot += dl * Math.min(1, dt * 4); }
+      if (k.t < (k.fire ? 9 : 4) && Math.random() < dt * (k.fire ? 14 : 9)) smokeAt(c.x + c.L / 2 + (Math.random() - .5) * c.L * .5, (c.lane ? ROAD_B - 14 : ROAD_T + 10) + c.yo, k.fire); }
+    c.x += c.dir * c.cv * dt - scroll; c.roll = (c.roll || 0) + c.cv * dt; });
+  chaseCD -= dt; if (moving && jamT <= 0 && (chaseCD <= 0 && Math.random() < dt * .02 || window.__chase)) { window.__chase = 0; startChase(); }
+  zoomCD -= dt; if (moving && jamT <= 0 && zoomCD <= 0 && Math.random() < dt * .03) { const ks = ['lambo', 'lambo', 'f40', 'p911', 'c63', 'a45', 'motorbike', 'motorbike']; if (spawnCar(null, ks[Math.random() * ks.length | 0], true)) zoomCD = 30 + Math.random() * 40; }
+  cars.forEach(c => { if ((c.zoom && Math.random() < dt * 30) || (c.ot && c.ot.out > .1 && Math.random() < dt * 16)) dust.push({ x: c.dir > 0 ? c.x : c.x + c.L + 6, y: (c.lane ? ROAD_B - 5 : ROAD_T + 17) + c.yo, vx: -c.dir * 30 - scroll / dt * 0, vy: -6, r: 1.5, l: .5 }); });
+  for (let i = csmoke.length - 1; i >= 0; i--) { const p = csmoke[i]; p.x += p.vx * dt - scroll; p.y += p.vy * dt; p.r += 9 * dt; p.a -= .4 * dt; if (p.a <= 0) csmoke.splice(i, 1); }
+  cars = cars.filter(c => c.x > -c.L - 300 && c.x < W + 320);
+  if (cars.length < (jamT > 0 ? 10 : 5) && Math.random() < dt * (jamT > 0 ? 2.5 : 1)) spawnCar();
 }
 function spawnNpc(x) {
   const esc = Math.random() < .16, k = esc ? ESC_KEYS[Math.random() * ESC_KEYS.length | 0] : NPC_KEYS[Math.random() * NPC_KEYS.length | 0];
@@ -393,8 +523,7 @@ function update(dt) {
   // scroll the world
   street.forEach(b => { b.x -= dx; if (!b.past && b.kind === 'lm' && MOSQUE_K.includes(b.key) && b.x + b.w < hero.x && state === 'play') { b.past = 1; passed++; } }); while (street.length && street[0].x + street[0].w + 40 < -20) street.shift(); fillStreet();
   skyline.forEach(b => b.x -= dx * .32); while (skyline.length && skyline[0].x + skyline[0].w < -50) skyline.shift(); fillSkyline();
-  cars.forEach(c => c.x += c.v * dt - dx * .92); cars = cars.filter(c => c.x > -260 && c.x < W + 300);
-  if ((nextCar -= dt) <= 0) { spawnCar(); nextCar = 1.2 + Math.random() * 2.6; }
+  updateTraffic(dt, dx);
 
   // people on the front pavement
   npcs.forEach(p => {
@@ -952,9 +1081,9 @@ function draw() {
   // sun glint on the road
   const gl = ctx.createRadialGradient(W * .78, ROAD_T + 16, 2, W * .78, ROAD_T + 16, 120); gl.addColorStop(0, 'rgba(255,200,140,.28)'); gl.addColorStop(1, 'rgba(255,200,140,0)'); ctx.fillStyle = gl; ctx.fillRect(0, ROAD_T, W, ROAD_B - ROAD_T);
   // cars (far lane then near lane)
-  [true, false].forEach(far => cars.filter(c => c.far === far).forEach(c => { const sp = carSprite(c.k, c.ci, far); const gy = far ? ROAD_T + 19 : ROAD_B - 3;
-    ctx.fillStyle = 'rgba(0,0,0,.22)'; ctx.beginPath(); ctx.ellipse(c.x + sp.w / 2, gy, sp.w * .46, 2.8, 0, 0, 7); ctx.fill();
-    ctx.drawImage(sp.c, px(c.x), px(gy - sp.gy), sp.w, sp.h); c.roll = (c.roll || 0) + Math.abs(c.v) * (1 / 60) * (far ? -1 : 1); if (sp.wh.length) drawWheels(sp, px(c.x), px(gy - sp.gy), c.roll); }));
+  { const depth = c => c.lane === 0 || (c.yo < -LD * .5) ? 0 : 1;   // an overtaking car is drawn at the depth of the lane it has pulled into
+    [0, 1].forEach(dl => cars.filter(c => depth(c) === dl).sort((p, q) => p.yo - q.yo).forEach(drawTrafficCar));
+    csmoke.forEach(p => { ctx.globalAlpha = Math.max(0, p.a); ctx.fillStyle = p.dark ? '#3a3438' : '#c8c4cc'; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 7); ctx.fill(); }); ctx.globalAlpha = 1; }
   // kerb + front pavement
   ctx.fillStyle = '#d4c8c2'; ctx.fillRect(0, ROAD_B, W, 4); ctx.fillStyle = '#8f8088'; ctx.fillRect(0, ROAD_B + 4, W, 2);
   const pg = ctx.createLinearGradient(0, PAVE_T - 2, 0, VH); pg.addColorStop(0, '#cbb8b0'); pg.addColorStop(1, '#a8949a'); ctx.fillStyle = pg; ctx.fillRect(0, ROAD_B + 6, W, VH - ROAD_B - 6);
