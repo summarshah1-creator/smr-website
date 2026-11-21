@@ -28,9 +28,9 @@ const img = src => { const i = new Image(); i.src = src; return i; };
 const heroImg = img('art/hero.png');
 const HERO_FR = ['run0_normal', 'run1_normal', 'run2_normal', 'run3_normal', 'run4_normal', 'run5_normal', 'fly0_effort', 'fly1_effort', 'fly2_effort', 'fly0_panic', 'fly1_panic', 'fly2_panic', 'glide0_normal', 'glide1_normal', 'land0_effort', 'glide0_ko', 'run0_happy', 'run0_blink'];
 const FR = n => HERO_FR.indexOf(n);
-const NPC_META = {"pc_m":{"w":47,"h":88,"n":9,"type":"walk"},"pc_f":{"w":47,"h":75,"n":9,"type":"walk"},"pcso":{"w":50,"h":74,"n":9,"type":"walk"},"warden":{"w":50,"h":74,"n":9,"type":"walk"},"fan_dad":{"w":43,"h":102,"n":9,"type":"walk"},"fan_f":{"w":47,"h":69,"n":9,"type":"walk"},"fan_kid":{"w":51,"h":74,"n":9,"type":"walk"},"blonde":{"w":47,"h":70,"n":9,"type":"walk"},"abaya":{"w":49,"h":70,"n":9,"type":"walk"},"teen":{"w":47,"h":70,"n":9,"type":"walk"},"aunty":{"w":47,"h":72,"n":9,"type":"walk"},"uncle":{"w":47,"h":70,"n":9,"type":"walk"},"nurse":{"w":47,"h":76,"n":9,"type":"walk"},"elder":{"w":49,"h":72,"n":9,"type":"walk"},"builder":{"w":49,"h":76,"n":9,"type":"walk"},"rider":{"w":50,"h":67,"n":9,"type":"walk"},"rider_g":{"w":54,"h":74,"n":9,"type":"walk"},"rider_o":{"w":54,"h":74,"n":9,"type":"walk"},"schoolboy":{"w":47,"h":67,"n":9,"type":"walk"},"shop":{"w":47,"h":67,"n":9,"type":"walk"},"lad":{"w":47,"h":67,"n":9,"type":"walk"},"esc_a":{"w":54,"h":78,"n":4,"type":"esc"},"esc_b":{"w":74,"h":82,"n":4,"type":"esc"},"esc_c":{"w":74,"h":75,"n":4,"type":"esc"},"esc_d":{"w":74,"h":78,"n":4,"type":"esc"},"esc_e":{"w":54,"h":82,"n":4,"type":"esc"}};   // sprite sheets: walkers = walk0-3, blink0-3, shock; e-scooters = ride0-2, shock
+const NPC_META = {"pc_m":{"w":47,"h":88,"n":11,"type":"walk"},"pc_f":{"w":47,"h":75,"n":11,"type":"walk"},"pcso":{"w":50,"h":74,"n":11,"type":"walk"},"warden":{"w":50,"h":74,"n":11,"type":"walk"},"fan_dad":{"w":43,"h":102,"n":11,"type":"walk"},"fan_f":{"w":47,"h":69,"n":11,"type":"walk"},"fan_kid":{"w":51,"h":74,"n":11,"type":"walk"},"blonde":{"w":47,"h":70,"n":11,"type":"walk"},"abaya":{"w":49,"h":70,"n":11,"type":"walk"},"teen":{"w":47,"h":70,"n":11,"type":"walk"},"aunty":{"w":47,"h":72,"n":11,"type":"walk"},"uncle":{"w":47,"h":70,"n":11,"type":"walk"},"nurse":{"w":47,"h":76,"n":11,"type":"walk"},"elder":{"w":49,"h":72,"n":11,"type":"walk"},"builder":{"w":49,"h":76,"n":11,"type":"walk"},"rider":{"w":50,"h":67,"n":11,"type":"walk"},"rider_g":{"w":54,"h":74,"n":11,"type":"walk"},"rider_o":{"w":54,"h":74,"n":11,"type":"walk"},"schoolboy":{"w":47,"h":67,"n":11,"type":"walk"},"shop":{"w":47,"h":67,"n":11,"type":"walk"},"lad":{"w":47,"h":67,"n":11,"type":"walk"},"esc_a":{"w":54,"h":78,"n":5,"type":"esc"},"esc_b":{"w":74,"h":82,"n":5,"type":"esc"},"esc_c":{"w":74,"h":75,"n":5,"type":"esc"},"esc_d":{"w":74,"h":78,"n":5,"type":"esc"},"esc_e":{"w":54,"h":82,"n":5,"type":"esc"}};   // sprite sheets: walkers = walk0-3, blink0-3, shock, cheer, dizzy; e-scooters = ride0-2, shock, cheer
 const NPC_KEYS = Object.keys(NPC_META).filter(k => NPC_META[k].type === 'walk'), ESC_KEYS = Object.keys(NPC_META).filter(k => NPC_META[k].type === 'esc');
-const npcImg = {}; Object.keys(NPC_META).forEach(k => npcImg[k] = img('art/npc_' + k + '.png?v=2'));
+const npcImg = {}; Object.keys(NPC_META).forEach(k => npcImg[k] = img('art/npc_' + k + '.png?v=3'));
 
 /* buildings: Flappy landmarks + house runs, drawn at KR px per unit, trimmed, cached (LRU) */
 const M = 90, LH = 380;
@@ -147,7 +147,7 @@ function spawnNpc(x) {
   const esc = Math.random() < .16, k = esc ? ESC_KEYS[Math.random() * ESC_KEYS.length | 0] : NPC_KEYS[Math.random() * NPC_KEYS.length | 0];
   const dir = Math.random() < .5 ? -1 : 1;
   npcs.push({ k, esc, x: x !== undefined ? x : (dir > 0 && esc ? -90 : W + 60), y: PAVE_T + 18 + Math.random() * 26, dir, v: esc ? 70 + Math.random() * 50 : 16 + Math.random() * 14,
-    ph: Math.random() * 4, react: 0, hop: 0, look: 0, blink: 1 + Math.random() * 4 });
+    ph: Math.random() * 4, react: 0, hop: 0, hopH: 9, look: 0, blink: 1 + Math.random() * 4, mood: '', moodT: 0, fall: 0, fallDir: 1, idle: 2 + Math.random() * 6, done: 0 });
 }
 
 /* ---------------- obstacles + coins ---------------- */
@@ -206,10 +206,27 @@ function update(dt) {
   if ((nextCar -= dt) <= 0) { spawnCar(); nextCar = 1.2 + Math.random() * 2.6; }
 
   // people on the front pavement
-  npcs.forEach(p => { p.x += (p.dir * p.v * (p.react > 0 && !p.esc ? .15 : 1)) * dt - dx; p.ph += dt * (p.esc ? 14 : p.v * .32); p.blink -= dt; if (p.blink < -.13) p.blink = 1.5 + Math.random() * 4;
-    const near = !hero.dead && Math.abs(p.x - hero.x) < 80 && state !== 'menu';
-    if (near && p.react <= 0 && (hero.y > FLOOR - 120 || speed > 200)) { p.react = 1.1; p.hop = 1; p.look = hero.x > p.x ? 1 : -1; }
-    if (p.react > 0) p.react -= dt; if (p.hop > 0) p.hop = Math.max(0, p.hop - dt * 3); });
+  npcs.forEach(p => {
+    const busy = p.react > 0 || p.fall > 0 || p.moodT > 0 || p.idle < 0;
+    const mv = p.fall > 0 ? 0 : p.esc ? 1 : busy ? (p.mood === 'cheer' ? .3 : .1) : 1;
+    p.x += p.dir * p.v * mv * dt - dx; if (!busy || p.esc) p.ph += dt * (p.esc ? 14 : p.v * .32);
+    p.blink -= dt; if (p.blink < -.13) p.blink = 1.5 + Math.random() * 4;
+    if (!p.esc) { p.idle -= dt; if (p.idle < -1.6) p.idle = 4 + Math.random() * 8; }   // now and then stop and look round
+    if (p.react > 0) p.react -= dt; if (p.moodT > 0) p.moodT -= dt; if (p.hop > 0) p.hop = Math.max(0, p.hop - dt * 2.6);
+    if (p.fall > 0) { p.fall -= dt; }
+    if (state === 'menu' || p.fall > 0) return;
+    const ddx = hero.x - p.x, ad = Math.abs(ddx), up = FLOOR - hero.y;
+    if (hero.dead) {   // he tumbles into people: they go over (cartoon), see stars, get back up
+      if (!p.esc && ad < 26 && up < 40 && Math.abs(hero.vx) > 20 && !p.done) { p.fall = 1.9; p.fallDir = ddx > 0 ? -1 : 1; p.done = 1; SFX.thud(); }
+      return;
+    }
+    if (state !== 'play') return;
+    if (!p.done && hero.ground && ddx < 0 && ad < 70) { p.done = 1; p.react = .7; p.hop = 1; p.hopH = 24; p.look = -1; }          // jump out of his way
+    else if (!p.done && ad < 80 && up < 130) { p.done = 1; p.react = 1.1; p.hop = 1; p.hopH = 9; p.look = ddx > 0 ? 1 : -1; }    // he whooshes past low: shocked
+    else if (!p.done && ad < 60 && up >= 130) { const fan = /fan/.test(p.k);                                                       // he flies over high
+      if (fan || Math.random() < .45) { p.done = 1; p.mood = 'cheer'; p.moodT = 1.3; p.look = ddx > 0 ? 1 : -1; p.hop = 1; p.hopH = 6; } else p.done = 1; }
+    if (p.done && ad > 160) p.done = 0;
+  });
   npcs = npcs.filter(p => p.x > -140 && p.x < W + 160);
   if ((nextNpc -= dt) <= 0) { spawnNpc(); nextNpc = .9 + Math.random() * 2.2; }
 
@@ -312,6 +329,7 @@ function draw() {
   const pg = ctx.createLinearGradient(0, PAVE_T - 2, 0, VH); pg.addColorStop(0, '#cbb8b0'); pg.addColorStop(1, '#a8949a'); ctx.fillStyle = pg; ctx.fillRect(0, ROAD_B + 6, W, VH - ROAD_B - 6);
   ctx.fillStyle = 'rgba(110,92,104,.55)'; const d3 = dist % 34;
   for (let r = 0; r < 4; r++) { const y = ROAD_B + 6 + r * 11; ctx.fillRect(0, y, W, .7); const o2 = r % 2 ? 17 : 0; for (let x = -d3 - o2; x < W; x += 34) ctx.fillRect(x, y, .7, 11); }
+  ctx.fillStyle = 'rgba(16,8,38,.2)'; ctx.fillRect(0, 0, W, ROAD_B);   // knock the backdrop back a touch
   // coins
   if (coinK !== KR) makeCoins();
   coinList.forEach(c => { const f = coinFrames[Math.floor((t * 10 + c.x * .05)) % 8]; const s2 = f.width / KR; ctx.drawImage(f, c.x - s2 / 2, c.y - s2 / 2 + Math.sin(t * 4 + c.x * .1) * .8, s2, s2); });
@@ -350,18 +368,33 @@ function drawHero() {
 function drawNpc(p) {
   const im = npcImg[p.k], M = NPC_META[p.k]; if (!im.complete || !im.naturalWidth) return;
   const sc = .9, w = M.w * sc, h = M.h * sc;
-  const facing = p.react > 0 && !p.esc ? p.look : p.dir;
+  let facing = p.dir;
+  if ((p.react > 0 || p.moodT > 0) && !p.esc) facing = p.look;
+  else if (p.idle < 0 && !p.esc) facing = (p.idle < -.8 ? -p.dir : p.dir);      // looks back over the shoulder
   let f;
-  if (p.esc) f = p.react > 0 ? 3 : Math.floor(p.ph) % 3;
+  if (p.esc) f = p.react > 0 ? 3 : p.moodT > 0 ? 4 : Math.floor(p.ph) % 3;
+  else if (p.fall > 0) f = 10;
   else if (p.react > 0) f = 8;
-  else f = (Math.floor(p.ph) % 4) + (p.blink < 0 ? 4 : 0);
-  const bob = p.esc ? (Math.floor(p.ph * .5) % 2) * .6 : (p.react > 0 ? 0 : (Math.floor(p.ph) % 2) * 1.2), hop = Math.sin(p.hop * Math.PI) * (p.esc ? 0 : 9);
-  ctx.fillStyle = 'rgba(30,10,30,.25)'; ctx.beginPath(); ctx.ellipse(p.x, p.y, w * .36, 2, 0, 0, 7); ctx.fill();
-  ctx.save(); ctx.translate(p.x, p.y - bob - hop); if (facing < 0) ctx.scale(-1, 1); ctx.imageSmoothingEnabled = false;
+  else if (p.moodT > 0) f = 9;
+  else { const still = p.idle < 0; f = (still ? 0 : Math.floor(p.ph) % 4) + (p.blink < 0 ? 4 : 0); }
+  const walking = !p.esc && !(p.react > 0 || p.moodT > 0 || p.idle < 0 || p.fall > 0);
+  const bob = p.esc ? (Math.floor(p.ph * .5) % 2) * .6 : walking ? (Math.floor(p.ph) % 2) * 1.2 : 0, hop = Math.sin(p.hop * Math.PI) * p.hopH;
+  ctx.fillStyle = 'rgba(30,10,30,.25)'; ctx.beginPath(); ctx.ellipse(p.x, p.y, w * (p.fall > 0 ? .6 : .36), 2, 0, 0, 7); ctx.fill();
+  ctx.save(); ctx.translate(p.x, p.y - bob - hop);
+  if (p.fall > 0) {   // tip over backwards, lie there, then pop back up
+    const T = 1.9 - p.fall, k = T < .25 ? T / .25 : p.fall < .35 ? p.fall / .35 : 1;
+    ctx.rotate(p.fallDir * k * Math.PI / 2 * .92); ctx.translate(0, k * 2);
+  }
+  if (facing < 0) ctx.scale(-1, 1); ctx.imageSmoothingEnabled = false;
   ctx.drawImage(im, f * M.w, 0, M.w, M.h, -w / 2, -h, w, h); ctx.restore(); ctx.imageSmoothingEnabled = true;
-  if (p.react > 0 && !p.esc) { const y = p.y - h - 10 - hop; ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(p.x, y, 6, 0, 7); ctx.fill(); ctx.strokeStyle = '#1a1024'; ctx.lineWidth = .8; ctx.stroke();
-    ctx.fillStyle = '#e8352a'; ctx.font = '700 9px Silk'; ctx.textAlign = 'center'; ctx.fillText('!', p.x, y + 3.5); }
+  if (p.fall > 0 && p.fall < 1.6) {   // little stars circling
+    const cx = p.x + p.fallDir * h * .62, cy = p.y - 14;
+    for (let i = 0; i < 3; i++) { const a = t * 6 + i * 2.1; ctx.fillStyle = i % 2 ? '#ffe36a' : '#ffffff'; drawStar(cx + Math.cos(a) * 10, cy + Math.sin(a) * 3.5, 2.6); }
+  }
+  if ((p.react > 0 || p.moodT > 0) && !p.esc) { const y = p.y - h - 10 - hop; ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(p.x, y, 6, 0, 7); ctx.fill(); ctx.strokeStyle = '#1a1024'; ctx.lineWidth = .8; ctx.stroke();
+    ctx.fillStyle = p.moodT > 0 ? '#2fbf4a' : '#e8352a'; ctx.font = '700 9px Silk'; ctx.textAlign = 'center'; ctx.fillText(p.moodT > 0 ? '♥' : '!', p.x, y + 3.5); }
 }
+function drawStar(x, y, r) { ctx.beginPath(); for (let i = 0; i < 10; i++) { const a = i / 10 * Math.PI * 2 - Math.PI / 2, rr = i % 2 ? r * .45 : r; ctx.lineTo(x + Math.cos(a) * rr, y + Math.sin(a) * rr); } ctx.closePath(); ctx.fill(); }
 function drawZap(o) {
   const c = Math.cos(o.ang), s = Math.sin(o.ang), ax = o.x - c * o.len / 2, ay = o.y - s * o.len / 2, bx = o.x + c * o.len / 2, by = o.y + s * o.len / 2;
   const path = (seed, amp) => { ctx.beginPath(); const n = 14; ctx.moveTo(ax, ay);
@@ -369,17 +402,19 @@ function drawZap(o) {
     ctx.lineTo(bx, by); };
   ctx.lineCap = ctx.lineJoin = 'round';
   // dark backing so it stands out against the shops
-  ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by); ctx.strokeStyle = 'rgba(8,4,28,.45)'; ctx.lineWidth = 13; ctx.stroke();
+  const pulse = .75 + .25 * Math.sin(t * 9 + o.seed);
+  ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by); ctx.strokeStyle = 'rgba(6,2,22,.62)'; ctx.lineWidth = 20; ctx.stroke();
   ctx.save(); ctx.globalCompositeOperation = 'lighter';
-  ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by); ctx.strokeStyle = 'rgba(60,170,255,.22)'; ctx.lineWidth = 18; ctx.stroke();
-  ctx.strokeStyle = 'rgba(80,200,255,.45)'; ctx.lineWidth = 9; ctx.stroke();
-  path(0, 3.4); ctx.strokeStyle = 'rgba(140,225,255,.95)'; ctx.lineWidth = 4; ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by); ctx.strokeStyle = `rgba(40,160,255,${.28 * pulse})`; ctx.lineWidth = 30; ctx.stroke();
+  ctx.strokeStyle = `rgba(60,190,255,${.4 * pulse})`; ctx.lineWidth = 16; ctx.stroke();
+  ctx.strokeStyle = `rgba(110,215,255,${.7 * pulse})`; ctx.lineWidth = 8; ctx.stroke();
+  path(0, 3.8); ctx.strokeStyle = 'rgba(170,235,255,1)'; ctx.lineWidth = 5; ctx.stroke();
   path(2, 2.4); ctx.strokeStyle = '#e8fbff'; ctx.lineWidth = 2; ctx.stroke();
   path(4, 1.4); ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1.2; ctx.stroke();
   ctx.restore();
   // insulator nodes (grey caps, orange bands, little lamp)
-  [[ax, ay], [bx, by]].forEach(([x, y]) => { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.fillStyle = 'rgba(90,200,255,.35)'; ctx.beginPath(); ctx.arc(x, y, 13, 0, 7); ctx.fill(); ctx.restore(); ctx.fillStyle = '#2a2236'; ctx.beginPath(); ctx.arc(x, y, 7.2, 0, 7); ctx.fill(); const g = ctx.createRadialGradient(x - 2, y - 2, 1, x, y, 6.5); g.addColorStop(0, '#d9dbe6'); g.addColorStop(1, '#6d7286'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, 6, 0, 7); ctx.fill();
-    ctx.strokeStyle = '#ff8a1f'; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.arc(x, y, 4, 0, 7); ctx.stroke(); ctx.fillStyle = Math.floor(t * 10) % 2 ? '#bff4ff' : '#ffffff'; ctx.beginPath(); ctx.arc(x, y, 1.8, 0, 7); ctx.fill(); });
+  [[ax, ay], [bx, by]].forEach(([x, y]) => { ctx.fillStyle = 'rgba(6,2,22,.6)'; ctx.beginPath(); ctx.arc(x, y, 10, 0, 7); ctx.fill(); ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.fillStyle = 'rgba(90,200,255,.45)'; ctx.beginPath(); ctx.arc(x, y, 17, 0, 7); ctx.fill(); ctx.restore(); ctx.fillStyle = '#2a2236'; ctx.beginPath(); ctx.arc(x, y, 7.2, 0, 7); ctx.fill(); const g = ctx.createRadialGradient(x - 2, y - 2, 1, x, y, 6.5); g.addColorStop(0, '#d9dbe6'); g.addColorStop(1, '#6d7286'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, 6, 0, 7); ctx.fill();
+    for (let i = 0; i < 8; i++) { ctx.strokeStyle = i % 2 ? '#1a1024' : '#ffd21f'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(x, y, 4.6, i / 8 * Math.PI * 2, (i + 1) / 8 * Math.PI * 2); ctx.stroke(); } ctx.fillStyle = Math.floor(t * 10) % 2 ? '#bff4ff' : '#ffffff'; ctx.beginPath(); ctx.arc(x, y, 1.8, 0, 7); ctx.fill(); });
   if (Math.random() < .25) sparks.push({ x: ax + (bx - ax) * Math.random(), y: ay + (by - ay) * Math.random(), vx: (Math.random() - .5) * 80, vy: -Math.random() * 60, l: .25, c: '#dff8ff' });
 }
 function drawRocket(o) {
