@@ -859,12 +859,13 @@ function setLyr(on) { if (LY) lyBig(on); }
 /* ---------- about the artist / about the song cards ---------- */
 // Artist profiles shown under the player (matched by name, case-insensitive). img: 'brand' = SMR Digital panel, 'art' = the track's cover, or an image URL.
 const ARTISTS = {
-  'smr digital': { img: 'brand', verified: true, sub: 'Apps · Websites · Graphics · Music · Luton', follow: 'https://www.instagram.com/smrdigitaluk/',
-    text: 'SMR Digital is a creative studio in Luton, run by Summar Shah. We design and build apps, websites, graphics and marketing for businesses, charities and artists, and now we make music too.\n\nThat’s Gatsby Law (NFA) was written and produced by SMR Digital: a track built around a real story, made to sound as big as the brand behind it. Want a song, an app or a whole new look for your business? Message us on Instagram @smrdigitaluk.' },
-  'saf rathor': { img: 'art', sub: 'Criminal defence solicitor · Gatsby Law',
-    text: 'Saf Rathor runs Gatsby Law, a criminal defence firm, with his big brother. Day or night, they’re the call people make when someone’s held at the police station, and they’ve built their name on fighting for the best result there is: No Further Action.\n\nFrom a desk and a phone to their name on the building and a Channel 4 feature, Saf’s journey is what this song is about. Away from the office, Gatsby gives back to the community through boxing, showing young people there’s a future beyond where they’ve been.' }
+  'smr digital': { img: 'brand', verified: true, sub: 'Luton, United Kingdom', link: '/#digital', linkText: 'View more',
+    text: 'SMR Digital is a creative studio in Luton, run by Summar Shah. We design and build apps and websites, and do graphic design, printing and marketing for businesses, charities and artists. Now we offer music production too.\n\nThat’s Gatsby Law (NFA) was written and produced by SMR Digital: a track built around a real story, made to sound as big as the brand behind it. Want a song, an app, branding or a whole new look for your business? Get in touch by email at summar@smrgraphics.co.uk, on our website, or message us on Instagram @smrdigitaluk.' },
+  'saf rathor': { img: '/music/img/saf-rathor.jpg', pos: 'center 18%', sub: 'Criminal defence · Gatsby Law',
+    text: 'Saf Rathor runs Gatsby Law, a criminal defence firm, with his big brother. They’ve worked hard for everything they have, going from a desk and a phone to their name on the building.' }
 };
 const TICK = '<svg viewBox="0 0 24 24" aria-label="Verified"><path fill="#a78bfa" d="m12 1.5 2.6 1.9 3.2-.1 1 3.1 2.6 1.9-1 3.1 1 3.1-2.6 1.9-1 3.1-3.2-.1L12 22.5l-2.6-1.9-3.2.1-1-3.1-2.6-1.9 1-3.1-1-3.1 2.6-1.9 1-3.1 3.2.1z"/><path d="m8 12.2 2.7 2.7L16.3 9" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+function linkify(h) { return h.replace(/([a-z0-9._-]+@[a-z0-9.-]+\.[a-z]{2,})/gi, '<a href="mailto:$1" style="color:#fff">$1</a>').replace(/@smrdigitaluk\b/g, '<a href="https://www.instagram.com/smrdigitaluk/" target="_blank" rel="noopener" style="color:#fff">@smrdigitaluk</a>'); }
 function paras(txt) { return String(txt || '').split(/\n\s*\n/).map(x => x.trim()).filter(Boolean); }
 function renderAbout(t) {
   const box = $('#aboutBox'); let h = '';
@@ -873,11 +874,11 @@ function renderAbout(t) {
     const a = ARTISTS[n.toLowerCase()]; if (!a) return;
     let img;
     if (a.img === 'brand') img = '<div class="img brandimg"><h4>About the artist</h4>' + $('.brand svg').outerHTML.replace(/lgA/g, 'lgAb' + i).replace('>Player</text>', '>Digital</text>').replace('x2="97.9"', 'x2="99.5"') + '<small>Written &amp; produced</small></div>';
-    else { const u = a.img === 'art' ? t.art : a.img; img = '<div class="img"' + (u ? ' style="background-image:linear-gradient(180deg,rgba(0,0,0,.45),transparent 40%),url(\'' + esc(u) + '\')"' : '') + '><h4>About the artist</h4></div>'; }
+    else { const u = a.img === 'art' ? t.art : a.img; img = '<div class="img"' + (u ? ' style="background-image:linear-gradient(180deg,rgba(0,0,0,.45),transparent 40%),url(\'' + esc(u) + '\');background-position:' + (a.pos || 'center 20%') + '"' : '') + '><h4>About the artist</h4></div>'; }
     const ps = paras(a.text);
     h += '<div class="card about">' + img + '<div class="bd"><div class="nm"><div><b>' + esc(n) + (a.verified ? TICK : '') + '</b><span>' + esc(a.sub || '') + '</span></div>' +
-      (a.follow ? '<a class="fol" href="' + esc(a.follow) + '" target="_blank" rel="noopener">Follow</a>' : '') + '</div>' +
-      '<p class="clip">' + ps.map(esc).join('<br><br>') + '</p>' + (ps.join('').length > 150 ? '<button class="more" data-more>show more</button>' : '') + '</div></div>';
+      (a.link ? '<a class="fol" href="' + esc(a.link) + '" target="_blank" rel="noopener">' + esc(a.linkText || 'View more') + '</a>' : '') + '</div>' +
+      '<p class="clip">' + ps.map(x => linkify(esc(x))).join('<br><br>') + '</p>' + (ps.join('').length > 150 ? '<button class="more" data-more>show more</button>' : '') + '</div></div>';
   });
   const ab = paras(t.about);
   if (ab.length) {

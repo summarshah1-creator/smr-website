@@ -27,6 +27,11 @@ function music_db(): PDO {
             $pdo->prepare('UPDATE music_tracks SET slug = ? WHERE code = ?')->execute([music_slug((string) $r['title']), $r['code']]);
         $done = true;
         try { music_seed_import(); } catch (Throwable $e) {}
+        // one-off text fixes for tracks that were already imported (each runs once)
+        if (music_kv('fix:gatsby-about-2') === null) {
+            $pdo->prepare("UPDATE music_tracks SET about = ?, updated_at = ? WHERE slug = 'thats-gatsby-law'")->execute(["That’s Gatsby Law (NFA) is Saf Rathor’s story, told from his point of view. Two brothers, two bosses: Saf and his big brother started Gatsby Law with a desk, a phone and their dad’s belief that the future was bright. Ten years on, their name is on the building.\n\nThe song goes behind the results: 3am calls from worried mums, cases nobody thought could be won, and the long nights the cameras never show. NFA stands for No Further Action, the result every client hopes for, and the promise Saf makes when the phone rings.\n\nWhat drives them is simple: every case is a life, not a number. The nice cars came later; what they’re proudest of is showing the next generation what’s possible.", now()]);
+            music_kv('fix:gatsby-about-2', '1');
+        }
     }
     return $pdo;
 }
