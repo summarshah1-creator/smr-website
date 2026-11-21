@@ -42,7 +42,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .tag b{color:#ffd75a}
 .heroWrap{position:absolute;right:3%;bottom:4%;height:84%;aspect-ratio:925/1302;animation:bob 2.2s ease-in-out infinite}
 .hero{position:relative;z-index:1;width:100%;height:100%;filter:drop-shadow(10px 14px 10px rgba(0,0,0,.45))}
-#steamCv{position:absolute;z-index:0;left:-80%;top:0;width:180%;height:140%;pointer-events:none}
+#steamCv{position:absolute;z-index:2;left:-80%;top:0;width:180%;height:140%;pointer-events:none}
 @keyframes bob{50%{transform:translateY(-4%) rotate(-1.5deg)}}
 .stats{position:absolute;top:10px;right:calc(var(--sr,0px) + 64px);display:flex;gap:8px;font-size:clamp(9px,1.3vw,13px)}
 .stats div{background:rgba(18,12,38,.8);border-radius:9px;padding:7px 10px;box-shadow:0 0 0 2px rgba(255,255,255,.2) inset;display:flex;align-items:center;gap:7px}
@@ -70,6 +70,23 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .row{display:flex;justify-content:space-between;gap:30px;font-size:13px;margin:8px 0}
 .go{margin-top:12px;font-family:PS,monospace;font-size:12px;background:#2fbf4a;color:#fff;border:0;border-radius:12px;padding:12px 16px;box-shadow:0 5px 0 #1b7a2c;cursor:pointer}
 .go.alt{background:#3a3168;box-shadow:0 5px 0 #1a1438}
+.row.sm{font-size:10px;color:#cfc8f5;margin:5px 0}
+#eidiBox{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at center,rgba(14,8,32,.4),rgba(8,4,22,.88));pointer-events:auto}
+.ebox{text-align:center}
+.ebox h2{margin:0 0 6px;font-size:clamp(14px,2.4vw,22px);color:#ffd75a;text-shadow:3px 3px 0 #160c28}
+.etxt{font-family:Silk;font-size:13px;color:#e8e4ff;margin-bottom:14px}
+.erow{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;perspective:600px}
+.env{position:relative;width:clamp(78px,11vw,110px);aspect-ratio:3/2;border:0;background:none;padding:0;cursor:pointer;transform-style:preserve-3d;transition:transform .45s cubic-bezier(.3,1.4,.5,1);animation:wig 1.6s ease-in-out infinite}
+.env:nth-child(2){animation-delay:.2s}.env:nth-child(3){animation-delay:.4s}.env:nth-child(4){animation-delay:.6s}
+@keyframes wig{50%{transform:translateY(-4px) rotate(-2deg)}}
+.env .f,.env .b{position:absolute;inset:0;border-radius:10px;backface-visibility:hidden;display:flex;align-items:center;justify-content:center;flex-direction:column}
+.env .f{background:linear-gradient(160deg,#2fbf6a,#157a3e);box-shadow:0 0 0 3px #ffd75a inset,0 6px 0 #0b4a25;overflow:hidden}
+.env .f:before{content:'';position:absolute;left:-10%;right:-10%;top:-40%;height:80%;background:#25a35a;transform:rotate(0);clip-path:polygon(0 0,100% 0,50% 100%)}
+.env .f span{position:relative;font-family:Amiri,serif;font-weight:700;font-size:20px;color:#ffd75a;margin-top:18%}
+.env .b{transform:rotateY(180deg);background:linear-gradient(#fff7d6,#ffe39a);box-shadow:0 0 0 3px #ffd75a inset,0 6px 0 #a87a10;color:#2a1500}
+.env .b b{font-family:PS;font-size:clamp(12px,1.8vw,17px)}
+.env .b small{font-family:Silk;font-size:9px;margin-top:4px;line-height:1.2}
+.env.open{transform:rotateY(180deg);animation:none}
 #toast{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);background:#151226;border:2px solid #ffd75a;border-radius:12px;padding:8px 14px;font-family:Silk;font-size:13px;color:#fff;pointer-events:none}
 </style>
 </head>
@@ -93,7 +110,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
       <div class="title"><div class="badge">AN SMR ORIGINAL</div>
       <img class="logo" src="art/logo.webp" alt="Jummah Dash">
       <div class="tag">LATE FOR <b>JUMMAH</b>. AGAIN.</div></div>
-      <div class="heroWrap" id="heroWrap"><canvas id="steamCv"></canvas><img class="hero" src="art/hero_hd.webp?v=1795283304" alt=""></div>
+      <div class="heroWrap" id="heroWrap"><canvas id="steamCv"></canvas><img class="hero" src="art/hero_hd.webp?v=1795284305" alt=""></div>
       <div class="stats"><div>BEST <span id="hBest">0m</span></div><div class="gold"><span class="coin">£</span><span id="hBank">£0</span></div></div>
       <div class="mine">Heading to <b id="mineName">your masjid</b></div>
       <div class="play">TOUCH ANYWHERE TO PLAY</div>
@@ -123,14 +140,25 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
       <div class="row"><span>Distance</span><span id="oD">0m</span></div>
       <div class="row"><span>Collected</span><span id="oC">£0</span></div>
       <div class="row"><span>Best</span><span id="oB">0m</span></div>
+      <div class="row sm"><span>People steamed</span><span id="oS">0</span></div>
+      <div class="row sm"><span>Hazards dodged</span><span id="oZ">0</span></div>
+      <div class="row sm"><span>Coins missed</span><span id="oM">0</span></div>
       <button class="go" id="again">RUN AGAIN</button> <button class="go alt" id="ovShare">SHARE</button> <button class="go alt" id="ovHome">HOME</button>
+    </div>
+  </div>
+  <div id="eidiBox" class="hide">
+    <div class="ebox">
+      <h2>OPEN YOUR EIDI</h2>
+      <div class="etxt" id="eidiTxt">Tap each envelope to open it</div>
+      <div class="erow" id="eidiRow"></div>
+      <button class="go hide" id="eidiGo">CARRY ON</button>
     </div>
   </div>
   <div id="toast" class="hide"></div>
 </div>
 </div>
-<script src="landmarks.js?v=1795283304"></script>
-<script src="vehicles.js?v=1795283304"></script>
-<script src="game.js?v=1795283304"></script>
+<script src="landmarks.js?v=1795284305"></script>
+<script src="vehicles.js?v=1795284305"></script>
+<script src="game.js?v=1795284305"></script>
 </body>
 </html>
