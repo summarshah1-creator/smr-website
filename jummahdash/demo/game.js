@@ -55,7 +55,17 @@ const NPC_H = {"pc_m": "98290b7f51", "pc_f": "70a6bfd549", "pcso": "fc602db7dd",
 
 /* buildings: Flappy landmarks + house runs, drawn at KR px per unit, trimmed, cached (LRU) */
 const M = 90, LH = 380;
-const STREET = ['galaxy', 'townhall', 'masjid', 'chaiikhana', 'spudkingz', 'miamicrispy', 'barak', 'stmarys', 'hatfactory', 'chaiiwala', 'masjidali', 'suffa', 'nadeem', 'oak', 'periperi', 'toros', 'kahwa', 'topspizza', 'alquds', 'kaya', 'karwan', 'krispy', 'grandbazar', 'gna', 'cycleking', 'smr', 'currys', 'letters', 'gurdwara', 'ldh', 'frasers', 'station'];
+let STREET = (window.LM_ORDER || Object.keys(window.LANDMARKS || {})).filter(k => window.LANDMARKS && LANDMARKS[k]);   // every Luton building from Flappy Kabootar
+/* buildings come in a shuffled deck like Flappy Kabootar: every one shows up before any repeats; sets stay together in order */
+const SETS = [['frasers', 'station', 'hatfactory'], ['wardownfield', 'wardown', 'wardownbridge', 'funfair'], ['welcome', 'airport']];
+let deck = [], lastUnit = null, setQ = [];
+function buildDeck() {
+  const inSet = new Set(SETS.flat());
+  const units = SETS.map(u => u.filter(k => LANDMARKS[k])).filter(u => u.length).concat(STREET.filter(k => !inSet.has(k)).map(k => [k]));
+  for (let i = units.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [units[i], units[j]] = [units[j], units[i]]; }
+  if (lastUnit && units[0].join() === lastUnit.join()) units.push(units.shift());
+  lastUnit = units[units.length - 1]; return units;
+}
 const HOUSE_K = () => Object.keys(window.HOUSES || {});
 const bCache = new Map(), hazeCache = new Map();
 function buildingCanvas(kind, key) {
@@ -66,6 +76,7 @@ function buildingCanvas(kind, key) {
   const c = document.createElement('canvas'); c.width = Math.ceil((w + 2 * M) * KR); c.height = Math.ceil(LH * KR);
   const o = c.getContext('2d'); o.imageSmoothingEnabled = false; o.scale(KR, KR);
   try { draw(o); } catch (e) { console.warn(key, e); }
+  if (kind === 'lm' && window.LM_ANIM && LM_ANIM[key]) try { const af = key !== 'lutonhoo' && window.SCALE && SCALE[key]; if (af) { o.save(); o.translate(M, LH - 6); o.scale(af, af); LM_ANIM[key](o, 0, 0, 0); o.restore(); } else LM_ANIM[key](o, M, LH - 6, 0); } catch (e) {}
   // trim empty space so drawing stays cheap
   const d = o.getImageData(0, 0, c.width, c.height).data; let top = c.height, l = c.width, r = 0;
   for (let y = 0; y < c.height; y += 2) for (let x = 0; x < c.width; x += 2) if (d[(y * c.width + x) * 4 + 3] > 8) { if (y < top) top = y; if (x < l) l = x; if (x > r) r = x; }
@@ -78,7 +89,7 @@ function buildingCanvas(kind, key) {
 function hazed(id, v) {   // pale, sunset-tinted copy for the far skyline
   if (hazeCache.has(id)) return hazeCache.get(id);
   const c = document.createElement('canvas'); c.width = v.c.width; c.height = v.c.height; const o = c.getContext('2d');
-  o.drawImage(v.c, 0, 0); o.globalCompositeOperation = 'source-atop'; o.fillStyle = 'rgba(204,128,150,.72)'; o.fillRect(0, 0, c.width, c.height);
+  o.drawImage(v.c, 0, 0); o.globalCompositeOperation = 'source-atop'; o.fillStyle = DAY ? 'rgba(168,200,232,.66)' : 'rgba(204,128,150,.72)'; o.fillRect(0, 0, c.width, c.height);
   hazeCache.set(id, c); while (hazeCache.size > 10) hazeCache.delete(hazeCache.keys().next().value); return c;
 }
 
@@ -155,10 +166,11 @@ let lastLm = [];
 function nextBuilding() {
   const prev = street[street.length - 1]; const x = prev ? prev.x + prev.w + (prev.gap || 0) : -60;
   const wantLm = !prev || prev.kind === 'hs' && (prev.run || 0) >= 1 + (Math.random() * 2 | 0);
-  if (wantLm) { let k; const others = MOSQUE_K.filter(m => m !== myMosque && !lastLm.slice(-4).includes(m));
-    if (others.length && Math.random() < .3) k = others[Math.random() * others.length | 0];
-    else do { k = STREET[Math.random() * STREET.length | 0]; } while (lastLm.includes(k) || !LANDMARKS[k] || k === myMosque); lastLm.push(k); if (lastLm.length > 10) lastLm.shift();
-    street.push({ kind: 'lm', key: k, x, w: LANDMARKS[k].w * BS, gap: 6 + Math.random() * 14 }); }
+  if (setQ.length || wantLm) { let k;
+    if (setQ.length) k = setQ.shift();
+    else { let u; do { if (!deck.length) deck = buildDeck(); u = deck.shift().filter(x => x !== myMosque); } while (!u.length); k = u.shift(); setQ = u; }
+    lastLm.push(k); if (lastLm.length > 10) lastLm.shift();
+    street.push({ kind: 'lm', key: k, x, w: LANDMARKS[k].w * BS, gap: setQ.length ? 0 : 6 + Math.random() * 14 }); }
   else { const hk = HOUSE_K(); const k = hk[Math.random() * hk.length | 0]; street.push({ kind: 'hs', key: k, x, w: Math.round(HOUSES[k].w * 1.35) * BS, gap: 0, run: prev && prev.kind === 'hs' ? (prev.run || 1) + 1 : 1 }); }
 }
 function fillStreet() { while (!street.length || street[street.length - 1].x < W + 600) { nextBuilding(); const b = street[street.length - 1]; setTimeout(() => buildingCanvas(b.kind, b.key), 0); } }   // built ~1.5 screens ahead so there's no hitch
@@ -685,12 +697,16 @@ function revive(keep) {   // second chance (Eidi or Save Me): he jumps back up a
 }
 
 /* ---------------- draw ---------------- */
-let skyCv = null, vigCv = null;
+let skyCv = null, vigCv = null; const DAY = /[?&]day=1/.test(location.search);   // midday sky (posters / testing)
 function buildSky() {
   skyCv = document.createElement('canvas'); skyCv.width = cv.width; skyCv.height = cv.height; const o = skyCv.getContext('2d');
   const sky = o.createLinearGradient(0, 0, 0, cv.height);
-  sky.addColorStop(0, '#1c1f52'); sky.addColorStop(.32, '#4a3684'); sky.addColorStop(.55, '#b85d8e'); sky.addColorStop(.68, '#f08c6e'); sky.addColorStop(.74, '#ffc27c'); sky.addColorStop(1, '#ffd49a');
+  if (DAY) { sky.addColorStop(0, '#2f86de'); sky.addColorStop(.45, '#5aaef0'); sky.addColorStop(.75, '#a8d8fa'); sky.addColorStop(1, '#d8efff'); }
+  else { sky.addColorStop(0, '#1c1f52'); sky.addColorStop(.32, '#4a3684'); sky.addColorStop(.55, '#b85d8e'); sky.addColorStop(.68, '#f08c6e'); sky.addColorStop(.74, '#ffc27c'); sky.addColorStop(1, '#ffd49a'); }
   o.fillStyle = sky; o.fillRect(0, 0, cv.width, cv.height); o.scale(S, S);
+  if (DAY) { const sg = o.createRadialGradient(W * .8, 46, 4, W * .8, 46, 150); sg.addColorStop(0, 'rgba(255,255,240,1)'); sg.addColorStop(.12, 'rgba(255,250,210,.7)'); sg.addColorStop(1, 'rgba(255,250,210,0)'); o.fillStyle = sg; o.fillRect(0, 0, W, VH);
+    o.fillStyle = 'rgba(255,255,255,.92)'; [[90, 70, 1], [330, 40, .8], [560, 95, 1.1], [760, 150, .7], [880, 60, .9]].forEach(([x, y, s]) => { for (let i = 0; i < 6; i++) { o.beginPath(); o.ellipse(x + (i - 2.5) * 16 * s, y + (i % 2 ? -5 : 2) * s, 20 * s, 11 * s, 0, 0, 7); o.fill(); } });
+    vigCv = document.createElement('canvas'); vigCv.width = cv.width; vigCv.height = cv.height; return; }
   stars.forEach(s => { o.globalAlpha = .3 + .4 * Math.random(); o.fillStyle = '#fff7e6'; o.fillRect(s.x * W, s.y * VH, s.r, s.r); }); o.globalAlpha = 1;
   const sg = o.createRadialGradient(W * .78, G - 30, 4, W * .78, G - 30, 210); sg.addColorStop(0, 'rgba(255,236,190,.95)'); sg.addColorStop(.12, 'rgba(255,214,150,.55)'); sg.addColorStop(1, 'rgba(255,190,130,0)');
   o.fillStyle = sg; o.fillRect(0, 0, W, VH);
@@ -1064,5 +1080,5 @@ resize(); seedStars(); reset(); refreshHome(); if (myMosque) setTimeout(refreshH
 let last = performance.now();
 function frame(now) { const dt = Math.min(.05, (now - last) / 1000); last = now; update(dt); draw(); requestAnimationFrame(frame); }
 requestAnimationFrame(frame);
-window.__jd = { veh: k => startVehicle(k), laser: () => [CEIL + 40, (CEIL + FLOOR) / 2].forEach((y, i) => obs.push({ type: 'laser', x: W / 2, y, ph: 'in', pt: 0, slide: 0, d: i * .12 })), eidi: n => { eidi = n; }, kill: w => die(w), gift: k => gifts.push({ k, x: W * .6, y: 200, b: 0 }), get state() { return state; }, start, hero, get obs() { return obs; }, spawnRocket: () => obs.push({ type: "rocket", x: W + 40, y: hero.y - 30, warn: 1.5, lock: 0, v: 0 }), setHold: v => holding = v, get dist() { return dist; }, mis: (s, c) => { RUN.steamed = s; coins = c; }, get npcs() { return npcs; }, boost: m => startBoost(m), get SHOP() { return SHOP; } };
+window.__jd = { veh: k => startVehicle(k), laser: () => [CEIL + 40, (CEIL + FLOOR) / 2].forEach((y, i) => obs.push({ type: 'laser', x: W / 2, y, ph: 'in', pt: 0, slide: 0, d: i * .12 })), eidi: n => { eidi = n; }, kill: w => die(w), gift: k => gifts.push({ k, x: W * .6, y: 200, b: 0 }), get state() { return state; }, start, hero, get obs() { return obs; }, spawnRocket: () => obs.push({ type: "rocket", x: W + 40, y: hero.y - 30, warn: 1.5, lock: 0, v: 0 }), setHold: v => holding = v, get dist() { return dist; }, mis: (s, c) => { RUN.steamed = s; coins = c; }, get npcs() { return npcs; }, boost: m => startBoost(m), get SHOP() { return SHOP; }, bc: (k) => buildingCanvas("lm", k), get STREET() { return STREET; } };
 })();
