@@ -21,6 +21,7 @@ function music_db(): PDO {
             plays INTEGER DEFAULT 0, ready INTEGER DEFAULT 0, created_at INTEGER, updated_at INTEGER)");
         $pdo->exec("CREATE TABLE IF NOT EXISTS music_kv (k TEXT PRIMARY KEY, v TEXT)");
         $done = true;
+        try { music_seed_import(); } catch (Throwable $e) {}
     }
     return $pdo;
 }
@@ -91,4 +92,38 @@ function music_sweep(): void {
     // Unfinished uploads older than a day go.
     $st = music_db()->prepare('SELECT code FROM music_tracks WHERE ready = 0 AND created_at < ?'); $st->execute([now() - 86400]);
     foreach ($st->fetchAll(PDO::FETCH_COLUMN) as $c) { rrmdir_any(music_dir($c)); music_db()->prepare('DELETE FROM music_tracks WHERE code = ?')->execute([$c]); }
+}
+
+/* Tracks shipped with the site: demo-data/music-seed/<slug>.pack.php (PHP that exits if requested + a ZIP of audio.<ext>, art.<ext>, meta.json).
+   Each is added once (remembered in music_kv 'seed:<slug>'), so deleting it in the player keeps it deleted. */
+function music_seed_import(): void {
+    $dir = SITE_ROOT . '/demo-data/music-seed';
+    if (!is_dir($dir) || !class_exists('ZipArchive')) return;
+    foreach (glob($dir . '/*.pack.php') ?: [] as $pack) {
+        $slug = basename($pack, '.pack.php');
+        if (music_kv('seed:' . $slug) !== null) continue;
+        $raw = (string) file_get_contents($pack);
+        $at = strpos($raw, '__halt_compiler();'); if ($at === false) continue;
+        $tmp = music_dir() . '/.seed-' . bin2hex(random_bytes(4)) . '.zip';
+        file_put_contents($tmp, substr($raw, $at + strlen('__halt_compiler();'))); unset($raw);
+        $z = new ZipArchive();
+        if ($z->open($tmp) === true) {
+            $m = json_decode((string) $z->getFromName('meta.json'), true) ?: [];
+            $ext = (string) ($m['ext'] ?? 'mp3'); $art = (string) ($m['art'] ?? '');
+            $audio = $z->getFromName('audio.' . $ext);
+            if ($audio !== false && isset(MUSIC_AUDIO[$ext])) {
+                $code = rand_token(12); $d = music_dir($code); @mkdir($d, 0750, true);
+                file_put_contents("$d/audio.$ext", $audio);
+                if ($art !== '' && ($a = $z->getFromName('art.' . $art)) !== false) file_put_contents("$d/art.$art", $a); else $art = '';
+                $min = (int) db()->query('SELECT COALESCE(MIN(sort), 0) FROM music_tracks')->fetchColumn();
+                db()->prepare('INSERT INTO music_tracks (code, title, artist, album, year, genre, track_no, duration, ext, size, art, lyrics, download, sort, ready, created_at, updated_at)
+                    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,1,?,?)')->execute([$code, (string) ($m['title'] ?? 'Untitled'), (string) ($m['artist'] ?? ''), (string) ($m['album'] ?? ''),
+                    (string) ($m['year'] ?? ''), (string) ($m['genre'] ?? ''), (string) ($m['track'] ?? ''), (float) ($m['duration'] ?? 0), $ext, strlen($audio), $art,
+                    (string) ($m['lyrics'] ?? ''), (int) ($m['download'] ?? 0), $min - 1, now(), now()]);
+            }
+            $z->close();
+        }
+        @unlink($tmp);
+        music_kv('seed:' . $slug, (string) now());
+    }
 }
