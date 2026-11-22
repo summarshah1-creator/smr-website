@@ -92,9 +92,25 @@ input[type=date], input[type=time], input[type=text], input[type=search] { width
 .row { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
 .seg { display:flex; border:1px solid var(--line); border-radius:12px; overflow:hidden; }
 .seg button { flex:1; padding:11px 8px; background:#1b1813; color:var(--dim); border:0; font-size:14px; cursor:pointer; }
-.musSel { position:relative; }
-.musSel select { width:100%; appearance:none; -webkit-appearance:none; padding:13px 40px 13px 14px; border:1px solid var(--gold); border-radius:12px; background:#1a150c; color:var(--text); font:500 15px 'Josefin',sans-serif; cursor:pointer; }
-.musSel::after { content:''; position:absolute; right:16px; top:50%; width:8px; height:8px; border-right:2px solid var(--gold2); border-bottom:2px solid var(--gold2); transform:translateY(-70%) rotate(45deg); pointer-events:none; }
+.mdd { border:1px solid var(--gold); border-radius:12px; background:#1a150c; overflow:hidden; }
+.mddHead { width:100%; display:flex; align-items:center; gap:10px; padding:13px 14px; border:0; background:none; color:var(--text); font:500 15px 'Josefin',sans-serif; text-align:left; cursor:pointer; }
+.mddHead span { flex:1; min-width:0; }
+.mddHead .chev { width:8px; height:8px; border-right:2px solid var(--gold2); border-bottom:2px solid var(--gold2); transform:translateY(-2px) rotate(45deg); transition:transform .3s cubic-bezier(.22,1,.36,1); flex:none; }
+.mdd.open .mddHead .chev { transform:translateY(2px) rotate(225deg); }
+.rec { display:inline-block; margin-left:6px; padding:2px 7px; border-radius:999px; background:rgba(234,193,62,.16); color:var(--gold2); font-size:11px; letter-spacing:.04em; vertical-align:1px; white-space:nowrap; }
+.mddList { display:grid; grid-template-rows:0fr; transition:grid-template-rows .38s cubic-bezier(.22,1,.36,1); }
+.mdd.open .mddList { grid-template-rows:1fr; }
+.mddList > div { overflow:hidden; min-height:0; }
+.mrow { display:flex; align-items:center; gap:10px; padding:11px 10px 11px 14px; border-top:1px solid rgba(255,255,255,.06); cursor:pointer; opacity:0; transform:translateY(-6px); transition:opacity .25s, transform .3s, background-color .2s; }
+.mdd.open .mrow { opacity:1; transform:none; }
+.mrow:active { background:rgba(234,193,62,.07); }
+.mrow .dot { width:16px; height:16px; border-radius:50%; border:1.5px solid #5a4f3a; flex:none; transition:border-color .2s, background .2s; }
+.mrow.on .dot { border-color:var(--gold); background:radial-gradient(circle,#eac13e 0 45%,transparent 50%); }
+.mrow .nm { flex:1; min-width:0; font-size:14.5px; color:var(--text); }
+.mrow.on .nm { color:var(--gold2); }
+.mplay { width:34px; height:34px; flex:none; border-radius:50%; border:1px solid #4a4232; background:#100e0b; color:var(--gold2); display:grid; place-items:center; cursor:pointer; padding:0; }
+.mplay svg { width:16px; height:16px; }
+.mplay.on { background:var(--gold); color:#1a1206; border-color:transparent; }
 .seg button.on { background:linear-gradient(180deg,#2c2416,#1d180f); color:var(--gold2); box-shadow: inset 0 -2px 0 var(--gold); }
 label.chk { display:flex; gap:8px; align-items:center; font-size:14px; color:var(--text); margin-top:10px; }
 label.chk input { width:18px; height:18px; accent-color: var(--gold); }
@@ -201,8 +217,11 @@ button:active, .big:active, .pill:active, .chip:active, .fx:active, .hsBtn:activ
 
     <section>
       <h2>Background music</h2>
-      <div class="musSel"><select id="musList" aria-label="Background music"></select></div>
-      <p class="small" id="musNote" style="margin:8px 0 0">Automatic picks the music to match your games: the Champions League theme for Champions League games, the Premier League theme for Premier League games, and Kick-Off Anthem for everything else.</p>
+      <div class="mdd" id="mdd">
+        <button class="mddHead" id="mddHead" type="button" aria-expanded="false"><span id="mddCur"></span><i class="chev"></i></button>
+        <div class="mddList" id="musList" role="listbox"></div>
+      </div>
+      <p class="small" id="musNote" style="margin:8px 0 0">The recommended track matches your games: the Champions League theme for Champions League games, the Premier League theme for Premier League games, and Kick-Off Anthem for everything else. Tap the speaker to listen to any track.</p>
     </section>
 
     <section>
@@ -574,13 +593,33 @@ async function musicBuffer(track) {
   })());
   try { return await musBuf.get(track.id); } catch (e) { musBuf.delete(track.id); throw e; }
 }
-function renderMusic() {
-  const cur = state.music || 'auto', auto = MUSIC.find(m => m.id === autoMusic(state));
-  const rows = [['auto', 'Automatic' + (auto ? ` (${auto.name})` : '')], ...MUSIC.map(m => [m.id, m.name]), ['none', 'No music']];
-  const sel = $('#musList');
-  sel.innerHTML = rows.map(([id, n]) => `<option value="${id}"${id === cur ? ' selected' : ''}>${esc(n)}</option>`).join('');
-  sel.onchange = () => { state.music = sel.value; relayout(); syncSound(true); };
+const ICO_SPK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg>';
+const ICO_STOP = '<svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor"/></svg>';
+const prevEl = new Audio(); prevEl.preload = 'none'; let prevId = null;
+function stopPreview() { if (prevId) { prevEl.pause(); prevId = null; document.querySelectorAll('.mplay.on').forEach(b => { b.classList.remove('on'); b.innerHTML = ICO_SPK; }); if (soundOn) syncSound(true); } }
+prevEl.onended = stopPreview;
+function playPreview(tr, btn) {
+  const same = prevId === tr.id; stopPreview(); if (same) return;
+  if (!musEl.paused) musEl.pause();
+  prevEl.src = tr.src; prevEl.currentTime = 0; prevEl.play().catch(() => {}); prevId = tr.id;
+  btn.classList.add('on'); btn.innerHTML = ICO_STOP;
 }
+function selectedId() { return state.music === 'auto' || !state.music ? autoMusic(state) : state.music; }
+function renderMusic() {
+  const recId = autoMusic(state), sel = selectedId();
+  const label = id => { const t = MUSIC.find(m => m.id === id); return t ? esc(t.name) + (id === recId ? '<span class="rec">Recommended</span>' : '') : 'No music'; };
+  $('#mddCur').innerHTML = label(sel);
+  const rows = [...MUSIC.map(m => m.id), 'none'];
+  $('#musList').innerHTML = '<div>' + rows.map((id, i) => `<div class="mrow${id === sel ? ' on' : ''}" data-m="${id}" role="option" aria-selected="${id === sel}" style="transition-delay:${(i * .03).toFixed(2)}s"><span class="dot"></span><span class="nm">${label(id)}</span>${id !== 'none' ? `<button class="mplay${prevId === id ? ' on' : ''}" type="button" aria-label="Listen">${prevId === id ? ICO_STOP : ICO_SPK}</button>` : ''}</div>`).join('') + '</div>';
+  $('#musList').querySelectorAll('.mrow').forEach(r => r.onclick = e => {
+    const pb = e.target.closest('.mplay');
+    if (pb) { e.stopPropagation(); playPreview(MUSIC.find(m => m.id === r.dataset.m), pb); return; }
+    const id = r.dataset.m; state.music = id === autoMusic(state) ? 'auto' : id;
+    stopPreview(); $('#mdd').classList.remove('open'); $('#mddHead').setAttribute('aria-expanded', 'false');
+    relayout(); syncSound(true);
+  });
+}
+$('#mddHead').onclick = () => { const o = $('#mdd').classList.toggle('open'); $('#mddHead').setAttribute('aria-expanded', o); if (!o) stopPreview(); };
 const musEl = $('#mus'); let soundOn = false;
 function syncSound(force) {
   const tr = soundOn ? musicFor(state) : null;
