@@ -1,6 +1,6 @@
 /* Jummah Dash: keeps the whole game on the phone. First visit downloads it once;
    after that it opens from the phone, and an update only downloads the files that changed. */
-const BUILD = '20261122182037';
+const BUILD = '20261122182812';
 const FILES = {
 "hd/landmarks_hd.js": "008cc0e557",
 "hd/cars_v3.js": "333148ab5d",
@@ -8,7 +8,7 @@ const FILES = {
 "game.js": "76ffabc897",
 "landmarks.js": "5121e57aa2",
 "vehicles.js": "32fdac20ce",
-"manifest.webmanifest": "636eadba05",
+"manifest.webmanifest": "f337af2b13",
 "silk.woff2": "c40ed2272b",
 "silkb.woff2": "67996e4e8c",
 "ps2p.woff2": "87ab8daaa6",
@@ -23,9 +23,11 @@ const FILES = {
 "art/hero_occ.png": "893c2284b9",
 "art/hero_hd.webp": "198cf84203",
 "art/logo.webp": "d69bcb982d",
-"art/icon-180.png": "927503e725",
-"art/icon-192.png": "76fcca7df5",
-"art/icon-512.png": "269f138d91",
+"art/icon-180.png": "d75814e461",
+"art/icon-192.png": "c356103bca",
+"art/icon-512.png": "eecca73448",
+"art/icon-1024.png": "745d129c4a",
+"art/og.jpg": "09f750f5ec",
 "art/fk-icon.png": "6f7419c1df",
 "art/wheels.webp": "5ee29ca5f7",
 "art/cars/a3.webp": "5143730f94",
