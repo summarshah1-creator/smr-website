@@ -50,9 +50,13 @@ let heroImg = heroImgs[SHOP.outfit] || heroImgs.classic; const HX4 = 6;   // she
 const hasG = id => SHOP.eq.includes(id);   // hero redrawn at 3x the pixels (smooth curves, finer detail)
 const HERO_FR = ['run0_normal', 'run1_normal', 'run2_normal', 'run3_normal', 'run4_normal', 'run5_normal', 'fly0_effort', 'fly1_effort', 'fly2_effort', 'fly0_panic', 'fly1_panic', 'fly2_panic', 'glide0_normal', 'glide1_normal', 'land0_effort', 'glide0_ko', 'run0_happy', 'run0_blink', 'hang0_happy', 'hang1_happy', 'hang2_happy', 'hang3_happy', 'fall0_panic', 'fall1_panic', 'fall2_panic', 'fall0_ko', 'sit0_happy', 'sit1_happy'];
 const FR = n => HERO_FR.indexOf(n);
-const NPC_META = {"pc_m":{"w":95,"h":175,"n":15,"type":"walk","k":2},"pc_f":{"w":95,"h":149,"n":15,"type":"walk","k":2},"pcso":{"w":98,"h":147,"n":15,"type":"walk","k":2},"warden":{"w":98,"h":147,"n":15,"type":"walk","k":2},"fan_dad":{"w":87,"h":204,"n":15,"type":"walk","k":2},"fan_f":{"w":95,"h":136,"n":15,"type":"walk","k":2},"fan_kid":{"w":101,"h":147,"n":15,"type":"walk","k":2},"blonde":{"w":95,"h":139,"n":15,"type":"walk","k":2},"abaya":{"w":97,"h":139,"n":15,"type":"walk","k":2},"teen":{"w":95,"h":139,"n":15,"type":"walk","k":2},"aunty":{"w":95,"h":144,"n":15,"type":"walk","k":2},"uncle":{"w":95,"h":139,"n":15,"type":"walk","k":2},"nurse":{"w":95,"h":152,"n":15,"type":"walk","k":2},"elder":{"w":97,"h":144,"n":15,"type":"walk","k":2},"builder":{"w":97,"h":152,"n":15,"type":"walk","k":2},"rider":{"w":101,"h":134,"n":15,"type":"walk","k":2},"rider_g":{"w":107,"h":147,"n":15,"type":"walk","k":2},"rider_o":{"w":107,"h":147,"n":15,"type":"walk","k":2},"schoolboy":{"w":95,"h":134,"n":15,"type":"walk","k":2},"shop":{"w":95,"h":134,"n":15,"type":"walk","k":2},"lad":{"w":95,"h":134,"n":15,"type":"walk","k":2},"esc_a":{"w":108,"h":155,"n":5,"type":"esc","k":2},"esc_b":{"w":147,"h":163,"n":5,"type":"esc","k":2},"esc_c":{"w":147,"h":150,"n":5,"type":"esc","k":2},"esc_d":{"w":147,"h":155,"n":5,"type":"esc","k":2},"esc_e":{"w":108,"h":163,"n":5,"type":"esc","k":2},"postie":{"w":98,"h":147,"n":15,"type":"walk","k":2}};   // sprite sheets: walkers = walk0-3, blink0-3, shock, cheer, dizzy; e-scooters = ride0-2, shock, cheer
-const NPC_KEYS = Object.keys(NPC_META).filter(k => NPC_META[k].type === 'walk'), ESC_KEYS = Object.keys(NPC_META).filter(k => NPC_META[k].type === 'esc');
-const NPC_H = {"pc_m": "4b39ea0f28", "pc_f": "a8bfafc3de", "pcso": "d8d63c30c7", "warden": "43bf1099d7", "fan_dad": "d5b873bf1e", "fan_f": "0736ecded9", "fan_kid": "606902cf47", "blonde": "6fc83e8854", "abaya": "dd1ebdea2f", "teen": "c0c656d8de", "aunty": "e02332302b", "uncle": "273a6b5a4c", "nurse": "2c491f4e02", "elder": "a04be1b1e0", "builder": "72cae29771", "rider": "a0ffe859bc", "rider_g": "f5982c965f", "rider_o": "889f5df411", "schoolboy": "4f559d413f", "shop": "4b57a651cf", "lad": "3ac8923621", "esc_a": "c9a4f048dc", "esc_b": "991980ba7e", "esc_c": "b861ab124e", "esc_d": "04bca54c95", "esc_e": "78ccb20f44", "postie": "1a61959adc"}; const npcImg = {}; Object.keys(NPC_META).forEach(k => npcImg[k] = img('art/npc_' + k + '.png?h=' + (NPC_H[k] || 1)));
+let NPC_META = {};   // filled from art/npc.json (hd/build_npc_v3.py)
+let NPC_KEYS = [], ESC_KEYS = [], CHAIR_KEYS = [], NPC_W = 0;
+const NPC_H = {"pc_m": "bf9a23129c", "pc_f": "0d10d7e436", "pcso": "b96c95a849", "warden": "a66d4454a6", "fan_dad": "416f96e1f2", "fan_f": "a416d60d51", "fan_kid": "7d09983a79", "blonde": "5911071100", "abaya": "98120d714a", "teen": "c21b2888e4", "aunty": "329758884e", "uncle": "6a4f751543", "nurse": "7812a41339", "elder": "9a32510cd8", "builder": "c13eb606d8", "rider": "058fbb3a66", "rider_g": "6c7740c3ed", "rider_o": "5638f8be18", "schoolboy": "7b22f99a30", "shop": "62e2520146", "lad": "a096166c0d", "postie": "17230db312", "sehri": "f13be655e0", "v_woman_0": "b8bad350d0", "v_woman_1": "82be4238c0", "v_woman_2": "52857dbf09", "v_woman_3": "da19a4cbf1", "v_woman_4": "87fd629baf", "v_woman_5": "1cb9a17521", "v_woman_6": "811295b2c0", "v_woman_7": "beeb386555", "v_hijabi_0": "3089bb24dc", "v_hijabi_1": "bce7b5c5b7", "v_hijabi_2": "5e854e22b5", "v_hijabi_3": "fe3054eaa6", "v_hijabi_4": "ad1ec806c7", "v_hijabi_5": "cdede80a81", "v_hijabi_6": "44202cb8d3", "v_hijabi_7": "f77e50f005", "v_aunty_0": "329758884e", "v_aunty_1": "0905cf2b06", "v_aunty_2": "623a5f44ae", "v_aunty_3": "593dd6959d", "v_aunty_4": "2eb8f5ad8f", "v_aunty_5": "b58a3a56be", "v_man_0": "71ff3ee32c", "v_man_1": "18f08fb06f", "v_man_2": "cc78fa10e1", "v_man_3": "080e55fa52", "v_man_4": "7e0895c2cd", "v_man_5": "93036b778a", "v_man_6": "4428567992", "v_man_7": "7ee8375172", "v_student_0": "32dac47fb8", "v_student_1": "23e346d25a", "v_student_2": "385f83195e", "v_student_3": "02b1dc729a", "v_student_4": "7497cb9401", "v_student_5": "c4818404a2", "v_student_6": "9015c2b3cc", "v_student_7": "c3a28395b5", "v_student_8": "c94c86d802", "v_student_9": "2dba1de413", "v_police_0": "c261821f37", "v_police_1": "323ae71bb0", "v_police_2": "3228f384c7", "v_police_3": "039aa4406e", "v_police_4": "323ae71bb0", "v_police_5": "3228f384c7", "v_nurse_0": "236bc65df9", "v_nurse_1": "c357ae592c", "v_nurse_2": "debc7109c1", "v_nurse_3": "7e26062562", "v_nurse_4": "236bc65df9", "v_builder_0": "4d9ae1ee7a", "v_builder_1": "fc3b9d77f4", "v_builder_2": "3fa6f6deab", "v_builder_3": "e017599c9a", "v_builder_4": "559e2da12c", "v_fan_0": "e9d5ba4f11", "v_fan_1": "31736ec649", "v_fan_2": "8f9c30a348", "v_fan_3": "da10b1408c", "v_fan_4": "7b268f68bb", "chair_0": "50f7860105", "chair_1": "aa1323b9dc", "chair_2": "59380dcac0", "chair_3": "1d3aebd3d0", "chair_4": "99bd61c919", "chair_5": "a19d80c6e7", "chair_6": "7cbeb253a5", "chair_7": "91b79ad117", "v_fandad_0": "a3d09d1732", "v_fandad_1": "65a16dd5c7", "v_fandad_2": "f3b3f6fa37", "v_fandad_3": "79b38e4a36", "eesc_a": "a2ac5d8aed", "eesc_b": "35d3514fc0", "eesc_c": "58d3d153a3", "mobility": "4f2caa3907"}; const npcImg = {};
+const npcGet = k => npcImg[k] || (npcImg[k] = img('art/npc_' + k + '.webp?h=' + (NPC_H[k] || 1)));   // loaded the first time someone of that kind walks on
+fetch('art/npc.json?h=cb2784f590').then(r => r.json()).then(m => { NPC_META = m; const K = Object.keys(m);
+  NPC_KEYS = K.filter(k => m[k].type === 'walk'); ESC_KEYS = K.filter(k => m[k].type === 'esc' && k[0] === 'e'); CHAIR_KEYS = K.filter(k => k.startsWith('chair_'));
+  NPC_W = NPC_KEYS.reduce((a, k) => a + (m[k].wt || 1), 0); NPC_KEYS.slice(0, 12).forEach(npcGet); ESC_KEYS.forEach(npcGet); npcGet('mobility'); }).catch(() => {});
 
 /* buildings: Flappy landmarks + house runs, drawn at KR px per unit, trimmed, cached (LRU) */
 const M = 90, LH = 380;
@@ -182,7 +186,7 @@ function hazed(id, v) {   // pale, sunset-tinted copy for the far skyline
 }
 
 /* vehicles, rendered at KR, both directions */
-const CAR_KEYS = ['golf', 'a45', 'rs3', 'taxi', 'van', 'bigvan', 'postvan', 'smallvan', 'bus', 'police', 'gwagon', 'c63', 'pickup', 'moped', 'bike', 'coach', 'binlorry', 'ambulance'];
+const CAR_KEYS = ['jazz', 'yaris', 'polo', 'fiesta', 'focus', 'zafira', 'avensis', 'x6', 'x7', 'prius', 'prius2', 'taxi2', 'sclass', 'rolls', 'golfr', 'v60', 'xc40', 'corsa', 'fiat500', 'sportage', 'gt3', 'f812', 'lambo', 'astra', 'golf', 'bmw1', 'a3', 'aold', 'a45', 'bmw3', 'c63s', 'c63', 'tesla', 'qashqai', 'rangerover', 'gwagon', 'urus', 'taxi', 'van', 'bigvan', 'postvan', 'smallvan', 'bus', 'police', 'pickup', 'moped', 'bike', 'coach', 'binlorry', 'ambulance'];
 const carCache = new Map();
 /* HD pass for the vehicle art (owner, 21 Nov): the shared Flappy drawings go through a context wrapper that turns the flat body
    colour into a glossy gradient with a reflection band, thins the dark outlines, gives the glass a sky reflection and the rims a
@@ -204,28 +208,37 @@ function carSprite(k, ci, flip) {
   const id = k + ci + flip + '@' + KR; if (carCache.has(id)) return carCache.get(id);
   const V = VEHICLES[k]; const col = V.colours[ci % V.colours.length]; const SC = 1.6, k2 = KR * SC;
   const c = document.createElement('canvas'); c.width = Math.ceil((V.w + 6) * k2); c.height = Math.ceil(90 * k2); const o = c.getContext('2d');
-  o.scale(k2, k2); window.__WREC = []; try { V.d(hdCtx(o, col[1], 86 - (V.h || 24), 86), 3, 86, col); } catch (e) {} const wr = window.__WREC; window.__WREC = null;
+  o.scale(k2, k2); window.__WREC = []; try { V.d(V.v3 ? o : hdCtx(o, col[1], 86 - (V.h || 24), 86), 3, 86, col); } catch (e) {} const wr = window.__WREC; window.__WREC = null;
   // specular sweep across the bodywork
-  o.setTransform(1, 0, 0, 1, 0, 0); o.globalCompositeOperation = 'source-atop'; const sg = o.createLinearGradient(c.width * .2, 0, c.width * .55, c.height); sg.addColorStop(0, 'rgba(255,255,255,0)'); sg.addColorStop(.48, 'rgba(255,255,255,.1)'); sg.addColorStop(.52, 'rgba(255,255,255,0)'); o.fillStyle = sg; o.fillRect(0, 0, c.width, c.height); o.globalCompositeOperation = 'source-over';
+  o.setTransform(1, 0, 0, 1, 0, 0); if (!(wr || []).some(w => w.under)) { o.globalCompositeOperation = 'source-atop'; const sg = o.createLinearGradient(c.width * .2, 0, c.width * .55, c.height); sg.addColorStop(0, 'rgba(255,255,255,0)'); sg.addColorStop(.48, 'rgba(255,255,255,.1)'); sg.addColorStop(.52, 'rgba(255,255,255,0)'); o.fillStyle = sg; o.fillRect(0, 0, c.width, c.height); o.globalCompositeOperation = 'source-over'; }
   let out = c;
   if (flip) { const f = document.createElement('canvas'); f.width = c.width; f.height = c.height; const g = f.getContext('2d'); g.translate(f.width, 0); g.scale(-1, 1); g.drawImage(c, 0, 0); g.setTransform(1, 0, 0, 1, 0, 0);
     if (V.fixMirror) { g.scale(k2, k2); try { V.fixMirror(hdCtx(g, col[1], 86 - (V.h || 24), 86), 3, 86, f.width / k2); } catch (e) {} } out = f; }
-  const wh = (wr || []).map(w => ({ x: (flip ? c.width - w.x : w.x) / KR, y: w.y / KR, r: w.r / KR, rim: w.rim, spokes: w.spokes || 5 }));
-  const v = { c: out, w: (V.w + 6) * SC, h: 90 * SC, gy: 86 * SC, sp: V.speed, wh };
+  const wh = (wr || []).map(w => ({ x: (flip ? c.width - w.x : w.x) / KR, y: w.y / KR, r: w.r / KR, rim: w.rim, spokes: w.spokes || 5, wi: w.wi }));
+  const under = (wr || []).some(w => w.under);
+  const v = { c: out, w: (V.w + 6) * SC, h: 90 * SC, gy: 86 * SC, sp: V.speed, wh, under };
   carCache.set(id, v); if (carCache.size > 40) carCache.delete(carCache.keys().next().value); return v;
 }
-function drawTrafficCar(c) { const far = c.lane === 0, sp = carSprite(c.k, c.ci, far), gy = (far ? ROAD_T + 19 : ROAD_B - 3) + c.yo, X = px(c.x), Y = px(gy - sp.gy), k = c.crash;
-  ctx.fillStyle = 'rgba(0,0,0,.24)'; ctx.beginPath(); ctx.ellipse(c.x + sp.w / 2, gy, sp.w * .44, 2.8, 0, 0, 7); ctx.fill();
+function drawTrafficCar(c) { const far = c.lane === 0, sp = carSprite(c.k, c.ci, far), gy = (far ? ROAD_T + 19 : ROAD_B - 3) + c.yo, X = px(c.x), Y = px(gy - sp.gy), k = c.crash, K = far ? .9 : 1;   // far lane a touch smaller (further away)
+  ctx.fillStyle = 'rgba(0,0,0,.24)'; ctx.beginPath(); ctx.ellipse(c.x + sp.w / 2, gy, sp.w * .44 * K, 2.8 * K, 0, 0, 7); ctx.fill();
   ctx.save(); if (k && k.rot) { const cx = c.x + sp.w / 2, cy = gy - 10; ctx.translate(cx, cy); ctx.rotate(k.rot); ctx.translate(-cx, -cy); }
   else if (!k) { const b = Math.sin((c.roll || 0) * .09) * .35; ctx.translate(0, b); }   // a little suspension bob
-  ctx.drawImage(sp.c, X, Y, sp.w, sp.h); if (sp.wh.length) drawWheels(sp, X, Y, (c.roll || 0) * (far ? -1 : 1));
+  if (K !== 1) { ctx.translate(X + sp.w / 2, gy); ctx.scale(K, K); ctx.translate(-X - sp.w / 2, -gy); }
+  const roll = (c.roll || 0) * (far ? -1 : 1);
+  if (sp.under) { if (sp.wh.length) drawWheels(sp, X, Y, roll); ctx.drawImage(sp.c, X, Y, sp.w, sp.h); }   // wheels behind the body: the arches overhang them
+  else { ctx.drawImage(sp.c, X, Y, sp.w, sp.h); if (sp.wh.length) drawWheels(sp, X, Y, roll); }
   if (c.run || c.police) { const on = Math.floor(performance.now() / 120) % 2, lx = c.x + sp.w / 2, ly = gy - (VEHICLES[c.k].h || 24) * CSC * .9; ctx.globalCompositeOperation = 'lighter';
     [[-4, on], [4, !on]].forEach(([o, lit]) => { if (!lit) return; const r = ctx.createRadialGradient(lx + o * 2, ly, 0, lx + o * 2, ly, 34); r.addColorStop(0, 'rgba(200,225,255,1)'); r.addColorStop(.15, 'rgba(70,130,255,.85)'); r.addColorStop(1, 'rgba(40,80,255,0)'); ctx.fillStyle = r; ctx.fillRect(lx + o * 2 - 34, ly - 34, 68, 68); });
     ctx.globalCompositeOperation = 'source-over'; }
+  if (c.tail && Math.floor(performance.now() / 180) % 2) { const hx = far ? c.x + 4 : c.x + sp.w - 8, hy = gy - 9; ctx.globalCompositeOperation = 'lighter';   // flashing its headlights at the car in front
+    const r = ctx.createRadialGradient(hx, hy, 0, hx, hy, 26); r.addColorStop(0, 'rgba(255,255,235,1)'); r.addColorStop(.2, 'rgba(255,250,200,.7)'); r.addColorStop(1, 'rgba(255,240,180,0)'); ctx.fillStyle = r; ctx.fillRect(hx - 26, hy - 26, 52, 52); ctx.globalCompositeOperation = 'source-over'; }
   if (k && k.fire && k.t < 9) { ctx.globalCompositeOperation = 'lighter'; for (let i = 0; i < 4; i++) { const fx = c.x + sp.w * (.35 + Math.random() * .3), fy = gy - 14 - Math.random() * 10, r = ctx.createRadialGradient(fx, fy, 0, fx, fy, 9); r.addColorStop(0, 'rgba(255,220,120,.9)'); r.addColorStop(1, 'rgba(255,80,0,0)'); ctx.fillStyle = r; ctx.fillRect(fx - 9, fy - 9, 18, 18); } ctx.globalCompositeOperation = 'source-over'; }
   ctx.restore(); }
 // turning wheels: the rim + spokes are redrawn over each wheel every frame, rotated by how far the car has rolled
 function drawWheels(sp, x0, y0, roll) { for (const w of sp.wh) { const cx = x0 + w.x, cy = y0 + w.y, r = w.r * .64; if (r < 1.2) continue;
+  if (sp.under) { ctx.beginPath(); ctx.arc(cx, cy, w.r * .98, 0, 7); ctx.fillStyle = '#1b1c20'; ctx.fill(); }
+  const WI = window.WHEEL_IMG; if (w.wi != null && WI && WI.complete && WI.naturalWidth) {   // the owner's wheel pictures, turning
+    const R = w.r * .985; ctx.save(); ctx.translate(cx, cy); ctx.rotate(roll / w.r); ctx.drawImage(WI, (w.wi % 5) * 128, (w.wi / 5 | 0) * 128, 128, 128, -R, -R, R * 2, R * 2); ctx.restore(); continue; }
   ctx.save(); ctx.translate(cx, cy); ctx.beginPath(); ctx.arc(0, 0, r, 0, 7); ctx.fillStyle = w.rim || '#9aa2ab'; ctx.fill(); ctx.beginPath(); ctx.arc(-r * .2, -r * .2, r * .55, 0, 7); ctx.fillStyle = 'rgba(255,255,255,.25)'; ctx.fill();
   ctx.rotate(roll / w.r); ctx.strokeStyle = 'rgba(40,42,48,.85)'; ctx.lineWidth = Math.max(.6, r * .2); for (let i = 0; i < w.spokes; i++) { const a = i * 2 * Math.PI / w.spokes; ctx.beginPath(); ctx.moveTo(Math.cos(a) * r * .25, Math.sin(a) * r * .25); ctx.lineTo(Math.cos(a) * r * .92, Math.sin(a) * r * .92); ctx.stroke(); }
   ctx.beginPath(); ctx.arc(0, 0, r * .24, 0, 7); ctx.fillStyle = '#5a5d66'; ctx.fill(); ctx.restore(); } }
@@ -366,7 +379,7 @@ function fillSkyline() { let x = skyline.length ? skyline[skyline.length - 1].x 
    One car per lane space (they queue behind slower ones), overtaking when the other lane is clear, fly-pasts, police chases,
    blue-light runs (traffic pulls in), rare spin-outs and head-ons with a jam and horns. All with sound. ---------- */
 const LD = (ROAD_B - 3) - (ROAD_T + 19), EMK = { police: 108, ambulance: 96, fire: 82 }, CSC = 1.6, VK = 2.2;
-let zoomCD = 20, crashCD = 60, otCD = 6, headCD = 120, jamT = 0, chaseCD = 90, hornT = 2, lastCarK = '';
+let pairCD = 120, zoomCD = 20, crashCD = 60, otCD = 6, headCD = 120, jamT = 0, chaseCD = 90, hornT = 2, lastCarK = '';
 const cBody = c => { const L = VEHICLES[c.k].w * CSC; return [c.x + 3 * CSC, c.x + 3 * CSC + L]; };
 function pickCarK() { const ks = CAR_KEYS.filter(k => VEHICLES[k]), tot = ks.reduce((a, k) => a + (VEHICLES[k].weight || 1), 0);
   for (let n = 0; n < 4; n++) { let r = Math.random() * tot; for (const k of ks) { r -= VEHICLES[k].weight || 1; if (r <= 0) { if (k !== lastCarK || n === 3) { lastCarK = k; return k; } break; } } } return ks[0]; }
@@ -376,13 +389,13 @@ function spawnCar(x, key, zoom, laneF) {
   const quick = !zoom && Math.random() < .15, v = zoom ? (130 + Math.random() * 110) * VK : ((V.speed ? V.speed[0] + Math.random() * (V.speed[1] - V.speed[0]) : 30) * VK) * (quick ? 1.35 : 1);
   const sv = dir * v - speed * .92, sx = x != null ? x : (sv > 0 ? -L - 30 : W + 30);
   if (cars.some(c => c.lane === lane && sx < c.x + c.L + 24 && c.x < sx + L + 24)) return false;
-  const c = { k, ci: Math.random() * 10 | 0, lane, dir, x: sx, v, cv: v, yo: 0, L, zoom: !!zoom }; cars.push(c);
+  const c = { k, ci: Math.random() * 6000 | 0, lane, dir, x: sx, v, cv: v, yo: 0, L, zoom: !!zoom }; cars.push(c);
   if (zoom) SFX.zoom(k === 'motorbike');
   if (EMK[k] && !zoom) { c.emerg = 1; c.rolled = c.headRolled = c.otRolled = 1;
     if (jamT <= 0 && k !== 'police' && Math.random() < .35) { c.run = 1; c.v = c.cv = EMK[k] * VK; if (k === 'fire') { SFX.neenaw(); SFX.airhorn(1.2); } else if (k === 'ambulance') SFX.wail(); else SFX.siren(); } }
   return c;
 }
-function startChase() { const ks = ['lambo', 'f40', 'p911', 'c63', 'a45', 'rs3', 'golf', 'gwagon'], f = spawnCar(null, ks[Math.random() * ks.length | 0], true); if (!f) return;
+function startChase() { const ks = ['lambo', 'gt3', 'f812', 'c63', 'a45', 'urus', 'golfr', 'gwagon'], f = spawnCar(null, ks[Math.random() * ks.length | 0], true); if (!f) return;
   f.v = f.cv = (150 + Math.random() * 50) * VK; f.flee = 1; const PL = VEHICLES.police.w * CSC;
   cars.push({ k: 'police', ci: 0, lane: f.lane, dir: f.dir, x: f.dir > 0 ? f.x - PL - 50 - Math.random() * 30 : f.x + f.L + 50 + Math.random() * 30, v: f.v + 6 * VK, cv: f.v + 6 * VK, yo: 0, L: PL, zoom: true, police: 1, run: 1, emerg: 1, rolled: 1, headRolled: 1 });
   chaseCD = 240 + Math.random() * 300; zoomCD = Math.max(zoomCD, 20); SFX.siren(); }
@@ -442,17 +455,26 @@ function updateTraffic(dt, dx) {
       if (k.done && k.st !== 'hit') { const want = k.st === 'side' ? Math.PI / 2 * Math.sign(k.spin) : 0, cur = ((k.rot % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI); let dl = want - cur; dl = ((dl + Math.PI) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI) - Math.PI; k.rot += dl * Math.min(1, dt * 4); }
       if (k.t < (k.fire ? 9 : 4) && Math.random() < dt * (k.fire ? 14 : 9)) smokeAt(c.x + c.L / 2 + (Math.random() - .5) * c.L * .5, (c.lane ? ROAD_B - 14 : ROAD_T + 10) + c.yo, k.fire); }
     c.x += c.dir * c.cv * dt - scroll; c.roll = (c.roll || 0) + c.cv * dt; });
+  pairCD -= dt; if (moving && jamT <= 0 && (pairCD <= 0 && Math.random() < dt * .01 || window.__pair)) { const lane = Math.random() < .5 ? 0 : 1, r = spawnCar(null, 'reliant', false, lane);
+    if (r) { window.__pair = 0; r.v = r.cv = 26 * VK; r.rolled = r.headRolled = r.otRolled = 1; const ML = VEHICLES.mini.w * CSC, mx = r.dir > 0 ? r.x - ML - 6 : r.x + r.L + 6;
+      cars.push({ k: 'mini', ci: 0, lane, dir: r.dir, x: mx, v: r.v, cv: r.v, yo: 0, L: ML, rolled: 1, headRolled: 1, otRolled: 1, tail: r, beepT: 1 }); pairCD = 200 + Math.random() * 200; } }
+  cars.forEach(c => { if (!c.tail) return; const r = c.tail; if (!cars.includes(r) || r.crash) { c.tail = null; return; }   // stays glued to the three-wheeler's bumper
+    const gap = c.dir > 0 ? r.x - (c.x + c.L) : c.x - (r.x + r.L); c.cv = r.cv + (gap - 5) * 2; c.ot = null;
+    if ((c.beepT -= dt) <= 0) { c.beepT = 1.6 + Math.random() * 2.4; if (c.x > -40 && c.x < W + 40) SFX.horn(Math.random() * .6); } });
   chaseCD -= dt; if (moving && jamT <= 0 && (chaseCD <= 0 && Math.random() < dt * .02 || window.__chase)) { window.__chase = 0; startChase(); }
-  zoomCD -= dt; if (moving && jamT <= 0 && zoomCD <= 0 && Math.random() < dt * .03) { const ks = ['lambo', 'lambo', 'f40', 'p911', 'c63', 'a45', 'motorbike', 'motorbike']; if (spawnCar(null, ks[Math.random() * ks.length | 0], true)) zoomCD = 30 + Math.random() * 40; }
+  zoomCD -= dt; if (moving && jamT <= 0 && zoomCD <= 0 && Math.random() < dt * .03) { const ks = ['lambo', 'f812', 'gt3', 'golfr', 'c63', 'urus', 'a45', 'motorbike', 'motorbike']; if (spawnCar(null, ks[Math.random() * ks.length | 0], true)) zoomCD = 30 + Math.random() * 40; }
   cars.forEach(c => { if ((c.zoom && Math.random() < dt * 30) || (c.ot && c.ot.out > .1 && Math.random() < dt * 16)) dust.push({ x: c.dir > 0 ? c.x : c.x + c.L + 6, y: (c.lane ? ROAD_B - 5 : ROAD_T + 17) + c.yo, vx: -c.dir * 30 - scroll / dt * 0, vy: -6, r: 1.5, l: .5 }); });
   for (let i = csmoke.length - 1; i >= 0; i--) { const p = csmoke[i]; p.x += p.vx * dt - scroll; p.y += p.vy * dt; p.r += 9 * dt; p.a -= .4 * dt; if (p.a <= 0) csmoke.splice(i, 1); }
   cars = cars.filter(c => c.x > -c.L - 300 && c.x < W + 320);
   if (cars.length < (jamT > 0 ? 10 : 5) && Math.random() < dt * (jamT > 0 ? 2.5 : 1)) spawnCar();
 }
 function spawnNpc(x) {
-  const esc = Math.random() < .16, k = esc ? ESC_KEYS[Math.random() * ESC_KEYS.length | 0] : NPC_KEYS[Math.random() * NPC_KEYS.length | 0];
-  const dir = Math.random() < .5 ? -1 : 1;
-  npcs.push({ k, esc, x: x !== undefined ? x : (dir > 0 && esc ? -90 : W + 60), y: PAVE_T + 16 + Math.random() * 22, dir, v: esc ? 70 + Math.random() * 50 : 16 + Math.random() * 14,
+  if (!NPC_KEYS.length) return;
+  const chair = CHAIR_KEYS.length && Math.random() < .01, esc = !chair && Math.random() < .16;   // wheelchair users: 1 in 100 people
+  let k; if (chair) k = CHAIR_KEYS[Math.random() * CHAIR_KEYS.length | 0]; else if (esc) k = ESC_KEYS[Math.random() * ESC_KEYS.length | 0];
+  else { let r = Math.random() * NPC_W; k = NPC_KEYS.find(q => (r -= NPC_META[q].wt || 1) <= 0) || NPC_KEYS[0]; }
+  npcGet(k); const dir = Math.random() < .5 ? -1 : 1;
+  npcs.push({ k, esc: esc || chair, chair, x: x !== undefined ? x : (dir > 0 && esc ? -90 : W + 60), y: PAVE_T + 16 + Math.random() * 22, dir, v: esc ? 70 + Math.random() * 50 : chair ? 14 + Math.random() * 8 : 16 + Math.random() * 14,
     ph: Math.random() * 4, react: 0, hop: 0, hopH: 9, look: 0, blink: 1 + Math.random() * 4, mood: '', moodT: 0, fall: 0, fallDir: 1, idle: 2 + Math.random() * 6, done: 0 });
 }
 
@@ -1112,7 +1134,8 @@ function draw() {
   obs.forEach(o => { if (o.type === 'zap') drawZap(o); else if (o.type === 'laser') drawLaser(o); else drawRocket(o); });
   gifts.forEach(drawGift);
   // people + hero, sorted by depth (feet y)
-  const list = npcs.map(p => ({ y: p.y, f: () => drawNpc(p) })); mobs.forEach(m => list.push({ y: m.y, f: () => { const sp = carSprite('mobility', m.ci, m.d < 0), K = 1.75; ctx.fillStyle = 'rgba(0,0,0,.22)'; ctx.beginPath(); ctx.ellipse(m.x + sp.w * K / 2, m.y, sp.w * K * .38, 3, 0, 0, 7); ctx.fill(); ctx.save(); ctx.translate(m.x, m.y); ctx.scale(K, K); ctx.drawImage(sp.c, 0, -sp.gy, sp.w, sp.h); if (sp.wh.length) drawWheels(sp, 0, -sp.gy, m.roll * m.d / K); ctx.restore(); } })); list.push({ y: hero.dead ? FLOOR + 6 : (hero.ground ? FLOOR : FLOOR + 1), f: drawHero });
+  const list = npcs.map(p => ({ y: p.y, f: () => drawNpc(p) })); mobs.forEach(m => list.push({ y: m.y, f: () => { const M = NPC_META.mobility, im = npcGet('mobility'); if (!M || !im.naturalWidth) return; const sc = .9 / M.k, w = M.w * sc, h = M.h * sc, f = Math.floor(m.roll / 9) % M.n;
+    ctx.save(); ctx.translate(m.x, m.y); if (m.d < 0) ctx.scale(-1, 1); ctx.drawImage(im, f * M.w, 0, M.w, M.h, -w / 2, -h, w, h); ctx.restore(); } })); list.push({ y: hero.dead ? FLOOR + 6 : (hero.ground ? FLOOR : FLOOR + 1), f: drawHero });
   list.sort((a, b) => a.y - b.y).forEach(o => o.f());
   dust.forEach(p => { ctx.globalAlpha = Math.max(0, p.l * 1.6) * .6; ctx.fillStyle = '#d8ccc6'; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 7); ctx.fill(); }); ctx.globalAlpha = 1;
   rings.forEach(r => { ctx.strokeStyle = `rgba(255,255,255,${.8 * (1 - r.t / .6)})`; ctx.lineWidth = 3 * (1 - r.t / .6) + .5; ctx.beginPath(); ctx.arc(r.x, r.y, 10 + r.t * 220, 0, 7); ctx.stroke(); });
@@ -1159,23 +1182,24 @@ function drawHero() {
 }
 const tintCv = document.createElement('canvas');
 function drawNpc(p) {
-  const im = npcImg[p.k], M = NPC_META[p.k]; if (!im.complete || !im.naturalWidth) return;
+  const im = npcGet(p.k), M = NPC_META[p.k]; if (!M || !im.complete || !im.naturalWidth) return;
   const sc = .9 / (M.k || 1), w = M.w * sc, h = M.h * sc;
   let facing = p.dir; if (p.flee > 0) facing = p.dir;
   if ((p.react > 0 || p.moodT > 0) && !p.esc) facing = p.look;
+  if (p.fall > 0 && M.v3) facing = -p.fallDir;   // lying frame has the head behind: head goes the way they fell
   else if (p.idle < 0 && !p.esc) facing = (p.idle < -.8 ? -p.dir : p.dir);      // looks back over the shoulder
   let f;
   if (p.esc) f = p.react > 0 ? 3 : p.moodT > 0 ? 4 : Math.floor(p.ph) % 3;
-  else if (p.fall > 0) f = (p.fall0 || 1.9) - p.fall < .2 ? 8 : 10;
+  else if (p.fall > 0) f = M.v3 ? ((p.fall0 || 1.9) - p.fall < .22 ? 15 : 16) : (p.fall0 || 1.9) - p.fall < .2 ? 8 : 10;
   else if (p.flee > 0) f = M.n > 11 ? 11 + Math.floor(p.ph) % 4 : 8;      // panic run: legs going, arms up
   else if (p.react > 0) f = 8;
   else if (p.moodT > 0) f = 9;
   else { const still = p.idle < 0; f = (still ? 0 : Math.floor(p.ph) % 4) + (p.blink < 0 ? 4 : 0); }
   const walking = !p.esc && (p.flee > 0 || !(p.react > 0 || p.moodT > 0 || p.idle < 0 || p.fall > 0));
   const bob = p.esc ? (Math.floor(p.ph * .5) % 2) * .6 : walking ? (Math.floor(p.ph) % 2) * 1.2 : 0, hop = Math.sin(p.hop * Math.PI) * p.hopH;
-  ctx.fillStyle = 'rgba(30,10,30,.25)'; ctx.beginPath(); ctx.ellipse(p.x, p.y, w * (p.fall > 0 ? .6 : .36), 2, 0, 0, 7); ctx.fill();
+  if (!M.v3) { ctx.fillStyle = 'rgba(30,10,30,.25)'; ctx.beginPath(); ctx.ellipse(p.x, p.y, w * (p.fall > 0 ? .6 : .36), 2, 0, 0, 7); ctx.fill(); }
   ctx.save(); ctx.translate(p.x, p.y - bob - hop);
-  if (p.fall > 0) {   // knocked flat like Jetpack Joyride's scientists: snap back, slam down, small bounce, then lie there
+  if (p.fall > 0 && !M.v3) {   // knocked flat like Jetpack Joyride's scientists: snap back, slam down, small bounce, then lie there
     const T = (p.fall0 || 1.9) - p.fall; let a, lift = 0;
     if (T < .06) { a = -.35 * (T / .06); lift = 5 * (T / .06); }
     else if (T < .2) { const k = (T - .06) / .14; a = -.35 + (Math.PI / 2 + .35) * k * k; lift = 5 * (1 - k); }
@@ -1185,8 +1209,8 @@ function drawNpc(p) {
   }
   if (facing < 0) ctx.scale(-1, 1); ctx.imageSmoothingEnabled = true;
   ctx.drawImage(im, f * M.w, 0, M.w, M.h, -w / 2, -h, w, h); ctx.restore(); ctx.imageSmoothingEnabled = true;
-  if (p.fall > 0 && p.fall < 1.6) {   // little stars circling
-    const cx = p.x + p.fallDir * h * .62, cy = p.y - 14;
+  if (p.fall > 0 && (M.v3 ? (p.fall0 || 1.9) - p.fall > .3 : p.fall < 1.6)) {   // little stars circling the head
+    const cx = M.v3 ? p.x + p.fallDir * 26 : p.x + p.fallDir * h * .62, cy = M.v3 ? p.y - 13 : p.y - 14;
     for (let i = 0; i < 3; i++) { const a = t * 6 + i * 2.1; ctx.fillStyle = i % 2 ? '#ffe36a' : '#ffffff'; drawStar(cx + Math.cos(a) * 10, cy + Math.sin(a) * 3.5, 2.6); }
   }
   // (no speech bubbles: the faces and bodies do the reacting)
@@ -1450,5 +1474,5 @@ resize(); seedStars(); reset(); refreshHome(); if (myMosque) setTimeout(refreshH
 let last = performance.now();
 function frame(now) { const dt = Math.min(.05, (now - last) / 1000); last = now; update(dt); draw(); if (bakeQ.length) bakeOne(); requestAnimationFrame(frame); }
 requestAnimationFrame(frame);
-window.__jd = { veh: k => startVehicle(k), laser: () => [CEIL + 40, (CEIL + FLOOR) / 2].forEach((y, i) => obs.push({ type: 'laser', x: W / 2, y, ph: 'in', pt: 0, slide: 0, d: i * .12 })), eidi: n => { eidi = n; }, kill: w => die(w), gift: k => gifts.push({ k, x: W * .6, y: 200, b: 0 }), get state() { return state; }, start, hero, get obs() { return obs; }, spawnRocket: () => obs.push({ type: "rocket", x: W + 40, y: hero.y - 30, warn: 1.5, lock: 0, v: 0 }), setHold: v => holding = v, get dist() { return dist; }, mis: (s, c) => { RUN.steamed = s; coins = c; }, get npcs() { return npcs; }, boost: m => startBoost(m), get SHOP() { return SHOP; }, bc: (k, kd) => buildingCanvas(kd || "lm", k), carSprite: (k, ci, f) => carSprite(k, ci, f), queue: k => deck.unshift([k]), street: () => street, npc: x => spawnNpc(x), car: x => spawnCar(x), get STREET() { return STREET; } };
+window.__jd = { veh: k => startVehicle(k), laser: () => [CEIL + 40, (CEIL + FLOOR) / 2].forEach((y, i) => obs.push({ type: 'laser', x: W / 2, y, ph: 'in', pt: 0, slide: 0, d: i * .12 })), eidi: n => { eidi = n; }, kill: w => die(w), gift: k => gifts.push({ k, x: W * .6, y: 200, b: 0 }), get state() { return state; }, start, hero, get obs() { return obs; }, spawnRocket: () => obs.push({ type: "rocket", x: W + 40, y: hero.y - 30, warn: 1.5, lock: 0, v: 0 }), setHold: v => holding = v, get dist() { return dist; }, mis: (s, c) => { RUN.steamed = s; coins = c; }, get npcs() { return npcs; }, boost: m => startBoost(m), get SHOP() { return SHOP; }, bc: (k, kd) => buildingCanvas(kd || "lm", k), carSprite: (k, ci, f) => carSprite(k, ci, f), queue: k => deck.unshift([k]), street: () => street, npc: x => spawnNpc(x), car: (x, k, l) => spawnCar(x, k, false, l), get STREET() { return STREET; } };
 })();
