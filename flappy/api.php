@@ -3,6 +3,7 @@
    Data lives in the shared private SQLite (demo-lib/bootstrap.php). Owner reads it in SMR Admin → Flappy. */
 define('SMR_DEMO', 1);
 require dirname(__DIR__) . '/demo-lib/bootstrap.php';
+require dirname(__DIR__) . '/demo-lib/gamestats.php';
 security_headers(false);
 date_default_timezone_set('Europe/London');
 
@@ -19,6 +20,7 @@ function fk_db(): PDO {
         $pdo->exec('CREATE INDEX IF NOT EXISTS fk_events_day ON fk_events(day, ev)');
         $pdo->exec("CREATE TABLE IF NOT EXISTS fk_runs (id TEXT PRIMARY KEY, at INTEGER NOT NULL, ip TEXT DEFAULT '', used INTEGER DEFAULT 0)");
         $pdo->exec("CREATE TABLE IF NOT EXISTS fk_players (pid TEXT PRIMARY KEY, name TEXT, phone TEXT DEFAULT '', at INTEGER NOT NULL)");
+        gs_init($pdo, 'fk');   // owner devices + the fk_ev view (events without them)
         $pdo->exec("CREATE TABLE IF NOT EXISTS fk_flags (id INTEGER PRIMARY KEY, name TEXT, score INTEGER, need INTEGER, took INTEGER, pid TEXT DEFAULT '', ip TEXT DEFAULT '', at INTEGER NOT NULL, done INTEGER DEFAULT 0)");
         // one-off leaderboard entries added by the owner (applied once, then never again)
         foreach ([['seed-summar-68', 'SUMMAR', 68], ['seed-kashai-1000', 'Kashai', 1000]] as [$key, $name, $score]) {
@@ -143,19 +145,19 @@ const FK_EVENTS = ['ban', 'visit', 'play', 'over', 'share', 'card', 'card_save',
 function fk_stats(int $days): array {
     $p = fk_db(); $from = $days > 0 ? date('Y-m-d', strtotime('-' . ($days - 1) . ' days')) : '0000-00-00';
     $q = function (string $sql, array $a = []) use ($p) { $st = $p->prepare($sql); $st->execute($a); return $st; };
-    $tot = []; foreach ($q('SELECT ev, COUNT(*) n, COUNT(DISTINCT vid) u FROM fk_events WHERE day >= ? GROUP BY ev', [$from])->fetchAll() as $r) $tot[$r['ev']] = ['n' => (int) $r['n'], 'u' => (int) $r['u']];
-    $visitors = (int) $q("SELECT COUNT(DISTINCT vid) FROM fk_events WHERE day >= ?", [$from])->fetchColumn();
-    $sc = $q("SELECT COUNT(*) n, AVG(val) a, MAX(val) m FROM fk_events WHERE ev = 'over' AND day >= ?", [$from])->fetch();
-    $src = $q("SELECT src, COUNT(DISTINCT vid) u, COUNT(*) n FROM fk_events WHERE ev = 'visit' AND day >= ? GROUP BY src ORDER BY u DESC", [$from])->fetchAll();
-    $dev = $q("SELECT dev, COUNT(DISTINCT vid) u FROM fk_events WHERE ev = 'visit' AND day >= ? GROUP BY dev ORDER BY u DESC", [$from])->fetchAll();
-    $appv = (int) $q("SELECT COUNT(DISTINCT vid) FROM fk_events WHERE ev = 'visit' AND app = 1 AND day >= ?", [$from])->fetchColumn();
-    $opens = (int) $q("SELECT COUNT(*) FROM fk_events WHERE ev = 'visit' AND day >= ?", [$from])->fetchColumn();
-    $uniq = (int) $q("SELECT COUNT(DISTINCT vid) FROM fk_events WHERE ev = 'visit' AND day >= ?", [$from])->fetchColumn();
+    $tot = []; foreach ($q('SELECT ev, COUNT(*) n, COUNT(DISTINCT vid) u FROM fk_ev WHERE day >= ? GROUP BY ev', [$from])->fetchAll() as $r) $tot[$r['ev']] = ['n' => (int) $r['n'], 'u' => (int) $r['u']];
+    $visitors = (int) $q("SELECT COUNT(DISTINCT vid) FROM fk_ev WHERE day >= ?", [$from])->fetchColumn();
+    $sc = $q("SELECT COUNT(*) n, AVG(val) a, MAX(val) m FROM fk_ev WHERE ev = 'over' AND day >= ?", [$from])->fetch();
+    $src = $q("SELECT src, COUNT(DISTINCT vid) u, COUNT(*) n FROM fk_ev WHERE ev = 'visit' AND day >= ? GROUP BY src ORDER BY u DESC", [$from])->fetchAll();
+    $dev = $q("SELECT dev, COUNT(DISTINCT vid) u FROM fk_ev WHERE ev = 'visit' AND day >= ? GROUP BY dev ORDER BY u DESC", [$from])->fetchAll();
+    $appv = (int) $q("SELECT COUNT(DISTINCT vid) FROM fk_ev WHERE ev = 'visit' AND app = 1 AND day >= ?", [$from])->fetchColumn();
+    $opens = (int) $q("SELECT COUNT(*) FROM fk_ev WHERE ev = 'visit' AND day >= ?", [$from])->fetchColumn();
+    $uniq = (int) $q("SELECT COUNT(DISTINCT vid) FROM fk_ev WHERE ev = 'visit' AND day >= ?", [$from])->fetchColumn();
     // new = first ever visit falls inside the range; returning = has opened it on 2+ different days (ever) and came in this range
-    $new = (int) $q("SELECT COUNT(*) FROM (SELECT vid, MIN(day) f FROM fk_events WHERE ev = 'visit' GROUP BY vid) WHERE f >= ? AND vid IN (SELECT vid FROM fk_events WHERE ev = 'visit' AND day >= ?)", [$from, $from])->fetchColumn();
-    $back = (int) $q("SELECT COUNT(*) FROM (SELECT vid FROM fk_events WHERE ev = 'visit' GROUP BY vid HAVING COUNT(DISTINCT day) > 1) WHERE vid IN (SELECT vid FROM fk_events WHERE ev = 'visit' AND day >= ?)", [$from])->fetchColumn();
-    $places = $q("SELECT extra place, COUNT(*) n FROM fk_events WHERE ev = 'over' AND extra != '' AND day >= ? GROUP BY extra ORDER BY n DESC LIMIT 10", [$from])->fetchAll();
-    $daily = $q("SELECT day, COUNT(DISTINCT vid) v, SUM(ev = 'play') g FROM fk_events WHERE day >= ? GROUP BY day ORDER BY day", [date('Y-m-d', strtotime('-29 days'))])->fetchAll();
+    $new = (int) $q("SELECT COUNT(*) FROM (SELECT vid, MIN(day) f FROM fk_ev WHERE ev = 'visit' GROUP BY vid) WHERE f >= ? AND vid IN (SELECT vid FROM fk_ev WHERE ev = 'visit' AND day >= ?)", [$from, $from])->fetchColumn();
+    $back = (int) $q("SELECT COUNT(*) FROM (SELECT vid FROM fk_ev WHERE ev = 'visit' GROUP BY vid HAVING COUNT(DISTINCT day) > 1) WHERE vid IN (SELECT vid FROM fk_ev WHERE ev = 'visit' AND day >= ?)", [$from])->fetchColumn();
+    $places = $q("SELECT extra place, COUNT(*) n FROM fk_ev WHERE ev = 'over' AND extra != '' AND day >= ? GROUP BY extra ORDER BY n DESC LIMIT 10", [$from])->fetchAll();
+    $daily = $q("SELECT day, COUNT(DISTINCT vid) v, SUM(ev = 'play') g FROM fk_ev WHERE day >= ? GROUP BY day ORDER BY day", [date('Y-m-d', strtotime('-29 days'))])->fetchAll();
     return ['days' => $days, 'visitors' => $visitors, 'opens' => $opens, 'unique' => $uniq, 'new' => $new, 'returning' => $back, 'app_users' => $appv, 'events' => $tot, 'games' => (int) $sc['n'], 'avg' => round((float) $sc['a'], 1), 'best' => (int) $sc['m'], 'sources' => $src, 'devices' => $dev, 'places' => $places, 'daily' => $daily];
 }
 
@@ -176,6 +178,7 @@ try {
         $vid = preg_replace('/[^a-z0-9]/i', '', substr((string) ($in['vid'] ?? ''), 0, 20));
         $src = preg_replace('/[^a-z0-9_-]/i', '', substr((string) ($in['src'] ?? ''), 0, 24));
         $dev = preg_replace('/[^a-z]/i', '', substr((string) ($in['dev'] ?? ''), 0, 12));
+        if ($vid !== '' && admin_token()) gs_mark_owner(fk_db(), 'fk', $vid, 'admin-cookie');   // played on a phone logged in to SMR Admin = the owner's
         fk_db()->prepare('INSERT INTO fk_events (day, at, vid, ev, src, dev, app, val, extra) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)')
             ->execute([fk_today(), now(), $vid, $ev, $src, $dev, empty($in['app']) ? 0 : 1, max(0, min(9999, (int) ($in['val'] ?? 0))), fk_clean((string) ($in['extra'] ?? ''), 60)]);
         if (random_int(1, 200) === 1) fk_db()->prepare('DELETE FROM fk_events WHERE at < ?')->execute([now() - 400 * 86400]);
@@ -238,7 +241,7 @@ try {
     }
 
     /* ---- owner only ---- */
-    if (in_array($a, ['admin', 'rec_done', 'rec_del', 'score_del', 'score_add', 'banner_up', 'flag_ok', 'flag_del', 'stats', 'since', 'settings_save'], true)) {
+    if (in_array($a, ['admin', 'rec_done', 'rec_del', 'score_del', 'score_add', 'banner_up', 'flag_ok', 'flag_del', 'stats', 'since', 'settings_save', 'devices', 'owner'], true)) {
         if (!admin_token()) json_out(['error' => 'Log in to SMR Admin first.'], 401);
         $p = fk_db();
         if ($a === 'admin') {
@@ -249,12 +252,11 @@ try {
             $plays = (int) $p->query('SELECT COUNT(*) FROM fk_scores')->fetchColumn();
             $fl = $p->query('SELECT id, name, score, need, took, at FROM fk_flags WHERE done = 0 ORDER BY at DESC LIMIT 50')->fetchAll(PDO::FETCH_ASSOC);
             // best games actually played (from the game-over events), whether or not a name was saved
-            $runs = $p->query("SELECT e.at, e.day, e.dev, e.src, e.val AS score, e.extra AS place, e.app, (SELECT COUNT(*) FROM fk_scores s WHERE s.score = e.val) AS saved FROM fk_events e WHERE e.ev = 'over' AND e.val > 0 ORDER BY e.val DESC, e.at DESC LIMIT 20")->fetchAll(PDO::FETCH_ASSOC);
+            $runs = $p->query("SELECT e.at, e.day, e.dev, e.src, e.val AS score, e.extra AS place, e.app, (SELECT COUNT(*) FROM fk_scores s WHERE s.score = e.val) AS saved FROM fk_ev e WHERE e.ev = 'over' AND e.val > 0 ORDER BY e.val DESC, e.at DESC LIMIT 20")->fetchAll(PDO::FETCH_ASSOC);
             json_out(['fests' => fk_fests(5), 'recs' => $recs, 'today' => $t->fetchAll(), 'all' => $all, 'new' => $n, 'entries' => $plays, 'flags' => $fl, 'runs' => $runs]);
         }
-        if ($a === 'since') { $t = max(0, (int) ($_GET['t'] ?? 0)); $q = function (string $ev) use ($p, $t) { $st = $p->prepare('SELECT COUNT(*) FROM fk_events WHERE ev = ? AND at > ?'); $st->execute([$ev, $t]); return (int) $st->fetchColumn(); };
-            $pl = $p->prepare("SELECT COUNT(DISTINCT vid) FROM fk_events WHERE ev = 'play' AND at > ?"); $pl->execute([$t]); $bs = $p->prepare('SELECT MAX(val) FROM fk_events WHERE ev = ? AND at > ?'); $bs->execute(['over', $t]);
-            json_out(['games' => $q('play'), 'people' => (int) $pl->fetchColumn(), 'best' => (int) $bs->fetchColumn(), 'now' => time()]); }
+        if ($a === 'since') json_out(gs_since($p, 'fk', max(0, (int) ($_GET['t'] ?? 0)), 'fk_recs'));
+        if ($a === 'devices') json_out(['devices' => gs_devices($p, 'fk')]);
         if ($a === 'stats') json_out(fk_stats(max(0, min(400, (int) ($_GET['days'] ?? 7)))) + ['settings' => fk_settings(), 'season' => fk_season_info()]);
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') json_out(['error' => 'POST only'], 405);
         if ($a === 'banner_up') {
@@ -281,6 +283,7 @@ try {
             $p->prepare('INSERT INTO fk_meta (k, v) VALUES (?, ?) ON CONFLICT(k) DO UPDATE SET v = excluded.v')->execute(['settings', json_encode($new)]);
             json_out(['ok' => true, 'settings' => $new]);
         }
+        if ($a === 'owner') { gs_set_owner($p, 'fk', (string) ($in['vid'] ?? ''), !empty($in['on'])); json_out(['ok' => true, 'devices' => gs_devices($p, 'fk')]); }
         $id = (int) ($in['id'] ?? 0);
         if ($a === 'score_add') { $nm = fk_clean((string) ($in['name'] ?? ''), 14); $sc = (int) ($in['score'] ?? 0); $dy = preg_match('/^\d{4}-\d{2}-\d{2}$/', (string) ($in['day'] ?? '')) ? $in['day'] : fk_today();
             if ($nm === '' || $sc < 1 || $sc > 9999) json_out(['error' => 'Add a name and a score from 1 to 9999.'], 400);

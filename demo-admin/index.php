@@ -38,6 +38,10 @@ button{cursor:pointer;background:none;border:0}
 .logo svg{height:15px;width:auto}
 .logo span{font-family:Poppins,sans-serif;font-weight:300;font-size:16px;line-height:1.25;padding-bottom:.15em;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
 .logo b{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-left:6px;font-weight:700}
+.glist{display:grid;gap:10px}.gcard{display:flex;align-items:center;gap:14px;padding:14px;border-radius:18px;background:rgba(255,255,255,.04);border:1px solid var(--line);color:inherit;text-decoration:none;transition:transform .15s,background .2s}.gcard:active{transform:scale(.98)}.gcard:hover{background:rgba(255,255,255,.07)}
+.gcard img{width:58px;height:58px;border-radius:14px;flex:none;box-shadow:0 4px 14px rgba(0,0,0,.35)}.gcard div{flex:1;min-width:0}.gcard b{display:block;font-size:17px}.gcard .gl{display:block;color:var(--muted);font-size:13px;margin-top:3px}.gcard .gl.new{color:#ff9bc4;font-weight:700}
+.gcard .gb{font-style:normal;background:#ff3b7f;color:#fff;border-radius:99px;font-size:12px;font-weight:800;padding:2px 8px}.gcard .gb:empty{display:none}.gcard .gch{width:20px;height:20px;color:var(--muted);flex:none}
+.bar.gbar{display:flex;align-items:center;justify-content:flex-start;gap:10px;flex-wrap:nowrap}.gbar img{width:34px;height:34px;border-radius:9px}.gbar h1{margin:0;font-size:20px}.gback{display:inline-flex;align-items:center;gap:2px;color:var(--muted);text-decoration:none;font-weight:700;font-size:14px;padding:6px 8px 6px 2px;margin-right:4px}.gback svg{width:20px;height:20px}
 .tabs{display:flex;gap:4px;padding:4px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid var(--line)}
 .tabs button{padding:8px 14px;border-radius:10px;font-weight:700;font-size:13.5px;color:var(--muted)}
 .tabs button.on{background:var(--grad);color:#fff}
@@ -312,7 +316,7 @@ document.addEventListener('keydown',function(e){if(/^\d$/.test(e.key))press(e.ke
     <button class="btn sm icon" id="acct" aria-label="Settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></button>
     <nav class="tabs" role="tablist">
       <button data-grp="mail" role="tab">Email<span class="cnt" id="mailcnt"></span></button>
-      <button data-grp="flappy" role="tab">Flappy<span class="cnt" id="fkcnt"></span></button>
+      <button data-grp="games" role="tab">Games<span class="cnt" id="fkcnt"></span></button>
       <button data-grp="music" role="tab">Music</button>
       <button data-grp="stats" role="tab">Analytics</button>
       <button data-grp="demos" role="tab">Demos</button>
@@ -389,10 +393,21 @@ document.addEventListener('keydown',function(e){if(/^\d$/.test(e.key))press(e.ke
     <div class="list" id="dlist"><p class="empty">Loading…</p></div>
   </section>
 
-  <!-- FLAPPY KABOOTAR: place recommendations + leaderboard (flappy/admin.php) -->
+  <!-- GAMES: one card per game; each opens that game's own page (stats, inbox, settings) in an iframe -->
+  <section id="tab-games" class="tab hidden">
+    <div class="bar"><div><h1>Games</h1><p class="sub">Stats, places people recommend and settings for each game. Your own phones are never counted.</p></div></div>
+    <div class="glist">
+      <a class="gcard" href="#flappy"><img src="/flappy/icon-180.png" alt=""><div><b>Flappy Kabootar</b><span class="gl" id="gfk">Stats · Inbox · Leaderboard · Settings</span></div><i class="gb" id="gfkb"></i><svg class="gch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></a>
+      <a class="gcard" href="#jummah"><img src="/jummahdash/demo/art/icon-180.png" alt=""><div><b>Jummah Dash</b><span class="gl" id="gjd">Stats · Inbox · Settings</span></div><i class="gb" id="gjdb"></i><svg class="gch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></a>
+    </div>
+  </section>
   <section id="tab-flappy" class="tab hidden">
-    <div class="bar"><div><h1>Flappy Kabootar</h1><p class="sub">Places people want in the game, and the leaderboard.</p></div></div>
-    <iframe id="fkframe" title="Flappy Kabootar inbox" style="width:100%;height:calc(100vh - 210px);min-height:480px;border:0;background:transparent" loading="lazy"></iframe>
+    <div class="bar gbar"><a class="gback" href="#games"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>Games</a><img src="/flappy/icon-180.png" alt=""><h1>Flappy Kabootar</h1></div>
+    <iframe id="fkframe" title="Flappy Kabootar" style="width:100%;height:calc(100vh - 190px);min-height:480px;border:0;background:transparent" loading="lazy"></iframe>
+  </section>
+  <section id="tab-jummah" class="tab hidden">
+    <div class="bar gbar"><a class="gback" href="#games"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>Games</a><img src="/jummahdash/demo/art/icon-180.png" alt=""><h1>Jummah Dash</h1></div>
+    <iframe id="jdframe" title="Jummah Dash" style="width:100%;height:calc(100vh - 190px);min-height:480px;border:0;background:transparent" loading="lazy"></iframe>
   </section>
 
   <!-- MUSIC: SMR Player tracks (upload, edit, private/public) = /music/?manage=1 -->
@@ -524,15 +539,20 @@ var ICON={dots:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="
 
 /* ---------- tabs (hash) ---------- */
 var lastDemoTab='demos';
-var showTab=function(t){if(['demos','send','live','designs','flappy','mail','music','stats'].indexOf(t)<0)t='demos';if(t==='stats'){var sf=document.getElementById('stframe');if(sf&&!sf.src)sf.src='/music/stats.php'}if(t==='music'){var mf=document.getElementById('muframe');if(mf&&!mf.src)mf.src='/music/?manage=1'}if(t==='flappy'){var ff=document.getElementById('fkframe');if(ff&&!ff.src)ff.src='/flappy/admin.php'}
-  var grp=(t==='mail'||t==='flappy'||t==='music'||t==='stats')?t:'demos';if(grp==='demos')lastDemoTab=t;
+var showTab=function(t){if(['demos','send','live','designs','games','flappy','jummah','mail','music','stats'].indexOf(t)<0)t='demos';if(t==='games')gamesCards();if(t==='jummah'){var jf=document.getElementById('jdframe');if(jf&&!jf.src)jf.src='/jummahdash/admin.php'}if(t==='stats'){var sf=document.getElementById('stframe');if(sf&&!sf.src)sf.src='/music/stats.php'}if(t==='music'){var mf=document.getElementById('muframe');if(mf&&!mf.src)mf.src='/music/?manage=1'}if(t==='flappy'){var ff=document.getElementById('fkframe');if(ff&&!ff.src)ff.src='/flappy/admin.php'}
+  var grp=(t==='mail'||t==='music'||t==='stats')?t:(t==='games'||t==='flappy'||t==='jummah')?'games':'demos';if(grp==='demos')lastDemoTab=t;
   document.querySelectorAll('[data-tab]').forEach(function(b){b.classList.toggle('on',b.dataset.tab===t)});document.querySelectorAll('[data-grp]').forEach(function(b){b.classList.toggle('on',b.dataset.grp===grp)});document.getElementById('subtabs').classList.toggle('hidden',grp!=='demos');
   document.querySelectorAll('.tab').forEach(function(s){s.classList.toggle('hidden',s.id!=='tab-'+t)});window.scrollTo(0,0);if(t==='live'&&typeof load==='function'&&D.length)load();if(t!=='send'&&$('created').dataset.used&&typeof resetSend==='function')resetSend();if(t==='mail'&&typeof mailOpen==='function')mailOpen();if(t==='designs'&&typeof dLoad==='function')dLoad()};
 document.querySelectorAll('[data-tab]').forEach(function(b){b.addEventListener('click',function(){if(location.hash!=='#'+b.dataset.tab)history.replaceState(null,'','#'+b.dataset.tab);showTab(b.dataset.tab)})});
 document.querySelectorAll('[data-grp]').forEach(function(b){b.addEventListener('click',function(){var t=b.dataset.grp==='demos'?lastDemoTab:b.dataset.grp;if(location.hash!=='#'+t)history.replaceState(null,'','#'+t);showTab(t)})});
 window.addEventListener('hashchange',function(){showTab(location.hash.slice(1))});
-window.addEventListener('message',function(e){if(e.origin===location.origin&&e.data&&typeof e.data.fkNew==='number'){var c=document.getElementById('fkcnt');if(c)c.textContent=e.data.fkNew?e.data.fkNew:''}});
-fetch('/flappy/api.php?a=admin',{credentials:'same-origin'}).then(function(r){return r.json()}).then(function(j){var c=document.getElementById('fkcnt');if(c&&j&&j.new)c.textContent=j.new}).catch(function(){});
+// Games tab badge = new place recommendations in both games; each card also shows what's new since you last opened that game's page
+var GN={fk:0,jd:0};function gBadge(){var c=document.getElementById('fkcnt'),t=GN.fk+GN.jd;if(c)c.textContent=t?t:'';var a=document.getElementById('gfkb'),b=document.getElementById('gjdb');if(a)a.textContent=GN.fk?GN.fk+' new place'+(GN.fk>1?'s':''):'';if(b)b.textContent=GN.jd?GN.jd+' new place'+(GN.jd>1?'s':''):''}
+window.addEventListener('message',function(e){if(e.origin!==location.origin||!e.data)return;if(typeof e.data.fkNew==='number'){GN.fk=e.data.fkNew;gBadge()}if(typeof e.data.jdNew==='number'){GN.jd=e.data.jdNew;gBadge()}});
+fetch('/flappy/api.php?a=admin',{credentials:'same-origin'}).then(function(r){return r.json()}).then(function(j){if(j&&typeof j.new==='number'){GN.fk=j.new;gBadge()}}).catch(function(){});
+fetch('/jummahdash/api.php?a=admin',{credentials:'same-origin'}).then(function(r){return r.json()}).then(function(j){if(j&&typeof j.new==='number'){GN.jd=j.new;gBadge()}}).catch(function(){});
+function gamesCards(){[['fk','/flappy/api.php','fk_adm_seen','gfk','Stats · Inbox · Leaderboard · Settings'],['jd','/jummahdash/api.php','jd_adm_seen','gjd','Stats · Inbox · Settings']].forEach(function(g){var seen=0;try{seen=+localStorage.getItem(g[2])||0}catch(e){}var el=document.getElementById(g[3]);if(!el||!seen)return;
+  fetch(g[1]+'?a=since&t='+seen,{credentials:'same-origin'}).then(function(r){return r.json()}).then(function(j){if(!j||j.error)return;if(j.games){el.textContent=j.games+' new game'+(j.games>1?'s':'')+(j.new_players?' · '+j.new_players+' new player'+(j.new_players>1?'s':''):'')+' since you last checked';el.className='gl new'}else{el.textContent='Nothing new since you last checked';el.className='gl'}}).catch(function(){})})}
 showTab(location.hash.slice(1));
 
 /* ---------- sheet ---------- */
