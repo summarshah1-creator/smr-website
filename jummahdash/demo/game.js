@@ -15,9 +15,9 @@ const ROAD_T = 309, ROAD_B = 352;     // road
 const PAVE_T = 358;                   // front pavement top
 const FLOOR = 390;                    // hero feet when running
 const CEIL = 3;                       // invisible ceiling: his head can go right up to the top of the screen (like Barry)
-const HW = 48, HH0 = 58, HS = .92, HH = HH0 * HS;   // hero sprite cell + its on-screen scale (owner 22 Nov: whole hero ≈ the height of Barry's jetpack in Jetpack Joyride, ~12% of the screen)
+const HW = 48, HH0 = 58, HS = 1.06, HH = HH0 * HS;   // hero sprite cell + its on-screen scale (owner 22 Nov: whole hero ≈ the height of Barry's jetpack in Jetpack Joyride, ~12% of the screen)
 const HSR = 1.5, HHR = HH0 * HSR;   // size he's drawn at inside the rides (tuk-tuk, carpet, pigeon, Corolla roof), which kept their size
-const NPCK = .51;   // owner 22 Nov: walkers ≈ JJ's scientists, ~9.5% of the screen
+const NPCK = .6375;   // owner 22 Nov: walkers ≈ JJ's scientists, ~9.5% of the screen
 const BS = .8;                        // buildings drawn a bit smaller so there's more sky to fly in
 let S = 1, W = 600, dpr = 1, KR = 2;  // units->px, screen width in units, render scale for buildings
 
@@ -1197,9 +1197,13 @@ function draw() {
   // rocket warnings on the right edge
   obs.forEach(o => { if (o.type === 'rocket' && (o.warn > 0 || o.lock > 0)) { const x = W - 20;   // small red ! that follows him, then a big flashing starburst just before it fires
     ctx.save(); ctx.translate(x + (o.lock > 0 ? (Math.random() - .5) * 2.4 : 0), o.y);
-    if (o.lock > 0) { const s2 = 1 + Math.sin(t * 30) * .08; ctx.scale(s2, s2); ctx.fillStyle = '#ffd21f'; ctx.beginPath(); for (let i = 0; i < 24; i++) { const a = i / 24 * Math.PI * 2 + t * 2, r = i % 2 ? 9 : 15; ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r); } ctx.closePath(); ctx.fill(); ctx.strokeStyle = '#ff6a1a'; ctx.lineWidth = 1.2; ctx.stroke();
+    if (o.lock > 0) { const s2 = 1.6 + Math.sin(t * 30) * .12; ctx.translate(-8, 0); ctx.scale(s2, s2); ctx.fillStyle = '#ffd21f'; ctx.beginPath(); for (let i = 0; i < 24; i++) { const a = i / 24 * Math.PI * 2 + t * 2, r = i % 2 ? 9 : 15; ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r); } ctx.closePath(); ctx.fill(); ctx.strokeStyle = '#ff6a1a'; ctx.lineWidth = 1.2; ctx.stroke();
       ctx.fillStyle = '#d8141c'; ctx.font = '900 17px Mont, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('!', 0, 1); }
-    else { const blink = Math.floor(t * 8) % 2; ctx.globalAlpha = blink ? 1 : .55; ctx.fillStyle = '#e8161e'; ctx.font = '900 16px Mont, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineWidth = 3; ctx.strokeStyle = 'rgba(255,255,255,.85)'; ctx.strokeText('!', 0, 0); ctx.fillText('!', 0, 0); }
+    else {   // owner 22 Nov: big, obvious, shaking warning
+      const sh = 2.2, pul = 1 + Math.sin(t * 22) * .1; ctx.translate(-6 + (Math.random() - .5) * sh * 2, (Math.random() - .5) * sh * 2); ctx.rotate(Math.sin(t * 40) * .12); ctx.scale(pul, pul);
+      const gl = ctx.createRadialGradient(0, 0, 4, 0, 0, 30); gl.addColorStop(0, 'rgba(255,40,40,.55)'); gl.addColorStop(1, 'rgba(255,40,40,0)'); ctx.fillStyle = gl; ctx.beginPath(); ctx.arc(0, 0, 30, 0, 7); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(0, -19); ctx.lineTo(18, 14); ctx.lineTo(-18, 14); ctx.closePath(); ctx.lineJoin = 'round'; ctx.lineWidth = 5; ctx.strokeStyle = '#ffffff'; ctx.stroke(); ctx.fillStyle = Math.floor(t * 10) % 2 ? '#e8161e' : '#ff4a2a'; ctx.fill();
+      ctx.fillStyle = '#ffffff'; ctx.font = '900 22px Mont, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('!', 0, 3); }
     ctx.restore(); } });
   pops.forEach(p => { ctx.globalAlpha = Math.min(1, (1.1 - p.t) * 3); ctx.font = '12px PS'; ctx.textAlign = 'center'; ctx.fillStyle = '#160c28'; ctx.fillText(p.txt, p.x + 1.5, p.y + 1.5); ctx.fillStyle = p.col; ctx.fillText(p.txt, p.x, p.y); }); ctx.globalAlpha = 1;
   if (banner) drawBanner();
@@ -1267,31 +1271,29 @@ function drawNpc(p) {
   // (no speech bubbles: the faces and bodies do the reacting)
 }
 function drawStar(x, y, r) { ctx.beginPath(); for (let i = 0; i < 10; i++) { const a = i / 10 * Math.PI * 2 - Math.PI / 2, rr = i % 2 ? r * .45 : r; ctx.lineTo(x + Math.cos(a) * rr, y + Math.sin(a) * rr); } ctx.closePath(); ctx.fill(); }
-function drawZap(o) {
+function drawZap(o) {   // owner 22 Nov: JJ-style electric beam: no casing or dark outline, glowing, jagged and random, crackling orbs at the ends
   const c = Math.cos(o.ang), s = Math.sin(o.ang), ax = o.x - c * o.len / 2, ay = o.y - s * o.len / 2, bx = o.x + c * o.len / 2, by = o.y + s * o.len / 2;
-  const path = (seed, amp) => { ctx.beginPath(); const n = 14; ctx.moveTo(ax, ay);
-    for (let i = 1; i < n; i++) { const k = i / n, j = Math.sin(t * 40 + i * 1.7 + o.seed + seed) * amp + Math.sin(t * 23 + i * 3.1) * amp * .4; ctx.lineTo(ax + (bx - ax) * k - s * j, ay + (by - ay) * k + c * j); }
+  const fr = Math.floor(t * 22), R = n => { const v = Math.sin(n * 127.1 + o.seed * 311.7 + fr * 74.7) * 43758.5453; return v - Math.floor(v); };
+  const bolt = (seed, amp, n) => { ctx.beginPath(); ctx.moveTo(ax, ay);
+    for (let i = 1; i < n; i++) { const k = i / n, env = Math.sin(k * Math.PI) * .7 + .3, j = (R(seed * 31 + i) - .5) * 2 * amp * env; ctx.lineTo(ax + (bx - ax) * k - s * j, ay + (by - ay) * k + c * j); }
     ctx.lineTo(bx, by); };
-  ctx.lineCap = ctx.lineJoin = 'round';
-  // dark backing so it stands out against the shops
-  const pulse = .75 + .25 * Math.sin(t * 9 + o.seed);
-  ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by); ctx.strokeStyle = 'rgba(6,2,22,.62)'; ctx.lineWidth = 20; ctx.stroke();
-  ctx.save(); ctx.globalCompositeOperation = 'lighter';
-  ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by); ctx.strokeStyle = `rgba(40,160,255,${.28 * pulse})`; ctx.lineWidth = 30; ctx.stroke();
-  ctx.strokeStyle = `rgba(60,190,255,${.4 * pulse})`; ctx.lineWidth = 16; ctx.stroke();
-  ctx.strokeStyle = `rgba(110,215,255,${.7 * pulse})`; ctx.lineWidth = 8; ctx.stroke();
-  path(0, 3.8); ctx.strokeStyle = 'rgba(170,235,255,1)'; ctx.lineWidth = 5; ctx.stroke();
-  path(2, 2.4); ctx.strokeStyle = '#e8fbff'; ctx.lineWidth = 2; ctx.stroke();
-  path(4, 1.4); ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1.2; ctx.stroke();
+  ctx.save(); ctx.lineCap = ctx.lineJoin = 'round'; ctx.globalCompositeOperation = 'lighter';
+  const pulse = .8 + .2 * R(99);
+  // soft uneven glow (a few wobbling wide strokes, not one neat tube)
+  for (let g = 0; g < 3; g++) { bolt(10 + g, 7, 7); ctx.strokeStyle = `rgba(255,${170 + g * 25},40,${(.16 * pulse).toFixed(3)})`; ctx.lineWidth = 26 - g * 7; ctx.stroke(); }
+  // crackling strands
+  bolt(1, 9, 16); ctx.strokeStyle = 'rgba(255,200,60,.85)'; ctx.lineWidth = 3.4; ctx.stroke();
+  bolt(2, 6, 18); ctx.strokeStyle = 'rgba(255,236,140,.95)'; ctx.lineWidth = 2.2; ctx.stroke();
+  bolt(3, 3.5, 20); ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1.3; ctx.stroke();
+  if (R(7) < .5) { bolt(4, 13, 12); ctx.strokeStyle = 'rgba(255,220,90,.6)'; ctx.lineWidth = 1.1; ctx.stroke(); }
+  // glowing orbs with a ragged corona, no metal caps
+  [[ax, ay, 0], [bx, by, 5]].forEach(([x, y, sd]) => {
+    const hg = ctx.createRadialGradient(x, y, 0, x, y, 22); hg.addColorStop(0, 'rgba(255,255,235,1)'); hg.addColorStop(.25, 'rgba(255,230,120,.9)'); hg.addColorStop(.6, 'rgba(255,170,40,.35)'); hg.addColorStop(1, 'rgba(255,140,20,0)');
+    ctx.fillStyle = hg; ctx.beginPath(); ctx.arc(x, y, 22, 0, 7); ctx.fill();
+    ctx.fillStyle = 'rgba(255,225,110,.8)'; ctx.beginPath(); for (let i = 0; i < 22; i++) { const a = i / 22 * Math.PI * 2, r = i % 2 ? 6 + R(sd + i) * 3 : 10 + R(sd + i + 40) * 9; ctx.lineTo(x + Math.cos(a) * r, y + Math.sin(a) * r); } ctx.closePath(); ctx.fill();
+    ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.arc(x, y, 4.2, 0, 7); ctx.fill(); });
   ctx.restore();
-  // insulator nodes (grey caps, orange bands, little lamp)
-  [[ax, ay, 1], [bx, by, -1]].forEach(([x, y, sd]) => { ctx.save(); ctx.translate(x, y);
-    ctx.save(); ctx.globalCompositeOperation = 'lighter'; const hg = ctx.createRadialGradient(0, 0, 2, 0, 0, 19); hg.addColorStop(0, 'rgba(200,245,255,.9)'); hg.addColorStop(.5, 'rgba(70,190,255,.35)'); hg.addColorStop(1, 'rgba(40,140,255,0)'); ctx.fillStyle = hg; ctx.beginPath(); ctx.arc(0, 0, 19, 0, 7); ctx.fill();
-    ctx.rotate(t * 3 * sd + o.seed); ctx.fillStyle = 'rgba(160,230,255,.85)'; ctx.beginPath(); for (let i = 0; i < 20; i++) { const a = i / 20 * Math.PI * 2, r = i % 2 ? 8 : 13 + Math.sin(t * 20 + i) * 1.6; ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r); } ctx.closePath(); ctx.fill(); ctx.restore();
-    ctx.rotate(o.ang); const mg = ctx.createLinearGradient(0, -6, 0, 6); mg.addColorStop(0, '#f4f6fa'); mg.addColorStop(.45, '#b8c0cc'); mg.addColorStop(1, '#5a6272'); ctx.fillStyle = mg; roundRect(-6.5, -6, 13, 12, 3); ctx.fill(); ctx.strokeStyle = '#1a1024'; ctx.lineWidth = .8; ctx.stroke();
-    ctx.fillStyle = '#2a3040'; ctx.fillRect(-6.5, -2, 13, 1.2); ctx.fillRect(-6.5, 1.4, 13, 1.2); ctx.fillStyle = Math.floor(t * 10) % 2 ? '#bff4ff' : '#ffffff'; ctx.beginPath(); ctx.arc(0, 0, 1.6, 0, 7); ctx.fill();
-    ctx.restore(); });
-  if (Math.random() < .25) sparks.push({ x: ax + (bx - ax) * Math.random(), y: ay + (by - ay) * Math.random(), vx: (Math.random() - .5) * 80, vy: -Math.random() * 60, l: .25, c: '#dff8ff' });
+  if (Math.random() < .3) sparks.push({ x: ax + (bx - ax) * Math.random(), y: ay + (by - ay) * Math.random(), vx: (Math.random() - .5) * 90, vy: (Math.random() - .5) * 90, l: .22, c: Math.random() < .5 ? '#fff3a0' : '#ffffff' });
 }
 function drawRocket(o) {   // white missile (longer than Barry's), red tip band, fins, roaring flame, long trail of smoke puffs
   if (o.warn > 0 || o.lock > 0) return;
