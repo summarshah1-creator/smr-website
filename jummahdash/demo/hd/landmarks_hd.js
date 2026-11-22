@@ -109,7 +109,7 @@ HD.townhall = (c, x, G) => {
   // chamfered cap, drum and finial
   poly(c, lg(c, x + 88, 0, x + 112, 0, [[0, '#d9d0bb'], [.4, '#f4efe3'], [1, '#d2c8b1']]), [[x + 88, G - 202], [x + 112, G - 202], [x + 110, G - 210], [x + 107, G - 213], [x + 93, G - 213], [x + 90, G - 210]], LINE, .45);
   line(c, SD, .6, [[x + 89, G - 206], [x + 111, G - 206]]);
-  rect(c, '#f4f2ee', x + 97.5, G - 218, 5, 5, LINE, .35); c.beginPath(); c.arc(x + 100, G - 219.5, 1.3, 0, 7); c.fillStyle = '#f4f2ee'; c.fill(); c.stroke();
+  // (drum + ball finial taken off, owner 22 Nov)
   // --- entrance portico: pediment, four fluted columns, dark recess, panelled door with a fanlight, steps
   rect(c, '#6e6658', x + 79, G - 52, 42, 46);
   c.fillStyle = lg(c, 0, G - 54, 0, G - 24, [[0, '#3f3a33'], [1, '#5c5548']]); c.fillRect(x + 80, G - 52, 40, 30);
@@ -1952,6 +1952,8 @@ const REFLOOR = {
   krispy:    [[0, 0], [44, 2.4], [50, 2.7], [76, 3.6], [79, 3.75], [109, 5.05], [112, 5.2], [120, 5.55]],
 };
 const REF_U = 20, REF_R = 6, REF_M = 30, refCache = {};
+// Marsh Farm towers 30% wider in Jummah Dash (owner, 22 Nov); the game widens its footprint to match
+{ const mf = HD.marshfarm; if (mf) HD.marshfarm = (c, x, G) => { c.save(); c.translate(x, 0); c.scale(1.3, 1); c.translate(-x, 0); mf(c, x, G); c.restore(); }; }
 for (const key of Object.keys(REFLOOR)) { const orig = HD[key]; if (!orig) continue;
   HD[key] = (c, x, G) => {
     const map = REFLOOR[key], W = ((window.LANDMARKS && LANDMARKS[key] && LANDMARKS[key].w) || 300) + 2 * REF_M, top = map[map.length - 1][0] + 40;

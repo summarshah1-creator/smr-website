@@ -59,7 +59,7 @@ fetch('art/npc.json?h=cb2784f590').then(r => r.json()).then(m => { NPC_META = m;
   NPC_W = NPC_KEYS.reduce((a, k) => a + (m[k].wt || 1), 0); NPC_KEYS.slice(0, 12).forEach(npcGet); ESC_KEYS.forEach(npcGet); npcGet('mobility'); }).catch(() => {});
 
 /* buildings: Flappy landmarks + house runs, drawn at KR px per unit, trimmed, cached (LRU) */
-const M = 90, LH = 380;
+const M = 90, LH = 440;
 let STREET = (window.LM_ORDER || Object.keys(window.LANDMARKS || {})).filter(k => window.LANDMARKS && LANDMARKS[k]);   // every Luton building from Flappy Kabootar
 /* buildings come in a shuffled deck like Flappy Kabootar: every one shows up before any repeats; sets stay together in order */
 const SETS = [['frasers', 'station', 'hatfactory'], ['wardownfield', 'wardown', 'wardownbridge', 'funfair'], ['welcome', 'airport']];
@@ -157,13 +157,18 @@ function hdFinish(c, o, N, l, top, r) {
 // and storeys match from building to building; taller buildings ease in towards the top of the screen (Town Hall tower / Marsh Farm 44 m = 353).
 // The food trailers keep their size (owner). Multipliers on top of Flappy's own sizes.
 const JK = {"masjid":0.926,"marshfarm":1.113,"nadeem":0.88,"hatfactory":0.932,"vauxhall":1.055,"townhall":1.282,"gurdwara":0.949,"ldh":1.267,"lutonhoo":1.128,"frasers":1.03,"matalan":0.851,"masjidali":0.94,"tesco":1.085,"bandq":1.09,"stmarys":1.395,"uob":1.325,"jdgyms":0.9,"currys":0.971,"smr":0.938,"inspire":0.821,"galaxy":1.588,"lewsey":1.01,"funfair":1.526,"airport":1.465,"gna":1.2134,"cycleking":1.0153,"kahwa":1.2134,"chaiiwala":0.92,"toros":1.2134,"chiltern":1.17,"sixthform":1.404,"alquds":1.2134,"leagrave":1.091,"topspizza":1.2134,"lidl":0.91,"orbital":1.455,"bigyellow":1.822,"venue":1.335,"oak":1.2134,"grandbazar":1.226,"station":1.391,"periperi":1.113,"suffa":1.366,"miamicrispy":1.01,"foodbank":1.165,"wardownbridge":0.815,"karwan":1.372,"kaya":1.232,"krispy":1.2134,"barak":1.256,"murganos":1.2134}, JKH = {"semi":1.17,"terrace":1.17,"rowGrey":1.17,"rowYellow":1.17,"rowBrown":1.17,"rowRed":1.17,"rowPainted":1.17,"pairRed":1.17,"pebble":1.17,"render":1.17,"newbuild":1.17,"bungalow":1.17};
-const jkOf = b => (b.kind === 'lm' ? JK[b.key] : JKH[b.key]) || 1;
+// owner 22 Nov (later): every building scaled up together so the Town Hall tower (finial removed) stops a finial's height
+// below the top of the screen; Marsh Farm towers may go off the top. Marsh Farm 30% wider (WX).
+const BSC = 1.108, WX = { marshfarm: 1.3 };
+if (LANDMARKS.marshfarm && !LANDMARKS.marshfarm._wx) { LANDMARKS.marshfarm.w = Math.round(LANDMARKS.marshfarm.w * WX.marshfarm); LANDMARKS.marshfarm._wx = 1; }
+const jkL = k => (JK[k] || 1) * BSC, jkH = k => (JKH[k] || 1) * BSC;
+const jkOf = b => b.kind === 'lm' ? jkL(b.key) : jkH(b.key);
 let KB = 2;
 if (document.fonts) Promise.all(['700 10px Mont', '600 10px Oswald', '700 10px Amiri'].map(f => document.fonts.load(f)).concat(window.HD_READY || [])).then(() => { bCache.clear(); hazeCache.clear(); });   // redraw buildings once the sign fonts are in   // building px per unit = exactly the on-screen size (S * BS)
 function buildingCanvas(kind, key, bakeAnim) {
   const id = kind + ':' + key + (bakeAnim ? ':a' : ''); if (bCache.has(id)) { const v = bCache.get(id); bCache.delete(id); bCache.set(id, v); return v; }
   let w, draw;
-  const jk = (kind === 'lm' ? JK[key] : JKH[key]) || 1;
+  const jk = kind === 'lm' ? jkL(key) : jkH(key);
   if (kind === 'lm') { const L = LANDMARKS[key]; if (!L) return null; w = Math.round(L.w * jk); const H2 = window.LANDMARKS_HD && LANDMARKS_HD[key];
     draw = H2 ? (o => { const f = (window.SCALE && SCALE[key]) || 1; o.save(); o.translate(M, LH - 6); o.scale(f, f); H2(o, 0, 0); o.restore(); }) : (o => L.d(o, M, LH - 6)); }
   else { const Hh = HOUSES[key]; if (!Hh) return null; w = Math.round(Hh.w * 1.35 * jk); const HH = window.HOUSES_HD && HOUSES_HD[key]; draw = o => window.drawScaled(o, HH || Hh.d.bind(Hh), M, LH - 6, 1.35); }
@@ -382,10 +387,10 @@ function nextBuilding() {
     else { let u; do { if (!deck.length) deck = buildDeck(); u = deck.shift().filter(x => x !== myMosque); } while (!u.length); k = u.shift(); setQ = u; }
     lastLm.push(k); if (lastLm.length > 10) lastLm.shift();
     const x = prev ? prev.x + prev.w + gapBetween(prev, 'lm', k) : -60;
-    street.push({ kind: 'lm', key: k, x, w: LANDMARKS[k].w * BS * (JK[k] || 1), inSet: setQ.length > 0 }); }
+    street.push({ kind: 'lm', key: k, x, w: LANDMARKS[k].w * BS * jkL(k), inSet: setQ.length > 0 }); }
   else { if (!houseDeck.length) { houseDeck = HOUSE_K().slice(); for (let i = houseDeck.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [houseDeck[i], houseDeck[j]] = [houseDeck[j], houseDeck[i]]; } }
     const k = houseDeck.shift(), x = prev ? prev.x + prev.w + gapBetween(prev, 'hs', k) : -60;
-    street.push({ kind: 'hs', key: k, x, w: Math.round(HOUSES[k].w * 1.35 * (JKH[k] || 1)) * BS, run: prev && prev.kind === 'hs' ? (prev.run || 1) + 1 : 1 }); }
+    street.push({ kind: 'hs', key: k, x, w: Math.round(HOUSES[k].w * 1.35 * jkH(k)) * BS, run: prev && prev.kind === 'hs' ? (prev.run || 1) + 1 : 1 }); }
 }
 const bakeQ = [];
 function fillStreet() { while (!street.length || street[street.length - 1].x < W + 900) { nextBuilding(); const b = street[street.length - 1]; bakeQ.push(b); } }
