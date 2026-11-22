@@ -174,7 +174,6 @@ details[open] summary { margin-bottom:12px; }
       <h2>Format</h2>
       <div class="seg" id="fmtSeg">
         <button data-f="story" class="on">Story format</button>
-        <button data-f="tiktok">Post format</button>
       </div>
       <p class="small" id="fmtNote" style="margin:8px 0 0"></p>
       <label class="chk"><input type="checkbox" id="optNames"> Show team names under crests</label>
@@ -330,7 +329,7 @@ const TXT = {
 const FORMATS = {
   //            logo top/height   fixtures block (single game starts at crestTop)   footer cap-tops
   tiktok: { logoY: 207, logoH: 279, crestTop: 775, areaTop: 545, areaBot: 1585, titleY: 1650, l1Y: 1723, l2Y: 1775, safeTop: 0, safeBot: 0 },
-  story:  { logoY: 255, logoH: 235, crestTop: 714, areaTop: 545, areaBot: 1360, titleY: 1408, l1Y: 1478, l2Y: 1526, safeTop: 250, safeBot: 340 },
+  story:  { logoY: 207, logoH: 279, crestTop: 762, areaTop: 545, areaBot: 1585, titleY: 1650, l1Y: 1723, l2Y: 1775, safeTop: 0, safeBot: 0 },   // = the owner's Canva frame
 };
 function jfont(w, px) { return `${w} ${px}px Jost, Josefin, sans-serif`; }
 function buildLayout(st) {
@@ -364,7 +363,7 @@ function buildLayout(st) {
     return { h, items, k };
   };
   const nG = sorted.length;
-  const CAP = 274 * (st.format === 'story' ? .9 : 1);   // same size as one game; only shrinks when it can't fit
+  const CAP = 300;   // same size as one game; only shrinks when it can't fit
   let lo = 80, hi = CAP, best = measure(lo);
   const area = F.areaBot - F.areaTop;
   for (let i = 0; i < 24; i++) { const mid = (lo + hi) / 2; const m = measure(mid); if (m.h <= area) { lo = mid; best = m; } else hi = mid; }
@@ -742,7 +741,7 @@ async function loadData() {
 function syncFormat() {
   document.querySelectorAll('#fmtSeg button').forEach(b => b.classList.toggle('on', b.dataset.f === state.format));
   $('#fmtNote').textContent = state.format === 'story'
-    ? 'Everything is kept clear of the Instagram profile bar at the top and the reply bar at the bottom.'
+    ? 'Instagram Story / TikTok size (1080×1920).'
     : 'Full-height layout for TikTok and Reels (1080×1920).';
   updateSafe();
 }
