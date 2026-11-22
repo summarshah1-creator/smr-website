@@ -808,8 +808,15 @@ function startBoost(m) {
 }
 function boostUpdate(dt) {
   boost.t += dt;
-  if (!boost.out) { boost.left -= speed * dt; hero.y = FLOOR; hero.vy = 0; hero.rot = 0; hero.run += dt * 30; shake = Math.max(shake, .04);
-    if (Math.random() < dt * 30) dust.push({ x: hero.x - 70, y: FLOOR, vx: -200 - Math.random() * 200, vy: -Math.random() * 40, r: 3, l: .5 });
+  if (!boost.out) { boost.left -= speed * dt;
+    // owner 22 Nov: the Corolla jumps too (tap = jump, hold = higher), to grab the coins up in the air
+    { const press = holding && !boost.held; boost.held = holding; boost.jy = boost.jy || 0; boost.vy = boost.vy || 0; boost.sq = Math.max(0, (boost.sq || 0) - dt * 5);
+      if (press && boost.jy >= -.5) { boost.vy = -620; boost.jt = 0; SFX.whoosh(); tone(260, .14, 'triangle', .07, 1.8); }
+      boost.jt = (boost.jt || 0) + dt; boost.vy += (holding && boost.vy < 0 && boost.jt < .45 ? 650 : 1900) * dt; boost.jy += boost.vy * dt;
+      if (FLOOR + boost.jy - 110 < CEIL) { boost.jy = CEIL + 110 - FLOOR; boost.vy = Math.max(0, boost.vy); }
+      if (boost.jy >= 0) { if (boost.vy > 200) { boost.sq = Math.min(1, boost.vy / 700); shake = .12; tone(110, .15, 'triangle', .1); } boost.jy = 0; boost.vy = 0; } }
+    hero.y = FLOOR + boost.jy; hero.vy = 0; hero.rot = 0; hero.run += dt * 30; shake = Math.max(shake, .04);
+    if (!boost.jy && Math.random() < dt * 30) dust.push({ x: hero.x - 70, y: FLOOR, vx: -200 - Math.random() * 200, vy: -Math.random() * 40, r: 3, l: .5 });
     npcs.forEach(p => { if (!p.esc && p.fall <= 0 && p.x > hero.x - 40 && p.x < hero.x + 260 && !p.done) { p.done = 1; p.react = .8; p.hop = 1; p.hopH = 30; p.look = -1; } });
     obs = obs.filter(o => o.type === 'laser' || o.x > W);
     if (boost.left <= 0) { boost.out = 1; boost.ot = 0; hero.vy = -620; hero.ground = false; inv = 1.2; pops.push({ x: hero.x + 20, y: hero.y - 120, txt: 'CHEERS UNCLE!', col: '#ffd75a', t: 0 }); tone(660, .12, 'square', .05); setTimeout(() => tone(880, .2, 'square', .05), 100); } }
@@ -847,19 +854,20 @@ function drawBoost() {
   const x = hero.x + (boost.out ? boost.ox : 0) + 6;
   if (!boost.out) {   // hero crouched on the roof, holding on
     for (let i = 0; i < 4; i++) { ctx.strokeStyle = `rgba(255,255,255,${.25 + i * .1})`; ctx.lineWidth = 1.5; const yy = FLOOR - 20 - i * 14 - Math.random() * 8; ctx.beginPath(); ctx.moveTo(x - 90 - Math.random() * 60, yy); ctx.lineTo(x - 140 - Math.random() * 120, yy); ctx.stroke(); }
-    ctx.save(); ctx.translate(hero.x - 6, FLOOR - 47 + Math.sin(hero.run * 2) * .8); ctx.imageSmoothingEnabled = true; ctx.drawImage(heroImg, FR('land0_effort') * HW * HX4, 0, HW * HX4, HH0 * HX4, -HW * HS / 2, -HH, HW * HS, HH); ctx.restore(); }
-  drawCorolla(ctx, x, FLOOR + 2, 1.05, true);
+    ctx.save(); ctx.translate(hero.x - 6, FLOOR + (boost.jy || 0) - 47 + Math.sin(hero.run * 2) * .8); ctx.imageSmoothingEnabled = true; ctx.drawImage(heroImg, FR('land0_effort') * HW * HX4, 0, HW * HX4, HH0 * HX4, -HW * HS / 2, -HH, HW * HS, HH); ctx.restore(); }
+  if (!boost.out && boost.jy) { ctx.fillStyle = 'rgba(20,10,30,.25)'; ctx.beginPath(); ctx.ellipse(x, FLOOR + 3, 70, 4, 0, 0, 7); ctx.fill(); }
+  drawCorolla(ctx, x, FLOOR + 2 + (boost.out ? 0 : boost.jy || 0), 1.05, true);
 }
 function startVehicle(k) {
   RUN[k] = 1;
-  veh = { k, t: 0, vy: 0, jumps: 0, held: false, wob: 0, g: 1, s: 1, flap: 0, fuel: 1, nb: 0, ht: 0 }; if (k === 'kabootar') veh.tip = 1; if (k === 'tuktuk' && !RUN.nitroTip) { RUN.nitroTip = 1; setTimeout(() => pops.push({ x: hero.x + 30, y: hero.y - 110, txt: 'HOLD FOR NITRO!', col: '#ffd21f', t: 0 }), 900); } hero.thrust = false; if (k === 'kabootar') hero.vy = -200;
+  veh = { k, t: 0, vy: 0, jumps: 0, held: false, wob: 0, g: 1, s: 1, flap: 0, fuel: 1, nb: 0, ht: 0 }; if (k === 'kabootar') veh.tip = 1; if (k === 'tuktuk' && !RUN.nitroTip) { RUN.nitroTip = 1; setTimeout(() => pops.push({ x: hero.x + 30, y: hero.y - 110, txt: 'TAP TO JUMP · HOLD TO GO HIGHER!', col: '#ffd21f', t: 0 }), 900); } hero.thrust = false; if (k === 'kabootar') hero.vy = -200;
   banner = { k, t: 0 }; rings.push({ x: hero.x, y: hero.y - 30, t: 0 }); flashT = .12; flashCol = '255,255,255';
   tone(523, .1, 'square', .06); setTimeout(() => tone(659, .1, 'square', .06), 90); setTimeout(() => tone(784, .2, 'square', .06), 180);
 }
 function vehCircles() { const x = hero.x, y = hero.y;
   if (veh.k === 'kabootar') return [[x + 2, y - 30, 13], [x, y - 62, 11], [x + 2, y - 103, 13]];
   if (veh.k === 'sandals') { const sg = veh.s < 0 ? -1 : 1; return [[x + 3, y - 31 * sg, 10], [x + 7, y - 58 * sg, 9]]; }
-  return veh.k === 'tuktuk' ? [[x - 4, y - 22, 18], [x + 16, y - 16, 12], [x - 2, y - 48, 12]] : [[x, y - 8, 16], [x + 4, y - 36, 12]]; }
+  return veh.k === 'tuktuk' ? [[x - 5, y - 26, 21], [x + 19, y - 19, 14], [x - 2, y - 58, 14]] : [[x, y - 8, 16], [x + 4, y - 36, 12]]; }
 function vehUpdate(dt) {
   veh.t += dt; hero.run += dt * (6 + speed / 22); if (hissG) hissG.gain.setTargetAtTime(0, AC.currentTime, .06);
   if (veh.k === 'kabootar') {   // flappy controls: tap to flap
@@ -884,20 +892,20 @@ function vehUpdate(dt) {
     return;
   }
   if (veh.k === 'tuktuk') {
-    const press = holding && !veh.held; veh.held = holding;
-    // NITRO (owner, 21 Nov): tap = hop, hold = rocket boost out of the exhaust. Faster, pulls coins in, and smashes through
-    // zappers/lasers/rockets without losing the tuk-tuk. Tank drains in ~2.5 s, refills slowly and with every coin
-    veh.ht = holding ? veh.ht + dt : 0; const want = veh.ht > .22 && veh.fuel > .02 ? 1 : 0;
-    if (want && veh.nb < .05) { SFX.whoosh(); tone(90, .5, 'sawtooth', .12, 2.2); shake = .12; }
-    veh.nb += (want - veh.nb) * Math.min(1, dt * (want ? 6 : 3)); if (veh.nb < .01) veh.nb = 0;
-    if (want) veh.fuel = Math.max(0, veh.fuel - dt / 2.5); else veh.fuel = Math.min(1, veh.fuel + dt / 9);
-    if (veh.nb > .3) { if (Math.random() < dt * 40) sparks.push({ x: hero.x - 54, y: hero.y - 14 + (Math.random() - .5) * 5, vx: -speed * .6 - 120 - Math.random() * 80, vy: (Math.random() - .5) * 40, l: .25 + Math.random() * .2, c: Math.random() < .5 ? '#ffd75a' : '#ff7a2a' }); shake = Math.max(shake, .03); }
-    if (press && hero.y >= FLOOR - .5) { hero.vy = -520; RUN.jumps++; tone(330, .12, 'triangle', .07, 1.6); for (let i = 0; i < 6; i++) dust.push({ x: hero.x - 20 + Math.random() * 30, y: FLOOR, vx: -60 - Math.random() * 80, vy: -Math.random() * 30, r: 2.5, l: .5 }); }
-    hero.vy += 1500 * dt; hero.y += hero.vy * dt;
-    if (hero.y >= FLOOR) { if (hero.vy > 200) { shake = .12; tone(120, .15, 'triangle', .1); for (let i = 0; i < 8; i++) dust.push({ x: hero.x + (Math.random() - .5) * 50, y: FLOOR, vx: (Math.random() - .5) * 160, vy: -Math.random() * 40, r: 3, l: .5 }); npcs.forEach(p => { if (!p.esc && Math.abs(p.x - hero.x) < 90 && p.fall <= 0) { p.react = .9; p.hop = 1; p.hopH = 16; p.look = hero.x > p.x ? 1 : -1; } }); }
+    // owner 22 Nov: works like Jetpack Joyride's rides: tap = jump, hold = jump much higher, keep holding on the way down =
+    // little thrusters under the floor slow the fall (about 1.2 s of thrust per jump). No more nitro.
+    const press = holding && !veh.held; veh.held = holding; const onG = hero.y >= FLOOR - .5; veh.sq = Math.max(0, (veh.sq || 0) - dt * 5);
+    if (press && onG) { hero.vy = -640; veh.jt = 0; veh.gl = 1.2; veh.sq = -.6; RUN.jumps++; SFX.whoosh(); tone(300, .14, 'triangle', .07, 1.8); for (let i = 0; i < 8; i++) dust.push({ x: hero.x - 30 + Math.random() * 50, y: FLOOR, vx: -60 - Math.random() * 90, vy: -Math.random() * 40, r: 3, l: .5 }); }
+    veh.jt = (veh.jt || 0) + dt; let g = 1900; veh.thr = 0;
+    if (!onG && holding) { if (hero.vy < 0 && veh.jt < .45) g = 650; else if (hero.vy >= -40 && veh.gl > 0) { g = 700; veh.gl -= dt; veh.thr = 1; if (hero.vy > 110) hero.vy = 110; } }
+    hero.vy += g * dt; hero.y += hero.vy * dt;
+    if (hero.y - 96 < CEIL) { hero.y = CEIL + 96; hero.vy = Math.max(0, hero.vy); }
+    if (veh.thr && Math.random() < dt * 50) [-30, 22].forEach(tx => sparks.push({ x: hero.x + tx, y: hero.y - 2, vx: -speed * .3 + (Math.random() - .5) * 30, vy: 140 + Math.random() * 90, l: .22 + Math.random() * .12, c: Math.random() < .5 ? '#ffd75a' : '#ff8a2a' }));
+    if (veh.thr && Math.random() < dt * 6) tone(70 + Math.random() * 20, .08, 'sawtooth', .03, 1.2);
+    if (hero.y >= FLOOR) { if (hero.vy > 200) { veh.sq = Math.min(1, hero.vy / 700); shake = .12; tone(120, .15, 'triangle', .1); for (let i = 0; i < 10; i++) dust.push({ x: hero.x + (Math.random() - .5) * 60, y: FLOOR, vx: (Math.random() - .5) * 180, vy: -Math.random() * 40, r: 3, l: .5 }); npcs.forEach(p => { if (!p.esc && Math.abs(p.x - hero.x) < 90 && p.fall <= 0) { p.react = .9; p.hop = 1; p.hopH = 16; p.look = hero.x > p.x ? 1 : -1; } }); }
       hero.y = FLOOR; hero.vy = 0; }
-    hero.rot = Math.max(-.25, Math.min(.2, hero.vy / 2200));
-    if (Math.random() < dt * 14) steam.push({ x: hero.x - 34, y: hero.y - 8, vx: -speed * .4 - 30, vy: -10 - Math.random() * 20, r: 2, l: .5, l0: .6 });
+    hero.rot = Math.max(-.22, Math.min(.18, hero.vy / 2400));
+    if (Math.random() < dt * 14) steam.push({ x: hero.x - 40, y: hero.y - 10, vx: -speed * .4 - 30, vy: -10 - Math.random() * 20, r: 2, l: .5, l0: .6 });
   } else {
     if (holding) hero.vy -= 1150 * dt; hero.vy += 480 * dt; hero.vy = Math.max(-210, Math.min(230, hero.vy)); hero.y += hero.vy * dt;
     if (hero.y >= FLOOR - 6) { hero.y = FLOOR - 6; hero.vy = 0; }
@@ -948,7 +956,9 @@ function drawVehicle() {
   ctx.save(); ctx.translate(x, y); ctx.rotate(hero.rot);
   if (k === 'tuktuk') {   // auto-rickshaw, side on; he sits fully inside, seen through the open side (owner, 21 Nov)
     const onG = hero.y >= FLOOR - .5, bob = onG ? Math.sin(hero.run * 2.2) * 1 + Math.sin(hero.run * 5.3) * .4 : 0, nose = onG ? 0 : Math.max(-.16, Math.min(.08, hero.vy / 2600));
-    ctx.rotate(nose); ctx.fillStyle = 'rgba(30,10,30,.3)'; ctx.beginPath(); ctx.ellipse(2, (FLOOR - y) + 1, 44, 4.5, 0, 0, 7); ctx.fill(); ctx.translate(0, bob);
+    ctx.rotate(nose); ctx.fillStyle = 'rgba(30,10,30,.3)'; ctx.beginPath(); ctx.ellipse(2, (FLOOR - y) + 1, 52 * (1 - Math.min(.5, (FLOOR - y) / 400)), 5, 0, 0, 7); ctx.fill();
+    { const sq = veh.sq || 0; ctx.scale(1.2 * (1 + sq * .08), 1.2 * (1 - sq * .12)); }   // bigger tuk-tuk (owner 22 Nov), squash on landing, stretch on take-off
+    ctx.translate(0, bob);
     const wheel = (wx, r) => { ctx.save(); ctx.translate(wx, -r - bob); ctx.fillStyle = '#141418'; ctx.beginPath(); ctx.arc(0, 0, r, 0, 7); ctx.fill(); const rg = ctx.createRadialGradient(-r * .2, -r * .2, 0, 0, 0, r * .55); rg.addColorStop(0, '#e8ecf2'); rg.addColorStop(1, '#7a808c'); ctx.fillStyle = rg; ctx.beginPath(); ctx.arc(0, 0, r * .55, 0, 7); ctx.fill();
       ctx.rotate(hero.run * 3); ctx.strokeStyle = '#3a3a44'; ctx.lineWidth = 1.1; for (let i = 0; i < 5; i++) { const a = i * 1.2566; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(Math.cos(a) * r * .5, Math.sin(a) * r * .5); ctx.stroke(); } ctx.fillStyle = '#2a2a30'; ctx.beginPath(); ctx.arc(0, 0, r * .16, 0, 7); ctx.fill(); ctx.restore(); };
     wheel(-28, 9);
@@ -973,12 +983,13 @@ function drawVehicle() {
     ctx.fillStyle = '#d8d8dc'; ctx.fillRect(35, -54, 5, 1.6); ctx.fillRect(39, -56, 1.4, 4);   // mirror
     ctx.fillStyle = '#fff6c0'; ctx.beginPath(); ctx.arc(38, -26, 3.2, 0, 7); ctx.fill(); ctx.fillStyle = 'rgba(255,246,190,.35)'; ctx.beginPath(); ctx.moveTo(40, -28); ctx.lineTo(70, -34); ctx.lineTo(70, -18); ctx.lineTo(40, -24); ctx.fill();
     wheel(30, 8);
-    if (veh.nb > .02) { const L = (34 + Math.random() * 14) * veh.nb; ctx.save(); ctx.globalCompositeOperation = 'lighter';   // rocket flame out of the exhaust
-      const fg = ctx.createLinearGradient(-50, 0, -50 - L, 0); fg.addColorStop(0, 'rgba(255,255,230,.95)'); fg.addColorStop(.3, 'rgba(255,200,60,.85)'); fg.addColorStop(.75, 'rgba(255,90,20,.5)'); fg.addColorStop(1, 'rgba(255,60,0,0)');
-      ctx.fillStyle = fg; ctx.beginPath(); ctx.moveTo(-48, -19); ctx.quadraticCurveTo(-50 - L * .5, -22 - Math.random() * 3, -50 - L, -14); ctx.quadraticCurveTo(-50 - L * .5, -6 + Math.random() * 3, -48, -9); ctx.closePath(); ctx.fill();
-      const gl = ctx.createRadialGradient(-50, -14, 0, -50, -14, 26); gl.addColorStop(0, 'rgba(255,170,60,.5)'); gl.addColorStop(1, 'rgba(255,120,30,0)'); ctx.fillStyle = gl; ctx.fillRect(-80, -44, 60, 60); ctx.restore(); }
+    if (veh.thr) { ctx.save(); ctx.globalCompositeOperation = 'lighter';   // thrusters under the floor while he holds on the way down
+      [-30, 22].forEach(tx => { const L = 16 + Math.random() * 10, fg = ctx.createLinearGradient(0, -6, 0, -6 + L); fg.addColorStop(0, 'rgba(255,255,230,.95)'); fg.addColorStop(.35, 'rgba(255,200,60,.85)'); fg.addColorStop(1, 'rgba(255,80,20,0)');
+        ctx.fillStyle = fg; ctx.beginPath(); ctx.moveTo(tx - 5, -6); ctx.quadraticCurveTo(tx - 3, -6 + L * .6, tx, -6 + L); ctx.quadraticCurveTo(tx + 3, -6 + L * .6, tx + 5, -6); ctx.closePath(); ctx.fill(); });
+      ctx.restore(); }
+    [-30, 22].forEach(tx => { ctx.fillStyle = '#3a3a40'; roundRect(tx - 5, -9, 10, 4, 1.5); ctx.fill(); });   // thruster nozzles
     ctx.fillStyle = '#3a3a40'; roundRect(-52, -18, 7, 6, 2); ctx.fill();   // exhaust / nitro pipe
-    { const gx = -20, gy = -100; ctx.fillStyle = 'rgba(20,10,30,.55)'; roundRect(gx - 1, gy - 1, 42, 6, 3); ctx.fill(); const fg2 = ctx.createLinearGradient(gx, 0, gx + 40, 0); fg2.addColorStop(0, '#ff7a2a'); fg2.addColorStop(1, '#ffe066'); ctx.fillStyle = fg2; roundRect(gx, gy, Math.max(2, 40 * veh.fuel), 4, 2); ctx.fill(); ctx.fillStyle = '#fff'; ctx.font = '700 5px Mont, sans-serif'; ctx.textAlign = 'right'; ctx.fillText('NITRO', gx - 3, gy + 4); }
+    // (nitro gauge removed, owner 22 Nov)
     if (onG && Math.floor(t * 20) % 3 === 0) { ctx.strokeStyle = 'rgba(255,255,255,.35)'; ctx.lineWidth = 1; for (let i = 0; i < 3; i++) { ctx.beginPath(); ctx.moveTo(-60 - i * 6, -50 + i * 12); ctx.lineTo(-72 - i * 6, -50 + i * 12); ctx.stroke(); } }   // speed lines
   } else {   // magic carpet: a real cloth ripple running nose to tail, shaded folds, border + medallion, swinging tassels
     const W2 = 50, n = 24;

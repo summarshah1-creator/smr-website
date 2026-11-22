@@ -182,6 +182,10 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 #rot[data-m="lock"] .lg,#rot[data-m="fs"] .lg{width:min(26vw,150px)}
 #pz{position:absolute;inset:0;z-index:40;background:rgba(8,4,22,.6);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;pointer-events:auto;font-family:PS,sans-serif;color:#fff;text-shadow:0 2px 0 #160c28}
 #pz.hide{display:none}#pz b{font-size:30px;color:#ffd75a}#pz span{font-size:16px;animation:bob .8s ease-in-out infinite alternate}
+.side{container-type:size}.side .tile{flex:1 1 0;min-height:0;font-size:clamp(10px,3.6cqh,16px)}.side .tile small{font-size:clamp(9px,3cqh,13px);white-space:nowrap}
+.side .tile .ti{width:clamp(22px,9cqh,48px);height:clamp(22px,9cqh,48px);flex:none;filter:drop-shadow(0 2px 0 rgba(0,0,0,.25))}
+.side .tile .lb{flex:1;text-align:left}
+.side .mos{flex:1;height:100%}.side .mos canvas{height:clamp(22px,9cqh,48px);width:auto;aspect-ratio:92/62}
 </style>
 </head>
 <body>
@@ -195,12 +199,12 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
   <div id="home">
     <div class="side">
       <button class="tile gold" id="bMos"><span class="mos"><canvas id="mosThumb" width="92" height="62"></canvas><span>MY MASJID<br><small id="mosName">Pick one</small></span></span></button>
-      <button class="tile" id="bShare">SHARE <small>with friends</small></button>
-      <button class="tile" id="bHow">HOW TO PLAY</button>
-      <button class="tile" id="bInst">GET THE APP <small>free</small></button>
-      <button class="tile shopT" id="bShop">SHOP <small>gadgets</small></button>
-      <button class="tile" id="bOutfit">OUTFITS <small id="outName">classic</small></button>
-      <button class="tile" id="bMis">MISSIONS <small id="misStars"></small></button>
+      <button class="tile" id="bShare"><svg viewBox="0 0 40 40" class="ti"><g stroke="#1a1030" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M3 19L37 5 25 35 17 24z" fill="#fff"/><path d="M17 24L37 5 25 35z" fill="#8fd0ff"/><path d="M17 24v9l4-5" fill="#4a90e2"/><path d="M3 28h6M5 33h5" stroke="#fff" stroke-width="2.4"/></g></svg><span class="lb">SHARE</span> <small>with friends</small></button>
+      <button class="tile" id="bHow"><svg viewBox="0 0 40 40" class="ti"><g stroke="#1a1030" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M11 12h18c5 0 8 4 9 10l1 6c.5 4-3 6-6 4l-5-4H12l-5 4c-3 2-6.5 0-6-4l1-6c1-6 4-10 9-10z" fill="#f2efff"/><path d="M10 17v8M6 21h8" stroke-width="3.2"/><circle cx="29" cy="16.5" r="2.4" fill="#ff5a5a"/><circle cx="34" cy="21.5" r="2.4" fill="#4cd964"/><circle cx="24" cy="21.5" r="2.4" fill="#4aa8ff"/><circle cx="29" cy="26.5" r="2.4" fill="#ffd23a"/></g></svg><span class="lb">HOW TO PLAY</span></button>
+      <button class="tile" id="bInst"><svg viewBox="0 0 40 40" class="ti"><g stroke="#1a1030" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><rect x="9" y="3" width="19" height="33" rx="4" fill="#2b2554"/><rect x="11.5" y="7" width="14" height="24" rx="1.5" fill="#6fd3ff"/><path d="M12 31l6-9 4 5 3.5-3V31z" fill="#2fbf5a" stroke-width="1.4"/><circle cx="31" cy="29" r="8" fill="#38d36a"/><path d="M31 24v9M27 29.5l4 4 4-4" stroke="#fff" stroke-width="2.6"/></g></svg><span class="lb">GET THE APP</span> <small>free</small></button>
+      <button class="tile shopT" id="bShop"><svg viewBox="0 0 40 40" class="ti"><g stroke="#1a1030" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><rect x="6" y="15" width="28" height="21" rx="1.5" fill="#fff6e0"/><rect x="10" y="22" width="8" height="14" fill="#7a4cff"/><circle cx="16" cy="29.5" r=".9" fill="#ffd23a" stroke="none"/><rect x="21" y="21" width="10" height="8" fill="#9fe0ff"/><path d="M4 8l3-5h26l3 5z" fill="#ffd23a"/><path d="M4.0 8h6.4v7a3.2 3.2 0 0 1-6.4 0z" fill="#ff4b4b"/><path d="M10.4 8h6.4v7a3.2 3.2 0 0 1-6.4 0z" fill="#fff"/><path d="M16.8 8h6.4v7a3.2 3.2 0 0 1-6.4 0z" fill="#ff4b4b"/><path d="M23.200000000000003 8h6.4v7a3.2 3.2 0 0 1-6.4 0z" fill="#fff"/><path d="M29.6 8h6.4v7a3.2 3.2 0 0 1-6.4 0z" fill="#ff4b4b"/></g></svg><span class="lb">SHOP</span> <small>gadgets</small></button>
+      <button class="tile" id="bOutfit"><svg viewBox="0 0 40 40" class="ti"><g stroke="#1a1030" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M20 8c0-3 4-3 4-5.5" fill="none" stroke="#c7c9d6" stroke-width="2.2"/><path d="M20 8L7 15h26z" fill="none" stroke="#c7c9d6" stroke-width="2.2"/><path d="M15 14l-7 4 2 8 4-2 -1 14h14l-1-14 4 2 2-8-7-4-3 2h-4z" fill="#fff"/><path d="M17 15l3 4 3-4" fill="none"/><path d="M20 19v7" stroke-width="1.6"/><path d="M14 33h12" stroke="#d8d4ee" stroke-width="1.6"/></g></svg><span class="lb">OUTFITS</span> <small id="outName">classic</small></button>
+      <button class="tile" id="bMis"><svg viewBox="0 0 40 40" class="ti"><g stroke="#1a1030" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M12 5h16v9a8 8 0 0 1-16 0z" fill="#ffd23a"/><path d="M12 8H6c0 6 3 9 7 9M28 8h6c0 6-3 9-7 9" fill="none"/><path d="M17 21h6l1 7h-8z" fill="#e0a21a"/><rect x="11" y="28" width="18" height="7" rx="1.5" fill="#7a4cff"/><path d="M20 7.5l1.6 3.3 3.6.5-2.6 2.5.6 3.6-3.2-1.7-3.2 1.7.6-3.6-2.6-2.5 3.6-.5z" fill="#fff" stroke-width="1.2"/></g></svg><span class="lb">MISSIONS</span> <small id="misStars"></small></button>
     </div>
     <div class="main">
       <div class="title"><div class="badge">AN SMR ORIGINAL</div>
@@ -318,6 +322,6 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 <script src="vehicles.js?h=32fdac20ce"></script>
 <script src="hd/cars_v3.js?h=333148ab5d"></script>
 <script src="hd/landmarks_hd.js?h=008cc0e557"></script>
-<script src="game.js?h=90884ecf78"></script>
+<script src="game.js?h=cd9e58b40d"></script>
 </body>
 </html>
