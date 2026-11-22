@@ -69,7 +69,18 @@ header span { color:var(--dim); font-size:13px; letter-spacing:.08em; }
 .stage { display:flex; flex-direction:column; align-items:center; gap:10px; }
 .screen { position:relative; width:min(100%, 380px); aspect-ratio:9/16; border-radius:18px; overflow:hidden; background:#000; box-shadow:0 20px 60px rgba(0,0,0,.6), 0 0 0 1px #2a2418; }
 .screen.post { aspect-ratio:4/5; }
-.screen canvas { width:100%; height:100%; display:block; }
+.screen canvas { width:100%; height:100%; display:block; object-fit:cover; }
+.screen.sized { aspect-ratio:auto; }
+.screen.morph { transition:width .55s cubic-bezier(.22,.8,.24,1), height .55s cubic-bezier(.22,.8,.24,1); }
+@media (max-width: 859px) {
+  .stage.stick { position:sticky; top:0; z-index:5; margin:-10px -14px 0; padding:10px 14px 10px; background:var(--bg); }
+  .stage.stick.down { box-shadow:0 10px 18px -6px rgba(0,0,0,.85); }
+  .stage.stick .ctrl .pill { white-space:nowrap; }
+  .stage.stick.down .ctrl .pill { padding:6px 11px; font-size:12.5px; }
+}
+.seg button { transition:background .25s, color .25s; }
+.seg button.pop { animation:segPop .6s cubic-bezier(.3,1.6,.5,1); }
+@keyframes segPop { 0% { transform:scale(.92); box-shadow:inset 0 -2px 0 var(--gold), 0 0 0 0 rgba(214,171,82,.55); } 55% { transform:scale(1.04); box-shadow:inset 0 -2px 0 var(--gold), 0 0 0 7px rgba(214,171,82,0); } 100% { transform:scale(1); } }
 .safe { position:absolute; left:0; right:0; pointer-events:none; background:repeating-linear-gradient(45deg, rgba(214,171,82,.10) 0 6px, transparent 6px 12px); border-color:rgba(214,171,82,.35); display:none; }
 .safe.top { top:0; border-bottom:1px dashed; } .safe.bot { bottom:0; border-top:1px dashed; }
 .screen.showsafe .safe { display:block; }
@@ -232,6 +243,11 @@ button:active, .big:active, .pill:active, .chip:active, .fx:active, .hsBtn:activ
         <button data-f="post">Post format</button>
       </div>
       <p class="small" id="fmtNote" style="margin:8px 0 0"></p>
+      <div class="seg" id="kindSeg" style="margin-top:12px">
+        <button data-k="video" class="on">▶ Video</button>
+        <button data-k="still">▣ Still picture</button>
+      </div>
+      <p class="small" id="kindNote" style="margin:8px 0 0"></p>
       <label class="chk"><input type="checkbox" id="optNames"> Show team names under crests</label>
       <label class="chk"><input type="checkbox" id="optDay"> Show weekday in the date (e.g. SATURDAY 8TH NOVEMBER)</label>
     </section>
@@ -343,11 +359,11 @@ const state = {
     { home: 'fc-barcelona', away: 'aston-villa', date: iso(today), time: '20:00' },
     { home: 'manchester-united', away: 'as-roma', date: iso(today), time: '20:00' },
   ],
-  format: 'story', music: 'auto', names: false, weekday: false,
+  format: 'story', kind: 'video', music: 'auto', names: false, weekday: false,
   venue: { title: 'KAYA LOUNGE', l1: '10 MARSH ROAD, LUTON, LU3 2NH', l2: '35 GOLDINGTON ROAD, BEDFORD, MK40 3LH' },
 };
 let hadSaved = false;
-try { const s = JSON.parse(localStorage.getItem('kaya-state') || 'null'); if (s && s.games) { Object.assign(state, s); if (state.format !== 'post') state.format = 'story'; hadSaved = true; state.games.forEach(g => { g.home = MIGRATE[g.home] || g.home; g.away = MIGRATE[g.away] || g.away; }); } } catch (e) {}
+try { const s = JSON.parse(localStorage.getItem('kaya-state') || 'null'); if (s && s.games) { Object.assign(state, s); if (state.format !== 'post') state.format = 'story'; if (state.kind !== 'still') state.kind = 'video'; hadSaved = true; state.games.forEach(g => { g.home = MIGRATE[g.home] || g.home; g.away = MIGRATE[g.away] || g.away; }); } } catch (e) {}
 function persistLocal() { try { localStorage.setItem('kaya-state', JSON.stringify(state)); } catch (e) {} }
 
 /* ---------------- images ---------------- */
@@ -641,7 +657,7 @@ function syncSound(force) {
 /* ---------------- preview ---------------- */
 const cv = $('#cv'), cctx = cv.getContext('2d'), bgv = $('#bgv');
 const dpr = Math.min(2, window.devicePixelRatio || 1);
-function sizePreview() { const r = cv.getBoundingClientRect(); const s = Math.min(1, (r.width * dpr) / W) || .5; cv.width = Math.round(W * s); cv.height = Math.round(outH(state.format) * s); }
+function sizePreview() { const bw = Math.min(380, ($('#scroller').clientWidth || 380) - 28); const s = Math.min(1, (bw * dpr) / W) || .5; cv.width = Math.round(W * s); cv.height = Math.round(outH(state.format) * s); }
 let layout = buildLayout(state), playing = true, frozenT = 0;
 let relayout = function () { layout = buildLayout(state); persistLocal(); renderMusic(); };
 function preloadCrests() { return Promise.all(state.games.flatMap(g => [g.home, g.away]).map(id => { const t = teamById(id); const r = t && loadImg(t.src); return r ? r.p : null; })); }
@@ -892,9 +908,37 @@ function syncFormat() {
     : 'Instagram Story / TikTok size (1080×1920).';
   $('#screen').classList.toggle('post', state.format === 'post'); $('#safeBtn').style.display = state.format === 'post' ? 'none' : '';
   if (state.format === 'post') $('#screen').classList.remove('showsafe');
-  sizePreview(); updateSafe();
+  sizePreview(); updateSafe(); fitStage();
 }
-document.querySelectorAll('#fmtSeg button').forEach(b => b.onclick = () => { state.format = b.dataset.f; syncFormat(); relayout(); });
+function popBtn(b) { b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop'); }
+document.querySelectorAll('#fmtSeg button').forEach(b => b.onclick = () => { popBtn(b); if (state.format === b.dataset.f) return; state.format = b.dataset.f; morphNext = true; syncFormat(); relayout(); });
+function syncKind() {
+  document.querySelectorAll('#kindSeg button').forEach(b => b.classList.toggle('on', b.dataset.k === state.kind));
+  $('#kindNote').textContent = state.kind === 'still' ? 'A still picture (JPEG) of the finished design, with everything in place.' : 'A 15-second video with the animation and music.';
+  setShare();
+}
+document.querySelectorAll('#kindSeg button').forEach(b => b.onclick = () => { popBtn(b); if (state.kind === b.dataset.k) return; state.kind = b.dataset.k; syncKind(); relayout(); });
+/* preview size: full width at the top; on phones it sticks and shrinks to the top half as you scroll */
+let morphNext = false;
+function fitStage() {
+  const sc = $('#scroller'), scr = $('#screen'), stage = scr.closest('.stage');
+  const ar = state.format === 'post' ? 4 / 5 : 9 / 16;
+  const bw = Math.min(380, sc.clientWidth - 28);
+  const phone = innerWidth < 860;
+  stage.classList.toggle('stick', phone);
+  const hNat = bw / ar;
+  let h = hNat;
+  if (phone) {
+    const ctrl = stage.querySelector('.ctrl').offsetHeight + 30;
+    const hMin = Math.min(hNat, Math.max(220, sc.clientHeight * .5));
+    h = Math.max(hMin, hNat - sc.scrollTop);
+    stage.style.marginBottom = (hNat - h) + 'px';
+    stage.classList.toggle('down', sc.scrollTop > 4);
+  } else stage.style.marginBottom = '';
+  const w = h * ar;
+  if (morphNext) { scr.classList.add('morph'); clearTimeout(fitStage.t); fitStage.t = setTimeout(() => scr.classList.remove('morph'), 600); morphNext = false; }
+  scr.classList.add('sized'); scr.style.width = w + 'px'; scr.style.height = h + 'px';
+}
 $('#optNames').checked = state.names; $('#optNames').onchange = e => { state.names = e.target.checked; relayout(); };
 $('#optDay').checked = state.weekday; $('#optDay').onchange = e => { state.weekday = e.target.checked; relayout(); };
 for (const [id, key] of [['#vTitle', 'title'], ['#vL1', 'l1'], ['#vL2', 'l2']]) {
@@ -1029,6 +1073,15 @@ async function recordRealtime(c, ctx, st, L, v, onProgress, abuf) {
   const ext = type.includes('mp4') ? 'mp4' : 'webm';
   return { blob: new Blob(chunks, { type: type.split(';')[0] }), ext };
 }
+async function renderStill(fmt) {
+  const st = JSON.parse(JSON.stringify(state)); st.format = fmt;
+  for (const w of [300, 350, 400, 600]) await document.fonts.load(jfont(w, 40));
+  await preloadCrests(); await LOGO.p; await LOGOM.p;
+  const L = buildLayout(st); const v = await getExportVideo(); await seek(v, 8);
+  const c = document.createElement('canvas'); c.width = W; c.height = outH(fmt);
+  render(c.getContext('2d'), 8, st, L, v);
+  return { blob: await new Promise(r => c.toBlob(r, 'image/jpeg', .93)), ext: 'jpg' };
+}
 function teamsKey() { return state.games.map(g => [g.home, g.away].map(id => (teamById(id) || {}).src).join()).join(); }
 function fileName(fmt, ext) { const d = (state.games[0] && state.games[0].date) || iso(new Date()); return `kaya-matchday-${d}${fmt === 'post' ? '-post' : '-story'}.${ext}`; }
 const STANDALONE = !(window.claude && window.claude.use);
@@ -1067,13 +1120,14 @@ shareBtn.onclick = async () => {
   if (busy) return;
   if (pending) { const ok = await shareFile(pending.blob, pending.name); if (ok) msg('Done.'); return; }
   if (!state.games.some(g => g.home && g.away)) { msg('Pick both teams for at least one game.', true); return; }
-  setBusy(true); msg(''); setShare('Making your video… 0%');
+  const still = state.kind === 'still';
+  setBusy(true); msg(''); setShare(still ? 'Making your picture…' : 'Making your video… 0%');
   try {
-    const out = await renderVideo(state.format, p => { $('#prog i').style.width = (p * 100).toFixed(1) + '%'; setShare(`Making your video… ${Math.round(p * 100)}%`); });
+    const out = still ? await renderStill(state.format) : await renderVideo(state.format, p => { $('#prog i').style.width = (p * 100).toFixed(1) + '%'; setShare(`Making your video… ${Math.round(p * 100)}%`); });
     const name = fileName(state.format, out.ext);
-    if (STANDALONE) { pending = { blob: out.blob, name }; setBusy(false); msg('Your video is ready.'); if (navigator.vibrate) navigator.vibrate(30); }
+    if (STANDALONE) { pending = { blob: out.blob, name }; setBusy(false); msg(still ? 'Your picture is ready.' : 'Your video is ready.'); if (navigator.vibrate) navigator.vibrate(30); }
     else { setBusy(false); if (await claudeSave(out.blob, name)) msg('Done.'); }
-  } catch (e) { console.error(e); setBusy(false); msg('Couldn’t make the video: ' + (e && e.message || e), true); }
+  } catch (e) { console.error(e); setBusy(false); msg((state.kind === 'still' ? 'Couldn’t make the picture: ' : 'Couldn’t make the video: ') + (e && e.message || e), true); }
 };
 /* ---------------- add to home screen ---------------- */
 const IS_IOS = /iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.maxTouchPoints > 1 && /Macintosh/.test(navigator.userAgent));
@@ -1119,7 +1173,7 @@ const _relayout = relayout; relayout = function () { _relayout(); clearPending()
 
 /* ---------------- boot ---------------- */
 window.__kaya = { state, renderVideo, buildLayout, render, relayout };
-renderGames(); syncFormat(); sizePreview(); addEventListener('resize', sizePreview);
+renderGames(); syncFormat(); syncKind(); sizePreview(); addEventListener('resize', () => { sizePreview(); fitStage(); }); $('#scroller').addEventListener('scroll', fitStage, { passive: true });
 [300, 350, 400, 600].forEach(w => document.fonts.load(jfont(w, 40)));
 bgv.play().catch(() => { playing = false; $('#playBtn').textContent = '▶ Play'; });
 preloadCrests(); renderMusic(); requestAnimationFrame(tick); initCaps(); loadData();
