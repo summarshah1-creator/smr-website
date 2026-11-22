@@ -45,7 +45,7 @@ addEventListener('load', loadStep);
 let SHOP = (() => { try { return JSON.parse(localStorage.getItem('jd_shop')) || null; } catch (e) { return null; } })() || { own: { classic: 1 }, eq: [], slots: 2, outfit: 'classic', hs500: 0, hs1000: 0, save: 0 };
 const saveShop = () => { try { localStorage.setItem('jd_shop', JSON.stringify(SHOP)); } catch (e) {} };
 const OUTFIT_KEYS = ['classic', 'eid', 'luton', 'puffer', 'moroccan'];
-const heroImgs = {}; OUTFIT_KEYS.forEach(k => heroImgs[k] = img(k === 'classic' ? 'art/hero3.webp?h=238b48ed63' : 'art/hero3_' + k + '.webp?v=4'));
+const heroImgs = {}; OUTFIT_KEYS.forEach(k => heroImgs[k] = img(k === 'classic' ? 'art/hero3.webp?h=9be4361b8d' : 'art/hero3_' + k + '.webp?v=4'));
 let heroImg = heroImgs[SHOP.outfit] || heroImgs.classic; const HX4 = 6;   // sheet = 6 px per cell unit (smooth cartoon hero, hd/hero_rig.js)
 const hasG = id => SHOP.eq.includes(id);   // hero redrawn at 3x the pixels (smooth curves, finer detail)
 const HERO_FR = ['run0_normal', 'run1_normal', 'run2_normal', 'run3_normal', 'run4_normal', 'run5_normal', 'fly0_effort', 'fly1_effort', 'fly2_effort', 'fly0_panic', 'fly1_panic', 'fly2_panic', 'glide0_normal', 'glide1_normal', 'land0_effort', 'glide0_ko', 'run0_happy', 'run0_blink', 'hang0_happy', 'hang1_happy', 'hang2_happy', 'hang3_happy', 'fall0_panic', 'fall1_panic', 'fall2_panic', 'fall0_ko', 'sit0_happy', 'sit1_happy'];
