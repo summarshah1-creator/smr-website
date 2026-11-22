@@ -91,6 +91,9 @@ input[type=date], input[type=time], input[type=text], input[type=search] { width
 .row { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
 .seg { display:flex; border:1px solid var(--line); border-radius:12px; overflow:hidden; }
 .seg button { flex:1; padding:11px 8px; background:#1b1813; color:var(--dim); border:0; font-size:14px; cursor:pointer; }
+.musSel { position:relative; }
+.musSel select { width:100%; appearance:none; -webkit-appearance:none; padding:13px 40px 13px 14px; border:1px solid var(--gold); border-radius:12px; background:#1a150c; color:var(--text); font:500 15px 'Josefin',sans-serif; cursor:pointer; }
+.musSel::after { content:''; position:absolute; right:16px; top:50%; width:8px; height:8px; border-right:2px solid var(--gold2); border-bottom:2px solid var(--gold2); transform:translateY(-70%) rotate(45deg); pointer-events:none; }
 .seg button.on { background:linear-gradient(180deg,#2c2416,#1d180f); color:var(--gold2); box-shadow: inset 0 -2px 0 var(--gold); }
 label.chk { display:flex; gap:8px; align-items:center; font-size:14px; color:var(--text); margin-top:10px; }
 label.chk input { width:18px; height:18px; accent-color: var(--gold); }
@@ -155,6 +158,7 @@ details[open] summary { margin-bottom:12px; }
       <button class="pill" id="playBtn">❚❚ Pause</button>
       <button class="pill" id="replayBtn">↺ Replay</button>
       <button class="pill" id="safeBtn">Safe zones</button>
+      <button class="pill" id="sndBtn">🔇 Sound off</button>
     </div>
   </div>
 
@@ -184,6 +188,12 @@ details[open] summary { margin-bottom:12px; }
       <p class="small" id="fmtNote" style="margin:8px 0 0"></p>
       <label class="chk"><input type="checkbox" id="optNames"> Show team names under crests</label>
       <label class="chk"><input type="checkbox" id="optDay"> Show weekday in the date (e.g. SATURDAY 8TH NOVEMBER)</label>
+    </section>
+
+    <section>
+      <h2>Background music</h2>
+      <div class="musSel"><select id="musList" aria-label="Background music"></select></div>
+      <p class="small" id="musNote" style="margin:8px 0 0">Automatic picks the music to match your games: the Champions League theme for Champions League games, the Premier League theme for Premier League games, and Kick-Off Anthem for everything else.</p>
     </section>
 
     <section>
@@ -234,6 +244,7 @@ details[open] summary { margin-bottom:12px; }
   </div>
 </div>
 
+<audio id="mus" preload="auto" playsinline></audio>
 <video id="bgv" src="bg.mp4" muted playsinline loop preload="auto" crossorigin="anonymous" style="display:none"></video>
 <script>
 ['gesturestart','gesturechange','gestureend'].forEach(t => document.addEventListener(t, e => e.preventDefault(), { passive: false }));
@@ -273,7 +284,7 @@ const state = {
     { home: 'fc-barcelona', away: 'aston-villa', date: iso(today), time: '20:00' },
     { home: 'manchester-united', away: 'as-roma', date: iso(today), time: '20:00' },
   ],
-  format: 'story', names: false, weekday: false,
+  format: 'story', music: 'auto', names: false, weekday: false,
   venue: { title: 'KAYA LOUNGE', l1: '10 MARSH ROAD, LUTON, LU3 2NH', l2: '35 GOLDINGTON ROAD, BEDFORD, MK40 3LH' },
 };
 let hadSaved = false;
@@ -500,21 +511,69 @@ function render(ctx, t, st, L, video) {
   ctx.restore();
 }
 
+/* ---------------- background music ---------------- */
+const MUSIC = [
+  { id: 'ucl', name: 'Champions League theme', src: 'music-ucl.m4a' },
+  { id: 'pl', name: 'Premier League theme', src: 'music-pl.m4a' },
+  { id: 'kickoff', name: 'Kick-Off Anthem', src: 'music-kickoff.m4a' },
+  { id: 'vibes', name: 'Matchday Vibes', src: 'music-vibes.m4a' },
+];
+function gameComp(g) {
+  if (g.c) return g.c;
+  const m = (typeof FIXTURES !== 'undefined' ? FIXTURES : []).find(m => m.d === g.date && fxRef(m.hi, m.h) === g.home && fxRef(m.ai, m.a) === g.away);
+  return m ? m.c : '';
+}
+function autoMusic(st) {
+  const comps = st.games.map(gameComp);
+  if (comps.includes('Champions League')) return 'ucl';
+  if (comps.includes('Premier League')) return 'pl';
+  return 'kickoff';
+}
+function musicFor(st) { const id = st.music === 'auto' || !st.music ? autoMusic(st) : st.music; return MUSIC.find(m => m.id === id) || null; }
+const musBuf = new Map();
+async function musicBuffer(track) {
+  if (!musBuf.has(track.id)) musBuf.set(track.id, (async () => {
+    const ab = await (await fetch(track.src)).arrayBuffer();
+    const oc = new (window.OfflineAudioContext || window.webkitOfflineAudioContext)(2, 48000 * DUR, 48000);
+    return await new Promise((res, rej) => { const r = oc.decodeAudioData(ab, res, rej); if (r && r.then) r.then(res, rej); });
+  })());
+  try { return await musBuf.get(track.id); } catch (e) { musBuf.delete(track.id); throw e; }
+}
+function renderMusic() {
+  const cur = state.music || 'auto', auto = MUSIC.find(m => m.id === autoMusic(state));
+  const rows = [['auto', 'Automatic' + (auto ? ` (${auto.name})` : '')], ...MUSIC.map(m => [m.id, m.name]), ['none', 'No music']];
+  const sel = $('#musList');
+  sel.innerHTML = rows.map(([id, n]) => `<option value="${id}"${id === cur ? ' selected' : ''}>${esc(n)}</option>`).join('');
+  sel.onchange = () => { state.music = sel.value; relayout(); syncSound(true); };
+}
+const musEl = $('#mus'); let soundOn = false;
+function syncSound(force) {
+  const tr = soundOn ? musicFor(state) : null;
+  if (!tr) { if (!musEl.paused) musEl.pause(); return; }
+  if (!musEl.src.endsWith(tr.src)) { musEl.src = tr.src; force = true; }
+  const t = playing ? (bgv.currentTime || 0) : frozenT;
+  if (force || Math.abs(musEl.currentTime - t) > .3) { try { musEl.currentTime = Math.min(t, DUR - .05); } catch (e) {} }
+  if (playing && musEl.paused) musEl.play().catch(() => {});
+  if (!playing && !musEl.paused) musEl.pause();
+}
+
 /* ---------------- preview ---------------- */
 const cv = $('#cv'), cctx = cv.getContext('2d'), bgv = $('#bgv');
 const dpr = Math.min(2, window.devicePixelRatio || 1);
 function sizePreview() { const r = cv.getBoundingClientRect(); const s = Math.min(1, (r.width * dpr) / W) || .5; cv.width = Math.round(W * s); cv.height = Math.round(H * s); }
 let layout = buildLayout(state), playing = true, frozenT = 0;
-let relayout = function () { layout = buildLayout(state); persistLocal(); };
+let relayout = function () { layout = buildLayout(state); persistLocal(); renderMusic(); };
 function preloadCrests() { return Promise.all(state.games.flatMap(g => [g.home, g.away]).map(id => { const t = teamById(id); const r = t && loadImg(t.src); return r ? r.p : null; })); }
 function tick() {
   const t = playing ? (bgv.currentTime || 0) : frozenT;
   const s = cv.width / W; cctx.setTransform(s, 0, 0, s, 0, 0);
   render(cctx, t, state, layout, bgv);
+  if (soundOn) syncSound();
   requestAnimationFrame(tick);
 }
 $('#playBtn').onclick = () => { playing = !playing; if (playing) { bgv.play().catch(() => {}); $('#playBtn').textContent = '❚❚ Pause'; } else { frozenT = bgv.currentTime; bgv.pause(); $('#playBtn').textContent = '▶ Play'; } };
 $('#replayBtn').onclick = () => { bgv.currentTime = 0; playing = true; bgv.play().catch(() => {}); $('#playBtn').textContent = '❚❚ Pause'; };
+$('#sndBtn').onclick = () => { soundOn = !soundOn; $('#sndBtn').textContent = soundOn ? '🔊 Sound on' : '🔇 Sound off'; $('#sndBtn').classList.toggle('on', soundOn); if (soundOn && !playing) $('#playBtn').click(); syncSound(true); };
 $('#safeBtn').onclick = () => { $('#screen').classList.toggle('showsafe'); $('#safeBtn').classList.toggle('on'); updateSafe(); };
 function updateSafe() {
   const z = state.format === 'story' ? [250, 340] : [130, 380];
@@ -719,13 +778,13 @@ function toggleFixture(m) {
   else {
     if (state.games.length >= 6) { msg('A video fits up to 6 games. Remove one first.', true); return; }
     state.games = state.games.filter(g => g.home || g.away);
-    state.games.push({ home: fxRef(m.hi, m.h), away: fxRef(m.ai, m.a), date: m.d, time: m.t || '' });
+    state.games.push({ home: fxRef(m.hi, m.h), away: fxRef(m.ai, m.a), date: m.d, time: m.t || '', c: m.c });
   }
   renderGames(); relayout(); preloadCrests(); renderFixtures();
 }
 $('#useTop').onclick = () => {
   const list = dayMatches(fxDay).slice(0, 3); if (!list.length) return;
-  state.games = list.map(m => ({ home: fxRef(m.hi, m.h), away: fxRef(m.ai, m.a), date: m.d, time: m.t || '' }));
+  state.games = list.map(m => ({ home: fxRef(m.hi, m.h), away: fxRef(m.ai, m.a), date: m.d, time: m.t || '', c: m.c }));
   renderGames(); relayout(); preloadCrests(); renderFixtures();
 };
 async function loadData() {
@@ -738,7 +797,7 @@ async function loadData() {
     const upcoming = state.games.filter(g => (g.home || g.away) && g.date >= today0);
     if (!hadSaved || !upcoming.length) {
       const d = fxDays().find(x => dayMatches(x).length);
-      if (d) { fxDay = d; const top = dayMatches(d)[0]; state.games = top ? [{ home: fxRef(top.hi, top.h), away: fxRef(top.ai, top.a), date: top.d, time: top.t || '' }] : []; }
+      if (d) { fxDay = d; const top = dayMatches(d)[0]; state.games = top ? [{ home: fxRef(top.hi, top.h), away: fxRef(top.ai, top.a), date: top.d, time: top.t || '', c: top.c }] : []; }
     } else fxDay = upcoming.map(g => g.date).sort()[0];
   } catch (e) { $('#fxList').innerHTML = '<p class="small">Couldn\u2019t load the fixture list.</p>'; }
   renderGames(); relayout(); preloadCrests(); renderFixtures();
@@ -797,6 +856,13 @@ async function getExportVideo() {
   await new Promise(r => { if (v.readyState >= 2) r(); else { v.addEventListener('loadeddata', r, { once: true }); v.load(); } });
   exportVid = v; return v;
 }
+async function pickAudio(allowOpus) {
+  if (!('AudioEncoder' in window) || !('AudioData' in window)) return null;
+  const tries = [['aac', { codec: 'mp4a.40.2', sampleRate: 48000, numberOfChannels: 2, bitrate: 160000 }]];
+  if (allowOpus) tries.push(['opus', { codec: 'opus', sampleRate: 48000, numberOfChannels: 2, bitrate: 160000 }]);
+  for (const [mux, cfg] of tries) { try { const s = await AudioEncoder.isConfigSupported(cfg); if (s.supported) return { mux, cfg }; } catch (e) {} }
+  return null;
+}
 async function pickCodec() {
   if (!('VideoEncoder' in window)) return null;
   for (const codec of ['avc1.640033', 'avc1.640028', 'avc1.4d0033', 'avc1.4d0028', 'avc1.42003e']) {
@@ -814,12 +880,29 @@ async function renderVideo(fmt, onProgress, bgFn) {
   const L = buildLayout(st); const v = await getExportVideo();
   const c = document.createElement('canvas'); c.width = W; c.height = H; const ctx = c.getContext('2d');
   const cfg = await pickCodec(); const N = DUR * FPS;
+  const track = musicFor(st); let abuf = null;
+  if (track) { try { abuf = await musicBuffer(track); } catch (e) { console.warn('music', e); } }
+  // AAC through WebCodecs first; if this browser can't make AAC but can record MP4 with AAC, record in real time; else Opus
+  let acfg = abuf ? await pickAudio(false) : null;
+  if (abuf && !acfg && !(window.MediaRecorder && MediaRecorder.isTypeSupported('video/mp4;codecs=avc1,mp4a.40.2'))) acfg = await pickAudio(true);
   let out;
-  if (cfg && window.Mp4Muxer) {
-    const muxer = new Mp4Muxer.Muxer({ target: new Mp4Muxer.ArrayBufferTarget(), video: { codec: 'avc', width: W, height: H, frameRate: FPS }, fastStart: 'in-memory' });
+  if (cfg && window.Mp4Muxer && (!abuf || acfg)) {
+    const muxer = new Mp4Muxer.Muxer({ target: new Mp4Muxer.ArrayBufferTarget(), video: { codec: 'avc', width: W, height: H, frameRate: FPS },
+      audio: acfg ? { codec: acfg.mux, numberOfChannels: 2, sampleRate: 48000 } : undefined, fastStart: 'in-memory' });
     let err = null;
     const enc = new VideoEncoder({ output: (ch, meta) => muxer.addVideoChunk(ch, meta), error: e => { err = e; } });
     enc.configure(cfg);
+    let aenc = null, aPos = 0; const AN = abuf ? Math.min(abuf.length, 48000 * DUR) : 0;
+    if (acfg) { aenc = new AudioEncoder({ output: (ch, meta) => muxer.addAudioChunk(ch, meta), error: e => { err = e; } }); aenc.configure(acfg.cfg); }
+    const L0 = abuf ? abuf.getChannelData(0) : null, R0 = abuf ? abuf.getChannelData(abuf.numberOfChannels > 1 ? 1 : 0) : null;
+    const pushAudio = until => {   // feed audio up to sample `until`, in 1024-frame pieces
+      while (aenc && aPos < Math.min(until, AN)) {
+        const n = Math.min(1024, AN - aPos), d = new Float32Array(n * 2);
+        d.set(L0.subarray(aPos, aPos + n), 0); d.set(R0.subarray(aPos, aPos + n), n);
+        const ad = new AudioData({ format: 'f32-planar', sampleRate: 48000, numberOfFrames: n, numberOfChannels: 2, timestamp: Math.round(aPos * 1e6 / 48000), data: d });
+        aenc.encode(ad); ad.close(); aPos += n;
+      }
+    };
     for (let i = 0; i < N; i++) {
       if (err) throw err;
       const t = i / FPS; let src = v;
@@ -827,28 +910,39 @@ async function renderVideo(fmt, onProgress, bgFn) {
       render(ctx, t, st, L, src);
       const fr = new VideoFrame(c, { timestamp: Math.round(i * 1e6 / FPS), duration: Math.round(1e6 / FPS) });
       enc.encode(fr, { keyFrame: i % 60 === 0 }); fr.close();
+      pushAudio(Math.round((i + 1) * 48000 / FPS));
       while (enc.encodeQueueSize > 6) await new Promise(r => setTimeout(r, 5));
       if (i % 5 === 0) onProgress(i / N);
     }
-    await enc.flush(); if (err) throw err; muxer.finalize();
+    pushAudio(AN);
+    await enc.flush(); if (aenc) await aenc.flush(); if (err) throw err; muxer.finalize();
     out = { blob: new Blob([muxer.target.buffer], { type: 'video/mp4' }), ext: 'mp4' };
   } else {
-    out = await recordRealtime(c, ctx, st, L, v, onProgress);
+    out = await recordRealtime(c, ctx, st, L, v, onProgress, abuf);
   }
   onProgress(1); cacheOut.set(key, out); return out;
 }
-async function recordRealtime(c, ctx, st, L, v, onProgress) {
-  const types = ['video/mp4;codecs=avc1', 'video/mp4', 'video/webm;codecs=vp9', 'video/webm'];
+async function recordRealtime(c, ctx, st, L, v, onProgress, abuf) {
+  const types = ['video/mp4;codecs=avc1,mp4a.40.2', 'video/mp4;codecs=avc1', 'video/mp4', 'video/webm;codecs=vp9,opus', 'video/webm;codecs=vp9', 'video/webm'];
   const type = types.find(t => window.MediaRecorder && MediaRecorder.isTypeSupported(t));
   if (!type) throw new Error('This browser can’t record video. Try Chrome or Safari.');
-  const stream = c.captureStream(FPS); const rec = new MediaRecorder(stream, { mimeType: type, videoBitsPerSecond: 12_000_000 });
+  const stream = c.captureStream(FPS); let ac = null, srcNode = null;
+  if (abuf) {
+    try {
+      ac = new (window.AudioContext || window.webkitAudioContext)(); await ac.resume();
+      const dst = ac.createMediaStreamDestination(); srcNode = ac.createBufferSource(); srcNode.buffer = abuf; srcNode.connect(dst);
+      dst.stream.getAudioTracks().forEach(tr => stream.addTrack(tr));
+    } catch (e) { console.warn('audio', e); srcNode = null; }
+  }
+  const rec = new MediaRecorder(stream, { mimeType: type, videoBitsPerSecond: 12_000_000, audioBitsPerSecond: 160000 });
   const chunks = []; rec.ondataavailable = e => e.data.size && chunks.push(e.data);
-  await seek(v, 0); render(ctx, 0, st, L, v); rec.start(250); await v.play();
+  await seek(v, 0); render(ctx, 0, st, L, v); rec.start(250); await v.play(); if (srcNode) srcNode.start();
   await new Promise(res => {
     const step = () => { const t = v.currentTime; render(ctx, t, st, L, v); onProgress(t / DUR); if (t >= DUR - .05 || v.ended) { v.pause(); res(); } else requestAnimationFrame(step); };
     requestAnimationFrame(step);
   });
   await new Promise(r => { rec.onstop = r; rec.stop(); });
+  if (ac) { try { srcNode && srcNode.stop(); ac.close(); } catch (e) {} }
   const ext = type.includes('mp4') ? 'mp4' : 'webm';
   return { blob: new Blob(chunks, { type: type.split(';')[0] }), ext };
 }
@@ -942,7 +1036,7 @@ window.__kaya = { state, renderVideo, buildLayout, render, relayout };
 renderGames(); syncFormat(); sizePreview(); addEventListener('resize', sizePreview);
 [300, 350, 400, 600].forEach(w => document.fonts.load(jfont(w, 40)));
 bgv.play().catch(() => { playing = false; $('#playBtn').textContent = '▶ Play'; });
-preloadCrests(); requestAnimationFrame(tick); initCaps(); loadData();
+preloadCrests(); renderMusic(); requestAnimationFrame(tick); initCaps(); loadData();
 </script>
 </body>
 </html>
