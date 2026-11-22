@@ -41,8 +41,8 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .hide{display:none!important}
 
 /* ---------- home screen ---------- */
-#home{position:absolute;inset:0;pointer-events:auto;display:grid;grid-template-columns:calc(var(--sl,0px) + minmax(150px,24vw)) 1fr;grid-template-columns:calc(var(--sl,0px) + 26%) 1fr;background:linear-gradient(90deg,rgba(8,5,24,.9) 0,rgba(8,5,24,.72) 32%,rgba(8,5,24,.5) 62%,rgba(8,5,24,.62))}
-.side{display:flex;flex-direction:column;gap:7px;padding:12px 10px 12px calc(var(--sl,0px) + 22px);background:repeating-linear-gradient(135deg,#ffd21f 0 12px,#1a1024 12px 24px) left/8px 100% no-repeat}
+#home{position:absolute;inset:0;pointer-events:auto;display:grid;grid-template-columns:calc(var(--sl,0px) + minmax(150px,24vw)) 1fr;grid-template-columns:calc(var(--sl,0px) + 22%) 1fr;background:linear-gradient(90deg,rgba(8,5,24,.9) 0,rgba(8,5,24,.72) 32%,rgba(8,5,24,.5) 62%,rgba(8,5,24,.62))}
+.side{display:flex;flex-direction:column;gap:7px;padding:12px 8px 12px calc(max(8px,var(--sl,0px)) + 10px);background:repeating-linear-gradient(135deg,#ffd21f 0 12px,#1a1024 12px 24px) left/max(8px,var(--sl,0px)) 100% no-repeat}
 .side .tile{font-family:PS,monospace;font-size:clamp(8px,1.25vw,12px);text-align:left;border:0;border-radius:9px;padding:9px 10px;background:linear-gradient(#3a3168,#241c48);color:#fff;box-shadow:0 3px 0 #120c26,0 0 0 2px #5a4fa0 inset;display:flex;align-items:center;justify-content:space-between;gap:8px;cursor:pointer;line-height:1.5}
 .side .tile small{font-family:Silk;font-size:10px;color:#bdb4ff}
 .side .tile.gold{background:linear-gradient(#ffcf3a,#e09a12);color:#2a1500;box-shadow:0 3px 0 #8a5300,0 0 0 2px #fff0a8 inset}
@@ -50,21 +50,21 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .side .tile.lock{opacity:.55}
 .side .mos{display:flex;align-items:center;gap:8px}
 .side .mos canvas{position:static;width:46px;height:31px;border-radius:6px;background:linear-gradient(#ffc27c,#f08c6e);flex:none}
-.main{position:relative}
-.title{position:absolute;left:4%;top:4%;width:min(56%,560px);display:flex;flex-direction:column;align-items:flex-start;gap:6px}
-.logo{width:100%;filter:drop-shadow(0 8px 12px rgba(0,0,0,.55))}
+.main{position:relative;container-type:size;--hz:calc(3% + 56.8cqh + 8px)}
+.title{position:absolute;left:2%;right:var(--hz);top:4%;display:flex;flex-direction:column;align-items:center;gap:6px}
+.logo{width:100%;max-width:640px;filter:drop-shadow(0 8px 12px rgba(0,0,0,.55))}
 .badge{font-family:Silk;font-weight:700;font-size:12px;letter-spacing:2px;color:#ffd75a;background:#151226;border:2px solid #ffd75a;border-radius:20px;padding:4px 12px}
-.tag{margin-left:2%;font-size:14px;color:#fff;text-shadow:3px 3px 0 #160c28}
+.tag{text-align:center;font-size:14px;color:#fff;text-shadow:3px 3px 0 #160c28}
 .tag b{color:#ffd75a}
-.heroWrap{position:absolute;right:3%;bottom:4%;height:84%;aspect-ratio:925/1302;animation:bob 2.2s ease-in-out infinite}
+.heroWrap{position:absolute;right:3%;bottom:4%;height:80%;aspect-ratio:925/1302;animation:bob 2.2s ease-in-out infinite}
 .hero{position:relative;z-index:1;width:100%;height:100%;filter:drop-shadow(10px 14px 10px rgba(0,0,0,.45))}
 #steamCv{position:absolute;z-index:2;left:-80%;top:0;width:180%;height:140%;pointer-events:none}
 @keyframes bob{50%{transform:translateY(-4%) rotate(-1.5deg)}}
 .stats{position:absolute;top:10px;right:calc(var(--sr,0px) + 64px);display:flex;gap:8px;font-size:clamp(9px,1.3vw,13px)}
 .stats div{background:rgba(18,12,38,.8);border-radius:9px;padding:7px 10px;box-shadow:0 0 0 2px rgba(255,255,255,.2) inset;display:flex;align-items:center;gap:7px}
 .stats .gold{color:#ffd75a}
-.play{position:absolute;left:5.5%;bottom:9%;font-size:clamp(11px,1.9vw,19px);color:#ffd75a;text-shadow:3px 3px 0 #160c28;animation:pulse 1s infinite}
-.mine{position:absolute;left:5.5%;bottom:calc(9% + 34px);font-family:Silk;font-size:clamp(10px,1.4vw,14px);color:#e8e4ff;text-shadow:2px 2px 0 #160c28}
+.play{position:absolute;left:2%;right:var(--hz);text-align:center;bottom:9%;font-size:clamp(11px,1.9vw,19px);color:#ffd75a;text-shadow:3px 3px 0 #160c28;animation:pulse 1s infinite}
+.mine{position:absolute;left:2%;right:var(--hz);text-align:center;bottom:calc(9% + 34px);font-family:Silk;font-size:clamp(10px,1.4vw,14px);color:#e8e4ff;text-shadow:2px 2px 0 #160c28}
 .mine b{color:#7dffa0}
 @keyframes pulse{50%{opacity:.4}}
 
@@ -116,8 +116,8 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .item .buy.eq{background:#3a3168;box-shadow:0 4px 0 #1a1438}.item .buy.on{background:#ffd75a;color:#2a1600;box-shadow:0 4px 0 #a8770c}.item .buy.no{background:#5a4f80;box-shadow:0 4px 0 #2a2450;color:#bdb6e0}
 .item.shake{animation:shk .35s}@keyframes shk{20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
 .item.on{border-color:#ffd75a;background:rgba(255,215,90,.1)}
-#hsBox{position:absolute;right:calc(var(--sr,0px) + 14px);bottom:18px;display:flex;gap:8px;transform:translateX(130%);transition:transform .35s cubic-bezier(.3,1.4,.6,1);pointer-events:none}
-#hsBox.on{transform:none;pointer-events:auto}
+#hsBox{position:absolute;right:calc(var(--sr,0px) + 14px);bottom:18px;display:flex;gap:8px;transform:translateX(calc(130% + var(--sr,0px) + 20px));visibility:hidden;transition:transform .35s cubic-bezier(.3,1.4,.6,1),visibility 0s .35s;pointer-events:none}
+#hsBox.on{transform:none;visibility:visible;transition:transform .35s cubic-bezier(.3,1.4,.6,1);pointer-events:auto}
 #hsBox button{font-family:PS,monospace;color:#2a1600;background:linear-gradient(#ffe27a,#f0a81c);border:3px solid #fff1b0;border-radius:12px;padding:6px 10px;box-shadow:0 5px 0 #a8770c,0 0 16px rgba(255,200,60,.5);display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;animation:pulse .7s infinite alternate}
 #hsBox b{font-size:8px}#hsBox span{font-size:13px}#hsBox i{font-style:normal;font-family:Silk;font-size:9px}
 #saveMe{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(8,4,22,.55);pointer-events:auto;z-index:20;animation:itIn .25s}
@@ -158,6 +158,30 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .env .b small{font-family:Silk;font-size:9px;margin-top:4px;line-height:1.2}
 .env.open{transform:rotateY(180deg);animation:none}
 #toast{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);background:#151226;border:2px solid #ffd75a;border-radius:12px;padding:8px 14px;font-family:Silk;font-size:13px;color:#fff;pointer-events:none}
+
+/* sideways help (owner 22 Nov): in a phone browser the game asks for rotation lock (iPhone) or full screen (Android) so the browser bars never sit over it */
+#rot{position:fixed;inset:0;z-index:98;background:radial-gradient(120% 80% at 50% 0%,#2a2252,#0c0820 70%);color:#fff;font-family:Silk,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:calc(env(safe-area-inset-top) + 14px) 18px calc(env(safe-area-inset-bottom) + 14px);box-sizing:border-box;overflow:auto;text-align:center;transition:opacity .35s;touch-action:pan-y}
+#rot.hide{opacity:0;pointer-events:none}
+#rot .lg{width:min(52vw,230px)}
+#rot h1{font-family:PS,sans-serif;font-size:22px;margin:0;color:#ffd75a;letter-spacing:.5px}
+#rot .sub{font-size:13px;color:#d9d3ff;margin:-4px 0 2px;line-height:1.4}
+#rot .cards{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;width:100%;max-width:720px}
+#rot .cd{flex:1 1 260px;max-width:340px;background:rgba(255,255,255,.07);border:2px solid rgba(255,215,90,.55);border-radius:16px;padding:12px 14px;box-sizing:border-box;text-align:left;font-size:13px;line-height:1.45;color:#eee9ff}
+#rot .cd b{color:#fff}#rot .cd h3{margin:0 0 6px;font-family:PS,sans-serif;font-size:15px;color:#ffd75a;display:flex;align-items:center;gap:8px}
+#rot .cd ol{margin:0;padding-left:18px}#rot .cd li{margin:3px 0}
+#rot .n{display:inline-flex;width:22px;height:22px;border-radius:50%;background:#ffd75a;color:#2a2252;align-items:center;justify-content:center;font-size:13px;flex:none}
+#rot .ico{display:inline-block;vertical-align:-5px;width:20px;height:20px}
+#rot .go{font-family:PS,sans-serif;border:0;border-radius:14px;padding:13px 34px;font-size:18px;color:#2a1a00;background:linear-gradient(#ffe27a,#ffb52e);box-shadow:0 4px 0 #b8741a;cursor:pointer}
+#rot .lnk{background:none;border:0;color:#b9b0e8;font:12px Silk,sans-serif;text-decoration:underline;cursor:pointer;padding:4px}
+#rot .ph{display:flex;align-items:center;justify-content:center;gap:26px;margin-top:14px;min-height:56px;color:#ffd75a;font-size:12px}
+#rot .phone{width:30px;height:52px;border:3px solid #fff;border-radius:7px;position:relative;animation:turnL 2.4s ease-in-out infinite}
+#rot .phone:after{content:'';position:absolute;top:3px;left:50%;width:10px;height:3px;margin-left:-5px;border-radius:2px;background:#fff}
+@keyframes turnL{0%,20%{transform:rotate(0)}55%,85%{transform:rotate(-90deg)}100%{transform:rotate(0)}}
+#rot [data-for]{display:none}
+#rot[data-m="welcome"][data-os="ios"] [data-for~="wi"],#rot[data-m="welcome"][data-os="and"] [data-for~="wa"],#rot[data-m="welcome"][data-os="oth"] [data-for~="wa"],#rot[data-m="lock"] [data-for~="lk"],#rot[data-m="fs"] [data-for~="fs"]{display:revert}
+#rot[data-m="lock"] .lg,#rot[data-m="fs"] .lg{width:min(26vw,150px)}
+#pz{position:absolute;inset:0;z-index:40;background:rgba(8,4,22,.6);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;pointer-events:auto;font-family:PS,sans-serif;color:#fff;text-shadow:0 2px 0 #160c28}
+#pz.hide{display:none}#pz b{font-size:30px;color:#ffd75a}#pz span{font-size:16px;animation:bob .8s ease-in-out infinite alternate}
 </style>
 </head>
 <body>
@@ -165,6 +189,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 <canvas id="cv"></canvas>
 <div id="ui">
   <div class="hud" id="hud"><div id="dist">0m</div><div class="c"><span class="coin">£</span><span id="coins">£0</span></div></div>
+  <div id="pz" class="hide"><b>PAUSED</b><span>TAP TO CARRY ON</span></div>
   <div class="top-r"><button class="btn" id="snd">🔊</button></div>
 
   <div id="home">
@@ -260,11 +285,39 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
   <div id="toast" class="hide"></div>
 </div>
 </div>
+
+<div id="rot" class="hide" data-m="">
+  <img class="lg" src="art/logo.webp?h=d69bcb982d" alt="Jummah Dash">
+  <h1 data-for="wi wa">Best played sideways</h1>
+  <h1 data-for="lk">Turn on rotation lock to keep playing</h1>
+  <h1 data-for="fs">Play full screen</h1>
+  <div class="sub" data-for="wi">Pick one of these so Safari's bars stay out of the way:</div>
+  <div class="sub" data-for="lk">Your game is paused. Safari's bars get in the way when the screen turns, so lock it:</div>
+  <div class="sub" data-for="wa">Tap PLAY and turn your phone sideways. It goes full screen by itself.</div>
+  <div class="sub" data-for="fs">Your game is paused. Tap below to go full screen and carry on.</div>
+  <div class="cards">
+    <div class="cd" data-for="wi lk"><h3><span class="n">1</span>Turn on rotation lock</h3><ol>
+      <li>Swipe down from the <b>top-right corner</b> of your screen</li>
+      <li>Tap <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="#ffd75a" stroke-width="2"><path d="M20 12a8 8 0 1 1-2.3-5.6"/><path d="M20 4v4h-4"/><rect x="8.5" y="11" width="7" height="6" rx="1" fill="#ffd75a"/><path d="M10 11V9.5a2 2 0 0 1 4 0V11"/></svg> <b>Portrait Orientation Lock</b> so it turns on</li>
+      <li>Turn your phone sideways and play</li></ol>
+      <div class="ph"><span class="phone"></span>Turn it this way</div></div>
+    <div class="cd" data-for="wi lk"><h3><span class="n">2</span>Or add it to your Home Screen</h3><ol>
+      <li>Tap <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="#7fb6ff" stroke-width="2"><path d="M12 3v12"/><path d="M8 7l4-4 4 4"/><path d="M6 11H5v10h14V11h-1"/></svg> <b>Share</b> at the bottom of Safari</li>
+      <li>Tap <b>Add to Home Screen</b>, then <b>Add</b></li>
+      <li>Open <b>Jummah Dash</b> from your Home Screen: full screen, always sideways, no bars</li></ol></div>
+    <div class="cd" data-for="wa"><h3><span class="n">★</span>Best way to play</h3><ol>
+      <li>Tap <b>⋮</b> in your browser, then <b>Add to Home screen</b> or <b>Install app</b></li>
+      <li>Open <b>Jummah Dash</b> from your Home Screen: full screen and always sideways</li></ol></div>
+  </div>
+  <button class="go" id="rotGo" data-for="wi wa">PLAY ▸</button>
+  <button class="go" id="rotFs" data-for="fs">FULL SCREEN ▸</button>
+  <button class="lnk" id="rotAny" data-for="lk">Play like this anyway</button>
+</div>
 <div id="load"><img src="art/logo.webp?h=d69bcb982d" alt="Jummah Dash"><div class="bar"><i id="loadBar"></i></div><div class="lt" id="loadTxt">LOADING… 0%</div></div>
 <script src="landmarks.js?h=5121e57aa2"></script>
 <script src="vehicles.js?h=32fdac20ce"></script>
 <script src="hd/cars_v3.js?h=333148ab5d"></script>
 <script src="hd/landmarks_hd.js?h=008cc0e557"></script>
-<script src="game.js?h=7bfdaacc19"></script>
+<script src="game.js?h=90884ecf78"></script>
 </body>
 </html>

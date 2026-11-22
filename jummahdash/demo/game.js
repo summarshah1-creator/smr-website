@@ -25,8 +25,9 @@ function resize() {
   const st = $('stage'), port = innerHeight > innerWidth, sw = port ? innerHeight : innerWidth, sh2 = port ? innerWidth : innerHeight;
   st.style.width = sw + 'px'; st.style.height = sh2 + 'px'; st.style.transform = port ? `translateX(${innerWidth}px) rotate(90deg)` : 'none';
   // keep the menu and HUD clear of the notch / Dynamic Island: on an upright phone the island ends up on the left of the turned stage
-  st.style.setProperty('--sl', port ? 'max(44px, env(safe-area-inset-top))' : 'max(0px, env(safe-area-inset-left))');
-  st.style.setProperty('--sr', port ? 'max(0px, env(safe-area-inset-bottom))' : 'max(0px, env(safe-area-inset-right))');
+  // owner 22 Nov: same safe margin on BOTH sides (whichever way round the phone is, the Dynamic Island side never gets buttons)
+  const safe = port ? 'max(44px, env(safe-area-inset-top))' : 'max(env(safe-area-inset-left), env(safe-area-inset-right))';
+  st.style.setProperty('--sl', safe); st.style.setProperty('--sr', safe);
   cv.width = Math.round(sw * dpr); cv.height = Math.round(sh2 * dpr);
   S = cv.height / VH; W = cv.width / S;
   const k = Math.min(4, Math.max(1, Math.round(S * 10) / 10));
@@ -343,7 +344,7 @@ Object.assign(SFX, (() => {
   }; })());
 
 /* ---------------- game state ---------------- */
-let state = 'menu', t = 0, dist = 0, speed = 0, coins = 0, best = +(localStorage.getItem('jd_best') || 0);
+let paused = false, state = 'menu', t = 0, dist = 0, speed = 0, coins = 0, best = +(localStorage.getItem('jd_best') || 0);
 const hero = { x: 0, y: FLOOR, vy: 0, thrust: false, ground: true, landT: 0, rot: 0, run: 0, dead: false, vx: 0, bounce: 0, blink: 0 };
 let holding = false;
 let street = [], skyline = [], cars = [], npcs = [], obs = [], coinList = [], steam = [], sparks = [], stars = [];
@@ -1451,10 +1452,14 @@ tap('instGo', async () => { if (!instEvt) return; instEvt.prompt(); const r = aw
 tap('instClose', () => $('inst').classList.add('hide'));
 /* keep the game on the phone (service worker); a new version takes over next time the home screen is showing */
 if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
-  navigator.serviceWorker.register('sw.js').catch(() => {});
+  // owner 22 Nov: look for a new version when the game opens, every time it comes back on screen and every minute (browser and Home Screen app);
+  // a new version loads straight away on the home screen, or once the run is over, so nobody is thrown out mid-game. Saved coins/shop stay.
+  navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).then(reg => { const up = () => reg.update().catch(() => {});
+    up(); document.addEventListener('visibilitychange', () => { if (!document.hidden) up(); }); addEventListener('pageshow', up); addEventListener('focus', up); setInterval(up, 60000); }).catch(() => {});
   let had = !!navigator.serviceWorker.controller, want = false;
   navigator.serviceWorker.addEventListener('controllerchange', () => { if (!had) { had = true; return; } want = true; });
-  setInterval(() => { if (want && state === 'menu' && $('home') && !$('home').classList.contains('hide')) location.reload(); }, 1000);
+  setInterval(() => { if (!want) return; const vis = id => $(id) && !$(id).classList.contains('hide');
+    if ((state === 'menu' && vis('home')) || (state === 'dead' && vis('over'))) location.reload(); }, 1000);
 }
 tap('bMis', () => { $('misRank').innerHTML = rankHtml(); missionRows($('misRows')); $('mis').classList.remove('hide'); }); tap('misClose', () => $('mis').classList.add('hide')); tap('howClose', () => $('how').classList.add('hide'));
 tap('bShare', () => share('Late for Jummah? Play Jummah Dash – an SMR Original 🕌💨'));
@@ -1462,7 +1467,7 @@ tap('again', start); tap('ovHome', goHome);
 tap('eidiGo', () => { if ($('eidiGo').dataset.life) revive(); else { $('eidiBox').classList.add('hide'); eidi = 0; showOver(); } });
 tap('ovShare', () => share(`I flew ${Math.floor(dist / 10)}m and grabbed £${coins} trying to get to Jummah 😂 Beat that on Jummah Dash:`));
 tap('snd', () => { sndOn = !sndOn; $('snd').textContent = sndOn ? '🔊' : '🔇'; if (!sndOn && hissG) hissG.gain.value = 0; });
-const noHold = el => el && el.closest && el.closest('.btn,#home,.sheet,#over,#eidiBox');
+const noHold = el => el && el.closest && el.closest('.btn,#home,.sheet,#over,#eidiBox,#pz,#rot');
 window.addEventListener('pointerdown', e => { if (noHold(e.target)) return; holding = true; audio(); });
 window.addEventListener('touchstart', e => { if (noHold(e.target)) return; e.preventDefault(); holding = true; audio(); }, { passive: false });
 window.addEventListener('touchend', e => { if (!e.touches.length) holding = false; }); window.addEventListener('touchcancel', () => holding = false);
@@ -1470,7 +1475,36 @@ window.addEventListener('pointerup', () => holding = false); window.addEventList
 window.addEventListener('keydown', e => { if (e.code === 'Space' || e.code === 'ArrowUp') { e.preventDefault(); if (state === 'menu') start(); else if (state === 'dead' && !$('over').classList.contains('hide')) start(); else holding = true; } });
 window.addEventListener('keyup', e => { if (e.code === 'Space' || e.code === 'ArrowUp') holding = false; });
 document.addEventListener('gesturestart', e => e.preventDefault());
-window.addEventListener('resize', resize); window.addEventListener('orientationchange', () => setTimeout(resize, 200));
+/* phone browsers (owner 22 Nov): a welcome screen asks for rotation lock (iPhone) or full screen (Android); if the screen turns
+   in the browser the game pauses and asks again; any turn mid-run pauses the game (tap to carry on) so nobody dies in the flip */
+const UA = navigator.userAgent, IOS = /iPhone|iPad|iPod/.test(UA) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1), AND = /Android/i.test(UA);
+const PHONE = matchMedia('(pointer: coarse)').matches && Math.min(screen.width, screen.height) < 520;
+let welcomed = false, anyway = false, lastPort = null;
+const running = () => state === 'play' || state === 'intro';
+const pauseGame = () => { if (running() && !paused) { paused = true; holding = false; $('pz').classList.remove('hide'); } };
+tap('pz', () => setTimeout(() => { paused = false; $('pz').classList.add('hide'); }, 120));
+document.addEventListener('visibilitychange', () => { if (document.hidden) pauseGame(); });
+function rotCheck() {
+  const port = innerHeight > innerWidth, fs = !!(document.fullscreenElement || document.webkitFullscreenElement), r = $('rot');
+  if (lastPort !== null && port !== lastPort) pauseGame(); lastPort = port;
+  let m = '';
+  if (PHONE && !isApp) {
+    if (!welcomed) m = 'welcome';
+    else if (!port && IOS && !anyway) m = 'lock';
+    else if (!port && AND && !fs && !anyway) m = 'fs';
+  }
+  r.dataset.os = IOS ? 'ios' : AND ? 'and' : 'oth'; r.dataset.m = m; r.classList.toggle('hide', !m);
+  if (m && m !== 'welcome') pauseGame();
+}
+const goFull = async () => { if (!AND) return; try { const d = document.documentElement; await (d.requestFullscreen ? d.requestFullscreen({ navigationUI: 'hide' }) : d.webkitRequestFullscreen()); } catch (e) {} try { await screen.orientation.lock('landscape'); } catch (e) {} };
+tap('rotGo', () => { welcomed = true; goFull(); rotCheck(); });
+tap('rotFs', () => { goFull(); setTimeout(rotCheck, 400); });
+tap('rotAny', () => { anyway = true; rotCheck(); });
+const reflow = () => { resize(); rotCheck(); };
+window.addEventListener('resize', reflow); window.addEventListener('orientationchange', () => { pauseGame(); [80, 250, 600].forEach(d => setTimeout(reflow, d)); });
+if (window.visualViewport) visualViewport.addEventListener('resize', reflow);
+document.addEventListener('fullscreenchange', () => setTimeout(reflow, 100));
+[60, 300, 900].forEach(d => setTimeout(reflow, d));   // first open: Safari settles its size a moment after load
 // home screen: smoky steam pouring out of the two cooker nozzles. The canvas sits ON TOP of the art, and the art (minus the two dark
 // nozzle openings) is cut back out of it every frame, so the steam shows inside the openings, disappears behind the front lip,
 // then reappears below it: it looks like it comes from inside the holes, and it still passes behind the cooker, thobe and legs.
@@ -1509,7 +1543,7 @@ window.addEventListener('resize', resize); window.addEventListener('orientationc
 
 resize(); seedStars(); reset(); refreshHome(); if (myMosque) setTimeout(refreshHome, 300);
 let last = performance.now();
-function frame(now) { const dt = Math.min(.05, (now - last) / 1000); last = now; update(dt); draw(); if (bakeQ.length) bakeOne(); requestAnimationFrame(frame); }
+function frame(now) { const dt = Math.min(.05, (now - last) / 1000); last = now; if (!paused) update(dt); else holding = false; draw(); if (bakeQ.length) bakeOne(); requestAnimationFrame(frame); }
 requestAnimationFrame(frame);
 window.__jd = { veh: k => startVehicle(k), laser: () => [CEIL + 40, (CEIL + FLOOR) / 2].forEach((y, i) => obs.push({ type: 'laser', x: W / 2, y, ph: 'in', pt: 0, slide: 0, d: i * .12 })), eidi: n => { eidi = n; }, kill: w => die(w), gift: k => gifts.push({ k, x: W * .6, y: 200, b: 0 }), get state() { return state; }, start, hero, get obs() { return obs; }, spawnRocket: () => obs.push({ type: "rocket", x: W + 40, y: hero.y - 30, warn: 1.5, lock: 0, v: 0 }), setHold: v => holding = v, get dist() { return dist; }, mis: (s, c) => { RUN.steamed = s; coins = c; }, get npcs() { return npcs; }, boost: m => startBoost(m), get SHOP() { return SHOP; }, bc: (k, kd) => buildingCanvas(kd || "lm", k), carSprite: (k, ci, f) => carSprite(k, ci, f), queue: k => deck.unshift([k]), street: () => street, npc: x => spawnNpc(x), car: (x, k, l) => spawnCar(x, k, false, l), get STREET() { return STREET; } };
 })();
