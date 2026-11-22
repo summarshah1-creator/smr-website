@@ -68,6 +68,7 @@ header span { color:var(--dim); font-size:13px; letter-spacing:.08em; }
 @media (min-width: 860px) { .wrap { grid-template-columns: 380px 1fr; align-items:start; } .stage { position:sticky; top:14px; } }
 .stage { display:flex; flex-direction:column; align-items:center; gap:10px; }
 .screen { position:relative; width:min(100%, 380px); aspect-ratio:9/16; border-radius:18px; overflow:hidden; background:#000; box-shadow:0 20px 60px rgba(0,0,0,.6), 0 0 0 1px #2a2418; }
+.screen.post { aspect-ratio:4/5; }
 .screen canvas { width:100%; height:100%; display:block; }
 .safe { position:absolute; left:0; right:0; pointer-events:none; background:repeating-linear-gradient(45deg, rgba(214,171,82,.10) 0 6px, transparent 6px 12px); border-color:rgba(214,171,82,.35); display:none; }
 .safe.top { top:0; border-bottom:1px dashed; } .safe.bot { bottom:0; border-top:1px dashed; }
@@ -228,6 +229,7 @@ button:active, .big:active, .pill:active, .chip:active, .fx:active, .hsBtn:activ
       <h2>Format</h2>
       <div class="seg" id="fmtSeg">
         <button data-f="story" class="on">Story format</button>
+        <button data-f="post">Post format</button>
       </div>
       <p class="small" id="fmtNote" style="margin:8px 0 0"></p>
       <label class="chk"><input type="checkbox" id="optNames"> Show team names under crests</label>
@@ -309,6 +311,9 @@ let _lt = 0; document.addEventListener('touchend', e => { const n = Date.now(); 
 <script>
 "use strict";
 const W = 1080, H = 1920, FPS = 30, DUR = 15;
+// Post format (Instagram feed, 4:5): the lounge fills 1080×1350 and the story layout sits in the middle, trimmed of its empty top/bottom
+const POST = { h: 1350, k: .8, top: 150 };
+const outH = fmt => fmt === 'post' ? POST.h : H;
 const $ = s => document.querySelector(s);
 
 /* ---------------- data ---------------- */
@@ -342,7 +347,7 @@ const state = {
   venue: { title: 'KAYA LOUNGE', l1: '10 MARSH ROAD, LUTON, LU3 2NH', l2: '35 GOLDINGTON ROAD, BEDFORD, MK40 3LH' },
 };
 let hadSaved = false;
-try { const s = JSON.parse(localStorage.getItem('kaya-state') || 'null'); if (s && s.games) { Object.assign(state, s); state.format = 'story'; hadSaved = true; state.games.forEach(g => { g.home = MIGRATE[g.home] || g.home; g.away = MIGRATE[g.away] || g.away; }); } } catch (e) {}
+try { const s = JSON.parse(localStorage.getItem('kaya-state') || 'null'); if (s && s.games) { Object.assign(state, s); if (state.format !== 'post') state.format = 'story'; hadSaved = true; state.games.forEach(g => { g.home = MIGRATE[g.home] || g.home; g.away = MIGRATE[g.away] || g.away; }); } } catch (e) {}
 function persistLocal() { try { localStorage.setItem('kaya-state', JSON.stringify(state)); } catch (e) {} }
 
 /* ---------------- images ---------------- */
@@ -405,7 +410,7 @@ const FORMATS = {
 };
 function jfont(w, px) { return `${w} ${px}px Jost, Josefin, sans-serif`; }
 function buildLayout(st) {
-  const F = FORMATS[st.format];
+  const F = FORMATS[st.format] || FORMATS.story;
   const games = st.games.filter(g => g.home || g.away);
   const sorted = [...games].sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time));
   const groups = [];
@@ -558,7 +563,9 @@ function drawFooter(ctx, t, L, st) {
 }
 function render(ctx, t, st, L, video) {
   ctx.save();
-  if (video && (video.readyState >= 2 || video.complete)) ctx.drawImage(video, 0, 0, W, H); else { ctx.fillStyle = '#060504'; ctx.fillRect(0, 0, W, H); }
+  const post = st.format === 'post', oh = post ? POST.h : H, ok = video && (video.readyState >= 2 || video.complete);
+  if (ok) { if (post) ctx.drawImage(video, 0, (H - oh) / 2, W, oh, 0, 0, W, oh); else ctx.drawImage(video, 0, 0, W, H); } else { ctx.fillStyle = '#060504'; ctx.fillRect(0, 0, W, oh); }
+  if (post) { ctx.translate(W * (1 - POST.k) / 2, -POST.top * POST.k); ctx.scale(POST.k, POST.k); }
   drawLogo(ctx, t, L.F);
   for (const it of L.items) { if (it.type === 'row') drawRow(ctx, it, t, st); else drawLabel(ctx, it, t); }
   drawFooter(ctx, t, L, st);
@@ -634,7 +641,7 @@ function syncSound(force) {
 /* ---------------- preview ---------------- */
 const cv = $('#cv'), cctx = cv.getContext('2d'), bgv = $('#bgv');
 const dpr = Math.min(2, window.devicePixelRatio || 1);
-function sizePreview() { const r = cv.getBoundingClientRect(); const s = Math.min(1, (r.width * dpr) / W) || .5; cv.width = Math.round(W * s); cv.height = Math.round(H * s); }
+function sizePreview() { const r = cv.getBoundingClientRect(); const s = Math.min(1, (r.width * dpr) / W) || .5; cv.width = Math.round(W * s); cv.height = Math.round(outH(state.format) * s); }
 let layout = buildLayout(state), playing = true, frozenT = 0;
 let relayout = function () { layout = buildLayout(state); persistLocal(); renderMusic(); };
 function preloadCrests() { return Promise.all(state.games.flatMap(g => [g.home, g.away]).map(id => { const t = teamById(id); const r = t && loadImg(t.src); return r ? r.p : null; })); }
@@ -880,10 +887,12 @@ async function loadData() {
 /* ---------------- format + venue ---------------- */
 function syncFormat() {
   document.querySelectorAll('#fmtSeg button').forEach(b => b.classList.toggle('on', b.dataset.f === state.format));
-  $('#fmtNote').textContent = state.format === 'story'
-    ? 'Instagram Story / TikTok size (1080×1920).'
-    : 'Full-height layout for TikTok and Reels (1080×1920).';
-  updateSafe();
+  $('#fmtNote').textContent = state.format === 'post'
+    ? 'Instagram post size (1080×1350, 4:5) for the feed.'
+    : 'Instagram Story / TikTok size (1080×1920).';
+  $('#screen').classList.toggle('post', state.format === 'post'); $('#safeBtn').style.display = state.format === 'post' ? 'none' : '';
+  if (state.format === 'post') $('#screen').classList.remove('showsafe');
+  sizePreview(); updateSafe();
 }
 document.querySelectorAll('#fmtSeg button').forEach(b => b.onclick = () => { state.format = b.dataset.f; syncFormat(); relayout(); });
 $('#optNames').checked = state.names; $('#optNames').onchange = e => { state.names = e.target.checked; relayout(); };
@@ -937,10 +946,10 @@ async function pickAudio(allowOpus) {
   for (const [mux, cfg] of tries) { try { const s = await AudioEncoder.isConfigSupported(cfg); if (s.supported) return { mux, cfg }; } catch (e) {} }
   return null;
 }
-async function pickCodec() {
+async function pickCodec(h) { h = h || H;
   if (!('VideoEncoder' in window)) return null;
   for (const codec of ['avc1.640033', 'avc1.640028', 'avc1.4d0033', 'avc1.4d0028', 'avc1.42003e']) {
-    const cfg = { codec, width: W, height: H, bitrate: 12_000_000, framerate: FPS, avc: { format: 'avc' } };
+    const cfg = { codec, width: W, height: h, bitrate: 12_000_000, framerate: FPS, avc: { format: 'avc' } };
     try { const s = await VideoEncoder.isConfigSupported(cfg); if (s.supported) return cfg; } catch (e) {}
   }
   return null;
@@ -952,8 +961,8 @@ async function renderVideo(fmt, onProgress, bgFn) {
   for (const w of [300, 350, 400, 600]) await document.fonts.load(jfont(w, 40));
   await preloadCrests(); await LOGO.p; await LOGOM.p;
   const L = buildLayout(st); const v = await getExportVideo();
-  const c = document.createElement('canvas'); c.width = W; c.height = H; const ctx = c.getContext('2d');
-  const cfg = await pickCodec(); const N = DUR * FPS;
+  const OH = outH(st.format), c = document.createElement('canvas'); c.width = W; c.height = OH; const ctx = c.getContext('2d');
+  const cfg = await pickCodec(OH); const N = DUR * FPS;
   const track = musicFor(st); let abuf = null;
   if (track) { try { abuf = await musicBuffer(track); } catch (e) { console.warn('music', e); } }
   // AAC through WebCodecs first; if this browser can't make AAC but can record MP4 with AAC, record in real time; else Opus
@@ -961,7 +970,7 @@ async function renderVideo(fmt, onProgress, bgFn) {
   if (abuf && !acfg && !(window.MediaRecorder && MediaRecorder.isTypeSupported('video/mp4;codecs=avc1,mp4a.40.2'))) acfg = await pickAudio(true);
   let out;
   if (cfg && window.Mp4Muxer && (!abuf || acfg)) {
-    const muxer = new Mp4Muxer.Muxer({ target: new Mp4Muxer.ArrayBufferTarget(), video: { codec: 'avc', width: W, height: H, frameRate: FPS },
+    const muxer = new Mp4Muxer.Muxer({ target: new Mp4Muxer.ArrayBufferTarget(), video: { codec: 'avc', width: W, height: OH, frameRate: FPS },
       audio: acfg ? { codec: acfg.mux, numberOfChannels: 2, sampleRate: 48000 } : undefined, fastStart: 'in-memory' });
     let err = null;
     const enc = new VideoEncoder({ output: (ch, meta) => muxer.addVideoChunk(ch, meta), error: e => { err = e; } });
@@ -1021,7 +1030,7 @@ async function recordRealtime(c, ctx, st, L, v, onProgress, abuf) {
   return { blob: new Blob(chunks, { type: type.split(';')[0] }), ext };
 }
 function teamsKey() { return state.games.map(g => [g.home, g.away].map(id => (teamById(id) || {}).src).join()).join(); }
-function fileName(fmt, ext) { const d = (state.games[0] && state.games[0].date) || iso(new Date()); return `kaya-matchday-${d}${fmt === 'story' ? '-story' : ''}.${ext}`; }
+function fileName(fmt, ext) { const d = (state.games[0] && state.games[0].date) || iso(new Date()); return `kaya-matchday-${d}${fmt === 'post' ? '-post' : '-story'}.${ext}`; }
 const STANDALONE = !(window.claude && window.claude.use);
 let pending = null, busy = false;
 const shareBtn = $('#shareBtn');
