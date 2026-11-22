@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kaya Matchday Studio</title>
+<meta name="robots" content="noindex">
+<meta name="description" content="Make Kaya Lounge matchday videos for TikTok and Instagram Stories in a minute. Designed & built by SMR Digital.">
+<meta property="og:title" content="Kaya Matchday Studio">
+<meta property="og:description" content="Pick today's games and get a ready-to-post HD matchday video. Designed & built by SMR Digital.">
+<meta property="og:image" content="https://smrgraphics.co.uk/kayafootball/og.jpg">
+<meta name="theme-color" content="#0b0a08">
+<link rel="icon" href="icon.png">
+<link rel="apple-touch-icon" href="icon.png">
+<style>
+@font-face { font-family: 'Jost'; src: url('Jost.ttf') format('truetype'); font-weight: 100 900; font-display: block; }
+@font-face { font-family: 'Josefin'; src: url('JosefinSans.ttf') format('truetype'); font-weight: 100 700; font-display: block; }
+:root { --bg:#0b0a08; --card:#15130f; --line:#2a261e; --gold:#d6ab52; --gold2:#f3dc9c; --text:#efe9dc; --dim:#9b937f; }
+* { box-sizing: border-box; }
+html, body { margin:0; background:var(--bg); color:var(--text); font-family:'Josefin', system-ui, sans-serif; -webkit-font-smoothing:antialiased; }
+button, input, select { font-family:inherit; }
+header { padding:18px 18px 6px; display:flex; align-items:baseline; gap:10px; }
+header h1 { margin:0; font-size:20px; font-weight:600; letter-spacing:.22em; background:linear-gradient(180deg,#f7e7b0,#c9963c 60%,#f0d58a); -webkit-background-clip:text; background-clip:text; color:transparent; }
+header span { color:var(--dim); font-size:13px; letter-spacing:.08em; }
+.wrap { display:grid; grid-template-columns: 1fr; gap:18px; padding:10px 14px 40px; max-width:1100px; margin:0 auto; }
+.wrap > div { min-width:0; }
+.fx .tm { overflow-wrap:anywhere; }
+@media (min-width: 860px) { .wrap { grid-template-columns: 380px 1fr; align-items:start; } .stage { position:sticky; top:14px; } }
+.stage { display:flex; flex-direction:column; align-items:center; gap:10px; }
+.screen { position:relative; width:min(100%, 380px); aspect-ratio:9/16; border-radius:18px; overflow:hidden; background:#000; box-shadow:0 20px 60px rgba(0,0,0,.6), 0 0 0 1px #2a2418; }
+.screen canvas { width:100%; height:100%; display:block; }
+.safe { position:absolute; left:0; right:0; pointer-events:none; background:repeating-linear-gradient(45deg, rgba(214,171,82,.10) 0 6px, transparent 6px 12px); border-color:rgba(214,171,82,.35); display:none; }
+.safe.top { top:0; border-bottom:1px dashed; } .safe.bot { bottom:0; border-top:1px dashed; }
+.screen.showsafe .safe { display:block; }
+.ctrl { display:flex; gap:8px; align-items:center; }
+.pill { border:1px solid var(--line); background:var(--card); color:var(--text); border-radius:999px; padding:8px 14px; font-size:14px; cursor:pointer; }
+.pill.on { border-color:var(--gold); color:var(--gold2); }
+section { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:14px; margin-bottom:14px; }
+section h2 { margin:0 0 12px; font-size:13px; font-weight:600; letter-spacing:.2em; color:var(--gold); text-transform:uppercase; }
+.game { border:1px solid var(--line); border-radius:12px; padding:10px; margin-bottom:10px; background:#100e0b; }
+.teams { display:grid; grid-template-columns: 1fr auto 1fr; gap:8px; align-items:center; }
+.teamBtn { display:flex; align-items:center; gap:8px; width:100%; min-height:54px; padding:6px 10px; border-radius:10px; border:1px solid var(--line); background:#1b1813; color:var(--text); cursor:pointer; text-align:left; font-size:15px; }
+.teamBtn img, .teamBtn .ph { width:38px; height:38px; object-fit:contain; flex:none; }
+.ph { border-radius:8px; border:1px dashed #4a4232; display:grid; place-items:center; color:var(--dim); font-size:20px; }
+.teamBtn .nm { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.vs { color:var(--dim); font-weight:300; font-size:18px; }
+.when { display:grid; grid-template-columns: 1fr 1fr auto; gap:8px; margin-top:8px; }
+input[type=date], input[type=time], input[type=text], input[type=search] { width:100%; background:#1b1813; color:var(--text); border:1px solid var(--line); border-radius:10px; padding:10px; font-size:15px; color-scheme: dark; }
+.icon { width:44px; border-radius:10px; border:1px solid var(--line); background:#1b1813; color:var(--dim); cursor:pointer; font-size:18px; }
+.add { width:100%; padding:12px; border-radius:12px; border:1px dashed #5a4e35; background:transparent; color:var(--gold2); font-size:15px; cursor:pointer; letter-spacing:.05em; }
+.row { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+.seg { display:flex; border:1px solid var(--line); border-radius:12px; overflow:hidden; }
+.seg button { flex:1; padding:11px 8px; background:#1b1813; color:var(--dim); border:0; font-size:14px; cursor:pointer; }
+.seg button.on { background:linear-gradient(180deg,#2c2416,#1d180f); color:var(--gold2); box-shadow: inset 0 -2px 0 var(--gold); }
+label.chk { display:flex; gap:8px; align-items:center; font-size:14px; color:var(--text); margin-top:10px; }
+label.chk input { width:18px; height:18px; accent-color: var(--gold); }
+.big { width:100%; padding:15px; border-radius:14px; border:0; font-size:16px; font-weight:600; letter-spacing:.08em; cursor:pointer; color:#1a1206; background:linear-gradient(180deg,#f6e2a6,#d3a24a 55%,#b9852e); box-shadow:0 6px 20px rgba(214,171,82,.25); }
+.big.alt { color:var(--text); background:linear-gradient(135deg,#3b1f3d,#5c2a4a 40%,#7a4a22); box-shadow:none; border:1px solid #6b4a35; }
+.big:disabled { opacity:.5; cursor:default; }
+.exports { display:grid; gap:10px; }
+.small { font-size:13px; color:var(--dim); line-height:1.45; }
+.prog { height:6px; background:#221e16; border-radius:6px; overflow:hidden; display:none; }
+.prog i { display:block; height:100%; width:0; background:linear-gradient(90deg,#b9852e,#f6e2a6); }
+.msg { font-size:14px; min-height:1.2em; color:var(--gold2); }
+.msg.err { color:#f19a8a; }
+details summary { cursor:pointer; color:var(--gold); letter-spacing:.2em; font-size:13px; font-weight:600; list-style:none; }
+details summary::-webkit-details-marker { display:none; }
+details[open] summary { margin-bottom:12px; }
+.field { margin-bottom:10px; } .field span { display:block; font-size:12px; color:var(--dim); margin-bottom:5px; letter-spacing:.06em; }
+/* sheet */
+.sheet { position:fixed; inset:0; background:rgba(0,0,0,.65); display:none; align-items:flex-end; justify-content:center; z-index:10; }
+.sheet.open { display:flex; }
+.panel { width:min(100%, 560px); max-height:86vh; background:#14120e; border:1px solid var(--line); border-radius:20px 20px 0 0; padding:14px; display:flex; flex-direction:column; gap:10px; }
+@media (min-width: 860px) { .sheet { align-items:center; } .panel { border-radius:20px; } }
+.panel .top { display:flex; justify-content:space-between; align-items:center; }
+.panel .top b { letter-spacing:.18em; color:var(--gold); font-size:13px; }
+.grid { overflow:auto; display:grid; grid-template-columns: repeat(auto-fill, minmax(96px,1fr)); gap:8px; padding-bottom:6px; }
+.tcell { border:1px solid var(--line); background:#1b1813; border-radius:12px; padding:8px 6px; display:flex; flex-direction:column; align-items:center; gap:6px; cursor:pointer; color:var(--text); font-size:12.5px; text-align:center; position:relative; }
+.tcell img, .tcell .ph { width:52px; height:52px; object-fit:contain; }
+.tcell .del { position:absolute; top:3px; right:3px; width:22px; height:22px; border-radius:50%; border:0; background:#2a2118; color:#d99; font-size:13px; cursor:pointer; display:none; }
+.grid.editing .tcell .del { display:block; }
+.chips { display:flex; gap:6px; overflow-x:auto; padding-bottom:4px; scrollbar-width:none; }
+.chips::-webkit-scrollbar { display:none; }
+.chip { flex:none; border:1px solid var(--line); background:#1b1813; color:var(--dim); border-radius:999px; padding:7px 12px; font-size:13px; cursor:pointer; white-space:nowrap; }
+.chip.on { color:#1a1206; background:linear-gradient(180deg,#f3dc9c,#c99a44); border-color:transparent; }
+#fxList { margin-top:10px; display:grid; gap:6px; max-height:420px; overflow:auto; }
+.fx { display:grid; grid-template-columns: 34px 1fr auto 1fr 34px 40px; align-items:center; gap:8px; padding:8px; border:1px solid var(--line); border-radius:12px; background:#100e0b; cursor:pointer; }
+.fx.on { border-color:var(--gold); background:#1a150c; }
+.fx img { width:34px; height:34px; object-fit:contain; }
+.fx .tm { font-size:14px; line-height:1.15; } .fx .tm.r { text-align:right; }
+.fx .mid { text-align:center; font-size:12px; color:var(--dim); line-height:1.25; } .fx .mid b { display:block; color:var(--text); font-size:14px; font-weight:600; }
+.fx .ck { width:30px; height:30px; border-radius:50%; border:1px solid #4a4232; display:grid; place-items:center; color:var(--gold2); font-size:16px; }
+.fx.on .ck { background:var(--gold); color:#1a1206; border-color:transparent; }
+.fx .star { color:var(--gold2); font-size:11px; letter-spacing:.06em; }
+.tag { position:absolute; top:4px; left:4px; font-style:normal; font-size:9.5px; letter-spacing:.08em; padding:2px 5px; border-radius:6px; background:#2b2418; color:var(--dim); }
+.tag.up { color:var(--gold2); }
+.newteam { border-top:1px solid var(--line); padding-top:10px; display:grid; gap:8px; }
+.filebtn { display:flex; align-items:center; gap:10px; padding:10px; border:1px dashed #5a4e35; border-radius:10px; cursor:pointer; color:var(--gold2); font-size:14px; }
+.filebtn input { display:none; }
+.filebtn img { width:40px; height:40px; object-fit:contain; display:none; }
+.done { display:none; border:1px solid #3d3420; border-radius:14px; padding:12px; background:#17130c; }
+.done.show { display:block; }
+</style>
+</head>
+<body>
+<header><h1>KAYA MATCHDAY</h1><span>video studio</span></header>
+<div class="wrap">
+  <div class="stage">
+    <div class="screen" id="screen">
+      <canvas id="cv" width="540" height="960"></canvas>
+      <div class="safe top" id="safeTop"></div><div class="safe bot" id="safeBot"></div>
+    </div>
+    <div class="ctrl">
+      <button class="pill" id="playBtn">❚❚ Pause</button>
+      <button class="pill" id="replayBtn">↺ Replay</button>
+      <button class="pill" id="safeBtn">Safe zones</button>
+    </div>
+  </div>
+
+  <div>
+    <section>
+      <h2>Upcoming games</h2>
+      <div class="chips" id="dayChips"></div>
+      <div class="chips" id="compChips" style="margin-top:8px"></div>
+      <div id="fxList"></div>
+      <div class="row" style="margin-top:10px"><button class="pill" id="useTop">★ Use top picks for this day</button></div>
+      <p class="small" style="margin:10px 0 0">Times are UK time. Kick-offs can move for TV, so double-check before posting. Tap a game to add or remove it.</p>
+    </section>
+
+    <section>
+      <h2>Your video's games</h2>
+      <div id="games"></div>
+      <button class="add" id="addGame">+ Add game</button>
+      <button class="pill" id="crestBtn" style="margin-top:10px">⇪ Import HD crests</button>
+      <p class="small" style="margin:10px 0 0">Add games from the list above, or add one by hand here. Games with the same date and time are grouped under one time. The layout resizes itself for 1–6 games.</p>
+    </section>
+
+    <section>
+      <h2>Format</h2>
+      <div class="seg" id="fmtSeg">
+        <button data-f="tiktok" class="on">TikTok / Reels</button>
+        <button data-f="story">Instagram Story</button>
+      </div>
+      <p class="small" id="fmtNote" style="margin:8px 0 0"></p>
+      <label class="chk"><input type="checkbox" id="optNames"> Show team names under crests</label>
+      <label class="chk"><input type="checkbox" id="optDay"> Show weekday in the date (e.g. SATURDAY 8TH NOVEMBER)</label>
+    </section>
+
+    <section>
+      <h2>Export</h2>
+      <div class="exports">
+        <button class="big" id="saveBtn">⬇ Save MP4 video</button>
+        <button class="big alt" id="storyBtn">◎ Instagram Story</button>
+        <button class="pill" id="stillBtn" style="justify-self:start">Save still image (PNG)</button>
+        <div class="prog" id="prog"><i></i></div>
+        <div class="msg" id="msg"></div>
+        <button class="big" id="readyBtn" style="display:none"></button>
+        <div class="done" id="storyHelp">
+          <div class="small" style="color:var(--text)"><b style="color:var(--gold2)">Posting to your story</b><br>
+          <b>iPhone & Android:</b> in the share sheet that opens, tap <b>Instagram → Stories</b> (or <b>Save Video</b> to post it later).<br>
+          <b>Android / computer:</b> the video saves to your phone; open Instagram, tap <b>+ → Story</b> and pick it from your gallery.</div>
+          <p class="small" style="margin:8px 0 0"><a href="https://www.instagram.com/" style="color:var(--gold2)">Open Instagram</a></p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <details id="venueBox">
+        <summary>VENUE DETAILS ▾</summary>
+        <div class="field"><span>Name</span><input type="text" id="vTitle"></div>
+        <div class="field"><span>Address line 1</span><input type="text" id="vL1"></div>
+        <div class="field"><span>Address line 2</span><input type="text" id="vL2"></div>
+        <p class="small" id="dbNote" style="margin:0"></p>
+      </details>
+    </section>
+  </div>
+</div>
+
+<div class="sheet" id="sheet">
+  <div class="panel">
+    <div class="top"><b>CHOOSE TEAM</b><div class="row"><button class="pill" id="editTeams">Edit</button><button class="pill" id="closeSheet">Close</button></div></div>
+    <input type="search" id="search" placeholder="Search teams…">
+    <div class="grid" id="teamGrid"></div>
+    <div class="newteam">
+      <b class="small" style="color:var(--gold);letter-spacing:.18em">IMPORT HD CRESTS IN BULK</b>
+      <span class="small">Pick lots of crest files at once (PNG, WebP or SVG with transparent background). Name each file after the team, e.g. <b>arsenal.png</b>, <b>west-brom.svg</b>. They’re matched to the right team and saved for every future video.</span>
+      <label class="filebtn"><input type="file" id="bulkFile" multiple accept="image/png,image/webp,image/svg+xml">⇪ Choose crest files…</label>
+      <div class="msg" id="bulkMsg"></div>
+      <b class="small" style="color:var(--gold);letter-spacing:.18em;margin-top:6px">ADD OR REPLACE ONE CREST</b><span class="small">Use the exact team name to swap an <b>SD</b> crest for your own HD one. Your crest is used everywhere that team appears.</span>
+      <input type="text" id="ntName" placeholder="Team name, e.g. Arsenal">
+      <label class="filebtn"><input type="file" id="ntFile" accept="image/png,image/webp,image/svg+xml,image/jpeg"><img id="ntPrev" alt=""><span id="ntLabel">Choose crest image (PNG with transparent background is best)</span></label>
+      <button class="big" id="ntSave">Save team</button>
+      <div class="msg" id="ntMsg"></div>
+    </div>
+  </div>
+</div>
+
+<video id="bgv" src="bg.mp4" muted playsinline loop preload="auto" crossorigin="anonymous" style="display:none"></video>
+<script src="mp4-muxer.min.js"></script>
+<script>
+"use strict";
+const W = 1080, H = 1920, FPS = 30, DUR = 15;
+const $ = s => document.querySelector(s);
+
+/* ---------------- data ---------------- */
+let CATALOG = [];      // built-in crest library (crests/<id>.webp)
+let FIXTURES = [];     // upcoming games
+let dbTeams = [];      // uploaded by the user (db)
+let localTeams = [];   // session-only fallback
+const nkey = s => String(s || '').normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/\b(fc|afc|cf)\b/g, '').replace(/[^a-z0-9]+/g, ' ').trim();
+function customFor(name) { const k = nkey(name); return [...dbTeams, ...localTeams].find(t => nkey(t.name) === k) || null; }
+function allTeams() {
+  const custom = [...dbTeams, ...localTeams]; const ck = new Set(custom.map(t => nkey(t.name)));
+  return [...custom, ...CATALOG.filter(t => !ck.has(nkey(t.name)))].sort((a, b) => a.name.localeCompare(b.name));
+}
+function teamById(id) {
+  if (!id) return null;
+  if (id.startsWith('n:')) { const name = id.slice(2); return customFor(name) || { id, name, src: null, missing: true }; }
+  const t = [...dbTeams, ...localTeams].find(t => t.id === id) || CATALOG.find(t => t.id === id);
+  if (!t) return null;
+  if (!t.custom) { const c = customFor(t.name); if (c) return c; }   // an uploaded crest overrides the built-in one
+  return t;
+}
+const MIGRATE = { 's-barcelona': 'fc-barcelona', 's-aston-villa': 'aston-villa', 's-man-united': 'manchester-united', 's-roma': 'as-roma' };
+
+const today = new Date(); const iso = d => { const z = new Date(d.getTime() - d.getTimezoneOffset() * 6e4); return z.toISOString().slice(0, 10); };
+const state = {
+  games: [
+    { home: 'fc-barcelona', away: 'aston-villa', date: iso(today), time: '20:00' },
+    { home: 'manchester-united', away: 'as-roma', date: iso(today), time: '20:00' },
+  ],
+  format: 'tiktok', names: false, weekday: false,
+  venue: { title: 'KAYA LOUNGE', l1: '10 MARSH ROAD, LUTON, LU3 2NH', l2: '35 GOLDINGTON ROAD, BEDFORD, MK40 3LH' },
+};
+let hadSaved = false;
+try { const s = JSON.parse(localStorage.getItem('kaya-state') || 'null'); if (s && s.games) { Object.assign(state, s); hadSaved = true; state.games.forEach(g => { g.home = MIGRATE[g.home] || g.home; g.away = MIGRATE[g.away] || g.away; }); } } catch (e) {}
+function persistLocal() { try { localStorage.setItem('kaya-state', JSON.stringify(state)); } catch (e) {} }
+
+/* ---------------- images ---------------- */
+const imgCache = new Map();
+function loadImg(src) {
+  if (!src) return null;
+  if (imgCache.has(src)) return imgCache.get(src);
+  const im = new Image(); im.crossOrigin = 'anonymous'; im.decoding = 'async';
+  const rec = { im, ok: false, p: null };
+  rec.p = new Promise(r => { im.onload = () => { rec.ok = true; r(); }; im.onerror = () => r(); });
+  im.src = src; imgCache.set(src, rec); return rec;
+}
+const LOGO = loadImg('logo.png'), LOGOM = loadImg('logo_mask.png');
+
+/* ---------------- helpers ---------------- */
+const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
+const easeOut = x => 1 - Math.pow(1 - clamp(x), 3);
+const easeBack = x => { x = clamp(x); const c1 = 1.5, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); };
+const prog = (t, s, d) => clamp((t - s) / d);
+function rand(i) { const x = Math.sin(i * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); }
+const tmpCanvases = {};
+function tmp(key, w, h) {
+  let c = tmpCanvases[key]; if (!c) { c = tmpCanvases[key] = document.createElement('canvas'); }
+  w = Math.ceil(w); h = Math.ceil(h);
+  if (c.width !== w || c.height !== h) { c.width = w; c.height = h; }
+  const g = c.getContext('2d'); g.setTransform(1, 0, 0, 1, 0, 0); g.globalCompositeOperation = 'source-over'; g.globalAlpha = 1; g.clearRect(0, 0, w, h);
+  return c;
+}
+function font(w, px) { return `${w} ${px}px Josefin, sans-serif`; }
+function parseSegs(s) { const out = []; s.split(/(\*\*[^*]+\*\*)/).forEach(p => { if (!p) return; if (p.startsWith('**')) out.push({ t: p.slice(2, -2), b: true }); else out.push({ t: p, b: false }); }); return out; }
+function measureTracked(ctx, text, track) { let w = 0; for (const ch of text) w += ctx.measureText(ch).width + track; return w - track; }
+function drawTracked(ctx, text, x, y, track, alphaFn) {
+  for (let i = 0, cx = x; i < text.length; i++) {
+    const ch = text[i]; const a = alphaFn ? alphaFn(i) : 1;
+    if (a > 0) { ctx.globalAlpha = a; ctx.fillText(ch, cx, y); }
+    cx += ctx.measureText(ch).width + track;
+  }
+  ctx.globalAlpha = 1;
+}
+function ordinal(n) { const s = ['TH', 'ST', 'ND', 'RD'], v = n % 100; return n + (s[(v - 20) % 10] || s[v] || s[0]); }
+const MONTHS = ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'];
+const DAYS = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
+function fmtDate(d, wd) { if (!d) return ''; const [y, m, dd] = d.split('-').map(Number); const dt = new Date(y, m - 1, dd); return (wd ? DAYS[dt.getDay()] + ' ' : '') + ordinal(dd) + ' ' + MONTHS[m - 1]; }
+function fmtTime(t) { if (!t) return 'TBC'; let [h, m] = t.split(':').map(Number); const pm = h >= 12; h = h % 12 || 12; return `${h}.${String(m).padStart(2, '0')}${pm ? 'PM' : 'AM'}`; }
+
+/* ---------------- layout (matches the Canva master frame) ---------------- */
+// Final-frame measurements taken from the Canva design at 1080x1920.
+const CAPR = 0.7;                       // Jost cap-height / em
+const TXT = {
+  date:  { cap: 31, w: 350, tr: .125 },
+  time:  { cap: 25, w: 600, tr: .126 },
+  title: { cap: 36, w: 400, tr: .22 },
+  addr:  { cap: 23, w: 400, tr: .15 },
+  v:     { cap: 64, w: 300, tr: 0 },
+};
+const FORMATS = {
+  //            logo top/height   fixtures block (single game starts at crestTop)   footer cap-tops
+  tiktok: { logoY: 207, logoH: 279, crestTop: 775, areaTop: 545, areaBot: 1585, titleY: 1650, l1Y: 1723, l2Y: 1775, safeTop: 0, safeBot: 0 },
+  story:  { logoY: 255, logoH: 235, crestTop: 714, areaTop: 545, areaBot: 1360, titleY: 1408, l1Y: 1478, l2Y: 1526, safeTop: 250, safeBot: 340 },
+};
+function jfont(w, px) { return `${w} ${px}px Jost, Josefin, sans-serif`; }
+function buildLayout(st) {
+  const F = FORMATS[st.format];
+  const games = st.games.filter(g => g.home || g.away);
+  const sorted = [...games].sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time));
+  const groups = [];
+  for (const g of sorted) { const k = g.date + '|' + g.time; const last = groups[groups.length - 1]; if (last && last.key === k) last.games.push(g); else groups.push({ key: k, date: g.date, time: g.time, games: [g] }); }
+  const sameDate = new Set(sorted.map(g => g.date)).size <= 1;
+  const single = groups.length === 1;
+  const measure = S => {
+    const k = clamp(S / 274, .6, 1.05), kt = Math.max(k, .85), items = [], nameH = st.names ? 46 * k : 0;
+    let h = 0;
+    const rows = gr => gr.games.forEach((g, i) => { if (i) h += S * .14; items.push({ type: 'row', g, y: h, S, k }); h += S + nameH; });
+    if (single) {                                   // exactly the master frame: crests, date, bold time
+      rows(groups[0]);
+      h += (groups[0].games.length > 1 ? 120 : 232) * k;
+      items.push({ type: 'date', text: fmtDate(groups[0].date, st.weekday), y: h, k: kt }); h += TXT.date.cap * kt + 29 * kt;
+      items.push({ type: 'time', text: fmtTime(groups[0].time), y: h, k: kt }); h += TXT.time.cap * kt;
+    } else {
+      if (sameDate) { items.push({ type: 'date', text: fmtDate(sorted[0].date, st.weekday), y: h, k: kt }); h += TXT.date.cap * kt + 70 * kt; }
+      groups.forEach((gr, gi) => {
+        if (gi) h += 78 * k;
+        rows(gr); h += 52 * k;
+        if (!sameDate) { items.push({ type: 'date', text: fmtDate(gr.date, st.weekday), y: h, k: kt }); h += TXT.date.cap * kt + 24 * kt; }
+        items.push({ type: 'time', text: fmtTime(gr.time), y: h, k: kt }); h += TXT.time.cap * kt;
+      });
+    }
+    return { h, items, k };
+  };
+  const nG = sorted.length;
+  const CAP = 274 * (st.format === 'story' ? .9 : 1);   // same size as one game; only shrinks when it can't fit
+  let lo = 80, hi = CAP, best = measure(lo);
+  const area = F.areaBot - F.areaTop;
+  for (let i = 0; i < 24; i++) { const mid = (lo + hi) / 2; const m = measure(mid); if (m.h <= area) { lo = mid; best = m; } else hi = mid; }
+  let top = (single && nG === 1) ? F.crestTop : F.areaTop + (area - best.h) / 2;
+  if (top + best.h > F.areaBot) top = F.areaBot - best.h;
+  best.items.forEach(it => it.y += top);
+  // entrance timeline
+  let n = 0; best.items.forEach(it => { if (it.type === 'row') { it.t = .95 + n * .22; n++; } });
+  const after = .95 + Math.max(0, n - 1) * .22 + .75;
+  let m = 0; best.items.forEach(it => { if (it.type !== 'row') { it.t = after + m * .18; m++; } });
+  return { F, items: best.items, k: best.k, textEnd: after + m * .18 };
+}
+
+/* ---------------- drawing ---------------- */
+const easeInOut = x => { x = clamp(x); return x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; };
+function lightGold(ctx, y0, y1) {             // flat, light gold gradient (no bevel)
+  const g = ctx.createLinearGradient(0, y0, 0, y1);
+  g.addColorStop(0, '#f1d98f'); g.addColorStop(.55, '#dcb963'); g.addColorStop(1, '#c9a24d');
+  return g;
+}
+function goldGrad(ctx, y0, y1) { return lightGold(ctx, y0, y1); }
+function sweep(g, w, h, p, width = .28, strength = .95) {
+  const x = -w * .4 + p * w * 1.8;
+  const gr = g.createLinearGradient(x - w * width, -h * .3, x + w * width, h * .3);
+  gr.addColorStop(0, 'rgba(255,250,230,0)'); gr.addColorStop(.5, `rgba(255,250,230,${strength})`); gr.addColorStop(1, 'rgba(255,250,230,0)');
+  g.fillStyle = gr; g.fillRect(0, 0, w, h);
+}
+// text with exact cap-top positioning and tracking (em)
+function capText(ctx, text, capTop, spec, k, opts = {}) {
+  const size = spec.cap * k / CAPR, tr = spec.tr * size;
+  ctx.font = jfont(spec.w, size); ctx.textBaseline = 'alphabetic';
+  const w = measureTracked(ctx, text, tr);
+  const x = (opts.cx ?? W / 2) - w / 2, y = capTop + spec.cap * k;
+  if (opts.fill) ctx.fillStyle = opts.fill(y - spec.cap * k, y);
+  drawTracked(ctx, text, x, y, tr, opts.alphaFn);
+  return { x, w, size };
+}
+function drawLogo(ctx, t, F) {
+  if (!LOGO.ok) return;
+  const a = easeOut(prog(t, .2, .9)); if (a <= 0) return;
+  const hh = F.logoH, ww = hh * LOGO.im.width / LOGO.im.height;
+  const s = .94 + .06 * a, w = ww * s, h = hh * s, x = W / 2 - w / 2, y = F.logoY + (hh - h) / 2 + (1 - a) * 18;
+  ctx.save(); ctx.globalAlpha = a; ctx.drawImage(LOGO.im, x, y, w, h); ctx.restore();
+  const p = prog(t, 1.25, 1.1);                 // one soft light pass as it settles, then still
+  if (p > 0 && p < 1 && LOGOM.ok) {
+    const c = tmp('logo', w, h), g = c.getContext('2d');
+    g.drawImage(LOGOM.im, 0, 0, w, h); g.globalCompositeOperation = 'source-in'; sweep(g, w, h, easeInOut(p), .3, .45);
+    ctx.save(); ctx.globalCompositeOperation = 'screen'; ctx.drawImage(c, x, y); ctx.restore();
+  }
+}
+function badge(ctx, team, cx, cy, S) {
+  const w = S * .8, h = S * .92, x = cx - w / 2, y = cy - h / 2;
+  ctx.save();
+  ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + w, y); ctx.lineTo(x + w, y + h * .55); ctx.quadraticCurveTo(x + w, y + h * .85, cx, y + h); ctx.quadraticCurveTo(x, y + h * .85, x, y + h * .55); ctx.closePath();
+  const g = ctx.createLinearGradient(0, y, 0, y + h); g.addColorStop(0, '#2b241a'); g.addColorStop(1, '#0f0c08');
+  ctx.fillStyle = g; ctx.fill(); ctx.lineWidth = S * .035; ctx.strokeStyle = lightGold(ctx, y, y + h); ctx.stroke();
+  const ini = (team ? team.name : '?').split(/\s+/).filter(Boolean).map(s => s[0]).join('').slice(0, 3).toUpperCase();
+  ctx.font = jfont(600, S * (ini.length > 2 ? .24 : .3)); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillStyle = lightGold(ctx, cy - S * .2, cy + S * .2); ctx.fillText(ini, cx, cy - h * .04);
+  ctx.restore();
+}
+function drawCrest(ctx, teamId, cx, cy, S, a) {
+  const team = teamById(teamId); const rec = team ? loadImg(team.src) : null;
+  ctx.save(); ctx.globalAlpha = a;
+  if (rec && rec.ok) {
+    const iw = rec.im.naturalWidth || rec.im.width, ih = rec.im.naturalHeight || rec.im.height;
+    const sc = Math.min(S / iw, S / ih), w = iw * sc, h = ih * sc;
+    ctx.drawImage(rec.im, cx - w / 2, cy - h / 2, w, h);
+  } else badge(ctx, team, cx, cy, S);
+  ctx.restore();
+}
+function drawRow(ctx, it, t, st) {
+  const p = prog(t, it.t, .8); if (p <= 0) return;
+  const S = it.S, k = it.k, cy = it.y + S / 2, off = 272 * Math.min(1, .5 + .5 * S / 274);
+  const e = easeOut(p), slide = (1 - e) * 90;
+  drawCrest(ctx, it.g.home, W / 2 - off - slide, cy, S, e);
+  drawCrest(ctx, it.g.away, W / 2 + off + slide, cy, S, e);
+  const va = easeOut(prog(t, it.t + .35, .5));
+  if (va > 0) {
+    ctx.save(); ctx.globalAlpha = va; ctx.fillStyle = '#ffffff';
+    const vk = k * (1.12 - .12 * va);
+    capText(ctx, 'V', cy - TXT.v.cap * vk / 2, TXT.v, vk);
+    ctx.restore();
+  }
+  if (st.names) {
+    const na = easeOut(prog(t, it.t + .45, .5));
+    ctx.save(); ctx.globalAlpha = na; ctx.fillStyle = '#ffffff';
+    for (const [id, x] of [[it.g.home, W / 2 - off], [it.g.away, W / 2 + off]]) {
+      const tm = teamById(id); if (tm) capText(ctx, tm.name.toUpperCase(), it.y + S + 18 * k, TXT.addr, k * .9, { cx: x });
+    }
+    ctx.restore();
+  }
+}
+function drawLabel(ctx, it, t) {
+  const a = easeOut(prog(t, it.t, .6)); if (a <= 0) return;
+  ctx.save(); ctx.globalAlpha = a; ctx.fillStyle = '#ffffff';
+  capText(ctx, it.text, it.y + (1 - a) * 14, it.type === 'time' ? TXT.time : TXT.date, it.k);
+  ctx.restore();
+}
+function drawFooter(ctx, t, L, st) {
+  const F = L.F, start = Math.max(2.3, L.textEnd - .2);
+  const title = st.venue.title.toUpperCase();
+  // title: fades in while letter-spacing settles to the master value, one gentle light pass, then still
+  const a = easeOut(prog(t, start, .9)); if (a <= 0) return;
+  const spec = { ...TXT.title, tr: TXT.title.tr + (1 - a) * .12 };
+  const size = spec.cap / CAPR; ctx.font = jfont(spec.w, size);
+  const w = measureTracked(ctx, title, spec.tr * size) + 8, h = size * 1.4;
+  const c = tmp('title', w + 40, h), g = c.getContext('2d');
+  capText(g, title, h * .2, spec, 1, { cx: (w + 40) / 2, fill: (y0, y1) => lightGold(g, y0, y1) });
+  const p = prog(t, start + 1.1, 1.2);
+  if (p > 0 && p < 1) { g.globalCompositeOperation = 'source-atop'; sweep(g, w + 40, h, easeInOut(p), .2, .5); }
+  ctx.save(); ctx.globalAlpha = a; ctx.drawImage(c, W / 2 - (w + 40) / 2, F.titleY - h * .2); ctx.restore();
+  // addresses: clean white
+  [[st.venue.l1, F.l1Y, .35], [st.venue.l2, F.l2Y, .5]].forEach(([txt, y, d]) => {
+    if (!txt) return; const aa = easeOut(prog(t, start + d, .7)); if (aa <= 0) return;
+    ctx.save(); ctx.globalAlpha = aa; ctx.fillStyle = '#ffffff';
+    capText(ctx, txt.replace(/\*\*/g, '').toUpperCase(), y + (1 - aa) * 10, TXT.addr, 1);
+    ctx.restore();
+  });
+}
+function render(ctx, t, st, L, video) {
+  ctx.save();
+  if (video && (video.readyState >= 2 || video.complete)) ctx.drawImage(video, 0, 0, W, H); else { ctx.fillStyle = '#060504'; ctx.fillRect(0, 0, W, H); }
+  drawLogo(ctx, t, L.F);
+  for (const it of L.items) { if (it.type === 'row') drawRow(ctx, it, t, st); else drawLabel(ctx, it, t); }
+  drawFooter(ctx, t, L, st);
+  ctx.restore();
+}
+
+/* ---------------- preview ---------------- */
+const cv = $('#cv'), cctx = cv.getContext('2d'), bgv = $('#bgv');
+const dpr = Math.min(2, window.devicePixelRatio || 1);
+function sizePreview() { const r = cv.getBoundingClientRect(); const s = Math.min(1, (r.width * dpr) / W) || .5; cv.width = Math.round(W * s); cv.height = Math.round(H * s); }
+let layout = buildLayout(state), playing = true, frozenT = 0;
+function relayout() { layout = buildLayout(state); persistLocal(); }
+function preloadCrests() { return Promise.all(state.games.flatMap(g => [g.home, g.away]).map(id => { const t = teamById(id); const r = t && loadImg(t.src); return r ? r.p : null; })); }
+function tick() {
+  const t = playing ? (bgv.currentTime || 0) : frozenT;
+  const s = cv.width / W; cctx.setTransform(s, 0, 0, s, 0, 0);
+  render(cctx, t, state, layout, bgv);
+  requestAnimationFrame(tick);
+}
+$('#playBtn').onclick = () => { playing = !playing; if (playing) { bgv.play().catch(() => {}); $('#playBtn').textContent = '❚❚ Pause'; } else { frozenT = bgv.currentTime; bgv.pause(); $('#playBtn').textContent = '▶ Play'; } };
+$('#replayBtn').onclick = () => { bgv.currentTime = 0; playing = true; bgv.play().catch(() => {}); $('#playBtn').textContent = '❚❚ Pause'; };
+$('#safeBtn').onclick = () => { $('#screen').classList.toggle('showsafe'); $('#safeBtn').classList.toggle('on'); updateSafe(); };
+function updateSafe() {
+  const z = state.format === 'story' ? [250, 340] : [130, 380];
+  $('#safeTop').style.height = (z[0] / H * 100) + '%'; $('#safeBot').style.height = (z[1] / H * 100) + '%';
+}
+
+/* ---------------- games UI ---------------- */
+let pickTarget = null;
+function teamBtnHTML(id) {
+  const t = teamById(id);
+  if (!t) return `<span class="ph">+</span><span class="nm" style="color:var(--dim)">Choose team</span>`;
+  return `<img src="${t.src || badgeDataURL(t)}" alt=""><span class="nm">${esc(t.name)}${!t.src ? '<br><small style="color:#e9a27a">no crest yet · tap to add</small>' : (!t.custom && !t.hd ? '<br><small style="color:var(--dim)">SD crest · tap to add HD</small>' : '')}</span>`;
+}
+function esc(s) { return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+function renderGames() {
+  const el = $('#games'); el.innerHTML = '';
+  state.games.forEach((g, i) => {
+    const d = document.createElement('div'); d.className = 'game';
+    d.innerHTML = `<div class="teams"><button class="teamBtn" data-side="home">${teamBtnHTML(g.home)}</button><span class="vs">v</span><button class="teamBtn" data-side="away">${teamBtnHTML(g.away)}</button></div>
+      <div class="when"><input type="date" value="${g.date}"><input type="time" value="${g.time}" step="300"><button class="icon" title="Remove game">✕</button></div>`;
+    d.querySelectorAll('.teamBtn').forEach(b => b.onclick = () => openPicker(i, b.dataset.side));
+    const [di, ti] = d.querySelectorAll('input');
+    di.onchange = () => { g.date = di.value; relayout(); };
+    ti.onchange = () => { g.time = ti.value; relayout(); };
+    d.querySelector('.icon').onclick = () => { state.games.splice(i, 1); renderGames(); relayout(); renderFixtures(); };
+    el.appendChild(d);
+  });
+  $('#addGame').style.display = state.games.length >= 6 ? 'none' : '';
+}
+$('#addGame').onclick = () => {
+  const last = state.games[state.games.length - 1];
+  state.games.push({ home: null, away: null, date: last ? last.date : iso(new Date()), time: last ? last.time : '20:00' });
+  renderGames(); relayout(); openPicker(state.games.length - 1, 'home');
+};
+
+/* ---------------- team picker ---------------- */
+let editing = false;
+function openPicker(i, side) { pickTarget = { i, side }; $('#search').value = ''; const cur = teamById(state.games[i][side]); $('#ntName').value = cur && cur.missing ? cur.name : ''; renderGrid(); $('#sheet').classList.add('open'); }
+$('#crestBtn').onclick = () => { pickTarget = null; $('#search').value = ''; renderGrid(); $('#sheet').classList.add('open'); setTimeout(() => $('#bulkFile').scrollIntoView({ block: 'center' }), 50); };
+$('#closeSheet').onclick = () => $('#sheet').classList.remove('open');
+$('#sheet').onclick = e => { if (e.target.id === 'sheet') $('#sheet').classList.remove('open'); };
+$('#search').oninput = renderGrid;
+$('#editTeams').onclick = () => { editing = !editing; $('#editTeams').classList.toggle('on', editing); $('#teamGrid').classList.toggle('editing', editing); };
+function renderGrid() {
+  const q = nkey($('#search').value); const grid = $('#teamGrid'); grid.innerHTML = '';
+  let list = allTeams().filter(t => !q || nkey(t.name).includes(q) || nkey(t.country).includes(q));
+  const more = list.length > 120; if (more) list = list.slice(0, 120);
+  const frag = document.createDocumentFragment();
+  list.forEach(t => {
+    const c = document.createElement('div'); c.className = 'tcell';
+    const tag = t.custom ? '<em class="tag up">YOURS</em>' : (t.hd ? '' : '<em class="tag">SD</em>');
+    c.innerHTML = `<img loading="lazy" src="${t.src || badgeDataURL(t)}" alt=""><span>${esc(t.name)}</span>${tag}${t.custom ? '<button class="del" title="Remove team">✕</button>' : ''}`;
+    c.onclick = e => {
+      if (e.target.classList.contains('del')) { removeTeam(t); return; }
+      if (!pickTarget) return; state.games[pickTarget.i][pickTarget.side] = t.id;
+      const nextSide = pickTarget.side === 'home' && !state.games[pickTarget.i].away ? 'away' : null;
+      renderGames(); relayout(); preloadCrests(); renderFixtures();
+      if (nextSide) { pickTarget.side = nextSide; $('#search').value = ''; renderGrid(); } else $('#sheet').classList.remove('open');
+    };
+    frag.appendChild(c);
+  });
+  grid.appendChild(frag);
+  if (more) grid.insertAdjacentHTML('beforeend', '<p class="small" style="grid-column:1/-1">Type to search all ' + allTeams().length + ' teams…</p>');
+  if (!list.length) grid.innerHTML = `<p class="small" style="grid-column:1/-1">No teams match. Add it below with its crest.</p>`;
+}
+const LIB = (() => {
+  let dbp = null;
+  const open = () => dbp || (dbp = new Promise((res, rej) => { const r = indexedDB.open('kaya-crests', 1); r.onupgradeneeded = () => r.result.createObjectStore('teams', { keyPath: 'id' }); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }));
+  const run = async (mode, fn) => { const db = await open(); return new Promise((res, rej) => { const t = db.transaction('teams', mode); const q = fn(t.objectStore('teams')); t.oncomplete = () => res(q && q.result); t.onerror = () => rej(t.error); }); };
+  return { all: () => run('readonly', s => s.getAll()), put: rec => run('readwrite', s => s.put(rec)), del: id => run('readwrite', s => s.delete(id)) };
+})();
+async function loadLocalLibrary() {
+  try {
+    const recs = await LIB.all();
+    localTeams = (recs || []).map(r => { const t = { id: r.id, custom: true, name: r.name, src: r.blob ? URL.createObjectURL(r.blob) : null }; if (!t.src) t.src = badgeDataURL(t); return t; });
+    renderGames(); relayout(); preloadCrests(); renderFixtures();
+  } catch (e) {}
+}
+let ntFile = null;
+$('#ntFile').onchange = e => { ntFile = e.target.files[0] || null; const p = $('#ntPrev'); if (ntFile) { p.src = URL.createObjectURL(ntFile); p.style.display = 'block'; $('#ntLabel').textContent = ntFile.name; } };
+async function saveCustom(name, file) {
+  const existing = [...dbTeams, ...localTeams].find(t => nkey(t.name) === nkey(name));
+  if (DB && ASSETS) {
+    let crest = null;
+    if (file) { const type = file.type || (/\.svg$/i.test(file.name) ? 'image/svg+xml' : /\.webp$/i.test(file.name) ? 'image/webp' : 'image/png'); const r = await ASSETS.upload(file, file.type ? undefined : { type }); crest = r.id; }
+    if (existing && existing.docId) {
+      await DB.collection('teams').doc(existing.docId).set({ name: existing.name, crest, created: Date.now() });
+      const old = existing.src && existing.src.startsWith('/_blob/') ? existing.src.slice(7) : null; if (old && old !== crest) ASSETS.delete(old).catch(() => {});
+      existing.src = crest ? '/_blob/' + crest : badgeDataURL(existing); return existing;
+    }
+    const ref = await DB.collection('teams').add({ name, crest, created: Date.now() });
+    const team = { id: 'c:' + ref.id, docId: ref.id, custom: true, name, src: crest ? '/_blob/' + crest : null };
+    if (!team.src) team.src = badgeDataURL(team);
+    if (!dbTeams.find(t => t.id === team.id)) dbTeams.push(team);
+    return team;
+  }
+  if (existing) { existing.src = file ? URL.createObjectURL(file) : existing.src; try { await LIB.put({ id: existing.id, name: existing.name, blob: file || null }); } catch (e) {} return existing; }
+  const team = { id: 'l-' + Date.now() + Math.random().toString(36).slice(2, 6), custom: true, name, src: file ? URL.createObjectURL(file) : null };
+  if (!team.src) team.src = badgeDataURL(team);
+  localTeams.push(team); try { await LIB.put({ id: team.id, name, blob: file || null }); } catch (e) {} return team;
+}
+function knownName(raw) {
+  const k = nkey(raw); if (!k) return null;
+  const names = [...CATALOG.map(t => t.name), ...new Set(FIXTURES.flatMap(m => [m.h, m.a]))];
+  let exact = names.find(n => nkey(n) === k); if (exact) return exact;
+  let best = null;
+  for (const n of names) { const nk = nkey(n); if (nk.length > 3 && (nk.includes(k) || k.includes(nk))) { const d = Math.abs(nk.length - k.length); if (!best || d < best[0]) best = [d, n]; } }
+  return best ? best[1] : null;
+}
+const NICKS = { 'man utd': 'Manchester United', 'man united': 'Manchester United', 'man city': 'Manchester City', 'spurs': 'Tottenham Hotspur', 'wolves': 'Wolverhampton Wanderers',
+  'west brom': 'West Bromwich Albion', 'psg': 'Paris Saint-Germain', 'inter': 'Inter Milan', 'atletico': 'Atlético de Madrid', 'boro': 'Middlesbrough', 'qpr': 'Queens Park Rangers',
+  'brighton': 'Brighton & Hove Albion', 'forest': 'Nottingham Forest', 'villa': 'Aston Villa', 'newcastle': 'Newcastle United', 'leeds': 'Leeds United', 'bayern': 'Bayern Munich' };
+$('#bulkFile').onchange = async e => {
+  const files = [...e.target.files]; if (!files.length) return; const m = $('#bulkMsg'); m.className = 'msg';
+  let ok = 0, fail = 0; const unknown = [];
+  for (const [i, f] of files.entries()) {
+    m.textContent = `Importing ${i + 1} of ${files.length}…`;
+    let raw = f.name.replace(/\.[a-z0-9]+$/i, '').replace(/[-_.]+/g, ' ').replace(/\b(logo|crest|badge|hd|transparent|png|svg|\d{2,4}x\d{2,4}|\d{4})\b/gi, ' ').replace(/\s+/g, ' ').trim();
+    const nick = NICKS[raw.toLowerCase()]; const known = knownName(nick || raw);
+    const name = known || (nick || raw).replace(/\b\w/g, c => c.toUpperCase());
+    if (!known) unknown.push(name);
+    try { await saveCustom(name, f); ok++; } catch (err) { fail++; }
+  }
+  m.textContent = `Imported ${ok} crest${ok === 1 ? '' : 's'}${fail ? `, ${fail} failed` : ''}.` + (unknown.length ? ` Saved under their file names: ${unknown.slice(0, 6).join(', ')}${unknown.length > 6 ? '…' : ''}.` : '');
+  e.target.value = ''; renderGrid(); renderGames(); relayout(); renderFixtures(); preloadCrests();
+};
+$('#ntSave').onclick = async () => {
+  const name = $('#ntName').value.trim(); const m = $('#ntMsg'); m.className = 'msg';
+  if (!name) { m.textContent = 'Type the team name first.'; m.className = 'msg err'; return; }
+  $('#ntSave').disabled = true; m.textContent = 'Saving…';
+  try {
+    const team = await saveCustom(knownName(name) || name, ntFile);
+    m.textContent = DB && ASSETS ? 'Saved to your team library.' : 'Saved on this device.';
+    $('#ntName').value = ''; ntFile = null; $('#ntFile').value = ''; $('#ntPrev').style.display = 'none'; $('#ntLabel').textContent = 'Choose crest image (PNG with transparent background is best)';
+    if (pickTarget) { state.games[pickTarget.i][pickTarget.side] = team.id; } renderGames(); relayout(); renderFixtures(); preloadCrests();
+    renderGrid();
+  } catch (e) { m.textContent = 'Couldn\u2019t save: ' + (e && (e.message || e.code) || e); m.className = 'msg err'; }
+  $('#ntSave').disabled = false;
+};
+async function removeTeam(t) {
+  if (t.id.startsWith('l-')) { localTeams = localTeams.filter(x => x !== t); try { await LIB.del(t.id); } catch (e) {} renderGrid(); renderGames(); relayout(); return; }
+  try { await DB.collection('teams').doc(t.docId).delete(); const crest = t.src && t.src.startsWith('/_blob/') ? t.src.slice(7) : null; if (crest && ASSETS) ASSETS.delete(crest).catch(() => {}); dbTeams = dbTeams.filter(x => x.id !== t.id); renderGrid(); } catch (e) {}
+}
+function badgeDataURL(team) { const c = document.createElement('canvas'); c.width = c.height = 200; badge(c.getContext('2d'), team, 100, 100, 200); return c.toDataURL('image/png'); }
+
+/* ---------------- upcoming fixtures ---------------- */
+const BIG = new Set(['arsenal', 'chelsea', 'liverpool', 'manchester-city', 'manchester-united', 'tottenham-hotspur', 'newcastle-united', 'aston-villa',
+  'real-madrid', 'barcelona', 'bayern-munchen', 'paris-saint-germain', 'inter', 'juventus', 'ac-milan', 'atletico-de-madrid', 'borussia-dortmund', 'napoli']);
+const ENG = new Set(); // filled from catalog
+const COMPS = ['All', 'Premier League', 'Champions League', 'Championship', 'La Liga', 'Serie A', 'Bundesliga', 'Ligue 1', 'Eredivisie', 'Primeira Liga'];
+let fxDay = null, fxComp = 'All';
+const fxRef = (id, name) => id || ('n:' + name);
+function fxScore(m) {
+  const b = (BIG.has(m.hi) ? 1 : 0) + (BIG.has(m.ai) ? 1 : 0);
+  const eng = (ENG.has(m.hi) || ENG.has(m.ai)) ? 1 : 0;
+  return m.p * 10 - b * 9 - (m.c === 'Champions League' && eng ? 12 : 0) - (b === 2 ? 6 : 0);
+}
+function fxSelected(m) { return state.games.findIndex(g => g.date === m.d && g.home === fxRef(m.hi, m.h) && g.away === fxRef(m.ai, m.a)); }
+function dayLabel(d) {
+  const t = iso(new Date()), tm = iso(new Date(Date.now() + 864e5));
+  if (d === t) return 'Today'; if (d === tm) return 'Tomorrow';
+  const [y, m, dd] = d.split('-').map(Number); const dt = new Date(y, m - 1, dd);
+  return ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][dt.getDay()] + ' ' + dd + ' ' + MONTHS[m - 1].slice(0, 3).toLowerCase().replace(/^./, c => c.toUpperCase());
+}
+function fxDays() { const t = iso(new Date()); return [...new Set(FIXTURES.filter(m => m.d >= t).map(m => m.d))].slice(0, 14); }
+function dayMatches(d) { return FIXTURES.filter(m => m.d === d && (fxComp === 'All' || m.c === fxComp)).sort((a, b) => fxScore(a) - fxScore(b) || a.t.localeCompare(b.t)); }
+function renderFixtures() {
+  if (!FIXTURES.length) { $('#fxList').innerHTML = '<p class="small">Loading fixtures…</p>'; return; }
+  const days = fxDays(); if (!fxDay || !days.includes(fxDay)) fxDay = days[0];
+  $('#dayChips').innerHTML = days.map(d => `<button class="chip${d === fxDay ? ' on' : ''}" data-d="${d}">${dayLabel(d)}</button>`).join('');
+  $('#dayChips').querySelectorAll('.chip').forEach(b => b.onclick = () => { fxDay = b.dataset.d; renderFixtures(); });
+  const comps = COMPS.filter(c => c === 'All' || FIXTURES.some(m => m.d === fxDay && m.c === c));
+  if (!comps.includes(fxComp)) fxComp = 'All';
+  $('#compChips').innerHTML = comps.map(c => `<button class="chip${c === fxComp ? ' on' : ''}" data-c="${c}">${c}</button>`).join('');
+  $('#compChips').querySelectorAll('.chip').forEach(b => b.onclick = () => { fxComp = b.dataset.c; renderFixtures(); });
+  const list = dayMatches(fxDay); const top = new Set(list.slice(0, 3));
+  const el = $('#fxList'); el.innerHTML = '';
+  list.forEach(m => {
+    const H = teamById(fxRef(m.hi, m.h)), A = teamById(fxRef(m.ai, m.a));
+    const d = document.createElement('div'); const on = fxSelected(m) >= 0; d.className = 'fx' + (on ? ' on' : '');
+    const img = t => `<img loading="lazy" src="${(t && t.src) || badgeDataURL(t || { name: '?' })}" alt="">`;
+    d.innerHTML = `${img(H)}<span class="tm">${esc(H ? H.name : m.h)}</span><span class="mid"><b>${m.t ? fmtTime(m.t).toLowerCase() : 'TBC'}</b>${esc(m.c)}${top.has(m) && fxComp === 'All' ? '<br><span class="star">★ TOP PICK</span>' : ''}</span><span class="tm r">${esc(A ? A.name : m.a)}</span>${img(A)}<span class="ck">${on ? '✓' : '+'}</span>`;
+    d.onclick = () => toggleFixture(m);
+    el.appendChild(d);
+  });
+  if (!list.length) el.innerHTML = '<p class="small">No games in this competition on this day.</p>';
+}
+function toggleFixture(m) {
+  const i = fxSelected(m);
+  if (i >= 0) state.games.splice(i, 1);
+  else {
+    if (state.games.length >= 6) { msg('A video fits up to 6 games. Remove one first.', true); return; }
+    state.games = state.games.filter(g => g.home || g.away);
+    state.games.push({ home: fxRef(m.hi, m.h), away: fxRef(m.ai, m.a), date: m.d, time: m.t || '' });
+  }
+  renderGames(); relayout(); preloadCrests(); renderFixtures();
+}
+$('#useTop').onclick = () => {
+  const list = dayMatches(fxDay).slice(0, 3); if (!list.length) return;
+  state.games = list.map(m => ({ home: fxRef(m.hi, m.h), away: fxRef(m.ai, m.a), date: m.d, time: m.t || '' }));
+  renderGames(); relayout(); preloadCrests(); renderFixtures();
+};
+async function loadData() {
+  try {
+    const [cat, fx, cr] = await Promise.all([fetch('catalog.json').then(r => r.json()), fetch('fixtures.json').then(r => r.json()), fetch('crests.json').then(r => r.json())]);
+    CATALOG = cat.map(t => ({ ...t, src: cr[t.id] || null }));
+    CATALOG.filter(t => t.country === 'England').forEach(t => ENG.add(t.id));
+    FIXTURES = fx.matches || [];
+    if (!hadSaved) {
+      const d = fxDays()[0]; if (d) { fxDay = d; const list = dayMatches(d).slice(0, 2); if (list.length) state.games = list.map(m => ({ home: fxRef(m.hi, m.h), away: fxRef(m.ai, m.a), date: m.d, time: m.t || '' })); }
+    }
+  } catch (e) { $('#fxList').innerHTML = '<p class="small">Couldn\u2019t load the fixture list.</p>'; }
+  renderGames(); relayout(); preloadCrests(); renderFixtures();
+}
+
+/* ---------------- format + venue ---------------- */
+function syncFormat() {
+  document.querySelectorAll('#fmtSeg button').forEach(b => b.classList.toggle('on', b.dataset.f === state.format));
+  $('#fmtNote').textContent = state.format === 'story'
+    ? 'Everything is kept clear of the Instagram profile bar at the top and the reply bar at the bottom.'
+    : 'Full-height layout for TikTok and Reels (1080×1920).';
+  updateSafe();
+}
+document.querySelectorAll('#fmtSeg button').forEach(b => b.onclick = () => { state.format = b.dataset.f; syncFormat(); relayout(); });
+$('#optNames').checked = state.names; $('#optNames').onchange = e => { state.names = e.target.checked; relayout(); };
+$('#optDay').checked = state.weekday; $('#optDay').onchange = e => { state.weekday = e.target.checked; relayout(); };
+for (const [id, key] of [['#vTitle', 'title'], ['#vL1', 'l1'], ['#vL2', 'l2']]) {
+  const el = $(id); el.value = state.venue[key];
+  el.oninput = () => { state.venue[key] = el.value; persistLocal(); clearTimeout(el._t); el._t = setTimeout(saveSettings, 900); };
+}
+
+/* ---------------- capabilities: db, assets, downloads ---------------- */
+let DB = null, ASSETS = null, DOWN = null, settingsLoaded = false;
+async function saveSettings() { if (!DB || !settingsLoaded) return; try { await DB.doc('settings/venue').set({ venue: state.venue }); } catch (e) {} }
+async function initCaps() {
+  if (!window.claude || !window.claude.use) { $('#dbNote').textContent = 'Your crests and venue details are saved on this device.'; loadLocalLibrary(); return; }
+  claude.use('downloads').then(d => { DOWN = d; }).catch(() => {});
+  claude.use('assets').then(a => { ASSETS = a; }).catch(() => {});
+  try { DB = await claude.use('db'); } catch (e) { DB = null; }
+  if (!DB) { $('#dbNote').textContent = 'Team library saving isn’t available in this view; new teams last for this session.'; return; }
+  const timer = setTimeout(() => { $('#dbNote').textContent = 'Can’t reach your saved teams yet; they’ll appear when the connection returns.'; }, 10000);
+  DB.collection('teams').onSnapshot(snap => {
+    clearTimeout(timer); $('#dbNote').textContent = '';
+    dbTeams = snap.docs.map(d => { const v = d.data() || {}; const tm = { id: 'c:' + d.id, docId: d.id, custom: true, name: String(v.name || 'Team'), src: v.crest ? '/_blob/' + v.crest : null }; if (!tm.src) tm.src = badgeDataURL(tm); return tm; });
+    renderGames(); if ($('#sheet').classList.contains('open')) renderGrid(); preloadCrests(); renderFixtures(); relayout();
+  }, () => { clearTimeout(timer); });
+  try {
+    const s = await DB.doc('settings/venue').get();
+    if (s.exists) { const v = s.data(); if (v.venue) { Object.assign(state.venue, v.venue); $('#vTitle').value = state.venue.title; $('#vL1').value = state.venue.l1; $('#vL2').value = state.venue.l2; } }
+  } catch (e) {}
+  settingsLoaded = true;
+}
+
+/* ---------------- export ---------------- */
+function seek(v, t) {
+  return new Promise(res => {
+    let done = false; const fin = () => { if (done) return; done = true; v.removeEventListener('seeked', fin); res(); };
+    v.addEventListener('seeked', fin); v.currentTime = t; setTimeout(fin, 1500);
+  });
+}
+let exportVid = null;
+async function getExportVideo() {
+  if (exportVid) return exportVid;
+  const v = document.createElement('video'); v.muted = true; v.playsInline = true; v.preload = 'auto'; v.crossOrigin = 'anonymous'; v.src = 'bg.mp4';
+  v.style.cssText = 'position:fixed;left:-9999px;width:2px;height:2px'; document.body.appendChild(v);
+  await new Promise(r => { if (v.readyState >= 2) r(); else { v.addEventListener('loadeddata', r, { once: true }); v.load(); } });
+  exportVid = v; return v;
+}
+async function pickCodec() {
+  if (!('VideoEncoder' in window)) return null;
+  for (const codec of ['avc1.640033', 'avc1.640028', 'avc1.4d0033', 'avc1.4d0028', 'avc1.42003e']) {
+    const cfg = { codec, width: W, height: H, bitrate: 12_000_000, framerate: FPS, avc: { format: 'avc' } };
+    try { const s = await VideoEncoder.isConfigSupported(cfg); if (s.supported) return cfg; } catch (e) {}
+  }
+  return null;
+}
+const cacheOut = new Map();
+async function renderVideo(fmt, onProgress, bgFn) {
+  const st = JSON.parse(JSON.stringify(state)); st.format = fmt;
+  const key = JSON.stringify(st) + teamsKey(); if (!bgFn && cacheOut.has(key)) return cacheOut.get(key);
+  for (const w of [300, 350, 400, 600]) await document.fonts.load(jfont(w, 40));
+  await preloadCrests(); await LOGO.p; await LOGOM.p;
+  const L = buildLayout(st); const v = await getExportVideo();
+  const c = document.createElement('canvas'); c.width = W; c.height = H; const ctx = c.getContext('2d');
+  const cfg = await pickCodec(); const N = DUR * FPS;
+  let out;
+  if (cfg && window.Mp4Muxer) {
+    const muxer = new Mp4Muxer.Muxer({ target: new Mp4Muxer.ArrayBufferTarget(), video: { codec: 'avc', width: W, height: H, frameRate: FPS }, fastStart: 'in-memory' });
+    let err = null;
+    const enc = new VideoEncoder({ output: (ch, meta) => muxer.addVideoChunk(ch, meta), error: e => { err = e; } });
+    enc.configure(cfg);
+    for (let i = 0; i < N; i++) {
+      if (err) throw err;
+      const t = i / FPS; let src = v;
+      if (bgFn) src = await bgFn(i); else await seek(v, Math.min(t + .001, (v.duration || DUR) - .02));
+      render(ctx, t, st, L, src);
+      const fr = new VideoFrame(c, { timestamp: Math.round(i * 1e6 / FPS), duration: Math.round(1e6 / FPS) });
+      enc.encode(fr, { keyFrame: i % 60 === 0 }); fr.close();
+      while (enc.encodeQueueSize > 6) await new Promise(r => setTimeout(r, 5));
+      if (i % 5 === 0) onProgress(i / N);
+    }
+    await enc.flush(); if (err) throw err; muxer.finalize();
+    out = { blob: new Blob([muxer.target.buffer], { type: 'video/mp4' }), ext: 'mp4' };
+  } else {
+    out = await recordRealtime(c, ctx, st, L, v, onProgress);
+  }
+  onProgress(1); cacheOut.set(key, out); return out;
+}
+async function recordRealtime(c, ctx, st, L, v, onProgress) {
+  const types = ['video/mp4;codecs=avc1', 'video/mp4', 'video/webm;codecs=vp9', 'video/webm'];
+  const type = types.find(t => window.MediaRecorder && MediaRecorder.isTypeSupported(t));
+  if (!type) throw new Error('This browser can’t record video. Try Chrome or Safari.');
+  const stream = c.captureStream(FPS); const rec = new MediaRecorder(stream, { mimeType: type, videoBitsPerSecond: 12_000_000 });
+  const chunks = []; rec.ondataavailable = e => e.data.size && chunks.push(e.data);
+  await seek(v, 0); render(ctx, 0, st, L, v); rec.start(250); await v.play();
+  await new Promise(res => {
+    const step = () => { const t = v.currentTime; render(ctx, t, st, L, v); onProgress(t / DUR); if (t >= DUR - .05 || v.ended) { v.pause(); res(); } else requestAnimationFrame(step); };
+    requestAnimationFrame(step);
+  });
+  await new Promise(r => { rec.onstop = r; rec.stop(); });
+  const ext = type.includes('mp4') ? 'mp4' : 'webm';
+  return { blob: new Blob(chunks, { type: type.split(';')[0] }), ext };
+}
+function teamsKey() { return state.games.map(g => [g.home, g.away].map(id => (teamById(id) || {}).src).join()).join(); }
+function fileName(fmt, ext) { const d = (state.games[0] && state.games[0].date) || iso(new Date()); return `kaya-matchday-${d}${fmt === 'story' ? '-story' : ''}.${ext}`; }
+function setBusy(b) { if (b) { $('#readyBtn').style.display = 'none'; pending = null; } ['#saveBtn', '#storyBtn', '#stillBtn'].forEach(s => $(s).disabled = b); $('#prog').style.display = b ? 'block' : 'none'; }
+function msg(t, err) { $('#msg').textContent = t; $('#msg').className = 'msg' + (err ? ' err' : ''); }
+const STANDALONE = !(window.claude && window.claude.use);
+const IS_PHONE = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || (navigator.maxTouchPoints > 1 && /Macintosh/.test(navigator.userAgent));
+function saveDirect(blob, name, story) {
+  const file = new File([blob], name, { type: blob.type || (name.endsWith('.png') ? 'image/png' : 'video/mp4') });
+  if (IS_PHONE && navigator.canShare && navigator.canShare({ files: [file] })) {
+    return navigator.share({ files: [file] }).then(() => true, e => { if (e && e.name === 'AbortError') { msg('Cancelled. Tap the button again to save.'); return false; } return download(); });
+  }
+  return Promise.resolve(download());
+  function download() {
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click();
+    setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 60000); return true;
+  }
+}
+let pending = null;
+function offerSave(blob, name, story) {           // website: needs a fresh tap for the phone's share sheet
+  pending = { blob, name, story };
+  const b = $('#readyBtn');
+  b.textContent = story ? '◎ Share to Instagram Story' : (name.endsWith('.png') ? '⬇ Save image' : (IS_PHONE ? '⬇ Save / share video' : '⬇ Download video'));
+  b.style.display = 'block';
+}
+async function deliver(blob, name, story) {
+  if (STANDALONE) { offerSave(blob, name, story); return 'offered'; }
+  if (!DOWN) { msg('Saving files isn’t available in this view. Open this page in the Claude app or claude.ai to save.', true); return false; }
+  try { await DOWN.save({ filename: name, data: blob }); return true; }
+  catch (e) { if (e && e.code === 'declined') msg('Save cancelled.'); else msg('Couldn’t save: ' + ((e && (e.message || e.code)) || e), true); return false; }
+}
+async function doExport(fmt, story) {
+  if (!state.games.some(g => g.home && g.away)) { msg('Pick both teams for at least one game.', true); return; }
+  const lowres = [...new Set(state.games.flatMap(g => [g.home, g.away]).map(teamById).filter(t => t && (!t.src || (!t.custom && !t.hd))).map(t => t.name))];
+  setBusy(true); msg('Rendering HD video…' + (lowres.length ? ` (Heads up: ${lowres.join(', ')} ${lowres.length > 1 ? 'have' : 'has'} no HD crest yet.)` : '')); $('#storyHelp').classList.remove('show');
+  try {
+    const t0 = performance.now();
+    const out = await renderVideo(fmt, p => { $('#prog i').style.width = (p * 100).toFixed(1) + '%'; });
+    msg(`Video ready (${(out.blob.size / 1048576).toFixed(1)} MB, ${((performance.now() - t0) / 1000).toFixed(0)}s).`);
+    const ok = await deliver(out.blob, fileName(fmt, out.ext), story);
+    if (ok === 'offered') { msg(`Video ready (${(out.blob.size / 1048576).toFixed(1)} MB). Tap the button below to save it.`); if (story) $('#storyHelp').classList.add('show'); }
+    else if (ok) { msg(story ? 'Sent. Pick Instagram → Stories if the share sheet opened.' : 'Saved.'); if (story) $('#storyHelp').classList.add('show'); }
+  } catch (e) { console.error(e); msg('Render failed: ' + (e && e.message || e), true); }
+  setBusy(false);
+}
+$('#saveBtn').onclick = () => doExport(state.format, false);
+$('#readyBtn').onclick = async () => { if (!pending) return; const ok = await saveDirect(pending.blob, pending.name, pending.story); if (ok) msg(pending.story ? 'In the share sheet pick Instagram → Stories.' : (IS_PHONE ? 'Pick “Save Video” (or the app you want) in the share sheet.' : 'Downloaded.')); };
+$('#storyBtn').onclick = () => doExport('story', true);
+$('#stillBtn').onclick = async () => {
+  setBusy(true); msg('Making still…');
+  try {
+    await preloadCrests(); const v = await getExportVideo(); await seek(v, DUR - 1.2);
+    const c = document.createElement('canvas'); c.width = W; c.height = H; render(c.getContext('2d'), DUR - 1.2, state, buildLayout(state), v);
+    const blob = await new Promise(r => c.toBlob(r, 'image/png'));
+    const ok = await deliver(blob, fileName(state.format, 'png'), false);
+    if (ok === 'offered') msg('Image ready. Tap the button below to save it.'); else if (ok) msg('Saved.');
+  } catch (e) { msg('Couldn’t make the still: ' + (e.message || e), true); }
+  setBusy(false);
+};
+
+/* ---------------- boot ---------------- */
+window.__kaya = { state, renderVideo, buildLayout, render, relayout };
+renderGames(); syncFormat(); sizePreview(); addEventListener('resize', sizePreview);
+[300, 350, 400, 600].forEach(w => document.fonts.load(jfont(w, 40)));
+bgv.play().catch(() => { playing = false; $('#playBtn').textContent = '▶ Play'; });
+preloadCrests(); requestAnimationFrame(tick); initCaps(); loadData();
+</script>
+</body>
+</html>
