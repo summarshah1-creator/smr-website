@@ -1496,7 +1496,7 @@ window.LM_ANIM.lutonhoo = (c, x, G, t) => {
   for (let j = 0; j < 8; j++) { const ph = (t * 1.4 + j / 8) % 1, sd = j % 2 ? 1 : -1; R(c, '#bfe3f5', fx + sd * (14 + (j % 3)), -34 + ph * 22, 1, 2); }
   R(c, '#ffffff', fx, -66 - Math.round(Math.abs(Math.sin(t * 6)) * 2), 1, 3);
   // helicopter: parked on the lawn, takes off once the estate is ahead of you, climbs and flies off
-  const lift = Math.max(0, Math.min(1, (SW * .34 - x) / (SW * 1.1))), spin = .35 + Math.min(1, Math.max(0, (SW * .75 - x) / (SW * .35)));
+  const HO = window.HOO, lift = HO ? HO.lift : Math.max(0, Math.min(1, (SW * .34 - x) / (SW * 1.1))), spin = HO ? HO.spin : .35 + Math.min(1, Math.max(0, (SW * .75 - x) / (SW * .35)));
   const hx = 34 - lift * lift * 150, hy = -6 - lift * 150 - lift * lift * 40, tilt = -lift * .16;
   if (hx > -120 && hy > -320) {
     c.save(); c.translate(hx + 20, hy - 14); c.rotate(tilt); c.translate(-20, 14);

@@ -4,7 +4,7 @@
    Shapes: `top` = silhouette from the rear bumper to the front bumper as [x, y] fractions of length / height; `glass` = side window
    polygon; `pil` = pillar x positions; wheels sit on the real wheelbase. Front is on the right. */
 (function () {
-  const U = .0131 * 1.3, OUT = '#121016';
+  const U = .0131 * 1.3 * 1.2, UR = .8 / 1.2, OUT = '#121016';
   const SH = (col, k) => { const n = parseInt(col.slice(1), 16), f = v => Math.max(0, Math.min(255, Math.round(v * k))); return `rgb(${f(n >> 16)},${f(n >> 8 & 255)},${f(n & 255)})`; };
   // ---------- the cars (L, H, wheelbase, front overhang, wheel diameter in mm) ----------
   const C = {
@@ -356,7 +356,7 @@
     moped_b: ['del_b', 'Delivery moped', 1.1, [28, 44], 42], moped_g: ['del_g', 'Delivery moped', 1.1, [28, 44], 43], moped_o: ['del_o', 'Delivery moped', 1.1, [28, 44], 44],
     motorbike: ['motorbike', 'Motorbike', .06, [36, 56], 45], cycle_0: ['cycle_0', 'Bicycle', .35, [12, 20], 46], cycle_1: ['cycle_1', 'Bicycle', .35, [12, 20], 46],
     cycle_2: ['cycle_2', 'Bicycle', .35, [12, 20], 46], cycle_3: ['cycle_3', 'Bicycle', .35, [12, 20], 46], cycle_4: ['cycle_4', 'Bicycle', .35, [12, 20], 46] };
-  Object.entries(RIDE_INFO).forEach(([k, [f, n, wt, sp, wi]]) => { const M = RIDES[f], img = new Image(), sc = M.mmpx * U;
+  Object.entries(RIDE_INFO).forEach(([k, [f, n, wt, sp, wi]]) => { const M = RIDES[f], img = new Image(), sc = M.mmpx * U * UR;
     img.onload = () => { try { if (typeof carCache !== 'undefined') carCache.clear(); } catch (e) {} }; img.src = 'art/rides/' + f + '.webp?h=' + (CARS_H['r_' + f] || 1);
     V[k] = { n, w: Math.round(M.fw * sc), h: Math.round(M.h * sc), weight: wt, speed: sp, colours: [[k, '#ffffff']], v3: 1, frames: M.n, ride: 1,
       d(c, x, G) { const fr = (window.__RF || 0) % M.n, TM = c.getTransform();
