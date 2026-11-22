@@ -196,6 +196,18 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .smrhd span{font-family:Poppins,Mont,sans-serif;font-weight:300;font-size:26px;background:linear-gradient(90deg,#8a5cff,#ff4fa0);-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1}
 .smrlist{margin:0 0 6px;padding-left:18px;font-family:Silk;font-size:clamp(10px,1.3vw,13px);color:#d9d3ff;line-height:1.5;text-align:left}.smrlist b{color:#fff}
 .smrgo{display:block;text-align:center;text-decoration:none;background:linear-gradient(90deg,#8a5cff,#ff4fa0)!important;box-shadow:0 5px 0 #5a2a8a!important}
+
+/* owner 22 Nov: menu tiles show the name only; sound, best and coins in one row hard against the right corner; title block centred on the whole game screen */
+.side .tile small{display:none!important}.side .tile .lb{white-space:nowrap}
+.top-r{top:12px!important;right:calc(var(--sr,0px) + 12px)!important}
+#snd{width:36px;height:36px;padding:0;display:flex;align-items:center;justify-content:center;font-size:16px}
+.stats{top:12px!important;right:calc(var(--sr,0px) + 12px + 36px + 8px)!important;height:36px;align-items:stretch}
+.stats div{padding:0 11px!important;height:36px;box-sizing:border-box}
+#home .main{position:static;container-type:normal}
+#home .title{left:0!important;right:0!important;width:min(46%,560px);margin:0 auto}
+#home .mine,#home .credit{left:0!important;right:0!important}
+#home .credit{margin:0 auto}
+#home .heroWrap{height:80%}
 </style>
 </head>
 <body>
@@ -352,6 +364,6 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 <script src="vehicles.js?h=32fdac20ce"></script>
 <script src="hd/cars_v3.js?h=333148ab5d"></script>
 <script src="hd/landmarks_hd.js?h=008cc0e557"></script>
-<script src="game.js?h=17d0922819"></script>
+<script src="game.js?h=76ffabc897"></script>
 </body>
 </html>

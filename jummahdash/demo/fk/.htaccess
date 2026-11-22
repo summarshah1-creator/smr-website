@@ -1,0 +1,7 @@
+# Flappy Kabootar mode inside Jummah Dash: always fetch the newest copy
+DirectoryIndex index.html
+<IfModule mod_headers.c>
+  <FilesMatch "\.(html|json|js)$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+  </FilesMatch>
+</IfModule>

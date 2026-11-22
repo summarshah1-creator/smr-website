@@ -7,6 +7,7 @@ const cv = document.getElementById('cv'), ctx = cv.getContext('2d');
 const $ = id => document.getElementById(id);
 const MOSQUES = [['masjid', 'Luton Central Mosque'], ['masjidali', 'Masjid-e-Ali'], ['suffa', 'Suffa-Tul-Islam']];
 const MOSQUE_K = MOSQUES.map(m => m[0]);
+const FKDEMO = /[?&]fkdemo=1/.test(location.search);   // Flappy Kabootar mode demo: the gift box is always the pigeon
 let myMosque = (() => { try { return localStorage.getItem('jd_mosque') || ''; } catch (e) { return ''; } })();
 let bank = +(localStorage.getItem('jd_bank') || 0), passed = 0;
 const VH = 400;                       // world height in units
@@ -291,8 +292,18 @@ function makeCoins() {   // the 12-sided £1: nickel-brass outer ring, nickel-pl
 
 /* ---------------- sound (tiny WebAudio kit) ---------------- */
 let AC = null, sndOn = true, hissG = null;
+// Sound with the iPhone silent switch on (same as Flappy Kabootar): ask for 'playback' audio, and keep a silent looping
+// <audio> playing so older iPhones stay in that mode. Paused when the page is hidden or the sound is off.
+let keepAud = null;
+function playback() { if (!sndOn) return; try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) {}
+  try { if (!keepAud) { const n = 4000, b = new ArrayBuffer(44 + n), v = new DataView(b), w = (o, t) => { for (let i = 0; i < t.length; i++) v.setUint8(o + i, t.charCodeAt(i)); };
+      w(0, 'RIFF'); v.setUint32(4, 36 + n, true); w(8, 'WAVEfmt '); v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true); v.setUint32(24, 8000, true); v.setUint32(28, 8000, true); v.setUint16(32, 1, true); v.setUint16(34, 8, true); w(36, 'data'); v.setUint32(40, n, true); for (let i = 0; i < n; i++) v.setUint8(44 + i, 128);
+      keepAud = new Audio(URL.createObjectURL(new Blob([b], { type: 'audio/wav' }))); keepAud.loop = true; keepAud.setAttribute('playsinline', ''); keepAud.preload = 'auto'; }
+    if (keepAud.paused) { const p = keepAud.play(); if (p && p.catch) p.catch(() => {}); } } catch (e) {} }
+addEventListener('pointerdown', () => { playback(); if (AC && AC.state === 'suspended') AC.resume(); }, true);
+document.addEventListener('visibilitychange', () => { if (!keepAud) return; if (document.hidden) keepAud.pause(); else playback(); });
 function audio() {
-  if (AC) return; try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return; }
+  playback(); if (AC) return; try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return; }
   const b = AC.createBuffer(1, AC.sampleRate, AC.sampleRate), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
   const n = AC.createBufferSource(); n.buffer = b; n.loop = true; const f = AC.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 3200; f.Q.value = .7;
   hissG = AC.createGain(); hissG.gain.value = 0; n.connect(f); f.connect(hissG); hissG.connect(AC.destination); n.start();
@@ -351,6 +362,7 @@ const hero = { x: 0, y: FLOOR, vy: 0, thrust: false, ground: true, landT: 0, rot
 let holding = false;
 let street = [], skyline = [], cars = [], npcs = [], obs = [], coinList = [], steam = [], sparks = [], stars = [];
 let mobs = [], mobCD = 12; window.__mobsOn = () => mobs.some(m => m.x > 150 && m.x < 650); let nextObs = 0, nextNpc = 0, nextCar = 0, panicT = 0, deadT = 0;
+let runT = 0, firstBox = 0, lastBoxRide = 'kabootar';   // owner 22 Nov: every run's first gift box comes at 20 s and is the Flappy Kabootar one
 let flashT = 0, flashCol = '#fff', shake = 0, banner = null, rings = [], veh = null, inv = 0, gifts = [], nextGift = 0, nextEidi = 0, eidi = 0, pops = [], dust = [], revived = 0;
 const stats = { steamed: 0, dodged: 0, missed: 0 };
 
@@ -358,7 +370,7 @@ function seedStars() { stars = []; for (let i = 0; i < 90; i++) stars.push({ x: 
 function reset() {
   t = 0; dist = 0; speed = 0; coins = 0; obs = []; coinList = []; steam = []; sparks = []; panicT = 0; deadT = 0;
   RUN = newRun(); lastCoin = 0; mtQueue = []; boost = null; usedSave = 0; $('hsBox') && $('hsBox').classList.remove('on'); heroImg = heroImgs[SHOP.outfit] || heroImgs.classic;
-  flashT = 0; shake = 0; banner = null; rings = []; veh = null; inv = 0; gifts = []; eidi = 0; pops = []; dust = []; revived = 0; nextGift = 2200; nextEidi = 1600; stats.steamed = stats.dodged = stats.missed = 0;
+  flashT = 0; shake = 0; banner = null; rings = []; veh = null; inv = 0; gifts = []; eidi = 0; pops = []; dust = []; revived = 0; nextGift = FKDEMO ? 500 : 1e9; runT = 0; firstBox = 0; lastBoxRide = 'kabootar'; nextEidi = 1600; stats.steamed = stats.dodged = stats.missed = 0;
   Object.assign(hero, { x: -40, y: FLOOR, vy: 0, thrust: false, ground: true, landT: 0, rot: 0, run: 0, dead: false, vx: 0, bounce: 0 });
   nextObs = 380; nextNpc = 0; nextCar = 0;
   if (!street.length) fillStreet(); if (!skyline.length) fillSkyline();
@@ -679,7 +691,7 @@ function update(dt) {
   if (flashT > 0) flashT -= dt; if (shake > 0) shake -= dt; if (banner) { banner.t += dt; if (banner.t > 1.8) banner = null; }
   // coins
   coinList.forEach(c => { c.x -= dx;
-    if (!c.got && !hero.dead && state === 'play' && (hasG('tin') || (veh && (veh.k === 'kabootar' || veh.nb > .3)) || boost)) { const hx = hero.x + 4, hy = hero.y - (veh && veh.k === 'kabootar' ? 60 : veh ? 36 : 24), d = Math.hypot(hx - c.x, hy - c.y); if (d < (boost ? 260 : 170) || c.mag) { c.mag = 1; const k = Math.min(1, dt * 9); c.x += (hx - c.x) * k; c.y += (hy - c.y) * k; } }
+    if (!c.got && !hero.dead && state === 'play' && (hasG('tin') || (veh && (veh.k === 'kabootar' || veh.nb > .3)) || boost)) { const hx = hero.x + 4, hy = hero.y - (veh && veh.k === 'kabootar' ? 44 : veh ? 36 : 24), d = Math.hypot(hx - c.x, hy - c.y); if (d < (boost ? 260 : 170) || c.mag) { c.mag = 1; const k = Math.min(1, dt * 9); c.x += (hx - c.x) * k; c.y += (hy - c.y) * k; } }
     if (!c.got && !hero.dead && state === 'play') { const hc = heroCircles(); if (hc.some(([x, y, r]) => Math.hypot(x - c.x, y - c.y) < r + COIN_R + 2)) { c.got = 1; coins++; if (veh && veh.k === 'tuktuk') veh.fuel = Math.min(1, veh.fuel + .04); lastCoin = dist; SFX.coin(); for (let i = 0; i < 5; i++) sparks.push({ x: c.x, y: c.y, vx: (Math.random() - .5) * 90, vy: (Math.random() - .5) * 90, l: .3, c: '#fff3b0' }); } } });
   coinList.forEach(c => { if (!c.got && c.x < -18 && !c.m) { c.m = 1; stats.missed++; } });
   coinList = coinList.filter(c => c.x > -20 && !c.got);
@@ -748,7 +760,9 @@ function rankHtml() { const n = RANKS[Math.min(MS.rank, RANKS.length - 1)]; retu
 /* ================= Jetpack Joyride systems, our way ================= */
 /* gift box (= their vehicle token): rainbow box with a ?, gives a ride. Eidi envelopes (= spin tokens): opened at the end of a run. */
 function giftsUpdate(dt, dx) {
-  if (state === 'play' && !veh && !boost) { nextGift -= dx; if (nextGift <= 0) { gifts.push({ k: 'box', ride: nextRide(), x: W + 40, y: CEIL + 80 + Math.random() * (FLOOR - CEIL - 180), b: Math.random() * 6 }); nextGift = (2600 + Math.random() * 1800) * (hasG('dates') ? .5 : 1); } }
+  if (state === 'play' && !FM) runT += dt;
+  if (!FKDEMO && !firstBox && state === 'play' && !veh && !boost && runT >= 20) { firstBox = 1; gifts.push({ k: 'box', ride: 'kabootar', x: W + 40, y: CEIL + 90 + Math.random() * (FLOOR - CEIL - 200), b: 0 }); nextGift = 2600 + Math.random() * 1800; }
+  if (state === 'play' && !veh && !boost) { nextGift -= dx; if (nextGift <= 0) { const rr = () => { let k = nextRide(); for (let i = 0; i < 4 && k === lastBoxRide; i++) k = nextRide(); return lastBoxRide = k; }; gifts.push({ k: 'box', ride: FKDEMO ? 'kabootar' : rr(), x: W + 40, y: CEIL + 80 + Math.random() * (FLOOR - CEIL - 180), b: Math.random() * 6 }); nextGift = FKDEMO ? 700 + Math.random() * 300 : (2600 + Math.random() * 1800) * (hasG('dates') ? .5 : 1); } }
   if (state === 'play') { nextEidi -= dx; if (nextEidi <= 0) { gifts.push({ k: 'eidi', x: W + 30, y: CEIL + 50 + Math.random() * (FLOOR - CEIL - 120), b: Math.random() * 6 }); nextEidi = (2200 + Math.random() * 2400) * (hasG('envelope') ? .5 : 1); } }
   gifts.forEach(gf => { gf.x -= dx; gf.b += dt;
     if (!gf.got && !hero.dead && state === 'play' && heroCircles().some(([x, y, r]) => Math.hypot(x - gf.x, y - gf.y) < r + (gf.k === 'box' ? 26 : 13))) {
@@ -842,10 +856,58 @@ const PIG_WINGS = [['.oooo.......', 'owwwwoo.....', '.oggwwwoo...', '..oKgggwwo.
 const PK = 2.4, pigCv = [0, 1, 2].map(f => { const c = document.createElement('canvas'); c.width = 30 * PK; c.height = 26 * PK; const x = c.getContext('2d');
   const paint = (rows, ox, oy) => rows.forEach((r, j) => { for (let i = 0; i < r.length; i++) { const ch = r[i]; if (ch === '.') continue; x.fillStyle = PIG_COL[ch]; x.fillRect((ox + i) * PK, (oy + j) * PK, PK, PK); } });
   paint(PIG_BODY, 2, 12); paint(PIG_WINGS[f], 7, 12 + [-9, -4, -3][f] + 7); x.fillStyle = 'rgba(140,255,190,.35)'; x.fillRect(19 * PK, 16 * PK, 2 * PK, 2 * PK); return c; });
-// same pigeon at exactly 1 canvas pixel per art pixel (no seams), blown up crisp for the ride
-const pigArt = [0, 1, 2].map(f => { const c = document.createElement('canvas'); c.width = 30; c.height = 26; const x = c.getContext('2d');
-  const paint = (rows, ox, oy) => rows.forEach((r, j) => { for (let i = 0; i < r.length; i++) { const ch = r[i]; if (ch === '.') continue; x.fillStyle = PIG_COL[ch]; x.fillRect(ox + i, oy + j, 1, 1); } });
-  paint(PIG_BODY, 2, 12); paint(PIG_WINGS[f], 7, 12 + [-9, -4, -3][f] + 7); x.fillStyle = 'rgba(140,255,190,.35)'; x.fillRect(19, 16, 2, 2); return c; });
+// owner 22 Nov: ride pigeon redrawn at double detail (60x52 art pixels in the old 30x26 frame), 8 wingbeat frames
+const PIG_N = 8, pigArt = (() => { const out = [];
+  const shade = (x, y0, y1, a, b) => { const g = x.createLinearGradient(0, y0, 0, y1); g.addColorStop(0, a); g.addColorStop(1, b); return g; };
+  const wing = (x, ang, spread) => { x.save(); x.translate(13.2, 17.4); x.rotate(ang);
+    // primaries: long separate feathers fanning out at the tip
+    for (let i = 0; i < 6; i++) { const a = -.08 + i * .1 * spread, L = 13.5 - i * .9; x.save(); x.rotate(a); x.beginPath(); x.ellipse(-L * .55, 0, L * .55, 1.35, 0, 0, 7);
+      x.fillStyle = i < 4 ? '#3a4050' : '#55607a'; x.fill(); x.lineWidth = .45; x.strokeStyle = '#1b1a24'; x.stroke(); x.restore(); }
+    // secondaries + coverts (the main wing panel)
+    x.beginPath(); x.moveTo(1.2, -1.4); x.quadraticCurveTo(-4, -3.2, -9.5, -1.6); x.quadraticCurveTo(-10.6, .6, -9.2, 2.2);
+    for (let i = 0; i < 5; i++) { const px = -9.2 + i * 2.1; x.quadraticCurveTo(px + 1.05, 3.6, px + 2.1, 2.4); }
+    x.quadraticCurveTo(1.6, 2.6, 1.2, -1.4); x.closePath();
+    x.fillStyle = shade(x, -3, 3, '#e2e7ef', '#a7b0c2'); x.fill(); x.lineWidth = .55; x.strokeStyle = '#1b1a24'; x.stroke();
+    // the two black wing bars
+    x.strokeStyle = '#262a36'; x.lineWidth = 1; x.lineCap = 'round';
+    x.beginPath(); x.moveTo(-2.2, -.6); x.quadraticCurveTo(-4.6, .6, -6.4, 2.2); x.stroke();
+    x.beginPath(); x.moveTo(-5, -1.2); x.quadraticCurveTo(-7.2, 0, -8.6, 1.8); x.stroke();
+    // feather edges
+    x.strokeStyle = 'rgba(255,255,255,.55)'; x.lineWidth = .35; x.beginPath(); x.moveTo(.4, -1.6); x.quadraticCurveTo(-4, -2.7, -8.8, -1.4); x.stroke();
+    x.restore(); };
+  for (let f = 0; f < PIG_N; f++) { const c = document.createElement('canvas'); c.width = 60; c.height = 52; const x = c.getContext('2d'); x.scale(2, 2);
+    const ph = f / PIG_N * Math.PI * 2, ang = .55 - Math.cos(ph) * 1.05, spread = 1 + Math.max(0, Math.sin(ph)) * .9;   // down-stroke spreads the primaries, up-stroke folds them
+    const far = (a) => { x.save(); x.globalAlpha = 1; x.filter = 'brightness(.72)'; wing(x, a - .25, spread * .8); x.restore(); };
+    if (ang < -.1) far(ang);   // far wing peeks up behind the body on the up-stroke
+    // tail fan: five feathers with the dark band at the tips
+    for (let i = 0; i < 5; i++) { const ty = 16.9 + i * 1.35; x.save(); x.translate(6, 19.2); x.rotate(-.32 + i * .16); x.beginPath(); x.ellipse(-3.4, 0, 3.6, 1.05, 0, 0, 7);
+      const tg = x.createLinearGradient(-7, 0, 0, 0); tg.addColorStop(0, '#2e3442'); tg.addColorStop(.28, '#2e3442'); tg.addColorStop(.32, '#9aa3b5'); tg.addColorStop(1, '#b8c0ce');
+      x.fillStyle = tg; x.fill(); x.lineWidth = .45; x.strokeStyle = '#1b1a24'; x.stroke(); x.restore(); }
+    // feet
+    x.strokeStyle = '#c75a50'; x.lineWidth = .9; x.lineCap = 'round'; [[10.6, 9.4], [14, 12.8]].forEach(([a, b]) => { x.beginPath(); x.moveTo(a, 23.4); x.lineTo(a - .4, 25.2); x.lineTo(b - .4, 25.4); x.moveTo(a - .4, 25.2); x.lineTo(a + .9, 25.5); x.stroke(); });
+    // body
+    const bp = new Path2D(); bp.moveTo(4.6, 17.4); bp.quadraticCurveTo(8, 14.8, 15, 15.2); bp.quadraticCurveTo(18.6, 15.2, 19.4, 13.6);
+    bp.lineTo(23.6, 13.6); bp.quadraticCurveTo(23.4, 17.4, 21.4, 20.4); bp.quadraticCurveTo(18.6, 24.4, 12.4, 24.2); bp.quadraticCurveTo(6.6, 23.8, 4.6, 21.4); bp.closePath();
+    x.fillStyle = shade(x, 15, 24.5, '#cfd5e1', '#7a8396'); x.fill(bp);
+    const ng = x.createLinearGradient(18, 13, 22, 20); ng.addColorStop(0, '#5fbf7e'); ng.addColorStop(.5, '#3f9466'); ng.addColorStop(1, '#8a5fb0');
+    x.save(); x.clip(bp); x.fillStyle = ng; x.beginPath(); x.ellipse(20.6, 17.2, 3.4, 3.6, -.3, 0, 7); x.fill();
+    x.fillStyle = 'rgba(190,255,215,.45)'; x.beginPath(); x.ellipse(20.2, 16, 1.2, .9, -.4, 0, 7); x.fill();
+    x.fillStyle = 'rgba(255,255,255,.35)'; x.beginPath(); x.ellipse(11.5, 16.4, 5.5, 1.1, -.05, 0, 7); x.fill();
+    x.fillStyle = 'rgba(40,40,60,.18)'; x.beginPath(); x.ellipse(13, 23.6, 7, 1.8, 0, 0, 7); x.fill(); x.restore();
+    x.lineWidth = .6; x.strokeStyle = '#1b1a24'; x.stroke(bp);
+    // head
+    x.beginPath(); x.arc(21.6, 12.6, 2.9, 0, 7); x.fillStyle = shade(x, 9.7, 15.5, '#9aa4b8', '#6f798e'); x.fill(); x.lineWidth = .6; x.strokeStyle = '#1b1a24'; x.stroke();
+    // beak + white cere
+    x.beginPath(); x.moveTo(24.1, 12.4); x.lineTo(27.2, 13.6); x.lineTo(24.2, 14.2); x.closePath(); x.fillStyle = '#3a3d44'; x.fill(); x.lineWidth = .4; x.stroke();
+    x.fillStyle = '#f1f3f7'; x.beginPath(); x.ellipse(24.5, 12.5, .8, .5, .2, 0, 7); x.fill();
+    // eye: orange ring, pupil, glint
+    x.fillStyle = '#f08a2a'; x.beginPath(); x.arc(22.5, 12.1, 1.05, 0, 7); x.fill(); x.fillStyle = '#1b1a24'; x.beginPath(); x.arc(22.6, 12.1, .5, 0, 7); x.fill();
+    x.fillStyle = '#fff'; x.fillRect(22.7, 11.5, .5, .5);
+    wing(x, ang, spread);
+    // crisp pixel edges: no half-see-through pixels
+    const id = x.getImageData(0, 0, 60, 52), d = id.data; for (let i = 3; i < d.length; i += 4) d[i] = d[i] > 110 ? 255 : 0; x.putImageData(id, 0, 0);
+    out.push(c); }
+  window.__pigArt = out; return out; })();
 function runStarted() {   // start of the run proper: offer head starts (like their HEAD START buttons), golden misbaha ride
   usedSave = 0;
   if (SHOP.hs500 > 0 || SHOP.hs1000 > 0) { $('hs5').style.display = SHOP.hs500 > 0 ? '' : 'none'; $('hs10').style.display = SHOP.hs1000 > 0 ? '' : 'none'; $('hs5n').textContent = 'x' + SHOP.hs500; $('hs10n').textContent = 'x' + SHOP.hs1000; $('hsBox').classList.add('on'); clearTimeout(runStarted.t); runStarted.t = setTimeout(() => $('hsBox').classList.remove('on'), 3800); }
@@ -913,24 +975,25 @@ function drawBoost() {
   drawCorolla(ctx, x, FLOOR + 2 + (boost.out ? 0 : boost.jy || 0), 1.05, true);
 }
 function startVehicle(k) {
+  if (k === 'kabootar' && !window.__oldPigeon && FMS.enter()) return;
   RUN[k] = 1;
   veh = { k, t: 0, vy: 0, jumps: 0, held: false, wob: 0, g: 1, s: 1, flap: 0, fuel: 1, nb: 0, ht: 0 }; if (k === 'kabootar') veh.tip = 1; if (k === 'tuktuk' && !RUN.nitroTip) { RUN.nitroTip = 1; setTimeout(() => pops.push({ x: hero.x + 30, y: hero.y - 110, txt: 'TAP TO JUMP · HOLD TO GO HIGHER!', col: '#ffd21f', t: 0 }), 900); } hero.thrust = false; if (k === 'kabootar') hero.vy = -200;
   banner = { k, t: 0 }; rings.push({ x: hero.x, y: hero.y - 30, t: 0 }); flashT = .12; flashCol = '255,255,255';
   tone(523, .1, 'square', .06); setTimeout(() => tone(659, .1, 'square', .06), 90); setTimeout(() => tone(784, .2, 'square', .06), 180);
 }
 function vehCircles() { const x = hero.x, y = hero.y;
-  if (veh.k === 'kabootar') return [[x, y - 36, 34], [x + 60, y - 76, 15], [x - 27, y - 90, 14], [x - 24, y - 120, 12]];
+  if (veh.k === 'kabootar') return [[x, y - 18, 17], [x + 30, y - 38, 8], [x - 14, y - 50, 11], [x - 13, y - 74, 10]];
   if (veh.k === 'sandals') { const sg = veh.s < 0 ? -1 : 1, q = HS / 1.5; return [[x + 3 * q, y - 31 * q * sg, 10 * q], [x + 7 * q, y - 58 * q * sg, 9 * q]]; }
   return veh.k === 'tuktuk' ? [[x - 5, y - 26, 21], [x + 19, y - 19, 14], [x - 2, y - 58, 14]] : [[x, y - 8, 16], [x + 4, y - 36, 12]]; }
 function vehUpdate(dt) {
   veh.t += dt; hero.run += dt * (6 + speed / 22); if (hissG) hissG.gain.setTargetAtTime(0, AC.currentTime, .06);
   if (veh.k === 'kabootar') {   // flappy controls: tap to flap
     const press = holding && !veh.held; veh.held = holding; veh.flap -= dt;
-    veh.ft = (veh.ft || 0) + dt; if (veh.ft > (hero.vy < 0 ? .07 : .14)) { veh.ft = 0; veh.wf = ((veh.wf | 0) + 1) % 3; }   // wings always flapping, quicker on the way up (as in Flappy Kabootar)
-    if (press) { hero.vy = -270; veh.flap = .28; veh.wf = 0; veh.ft = 0; veh.tip = 0; RUN.flaps++; tone(700, .05, 'square', .04, 1.4); for (let i = 0; i < 4; i++) sparks.push({ x: hero.x - 10, y: hero.y - 90, vx: -80 - Math.random() * 60, vy: 40 + Math.random() * 60, l: .4, c: '#e8ecf4' }); }
+    veh.wp = ((veh.wp || 0) + dt * (hero.vy < 0 ? 5.2 : 2.6)) % 1; veh.wf = Math.floor(veh.wp * PIG_N);   // wings always beating, quicker on the way up
+    if (press) { hero.vy = -270; veh.flap = .28; veh.wp = 0; veh.taps = (veh.taps || 0) + 1; RUN.flaps++; tone(700, .05, 'square', .04, 1.4); for (let i = 0; i < 4; i++) sparks.push({ x: hero.x - 10, y: hero.y - 90, vx: -80 - Math.random() * 60, vy: 40 + Math.random() * 60, l: .4, c: '#e8ecf4' }); }
     hero.vy += 860 * dt; hero.y += hero.vy * dt;
     if (hero.y >= FLOOR) { hero.y = FLOOR; hero.vy = 0; }
-    if (hero.y - 140 < CEIL) { hero.y = CEIL + 140; hero.vy = Math.max(0, hero.vy); }   // the pigeon can fly right up to the top of the screen
+    if (hero.y - 96 < CEIL) { hero.y = CEIL + 96; hero.vy = Math.max(0, hero.vy); }   // the pigeon can fly right up to the top of the screen
     hero.rot = Math.max(-.35, Math.min(.5, hero.vy / 700));
     return;
   }
@@ -980,15 +1043,24 @@ function vehCrash() {
 function drawVehicle() {
   const x = hero.x, y = hero.y, k = veh.k;
   if (k === 'kabootar') {   // owner 22 Nov: he rides ON the Flappy pigeon (sitting on its back, wings flapping over his legs)
-    const f = veh.wf | 0, K = 2.8, U = PK * K;   // U = units per art pixel
+    const f = veh.wf | 0, K = 1.4, U = PK * K;   // owner 22 Nov: half the old size
     ctx.save(); ctx.translate(x, y); ctx.rotate(hero.rot * .5);
-    ctx.fillStyle = 'rgba(30,10,30,.18)'; ctx.beginPath(); ctx.ellipse(0, FLOOR - y + 2, 40 * (1 - Math.min(.6, (FLOOR - y) / 400)), 4, 0, 0, 7); ctx.fill();
-    const backY = -25 * U + 16 * U, hf = 'sit' + (Math.floor(t * 3) % 2) + '_happy';
-    ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high'; ctx.drawImage(heroImg, FR(hf) * HW * HX4, 0, HW * HX4, HH0 * HX4, -4 * U - HW * HSR / 2, backY + 10.5 - HHR, HW * HSR, HHR); ctx.imageSmoothingQuality = 'low';
+    ctx.fillStyle = 'rgba(30,10,30,.18)'; ctx.beginPath(); ctx.ellipse(0, FLOOR - y + 2, 24 * (1 - Math.min(.6, (FLOOR - y) / 400)), 3, 0, 0, 7); ctx.fill();
+    const backY = -9 * U, hf = 'sit' + (Math.floor(t * 3) % 2) + '_happy', rw = HW * HS, rh = HH0 * HS;
+    ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high'; ctx.drawImage(heroImg, FR(hf) * HW * HX4, 0, HW * HX4, HH0 * HX4, -1.5 * U - rw / 2, backY + 7.5 - rh, rw, rh); ctx.imageSmoothingQuality = 'low';
     ctx.imageSmoothingEnabled = false; ctx.drawImage(pigArt[f], -14 * U, -25 * U, 30 * U, 26 * U); ctx.imageSmoothingEnabled = true;
     ctx.restore();
-    if (veh.t < 3.2) { const a = Math.min(1, veh.t * 3, (3.2 - veh.t) * 2), s = 1 + Math.sin(t * 9) * .06; ctx.save(); ctx.globalAlpha = a; ctx.translate(W / 2, VH * .3); ctx.scale(s, s); ctx.font = '700 26px Silk'; ctx.textAlign = 'center'; ctx.lineJoin = 'round';
-      ctx.lineWidth = 6; ctx.strokeStyle = '#1b1a24'; ctx.strokeText('TAP TO FLAP', 0, 0); ctx.fillStyle = '#fff'; ctx.fillText('TAP TO FLAP', 0, 0); ctx.restore(); }
+    // TAP TO FLY: big, pulsing, with a tapping finger; stays until he has tapped 3 times (at least 2.5 s)
+    if (veh.t < 2.5 || (veh.taps || 0) < 3) { veh.tipA = Math.min(1, (veh.tipA || 0) + .08); } else veh.tipA = Math.max(0, (veh.tipA || 0) - .05);
+    if (veh.tipA > 0 && veh.t < 12) { const a = veh.tipA, s = 1 + Math.sin(t * 8) * .07, tp = (t * 2.2) % 1, dn = tp < .25;
+      ctx.save(); ctx.globalAlpha = a; ctx.translate(W / 2, VH * .26); ctx.scale(s, s); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
+      ctx.fillStyle = 'rgba(20,16,32,.72)'; ctx.beginPath(); ctx.roundRect(-118, -30, 236, 60, 30); ctx.fill(); ctx.lineWidth = 3; ctx.strokeStyle = '#ffd21f'; ctx.stroke();
+      ctx.font = '700 28px Silk'; ctx.lineWidth = 6; ctx.strokeStyle = '#1b1a24'; ctx.strokeText('TAP TO FLY', 18, 2); ctx.fillStyle = '#fff'; ctx.fillText('TAP TO FLY', 18, 2);
+      // finger tapping, with a ripple on each tap
+      ctx.save(); ctx.translate(-88, dn ? 4 : -2); ctx.fillStyle = '#fff'; ctx.strokeStyle = '#1b1a24'; ctx.lineWidth = 2.5;
+      ctx.beginPath(); ctx.roundRect(-5, -18, 10, 24, 5); ctx.roundRect(-14, -2, 28, 20, 8); ctx.fill(); ctx.stroke(); ctx.restore();
+      if (tp < .5) { ctx.strokeStyle = 'rgba(255,210,31,' + (1 - tp * 2) + ')'; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(-88, -18, 6 + tp * 28, 0, 7); ctx.stroke(); }
+      ctx.restore(); }
     return;
   }
   if (k === 'sandals') {
@@ -1403,7 +1475,10 @@ function showOver() {
   missionRows($('ovRows'));
   $('over').classList.remove('hide'); }
 const tap = (id, fn) => $(id).addEventListener('pointerdown', e => { e.preventDefault(); e.stopPropagation(); fn(e); });
-tap('home', e => { if (e.target.closest('.tile,.credit')) return; start(); });
+// owner 22 Nov: taps on or near anything you can press never start the game (24 px dead zone round every button, the whole menu column)
+const nearBtn = e => { const x = e.clientX, y = e.clientY, M = 24;
+  return [...document.querySelectorAll('#home .side, #home .stats, #home .credit, #home .badge, #snd')].some(el => { const r = el.getBoundingClientRect(); return r.width && x > r.left - M && x < r.right + M && y > r.top - M && y < r.bottom + M; }); };
+tap('home', e => { if (e.target.closest('.tile,.credit') || nearBtn(e)) return; start(); });
 tap('bSmr', () => $('smrInfo').classList.remove('hide')); tap('smrClose', () => $('smrInfo').classList.add('hide'));
 $('smrOpen').addEventListener('pointerdown', e => e.stopPropagation());
 tap('bMos', openPick); tap('pickClose', () => $('pick').classList.add('hide'));
@@ -1527,7 +1602,7 @@ tap('bShare', () => share('Late for Jummah? Play Jummah Dash – an SMR Original
 tap('again', start); tap('ovHome', goHome);
 tap('eidiGo', () => { if ($('eidiGo').dataset.life) revive(); else { $('eidiBox').classList.add('hide'); eidi = 0; showOver(); } });
 tap('ovShare', () => share(`I flew ${Math.floor(dist / 10)}m and grabbed £${coins} trying to get to Jummah 😂 Beat that on Jummah Dash:`));
-tap('snd', () => { sndOn = !sndOn; $('snd').textContent = sndOn ? '🔊' : '🔇'; if (!sndOn && hissG) hissG.gain.value = 0; });
+tap('snd', () => { sndOn = !sndOn; $('snd').textContent = sndOn ? '🔊' : '🔇'; if (!sndOn && hissG) hissG.gain.value = 0; if (sndOn) playback(); else if (keepAud) keepAud.pause(); });
 const noHold = el => el && el.closest && el.closest('.btn,#home,.sheet,#over,#eidiBox,#pz,#rot');
 window.addEventListener('pointerdown', e => { if (noHold(e.target)) return; holding = true; audio(); });
 window.addEventListener('touchstart', e => { if (noHold(e.target)) return; e.preventDefault(); holding = true; audio(); }, { passive: false });
@@ -1603,8 +1678,52 @@ document.addEventListener('fullscreenchange', () => setTimeout(reflow, 100));
 })();
 
 resize(); seedStars(); reset(); refreshHome(); if (myMosque) setTimeout(refreshHome, 300);
+
+/* FLAPPY KABOOTAR MODE (owner 22 Nov, demo, not live): grabbing the Flappy Kabootar gift box freezes the run, the screen breaks into
+   pixels and you're in the real Flappy Kabootar game (fk/: a separate copy with every Flappy rule, sky fixed at ~1pm, landscape),
+   riding the pigeon through the pipes, picking up £1 coins in the gaps. Crash = pixels again and you carry on the run.
+   ?fkdemo=1 = the gift box is always the pigeon and keeps coming back. Old ride: window.__oldPigeon = 1. */
+let FM = null;
+const FMS = (() => { const tmp = document.createElement('canvas'), tg = tmp.getContext('2d'), snap = document.createElement('canvas'); let fr = null, ready = false;
+  function frame0() { if (fr) return fr; fr = document.createElement('iframe'); fr.src = 'fk/index.html?h=baaaab3e34&hour=13&jd=1'; fr.setAttribute('allow', 'autoplay');
+    fr.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:0;opacity:0;pointer-events:none;z-index:2;background:#000';
+    $('cv').after(fr); return fr; }
+  window.__jdFkReady = () => { ready = true; };
+  window.__jdHero = () => ({ im: heroImg, sx: FR('sit' + (Math.floor(t * 3) % 2) + '_happy') * HW * HX4, sw: HW * HX4, sh: HH0 * HX4, w: HW, h: HH0 });
+  window.__jdCoin = () => { coins++; SFX.coin(); $('coins').textContent = '£' + coins; };
+  window.__jdFkDone = r => { if (!FM || FM.ph !== 'play') return; FM.res = r; FM.ph = 'out'; FM.t = 0; fr.style.opacity = 0; fr.style.pointerEvents = 'none'; };
+  const fw = () => fr && fr.contentWindow;
+  function enter() { frame0(); if (!ready || !fw().__jdGo) return false;
+    snap.width = cv.width; snap.height = cv.height; snap.getContext('2d').drawImage(cv, 0, 0);
+    FM = { ph: 'in', t: 0, go: 0 }; holding = false; RUN.kabootar = 1; veh = null; hero.thrust = false; if (hissG) try { hissG.gain.cancelScheduledValues(AC.currentTime); hissG.gain.setValueAtTime(0, AC.currentTime); } catch (e) {}   // no jetpack hiss in Flappy world
+    [988, 784, 659, 523, 392, 523, 784, 1047].forEach((f, i) => setTimeout(() => tone(f, .07, 'square', .05), i * 55));   // 8-bit "going in"
+    return true; }
+  function pixelate(src, b) { const tw = Math.max(1, Math.ceil(cv.width / b)), th = Math.max(1, Math.ceil(cv.height / b)); if (tmp.width !== tw || tmp.height !== th) { tmp.width = tw; tmp.height = th; }
+    tg.imageSmoothingEnabled = true; tg.imageSmoothingQuality = 'medium'; tg.drawImage(src, 0, 0, tw * b * src.width / cv.width, th * b * src.height / cv.height, 0, 0, tw, th);
+    ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.imageSmoothingEnabled = false; ctx.drawImage(tmp, 0, 0, tw, th, 0, 0, tw * b, th * b); }
+  function step(dt) { FM.t += dt; if (FM.ph === 'in' && FM.t > 1.05) { FM.ph = 'play'; fr.style.opacity = 1; fr.style.pointerEvents = 'auto'; try { fr.focus(); } catch (e) {} } }
+  function frame() { const fc = fw() && fw().__jdCanvas && fw().__jdCanvas();
+    if (FM.ph === 'in') { const k = FM.t;
+      if (k < .5) { const e = k / .5; pixelate(snap, 1 + e * e * 30); }
+      else { if (!FM.go) { FM.go = 1; fw().__jdGo(sndOn); } const e = Math.min(1, (k - .5) / .55); if (fc && fc.width) pixelate(fc, Math.max(1, 31 * (1 - e) * (1 - e))); }
+      if (k < .12) { ctx.fillStyle = `rgba(255,255,255,${.6 - k * 5})`; ctx.fillRect(0, 0, cv.width, cv.height); }
+      return; }
+    if (FM.ph === 'out') { const k = FM.t;
+      if (k < .45) { if (fc && fc.width) pixelate(fc, 1 + (k / .45) * (k / .45) * 30); return; }
+      if (!FM.back) { FM.back = 1; backToGame(); }
+      draw(); const e = Math.min(1, (k - .45) / .55); if (e < 1) pixelate(cv, Math.max(1, 31 * (1 - e) * (1 - e))); else { FM = null; try { fw().__jdEnd(); } catch (e2) {} }
+      return; } }
+  function backToGame() {   // back in the run: in the air, invincible for a moment, nothing dangerous right on top of him
+    hero.y = FLOOR - 150; hero.vy = -380; hero.ground = false; hero.rot = 0; inv = 2.4; veh = null; holding = false;
+    obs = obs.filter(o => o.x > W + 60 && o.type !== 'laser'); shake = .25;
+    const r = FM.res || { score: 0, coins: 0 }, n = r.score; RUN.fkPipes = Math.max(RUN.fkPipes || 0, n);
+    pops.push({ x: hero.x + 30, y: hero.y - 90, txt: n ? n + (n === 1 ? ' PIPE!' : ' PIPES!') + (r.coins ? ' +£' + r.coins : '') : 'KABOOTAR FLEW OFF!', col: '#ffd21f', t: 0 });
+    [523, 659, 784, 1047].forEach((f, i) => setTimeout(() => tone(f, .08, 'square', .05), i * 60)); }
+  setTimeout(frame0, 2500);   // load it in the background so it's ready the moment he grabs the box
+  return { enter, step, frame, preload: frame0 };
+})();
 let last = performance.now();
-function frame(now) { const dt = Math.min(.05, (now - last) / 1000); last = now; if (!paused) update(dt); else holding = false; draw(); if (bakeQ.length) bakeOne(); requestAnimationFrame(frame); }
+function frame(now) { const dt = Math.min(.05, (now - last) / 1000); last = now; if (FM) { if (!paused) { FMS.step(dt); if (FM && FM.ph === 'out' && FM.back) update(dt); } FMS.frame(); requestAnimationFrame(frame); return; } if (!paused) update(dt); else holding = false; draw(); if (bakeQ.length) bakeOne(); requestAnimationFrame(frame); }
 requestAnimationFrame(frame);
-window.__jd = { veh: k => startVehicle(k), laser: () => [CEIL + 40, (CEIL + FLOOR) / 2].forEach((y, i) => obs.push({ type: 'laser', x: W / 2, y, ph: 'in', pt: 0, slide: 0, d: i * .12 })), eidi: n => { eidi = n; }, kill: w => die(w), gift: (k, r, x, y) => gifts.push({ k, ride: r, x: x || W * .6, y: y || 200, b: 0 }), get state() { return state; }, start, hero, get obs() { return obs; }, spawnRocket: () => obs.push({ type: "rocket", x: W + 40, y: hero.y - 30, warn: 1.5, lock: 0, v: 0 }), setHold: v => holding = v, get dist() { return dist; }, mis: (s, c) => { RUN.steamed = s; coins = c; }, get npcs() { return npcs; }, boost: m => startBoost(m), get SHOP() { return SHOP; }, bc: (k, kd) => buildingCanvas(kd || "lm", k), carSprite: (k, ci, f) => carSprite(k, ci, f), queue: k => deck.unshift([k]), street: () => street, npc: x => spawnNpc(x), car: (x, k, l) => spawnCar(x, k, false, l), get STREET() { return STREET; } };
+window.__jd = { get fm() { return FM; }, get gifts() { return gifts; }, get runT() { return runT; }, veh: k => startVehicle(k), laser: () => [CEIL + 40, (CEIL + FLOOR) / 2].forEach((y, i) => obs.push({ type: 'laser', x: W / 2, y, ph: 'in', pt: 0, slide: 0, d: i * .12 })), eidi: n => { eidi = n; }, kill: w => die(w), gift: (k, r, x, y) => gifts.push({ k, ride: r, x: x || W * .6, y: y || 200, b: 0 }), get state() { return state; }, start, hero, get obs() { return obs; }, spawnRocket: () => obs.push({ type: "rocket", x: W + 40, y: hero.y - 30, warn: 1.5, lock: 0, v: 0 }), setHold: v => holding = v, get dist() { return dist; }, mis: (s, c) => { RUN.steamed = s; coins = c; }, get npcs() { return npcs; }, boost: m => startBoost(m), get SHOP() { return SHOP; }, bc: (k, kd) => buildingCanvas(kd || "lm", k), carSprite: (k, ci, f) => carSprite(k, ci, f), queue: k => deck.unshift([k]), street: () => street, npc: x => spawnNpc(x), car: (x, k, l) => spawnCar(x, k, false, l), get STREET() { return STREET; } };
 })();

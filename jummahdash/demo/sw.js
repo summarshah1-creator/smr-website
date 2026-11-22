@@ -1,11 +1,11 @@
 /* Jummah Dash: keeps the whole game on the phone. First visit downloads it once;
    after that it opens from the phone, and an update only downloads the files that changed. */
-const BUILD = '20261122172602';
+const BUILD = '20261122182037';
 const FILES = {
 "hd/landmarks_hd.js": "008cc0e557",
 "hd/cars_v3.js": "333148ab5d",
 "hd/foodbank.png": "8f4400d5e6",
-"game.js": "17d0922819",
+"game.js": "76ffabc897",
 "landmarks.js": "5121e57aa2",
 "vehicles.js": "32fdac20ce",
 "manifest.webmanifest": "636eadba05",
@@ -239,7 +239,26 @@ const FILES = {
 "art/npc_eesc_a.webp": "e907355984",
 "art/npc_eesc_b.webp": "576b803538",
 "art/npc_eesc_c.webp": "8155bd2a06",
-"art/npc_mobility.webp": "4f2caa3907"
+"art/npc_mobility.webp": "4f2caa3907",
+"fk/.htaccess": "02307c193a",
+"fk/adhan.mp3": "3c0d18884a",
+"fk/amiri.woff2": "d4fcd1fe15",
+"fk/fest.js": "e23953051e",
+"fk/icon-180.png": "9f39067722",
+"fk/icon-192.png": "0cf996bcd8",
+"fk/icon-512.png": "574631d627",
+"fk/index.html": "baaaab3e34",
+"fk/landmarks.js": "5121e57aa2",
+"fk/manifest.json": "8f56449168",
+"fk/namecheck.js": "95808a6a5f",
+"fk/namefilter.json": "55fc98964b",
+"fk/ps2p.woff2": "87ab8daaa6",
+"fk/silk.woff2": "c40ed2272b",
+"fk/silkb.woff2": "67996e4e8c",
+"fk/sky.js": "1e0b78e5c6",
+"fk/smr-mark.svg": "488e3bf2f7",
+"fk/smr.png": "bde08a58c3",
+"fk/vehicles.js": "32fdac20ce"
 };          // { path: hash } for every file the game uses
 const CACHE = 'jd-' + BUILD;
 
@@ -265,7 +284,7 @@ self.addEventListener('fetch', e => {
   const u = new URL(e.request.url);
   if (e.request.method !== 'GET' || u.origin !== location.origin) return;
   const base = new URL('./', self.registration.scope).pathname;
-  if (!u.pathname.startsWith(base)) return;
+  if (!u.pathname.startsWith(base) || u.pathname.startsWith(base + 'fk/')) return;   // the Flappy Kabootar mode page looks after itself
   if (e.request.mode === 'navigate') {   // the page: try the internet for 2.5 s, else the copy on the phone
     e.respondWith((async () => {
       const c = await caches.open(CACHE);
