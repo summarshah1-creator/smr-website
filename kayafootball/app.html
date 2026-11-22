@@ -330,7 +330,7 @@ let _lt = 0; document.addEventListener('touchend', e => { const n = Date.now(); 
 "use strict";
 const W = 1080, H = 1920, FPS = 30, DUR = 15;
 // Post format (Instagram feed, 4:5): the lounge fills 1080×1350 and the story layout sits in the middle, trimmed of its empty top/bottom
-const POST = { h: 1350, k: .8, top: 150 };
+const POST = { h: 1350, k: .74, top: 100 };
 let fmtP = 0;   // preview blend: 0 = story, 1 = post
 const outH = fmt => fmt === 'post' ? POST.h : H;
 const ohP = p => Math.round(H + (POST.h - H) * p);
