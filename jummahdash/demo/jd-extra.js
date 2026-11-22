@@ -41,7 +41,7 @@
 
   // ---- Recommend a place ----
   var css = document.createElement('style');
-  css.textContent = '#bRec .lb{font-size:.86em;white-space:nowrap}#recBox .box{max-height:92%;overflow:auto}#recBox label{display:block;font-family:PS,monospace;font-size:10px;color:#ffd75a;margin:10px 0 4px;text-align:left}'
+  css.textContent = '#recBox .box{max-height:92%;overflow:auto}#recBox label{display:block;font-family:PS,monospace;font-size:10px;color:#ffd75a;margin:10px 0 4px;text-align:left}'
     + '#recBox input,#recBox textarea{width:100%;box-sizing:border-box;font:15px/1.3 Mont,system-ui,sans-serif;color:#fff;background:#120d2a;border:2px solid #5a4fa0;border-radius:10px;padding:9px 10px;outline:none}'
     + '#recBox input:focus,#recBox textarea:focus{border-color:#ffd75a}#recBox textarea{resize:none;height:64px}'
     + '#recBox .rbt{display:flex;gap:8px;justify-content:center;margin-top:12px}#recBox .rbt .go{margin:0}#recBox .go.alt{background:#3a3168;box-shadow:0 5px 0 #1d1640}'
@@ -52,7 +52,7 @@
   function addTile() {
     var side = document.querySelector('#home .side'); if (!side || $('bRec')) return;
     var b = document.createElement('button'); b.className = 'tile'; b.id = 'bRec';
-    b.innerHTML = ICON + '<span class="lb">RECOMMEND A PLACE</span> <small>for the game</small>';
+    b.innerHTML = ICON + '<span class="lb">ADD A PLACE</span> <small>for the game</small>';   // owner 22 Nov: short enough to fit the tile
     side.appendChild(b);
     b.addEventListener('pointerdown', function (e) { e.preventDefault(); e.stopPropagation(); openRec(); });
     var holder = ($('smrInfo') && $('smrInfo').parentNode) || document.body;

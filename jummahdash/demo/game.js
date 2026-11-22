@@ -20,10 +20,11 @@ const HW = 48, HH0 = 58, HS = 1.06, HH = HH0 * HS;   // hero sprite cell + its o
 const HSR = 1.5, HHR = HH0 * HSR;   // size he's drawn at inside the rides (tuk-tuk, carpet, pigeon, Corolla roof), which kept their size
 const NPCK = .733;   // owner 22 Nov: walkers ≈ JJ's scientists, ~9.5% of the screen
 const BS = .8;                        // buildings drawn a bit smaller so there's more sky to fly in
+let GFX = (() => { try { return localStorage.getItem('jd_gfx') || 'hd'; } catch (e) { return 'hd'; } })();
 let S = 1, W = 600, dpr = 1, KR = 2;  // units->px, screen width in units, render scale for buildings
 
 function resize() {
-  dpr = Math.min(window.devicePixelRatio || 1, 1.75);
+  dpr = Math.min(window.devicePixelRatio || 1, GFX === 'lo' ? 1.2 : 1.75);   // Settings → Graphics: SMOOTH draws less sharp for older phones
   // always landscape: if the phone is upright, turn the whole stage 90° (the player just turns the phone)
   const st = $('stage'), port = innerHeight > innerWidth, sw = port ? innerHeight : innerWidth, sh2 = port ? innerWidth : innerHeight;
   st.style.width = sw + 'px'; st.style.height = sh2 + 'px'; st.style.transform = port ? `translateX(${innerWidth}px) rotate(90deg)` : 'none';
@@ -300,6 +301,10 @@ function makeCoins() {   // the 12-sided £1: nickel-brass outer ring, nickel-pl
 
 /* ---------------- sound (tiny WebAudio kit) ---------------- */
 let AC = null, sndOn = true, hissG = null;
+// Settings → Sound: separate volumes (owner 22 Nov). Every sound goes through one of these buses: jet (jetpack), coins, traffic (cars, convoy, sirens), fx (everything else)
+let MIX = null; const VOL = (() => { const d = { jet: 100, coins: 100, traffic: 100, fx: 100 }; try { return Object.assign(d, JSON.parse(localStorage.getItem('jd_mix') || '{}')); } catch (e) { return d; } })();
+let SHAKE = (() => { try { return localStorage.getItem('jd_shake') !== '0'; } catch (e) { return true; } })();
+function applyMix() { if (!MIX) return; for (const k in VOL) MIX[k].gain.value = Math.max(0, Math.min(1, VOL[k] / 100)); }
 // Sound with the iPhone silent switch on (same as Flappy Kabootar): ask for 'playback' audio, and keep a silent looping
 // <audio> playing so older iPhones stay in that mode. Paused when the page is hidden or the sound is off.
 let keepAud = null;
@@ -314,22 +319,23 @@ function audio() {
   playback(); if (AC) return; try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return; }
   const b = AC.createBuffer(1, AC.sampleRate, AC.sampleRate), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
   const n = AC.createBufferSource(); n.buffer = b; n.loop = true; const f = AC.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 3200; f.Q.value = .7;
-  hissG = AC.createGain(); hissG.gain.value = 0; n.connect(f); f.connect(hissG); hissG.connect(AC.destination); n.start();
+  MIX = {}; ['jet', 'coins', 'traffic', 'fx'].forEach(k => { MIX[k] = AC.createGain(); MIX[k].connect(AC.destination); }); applyMix();
+  hissG = AC.createGain(); hissG.gain.value = 0; n.connect(f); f.connect(hissG); hissG.connect(MIX.jet); n.start();
 }
-function tone(freq, dur, type = 'sine', vol = .12, slide = 0) {
+function tone(freq, dur, type = 'sine', vol = .12, slide = 0, bus = null) {
   if (!AC || !sndOn) return; const t = AC.currentTime, o = AC.createOscillator(), g = AC.createGain(); o.type = type; o.frequency.setValueAtTime(freq, t);
   if (slide) o.frequency.exponentialRampToValueAtTime(Math.max(30, freq * slide), t + dur);
-  g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(.0001, t + dur); o.connect(g); g.connect(AC.destination); o.start(t); o.stop(t + dur + .02);
+  g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(.0001, t + dur); o.connect(g); g.connect(bus || (MIX ? MIX.fx : AC.destination)); o.start(t); o.stop(t + dur + .02);
 }
-const SFX = { coin() { tone(1320, .09, 'square', .04); setTimeout(() => tone(1760, .12, 'square', .036), 55); },   /* coin ping 20% quieter (owner 22 Nov) */
+const SFX = { coin() { tone(1320, .09, 'square', .04, 0, MIX && MIX.coins); setTimeout(() => tone(1760, .12, 'square', .036, 0, MIX && MIX.coins), 55); },   /* coin ping 20% quieter (owner 22 Nov) */
   zap() { tone(120, .5, 'sawtooth', .16, .5); tone(900, .25, 'square', .06, .3); }, thud() { tone(140, .25, 'triangle', .3, .4); },
   warn() { tone(880, .08, 'square', .05); }, whoosh() { tone(500, .5, 'sawtooth', .05, .3); }, boom() { tone(90, .6, 'sawtooth', .22, .3); } };
 
 /* traffic sounds, ported from Flappy Kabootar (engine model, siren/wail/nee-naw, horns, skids, crashes) */
 Object.assign(SFX, (() => {
   const A = () => { if (!sndOn) return null; audio(); if (AC && AC.state === 'suspended') AC.resume(); return AC; };
-  const tn = (f0, f1, dur, type = 'square', vol = .12, delay = 0) => { const a = A(); if (!a) return; const t0 = a.currentTime + delay, o = a.createOscillator(), g = a.createGain(); o.type = type; o.frequency.setValueAtTime(f0, t0); o.frequency.exponentialRampToValueAtTime(Math.max(30, f1), t0 + dur); g.gain.setValueAtTime(vol, t0); g.gain.exponentialRampToValueAtTime(.0008, t0 + dur); o.connect(g).connect(a.destination); o.start(t0); o.stop(t0 + dur + .02); };
-  const nz = (dur, f0, f1, vol = .18, delay = 0) => { const a = A(); if (!a) return; const t0 = a.currentTime + delay, n = a.createBufferSource(), b = a.createBuffer(1, Math.ceil(a.sampleRate * dur), a.sampleRate), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; n.buffer = b; const fl = a.createBiquadFilter(); fl.type = 'bandpass'; fl.Q.value = 1.2; fl.frequency.setValueAtTime(f0, t0); fl.frequency.exponentialRampToValueAtTime(f1, t0 + dur); const g = a.createGain(); g.gain.setValueAtTime(vol, t0); g.gain.exponentialRampToValueAtTime(.001, t0 + dur); n.connect(fl).connect(g).connect(a.destination); n.start(t0); };
+  const tn = (f0, f1, dur, type = 'square', vol = .12, delay = 0) => { const a = A(); if (!a) return; const t0 = a.currentTime + delay, o = a.createOscillator(), g = a.createGain(); o.type = type; o.frequency.setValueAtTime(f0, t0); o.frequency.exponentialRampToValueAtTime(Math.max(30, f1), t0 + dur); g.gain.setValueAtTime(vol, t0); g.gain.exponentialRampToValueAtTime(.0008, t0 + dur); o.connect(g).connect((MIX ? MIX.traffic : a.destination)); o.start(t0); o.stop(t0 + dur + .02); };
+  const nz = (dur, f0, f1, vol = .18, delay = 0) => { const a = A(); if (!a) return; const t0 = a.currentTime + delay, n = a.createBufferSource(), b = a.createBuffer(1, Math.ceil(a.sampleRate * dur), a.sampleRate), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; n.buffer = b; const fl = a.createBiquadFilter(); fl.type = 'bandpass'; fl.Q.value = 1.2; fl.frequency.setValueAtTime(f0, t0); fl.frequency.exponentialRampToValueAtTime(f1, t0 + dur); const g = a.createGain(); g.gain.setValueAtTime(vol, t0); g.gain.exponentialRampToValueAtTime(.001, t0 + dur); n.connect(fl).connect(g).connect((MIX ? MIX.traffic : a.destination)); n.start(t0); };
   const engine = (D, f, vol, bike) => { const a = A(); if (!a) return; const t0 = a.currentTime, N = 28, re = new Float32Array(N), im = new Float32Array(N);
     for (let h = 1; h < N; h++) im[h] = Math.pow(h, bike ? -.75 : -.9) * (h % 2 ? 1 : (bike ? .55 : .8)) * (1 + .35 * Math.sin(h * 1.7));
     const wave = a.createPeriodicWave(re, im), o = a.createOscillator(), o2 = a.createOscillator(); o.setPeriodicWave(wave); o2.setPeriodicWave(wave);
@@ -338,12 +344,12 @@ Object.assign(SFX, (() => {
     const sh = a.createWaveShaper(), cv = new Float32Array(1024); for (let i = 0; i < 1024; i++) cv[i] = Math.tanh((i / 511.5 - 1) * (bike ? 3.2 : 2.6)); sh.curve = cv;
     const lp = a.createBiquadFilter(); lp.type = 'lowpass'; lp.Q.value = 1.4; lp.frequency.setValueAtTime(bike ? 1200 : 700, t0); lp.frequency.exponentialRampToValueAtTime(bike ? 4200 : 2600, t0 + D * .45); lp.frequency.exponentialRampToValueAtTime(bike ? 1400 : 650, t0 + D);
     const g = a.createGain(); g.gain.setValueAtTime(vol * .04, t0); g.gain.exponentialRampToValueAtTime(vol, t0 + D * .45); g.gain.exponentialRampToValueAtTime(vol * .03, t0 + D); g.gain.linearRampToValueAtTime(0, t0 + D + .04);
-    const og = a.createGain(); og.gain.value = .5; o.connect(og); o2.connect(og); og.connect(am); am.connect(sh); sh.connect(lp); lp.connect(g); g.connect(a.destination);
+    const og = a.createGain(); og.gain.value = .5; o.connect(og); o2.connect(og); og.connect(am); am.connect(sh); sh.connect(lp); lp.connect(g); g.connect((MIX ? MIX.traffic : a.destination));
     [o, o2, lfo].forEach(x => { x.start(t0); x.stop(t0 + D + .05); }); };
   const sir = (D, base, lfoF, dep, types, peak, glide) => { const a = A(); if (!a) return; const t0 = a.currentTime, o = a.createOscillator(), o2 = a.createOscillator(), l = a.createOscillator(), lg = a.createGain(), g = a.createGain(), f = a.createBiquadFilter();
     o.type = types[0]; o2.type = types[1]; l.type = 'triangle'; l.frequency.value = lfoF; lg.gain.value = dep; l.connect(lg); lg.connect(o.frequency); lg.connect(o2.frequency);
     [o, o2].forEach(x => { x.frequency.setValueAtTime(base, t0); x.frequency.linearRampToValueAtTime(base + glide, t0 + D * .42); x.frequency.linearRampToValueAtTime(base - glide, t0 + D); });
-    f.type = 'lowpass'; f.frequency.value = 2500; const m = a.createGain(); m.gain.value = .22; o.connect(f); o2.connect(m); m.connect(f); f.connect(g); g.connect(a.destination);
+    f.type = 'lowpass'; f.frequency.value = 2500; const m = a.createGain(); m.gain.value = .22; o.connect(f); o2.connect(m); m.connect(f); f.connect(g); g.connect((MIX ? MIX.traffic : a.destination));
     g.gain.setValueAtTime(.0001, t0); g.gain.exponentialRampToValueAtTime(peak, t0 + D * .45); g.gain.exponentialRampToValueAtTime(.0001, t0 + D); [o, o2, l].forEach(x => { x.start(t0); x.stop(t0 + D + .05); }); };
   return {
     zoom(bike) { engine(bike ? 1.6 : 1.9, bike ? [150, 265, 120] : [62, 108, 48], bike ? .16 : .2, bike); nz(1.2, 300, 1500, .03, .3); },
@@ -351,16 +357,16 @@ Object.assign(SFX, (() => {
     siren() { sir(5.5, 930, 3, 340, ['triangle', 'sawtooth'], .036, 70); },
     wail() { sir(6, 1050, .55, 380, ['triangle', 'square'], .033, 60); },
     neenaw() { const a = A(); if (!a) return; const t0 = a.currentTime, D = 6.5, o = a.createOscillator(), g = a.createGain(), f = a.createBiquadFilter(); o.type = 'sawtooth'; for (let k = 0, tt = 0; tt < D; k++, tt += .55) o.frequency.setValueAtTime(k % 2 ? 640 : 790, t0 + tt);
-      f.type = 'lowpass'; f.frequency.value = 1900; o.connect(f); f.connect(g); g.connect(a.destination); g.gain.setValueAtTime(.0001, t0); g.gain.exponentialRampToValueAtTime(.03, t0 + D * .45); g.gain.exponentialRampToValueAtTime(.0001, t0 + D); o.start(t0); o.stop(t0 + D + .05); },
+      f.type = 'lowpass'; f.frequency.value = 1900; o.connect(f); f.connect(g); g.connect((MIX ? MIX.traffic : a.destination)); g.gain.setValueAtTime(.0001, t0); g.gain.exponentialRampToValueAtTime(.03, t0 + D * .45); g.gain.exponentialRampToValueAtTime(.0001, t0 + D); o.start(t0); o.stop(t0 + D + .05); },
     airhorn(at) { [0, .45].forEach(d => { tn(233, 228, .38, 'sawtooth', .042, (at || 0) + d); tn(294, 290, .38, 'sawtooth', .036, (at || 0) + d); }); },
     horn(v) { v = v == null ? .5 : v; const n = v < .5 ? 1 : 2, f = 380 + v * 140; for (let i = 0; i < n; i++) { tn(f, f, .18 + (v > .8 ? .35 : 0), 'square', .021, i * .28); tn(f * 1.26, f * 1.26, .18 + (v > .8 ? .35 : 0), 'square', .015, i * .28); } },
     skid(v) { v = v == null ? .5 : v; const a = A(); if (!a) return; const t0 = a.currentTime, D = .9 + v * .5, n = a.createBufferSource(), b = a.createBuffer(1, Math.ceil(a.sampleRate * D), a.sampleRate), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
-      n.buffer = b; const f = a.createBiquadFilter(); f.type = 'bandpass'; f.Q.value = 9; f.frequency.setValueAtTime(1900 + v * 900, t0); f.frequency.linearRampToValueAtTime(1300 + v * 500, t0 + D); const g = a.createGain(); g.gain.setValueAtTime(0, t0); g.gain.linearRampToValueAtTime(.2, t0 + .06); g.gain.exponentialRampToValueAtTime(.001, t0 + D); n.connect(f); f.connect(g); g.connect(a.destination); n.start(t0); n.stop(t0 + D); },
+      n.buffer = b; const f = a.createBiquadFilter(); f.type = 'bandpass'; f.Q.value = 9; f.frequency.setValueAtTime(1900 + v * 900, t0); f.frequency.linearRampToValueAtTime(1300 + v * 500, t0 + D); const g = a.createGain(); g.gain.setValueAtTime(0, t0); g.gain.linearRampToValueAtTime(.2, t0 + .06); g.gain.exponentialRampToValueAtTime(.001, t0 + D); n.connect(f); f.connect(g); g.connect((MIX ? MIX.traffic : a.destination)); n.start(t0); n.stop(t0 + D); },
     bump() { nz(.12, 900, 300, .14); tn(160, 70, .12, 'square', .05); },
     crash() { const a = A(); if (!a) return; const t0 = a.currentTime, sr = a.sampleRate, nb = a.createBufferSource(), b = a.createBuffer(1, Math.ceil(sr * 1.1), sr), d = b.getChannelData(0);
       for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.exp(-i / sr * 9);
       for (let k = 0; k < 36; k++) { const p = Math.floor((.05 + Math.pow(Math.random(), 1.6) * .9) * sr), f = 3000 + Math.random() * 4500, Am = .1 + Math.random() * .35; for (let i = 0; i < sr * .05 && p + i < d.length; i++) d[p + i] += Math.sin(2 * Math.PI * f * i / sr) * Math.exp(-i / sr * 90) * Am; }
-      nb.buffer = b; const f = a.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 1600; f.Q.value = .45; const g = a.createGain(); g.gain.value = .22; nb.connect(f); f.connect(g); g.connect(a.destination); nb.start(t0); tn(70, 40, .35, 'sine', .3); },
+      nb.buffer = b; const f = a.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 1600; f.Q.value = .45; const g = a.createGain(); g.gain.value = .22; nb.connect(f); f.connect(g); g.connect((MIX ? MIX.traffic : a.destination)); nb.start(t0); tn(70, 40, .35, 'sine', .3); },
     thudBig(v) { v = v == null ? .5 : v; nz(.3 + v * .25, 1200 + v * 500, 160, .22); tn(120, 45, .3, 'triangle', .16); tn(420, 300, .25, 'square', .03, .02); nz(.5, 5000, 3000, .03, .08); }
   }; })());
 
@@ -463,7 +469,7 @@ const CVS = (() => { const N = ['m4_loop', 'm4_rev', 'm4_rev2', 'c63_loop', 'c63
   return { zoom() { if (sndOn && AC) zoom(); }, tick(dt) { if (zoomT > 0) zoomT -= dt; const on = cars.filter(c => c.convoy && (c.k === 'm4c' || c.k === 'c63w'));
       if (on.length && AC && !loading) load();
       const live = sndOn && AC && state === 'play' && !document.hidden;
-      if (!bus && AC) { bus = AC.createGain(); bus.gain.value = .18; /* 40% quieter (owner 22 Nov) */ bus.connect(AC.destination); }
+      if (!bus && AC) { bus = AC.createGain(); bus.gain.value = .18; /* 40% quieter (owner 22 Nov) */ bus.connect(MIX ? MIX.traffic : AC.destination); }
       // rev-and-creep timing: only while the M4 or C63 is near the screen
       const m4 = on.find(c => c.k === 'm4c'), c63 = on.find(c => c.k === 'c63w'), near = c => c && c.x + c.L > -60 && c.x < W + 60;
       [m4, c63].forEach(c => { if (c && c.lg) { c.lg.t += dt; if (c.lg.t > 2.6) c.lg = null; } });
@@ -651,7 +657,7 @@ function update(dt) {
   // scroll the world
   street.forEach(b => { b.x -= dx; if (!b.past && b.kind === 'lm' && MOSQUE_K.includes(b.key) && b.x + b.w < hero.x && state === 'play') { b.past = 1; passed++; } }); while (street.length && street[0].x + street[0].w + 40 < -20) street.shift(); fillStreet();
   skyline.forEach(b => b.x -= dx * .32); while (skyline.length && skyline[0].x + skyline[0].w < -50) skyline.shift(); fillSkyline();
-  updateTraffic(dt, dx); convoyTick(dt);
+  updateTraffic(dt, dx); convoyTick(dt); MYCAR.tick(dt);
 
   // now and then an older gent on a mobility scooter trundles along the pavement (owner, 21 Nov); people step round him
   mobCD -= dt; if (state !== 'menu' && mobCD <= 0) { mobCD = 35 + Math.random() * 50; const d = Math.random() < .5 ? -1 : 1; mobs.push({ x: W + 30, d, v: 20 + Math.random() * 8, ci: Math.random() * 3 | 0, y: PAVE_T + 30 + Math.random() * 8, roll: 0 }); }
@@ -1320,7 +1326,7 @@ function draw() {
   ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'low';
   if (!skyCv || skyCv.width !== cv.width || skyCv.height !== cv.height) buildSky();
   ctx.drawImage(skyCv, 0, 0);
-  const shx = shake > 0 ? (Math.random() - .5) * shake * 14 : 0, shy = shake > 0 ? (Math.random() - .5) * shake * 14 : 0;
+  const shx = shake > 0 && SHAKE ? (Math.random() - .5) * shake * 14 : 0, shy = shake > 0 && SHAKE ? (Math.random() - .5) * shake * 14 : 0;
   ctx.setTransform(S, 0, 0, S, shx * S, shy * S);
   drawJet();
   // far hazy skyline (smaller, slower)
@@ -1501,20 +1507,25 @@ function thumb(cnv, key) {   // a masjid drawn small for the picker / the home t
 }
 function refreshHome() {
   $('hBest').textContent = best + 'm'; $('hBank').textContent = '£' + bank.toLocaleString('en-GB'); $('misStars').textContent = '★'.repeat(MS.stars) + '☆'.repeat(3 - MS.stars);
-  $('outName').textContent = (ITEMS.outfit.find(o => o.id === SHOP.outfit) || {}).name.split(' ')[0].toLowerCase(); $('mosName').textContent = myMosque ? mosName() : 'Pick one'; $('mineName').textContent = mosName();
-  if (myMosque) thumb($('mosThumb'), myMosque);
+  $('outName').textContent = (ITEMS.outfit.find(o => o.id === SHOP.outfit) || {}).name.split(' ')[0].toLowerCase(); $('mineName').textContent = mosName();
 }
 let pickThenPlay = false;
-function openPick() {
-  const L = $('mlist'); L.innerHTML = '';
+// the masjid cards (first-time pop-up, and Settings → My masjid)
+function fillMasjids(L, onPick) { L.innerHTML = '';
   MOSQUES.forEach(([k, n]) => { const b = document.createElement('button'); b.className = 'mcard' + (k === myMosque ? ' on' : '');
     const c = document.createElement('canvas'); c.width = 320; c.height = 200; b.appendChild(c); b.appendChild(document.createTextNode(n));
-    b.addEventListener('pointerdown', e => { e.stopPropagation(); myMosque = k; try { localStorage.setItem('jd_mosque', k); } catch (e2) {} [...L.children].forEach(x => x.classList.remove('on')); b.classList.add('on'); refreshHome(); street = []; skyline = []; fillStreet(); fillSkyline();
-      // owner 22 Nov: no DONE button: picking a masjid closes the pop-up (and starts the run if PLAY opened it)
-      setTimeout(() => { $('pick').classList.add('hide'); if (pickThenPlay) { pickThenPlay = false; start(); } }, 260); });
-    L.appendChild(b); setTimeout(() => thumb(c, k), 0); });
+    b.addEventListener('pointerdown', e => { e.stopPropagation(); myMosque = k; try { localStorage.setItem('jd_mosque', k); } catch (e2) {} [...L.children].forEach(x => x.classList.remove('on')); b.classList.add('on'); refreshHome(); street = []; skyline = []; fillStreet(); fillSkyline(); if (onPick) onPick(); });
+    L.appendChild(b); setTimeout(() => thumb(c, k), 0); }); }
+function openPick() {
+  // owner 22 Nov: no DONE button: picking a masjid closes the pop-up (and starts the run if PLAY opened it); after that it lives in Settings
+  fillMasjids($('mlist'), () => setTimeout(() => { $('pick').classList.add('hide'); if (pickThenPlay) { pickThenPlay = false; start(); } }, 260));
   $('pick').classList.remove('hide');
 }
+function setSound(on) { sndOn = !!on; $('snd').classList.toggle('off', !sndOn); if (!sndOn && hissG) hissG.gain.value = 0; if (sndOn) playback(); else if (keepAud) keepAud.pause(); syncSet(); }
+function syncSet() { const S1 = $('setSnd'), G1 = $('setGfx'), K1 = $('setShk'); if (!S1) return; [...S1.children].forEach(b => b.classList.toggle('on', (b.dataset.v === '1') === sndOn)); [...G1.children].forEach(b => b.classList.toggle('on', b.dataset.v === GFX));
+  [...K1.children].forEach(b => b.classList.toggle('on', (b.dataset.v === '1') === SHAKE)); document.querySelectorAll('#setBox input[data-mix]').forEach(r => { r.value = VOL[r.dataset.mix]; r.nextElementSibling.textContent = VOL[r.dataset.mix] + '%'; });
+  $('setVols').classList.toggle('off', !sndOn); }
+function openSettings() { if (state !== 'menu') return; fillMasjids($('setMl')); syncSet(); $('setBox').classList.remove('hide'); }
 function share(txt) {
   const data = { title: 'Jummah Dash', text: txt, url: location.href.split('#')[0] };
   if (navigator.share) navigator.share(data).catch(() => {});
@@ -1548,7 +1559,13 @@ const nearBtn = e => { const x = e.clientX, y = e.clientY, M = 24;
 tap('home', e => { if (e.target.closest('.tile,.credit') || nearBtn(e)) return; start(); });
 tap('bSmr', () => $('smrInfo').classList.remove('hide')); tap('smrClose', () => $('smrInfo').classList.add('hide'));
 $('smrOpen').addEventListener('pointerdown', e => e.stopPropagation());
-tap('bMos', () => { pickThenPlay = false; openPick(); }); $('pick').addEventListener('pointerdown', e => { if (e.target.id === 'pick') { pickThenPlay = false; $('pick').classList.add('hide'); } }); tap('pickClose', () => $('pick').classList.add('hide'));
+tap('bSet', openSettings); tap('setClose', () => $('setBox').classList.add('hide')); $('setBox').addEventListener('pointerdown', e => { e.stopPropagation(); if (e.target.id === 'setBox') $('setBox').classList.add('hide'); });
+[...$('setSnd').children].forEach(b => b.addEventListener('pointerdown', e => { e.stopPropagation(); setSound(b.dataset.v === '1'); }));
+[...$('setShk').children].forEach(b => b.addEventListener('pointerdown', e => { e.stopPropagation(); SHAKE = b.dataset.v === '1'; try { localStorage.setItem('jd_shake', SHAKE ? '1' : '0'); } catch (x) {} syncSet(); }));
+document.querySelectorAll('#setBox input[data-mix]').forEach(r => { r.addEventListener('pointerdown', e => e.stopPropagation()); r.addEventListener('input', () => { VOL[r.dataset.mix] = +r.value; r.nextElementSibling.textContent = r.value + '%'; applyMix(); try { localStorage.setItem('jd_mix', JSON.stringify(VOL)); } catch (x) {} });
+  r.addEventListener('change', () => { if (!sndOn) return; audio(); const k = r.dataset.mix; if (k === 'coins') SFX.coin(); else if (k === 'fx') SFX.warn(); else if (k === 'jet' && hissG) { hissG.gain.setTargetAtTime(.03, AC.currentTime, .03); hissG.gain.setTargetAtTime(0, AC.currentTime + .5, .08); } else if (k === 'traffic' && SFX.horn) SFX.horn(.5); }); });
+[...$('setGfx').children].forEach(b => b.addEventListener('pointerdown', e => { e.stopPropagation(); GFX = b.dataset.v; try { localStorage.setItem('jd_gfx', GFX); } catch (x) {} syncSet(); resize(); }));
+$('pick').addEventListener('pointerdown', e => { if (e.target.id === 'pick') { pickThenPlay = false; $('pick').classList.add('hide'); } }); tap('pickClose', () => $('pick').classList.add('hide'));
 tap('bHow', () => $('how').classList.remove('hide'));
 
 /* ================= SHOP: utilities, gadgets (2 slots, buy a 3rd), outfits ================= */
@@ -1669,7 +1686,7 @@ tap('bShare', () => share('Late for Jummah? Play Jummah Dash – an SMR Original
 tap('again', start); tap('ovHome', goHome);
 tap('eidiGo', () => { if ($('eidiGo').dataset.life) revive(); else { $('eidiBox').classList.add('hide'); eidi = 0; showOver(); } });
 tap('ovShare', () => share(`I flew ${Math.floor(dist / 10)}m and grabbed £${coins} trying to get to Jummah 😂 Beat that on Jummah Dash:`));
-tap('snd', () => { sndOn = !sndOn; $('snd').textContent = sndOn ? '🔊' : '🔇'; if (!sndOn && hissG) hissG.gain.value = 0; if (sndOn) playback(); else if (keepAud) keepAud.pause(); });
+tap('snd', () => setSound(!sndOn));
 const noHold = el => el && el.closest && el.closest('.btn,#home,.sheet,#over,#eidiBox,#pz,#rot');
 window.addEventListener('pointerdown', e => { if (noHold(e.target)) return; holding = true; audio(); });
 window.addEventListener('touchstart', e => { if (noHold(e.target)) return; e.preventDefault(); holding = true; audio(); }, { passive: false });
@@ -1744,7 +1761,68 @@ document.addEventListener('fullscreenchange', () => setTimeout(reflow, 100));
   requestAnimationFrame(step);
 })();
 
+/* ---------- Add your car (owner 22 Nov): a request to the owner (first name, car, photo), shared with Flappy Kabootar via /flappy/carreq.js.
+   Once he approves it in SMR Admin, this phone gets a message (in the game, and as a notification if turned on) and its car drives past
+   at least every 30 s; approved cars from other players turn up now and then. ---------- */
+const MYCAR = (() => { let t = 6, pubT = 40 + Math.random() * 30; const pub = [], mine = [];
+  function reg(k, img, model) { const U = window.CARS_U || .0204, w = Math.round(4450 * U) + 2, h = Math.max(20, Math.round((w - 2) * img.height / img.width));
+    VEHICLES[k] = { n: model || 'Your car', w, h, weight: 0, speed: [32, 48], colours: [[k, '#ffffff']], v3: 1, user: 1, d(c, x, G) { c.imageSmoothingEnabled = true; c.imageSmoothingQuality = 'high'; c.drawImage(img, x, G - h, w - 2, h); } };
+    for (const id of [...carCache.keys()]) if (id.startsWith(k)) carCache.delete(id); }
+  function load(src, k, model, cb) { const im = new Image(); im.crossOrigin = 'anonymous'; im.onload = () => { reg(k, im, model); if (cb) cb(); }; im.src = src; }
+  function check() { if (!window.SMRCar) return; SMRCar.poll(j => {
+      (j.cars || []).forEach(c => { const k = 'u' + c.id; if (mine.includes(k)) return; load(SMRCar.img(c.id, c.done_at || c.at), k, c.model, () => { if (!mine.includes(k)) mine.push(k); t = Math.min(t, 4); }); });
+      MSG.add(j.msgs || []); }); }
+  fetch('/flappy/api.php?a=cfg', { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(c => { (c && c.cars || []).slice(0, 30).forEach(cr => load('/flappy/api.php?a=carimg&id=' + cr.id + '&v=' + cr.at, 'u' + cr.id, cr.model, () => { if (!pub.includes('u' + cr.id)) pub.push('u' + cr.id); })); }).catch(() => {});
+  setTimeout(check, 1500); setInterval(check, 60000); document.addEventListener('visibilitychange', () => { if (!document.hidden) check(); });
+  return { check, tick(dt) { if (state !== 'play' || (boost && !boost.out) || CVZ || jamT > 0) return;
+    if (mine.length) { t -= dt; if (t <= 0) t = spawnCar(null, mine[Math.random() * mine.length | 0], false, Math.random() < .5 ? 0 : 1) ? 30 : 1; }
+    const others = pub.filter(k => !mine.includes(k)); if (others.length) { pubT -= dt; if (pubT <= 0) pubT = spawnCar(null, others[Math.random() * others.length | 0], false, Math.random() < .5 ? 0 : 1) ? 45 + Math.random() * 40 : 2; } } };
+})();
+// messages from the owner about a car: shown when the player isn't mid-run
+const MSG = (() => { const q = []; let open = false;
+  function show() { if (open || !q.length || state === 'play' || state === 'intro') return; const m = q.shift(); open = true; $('msgT').textContent = m.title || 'Message'; $('msgB').textContent = m.body || ''; $('msgBox').classList.remove('hide'); if (window.SMRCar) SMRCar.seen([m.id]); }
+  $('msgOk').addEventListener('click', () => { $('msgBox').classList.add('hide'); open = false; setTimeout(show, 450); });
+  $('msgBox').addEventListener('pointerdown', e => e.stopPropagation());
+  setInterval(show, 1000);
+  return { add(list) { list.forEach(m => { if (!q.some(x => x.id === m.id)) q.push(m); }); show(); } };
+})();
+(() => { const cm = $('carBox'); let rd = null, flip = false, stage = 0, busy = false;
+  const btn = $('cS'), st = $('cSt'), no = $('cNo'), err = $('cE');
+  const setBtn = () => { btn.classList.toggle('sure', stage === 1); btn.classList.toggle('yes', stage === 2); btn.textContent = stage === 1 ? 'ARE YOU SURE?' : stage === 2 ? 'YES, SEND IT' : 'SEND REQUEST'; };
+  const close = () => { const a = document.activeElement; if (a && a.blur) a.blur(); cm.classList.add('hide'); };
+  try { const n = localStorage.getItem('smr_first'); if (n) $('cN').value = n; } catch (e) {}
+  tap('bCar', () => { $('carF').classList.remove('hide'); $('carOk').classList.add('hide'); err.textContent = ''; cm.classList.remove('hide'); });
+  cm.addEventListener('pointerdown', e => { e.stopPropagation(); if (e.target === cm) close(); }); cm.addEventListener('keydown', e => e.stopPropagation());
+  $('cX').addEventListener('click', close); $('cC').addEventListener('click', close);
+  function preview() { const src = flip ? SMRCar.flip(rd.cut ? rd.cut.c : rd.img) : (rd.cut ? rd.cut.c : rd.img), cv = $('cCv'), w = 480, h = Math.round(w * .45), x = cv.getContext('2d'); cv.width = w; cv.height = h; x.clearRect(0, 0, w, h);
+    const k = Math.min((w - 30) / src.width, (h - 24) / src.height), dw = src.width * k, dh = src.height * k;
+    if (rd.cut) { x.fillStyle = 'rgba(0,0,0,.28)'; x.beginPath(); x.ellipse(w / 2, h - 12, dw * .46, 6, 0, 0, 7); x.fill(); }
+    x.imageSmoothingQuality = 'high'; x.drawImage(src, (w - dw) / 2, rd.cut ? h - 12 - dh : (h - dh) / 2, dw, dh); $('cPv').classList.add('on'); }
+  $('cFl').addEventListener('click', () => { if (!rd) return; flip = !flip; preview(); });
+  $('cF').addEventListener('change', async e => { const f = e.target.files && e.target.files[0]; e.target.value = ''; if (!f) return;
+    if (!window.SMRCar) { err.textContent = "Couldn't load. Check your signal and try again."; return; }
+    rd = null; flip = false; stage = 0; setBtn(); no.classList.remove('on'); err.textContent = ''; $('cPv').classList.remove('on'); busy = true; btn.disabled = true; st.textContent = 'Checking your photo…';
+    try { rd = await SMRCar.read(f); const im = new Image(); im.src = rd.photo; await im.decode(); rd.img = im; preview();
+      st.textContent = rd.cut ? 'Looking good! We\'ll tidy it up and make the game car.' : 'Got it! We\'ll make the game car from this.';
+      if (rd.flag === 'crop') no.innerHTML = '<b>IS THE WHOLE CAR IN?</b>We can’t see both bumpers. For the best result, take the photo from further back so the whole car fits in.';
+      else if (rd.flag === 'front') no.innerHTML = '<b>WE NEED A SIDE VIEW</b>This looks like the front or back of the car. If it\'s the only photo you have we can still try, but it won’t look as good. A side-on photo works best.';
+      if (rd.flag) { no.classList.add('on'); stage = 1; setBtn(); }
+    } catch (x) { rd = null; st.textContent = ''; err.textContent = x && x.message && x.message.length > 8 ? x.message : "That photo didn't work. Try another one."; }
+    finally { busy = false; btn.disabled = false; } });
+  btn.addEventListener('click', async () => { if (busy) return; err.textContent = '';
+    const name = $('cN').value.trim(), model = $('cM').value.trim();
+    if (!name) { err.textContent = 'Please add your first name.'; return; } if (!model) { err.textContent = 'Please type your car.'; return; } if (!rd) { err.textContent = 'Please add a photo of your car.'; return; }
+    if (stage === 1) { stage = 2; setBtn(); return; }
+    busy = true; btn.disabled = true; btn.textContent = 'SENDING…'; try { localStorage.setItem('smr_first', name); } catch (x) {}
+    try { await SMRCar.submit({ name, model, photo: rd.photo, cut: rd.cut ? (flip ? SMRCar.flip(rd.cut.c) : rd.cut.c) : null, flag: rd.flag, game: 'jd' });
+      stage = 0; setBtn(); $('carF').classList.add('hide'); $('carOk').classList.remove('hide'); $('cNs').textContent = ''; $('cNt').classList.toggle('hide', !SMRCar.canNotify() || Notification.permission === 'granted');
+      if (SMRCar.canNotify() && Notification.permission === 'granted') SMRCar.notify().catch(() => {});
+    } catch (x) { err.textContent = x.message; } finally { busy = false; btn.disabled = false; if (stage === 0) btn.textContent = 'SEND REQUEST'; } });
+  $('cNt').addEventListener('click', async () => { try { await SMRCar.notify(); $('cNt').classList.add('hide'); $('cNs').textContent = "Done! We'll send a notification when your car is ready."; }
+    catch (x) { $('cNs').textContent = /iPhone|iPad/.test(navigator.userAgent) && !navigator.standalone ? 'On iPhone, add Jummah Dash to your Home Screen first, then turn notifications on. You\'ll still see the message here in the game.' : 'Notifications are off, but you\'ll still see the message here in the game.'; } });
+})();
 resize(); seedStars(); reset(); refreshHome(); if (myMosque) setTimeout(refreshHome, 300);
+if (!myMosque) setTimeout(() => { if (!myMosque && state === 'menu') { pickThenPlay = false; openPick(); } }, 900);   // first time: pick your masjid (later: Settings)
 
 /* FLAPPY KABOOTAR MODE (owner 22 Nov, demo, not live): grabbing the Flappy Kabootar gift box freezes the run, the screen breaks into
    pixels and you're in the real Flappy Kabootar game (fk/: a separate copy with every Flappy rule, sky fixed at ~1pm, landscape),

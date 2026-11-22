@@ -1,12 +1,12 @@
 /* Jummah Dash: keeps the whole game on the phone. First visit downloads it once;
    after that it opens from the phone, and an update only downloads the files that changed. */
-const BUILD = '20261122215712';
+const BUILD = '20261122222536';
 const FILES = {
-"jd-extra.js": "d46acc0992",
+"jd-extra.js": "5f6a2675de",
 "hd/landmarks_hd.js": "9e40888703",
-"hd/cars_v3.js": "0b06f737b8",
+"hd/cars_v3.js": "b2c54b648f",
 "hd/foodbank.png": "8f4400d5e6",
-"game.js": "20e6908caf",
+"game.js": "42c27e3d23",
 "landmarks.js": "4649570284",
 "vehicles.js": "32fdac20ce",
 "manifest.webmanifest": "f337af2b13",
@@ -319,3 +319,10 @@ self.addEventListener('fetch', e => {
   if (!(p in FILES)) return;
   e.respondWith((async () => (await (await caches.open(CACHE)).match(p)) || fetch(e.request))());
 });
+// car requests (owner 22 Nov): the owner's message when a player's car is ready / about their car
+self.addEventListener('push', e => {
+  let d = {}; try { d = e.data ? e.data.json() : {}; } catch (x) { d = { title: 'Jummah Dash', body: e.data ? e.data.text() : '' }; }
+  e.waitUntil(self.registration.showNotification(d.title || 'Jummah Dash', { body: d.body || '', tag: d.tag || 'jd', icon: 'art/icon-192.png', badge: 'art/icon-192.png', data: { url: d.url || './' } }));
+});
+self.addEventListener('notificationclick', e => { e.notification.close(); const url = (e.notification.data && e.notification.data.url) || './';
+  e.waitUntil(self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(cs => { for (const c of cs) if ('focus' in c) return c.focus(); return self.clients.openWindow(url); })); });

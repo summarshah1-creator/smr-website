@@ -74,6 +74,36 @@ body.x2on #place{opacity:0!important}#pwrTip{position:absolute;left:12px;right:1
 #recM .send:disabled,#przM .send:disabled{opacity:.6}
 #recM .err,#przM .err{color:#c8402a;font-size:12px;margin-top:6px;min-height:14px}
 #recM .ok,#przM .ok{text-align:center;padding:18px 4px 6px}#recM .ok b,#przM .ok b{display:block;font:700 15px Silk;color:#2f8a3a;margin-bottom:6px}
+#carM .steps{margin:2px 0 6px;padding-left:18px;font-size:12px;line-height:1.4;color:#5a4a2a}#carM .steps b{color:#1b1a24}
+#msgM .mfrom{font:700 9px Silk;color:#2f8a3a;margin-bottom:6px}#msgM p{white-space:pre-wrap}
+#carM,#mineM,#msgM{position:fixed;inset:0;z-index:50;background:rgba(15,14,22,.6);display:flex;align-items:center;justify-content:center;pointer-events:auto}
+#carM.hide,#mineM.hide,#msgM.hide{display:none}
+#carM:not(.hide),#mineM:not(.hide),#msgM:not(.hide){animation:mIn .25s ease}#carM:not(.hide) .box,#mineM:not(.hide) .box,#msgM:not(.hide) .box{animation:bIn .4s cubic-bezier(.18,1.25,.32,1)}
+@keyframes mIn{from{opacity:0}}@keyframes bIn{from{transform:translateY(24px) scale(.92);opacity:0}}
+#carM .box,#mineM .box,#msgM .box{position:relative;width:min(320px,88vw);background:#f6efd8;border:4px solid #1b1a24;box-shadow:0 6px 0 #1b1a24;border-radius:6px;padding:16px 16px 14px;font:500 13px -apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#1b1a24;text-align:left}
+#carM h3,#mineM h3,#msgM h3{margin:0 26px 4px 0;font:700 12px/1.4 Silk;letter-spacing:.04em}
+#carM p,#mineM p,#msgM p{margin:0 0 10px;font-size:12px;color:#6a5a3a}
+#carM label,#mineM label{display:block;font-weight:700;font-size:11px;margin:8px 0 3px;text-transform:uppercase;letter-spacing:.06em}
+#carM input,#carM textarea,#mineM input,#mineM textarea{width:100%;box-sizing:border-box;border:2px solid #1b1a24;border-radius:4px;padding:8px;font:500 14px -apple-system,'Segoe UI',Roboto,sans-serif;background:#fff}
+#carM textarea,#mineM textarea{height:64px;resize:none}
+#carM .x,#mineM .x{position:absolute;right:8px;top:8px;width:28px;height:28px;border:2px solid #1b1a24;border-radius:4px;background:#fff;font:700 16px/1 sans-serif;cursor:pointer}
+#carM .send,#mineM .send,#msgM .send{display:block;width:100%;margin-top:12px;background:#3fb04a;color:#fff;border:3px solid #1b1a24;box-shadow:0 4px 0 #1b1a24;border-radius:5px;padding:10px;font:700 14px Silk;cursor:pointer}
+#carM .send:disabled,#mineM .send:disabled{opacity:.6}
+#carM .err,#mineM .err{color:#c8402a;font-size:12px;margin-top:6px;min-height:14px}
+#carM .ok,#mineM .ok{text-align:center;padding:18px 4px 6px}#carM .ok b,#mineM .ok b{display:block;font:700 15px Silk;color:#2f8a3a;margin-bottom:6px}
+.mine{display:block;cursor:pointer;width:100%;margin:10px auto 0;font:700 10px Silk;letter-spacing:.06em;color:#1b1a24;background:linear-gradient(90deg,#fff3c4,#ffe08a);border:2px dashed #e8641c;border-radius:6px;padding:8px 8px}.mine:active{background:#ffe08a}
+#mineM .opt{display:flex;align-items:center;gap:10px;width:100%;margin:8px 0 0;padding:11px 10px;background:#fff;border:3px solid #1b1a24;box-shadow:0 3px 0 #1b1a24;border-radius:6px;cursor:pointer;text-align:left;font:600 12px -apple-system,'Segoe UI',Roboto,sans-serif;color:#1b1a24}
+#mineM .opt i{font-style:normal;font-size:24px;line-height:1}#mineM .opt b{display:block;font:700 11px Silk;letter-spacing:.04em;margin-bottom:2px}
+#mineM .opt.rec{border-style:solid;font-weight:600}
+#carM .pick{display:block;width:100%;box-sizing:border-box;margin:4px 0 0;padding:11px 8px;background:#fff;border:2px dashed #1b1a24;border-radius:5px;font:700 11px Silk;text-align:center;cursor:pointer}
+#carM .pv{display:none;margin:8px 0 0;border:2px solid #1b1a24;border-radius:5px;background:repeating-conic-gradient(#e9e2c9 0 25%,#f6efd8 0 50%) 0 0/14px 14px;position:relative}
+#carM .pv.on{display:block}#carM .pv canvas{display:block;width:100%;height:auto;image-rendering:pixelated}
+#carM .pvb{display:flex;align-items:center;justify-content:space-between;gap:6px;padding:5px 7px;border-top:2px solid #1b1a24;background:#fff;font:700 9px Silk}
+#carM .pvb button{border:2px solid #1b1a24;border-radius:4px;background:#ffd84a;font:700 9px Silk;padding:4px 7px;cursor:pointer}
+#carM .st{font-size:12px;color:#6a5a3a;margin:6px 0 0;min-height:15px}
+#carM .note{display:none;margin:8px 0 0;padding:8px 9px;background:#fff3c4;border:2px solid #e8a21c;border-radius:5px;font-size:12px;line-height:1.35}#carM .note.on{display:block}#carM .note b{font:700 10px Silk;display:block;margin-bottom:3px;color:#b2410e}
+#carM .send.sure{background:#e8a21c}#carM .send.yes{background:#e8641c}
+#carM .hint{font-size:11px;color:#6a5a3a;margin:4px 0 0}#carM .rm{display:block;margin:10px auto 0;background:none;border:0;color:#c8402a;font:600 12px sans-serif;text-decoration:underline;cursor:pointer}
 .shr,.hm{display:block;width:100%;margin:8px 0 0;cursor:pointer;background:#2a6fd8;color:#fff;border:2px solid #1b1a24;box-shadow:0 3px 0 #1b1a24;border-radius:6px;padding:9px 8px;font:700 10px Silk;letter-spacing:.06em}.hm{background:#fff;color:#1b1a24}
 .orow{display:flex;gap:8px}.orow button{flex:1}
 .cardBig{display:block;width:100%;margin:10px 0 0;cursor:pointer;background:#ffd84a;color:#1b1a24;border:3px solid #1b1a24;box-shadow:0 4px 0 #1b1a24;border-radius:6px;padding:12px 8px;font:700 13px Silk;letter-spacing:.05em}.cardBig.rare{background:linear-gradient(90deg,#ffd84a,#ff9a3c,#ffd84a);background-size:200% 100%;animation:shim 2.2s linear infinite}@keyframes shim{to{background-position:-200% 0}}
@@ -159,7 +189,7 @@ body.x2on #place{opacity:0!important}#pwrTip{position:absolute;left:12px;right:1
     <p style="margin-bottom:0;font-size:10px;color:#6a5a3a">Tap, click or press space to flap</p>
     <button class="shr" type="button" data-share="home"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M7 0h2v1h1v1h1v1h1v2H9v6H7V5H4V3h1V2h1V1h1zM1 7h4v2H3v5h10V9h-2V7h4v9H1z"/></svg> SHARE THE GAME</button>
     <button id="hsBtn" class="hsB" type="button"><img src="icon-192.png" alt="">SAVE TO YOUR HOME SCREEN</button>
-    <button class="rec" type="button">&#128205; Recommend a Luton place to feature</button>
+    <button class="mine" type="button">&#10024; MAKE THE GAME YOURS</button>
     <a class="pw" href="https://smrgraphics.co.uk" target="_blank" rel="noopener"><span>Designed &amp; built by</span><img src="smr.png" alt="SMR Digital"><i>&#8599;</i></a>
   </div>
   <div id="over" class="panel hide">
@@ -176,7 +206,7 @@ body.x2on #place{opacity:0!important}#pwrTip{position:absolute;left:12px;right:1
     <div class="seen" id="seen"></div>
     <div id="ban2" class="fkban" hidden></div>
     <button class="hsB" type="button"><img src="icon-192.png" alt="">SAVE TO YOUR HOME SCREEN</button>
-    <button class="rec" type="button">&#128205; Recommend a Luton place to feature</button>
+    <button class="mine" type="button">&#10024; MAKE THE GAME YOURS</button>
   </div>
   <div id="lbM" class="hide"><div class="box"><button class="x" type="button" aria-label="Close">&times;</button><h3>&#127942; LEADERBOARD</h3>
     <div class="tabs"><button type="button" data-lb="today" class="on">TODAY</button><button type="button" data-lb="all">ALL TIME</button></div>
@@ -208,6 +238,26 @@ body.x2on #place{opacity:0!important}#pwrTip{position:absolute;left:12px;right:1
   <div class="err" id="pzE"></div><button class="send" type="button" id="pzS">SAVE</button><button class="hm" type="button" id="pzX" style="margin-top:8px">NO THANKS</button></div>
   <div id="przOk" class="ok hide"><b>YOU'RE IN!</b>We'll be in touch if you win.<button class="send" type="button" id="pzC">CLOSE</button></div>
 </div></div>
+<div id="mineM" class="hide"><div class="box">
+  <button class="x" type="button" aria-label="Close">&times;</button>
+  <h3>MAKE THE GAME YOURS</h3><p>Put your own touch on Flappy Kabootar.</p>
+  <button class="opt" type="button" id="mCar"><i>&#128663;</i><span><b>PUT YOUR CAR IN THE GAME</b>Send us your car. If it is approved, everyone sees it in the game.</span></button>
+  <button class="opt rec" type="button"><i>&#128205;</i><span><b>RECOMMEND A PLACE</b>A Luton spot that should be in the game.</span></button>
+</div></div>
+<div id="carM" class="hide"><div class="box">
+  <button class="x" type="button" aria-label="Close">&times;</button>
+  <div id="carF"><h3>PUT YOUR CAR IN THE GAME</h3>
+  <ol class="steps"><li><b>Send us your car</b> with your first name and a photo.</li><li><b>We turn it into a game car.</b></li><li><b>If it's approved you'll get a message</b> and everyone will see your car in the game. On your phone it comes past at least every 30 seconds!</li></ol>
+  <label for="cN">Your first name</label><input id="cN" maxlength="20" placeholder="e.g. Adam" autocomplete="given-name">
+  <label for="cM">Your car</label><input id="cM" maxlength="60" placeholder="e.g. Black Audi A3" autocomplete="off">
+  <label>A photo of your car</label><label class="pick" for="cF">&#128247; ADD A PHOTO</label><input id="cF" type="file" accept="image/jpeg,image/png,image/*" hidden>
+  <div class="hint">From the side, with the whole car in. JPG or PNG, up to 20 MB.</div>
+  <div class="pv" id="cPv"><canvas id="cCv"></canvas><div class="pvb"><span>QUICK PREVIEW</span><button type="button" id="cFl">&#8644; FLIP</button></div></div>
+  <div class="st" id="cSt"></div><div class="note" id="cNo"></div>
+  <div class="err" id="cE"></div><button class="send" type="button" id="cS">SEND REQUEST</button></div>
+  <div id="carOk" class="ok hide"><b>REQUEST SENT!</b>Thanks! We'll make your car for the game. If it's approved you'll get a message here, then it drives through everyone's game, and past you at least every 30 seconds.<button class="send" type="button" id="cC">CLOSE</button></div>
+</div></div>
+<div id="msgM" class="hide"><div class="box"><div class="mfrom">MESSAGE FROM SMR DIGITAL</div><h3 id="msgT"></h3><p id="msgB"></p><button class="send" type="button" id="msgOk">OK</button></div></div>
 <div id="recM" class="hide"><div class="box">
   <button class="x" type="button" aria-label="Close">&times;</button>
   <div id="recF"><h3>RECOMMEND A PLACE</h3><p>Know a Luton spot that should be in the game? Tell us about it.</p>
@@ -219,6 +269,7 @@ body.x2on #place{opacity:0!important}#pwrTip{position:absolute;left:12px;right:1
 </div></div>
   <div id="tap" class="hide">TAP TO FLAP</div>
 </div>
+<script src="carreq.js?v=1"></script>
 <script src="landmarks.js?v=1122d"></script>
 <script src="vehicles.js?v=1121b"></script>
 <script src="namecheck.js"></script>
@@ -415,6 +466,37 @@ function drawBannerPlane(px, py, d) { const c = ctx, B = BANNER;
   R2('#1b1a24', 20, -7, 6, 6); R2('#e3261c', 21, -6, 4, 4); R2('#1b1a24', 19, 1, 7, 2); R2('#f4f2ec', 20, 1.4, 5, 1);
   R2('#1b1a24', -3, -1, 3, 2); const sp = Math.floor(t * 30) % 2; R2('rgba(60,60,70,.7)', -4, sp ? -5 : -3, 1, sp ? 10 : 6);
 }
+/* ---------- players' own cars (owner 22 Nov): "Make the game yours → Put your car in the game".
+   Your car (cut out on your phone, kept in localStorage fk_mycar) drives past every 30 s in your game; cars the owner puts in
+   everyone's game come from api.php cfg.cars and join the normal traffic now and then. Photos are pixelated to the game's
+   scale (1 art pixel per unit, dark outline) so they sit with the drawn cars. ---------- */
+const MYCAR = (() => { let mine = null, t = 8; const pub = new Set();
+  function sprite(img, k) {
+    const L = 58, Hh = Math.max(14, Math.min(30, Math.round(L * img.height / img.width))), sw = L, sh = Hh;
+    const a = document.createElement('canvas'); a.width = sw; a.height = sh; const ax = a.getContext('2d'); ax.imageSmoothingEnabled = true; ax.imageSmoothingQuality = 'high'; ax.drawImage(img, 0, 0, sw, sh);
+    const d = ax.getImageData(0, 0, sw, sh); for (let i = 3; i < d.data.length; i += 4) d.data[i] = d.data[i] > 110 ? 255 : 0; ax.putImageData(d, 0, 0);
+    const o = document.createElement('canvas'); o.width = (L + 6) * 2; o.height = 180; const ox = o.getContext('2d'); ox.imageSmoothingEnabled = false;
+    const x0 = 6, y0 = 172 - sh * 2;
+    // 1-pixel dark outline like the drawn cars
+    const m = document.createElement('canvas'); m.width = sw; m.height = sh; const mx = m.getContext('2d'); mx.drawImage(a, 0, 0); mx.globalCompositeOperation = 'source-in'; mx.fillStyle = '#1b1a24'; mx.fillRect(0, 0, sw, sh);
+    [[-1, 0], [1, 0], [0, -1], [0, 1]].forEach(([dx, dy]) => ox.drawImage(m, x0 + dx * 2, y0 + dy * 2, sw * 2, sh * 2));
+    ox.drawImage(a, x0, y0, sw * 2, sh * 2);
+    const f = document.createElement('canvas'); f.width = o.width; f.height = o.height; const fx = f.getContext('2d'); fx.translate(f.width, 0); fx.scale(-1, 1); fx.drawImage(o, 0, 0);
+    return { k, wh: [], gl: [], w: L + 2, c: o, flip: f, gy: 172, ht: sh + 1, wt: .2, sp: [30, 46], user: 1 };
+  }
+  const load = (src, k, cb) => { const im = new Image(); im.onload = () => { try { cb(sprite(im, k)); } catch (e) {} }; im.src = src; };
+  function set(dta) { mine = null; if (dta && dta.img) load(dta.img, 'mine', s => { mine = s; t = Math.min(t, 3); }); }
+  // owner 22 Nov: your car = the one the owner approved from your request (this phone's smr_dev); checked on open, every minute and on return
+  let mineIds = ''; function check() { if (!window.SMRCar) return; SMRCar.poll(j => { const cs = j.cars || []; const ids = cs.map(c => c.id).join(',');
+      if (ids && ids !== mineIds) { mineIds = ids; const c = cs[0]; set({ img: SMRCar.img(c.id, c.done_at || c.at) }); } if (window.FK_MSG) FK_MSG.add(j.msgs || []); }); }
+  setTimeout(check, 1500); setInterval(check, 60000); document.addEventListener('visibilitychange', () => { if (!document.hidden) check(); });
+  function addPublic(list) { (list || []).slice(0, 40).forEach(c => { const k = 'u' + c.id; if (pub.has(k)) return; pub.add(k); load('api.php?a=carimg&id=' + c.id + '&v=' + c.at, k, s => carSprites.push(s)); }); }
+  function tick(dt) { if (!mine || roadShut()) return; t -= dt; if (t > 0) return;
+    const far = ROAD + 14 - GY - 1, dir = mine.ht > far ? -1 : Math.random() < .5 ? 1 : -1, lane = dir > 0 ? 0 : 1, sx = dir > 0 ? -mine.w - 10 : W + 10;
+    if (cars.some(c => c.lane === lane && sx < c.x + c.sp.w + 24 && c.x < sx + mine.w + 24) || (lane === 0 && window.PWR && PWR.blockFar)) { t = .8; return; }
+    cars.push({ sp: mine, x: sx, dir, v: 38 + Math.random() * 8, lane, yo: 0, mine: 1, rolled: 1, headRolled: 1, otRolled: 1 }); t = 30; }
+  return { set, addPublic, tick, sprite, check };
+})(); window.FK_MYCAR = MYCAR;
 function pickCar() { const tot = carSprites.reduce((a, s) => a + s.wt, 0); for (let tries = 0; tries < 4; tries++) { let r = Math.random() * tot, s = carSprites.find(c => c.wt > 0); for (const c of carSprites) { r -= c.wt; if (r <= 0) { s = c; break; } } if (s.k !== lastCarK || tries === 3) { lastCarK = s.k; return s; } } }
 function spawnCar(x, key, zoom) { const sp = key ? carSprites.find(s => s.k === key) : pickCar(), far = ROAD + 14 - GY - 1, dir = sp.ht > far ? -1 : Math.random() < .5 ? 1 : -1, lane = dir > 0 ? 0 : 1, sx = x != null ? x : (dir > 0 ? -110 : W + 20);
   if (lane === 0 && window.PWR && PWR.blockFar) return;
@@ -535,10 +617,10 @@ function flap() { if (window.__flapT) window.__flapT.push(window.__fr);
 function start() { reset(); moments.clear(); golden = /[?&]golden=1/.test(location.search) || Math.random() < 1 / 500; state = 'ready'; if (golden) { moment('golden'); TRACK.send('golden'); setTimeout(() => { $('place').querySelector('small').textContent = 'ONLY 1 IN 500 GAMES'; $('placeN').textContent = '\u2728 GOLDEN KABOOTAR \u2728'; $('placeP').hidden = true; $('place').classList.add('on'); placeTimer = 3.5; }, 150); } TRACK.send('play'); $('place').classList.remove('on'); placeTimer = 0; $('start').classList.add('hide'); $('over').classList.add('hide'); $('score').classList.remove('hide'); scoreTxt(0); $('tap').classList.remove('hide'); }
 $('go').addEventListener('click', e => { e.stopPropagation(); start(); });
 $('again').addEventListener('click', e => { e.stopPropagation(); start(); });
-const modalOpen = () => ['lbM', 'cardM', 'hsM', 'recM'].some(id => { const m = document.getElementById(id); return m && !m.classList.contains('hide'); });
-const down = e => { if (modalOpen()) return; if (e.target.closest && e.target.closest(".btn,a,button,input,select,#pvP,#hsM,#recM,#lbM,#cardM")) return; e.preventDefault(); flap(); };
+const modalOpen = () => ['lbM', 'cardM', 'hsM', 'recM', 'mineM', 'carM'].some(id => { const m = document.getElementById(id); return m && !m.classList.contains('hide'); });
+const down = e => { if (modalOpen()) return; if (e.target.closest && e.target.closest(".btn,a,button,input,select,#pvP,#hsM,#recM,#mineM,#carM,#lbM,#cardM")) return; e.preventDefault(); flap(); };
 addEventListener('pointerdown', down, { passive: false });
-addEventListener('keydown', e => { if (e.key === 'Escape') { ['lbM', 'cardM', 'hsM', 'recM'].forEach(id => $(id).classList.add('hide')); return; } if (modalOpen() || (e.target && /INPUT|TEXTAREA/.test(e.target.tagName))) return; if (e.code === 'Space' || e.code === 'ArrowUp') { e.preventDefault(); if (state === 'menu' || (state === 'over' && dieT > .6)) start(); else flap(); } });
+addEventListener('keydown', e => { if (e.key === 'Escape') { ['lbM', 'cardM', 'hsM', 'recM', 'mineM', 'carM'].forEach(id => $(id).classList.add('hide')); return; } if (modalOpen() || (e.target && /INPUT|TEXTAREA/.test(e.target.tagName))) return; if (e.code === 'Space' || e.code === 'ArrowUp') { e.preventDefault(); if (state === 'menu' || (state === 'over' && dieT > .6)) start(); else flap(); } });
 
 const PRAYER_NAME = { fajr: 'FAJR', dhuhr: 'DHUHR', asr: 'ASR', maghrib: 'MAGHRIB', isha: 'ISHA' };
 function showPlace(n, k) { $('place').querySelector('small').textContent = 'FLYING PAST'; $('placeN').textContent = n; const p = $('place'), pp = $('placeP');
@@ -784,7 +866,7 @@ const LB = (() => { const api = 'api.php'; let run = '', runFor = ''; const star
 /* ---------- always the latest version, also when saved to the Home Screen ----------
    version.json is rewritten on every deploy; when it changes the page reloads itself (straight away on the menu,
    or right after the current game ends), with a cache-busting query so the phone fetches the new HTML. */
-(() => { const BUILD = '11222200'; let pending = false;
+(() => { const BUILD = '11222230'; let pending = false;
   const go = () => { let last = 0; try { last = +sessionStorage.getItem('fk_upd_t') || 0; } catch (e) {} if (Date.now() - last < 60000) return;   // never loop: at most one reload a minute
     try { sessionStorage.setItem('fk_upd_t', String(Date.now())); } catch (e) {} location.replace(location.pathname + '?u=' + Date.now() + location.hash); };
   const check = () => fetch('version.json?ts=' + Date.now(), { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(j => {
@@ -837,7 +919,7 @@ const TRACK = (() => {
   const send = (ev, val, extra) => { try { const body = JSON.stringify({ ev, vid, src, dev, app: app ? 1 : 0, val: val || 0, extra: extra || '' });
     if (navigator.sendBeacon) navigator.sendBeacon('api.php?a=ev', new Blob([body], { type: 'application/json' })); else fetch('api.php?a=ev', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body, keepalive: true }).catch(() => {}); } catch (e) {} };
   send('visit'); window.TRACK_SEND = send; document.querySelectorAll('.pw').forEach(a => a.addEventListener('click', () => send('smr')));
-  fetch('api.php?a=cfg', { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(c => { if (!c || typeof c !== 'object') return; try { SKY.cfg(c); } catch (e) {}
+  fetch('api.php?a=cfg', { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(c => { if (!c || typeof c !== 'object') return; try { SKY.cfg(c); } catch (e) {} try { MYCAR.addPublic(c.cars); } catch (e) {}
     // owner's banner: a written notice or an uploaded picture, on the home screen and/or the end screen
     { const mode = c.banner_mode || (c.notice ? 'text' : 'off'), txt = c.banner_text || c.notice || '', lk = c.banner_link || '', wh = c.banner_where || 'both';
       const fill = el => { el.innerHTML = ''; let inner;
@@ -997,7 +1079,7 @@ function update(dt) {
   for (let i = smoke.length - 1; i >= 0; i--) { const p = smoke[i]; p.x += p.vx * dt - (moving ? step : 0); p.y -= 6 * dt; p.r += 7 * dt; p.a -= .5 * dt; if (p.a <= 0) smoke.splice(i, 1); }
   cars.forEach(c => { if (c.x + c.sp.w < 0 || c.x > W) return; if (c.police) moment('chase'); if (c.crash) moment(c.crash.st === 'hit' ? 'headon' : 'crash'); });
   if (!/[?&](wx|sky|panel|season)=/.test(location.search)) { if (SKY.cur.snow > .25) moment('snow'); if (SKY.flash > .5) moment('storm'); }
-  cars = cars.filter(c => c.x > -220 && c.x < W + 220); if (roadShut()) cars.length = 0; else if (cars.length < (jamT > 0 ? 10 : 4) && Math.random() < dt * (jamT > 0 ? 2.5 : .8)) spawnCar();
+  MYCAR.tick(dt); cars = cars.filter(c => c.x > -220 && c.x < W + 220); if (roadShut()) cars.length = 0; else if (cars.length < (jamT > 0 ? 10 : 4) && Math.random() < dt * (jamT > 0 ? 2.5 : .8)) spawnCar();
   // Mr Rushed ice cream van: its own timer, roughly every 30 seconds (first one a bit sooner)
   // Mr Rushed is parked outside Currys now, so his van never drives on the road
   if (placeTimer > 0) { placeTimer -= dt; if (placeTimer <= 0) $('place').classList.remove('on'); }
@@ -1353,6 +1435,51 @@ Promise.all([document.fonts.load('700 8px Silk'), document.fonts.load('400 8px S
       paint(PIG_WINGS[f], OX + 5, OY + 7 + [-9, -4, -3][f], true); }; window.__lbDraw = draw;
     let fi = 0; const seq = [0, 1, 2, 1]; draw(0); setInterval(() => { if (state !== 'menu') return; fi = (fi + 1) % 4; draw(seq[fi]); }, 140); })(); reset(); requestAnimationFrame(loop);
 });
+})();
+
+/* ---------- Make the game yours: put your car in the game (owner 22 Nov) ----------
+   A request to the owner: first name, car, photo (carreq.js, shared with Jummah Dash). He makes the game car in SMR Admin;
+   once approved this phone gets a message and its car drives past every 30 seconds (everyone else sees it now and then). */
+window.FK_MSG = (() => { const $ = id => document.getElementById(id), q = []; let open = false;
+  function show() { if (open || !q.length || state === 'play') return; const m = q.shift(); open = true; $('msgT').textContent = m.title || 'Message'; $('msgB').textContent = m.body || ''; $('msgM').classList.remove('hide'); if (window.SMRCar) SMRCar.seen([m.id]); }
+  $('msgOk').addEventListener('click', e => { e.stopPropagation(); $('msgM').classList.add('hide'); open = false; setTimeout(show, 400); });
+  $('msgM').addEventListener('pointerdown', e => e.stopPropagation()); setInterval(show, 1000);
+  return { add(list) { list.forEach(m => { if (!q.some(x => x.id === m.id)) q.push(m); }); show(); } };
+})();
+(() => { const $ = id => document.getElementById(id); const mm = $('mineM'), cm = $('carM');
+  const show = m => m.classList.remove('hide'), hide = m => m.classList.add('hide');
+  document.querySelectorAll('.mine').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); show(mm); }));
+  [mm, cm].forEach(m => { m.querySelector('.x').addEventListener('click', e => { e.stopPropagation(); hide(m); }); m.addEventListener('pointerdown', e => { e.stopPropagation(); if (e.target === m) hide(m); }); m.addEventListener('keydown', e => e.stopPropagation()); });
+  mm.querySelector('.opt.rec').addEventListener('click', () => hide(mm));
+  let rd = null, flip = false, stage = 0, busy = false;
+  const btn = $('cS'), st = $('cSt'), no = $('cNo'), err = $('cE');
+  try { const n = localStorage.getItem('smr_first'); if (n) $('cN').value = n; } catch (e) {}
+  $('mCar').addEventListener('click', e => { e.stopPropagation(); hide(mm); $('carF').classList.remove('hide'); $('carOk').classList.add('hide'); err.textContent = ''; show(cm); });
+  const setBtn = () => { btn.classList.toggle('sure', stage === 1); btn.classList.toggle('yes', stage === 2); btn.textContent = stage === 1 ? 'ARE YOU SURE?' : stage === 2 ? 'YES, SEND IT' : 'SEND REQUEST'; };
+  function preview() { const src0 = rd.cut ? rd.cut.c : rd.img, src = flip ? SMRCar.flip(src0) : src0, cv = $('cCv');
+    if (rd.cut && window.FK_MYCAR) { const sp = FK_MYCAR.sprite(src, 'pv'); cv.width = sp.c.width; cv.height = 180 - (172 - sp.ht * 2) + 20; const x = cv.getContext('2d'); x.imageSmoothingEnabled = false; x.drawImage(sp.c, 0, -(172 - sp.ht * 2) + 10); }
+    else { const w = 320, h = Math.round(w * src.height / src.width), x = cv.getContext('2d'); cv.width = w; cv.height = h; x.drawImage(src, 0, 0, w, h); }
+    $('cPv').classList.add('on'); }
+  $('cFl').addEventListener('click', e => { e.stopPropagation(); if (!rd) return; flip = !flip; preview(); });
+  $('cF').addEventListener('change', async e => { const f = e.target.files && e.target.files[0]; e.target.value = ''; if (!f) return;
+    if (!window.SMRCar) { err.textContent = "Couldn't load. Check your signal and try again."; return; }
+    rd = null; flip = false; stage = 0; setBtn(); no.classList.remove('on'); err.textContent = ''; $('cPv').classList.remove('on'); busy = true; btn.disabled = true; st.textContent = 'Checking your photo…';
+    try { rd = await SMRCar.read(f); const im = new Image(); im.src = rd.photo; await im.decode(); rd.img = im; preview();
+      st.textContent = rd.cut ? 'Looking good! We will tidy it up and make the game car.' : 'Got it! We will make the game car from this.';
+      if (rd.flag === 'crop') no.innerHTML = '<b>IS THE WHOLE CAR IN?</b>We can’t see both bumpers. For the best result, take the photo from further back so the whole car fits in.';
+      else if (rd.flag === 'front') no.innerHTML = '<b>WE NEED A SIDE VIEW</b>This looks like the front or back of the car. If it is the only photo you have we can still try, but it won’t look as good. A side-on photo works best.';
+      if (rd.flag) { no.classList.add('on'); stage = 1; setBtn(); }
+    } catch (x) { rd = null; st.textContent = ''; err.textContent = x && x.message && x.message.length > 8 ? x.message : "That photo didn't work. Try another one."; }
+    finally { busy = false; btn.disabled = false; } });
+  btn.addEventListener('click', async e => { e.stopPropagation(); if (busy) return; err.textContent = '';
+    const name = $('cN').value.trim(), model = $('cM').value.trim();
+    if (!name) { err.textContent = 'Please add your first name.'; return; } if (!model) { err.textContent = 'Please type your car.'; return; } if (!rd) { err.textContent = 'Please add a photo of your car.'; return; }
+    if (stage === 1) { stage = 2; setBtn(); return; }
+    busy = true; btn.disabled = true; btn.textContent = 'SENDING…'; try { localStorage.setItem('smr_first', name); } catch (x) {}
+    try { await SMRCar.submit({ name, model, photo: rd.photo, cut: rd.cut ? (flip ? SMRCar.flip(rd.cut.c) : rd.cut.c) : null, flag: rd.flag, game: 'fk' });
+      if (window.TRACK_SEND) window.TRACK_SEND('car'); stage = 0; setBtn(); $('carF').classList.add('hide'); $('carOk').classList.remove('hide');
+    } catch (x) { err.textContent = x.message; } finally { busy = false; btn.disabled = false; if (stage === 0) btn.textContent = 'SEND REQUEST'; } });
+  $('cC').addEventListener('click', e => { e.stopPropagation(); hide(cm); });
 })();
 
 /* ---------- recommend-a-place pop-up: saves to the game's inbox (falls back to email) ---------- */

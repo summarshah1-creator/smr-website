@@ -340,6 +340,7 @@
     c.restore();
   }
   // register: replaces/extends the Flappy vehicle list with these
+  window.CARS_U = U;   // players' own cars (Add your car) are sized with the same scale
   const V = window.VEHICLES; if (!V) return;
   Object.entries(C).forEach(([k, s]) => { s.key = k; if (s.convoy && PICS[k]) s.H = s.L * (PICS[k].g - PICS[k].top) / PICS[k].w;   // convoy pictures keep their own proportions so the arches stay round
  if (TRACE[k]) { s.tr = TRACE[k]; s.H = TRACE[k].h * s.L; }

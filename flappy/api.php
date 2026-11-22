@@ -21,6 +21,10 @@ function fk_db(): PDO {
         $pdo->exec("CREATE TABLE IF NOT EXISTS fk_runs (id TEXT PRIMARY KEY, at INTEGER NOT NULL, ip TEXT DEFAULT '', used INTEGER DEFAULT 0)");
         $pdo->exec("CREATE TABLE IF NOT EXISTS fk_players (pid TEXT PRIMARY KEY, name TEXT, phone TEXT DEFAULT '', at INTEGER NOT NULL)");
         gs_init($pdo, 'fk');   // owner devices + the fk_ev view (events without them)
+        $pdo->exec("CREATE TABLE IF NOT EXISTS fk_cars (id INTEGER PRIMARY KEY, model TEXT NOT NULL, pid TEXT DEFAULT '', name TEXT DEFAULT '', flag TEXT DEFAULT '', at INTEGER NOT NULL, ip TEXT DEFAULT '', status INTEGER DEFAULT 0)");   // players' own cars: 0 new, 1 in everyone's game, 2 kept out
+        foreach (['dev TEXT DEFAULT \'\'', 'game TEXT DEFAULT \'\'', 'files TEXT DEFAULT \'\'', 'done_at INTEGER DEFAULT 0'] as $col) { try { $pdo->exec('ALTER TABLE fk_cars ADD COLUMN ' . $col); } catch (Throwable $e) {} }   // car requests (owner 22 Nov)
+        $pdo->exec("CREATE TABLE IF NOT EXISTS fk_car_msgs (id INTEGER PRIMARY KEY, dev TEXT NOT NULL, car_id INTEGER DEFAULT 0, title TEXT, body TEXT, at INTEGER NOT NULL, seen INTEGER DEFAULT 0)");
+        $pdo->exec("CREATE TABLE IF NOT EXISTS fk_car_subs (endpoint TEXT PRIMARY KEY, dev TEXT NOT NULL, p256dh TEXT, auth TEXT, at INTEGER NOT NULL)");
         $pdo->exec("CREATE TABLE IF NOT EXISTS fk_flags (id INTEGER PRIMARY KEY, name TEXT, score INTEGER, need INTEGER, took INTEGER, pid TEXT DEFAULT '', ip TEXT DEFAULT '', at INTEGER NOT NULL, done INTEGER DEFAULT 0)");
         // one-off leaderboard entries added by the owner (applied once, then never again)
         foreach ([['seed-summar-68', 'SUMMAR', 68], ['seed-kashai-1000', 'Kashai', 1000]] as [$key, $name, $score]) {
@@ -140,8 +144,24 @@ function fk_fest_check(): void { try { $p = fk_db(); foreach (fk_fests(3) as $f)
         $p->prepare('INSERT INTO fk_meta (k, v) VALUES (?, ?)')->execute([$key, (string) time()]);
         if (is_file(dirname(__DIR__) . '/demo-lib/push.php')) { require_once dirname(__DIR__) . '/demo-lib/push.php'; if (function_exists('push_all')) push_all('Flappy Kabootar: ' . $f['name'] . ' is coming', $f['name'] . ' is on ' . $f['date'] . ' (in ' . $f['days'] . ' days)' . ($f['moon'] ? ', date depends on the moon' : '') . '. Want the game decorated? Check the ideas in Flappy → Inbox.', '/demo-admin/#flappy', 'fk-fest'); } } } catch (Throwable $e) {} }
 function fk_banner_file(): string { return private_dir() . '/fk-banner.img'; }
+function fk_car_file(int $id): string { $d = private_dir() . '/fk-cars'; if (!is_dir($d)) @mkdir($d, 0700, true); return $d . '/' . $id . '.png'; }
+function fk_car_extra(int $id, string $kind): string { return dirname(fk_car_file($id)) . '/' . $id . '-' . $kind . ($kind === 'photo' ? '.jpg' : '.png'); }
+function fk_dev($v): string { return preg_replace('/[^a-z0-9]/i', '', substr((string) $v, 0, 40)); }
+function fk_png_in($d, int $max): ?string { $d = (string) $d; if (!preg_match('~^data:image/(png|jpeg);base64,~', $d)) return null; $bin = base64_decode(substr($d, strpos($d, ',') + 1), true);
+    if ($bin === false || strlen($bin) > $max) return null; $i = @getimagesizefromstring($bin); if (!$i || !in_array($i[2], [IMAGETYPE_PNG, IMAGETYPE_JPEG], true) || $i[0] < 20 || $i[1] < 12) return null; return $bin; }
+// a message to the player's phone: shown in the game next time it's open (both games), plus a lock-screen notification if they turned them on (Jummah Dash app)
+function fk_car_tell(string $dev, int $car, string $title, string $body): void {
+    if ($dev === '') return; fk_db()->prepare('INSERT INTO fk_car_msgs (dev, car_id, title, body, at) VALUES (?, ?, ?, ?, ?)')->execute([$dev, $car, $title, $body, now()]);
+    $q = fk_db()->prepare('SELECT * FROM fk_car_subs WHERE dev = ?'); $q->execute([$dev]); $subs = $q->fetchAll(PDO::FETCH_ASSOC); if (!$subs || !function_exists('curl_init')) return;
+    require_once dirname(__DIR__) . '/demo-lib/push.php';
+    $payload = json_encode(['title' => $title, 'body' => $body, 'url' => '/jummahdash/demo/', 'tag' => 'car-' . $car], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    foreach ($subs as $sb) { try { $ch = curl_init($sb['endpoint']); curl_setopt_array($ch, [CURLOPT_POST => true, CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => 6, CURLOPT_CONNECTTIMEOUT => 4,
+        CURLOPT_POSTFIELDS => push_encrypt($payload, $sb['p256dh'], $sb['auth']), CURLOPT_HTTPHEADER => ['Content-Type: application/octet-stream', 'Content-Encoding: aes128gcm', 'TTL: 86400', 'Urgency: normal', 'Authorization: ' . vapid_header($sb['endpoint'])]]);
+        curl_exec($ch); $code = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE); curl_close($ch); if ($code === 404 || $code === 410) fk_db()->prepare('DELETE FROM fk_car_subs WHERE endpoint = ?')->execute([$sb['endpoint']]); } catch (Throwable $e) {} }
+}
+function fk_cars_live(): array { return fk_db()->query('SELECT id, model, at FROM fk_cars WHERE status = 1 ORDER BY at DESC LIMIT 40')->fetchAll(PDO::FETCH_ASSOC); }
 /* ---- analytics: small first-party events, no outside services ---- */
-const FK_EVENTS = ['ban', 'visit', 'play', 'over', 'share', 'card', 'card_save', 'hs_open', 'install', 'lb_open', 'name', 'rec', 'smr', 'sound_on', 'golden', 'moment'];
+const FK_EVENTS = ['ban', 'visit', 'play', 'over', 'share', 'card', 'card_save', 'hs_open', 'install', 'lb_open', 'name', 'rec', 'car', 'smr', 'sound_on', 'golden', 'moment'];
 function fk_stats(int $days): array {
     $p = fk_db(); $from = $days > 0 ? date('Y-m-d', strtotime('-' . ($days - 1) . ' days')) : '0000-00-00';
     $q = function (string $sql, array $a = []) use ($p) { $st = $p->prepare($sql); $st->execute($a); return $st; };
@@ -167,7 +187,7 @@ $in = $_SERVER['REQUEST_METHOD'] === 'POST' ? (json_decode((string) file_get_con
 
 try {
     if ($a === 'board') json_out(fk_board(fk_pid($_GET['pid'] ?? '')));
-    if ($a === 'cfg') { header('Cache-Control: no-store'); fk_season_check(); fk_fest_check(); $o = fk_settings(); if ($o['wx_live']) { try { $o['wx'] = fk_weather(); } catch (Throwable $e) {} } json_out($o); }
+    if ($a === 'cfg') { header('Cache-Control: no-store'); fk_season_check(); fk_fest_check(); $o = fk_settings(); if ($o['wx_live']) { try { $o['wx'] = fk_weather(); } catch (Throwable $e) {} } try { $o['cars'] = fk_cars_live(); } catch (Throwable $e) {} json_out($o); }
     if ($a === 'banner') { $f = fk_banner_file(); if (!is_file($f)) { http_response_code(404); exit; } $i = @getimagesize($f);
         header('Content-Type: ' . ($i['mime'] ?? 'image/jpeg')); header('Cache-Control: public, max-age=604800'); header('Content-Length: ' . filesize($f)); readfile($f); exit; }
 
@@ -228,6 +248,42 @@ try {
         fk_player($pid, $name, $ph); json_out(['ok' => true]);
     }
 
+    // a player's own car (cut out on their phone): kept for the owner to check; once he puts it in everyone's game it turns up in traffic for all
+    if ($a === 'carimg') { $id = (int) ($_GET['id'] ?? 0); $q = fk_db()->prepare('SELECT status FROM fk_cars WHERE id = ?'); $q->execute([$id]); $st = $q->fetchColumn();
+        $f = fk_car_file($id); if ($st === false || !is_file($f) || ((int) $st !== 1 && !admin_token())) { http_response_code(404); exit; }
+        header('Content-Type: image/png'); header('Cache-Control: ' . ((int) $st === 1 ? 'public, max-age=604800' : 'no-store')); header('Content-Length: ' . filesize($f)); readfile($f); exit; }
+    // car request (owner 22 Nov): first name, car, photo (any size up to 20 MB on the phone; sent as a JPEG up to 2400 px) + the phone's rough cut-out for a quick check.
+    // The owner makes the game car in SMR Admin → Games; when it's approved the player gets a message and the car drives through everyone's game.
+    if ($a === 'car' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+        $model = fk_clean((string) ($in['model'] ?? ''), 60); $name = fk_clean((string) ($in['name'] ?? ''), 20); $flag = in_array($in['flag'] ?? '', ['front', 'crop'], true) ? $in['flag'] : '';
+        $dev = fk_dev($in['dev'] ?? ''); $game = ($in['game'] ?? '') === 'jd' ? 'jd' : 'fk';
+        if ($name === '') json_out(['error' => 'Please add your first name.'], 400);
+        if ($model === '') json_out(['error' => 'Please type your car make and model.'], 400);
+        if (fk_rude($model) || fk_rude($name)) json_out(['error' => "That name isn't allowed."], 400);
+        $photo = fk_png_in($in['photo'] ?? '', 9000000); if ($photo === null) json_out(['error' => "That photo didn't work. Try a JPG or PNG."], 400);
+        $cut = fk_png_in($in['cut'] ?? '', 3000000);
+        $k = 'fk_car:' . fk_ip(); if (too_many($k, 6, 3600)) json_out(['error' => 'Thanks! You have sent a few already, try again later.'], 429); note_fail($k);
+        $p = fk_db(); $p->prepare('INSERT INTO fk_cars (model, pid, name, flag, at, ip, dev, game) VALUES (?, ?, ?, ?, ?, ?, ?, ?)')->execute([$model, fk_pid($in['pid'] ?? ''), $name, $flag, now(), fk_ip(), $dev, $game]);
+        $id = (int) $p->lastInsertId(); file_put_contents(fk_car_extra($id, 'photo'), $photo, LOCK_EX); if ($cut !== null) file_put_contents(fk_car_extra($id, 'cut'), $cut, LOCK_EX);
+        json_out_then(['ok' => true, 'id' => $id], function () use ($model, $name, $flag, $game) {
+            if (is_file(dirname(__DIR__) . '/demo-lib/push.php')) { require_once dirname(__DIR__) . '/demo-lib/push.php'; if (function_exists('push_all')) push_all(($game === 'jd' ? 'Jummah Dash' : 'Flappy Kabootar') . ': car request', $model . ' from ' . $name . ($flag === 'front' ? ' · not a side view' : ($flag === 'crop' ? ' · not the whole car' : '')), '/demo-admin/#flappy', 'fk-car'); }
+        });
+    }
+    // the player's phone: its approved cars (drive past every 30 s) + any messages from the owner
+    if ($a === 'mycars') { header('Cache-Control: no-store'); $dev = fk_dev($_GET['dev'] ?? ''); if ($dev === '') json_out(['cars' => [], 'msgs' => []]);
+        $q = fk_db()->prepare('SELECT id, model, at, done_at FROM fk_cars WHERE dev = ? AND status = 1 ORDER BY at DESC LIMIT 5'); $q->execute([$dev]); $cars = $q->fetchAll(PDO::FETCH_ASSOC);
+        $q = fk_db()->prepare('SELECT id, title, body, at FROM fk_car_msgs WHERE dev = ? AND seen = 0 ORDER BY at LIMIT 5'); $q->execute([$dev]);
+        json_out(['cars' => $cars, 'msgs' => $q->fetchAll(PDO::FETCH_ASSOC)]); }
+    if ($a === 'msg_seen' && $_SERVER['REQUEST_METHOD'] === 'POST') { $dev = fk_dev($in['dev'] ?? ''); $ids = array_slice(array_map('intval', (array) ($in['ids'] ?? [])), 0, 20);
+        foreach ($ids as $mid) fk_db()->prepare('UPDATE fk_car_msgs SET seen = 1 WHERE id = ? AND dev = ?')->execute([$mid, $dev]); json_out(['ok' => true]); }
+    if ($a === 'vapid') { require_once dirname(__DIR__) . '/demo-lib/push.php'; json_out(['key' => vapid_keys()['public']]); }
+    if ($a === 'car_sub' && $_SERVER['REQUEST_METHOD'] === 'POST') { $dev = fk_dev($in['dev'] ?? ''); $sub = (array) ($in['sub'] ?? []); $ep = (string) ($sub['endpoint'] ?? ''); $keys = (array) ($sub['keys'] ?? []);
+        if ($dev === '' || !preg_match('~^https://~', $ep) || strlen($ep) > 800 || empty($keys['p256dh']) || empty($keys['auth'])) json_out(['error' => 'bad'], 400);
+        $k = 'fk_sub:' . fk_ip(); if (too_many($k, 10, 3600)) json_out(['error' => 'later'], 429); note_fail($k);
+        fk_db()->prepare('INSERT OR REPLACE INTO fk_car_subs (endpoint, dev, p256dh, auth, at) VALUES (?, ?, ?, ?, ?)')->execute([$ep, $dev, substr((string) $keys['p256dh'], 0, 200), substr((string) $keys['auth'], 0, 100), now()]); json_out(['ok' => true]); }
+    if ($a === 'carphoto') { if (!admin_token()) { http_response_code(403); exit; } $id = (int) ($_GET['id'] ?? 0); $kind = ($_GET['k'] ?? '') === 'cut' ? 'cut' : 'photo'; $f = fk_car_extra($id, $kind);
+        if (!is_file($f)) { http_response_code(404); exit; } header('Content-Type: ' . ($kind === 'cut' ? 'image/png' : 'image/jpeg')); header('Cache-Control: no-store'); readfile($f); exit; }
+
     if ($a === 'rec' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         $name = fk_clean((string) ($in['name'] ?? ''), 80); $addr = fk_clean((string) ($in['address'] ?? ''), 160); $note = fk_clean((string) ($in['note'] ?? ''), 500);
         if ($name === '') json_out(['error' => 'Please add the place name.'], 400);
@@ -241,19 +297,21 @@ try {
     }
 
     /* ---- owner only ---- */
-    if (in_array($a, ['admin', 'rec_done', 'rec_del', 'score_del', 'score_add', 'banner_up', 'flag_ok', 'flag_del', 'stats', 'since', 'settings_save', 'devices', 'owner'], true)) {
+    if (in_array($a, ['admin', 'rec_done', 'rec_del', 'car_ok', 'car_del', 'car_msg', 'car_no', 'score_del', 'score_add', 'banner_up', 'flag_ok', 'flag_del', 'stats', 'since', 'settings_save', 'devices', 'owner'], true)) {
         if (!admin_token()) json_out(['error' => 'Log in to SMR Admin first.'], 401);
         $p = fk_db();
         if ($a === 'admin') {
             $recs = $p->query('SELECT id, name, address, note, at, done FROM fk_recs ORDER BY done ASC, at DESC LIMIT 300')->fetchAll();
             $t = $p->prepare("SELECT MAX(id) id, name, MAX(score) score, MIN(at) at, (SELECT phone FROM fk_players pl WHERE pl.pid = fk_scores.pid AND fk_scores.pid != '') phone FROM fk_scores WHERE day = ? GROUP BY CASE WHEN pid != '' THEN pid ELSE 'r' || id END ORDER BY score DESC, at ASC LIMIT 50"); $t->execute([fk_today()]);
             $all = $p->query("SELECT MAX(id) id, name, MAX(score) score, MIN(at) at, MAX(day) day, (SELECT phone FROM fk_players pl WHERE pl.pid = fk_scores.pid AND fk_scores.pid != '') phone FROM fk_scores GROUP BY CASE WHEN pid != '' THEN pid ELSE 'r' || id END ORDER BY score DESC, at ASC LIMIT 50")->fetchAll();
-            $n = (int) $p->query('SELECT COUNT(*) FROM fk_recs WHERE done = 0')->fetchColumn();
+            $n = (int) $p->query('SELECT COUNT(*) FROM fk_recs WHERE done = 0')->fetchColumn() + (int) $p->query('SELECT COUNT(*) FROM fk_cars WHERE status = 0')->fetchColumn();
+            $cars = $p->query('SELECT c.id, c.model, c.name, c.flag, c.at, c.status, c.game, c.dev, c.done_at, (SELECT COUNT(*) FROM fk_car_subs s WHERE s.dev = c.dev AND c.dev != \'\') AS notif FROM fk_cars c ORDER BY c.status = 0 DESC, c.at DESC LIMIT 200')->fetchAll(PDO::FETCH_ASSOC);
+            foreach ($cars as &$c) { $c['photo'] = is_file(fk_car_extra((int) $c['id'], 'photo')) ? 1 : 0; $c['cut'] = is_file(fk_car_extra((int) $c['id'], 'cut')) ? 1 : 0; $c['final'] = is_file(fk_car_file((int) $c['id'])) ? 1 : 0; } unset($c);
             $plays = (int) $p->query('SELECT COUNT(*) FROM fk_scores')->fetchColumn();
             $fl = $p->query('SELECT id, name, score, need, took, at FROM fk_flags WHERE done = 0 ORDER BY at DESC LIMIT 50')->fetchAll(PDO::FETCH_ASSOC);
             // best games actually played (from the game-over events), whether or not a name was saved
             $runs = $p->query("SELECT e.at, e.day, e.dev, e.src, e.val AS score, e.extra AS place, e.app, (SELECT COUNT(*) FROM fk_scores s WHERE s.score = e.val) AS saved FROM fk_ev e WHERE e.ev = 'over' AND e.val > 0 ORDER BY e.val DESC, e.at DESC LIMIT 20")->fetchAll(PDO::FETCH_ASSOC);
-            json_out(['fests' => fk_fests(5), 'recs' => $recs, 'today' => $t->fetchAll(), 'all' => $all, 'new' => $n, 'entries' => $plays, 'flags' => $fl, 'runs' => $runs]);
+            json_out(['fests' => fk_fests(5), 'recs' => $recs, 'cars' => $cars, 'today' => $t->fetchAll(), 'all' => $all, 'new' => $n, 'entries' => $plays, 'flags' => $fl, 'runs' => $runs]);
         }
         if ($a === 'since') json_out(gs_since($p, 'fk', max(0, (int) ($_GET['t'] ?? 0)), 'fk_recs'));
         if ($a === 'devices') json_out(['devices' => gs_devices($p, 'fk')]);
@@ -292,6 +350,23 @@ try {
             if ($f) { $p->prepare('INSERT INTO fk_scores (name, score, day, at, ip, pid) VALUES (?, ?, ?, ?, ?, ?)')->execute([$f['name'], $f['score'], date('Y-m-d', (int) $f['at']), (int) $f['at'], $f['ip'], $f['pid']]); $p->prepare('UPDATE fk_flags SET done = 1 WHERE id = ?')->execute([$id]); } json_out(['ok' => true]); }
         if ($a === 'flag_del') { $p->prepare('UPDATE fk_flags SET done = 2 WHERE id = ?')->execute([$id]); json_out(['ok' => true]); }
         if ($a === 'rec_done') { $p->prepare('UPDATE fk_recs SET done = ? WHERE id = ?')->execute([empty($in['undo']) ? 1 : 0, $id]); json_out(['ok' => true]); }
+        $cq = $p->prepare('SELECT * FROM fk_cars WHERE id = ?'); $cq->execute([$id]); $car = $cq->fetch(PDO::FETCH_ASSOC);
+        if (in_array($a, ['car_ok', 'car_msg', 'car_no'], true) && !$car) json_out(['error' => 'That request has gone.'], 404);
+        // approve: the owner's finished game car (PNG, transparent) or the phone's cut-out; then the player's photo is deleted and they get a message
+        if ($a === 'car_ok') {
+            if (!empty($in['undo'])) { $p->prepare('UPDATE fk_cars SET status = 2 WHERE id = ?')->execute([$id]); json_out(['ok' => true]); }
+            if (!empty($in['img'])) { $bin = fk_png_in($in['img'], 3000000); if ($bin === null) json_out(['error' => 'Use a PNG or JPG under 3 MB.'], 400); file_put_contents(fk_car_file($id), $bin, LOCK_EX); }
+            elseif (!empty($in['use_cut']) && is_file(fk_car_extra($id, 'cut'))) copy(fk_car_extra($id, 'cut'), fk_car_file($id));
+            if (!is_file(fk_car_file($id))) json_out(['error' => 'Add the finished car picture first.'], 400);
+            $p->prepare('UPDATE fk_cars SET status = 1, done_at = ? WHERE id = ?')->execute([now(), $id]);
+            @unlink(fk_car_extra($id, 'photo')); @unlink(fk_car_extra($id, 'cut'));
+            if (empty($car['done_at'])) fk_car_tell((string) $car['dev'], $id, 'Your car is in the game! 🚗', 'Your ' . $car['model'] . ' is now driving through the game for everyone. On your phone it comes past at least every 30 seconds.');
+            json_out(['ok' => true]); }
+        if ($a === 'car_msg') { $t = fk_clean((string) ($in['text'] ?? ''), 400); if ($t === '') json_out(['error' => 'Type a message.'], 400); if ((string) $car['dev'] === '') json_out(['error' => "This request came from an older version, so it can't get messages."], 400);
+            fk_car_tell((string) $car['dev'], $id, 'Message about your ' . $car['model'], $t); json_out(['ok' => true]); }
+        if ($a === 'car_no') { $p->prepare('UPDATE fk_cars SET status = 2 WHERE id = ?')->execute([$id]); $t = fk_clean((string) ($in['text'] ?? ''), 400);
+            if ($t !== '') fk_car_tell((string) $car['dev'], $id, 'About your ' . $car['model'], $t); @unlink(fk_car_extra($id, 'photo')); @unlink(fk_car_extra($id, 'cut')); json_out(['ok' => true]); }
+        if ($a === 'car_del') { $p->prepare('DELETE FROM fk_cars WHERE id = ?')->execute([$id]); @unlink(fk_car_file($id)); @unlink(fk_car_extra($id, 'photo')); @unlink(fk_car_extra($id, 'cut')); json_out(['ok' => true]); }
         if ($a === 'rec_del') { $p->prepare('DELETE FROM fk_recs WHERE id = ?')->execute([$id]); json_out(['ok' => true]); }
         if ($a === 'score_del') { $q = $p->prepare('SELECT pid FROM fk_scores WHERE id = ?'); $q->execute([$id]); $pd = (string) $q->fetchColumn(); if ($pd !== '') $p->prepare('DELETE FROM fk_scores WHERE pid = ?')->execute([$pd]); else $p->prepare('DELETE FROM fk_scores WHERE id = ?')->execute([$id]); json_out(['ok' => true]); }
     }
