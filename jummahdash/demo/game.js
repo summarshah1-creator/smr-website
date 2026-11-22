@@ -195,7 +195,7 @@ function hazed(id, v) {   // pale, sunset-tinted copy for the far skyline
 
 /* vehicles, rendered at KR, both directions */
 const NEAR_ONLY = { police: 1, policevan: 1, ambulance: 1, fire: 1, postvan: 1 };   // lettering on the side would read backwards in the far lane
-const CAR_KEYS = ['jazz', 'yaris', 'polo', 'fiesta', 'focus', 'zafira', 'avensis', 'x6', 'x7', 'prius', 'prius2', 'taxi2', 'sclass', 'rolls', 'golfr', 'v60', 'xc40', 'corsa', 'fiat500', 'sportage', 'gt3', 'f812', 'lambo', 'astra', 'golf', 'bmw1', 'a3', 'aold', 'a45', 'bmw3', 'c63s', 'c63', 'tesla', 'qashqai', 'rangerover', 'gwagon', 'urus', 'taxi', 'bigvan', 'postvan', 'smallvan', 'police', 'policevan', 'tractor', 'artic', 'binlorry', 'ambulance', 'fire', 'bus', 'dd', 'coach', 'moped_b', 'moped_g', 'moped_o', 'motorbike', 'cycle_0', 'cycle_1', 'cycle_2', 'cycle_3', 'cycle_4'];
+const CAR_KEYS = ['jazz', 'yaris', 'polo', 'fiesta', 'focus', 'zafira', 'avensis', 'x6', 'x7', 'prius', 'prius2', 'taxi2', 'sclass', 'rolls', 'golfr', 'v60', 'xc40', 'corsa', 'fiat500', 'sportage', 'gt3', 'f812', 'lambo', 'astra', 'golf', 'bmw1', 'a3', 'a45', 'bmw3', 'c63s', 'c63', 'tesla', 'qashqai', 'rangerover', 'gwagon', 'urus', 'taxi', 'bigvan', 'postvan', 'smallvan', 'police', 'policevan', 'tractor', 'artic', 'binlorry', 'ambulance', 'fire', 'bus', 'dd', 'coach', 'moped_b', 'moped_g', 'moped_o', 'motorbike', 'cycle_0', 'cycle_1', 'cycle_2', 'cycle_3', 'cycle_4'];
 const carCache = new Map();
 /* HD pass for the vehicle art (owner, 21 Nov): the shared Flappy drawings go through a context wrapper that turns the flat body
    colour into a glossy gradient with a reflection band, thins the dark outlines, gives the glass a sky reflection and the rims a
@@ -421,11 +421,16 @@ function startJam(cx, T) { jamT = T; cars.forEach(o => { if (!o.crash) o.free = 
 let csmoke = [];
 function smokeAt(x, y, dark) { if (csmoke.length < 90) csmoke.push({ x, y, vx: (Math.random() - .5) * 20, vy: -14 - Math.random() * 12, r: 3, a: dark ? .6 : .45, dark }); }
 window.__cars = () => cars;
+// strict lanes (owner, 22 Nov): never two cars overlapping in one lane. An overtaker only starts when there is room for it in
+// front of the car it passes, and only pulls back in when its own lane is clear around it (with space front and back).
+function slotFree(c) { return !cars.some(q => q !== c && !q.crash && q.lane === c.lane && !(q.ot && q.ot.out > .2) && q.x < c.x + c.L + 26 && q.x + q.L > c.x - 26); }
+function roomAfter(c, a) { const need = c.L + 80; return !cars.some(q => q !== c && q !== a && !q.crash && q.lane === c.lane && !(q.ot && q.ot.out > .2) && (c.dir > 0 ? q.x + q.L > a.x + a.L - 4 && q.x < a.x + a.L + need : q.x < a.x + 4 && q.x + q.L > a.x - need)); }
 function updateTraffic(dt, dx) {
   const moving = state !== 'dead' || speed > 5, scroll = dx * .92;
   cars.forEach(c => { let ahead = null, gap = 1e9;
-    cars.forEach(o => { if (o === c || (o.crash && !o.crash.road) || (o.lane !== c.lane && !(o.crash && o.crash.road)) || (o.ot && o.ot.out > .5)) return; const d = c.dir > 0 ? o.x - (c.x + c.L) : c.x - (o.x + o.L); if (d > -4 && d < gap) { gap = d; ahead = o; } });
-    if (!c.ot && !c.emerg && !c.crash && jamT <= 0 && ahead && gap < 60 && ((c.zoom && !(c.police && ahead.flee)) || (c.v > ahead.cv + 6 * VK && !c.otRolled && (c.otRolled = 1) && otCD <= 0 && Math.random() < .35)) && c.L < 140) {
+    cars.forEach(o => { const intoMine = o.lane !== c.lane && o.ot && o.ot.out > .3 && o.dir !== c.dir;   // an overtaker coming the other way in my lane: brake for it
+      if (o === c || (o.crash && !o.crash.road) || (o.lane !== c.lane && !(o.crash && o.crash.road) && !intoMine) || (o.ot && o.ot.out > .5 && !intoMine)) return; const d = c.dir > 0 ? o.x - (c.x + c.L) : c.x - (o.x + o.L); if (d > -4 && d < gap) { gap = d; ahead = o; } });
+    if (!c.ot && !c.emerg && !c.crash && jamT <= 0 && ahead && ahead.dir === c.dir && gap < 60 && roomAfter(c, ahead) && ((c.zoom && !(c.police && ahead.flee)) || (c.v > ahead.cv + 6 * VK && !c.otRolled && (c.otRolled = 1) && otCD <= 0 && Math.random() < .35)) && c.L < 140) {
       const vo = c.zoom ? c.v : Math.max(c.v, ahead.cv + 34 * VK) * 1.35, rel = Math.max(20, vo - ahead.cv), Tp = (gap + ahead.L + c.L + 40) / rel + .9;
       const need = vo * Tp + 60, x0 = c.dir > 0 ? c.x - 10 : c.x - need, x1 = c.dir > 0 ? c.x + c.L + need : c.x + c.L + 10;
       const clear = !cars.some(o => { if (o === c || o.crash) return false; if (o.lane === c.lane && !(o.ot && o.ot.out > .2)) return false; const reach = o.dir === c.dir ? 0 : o.cv * Tp;
@@ -435,11 +440,11 @@ function updateTraffic(dt, dx) {
     if (c.crash) return;
     if (c.ot) { const o = c.ot, side = c.lane ? -1 : 1;
       if (!o.abort && o.out > .2) { const fx = c.dir > 0 ? c.x + c.L : c.x; if (cars.some(q => q !== c && !q.crash && q.lane !== c.lane && (c.dir > 0 ? q.x > fx - 4 && q.x < fx + 90 : q.x + q.L < fx + 4 && q.x + q.L > fx - 90))) o.abort = true; }
-      if (o.abort) { o.out = Math.max(0, o.out - dt * 3); c.yo = side * LD * (o.out * o.out * (3 - 2 * o.out)); c.cv = Math.min(c.v, o.past.cv) * .8; if (o.out <= 0) { c.ot = null; c.yo = 0; } return; }
+      if (o.abort) { const fr = slotFree(c); if (fr) o.out = Math.max(0, o.out - dt * 3); c.yo = side * LD * (o.out * o.out * (3 - 2 * o.out)); c.cv = Math.min(c.v, cars.includes(o.past) ? o.past.cv : c.v) * (fr ? .8 : .55); if (o.out <= 0) { c.ot = null; c.yo = 0; } return; }
       const passed = !cars.includes(o.past) || (c.dir > 0 ? c.x > o.past.x + o.past.L + 20 : c.x + c.L < o.past.x - 20);
-      o.out = Math.max(0, Math.min(1, o.out + (passed ? -dt * 2.2 : dt * 2.4))); c.yo = side * LD * (o.out * o.out * (3 - 2 * o.out));
+      const back = passed && slotFree(c); o.out = Math.max(0, Math.min(1, o.out + (back ? -dt * 2.2 : dt * 2.4))); c.yo = side * LD * (o.out * o.out * (3 - 2 * o.out));
       c.cv = c.zoom ? c.v : Math.max(c.v, o.past.cv + 34 * VK) * 1.35; if (passed && o.out <= 0) { c.ot = null; c.yo = 0; } return; }
-    let tg = ahead && gap < 40 ? Math.min(c.v, ahead.crash ? 0 : ahead.cv) * (gap < 14 ? .85 : 1) : c.v;
+    let tg = ahead && ahead.dir !== c.dir && !ahead.crash ? (gap < 90 ? 0 : c.v * .5) : ahead && gap < 40 ? Math.min(c.v, ahead.crash ? 0 : ahead.cv) * (gap < 14 ? .85 : 1) : c.v;
     if (jamT > 0 && !c.free && !ahead && c.x > -10 && c.x + c.L < W + 10 && (c.dir > 0 ? c.x > W * .25 : c.x < W * .75)) tg = 0;
     if (c.drift) tg = c.v; if (c.pull) tg *= 1 - .65 * c.pull; if (c.run) tg = c.v * (c.out > .5 || !ahead ? 1 : .55);
     c.cv = c.cv + (tg - c.cv) * Math.min(1, dt * (tg < c.cv ? 5 : 1.1)); if (ahead && gap < 4 && !(c.run && c.out > .4)) c.cv = Math.min(c.cv, ahead.cv); });
