@@ -15,7 +15,9 @@ const ROAD_T = 309, ROAD_B = 352;     // road
 const PAVE_T = 358;                   // front pavement top
 const FLOOR = 390;                    // hero feet when running
 const CEIL = 3;                       // invisible ceiling: his head can go right up to the top of the screen (like Barry)
-const HW = 48, HH0 = 58, HS = 1.5, HH = HH0 * HS;   // hero sprite cell + its on-screen scale
+const HW = 48, HH0 = 58, HS = .92, HH = HH0 * HS;   // hero sprite cell + its on-screen scale (owner 22 Nov: whole hero ≈ the height of Barry's jetpack in Jetpack Joyride, ~12% of the screen)
+const HSR = 1.5, HHR = HH0 * HSR;   // size he's drawn at inside the rides (tuk-tuk, carpet, pigeon, Corolla roof), which kept their size
+const NPCK = .51;   // owner 22 Nov: walkers ≈ JJ's scientists, ~9.5% of the screen
 const BS = .8;                        // buildings drawn a bit smaller so there's more sky to fly in
 let S = 1, W = 600, dpr = 1, KR = 2;  // units->px, screen width in units, render scale for buildings
 
@@ -677,7 +679,7 @@ function update(dt) {
   if (flashT > 0) flashT -= dt; if (shake > 0) shake -= dt; if (banner) { banner.t += dt; if (banner.t > 1.8) banner = null; }
   // coins
   coinList.forEach(c => { c.x -= dx;
-    if (!c.got && !hero.dead && state === 'play' && (hasG('tin') || (veh && (veh.k === 'kabootar' || veh.nb > .3)) || boost)) { const hx = hero.x + 4, hy = hero.y - (veh && veh.k === 'kabootar' ? 60 : 36), d = Math.hypot(hx - c.x, hy - c.y); if (d < (boost ? 260 : 170) || c.mag) { c.mag = 1; const k = Math.min(1, dt * 9); c.x += (hx - c.x) * k; c.y += (hy - c.y) * k; } }
+    if (!c.got && !hero.dead && state === 'play' && (hasG('tin') || (veh && (veh.k === 'kabootar' || veh.nb > .3)) || boost)) { const hx = hero.x + 4, hy = hero.y - (veh && veh.k === 'kabootar' ? 60 : veh ? 36 : 24), d = Math.hypot(hx - c.x, hy - c.y); if (d < (boost ? 260 : 170) || c.mag) { c.mag = 1; const k = Math.min(1, dt * 9); c.x += (hx - c.x) * k; c.y += (hy - c.y) * k; } }
     if (!c.got && !hero.dead && state === 'play') { const hc = heroCircles(); if (hc.some(([x, y, r]) => Math.hypot(x - c.x, y - c.y) < r + COIN_R + 2)) { c.got = 1; coins++; if (veh && veh.k === 'tuktuk') veh.fuel = Math.min(1, veh.fuel + .04); lastCoin = dist; SFX.coin(); for (let i = 0; i < 5; i++) sparks.push({ x: c.x, y: c.y, vx: (Math.random() - .5) * 90, vy: (Math.random() - .5) * 90, l: .3, c: '#fff3b0' }); } } });
   coinList.forEach(c => { if (!c.got && c.x < -18 && !c.m) { c.m = 1; stats.missed++; } });
   coinList = coinList.filter(c => c.x > -20 && !c.got);
@@ -854,7 +856,7 @@ function drawBoost() {
   const x = hero.x + (boost.out ? boost.ox : 0) + 6;
   if (!boost.out) {   // hero crouched on the roof, holding on
     for (let i = 0; i < 4; i++) { ctx.strokeStyle = `rgba(255,255,255,${.25 + i * .1})`; ctx.lineWidth = 1.5; const yy = FLOOR - 20 - i * 14 - Math.random() * 8; ctx.beginPath(); ctx.moveTo(x - 90 - Math.random() * 60, yy); ctx.lineTo(x - 140 - Math.random() * 120, yy); ctx.stroke(); }
-    ctx.save(); ctx.translate(hero.x - 6, FLOOR + (boost.jy || 0) - 47 + Math.sin(hero.run * 2) * .8); ctx.imageSmoothingEnabled = true; ctx.drawImage(heroImg, FR('land0_effort') * HW * HX4, 0, HW * HX4, HH0 * HX4, -HW * HS / 2, -HH, HW * HS, HH); ctx.restore(); }
+    ctx.save(); ctx.translate(hero.x - 6, FLOOR + (boost.jy || 0) - 47 + Math.sin(hero.run * 2) * .8); ctx.imageSmoothingEnabled = true; ctx.drawImage(heroImg, FR('land0_effort') * HW * HX4, 0, HW * HX4, HH0 * HX4, -HW * HSR / 2, -HHR, HW * HSR, HHR); ctx.restore(); }
   if (!boost.out && boost.jy) { ctx.fillStyle = 'rgba(20,10,30,.25)'; ctx.beginPath(); ctx.ellipse(x, FLOOR + 3, 70, 4, 0, 0, 7); ctx.fill(); }
   drawCorolla(ctx, x, FLOOR + 2 + (boost.out ? 0 : boost.jy || 0), 1.05, true);
 }
@@ -866,7 +868,7 @@ function startVehicle(k) {
 }
 function vehCircles() { const x = hero.x, y = hero.y;
   if (veh.k === 'kabootar') return [[x + 2, y - 30, 13], [x, y - 62, 11], [x + 2, y - 103, 13]];
-  if (veh.k === 'sandals') { const sg = veh.s < 0 ? -1 : 1; return [[x + 3, y - 31 * sg, 10], [x + 7, y - 58 * sg, 9]]; }
+  if (veh.k === 'sandals') { const sg = veh.s < 0 ? -1 : 1, q = HS / 1.5; return [[x + 3 * q, y - 31 * q * sg, 10 * q], [x + 7 * q, y - 58 * q * sg, 9 * q]]; }
   return veh.k === 'tuktuk' ? [[x - 5, y - 26, 21], [x + 19, y - 19, 14], [x - 2, y - 58, 14]] : [[x, y - 8, 16], [x + 4, y - 36, 12]]; }
 function vehUpdate(dt) {
   veh.t += dt; hero.run += dt * (6 + speed / 22); if (hissG) hissG.gain.setTargetAtTime(0, AC.currentTime, .06);
@@ -930,7 +932,7 @@ function drawVehicle() {
     const col = { luton: ['#f67a20', '#d65c10'], puffer: ['#2c2c34', '#1c1c22'], moroccan: ['#963a2e', '#74281f'], eid: ['#fcf0ce', '#e8d4a2'] }[SHOP.outfit] || ['#f8f6fa', '#d4d4e4'];
     ctx.save(); ctx.translate(x, y); ctx.rotate(hero.rot * .5);
     ctx.save(); ctx.translate(GX, GY); ctx.rotate(Math.sin(t * 5) * .05); ctx.translate(-GX, -GY); ctx.imageSmoothingEnabled = true; const hf = 'hang' + (Math.floor(t * 8) % 4) + '_happy';
-    ctx.drawImage(heroImg, FR(hf) * HW * HX4, 0, HW * HX4, HH0 * HX4, -HW * HS / 2, -HH, HW * HS, HH);
+    ctx.drawImage(heroImg, FR(hf) * HW * HX4, 0, HW * HX4, HH0 * HX4, -HW * HSR / 2, -HHR, HW * HSR, HHR);
     // sleeve: from inside the shoulder, up across his ear and over the top of his head (black outline, white sleeve, no joint showing)
     const arm = () => { ctx.beginPath(); ctx.moveTo(SX, SY); ctx.lineTo(EX, EY); ctx.lineTo(GX, GY + 3); };   // bent arm: elbow out behind his head, hand just above his hair
     ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = '#1a161e'; ctx.lineWidth = 9; arm(); ctx.stroke(); ctx.strokeStyle = col[0]; ctx.lineWidth = 6; arm(); ctx.stroke();
@@ -966,7 +968,7 @@ function drawVehicle() {
     // inside first: dark cabin, seat, then our hero (scaled to fit), all clipped to the side opening
     const OP = (np) => { if (!np) ctx.beginPath(); ctx.moveTo(-38, -36); ctx.lineTo(-38, -66); ctx.quadraticCurveTo(-37, -76, -26, -77); ctx.lineTo(10, -77); ctx.quadraticCurveTo(18, -76, 20, -66); ctx.lineTo(22, -36); ctx.closePath(); };
     ctx.save(); OP(); ctx.clip(); ctx.fillStyle = '#2a1e2e'; ctx.fillRect(-40, -80, 64, 46); ctx.fillStyle = '#8a1e2e'; roundRect(-36, -52, 26, 14, 3); ctx.fill(); ctx.fillStyle = '#a8283a'; roundRect(-36, -64, 8, 26, 3); ctx.fill();
-    const hs = .72; ctx.drawImage(heroImg, FR('run0_happy') * HW * HX4, 0, HW * HX4, HH0 * HX4, -HW * HS * hs / 2 - 2, -HH * hs - 22, HW * HS * hs, HH * hs);
+    const hs = .72; ctx.drawImage(heroImg, FR('run0_happy') * HW * HX4, 0, HW * HX4, HH0 * HX4, -HW * HSR * hs / 2 - 2, -HHR * hs - 22, HW * HSR * hs, HHR * hs);
     ctx.fillStyle = '#1a1a1e'; ctx.fillRect(8, -58, 2, 18); ctx.fillStyle = '#2a2a30'; ctx.beginPath(); ctx.ellipse(10, -58, 2, 5, -.4, 0, 7); ctx.fill();   // handlebar in front of him
     ctx.restore();
     // body: rear box + belly, green with a yellow band, black trim
@@ -997,7 +999,7 @@ function drawVehicle() {
     const wave = i => { const u = i / n; return Math.sin(t * 6.5 - u * 7) * (2.2 + u * 3.2) + Math.sin(t * 3.1 - u * 3) * 1.2; };
     const pts = []; for (let i = 0; i <= n; i++) pts.push([-W2 + i * (W2 * 2 / n), wave(i)]);
     const mid = Math.floor(n * .55);
-    ctx.drawImage(heroImg, FR('sit' + (Math.floor(t * 3) % 2) + '_happy') * HW * HX4, 0, HW * HX4, HH0 * HX4, -HW * HS / 2 - 4, -HH + 10.5 + pts[mid][1], HW * HS, HH);
+    ctx.drawImage(heroImg, FR('sit' + (Math.floor(t * 3) % 2) + '_happy') * HW * HX4, 0, HW * HX4, HH0 * HX4, -HW * HSR / 2 - 4, -HHR + 10.5 + pts[mid][1], HW * HSR, HHR);
     const TH = 5;
     ctx.fillStyle = '#4a0c18'; ctx.beginPath(); pts.forEach(([px2, py], i) => i ? ctx.lineTo(px2, py + 1) : ctx.moveTo(px2, py + 1)); for (let i = n; i >= 0; i--) ctx.lineTo(pts[i][0], pts[i][1] + TH + 1); ctx.closePath(); ctx.fill();   // underside / thickness
     for (let i = 0; i < n; i++) { const [x0, y0] = pts[i], [x1, y1] = pts[i + 1], sl = (y1 - y0) / (x1 - x0), lit = Math.max(.72, Math.min(1.25, 1 - sl * 1.4));
@@ -1183,7 +1185,7 @@ function draw() {
   obs.forEach(o => { if (o.type === 'zap') drawZap(o); else if (o.type === 'laser') drawLaser(o); else drawRocket(o); });
   gifts.forEach(drawGift);
   // people + hero, sorted by depth (feet y)
-  const list = npcs.map(p => ({ y: p.y, f: () => drawNpc(p) })); mobs.forEach(m => list.push({ y: m.y, f: () => { const M = NPC_META.mobility, im = npcGet('mobility'); if (!M || !im.naturalWidth) return; const sc = .9 / M.k, w = M.w * sc, h = M.h * sc, f = Math.floor(m.roll / 9) % M.n;
+  const list = npcs.map(p => ({ y: p.y, f: () => drawNpc(p) })); mobs.forEach(m => list.push({ y: m.y, f: () => { const M = NPC_META.mobility, im = npcGet('mobility'); if (!M || !im.naturalWidth) return; const sc = .9 * NPCK / M.k, w = M.w * sc, h = M.h * sc, f = Math.floor(m.roll / 9) % M.n;
     ctx.save(); ctx.translate(m.x, m.y); if (m.d < 0) ctx.scale(-1, 1); ctx.drawImage(im, f * M.w, 0, M.w, M.h, -w / 2, -h, w, h); ctx.restore(); } })); list.push({ y: hero.dead ? FLOOR + 6 : (hero.ground ? FLOOR : FLOOR + 1), f: drawHero });
   list.sort((a, b) => a.y - b.y).forEach(o => o.f());
   dust.forEach(p => { ctx.globalAlpha = Math.max(0, p.l * 1.6) * .6; ctx.fillStyle = '#d8ccc6'; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 7); ctx.fill(); }); ctx.globalAlpha = 1;
@@ -1232,7 +1234,7 @@ function drawHero() {
 const tintCv = document.createElement('canvas');
 function drawNpc(p) {
   const im = npcGet(p.k), M = NPC_META[p.k]; if (!M || !im.complete || !im.naturalWidth) return;
-  const sc = .9 / (M.k || 1), w = M.w * sc, h = M.h * sc;
+  const sc = .9 * NPCK / (M.k || 1), w = M.w * sc, h = M.h * sc;
   let facing = p.dir; if (p.flee > 0) facing = p.dir;
   if ((p.react > 0 || p.moodT > 0) && !p.esc) facing = p.look;
   if (p.fall > 0 && M.v3) facing = -p.fallDir;   // lying frame has the head behind: head goes the way they fell
