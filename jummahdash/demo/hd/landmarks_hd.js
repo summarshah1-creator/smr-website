@@ -1021,12 +1021,10 @@ HD.tesco = (c, x, G) => {
 };
 
 // Currys: white central entrance block with a curved roof edge, the new purple standalone Currys board (ring + lowercase name),
-// tall glazed entrance, sand-brick wings with blue Carphone Warehouse boards, trees, green bike stands, bollards, the two vans
+// tall glazed entrance, sand-brick wings (no Carphone Warehouse boards, owner 22 Nov), trees, green bike stands, bollards, the two vans
 HD.currys = (c, x, G) => {
   c.save(); c.lineJoin = 'round';
-  for (const wx of [x, x + 260]) { brick(c, wx, G - 104, 100, 104, '#d6aa70'); c.strokeStyle = LINE; c.lineWidth = .5; c.strokeRect(wx, G - 104, 100, 104); panels(c, wx, G - 118, 100, 14, '#eeeeea', 7); rect(c, '#3a3d44', wx, G - 10, 100, 10);
-    c.fillStyle = lg(c, 0, G - 98, 0, G - 76, [[0, '#2c4ea0'], [1, '#1c3478']]); c.fillRect(wx + 8, G - 98, 76, 22); c.strokeStyle = '#0e1e4a'; c.strokeRect(wx + 8, G - 98, 76, 22);
-    txt(c, 'Carphone', wx + 46, G - 90.4, 7, '#fff', { f: 'Mont, sans-serif', w: 700 }); txt(c, 'Warehouse', wx + 46, G - 82.6, 7, '#fff', { f: 'Mont, sans-serif', w: 700 }); }
+  for (const wx of [x, x + 260]) { brick(c, wx, G - 104, 100, 104, '#d6aa70'); c.strokeStyle = LINE; c.lineWidth = .5; c.strokeRect(wx, G - 104, 100, 104); panels(c, wx, G - 118, 100, 14, '#eeeeea', 7); rect(c, '#3a3d44', wx, G - 10, 100, 10); }
   c.fillStyle = lg(c, x + 84, 0, x + 276, 0, [[0, '#e6e6e2'], [.5, '#fafaf8'], [1, '#e2e2de']]); c.fillRect(x + 84, G - 166, 192, 166); c.strokeStyle = LINE; c.strokeRect(x + 84, G - 166, 192, 166);
   c.beginPath(); c.moveTo(x + 78, G - 166); c.quadraticCurveTo(x + 180, G - 192, x + 282, G - 166); c.closePath(); c.fillStyle = lg(c, 0, G - 186, 0, G - 166, [[0, '#ffffff'], [1, '#dcdcd8']]); c.fill(); c.strokeStyle = LINE; c.stroke(); rect(c, '#c8c8c4', x + 78, G - 167, 204, 1.6);
   for (let i = 0; i < 12; i++) rect(c, 'rgba(0,0,0,.08)', x + 92 + i * 16, G - 160, .6, 54);
@@ -1302,8 +1300,9 @@ HD.hatfactory = (c, x, G) => {
 // red leg, curved low wall with a rail
 HD.ldh = (c, x, G) => {
   c.save(); c.lineJoin = 'round'; x += 44; const TN = '#dcaa7c';
-  panels(c, x + 152, G - 236, 148, 236, '#aeb2b8', 18); rect(c, '#7e848c', x + 196, G - 250, 70, 14, LINE, .4); for (let i = 0; i < 12; i++) rect(c, '#6a7078', x + 198 + i * 5.6, G - 248, 2.6, 10);
-  for (let r = 0; r < 4; r++) for (let i = 0; i < 7; i++) { c.fillStyle = lg(c, 0, G - 226 + r * 18, 0, G - 215 + r * 18, [[0, (r + i) % 3 ? '#8aa4ba' : '#a8c0d2'], [1, '#4f6a82']]); c.fillRect(x + 157 + i * 20, G - 226 + r * 18, 16, 11); }
+  // owner 22 Nov: ward block 50% taller (354), runs off the top of the screen; window rows all the way down
+  panels(c, x + 152, G - 354, 148, 354, '#aeb2b8', 18); rect(c, '#7e848c', x + 196, G - 368, 70, 14, LINE, .4); for (let i = 0; i < 12; i++) rect(c, '#6a7078', x + 198 + i * 5.6, G - 366, 2.6, 10);
+  for (let r = 0; r < 11; r++) for (let i = 0; i < 7; i++) { c.fillStyle = lg(c, 0, G - 344 + r * 18, 0, G - 333 + r * 18, [[0, (r * 2 + i) % 3 ? '#8aa4ba' : '#a8c0d2'], [1, '#4f6a82']]); c.fillRect(x + 157 + i * 20, G - 344 + r * 18, 16, 11); }
   for (const [bx, bw, bh] of [[x - 40, 106, 132], [x + 270, 30, 124]]) { rect(c, '#2e3238', bx, G - bh, bw, bh, LINE, .4); for (let i = 0; i < 18; i++) rect(c, '#3e434b', bx + 2, G - bh + 4 + i * 2.2, bw - 4, 1.2); }
   rect(c, '#4a5562', x + 18, G - 86, 44, 12);
   c.fillStyle = lg(c, x + 64, 0, x + 272, 0, [[0, shade(TN, 1.04)], [1, shade(TN, .94)]]); c.fillRect(x + 64, G - 156, 208, 110); c.strokeStyle = LINE; c.lineWidth = .45; c.strokeRect(x + 64, G - 156, 208, 110);

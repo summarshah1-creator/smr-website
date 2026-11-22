@@ -452,8 +452,6 @@ L.tesco = { n: 'Tesco Extra', w: 200, d(c, x, G) {
 
 L.currys = { n: 'Currys', w: 360, d(c, x, G) {
   for (const wx of [x, x + 260]) { BRICK(c, wx, G - 104, 100, 104, '#d2a46a', '#bf9259'); R(c, OUT, wx - 1, G - 105, 102, 1); BOX(c, '#ecebe7', wx, G - 118, 100, 14); R(c, '#3a3d44', wx, G - 10, 100, 10); }
-  BOX(c, '#22408a', x + 8, G - 98, 76, 22); T(c, 'Carphone', x + 46, G - 96, 8, '#ffffff', 'center', false); T(c, 'Warehouse', x + 46, G - 86, 8, '#ffffff', 'center', false);
-  BOX(c, '#22408a', x + 276, G - 98, 76, 22); T(c, 'Carphone', x + 314, G - 96, 8, '#ffffff', 'center', false); T(c, 'Warehouse', x + 314, G - 86, 8, '#ffffff', 'center', false);
   BOX(c, '#f1f1ee', x + 84, G - 166, 192, 166); P(c, '#f6f6f3', [[x + 78, G - 166], [x + 104, G - 182], [x + 256, G - 182], [x + 282, G - 166]], true); for (let i = 0; i < 12; i++) R(c, '#dcdcd8', x + 92 + i * 16, G - 160, 1, 26);
   // the new standalone Currys sign: purple panel, thin white ring, lowercase name
   BOX(c, '#3f2a9c', x + 92, G - 154, 176, 48); R(c, '#4c36b0', x + 93, G - 153, 174, 2);
@@ -705,8 +703,9 @@ L.lutonhoo = { n: 'Luton Hoo Estate', w: 330, lawn: 10, d(c, x, G) {
 L.ldh = { n: 'Luton and Dunstable Hospital', w: 344, d(c, x, G) {
   x += 44;   // room for the longer left wing
   // tall grey hospital block behind
-  BOX(c, '#a9adb3', x + 152, G - 236, 148, 236); R(c, '#bfc3c8', x + 152, G - 236, 148, 3); BOX(c, '#7e848c', x + 196, G - 250, 70, 14); for (let i = 0; i < 6; i++) R(c, '#6a7078', x + 200 + i * 11, G - 247, 6, 9);
-  for (let r = 0; r < 4; r++) for (let i = 0; i < 7; i++) R(c, (r + i) % 3 ? '#5f7a92' : '#7b94aa', x + 157 + i * 20, G - 226 + r * 18, 16, 11);
+  // owner 22 Nov: the ward block is 50% taller (354) so it runs off the top of the screen, window rows all the way down to the cladding
+  BOX(c, '#a9adb3', x + 152, G - 354, 148, 354); R(c, '#bfc3c8', x + 152, G - 354, 148, 3); BOX(c, '#7e848c', x + 196, G - 368, 70, 14); for (let i = 0; i < 6; i++) R(c, '#6a7078', x + 200 + i * 11, G - 365, 6, 9);
+  for (let r = 0; r < 11; r++) for (let i = 0; i < 7; i++) R(c, (r * 2 + i) % 3 ? '#5f7a92' : '#7b94aa', x + 157 + i * 20, G - 344 + r * 18, 16, 11);
   // dark side blocks with louvres
   BOX(c, '#2e3238', x - 40, G - 132, 106, 132); for (let i = 0; i < 9; i++) R(c, '#3e434b', x - 38, G - 128 + i * 4, 102, 2); R(c, '#4a5562', x + 18, G - 86, 44, 12); R(c, '#4a5562', x - 34, G - 86, 44, 12);
   BOX(c, '#2e3238', x + 270, G - 124, 30, 124); for (let i = 0; i < 9; i++) R(c, '#3e434b', x + 272, G - 120 + i * 4, 26, 2);
@@ -1384,7 +1383,6 @@ const SHARP = {
     BOX(c, '#1e3fa3', X(34), Y(64), Math.round(142 * f), Math.round(18 * f)); T(c, 'OAK STAND', X(105), Y(64) + 4, 8, '#ffffff');
     T(c, 'F.G', X(44), Y(64) + 4, 8, '#ffffff', 'center', false); T(c, 'D.E', X(166), Y(64) + 4, 8, '#ffffff', 'center', false); },
   currys(c, x, G, f) { const X = v => Math.round(x + v * f), Y = v => Math.round(G - v * f);
-    for (const sx of [8, 276]) { BOX(c, '#22408a', X(sx), Y(98), Math.round(76 * f), Math.round(22 * f)); T(c, 'Carphone', X(sx + 38), Y(98) + 3, 8, '#ffffff', 'center', false); T(c, 'Warehouse', X(sx + 38), Y(98) + 14, 8, '#ffffff', 'center', false); }
     BOX(c, '#3f2a9c', X(92), Y(154), Math.round(176 * f), Math.round(48 * f)); R(c, '#4c36b0', X(92) + 1, Y(154) + 1, Math.round(176 * f) - 2, 2);
     c.strokeStyle = '#ece8fa'; c.lineWidth = 1.5; c.beginPath(); c.arc(X(180), Y(130), 25, 0, 7); c.stroke();
     c.font = '700 8px Silk'; c.textAlign = 'center'; c.textBaseline = 'top'; c.fillStyle = '#251766'; c.fillText('currys', X(180) + 1, Y(130) - 3); c.fillStyle = '#ffffff'; c.fillText('currys', X(180), Y(130) - 4); },

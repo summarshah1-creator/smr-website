@@ -232,7 +232,7 @@ function carSprite(k, ci, flip, fr = 0) {
   let out = c;
   if (flip) { const f = document.createElement('canvas'); f.width = c.width; f.height = c.height; const g = f.getContext('2d'); g.translate(f.width, 0); g.scale(-1, 1); g.drawImage(c, 0, 0); g.setTransform(1, 0, 0, 1, 0, 0);
     if (V.fixMirror) { g.scale(k2, k2); try { V.fixMirror(hdCtx(g, col[1], 86 - (V.h || 24), 86), 3, 86, f.width / k2); } catch (e) {} } out = f; }
-  const wh = (wr || []).map(w => ({ x: (flip ? c.width - w.x : w.x) / KR, y: w.y / KR, r: w.r / KR, rim: w.rim, spokes: w.spokes || 5, wi: w.wi, well: w.well }));
+  const wh = (wr || []).map(w => ({ x: (flip ? c.width - w.x : w.x) / KR, y: w.y / KR, r: w.r / KR, rim: w.rim, spokes: w.spokes || 5, wi: w.wi, well: w.well, cal: w.cal, cf: w.cf, fl: flip ? 1 : 0 }));
   const under = (wr || []).some(w => w.under);
   let lt = null; if (V.lights) { const Lr = V.lights(), W2 = c.width / KR, m = q => ({ x: flip ? W2 - q.x * SC : q.x * SC, y: q.y * SC, t: q.t }); lt = { bl: Lr.bl.map(m), hl: Lr.hl.map(m) }; }
   const v = { c: out, w: (V.w + 6) * SC, h: 90 * SC, gy: 86 * SC, sp: V.speed, wh, under, lt };
@@ -264,7 +264,15 @@ function drawTrafficCar(c) { const VV = VEHICLES[c.k], far = c.lane === 0, sp = 
 function drawWheels(sp, x0, y0, roll) { for (const w of sp.wh) { const cx = x0 + w.x, cy = y0 + w.y, r = w.r * .64; if (r < 1.2) continue;
   if (sp.under) { ctx.beginPath(); if (w.well) { ctx.arc(cx, cy, w.r * 1.16, Math.PI, 0); ctx.lineTo(cx + w.r * 1.16, cy + w.r * .2); ctx.lineTo(cx - w.r * 1.16, cy + w.r * .2); } else ctx.arc(cx, cy, w.r * .98, 0, 7); ctx.fillStyle = '#141418'; ctx.fill(); }
   const WI = window.WHEEL_IMG; if (w.wi != null && WI && WI.complete && WI.naturalWidth) {   // the owner's wheel pictures, turning
-    const R = w.r * .985; ctx.save(); ctx.translate(cx, cy); ctx.rotate(roll / w.r); ctx.drawImage(WI, (w.wi % 5) * 128, (w.wi / 5 | 0) * 128, 128, 128, -R, -R, R * 2, R * 2); ctx.restore(); continue; }
+    const R = w.r * .985;
+    if (w.cal) {   // brake caliper (owner 22 Nov): behind the wheel on the rear-facing side (left when the car faces right), front ones a bit bigger; doesn't turn
+      const k = w.cf ? 1 : .82, a0 = w.fl ? 0 : Math.PI, sp = .42 * k; ctx.save(); ctx.translate(cx, cy);
+      ctx.fillStyle = '#121216'; ctx.beginPath(); ctx.arc(0, 0, R * .8, 0, 7); ctx.fill();
+      ctx.strokeStyle = 'rgba(120,122,128,.35)'; ctx.lineWidth = R * .04; ctx.beginPath(); ctx.arc(0, 0, R * .6, 0, 7); ctx.stroke();
+      ctx.beginPath(); ctx.arc(0, 0, R * (.42 + .3 * k), a0 - sp, a0 + sp); ctx.arc(0, 0, R * .4, a0 + sp * .8, a0 - sp * .8, true); ctx.closePath();
+      ctx.fillStyle = w.cal; ctx.fill(); ctx.lineWidth = R * .03; ctx.strokeStyle = 'rgba(0,0,0,.5)'; ctx.stroke();
+      ctx.beginPath(); ctx.arc(0, 0, R * (.38 + .28 * k), a0 - sp * .7, a0 - sp * .1); ctx.lineWidth = R * .05; ctx.strokeStyle = 'rgba(255,255,255,.35)'; ctx.stroke(); ctx.restore(); }
+    ctx.save(); ctx.translate(cx, cy); ctx.rotate(roll / w.r); ctx.drawImage(WI, (w.wi % 5) * 128, (w.wi / 5 | 0) * 128, 128, 128, -R, -R, R * 2, R * 2); ctx.restore(); continue; }
   ctx.save(); ctx.translate(cx, cy); ctx.beginPath(); ctx.arc(0, 0, r, 0, 7); ctx.fillStyle = w.rim || '#9aa2ab'; ctx.fill(); ctx.beginPath(); ctx.arc(-r * .2, -r * .2, r * .55, 0, 7); ctx.fillStyle = 'rgba(255,255,255,.25)'; ctx.fill();
   ctx.rotate(roll / w.r); ctx.strokeStyle = 'rgba(40,42,48,.85)'; ctx.lineWidth = Math.max(.6, r * .2); for (let i = 0; i < w.spokes; i++) { const a = i * 2 * Math.PI / w.spokes; ctx.beginPath(); ctx.moveTo(Math.cos(a) * r * .25, Math.sin(a) * r * .25); ctx.lineTo(Math.cos(a) * r * .92, Math.sin(a) * r * .92); ctx.stroke(); }
   ctx.beginPath(); ctx.arc(0, 0, r * .24, 0, 7); ctx.fillStyle = '#5a5d66'; ctx.fill(); ctx.restore(); } }
@@ -313,7 +321,7 @@ function tone(freq, dur, type = 'sine', vol = .12, slide = 0) {
   if (slide) o.frequency.exponentialRampToValueAtTime(Math.max(30, freq * slide), t + dur);
   g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(.0001, t + dur); o.connect(g); g.connect(AC.destination); o.start(t); o.stop(t + dur + .02);
 }
-const SFX = { coin() { tone(1320, .09, 'square', .05); setTimeout(() => tone(1760, .12, 'square', .045), 55); },
+const SFX = { coin() { tone(1320, .09, 'square', .04); setTimeout(() => tone(1760, .12, 'square', .036), 55); },   /* coin ping 20% quieter (owner 22 Nov) */
   zap() { tone(120, .5, 'sawtooth', .16, .5); tone(900, .25, 'square', .06, .3); }, thud() { tone(140, .25, 'triangle', .3, .4); },
   warn() { tone(880, .08, 'square', .05); }, whoosh() { tone(500, .5, 'sawtooth', .05, .3); }, boom() { tone(90, .6, 'sawtooth', .22, .3); } };
 
@@ -370,7 +378,7 @@ function seedStars() { stars = []; for (let i = 0; i < 90; i++) stars.push({ x: 
 function reset() {
   t = 0; dist = 0; speed = 0; coins = 0; obs = []; coinList = []; steam = []; sparks = []; panicT = 0; deadT = 0;
   RUN = newRun(); lastCoin = 0; mtQueue = []; boost = null; usedSave = 0; $('hsBox') && $('hsBox').classList.remove('on'); heroImg = heroImgs[SHOP.outfit] || heroImgs.classic;
-  flashT = 0; shake = 0; banner = null; rings = []; veh = null; inv = 0; gifts = []; eidi = 0; pops = []; dust = []; revived = 0; nextGift = FKDEMO ? 500 : 1e9; runT = 0; firstBox = 0; lastBoxRide = 'kabootar'; nextEidi = 1600; stats.steamed = stats.dodged = stats.missed = 0;
+  flashT = 0; shake = 0; banner = null; rings = []; veh = null; inv = 0; gifts = []; eidi = 0; pops = []; dust = []; revived = 0; nextGift = FKDEMO ? 500 : 1e9; runT = 0; convoyT = 8 + Math.random() * 44; firstBox = 0; lastBoxRide = 'kabootar'; nextEidi = 1600; stats.steamed = stats.dodged = stats.missed = 0;
   Object.assign(hero, { x: -40, y: FLOOR, vy: 0, thrust: false, ground: true, landT: 0, rot: 0, run: 0, dead: false, vx: 0, bounce: 0 });
   nextObs = 380; nextNpc = 0; nextCar = 0;
   if (!street.length) fillStreet(); if (!skyline.length) fillSkyline();
@@ -426,12 +434,63 @@ function spawnCar(x, key, zoom, laneF) {
   const quick = !zoom && Math.random() < .15, v = zoom ? (130 + Math.random() * 110) * VK : ((V.speed ? V.speed[0] + Math.random() * (V.speed[1] - V.speed[0]) : 30) * VK) * (quick ? 1.35 : 1);
   const sv = dir * v - speed * .92, sx = x != null ? x : (sv > 0 ? -L - 30 : W + 30);
   if (cars.some(c => c.lane === lane && sx < c.x + c.L + 24 && c.x < sx + L + 24)) return false;
+  if (CVZ && lane === 1 && !key) return false;   // convoy zooming off: keep its lane empty
   const c = { k, ci: Math.random() * 6000 | 0, lane, dir, x: sx, v, cv: v, yo: 0, L, zoom: !!zoom }; cars.push(c);
   if (zoom) SFX.zoom(k === 'motorbike');
   if (EMK[k] && !zoom) { c.emerg = 1; c.rolled = c.headRolled = c.otRolled = 1;
     if (jamT <= 0 && k !== 'police' && Math.random() < .5) { c.run = 1; c.v = c.cv = EMK[k] * VK; if (k === 'fire') { SFX.neenaw(); SFX.airhorn(1.2); } else if (k === 'ambulance') SFX.wail(); else SFX.siren(); } }
   return c;
 }
+// owner 22 Nov: the convoy: M4, C63, Abarth, A-Class, then the long S-Class at the back, nose to tail, about every 45 s (random 38-52 s)
+const CONVOY = ['m4c', 'c63w', 'abarth', 'aclass', 'slwb']; let convoyT = 1e9;   // owner 22 Nov: once per run, at a random moment in the first minute (set in reset()) window.__convoy = () => { convoyT = 0; };
+// convoy sound (owner 22 Nov): the real M4 + C63 recordings. A burble loop per car that fades in as it nears the screen, is fullest
+// in frame (still under the game), drops to a quiet background once it has gone and then fades out; every few seconds the M4
+// revs and creeps forward, then the C63 does the same (rev clip + loop ducked + a touch of pitch)
+const CVS = (() => { const N = ['m4_loop', 'm4_rev', 'm4_rev2', 'c63_loop', 'c63_rev', 'c63_rev2'], buf = {}; let loading = false, bus = null; const voice = {}; let m4T = 3, c63T = 0;
+  function load() { if (loading || !AC) return; loading = true; N.forEach(n => fetch('art/snd/' + n + '.mp3?h=' + {"c63_loop": "d3e40a71af", "c63_rev": "a88aec5009", "c63_rev2": "832547414b", "m4_loop": "d8f509bb3d", "m4_rev": "88bd8ce917", "m4_rev2": "82e5130046"}[n]).then(r => r.arrayBuffer()).then(a => new Promise((ok, no) => AC.decodeAudioData(a, ok, no))).then(b => { buf[n] = b; }).catch(() => {})); }
+  function vol(c) { const m = c.x + c.L / 2, d = m < 0 ? -m : m > W ? m - W : 0;   // distance outside the screen
+    if (!d) return 1; if (d < 220) return 1 - .72 * d / 220; return Math.max(0, .28 * (1 - (d - 220) / 520)); }
+  function mk(k) { const s = AC.createBufferSource(); s.buffer = buf[k + '_loop']; s.loop = true; s.loopStart = .05; s.loopEnd = s.buffer.duration - .05;
+    const lg = AC.createGain(), g = AC.createGain(); g.gain.value = 0; let p = null; try { p = AC.createStereoPanner(); } catch (e) {}
+    s.connect(lg); lg.connect(g); if (p) { g.connect(p); p.connect(bus); } else g.connect(bus); s.start(); return { s, lg, g, p };   // loop -> duck (lg) -> car level (g) -> pan -> bus
+  }
+  function rev(c, k) { const v = voice[k]; if (!v) return; const n = Math.random() < .7 || !buf[k + '_rev2'] ? k + '_rev' : k + '_rev2'; if (!buf[n]) return;
+    const s = AC.createBufferSource(), g = AC.createGain(), t = AC.currentTime; s.buffer = buf[n]; g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(1.2, t + .06);
+    s.connect(g); g.connect(v.g); s.start(t); v.revEnd = t + s.buffer.duration - .25; s.onended = () => { try { g.disconnect(); } catch (e) {} }; }
+  let zoomT = 0;
+  function zoom() { zoomT = 4.5; ['m4', 'c63'].forEach(k => { const v = voice[k]; if (!v || !buf[k + '_rev']) return; const s = AC.createBufferSource(), g = AC.createGain(), t = AC.currentTime; s.buffer = buf[k + '_rev']; s.playbackRate.value = 1.12;
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(1.35, t + .08); s.connect(g); g.connect(v.g); s.start(t); v.revEnd = t + s.buffer.duration / 1.12 - .25; s.onended = () => { try { g.disconnect(); } catch (e) {} }; }); }
+  return { zoom() { if (sndOn && AC) zoom(); }, tick(dt) { if (zoomT > 0) zoomT -= dt; const on = cars.filter(c => c.convoy && (c.k === 'm4c' || c.k === 'c63w'));
+      if (on.length && AC && !loading) load();
+      const live = sndOn && AC && state === 'play' && !document.hidden;
+      if (!bus && AC) { bus = AC.createGain(); bus.gain.value = .18; /* 40% quieter (owner 22 Nov) */ bus.connect(AC.destination); }
+      // rev-and-creep timing: only while the M4 or C63 is near the screen
+      const m4 = on.find(c => c.k === 'm4c'), c63 = on.find(c => c.k === 'c63w'), near = c => c && c.x + c.L > -60 && c.x < W + 60;
+      [m4, c63].forEach(c => { if (c && c.lg) { c.lg.t += dt; if (c.lg.t > 2.6) c.lg = null; } });
+      if (near(m4) || near(c63)) { m4T -= dt; if (m4T <= 0 && m4 && !m4.lg) { m4.lg = { t: 0 }; if (live) rev(m4, 'm4'); m4T = 3.6 + Math.random() * 2.6; c63T = 1.1 + Math.random() * .9; }
+        if (c63T > 0) { c63T -= dt; if (c63T <= 0 && c63 && !c63.lg) { c63.lg = { t: 0 }; if (live) rev(c63, 'c63'); } } }
+      else m4T = Math.min(m4T, 1.2);
+      ['m4', 'c63'].forEach(k => { const c = k === 'm4' ? m4 : c63; let v = voice[k];
+        if (!AC || !buf[k + '_loop']) return; if (!v && c && live) v = voice[k] = mk(k); if (!v) return;
+        const t = AC.currentTime; if (v.revEnd && t > v.revEnd) v.revEnd = 0;
+        v.g.gain.setTargetAtTime(c && live ? Math.max(vol(c), zoomT > 1.5 ? .9 : 0) * (k === 'm4' ? 1 : .95) : 0, t, zoomT > 0 ? .5 : .12); v.lg.gain.setTargetAtTime(v.revEnd ? .4 : 1, t, .1);
+        if (v.p && c) v.p.pan.setTargetAtTime(Math.max(-.8, Math.min(.8, ((c.x + c.L / 2) / W - .5) * 1.6)), t, .15);
+        v.s.playbackRate.setTargetAtTime(zoomT > 0 ? 1.28 : c && c.lg && c.lg.t > .3 && c.lg.t < 1.4 ? 1.1 : 1, t, zoomT > 0 ? .6 : .25);
+        if (!c || !live) { v.gone = (v.gone || 0) + dt; if (v.gone > 2) { try { v.s.stop(); v.g.disconnect(); if (v.p) v.p.disconnect(); } catch (e) {} voice[k] = null; } } else v.gone = 0; }); } }; })();
+let CVZ = 0;   // owner 22 Nov: once the C63 has left the screen, the whole convoy floors it and zooms off to the right
+function convoyTick(dt) { CVS.tick(dt);
+  const cv = cars.filter(c => c.convoy); if (!cv.length) CVZ = 0;
+  else { const m4 = cv.find(c => c.k === 'm4c'), c63 = cv.find(c => c.k === 'c63w');
+    if (!CVZ && m4 && c63 && c63.x + c63.L < 0 && m4.x < W) { CVZ = 1; CVS.zoom(); }
+    if (CVZ) { const back = Math.min(...cv.map(c => c.x));   // nothing in their lane in front of them: off-screen ones go, on-screen ones get out of the way first
+      cars = cars.filter(c => c.convoy || c.lane !== 1 || c.x + c.L < back - 30 || (c.x > -c.L && c.x < W));
+      cars.forEach(c => { if (!c.convoy && c.lane === 1 && c.x + c.L > back - 30) { c.v = Math.max(c.v, speed * .92 + 360); c.zoom = true; } }); } }
+  convoyT -= dt; if (convoyT > 0 || jamT > 0 || state === 'menu') return; if (!CONVOY.every(k => VEHICLES[k])) { convoyT = 2; return; }
+  const lane = 1, dir = 1, v = 44 * VK, gap = 14, Ls = CONVOY.map(k => VEHICLES[k].w * CSC), tot = Ls.reduce((a, b) => a + b, 0) + gap * (Ls.length - 1);
+  const sv = dir * v - speed * .92, x0 = sv > 0 ? -tot - 40 : W + 40;
+  if (cars.some(c => c.lane === lane && x0 - 40 < c.x + c.L && c.x < x0 + tot + 40)) { convoyT = 1; return; }
+  let x = x0; for (let i = CONVOY.length - 1; i >= 0; i--) { const L = Ls[i]; cars.push({ k: CONVOY[i], ci: 0, lane, dir, x, v, cv: v, yo: 0, L, convoy: 1, rolled: 1, headRolled: 1, otRolled: 1 }); x += L + gap; }
+  convoyT = 1e9; }   // only once per run
 function startChase() { const ks = ['lambo', 'gt3', 'f812', 'c63', 'a45', 'urus', 'golfr', 'gwagon'], f = spawnCar(null, ks[Math.random() * ks.length | 0], true, 1); if (!f) return;
   f.v = f.cv = (150 + Math.random() * 50) * VK; f.flee = 1; const PL = VEHICLES.police.w * CSC;
   cars.push({ k: 'police', ci: 0, lane: f.lane, dir: f.dir, x: f.dir > 0 ? f.x - PL - 50 - Math.random() * 30 : f.x + f.L + 50 + Math.random() * 30, v: f.v + 6 * VK, cv: f.v + 6 * VK, yo: 0, L: PL, zoom: true, police: 1, run: 1, emerg: 1, rolled: 1, headRolled: 1 });
@@ -466,8 +525,13 @@ function updateTraffic(dt, dx) {
       c.cv = c.zoom ? c.v : Math.max(c.v, o.past.cv + 34 * VK) * 1.35; if (passed && o.out <= 0) { c.ot = null; c.yo = 0; } return; }
     let tg = ahead && ahead.dir !== c.dir && !ahead.crash ? (gap < 90 ? 0 : c.v * .5) : ahead && gap < 40 ? Math.min(c.v, ahead.crash ? 0 : ahead.cv) * (gap < 14 ? .85 : 1) : c.v;
     if (jamT > 0 && !c.free && !ahead && c.x > -10 && c.x + c.L < W + 10 && (c.dir > 0 ? c.x > W * .25 : c.x < W * .75)) tg = 0;
+    if (c.convoy && ahead && ahead.convoy && !ahead.crash) tg = ahead.cv + (gap - 14) * .6;   // the convoy holds together, nose to tail
+    if (c.convoy && CVZ) { tg = ahead && ahead.convoy ? ahead.cv + (gap - 12) * 1.2 : speed * .92 + 330; c.lg = null; }   // zoom off to the right
+    else if (c.convoy && c.lg) { const p = c.lg.t;   // rev, creep forward, ease off (owner 22 Nov: M4 + C63), never into the car in front
+      if (p > .3 && p < 1.4) tg = ahead && ahead.convoy ? ahead.cv + (gap - 5) * 1.6 : ahead && gap < 70 ? tg : c.v * 1.6; else if (p >= 1.4 && p < 2.4 && !(ahead && ahead.convoy)) tg = c.v * .8;
+      if (ahead && gap < 6) tg = Math.min(tg, ahead.cv); }
     if (c.drift) tg = c.v; if (c.pull) tg *= 1 - .65 * c.pull; if (c.run) tg = c.v * (c.out > .5 || !ahead ? 1 : .55);
-    c.cv = c.cv + (tg - c.cv) * Math.min(1, dt * (tg < c.cv ? 5 : 1.1)); if (ahead && gap < 4 && !(c.run && c.out > .4)) c.cv = Math.min(c.cv, ahead.cv); });
+    c.cv = c.cv + (tg - c.cv) * Math.min(1, dt * (tg < c.cv ? 5 : c.convoy && CVZ ? 1.8 : 1.1)); if (ahead && gap < 4 && !(c.run && c.out > .4)) c.cv = Math.min(c.cv, ahead.cv); });
   // blue lights: others slow and tuck in to the kerb, the emergency vehicle goes down the middle
   const RUNS = cars.filter(e => e.run && !e.crash);
   cars.forEach(c => { if (c.run || c.crash || c.drift || c.flee || c.zoom) return; let near = false;
@@ -507,7 +571,7 @@ function updateTraffic(dt, dx) {
   zoomCD -= dt; if (moving && jamT <= 0 && zoomCD <= 0 && Math.random() < dt * .03) { const ks = ['lambo', 'f812', 'gt3', 'golfr', 'c63', 'urus', 'a45']; if (spawnCar(null, ks[Math.random() * ks.length | 0], true)) zoomCD = 30 + Math.random() * 40; }
   cars.forEach(c => { if ((c.zoom && Math.random() < dt * 30) || (c.ot && c.ot.out > .1 && Math.random() < dt * 16)) dust.push({ x: c.dir > 0 ? c.x : c.x + c.L + 6, y: (c.lane ? ROAD_B - 5 : ROAD_T + 17) + c.yo, vx: -c.dir * 30 - scroll / dt * 0, vy: -6, r: 1.5, l: .5 }); });
   for (let i = csmoke.length - 1; i >= 0; i--) { const p = csmoke[i]; p.x += p.vx * dt - scroll; p.y += p.vy * dt; p.r += 9 * dt; p.a -= .4 * dt; if (p.a <= 0) csmoke.splice(i, 1); }
-  cars = cars.filter(c => c.x > -c.L - 300 && c.x < W + 320);
+  cars = cars.filter(c => c.x > -c.L - (c.convoy ? 1300 : 300) && c.x < W + (c.convoy ? (CVZ ? 260 : 1300) : 320));
   if (cars.length < (jamT > 0 ? 10 : 5) && Math.random() < dt * (jamT > 0 ? 2.5 : 1)) spawnCar();
 }
 function spawnNpc(x) {
@@ -561,7 +625,7 @@ function segDist(px, py, ax, ay, bx, by) { const dx = bx - ax, dy = by - ay, l =
 
 function die(why) {
   if (boost && !boost.out) return;
-  if (hero.dead || inv > 0) return;
+  if (hero.dead || inv > 0) return; if (window.__god) { window.__hits = (window.__hits || 0) + 1; window.__hitW = why; return; }
   if (veh && veh.k === 'tuktuk' && veh.nb > .4) { inv = .35; shake = .2; flashT = .08; flashCol = '255,220,120'; SFX.boom(); pops.push({ x: hero.x + 20, y: hero.y - 90, txt: 'SMASH!', col: '#ffd21f', t: 0 }); for (let i = 0; i < 18; i++) sparks.push({ x: hero.x + 30, y: hero.y - 30, vx: Math.random() * 260, vy: (Math.random() - .5) * 260, l: .5, c: ['#ffd75a', '#ffffff', '#ff9a2a'][i % 3] }); return; }
   if (veh) { vehCrash(); return; }
   hero.dead = true; hero.vx = speed; hero.vy = -140; hero.flail = 0; hero.squash = 0; hero.bounce = 0; hero.slide = 0; hero.restT = 0; deadT = 0; state = 'dead'; holding = false;
@@ -587,7 +651,7 @@ function update(dt) {
   // scroll the world
   street.forEach(b => { b.x -= dx; if (!b.past && b.kind === 'lm' && MOSQUE_K.includes(b.key) && b.x + b.w < hero.x && state === 'play') { b.past = 1; passed++; } }); while (street.length && street[0].x + street[0].w + 40 < -20) street.shift(); fillStreet();
   skyline.forEach(b => b.x -= dx * .32); while (skyline.length && skyline[0].x + skyline[0].w < -50) skyline.shift(); fillSkyline();
-  updateTraffic(dt, dx);
+  updateTraffic(dt, dx); convoyTick(dt);
 
   // now and then an older gent on a mobility scooter trundles along the pavement (owner, 21 Nov); people step round him
   mobCD -= dt; if (state !== 'menu' && mobCD <= 0) { mobCD = 35 + Math.random() * 50; const d = Math.random() < .5 ? -1 : 1; mobs.push({ x: W + 30, d, v: 20 + Math.random() * 8, ci: Math.random() * 3 | 0, y: PAVE_T + 30 + Math.random() * 8, roll: 0 }); }
@@ -633,7 +697,7 @@ function update(dt) {
   else if (playing && !hero.dead && veh) vehUpdate(dt);
   else if (playing && !hero.dead) {
     hero.thrust = holding && state === 'play';
-    if (hero.thrust) { if (!hero.wasThrust) { hero.vy = Math.min(hero.vy, -90); for (let i = 0; i < 8; i++) { const nz = nozzle(); steam.push({ x: nz[0], y: nz[1], vx: -speed * .3 - 40 - Math.random() * 60, vy: 120 + Math.random() * 120, r: 3 + Math.random() * 2.5, l: .45, l0: .6 }); } } hero.vy -= 1900 * dt; hero.ground = false; if (hissG && sndOn) hissG.gain.setTargetAtTime(.05, AC.currentTime, .03); }
+    if (hero.thrust) { if (!hero.wasThrust) { hero.vy = Math.min(hero.vy, -90); for (let i = 0; i < 8; i++) { const nz = nozzle(); steam.push({ x: nz[0], y: nz[1], vx: -speed * .3 - 40 - Math.random() * 60, vy: 120 + Math.random() * 120, r: 3 + Math.random() * 2.5, l: .45, l0: .6 }); } } hero.vy -= 1900 * dt; hero.ground = false; if (hissG && sndOn) hissG.gain.setTargetAtTime(.03, AC.currentTime, .03); /* jetpack hiss 30% then another 15% quieter (owner 22 Nov) */ }
     else if (hissG) hissG.gain.setTargetAtTime(0, AC.currentTime, .06);
     hero.wasThrust = hero.thrust; hero.vy += (hasG('chappal') ? 1150 : 820) * dt; hero.vy = Math.max(-300, Math.min(hasG('chappal') ? 540 : 420, hero.vy)); hero.y += hero.vy * dt;
     if (hero.y >= FLOOR) { if (!hero.ground && hero.vy > 120) { hero.landT = .14; tone(180, .08, 'triangle', .08); for (let i = 0; i < 6; i++) dust.push({ x: hero.x + (Math.random() - .5) * 20, y: FLOOR, vx: (Math.random() - .5) * 120, vy: -Math.random() * 30, r: 2, l: .45 }); npcs.forEach(p => { if (!p.esc && p.fall <= 0 && Math.abs(p.x - hero.x) < 150) { p.flee = 1.6 + Math.random() * .8; p.dir = p.x > hero.x ? 1 : -1; } }); } hero.y = FLOOR; hero.vy = 0; hero.ground = true; }
@@ -1440,11 +1504,14 @@ function refreshHome() {
   $('outName').textContent = (ITEMS.outfit.find(o => o.id === SHOP.outfit) || {}).name.split(' ')[0].toLowerCase(); $('mosName').textContent = myMosque ? mosName() : 'Pick one'; $('mineName').textContent = mosName();
   if (myMosque) thumb($('mosThumb'), myMosque);
 }
+let pickThenPlay = false;
 function openPick() {
   const L = $('mlist'); L.innerHTML = '';
   MOSQUES.forEach(([k, n]) => { const b = document.createElement('button'); b.className = 'mcard' + (k === myMosque ? ' on' : '');
     const c = document.createElement('canvas'); c.width = 320; c.height = 200; b.appendChild(c); b.appendChild(document.createTextNode(n));
-    b.addEventListener('pointerdown', e => { e.stopPropagation(); myMosque = k; try { localStorage.setItem('jd_mosque', k); } catch (e2) {} [...L.children].forEach(x => x.classList.remove('on')); b.classList.add('on'); refreshHome(); street = []; skyline = []; fillStreet(); fillSkyline(); });
+    b.addEventListener('pointerdown', e => { e.stopPropagation(); myMosque = k; try { localStorage.setItem('jd_mosque', k); } catch (e2) {} [...L.children].forEach(x => x.classList.remove('on')); b.classList.add('on'); refreshHome(); street = []; skyline = []; fillStreet(); fillSkyline();
+      // owner 22 Nov: no DONE button: picking a masjid closes the pop-up (and starts the run if PLAY opened it)
+      setTimeout(() => { $('pick').classList.add('hide'); if (pickThenPlay) { pickThenPlay = false; start(); } }, 260); });
     L.appendChild(b); setTimeout(() => thumb(c, k), 0); });
   $('pick').classList.remove('hide');
 }
@@ -1454,7 +1521,7 @@ function share(txt) {
   else { try { navigator.clipboard.writeText(txt + ' ' + data.url); toast('Link copied'); } catch (e) { toast(data.url); } }
 }
 function start() {
-  if (!myMosque) { openPick(); return; }
+  if (!myMosque) { pickThenPlay = true; openPick(); return; }
   audio(); if (AC && AC.state === 'suspended') AC.resume();
   street = []; skyline = []; reset(); passed = 0; state = 'intro'; hero.x = -30;
   ['home', 'over', 'pick', 'how'].forEach(id => $(id).classList.add('hide')); $('hud').style.display = 'block';
@@ -1481,7 +1548,7 @@ const nearBtn = e => { const x = e.clientX, y = e.clientY, M = 24;
 tap('home', e => { if (e.target.closest('.tile,.credit') || nearBtn(e)) return; start(); });
 tap('bSmr', () => $('smrInfo').classList.remove('hide')); tap('smrClose', () => $('smrInfo').classList.add('hide'));
 $('smrOpen').addEventListener('pointerdown', e => e.stopPropagation());
-tap('bMos', openPick); tap('pickClose', () => $('pick').classList.add('hide'));
+tap('bMos', () => { pickThenPlay = false; openPick(); }); $('pick').addEventListener('pointerdown', e => { if (e.target.id === 'pick') { pickThenPlay = false; $('pick').classList.add('hide'); } }); tap('pickClose', () => $('pick').classList.add('hide'));
 tap('bHow', () => $('how').classList.remove('hide'));
 
 /* ================= SHOP: utilities, gadgets (2 slots, buy a 3rd), outfits ================= */
@@ -1725,5 +1792,5 @@ const FMS = (() => { const tmp = document.createElement('canvas'), tg = tmp.getC
 let last = performance.now();
 function frame(now) { const dt = Math.min(.05, (now - last) / 1000); last = now; if (FM) { if (!paused) { FMS.step(dt); if (FM && FM.ph === 'out' && FM.back) update(dt); } FMS.frame(); requestAnimationFrame(frame); return; } if (!paused) update(dt); else holding = false; draw(); if (bakeQ.length) bakeOne(); requestAnimationFrame(frame); }
 requestAnimationFrame(frame);
-window.__jd = { get fm() { return FM; }, get gifts() { return gifts; }, get runT() { return runT; }, veh: k => startVehicle(k), laser: () => [CEIL + 40, (CEIL + FLOOR) / 2].forEach((y, i) => obs.push({ type: 'laser', x: W / 2, y, ph: 'in', pt: 0, slide: 0, d: i * .12 })), eidi: n => { eidi = n; }, kill: w => die(w), gift: (k, r, x, y) => gifts.push({ k, ride: r, x: x || W * .6, y: y || 200, b: 0 }), get state() { return state; }, start, hero, get obs() { return obs; }, spawnRocket: () => obs.push({ type: "rocket", x: W + 40, y: hero.y - 30, warn: 1.5, lock: 0, v: 0 }), setHold: v => holding = v, get dist() { return dist; }, mis: (s, c) => { RUN.steamed = s; coins = c; }, get npcs() { return npcs; }, boost: m => startBoost(m), get SHOP() { return SHOP; }, bc: (k, kd) => buildingCanvas(kd || "lm", k), carSprite: (k, ci, f) => carSprite(k, ci, f), queue: k => deck.unshift([k]), street: () => street, npc: x => spawnNpc(x), car: (x, k, l) => spawnCar(x, k, false, l), get STREET() { return STREET; } };
+window.__jd = { get fm() { return FM; }, get speed() { return speed; }, get coinList() { return coinList; }, get W() { return W; }, get gifts() { return gifts; }, get runT() { return runT; }, veh: k => startVehicle(k), laser: () => [CEIL + 40, (CEIL + FLOOR) / 2].forEach((y, i) => obs.push({ type: 'laser', x: W / 2, y, ph: 'in', pt: 0, slide: 0, d: i * .12 })), eidi: n => { eidi = n; }, kill: w => die(w), gift: (k, r, x, y) => gifts.push({ k, ride: r, x: x || W * .6, y: y || 200, b: 0 }), get state() { return state; }, start, hero, get obs() { return obs; }, spawnRocket: () => obs.push({ type: "rocket", x: W + 40, y: hero.y - 30, warn: 1.5, lock: 0, v: 0 }), setHold: v => holding = v, get dist() { return dist; }, mis: (s, c) => { RUN.steamed = s; coins = c; }, get npcs() { return npcs; }, boost: m => startBoost(m), get SHOP() { return SHOP; }, bc: (k, kd) => buildingCanvas(kd || "lm", k), carSprite: (k, ci, f) => carSprite(k, ci, f), queue: k => deck.unshift([k]), street: () => street, npc: x => spawnNpc(x), car: (x, k, l) => spawnCar(x, k, false, l), get STREET() { return STREET; } };
 })();
