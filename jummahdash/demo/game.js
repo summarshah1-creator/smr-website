@@ -186,7 +186,8 @@ function hazed(id, v) {   // pale, sunset-tinted copy for the far skyline
 }
 
 /* vehicles, rendered at KR, both directions */
-const CAR_KEYS = ['jazz', 'yaris', 'polo', 'fiesta', 'focus', 'zafira', 'avensis', 'x6', 'x7', 'prius', 'prius2', 'taxi2', 'sclass', 'rolls', 'golfr', 'v60', 'xc40', 'corsa', 'fiat500', 'sportage', 'gt3', 'f812', 'lambo', 'astra', 'golf', 'bmw1', 'a3', 'aold', 'a45', 'bmw3', 'c63s', 'c63', 'tesla', 'qashqai', 'rangerover', 'gwagon', 'urus', 'taxi', 'van', 'bigvan', 'postvan', 'smallvan', 'bus', 'police', 'pickup', 'moped', 'bike', 'coach', 'binlorry', 'ambulance'];
+const NEAR_ONLY = { police: 1, policevan: 1, ambulance: 1, fire: 1, postvan: 1 };   // lettering on the side would read backwards in the far lane
+const CAR_KEYS = ['jazz', 'yaris', 'polo', 'fiesta', 'focus', 'zafira', 'avensis', 'x6', 'x7', 'prius', 'prius2', 'taxi2', 'sclass', 'rolls', 'golfr', 'v60', 'xc40', 'corsa', 'fiat500', 'sportage', 'gt3', 'f812', 'lambo', 'astra', 'golf', 'bmw1', 'a3', 'aold', 'a45', 'bmw3', 'c63s', 'c63', 'tesla', 'qashqai', 'rangerover', 'gwagon', 'urus', 'taxi', 'bigvan', 'postvan', 'smallvan', 'police', 'policevan', 'tractor', 'artic', 'moped', 'bike', 'binlorry', 'ambulance', 'fire'];
 const carCache = new Map();
 /* HD pass for the vehicle art (owner, 21 Nov): the shared Flappy drawings go through a context wrapper that turns the flat body
    colour into a glossy gradient with a reflection band, thins the dark outlines, gives the glass a sky reflection and the rims a
@@ -216,7 +217,8 @@ function carSprite(k, ci, flip) {
     if (V.fixMirror) { g.scale(k2, k2); try { V.fixMirror(hdCtx(g, col[1], 86 - (V.h || 24), 86), 3, 86, f.width / k2); } catch (e) {} } out = f; }
   const wh = (wr || []).map(w => ({ x: (flip ? c.width - w.x : w.x) / KR, y: w.y / KR, r: w.r / KR, rim: w.rim, spokes: w.spokes || 5, wi: w.wi }));
   const under = (wr || []).some(w => w.under);
-  const v = { c: out, w: (V.w + 6) * SC, h: 90 * SC, gy: 86 * SC, sp: V.speed, wh, under };
+  let lt = null; if (V.lights) { const Lr = V.lights(), W2 = c.width / KR, m = q => ({ x: flip ? W2 - q.x * SC : q.x * SC, y: q.y * SC, t: q.t }); lt = { bl: Lr.bl.map(m), hl: Lr.hl.map(m) }; }
+  const v = { c: out, w: (V.w + 6) * SC, h: 90 * SC, gy: 86 * SC, sp: V.speed, wh, under, lt };
   carCache.set(id, v); if (carCache.size > 40) carCache.delete(carCache.keys().next().value); return v;
 }
 function drawTrafficCar(c) { const far = c.lane === 0, sp = carSprite(c.k, c.ci, far), gy = (far ? ROAD_T + 19 : ROAD_B - 3) + c.yo, X = px(c.x), Y = px(gy - sp.gy), k = c.crash, K = far ? .9 : 1;   // far lane a touch smaller (further away)
@@ -227,7 +229,14 @@ function drawTrafficCar(c) { const far = c.lane === 0, sp = carSprite(c.k, c.ci,
   const roll = (c.roll || 0) * (far ? -1 : 1);
   if (sp.under) { if (sp.wh.length) drawWheels(sp, X, Y, roll); ctx.drawImage(sp.c, X, Y, sp.w, sp.h); }   // wheels behind the body: the arches overhang them
   else { ctx.drawImage(sp.c, X, Y, sp.w, sp.h); if (sp.wh.length) drawWheels(sp, X, Y, roll); }
-  if (c.run || c.police) { const on = Math.floor(performance.now() / 120) % 2, lx = c.x + sp.w / 2, ly = gy - (VEHICLES[c.k].h || 24) * CSC * .9; ctx.globalCompositeOperation = 'lighter';
+  if ((c.run || c.police) && sp.lt) {   // blue lights: roof, side and bumper lamps flash in two alternating groups (double strobe), headlights wig-wag with them
+    const ph = Math.floor(performance.now() / 70) % 8, A = ph === 0 || ph === 2, B = ph === 4 || ph === 6, mid = sp.w / 2; ctx.globalCompositeOperation = 'lighter';
+    sp.lt.bl.forEach(p => { const on = p.x < mid ? A : B; if (!on) return; const R = p.t === 'r' ? 26 : p.t === 's' ? 15 : 12, x = X + p.x, y = Y + p.y, g = ctx.createRadialGradient(x, y, 0, x, y, R);
+      g.addColorStop(0, 'rgba(225,240,255,1)'); g.addColorStop(.18, 'rgba(70,130,255,.9)'); g.addColorStop(1, 'rgba(40,80,255,0)'); ctx.fillStyle = g; ctx.fillRect(x - R, y - R, R * 2, R * 2); });
+    sp.lt.hl.forEach(p => { if (!(A || B)) return; const x = X + p.x, y = Y + p.y, R = 15, g = ctx.createRadialGradient(x, y, 0, x, y, R);
+      g.addColorStop(0, 'rgba(255,255,245,1)'); g.addColorStop(.25, 'rgba(255,250,220,.6)'); g.addColorStop(1, 'rgba(255,240,200,0)'); ctx.fillStyle = g; ctx.fillRect(x - R, y - R, R * 2, R * 2); });
+    ctx.globalCompositeOperation = 'source-over'; }
+  else if (c.run || c.police) { const on = Math.floor(performance.now() / 120) % 2, lx = c.x + sp.w / 2, ly = gy - (VEHICLES[c.k].h || 24) * CSC * .9; ctx.globalCompositeOperation = 'lighter';
     [[-4, on], [4, !on]].forEach(([o, lit]) => { if (!lit) return; const r = ctx.createRadialGradient(lx + o * 2, ly, 0, lx + o * 2, ly, 34); r.addColorStop(0, 'rgba(200,225,255,1)'); r.addColorStop(.15, 'rgba(70,130,255,.85)'); r.addColorStop(1, 'rgba(40,80,255,0)'); ctx.fillStyle = r; ctx.fillRect(lx + o * 2 - 34, ly - 34, 68, 68); });
     ctx.globalCompositeOperation = 'source-over'; }
   if (c.tail && Math.floor(performance.now() / 180) % 2) { const hx = far ? c.x + 4 : c.x + sp.w - 8, hy = gy - 9; ctx.globalCompositeOperation = 'lighter';   // flashing its headlights at the car in front
@@ -378,24 +387,24 @@ function fillSkyline() { let x = skyline.length ? skyline[skyline.length - 1].x 
 /* ---------- traffic (ported from Flappy Kabootar, owner 21 Nov): two lanes, far lane drives left, near lane drives right.
    One car per lane space (they queue behind slower ones), overtaking when the other lane is clear, fly-pasts, police chases,
    blue-light runs (traffic pulls in), rare spin-outs and head-ons with a jam and horns. All with sound. ---------- */
-const LD = (ROAD_B - 3) - (ROAD_T + 19), EMK = { police: 108, ambulance: 96, fire: 82 }, CSC = 1.6, VK = 2.2;
+const LD = (ROAD_B - 3) - (ROAD_T + 19), EMK = { police: 108, policevan: 100, ambulance: 96, fire: 82 }, CSC = 1.6, VK = 2.2;
 let pairCD = 120, zoomCD = 20, crashCD = 60, otCD = 6, headCD = 120, jamT = 0, chaseCD = 90, hornT = 2, lastCarK = '';
 const cBody = c => { const L = VEHICLES[c.k].w * CSC; return [c.x + 3 * CSC, c.x + 3 * CSC + L]; };
 function pickCarK() { const ks = CAR_KEYS.filter(k => VEHICLES[k]), tot = ks.reduce((a, k) => a + (VEHICLES[k].weight || 1), 0);
   for (let n = 0; n < 4; n++) { let r = Math.random() * tot; for (const k of ks) { r -= VEHICLES[k].weight || 1; if (r <= 0) { if (k !== lastCarK || n === 3) { lastCarK = k; return k; } break; } } } return ks[0]; }
 function spawnCar(x, key, zoom, laneF) {
   const k = key || pickCarK(), V = VEHICLES[k]; if (!V) return false;
-  const lane = laneF != null ? laneF : V.w > 105 ? 1 : Math.random() < .5 ? 0 : 1, dir = lane ? 1 : -1, L = V.w * CSC;
+  const lane = laneF != null ? laneF : (V.w > 105 || NEAR_ONLY[k]) ? 1 : Math.random() < .5 ? 0 : 1, dir = lane ? 1 : -1, L = V.w * CSC;
   const quick = !zoom && Math.random() < .15, v = zoom ? (130 + Math.random() * 110) * VK : ((V.speed ? V.speed[0] + Math.random() * (V.speed[1] - V.speed[0]) : 30) * VK) * (quick ? 1.35 : 1);
   const sv = dir * v - speed * .92, sx = x != null ? x : (sv > 0 ? -L - 30 : W + 30);
   if (cars.some(c => c.lane === lane && sx < c.x + c.L + 24 && c.x < sx + L + 24)) return false;
   const c = { k, ci: Math.random() * 6000 | 0, lane, dir, x: sx, v, cv: v, yo: 0, L, zoom: !!zoom }; cars.push(c);
   if (zoom) SFX.zoom(k === 'motorbike');
   if (EMK[k] && !zoom) { c.emerg = 1; c.rolled = c.headRolled = c.otRolled = 1;
-    if (jamT <= 0 && k !== 'police' && Math.random() < .35) { c.run = 1; c.v = c.cv = EMK[k] * VK; if (k === 'fire') { SFX.neenaw(); SFX.airhorn(1.2); } else if (k === 'ambulance') SFX.wail(); else SFX.siren(); } }
+    if (jamT <= 0 && k !== 'police' && Math.random() < .5) { c.run = 1; c.v = c.cv = EMK[k] * VK; if (k === 'fire') { SFX.neenaw(); SFX.airhorn(1.2); } else if (k === 'ambulance') SFX.wail(); else SFX.siren(); } }
   return c;
 }
-function startChase() { const ks = ['lambo', 'gt3', 'f812', 'c63', 'a45', 'urus', 'golfr', 'gwagon'], f = spawnCar(null, ks[Math.random() * ks.length | 0], true); if (!f) return;
+function startChase() { const ks = ['lambo', 'gt3', 'f812', 'c63', 'a45', 'urus', 'golfr', 'gwagon'], f = spawnCar(null, ks[Math.random() * ks.length | 0], true, 1); if (!f) return;
   f.v = f.cv = (150 + Math.random() * 50) * VK; f.flee = 1; const PL = VEHICLES.police.w * CSC;
   cars.push({ k: 'police', ci: 0, lane: f.lane, dir: f.dir, x: f.dir > 0 ? f.x - PL - 50 - Math.random() * 30 : f.x + f.L + 50 + Math.random() * 30, v: f.v + 6 * VK, cv: f.v + 6 * VK, yo: 0, L: PL, zoom: true, police: 1, run: 1, emerg: 1, rolled: 1, headRolled: 1 });
   chaseCD = 240 + Math.random() * 300; zoomCD = Math.max(zoomCD, 20); SFX.siren(); }
