@@ -152,17 +152,25 @@ function hdFinish(c, o, N, l, top, r) {
   const sh = o.createLinearGradient(0, y0, 0, y0 + h); sh.addColorStop(0, 'rgba(255,250,235,.10)'); sh.addColorStop(.75, 'rgba(0,0,0,0)'); sh.addColorStop(1, 'rgba(20,10,30,.16)'); o.fillStyle = sh; o.fillRect(x0, y0, w, h);
   o.restore();
 }
+// realistic building sizes for Jummah Dash (owner, 22 Nov): real heights (planning docs, listings, typical UK figures; project doc
+// claude/jummah-dash-building-scale.md). One scale for everything up to 12 m (19.9 units a metre: a 9 m house = 179) so doors, shop fronts
+// and storeys match from building to building; taller buildings ease in towards the top of the screen (Town Hall tower / Marsh Farm 44 m = 353).
+// The food trailers keep their size (owner). Multipliers on top of Flappy's own sizes.
+const JK = {"masjid":0.926,"marshfarm":1.113,"nadeem":0.88,"hatfactory":0.932,"vauxhall":1.055,"townhall":1.282,"gurdwara":0.949,"ldh":1.267,"lutonhoo":1.128,"frasers":1.03,"matalan":0.851,"masjidali":0.94,"tesco":1.085,"bandq":1.09,"stmarys":1.395,"uob":1.325,"jdgyms":0.9,"currys":0.971,"smr":0.938,"inspire":0.821,"galaxy":1.588,"lewsey":1.01,"funfair":1.526,"airport":1.465,"gna":1.2134,"cycleking":1.0153,"kahwa":1.2134,"chaiiwala":0.92,"toros":1.2134,"chiltern":1.17,"sixthform":1.404,"alquds":1.2134,"leagrave":1.091,"topspizza":1.2134,"lidl":0.91,"orbital":1.455,"bigyellow":1.822,"venue":1.335,"oak":1.2134,"grandbazar":1.226,"station":1.391,"periperi":1.113,"suffa":1.366,"miamicrispy":1.01,"foodbank":1.165,"wardownbridge":0.815,"karwan":1.372,"kaya":1.232,"krispy":1.2134,"barak":1.256}, JKH = {"semi":1.17,"terrace":1.17,"rowGrey":1.17,"rowYellow":1.17,"rowBrown":1.17,"rowRed":1.17,"rowPainted":1.17,"pairRed":1.17,"pebble":1.17,"render":1.17,"newbuild":1.17,"bungalow":1.17};
+const jkOf = b => (b.kind === 'lm' ? JK[b.key] : JKH[b.key]) || 1;
 let KB = 2;
 if (document.fonts) Promise.all(['700 10px Mont', '600 10px Oswald', '700 10px Amiri'].map(f => document.fonts.load(f)).concat(window.HD_READY || [])).then(() => { bCache.clear(); hazeCache.clear(); });   // redraw buildings once the sign fonts are in   // building px per unit = exactly the on-screen size (S * BS)
 function buildingCanvas(kind, key, bakeAnim) {
   const id = kind + ':' + key + (bakeAnim ? ':a' : ''); if (bCache.has(id)) { const v = bCache.get(id); bCache.delete(id); bCache.set(id, v); return v; }
   let w, draw;
-  if (kind === 'lm') { const L = LANDMARKS[key]; if (!L) return null; w = L.w; const H2 = window.LANDMARKS_HD && LANDMARKS_HD[key];
+  const jk = (kind === 'lm' ? JK[key] : JKH[key]) || 1;
+  if (kind === 'lm') { const L = LANDMARKS[key]; if (!L) return null; w = Math.round(L.w * jk); const H2 = window.LANDMARKS_HD && LANDMARKS_HD[key];
     draw = H2 ? (o => { const f = (window.SCALE && SCALE[key]) || 1; o.save(); o.translate(M, LH - 6); o.scale(f, f); H2(o, 0, 0); o.restore(); }) : (o => L.d(o, M, LH - 6)); }
-  else { const Hh = HOUSES[key]; if (!Hh) return null; w = Math.round(Hh.w * 1.35); const HH = window.HOUSES_HD && HOUSES_HD[key]; draw = o => window.drawScaled(o, HH || Hh.d.bind(Hh), M, LH - 6, 1.35); }
+  else { const Hh = HOUSES[key]; if (!Hh) return null; w = Math.round(Hh.w * 1.35 * jk); const HH = window.HOUSES_HD && HOUSES_HD[key]; draw = o => window.drawScaled(o, HH || Hh.d.bind(Hh), M, LH - 6, 1.35); }
   const N = Math.min(4, Math.ceil(KB + .2));   // drawn natively just above screen size: vector curves, lettering and the sharp sign redraws at full detail, blocks on exact pixels
   const c = document.createElement('canvas'); c.width = (w + 2 * M) * N; c.height = LH * N;
   const o = c.getContext('2d', { willReadFrequently: true }); o.imageSmoothingEnabled = false; o.scale(N, N);
+  if (jk !== 1) { o.translate(M, LH - 6); o.scale(jk, jk); o.translate(-M, -(LH - 6)); }
   try { draw(o); } catch (e) { console.warn(key, e); }
   if (kind === 'lm' && window.LM_ANIM && LM_ANIM[key] && (bakeAnim || !LIVE_ANIM.has(key))) try { const af = key !== 'lutonhoo' && window.SCALE && SCALE[key]; if (af) { o.save(); o.translate(M, LH - 6); o.scale(af, af); LM_ANIM[key](o, 0, 0, 0); o.restore(); } else LM_ANIM[key](o, M, LH - 6, 0); } catch (e) {}
   // trim empty space (search on a 1/4 grid, then exact edges)
@@ -374,15 +382,15 @@ function nextBuilding() {
     else { let u; do { if (!deck.length) deck = buildDeck(); u = deck.shift().filter(x => x !== myMosque); } while (!u.length); k = u.shift(); setQ = u; }
     lastLm.push(k); if (lastLm.length > 10) lastLm.shift();
     const x = prev ? prev.x + prev.w + gapBetween(prev, 'lm', k) : -60;
-    street.push({ kind: 'lm', key: k, x, w: LANDMARKS[k].w * BS, inSet: setQ.length > 0 }); }
+    street.push({ kind: 'lm', key: k, x, w: LANDMARKS[k].w * BS * (JK[k] || 1), inSet: setQ.length > 0 }); }
   else { if (!houseDeck.length) { houseDeck = HOUSE_K().slice(); for (let i = houseDeck.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [houseDeck[i], houseDeck[j]] = [houseDeck[j], houseDeck[i]]; } }
     const k = houseDeck.shift(), x = prev ? prev.x + prev.w + gapBetween(prev, 'hs', k) : -60;
-    street.push({ kind: 'hs', key: k, x, w: Math.round(HOUSES[k].w * 1.35) * BS, run: prev && prev.kind === 'hs' ? (prev.run || 1) + 1 : 1 }); }
+    street.push({ kind: 'hs', key: k, x, w: Math.round(HOUSES[k].w * 1.35 * (JKH[k] || 1)) * BS, run: prev && prev.kind === 'hs' ? (prev.run || 1) + 1 : 1 }); }
 }
 const bakeQ = [];
 function fillStreet() { while (!street.length || street[street.length - 1].x < W + 900) { nextBuilding(); const b = street[street.length - 1]; bakeQ.push(b); } }
 function bakeOne() { const b = bakeQ.shift(); if (b) buildingCanvas(b.kind, b.key); }   // one picture per frame, well before it scrolls on   // built ~1.5 screens ahead so there's no hitch
-function fillSkyline() { let x = skyline.length ? skyline[skyline.length - 1].x + skyline[skyline.length - 1].w : -100; while (x < W * 2.2) { if (!skyDeck.length) { skyDeck = STREET.slice(); for (let i = skyDeck.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [skyDeck[i], skyDeck[j]] = [skyDeck[j], skyDeck[i]]; } } const k = skyDeck.shift(); if (!LANDMARKS[k] || k === myMosque || street.some(b => b.key === k)) continue; skyline.push({ kind: 'lm', key: k, x, w: LANDMARKS[k].w * .5 }); x += LANDMARKS[k].w * .5 - 16; } }
+function fillSkyline() { let x = skyline.length ? skyline[skyline.length - 1].x + skyline[skyline.length - 1].w : -100; while (x < W * 2.2) { if (!skyDeck.length) { skyDeck = STREET.slice(); for (let i = skyDeck.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [skyDeck[i], skyDeck[j]] = [skyDeck[j], skyDeck[i]]; } } const k = skyDeck.shift(); if (!LANDMARKS[k] || k === myMosque || street.some(b => b.key === k)) continue; skyline.push({ kind: 'lm', key: k, x, w: LANDMARKS[k].w * .5 * (JK[k] || 1) }); x += LANDMARKS[k].w * .5 - 16; } }
 
 /* ---------- traffic (ported from Flappy Kabootar, owner 21 Nov): two lanes, far lane drives left, near lane drives right.
    One car per lane space (they queue behind slower ones), overtaking when the other lane is clear, fly-pasts, police chases,
@@ -1119,10 +1127,11 @@ function draw() {
   ctx.imageSmoothingEnabled = true;
   const tA = performance.now() / 1000;
   street.forEach(b => { if (b.x > W + 40 || b.x + b.w < -40) return; const v = buildingCanvas(b.kind, b.key); if (!v) return;
-    if (b.key === 'airport') drawTakeoff(b, tA);
+    const jb = jkOf(b), jS = () => { ctx.save(); ctx.translate(b.x, G); ctx.scale(jb, jb); ctx.translate(-b.x, -G); };
+    if (b.key === 'airport') { jS(); drawTakeoff(b, tA); ctx.restore(); }
     ctx.drawImage(v.c, px(b.x + v.ox * BS), px(G + v.top * BS), v.c.width / S, v.c.height / S);
-    if (b.kind === 'lm' && LIVE_ANIM.has(b.key)) { const af = b.key !== 'lutonhoo' && window.SCALE && SCALE[b.key] || 1, k = BS * af; ctx.save(); ctx.scale(k, k); try { LM_ANIM[b.key](ctx, b.x / k, G / k, tA); } catch (e) {} ctx.restore(); }
-    if (b.key === 'station') drawTrain(b, tA); });
+    if (b.kind === 'lm' && LIVE_ANIM.has(b.key)) { const af = b.key !== 'lutonhoo' && window.SCALE && SCALE[b.key] || 1, k = BS * af; jS(); ctx.save(); ctx.scale(k, k); try { LM_ANIM[b.key](ctx, b.x / k, G / k, tA); } catch (e) {} ctx.restore(); ctx.restore(); }
+    if (b.key === 'station') { jS(); drawTrain(b, tA); ctx.restore(); } });
   // far pavement, road, kerb
   ctx.fillStyle = '#b3a3a3'; ctx.fillRect(0, G, W, ROAD_T - G); ctx.fillStyle = '#8c7c84'; ctx.fillRect(0, ROAD_T - 2, W, 2);
   const off = (dist % 30);

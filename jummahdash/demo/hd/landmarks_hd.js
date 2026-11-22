@@ -437,7 +437,7 @@ HD.lutonhoo = (c, x, G) => {
   stone(x + 26, G - 128, 288, 98);
   rect(c, SL, x + 22, G - 132, 296, 4, LINE, .4); for (let i = 0; i < 73; i++) rect(c, 'rgba(120,95,55,.45)', x + 24 + i * 4, G - 128.2, 1.6, 1.4);
   rect(c, SL, x + 26, G - 84, 288, 2.6, LINE, .3);
-  for (let i = 0; i < 10; i++) { const wx = x + 92 + i * 22; if (wx > x + 146 && wx < x + 196) continue; win(wx, G - 118, 10, 22); win(wx, G - 74, 10, 28); }
+  for (let i = 0; i < 10; i++) { const wx = x + 92 + i * 22; if ((wx > x + 146 && wx < x + 196) || wx > x + 238) continue; win(wx, G - 118, 10, 22); win(wx, G - 74, 10, 28); }
   // rounded bow, shaded like a curve
   c.fillStyle = lg(c, x + 6, 0, x + 70, 0, [[0, '#b89e70'], [.25, '#e4d3a8'], [.55, '#f0e2bd'], [1, '#b49a6c']]); c.fillRect(x + 6, G - 134, 64, 104); c.strokeStyle = LINE; c.lineWidth = .45; c.strokeRect(x + 6, G - 134, 64, 104);
   for (let yy = G - 131; yy < G - 30; yy += 3) rect(c, 'rgba(140,110,60,.14)', x + 6.5, yy, 63, .3);
@@ -445,6 +445,15 @@ HD.lutonhoo = (c, x, G) => {
   rect(c, RD, x + 36, G - 160, 4, 7, LINE, .3); c.beginPath(); c.arc(x + 38, G - 162, 1.4, 0, 7); c.fillStyle = '#c9a64a'; c.fill();
   for (const wx of [x + 18, x + 33, x + 48]) { win(wx, G - 122, 9, 22); win(wx, G - 76, 9, 28); }
   c.beginPath(); c.arc(x + 38, G - 93, 3, 0, 7); c.fillStyle = '#3e4d5e'; c.fill(); c.strokeStyle = SL; c.lineWidth = .6; c.stroke();
+  // the second full-height angle bow at the other end (listing: hexastyle Ionic portico and full height angle bows)
+  c.save(); c.translate(244, 0);
+  c.fillStyle = lg(c, x + 6, 0, x + 70, 0, [[0, '#b89e70'], [.25, '#e4d3a8'], [.55, '#f0e2bd'], [1, '#b49a6c']]); c.fillRect(x + 6, G - 134, 64, 104); c.strokeStyle = LINE; c.lineWidth = .45; c.strokeRect(x + 6, G - 134, 64, 104);
+  for (let yy = G - 131; yy < G - 30; yy += 3) rect(c, 'rgba(140,110,60,.14)', x + 6.5, yy, 63, .3);
+  poly(c, lg(c, x + 6, 0, x + 70, 0, [[0, '#5f6874'], [.5, '#8c95a2'], [1, '#5f6874']]), [[x + 6, G - 135], [x + 70, G - 135], [x + 62, G - 148], [x + 48, G - 154], [x + 28, G - 154], [x + 14, G - 148]], LINE, .45);
+  rect(c, RD, x + 36, G - 160, 4, 7, LINE, .3); c.beginPath(); c.arc(x + 38, G - 162, 1.4, 0, 7); c.fillStyle = '#c9a64a'; c.fill();
+  for (const wx of [x + 18, x + 33, x + 48]) { win(wx, G - 122, 9, 22); win(wx, G - 76, 9, 28); }
+  c.beginPath(); c.arc(x + 38, G - 93, 3, 0, 7); c.fillStyle = '#3e4d5e'; c.fill(); c.strokeStyle = SL; c.lineWidth = .6; c.stroke();
+  c.restore();
   // centre portico
   stone(x + 150, G - 136, 46, 106, SL);
   poly(c, SL, [[x + 145, G - 136], [x + 201, G - 136], [x + 173, G - 151]], LINE, .45); poly(c, SD, [[x + 156, G - 138], [x + 190, G - 138], [x + 173, G - 146]]);
@@ -452,7 +461,7 @@ HD.lutonhoo = (c, x, G) => {
   win(x + 166, G - 122, 14, 24);
   rect(c, '#3a3226', x + 162, G - 74, 22, 44); c.fillStyle = lg(c, x + 164, 0, x + 182, 0, [[0, '#4a3a28'], [.5, '#6a543a'], [1, '#4a3a28']]); c.fillRect(x + 164, G - 72, 18, 42);
   c.beginPath(); c.arc(x + 173, G - 72, 9, Math.PI, 0); c.fillStyle = lg(c, 0, G - 81, 0, G - 72, [[0, '#c9d6e0'], [1, '#4e5f70']]); c.fill(); rect(c, '#c9a64a', x + 172.4, G - 52, 1.2, 1.2);
-  for (const cx of [x + 152, x + 160, x + 186, x + 194]) { c.fillStyle = lg(c, cx, 0, cx + 4, 0, [[0, '#d9caa2'], [.45, '#fbf2dc'], [1, '#c9b78c']]); c.fillRect(cx, G - 82, 4, 52); c.strokeStyle = LINE; c.lineWidth = .3; c.strokeRect(cx, G - 82, 4, 52); rect(c, SL, cx - 1, G - 84, 6, 2, LINE, .25); rect(c, SL, cx - 1, G - 31, 6, 1.6, LINE, .25); }
+  for (const cx of [0, 1, 2, 3, 4, 5].map(i => x + 150 + i * 8.4)) { /* hexastyle: six columns */ c.fillStyle = lg(c, cx, 0, cx + 4, 0, [[0, '#d9caa2'], [.45, '#fbf2dc'], [1, '#c9b78c']]); c.fillRect(cx, G - 82, 4, 52); c.strokeStyle = LINE; c.lineWidth = .3; c.strokeRect(cx, G - 82, 4, 52); rect(c, SL, cx - 1, G - 84, 6, 2, LINE, .25); rect(c, SL, cx - 1, G - 31, 6, 1.6, LINE, .25); }
   // terrace + balustrade
   stone(x, G - 30, 330, 12, '#e8dec7'); rect(c, '#f6f0e0', x, G - 31.4, 330, 1.8, LINE, .3);
   for (let i = 0; i < 82; i++) { const bx = x + 2 + i * 4; if (bx > x + 128 && bx < x + 218) continue; c.beginPath(); c.moveTo(bx, G - 20); c.quadraticCurveTo(bx - .9, G - 24, bx + .7, G - 27.6); c.lineTo(bx + 1.5, G - 27.6); c.quadraticCurveTo(bx + 3.1, G - 24, bx + 2.2, G - 20); c.closePath(); c.fillStyle = '#f4eee0'; c.fill(); c.strokeStyle = 'rgba(120,100,60,.5)'; c.lineWidth = .2; c.stroke(); }
@@ -993,9 +1002,10 @@ HD.currys = (c, x, G) => {
 // canopy, trees, a lamp column and two parked cars
 HD.bandq = (c, x, G) => {
   c.save(); c.lineJoin = 'round'; const OR = '#ee6a1c';
-  panels(c, x, G - 76, 440, 76, '#cdd2da', 9); rect(c, OR, x - 2, G - 82, 444, 6, '#9a3e08', .4); rect(c, '#c94e10', x - 2, G - 77.4, 444, 1.4);
+  panels(c, x, G - 120, 440, 120, '#cdd2da', 9); rect(c, OR, x - 2, G - 126, 444, 6, '#9a3e08', .4); rect(c, '#c94e10', x - 2, G - 121.4, 444, 1.4);
+  for (const bx of [x + 24, x + 316]) { rect(c, OR, bx, G - 104, 100, 16, '#9a3e08', .4); txt(c, bx < x + 200 ? 'TRADE POINT' : 'GARDEN CENTRE', bx + 50, G - 96, 6.4, '#fff', { f: 'Mont, sans-serif', w: 800, ls: .6 }); }
   for (const bx of [x + 10, x + 330]) { rect(c, '#3a3f4a', bx, G - 30, 100, 30); for (let i = 0; i < 8; i++) { c.fillStyle = lg(c, 0, G - 28, 0, G, [[0, '#4a505c'], [1, '#2e333c']]); c.fillRect(bx + 4 + i * 12, G - 28, 10, 28); for (let k = 0; k < 9; k++) rect(c, 'rgba(0,0,0,.25)', bx + 4 + i * 12, G - 26 + k * 3, 10, .3); } }
-  panels(c, x + 150, G - 150, 140, 150, '#cdd2da', 10); rect(c, OR, x + 146, G - 158, 148, 10, '#9a3e08', .4);
+  panels(c, x + 150, G - 152, 140, 152, '#cdd2da', 10); rect(c, OR, x + 146, G - 160, 148, 10, '#9a3e08', .4);
   curtain(c, x + 154, G - 146, 132, 104, 6, 4);
   c.fillStyle = lg(c, 0, G - 140, 0, G - 96, [[0, '#ff8a3c'], [.1, OR], [1, '#d45a10']]); c.fillRect(x + 166, G - 140, 108, 44); c.strokeStyle = '#9a3e08'; c.lineWidth = .6; c.strokeRect(x + 166, G - 140, 108, 44);
   c.save(); c.font = '900 30px Mont, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.lineJoin = 'round'; c.lineWidth = 2; c.strokeStyle = '#8a3208'; c.strokeText('B&Q', x + 220, G - 117); c.fillStyle = '#ffffff'; c.fillText('B&Q', x + 220, G - 117); c.restore();
@@ -1385,26 +1395,44 @@ HD.oak = (c, x, G) => {
 // Cycle King: three brick blocks over the shops (tall left, low middle, tall right) with stepped parapets and white windows; yellow
 // fascias in red frames (CYCLE KING with red bursts, CYCLE KING with a bike + chequer strip, 7 DAYS A WEEK), red pilasters, windows
 // packed with bikes, glass doors
+// Cycle King, 56-66 Dunstable Road (owner's photo): a 1970s brick parade, three blocks. Left and right blocks are three
+// storeys (shop + two floors of flats), the middle block two; flat parapets stepping up into short brick towers. Drawn in real
+// metres (20 units a metre): shop 3.6 m tall (glass to 2.55 m, double doors 2.2 m, yellow fascia 2.65-3.45 m), flats 2.8 m a
+// storey with every window on its floor (sills 4.5 / 7.3 m, heads 5.7 / 8.5 m), parapets 9.4 m, towers 10.2 m, middle block 6.9 m.
 HD.cycleking = (c, x, G) => {
-  c.save(); c.lineJoin = 'round'; const B = '#9a4a34', Y = '#f8d420', RD = '#d8262f';
-  for (const [bx, bw, top] of [[x, 130, 160], [x + 130, 104, 124], [x + 234, 110, 150]]) { brick(c, bx, G - top, bw, top - 44, B); c.strokeStyle = LINE; c.lineWidth = .45; c.strokeRect(bx, G - top, bw, top - 44); rect(c, '#c4bcae', bx - 1, G - top - 1.6, bw + 2, 1.6); }
-  for (const [px, pw, top] of [[x + 6, 24, 160], [x + 52, 26, 160], [x + 100, 24, 160], [x + 240, 26, 150], [x + 304, 34, 150]]) { brick(c, px, G - top - 8, pw, 8, B); c.strokeStyle = LINE; c.strokeRect(px, G - top - 8, pw, 8); rect(c, '#c4bcae', px - 1, G - top - 9.6, pw + 2, 1.6); }
-  for (const [wx, wy, w, h] of [[22, 150, 28, 18], [84, 150, 22, 18], [16, 108, 26, 18], [56, 108, 22, 18], [96, 108, 16, 18], [144, 120, 26, 10], [180, 120, 26, 10], [244, 136, 14, 18], [274, 118, 18, 18], [308, 118, 22, 18], [274, 140, 18, 12]]) sash(c, x + wx, G - wy, w, h, { stone: '#f2f0ea' });
-  for (const [sx, sw] of [[x - 2, 132], [x + 130, 104], [x + 234, 112]]) { rect(c, RD, sx, G - 68, sw, 22, '#6a0e0e', .4); c.fillStyle = lg(c, 0, G - 66, 0, G - 48, [[0, '#ffe45a'], [1, '#eec010']]); c.fillRect(sx + 2, G - 66, sw - 4, 18); }
+  c.save(); c.lineJoin = 'round'; const B = '#9a4a34', Y = '#f8d420', RD = '#d8262f', m = v => v * 20;
+  const BL = [[x, 130, 9.4], [x + 130, 104, 6.9], [x + 234, 110, 9.4]];
+  for (const [bx, bw, top] of BL) { brick(c, bx, G - m(top), bw, m(top) - m(3.45), B); c.strokeStyle = LINE; c.lineWidth = .45; c.strokeRect(bx, G - m(top), bw, m(top) - m(3.45)); rect(c, '#c4bcae', bx - 1, G - m(top) - 1.6, bw + 2, 1.6, LINE, .3); }
+  for (const [px, pw] of [[x + 6, 24], [x + 100, 26], [x + 240, 26], [x + 304, 34]]) { brick(c, px, G - m(10.2), pw, m(.8), B); c.strokeStyle = LINE; c.strokeRect(px, G - m(10.2), pw, m(.8)); rect(c, '#c4bcae', px - 1, G - m(10.2) - 1.6, pw + 2, 1.6, LINE, .3); }
+  // floor bands so each storey reads, then the windows on their floors
+  for (const [bx, bw, top] of BL) for (const fl of [6.4, 9.2]) if (fl < top - .3) rect(c, 'rgba(0,0,0,.10)', bx, G - m(fl), bw, .8);
+  const W = (wx, sill, w) => hWin(c, x + wx, G - m(sill + 1.2), w, m(1.2), { inner: ['nets', 'blind', 'curtain'][Math.round(wx) % 3] });
+  for (const wx of [14, 52, 90]) { W(wx, 4.5, 26); W(wx, 7.3, 26); }
+  for (const wx of [148, 196]) W(wx, 4.5, 24);
+  for (const wx of [244, 282, 318]) { W(wx, 4.5, 22); W(wx, 7.3, 22); }
+  rect(c, '#2a2a2e', x + 128.6, G - m(9.4), 1.4, m(9.4) - m(3.6)); rect(c, '#2a2a2e', x + 232.6, G - m(9.4), 1.4, m(9.4) - m(3.6));   // downpipes
+  // fascia boards
+  const FT = G - m(3.45), FB = G - m(2.65);
+  for (const [sx, sw] of [[x - 2, 132], [x + 130, 104], [x + 234, 112]]) { rect(c, RD, sx, FT, sw, FB - FT, '#6a0e0e', .4); c.fillStyle = lg(c, 0, FT + 2, 0, FB - 2, [[0, '#ffe45a'], [1, '#eec010']]); c.fillRect(sx + 2, FT + 2, sw - 4, FB - FT - 4); }
   const burst = (bx, by) => { c.fillStyle = RD; c.beginPath(); for (let i = 0; i < 16; i++) { const a = i * Math.PI / 8, r = i % 2 ? 2.6 : 5.6; c.lineTo(bx + Math.cos(a) * r, by + Math.sin(a) * r * .7); } c.fill(); };
   const bike = (bx, by, col, s2 = 1) => { c.strokeStyle = col; c.lineWidth = .7 * s2; for (const wx of [bx, bx + 9 * s2]) { c.beginPath(); c.arc(wx, by, 3 * s2, 0, 7); c.stroke(); } c.beginPath(); c.moveTo(bx, by); c.lineTo(bx + 3 * s2, by - 4 * s2); c.lineTo(bx + 7.6 * s2, by - 4 * s2); c.lineTo(bx + 9 * s2, by); c.moveTo(bx + 3 * s2, by - 4 * s2); c.lineTo(bx + 4.6 * s2, by); c.lineTo(bx + 7.6 * s2, by - 4 * s2); c.moveTo(bx + 2.4 * s2, by - 5 * s2); c.lineTo(bx + 4 * s2, by - 5 * s2); c.moveTo(bx + 7.6 * s2, by - 4 * s2); c.lineTo(bx + 7.2 * s2, by - 5.6 * s2); c.stroke(); };
-  burst(x + 10, G - 57); burst(x + 118, G - 57); txt(c, 'CYCLE KING', x + 64, G - 56.6, 10.6, RD, { f: 'Mont, sans-serif', w: 900 });
-  rect(c, RD, x + 132, G - 66, 100, 3.6); for (let i = 0; i < 25; i++) rect(c, '#ffffff', x + 133 + i * 4, G - 65.2, 2, 1.8);
-  txt(c, 'CYCLE KING', x + 172, G - 55, 8, RD, { f: 'Mont, sans-serif', w: 900 }); bike(x + 208, G - 52.4, '#1b1a24', 1.1);
-  txt(c, '7 DAYS A WEEK', x + 290, G - 57, 8, RD, { f: 'Mont, sans-serif', w: 900 });
-  rect(c, '#ecebe5', x - 2, G - 46, 348, 46);
-  for (const [wx, ww] of [[x + 4, 56], [x + 68, 56], [x + 140, 40], [x + 240, 46], [x + 292, 46]]) { c.fillStyle = lg(c, 0, G - 42, 0, G - 4, [[0, '#f0f2ee'], [1, '#c8ccd0']]); c.fillRect(wx, G - 42, ww, 38); rect(c, '#3a4048', wx, G - 42, ww, 38, null);
-    c.fillStyle = lg(c, 0, G - 42, 0, G - 4, [[0, '#e8ecee'], [1, '#aab2ba']]); c.fillRect(wx + 1.4, G - 40.6, ww - 2.8, 35.2);
+  const FM = (FT + FB) / 2;
+  burst(x + 10, FM); burst(x + 118, FM); txt(c, 'CYCLE KING', x + 64, FM + .4, 10.6, RD, { f: 'Mont, sans-serif', w: 900 });
+  rect(c, RD, x + 132, FT + 2, 100, 3); for (let i = 0; i < 25; i++) rect(c, '#ffffff', x + 133 + i * 4, FT + 2.6, 2, 1.6);
+  txt(c, 'CYCLE KING', x + 172, FM + 2, 8, RD, { f: 'Mont, sans-serif', w: 900 }); bike(x + 208, FM + 4.4, '#1b1a24', 1.1);
+  txt(c, '7 DAYS A WEEK', x + 290, FM + .4, 8, RD, { f: 'Mont, sans-serif', w: 900 });
+  // shopfront: red posts, stallriser, glass full of bikes, double doors 2.2 m with a glass transom over them
+  const GT = G - m(2.55), GB = G - m(.35);
+  rect(c, '#ecebe5', x - 2, FB, 348, G - FB); rect(c, '#9a9c9e', x - 2, GB, 348, G - GB);
+  for (const [wx, ww] of [[x + 4, 56], [x + 68, 56], [x + 140, 40], [x + 240, 46], [x + 292, 46]]) { rect(c, '#3a4048', wx, GT, ww, GB - GT);
+    c.fillStyle = lg(c, 0, GT, 0, GB, [[0, '#e8ecee'], [1, '#aab2ba']]); c.fillRect(wx + 1.4, GT + 1.4, ww - 2.8, GB - GT - 2.8); rect(c, '#3a4048', wx, GT + 7, ww, .8);
     const cols = ['#e0302a', '#2a6fd8', '#f2c43a', '#3fae5a', '#e8641c', '#b23ad8', '#2a2a2e'];
-    for (let row = 0; row < 3; row++) for (let i = 0; i * 9 < ww - 12; i++) bike(wx + 4 + i * 9 + (row % 2) * 4, G - 32 + row * 10, cols[(i * 3 + row * 2 + Math.round(wx)) % cols.length], .85);
-    glare(c, wx + 1.4, G - 40.6, ww - 2.8, 35.2); }
-  for (const px of [x - 2, x + 62, x + 128, x + 232, x + 286, x + 342]) { c.fillStyle = lg(c, px, 0, px + 4, 0, [[0, '#a81a20'], [.5, '#e8343a'], [1, '#a81a20']]); c.fillRect(px, G - 46, 4, 46); }
-  rect(c, '#2a2f38', x + 184, G - 42, 40, 42); for (const dx of [x + 187, x + 206]) { c.fillStyle = lg(c, 0, G - 39, 0, G - 5, [[0, '#d4e4f0'], [1, '#7a9ab4']]); c.fillRect(dx, G - 39, 15, 34); glare(c, dx, G - 39, 15, 34); }
+    for (let row = 0; row < 3; row++) for (let i = 0; i * 9 < ww - 12; i++) bike(wx + 4 + i * 9 + (row % 2) * 4, GB - 6 - row * 11, cols[(i * 3 + row * 2 + Math.round(wx)) % cols.length], .85);
+    glare(c, wx + 1.4, GT + 1.4, ww - 2.8, GB - GT - 2.8); }
+  for (const px of [x - 2, x + 62, x + 128, x + 232, x + 286, x + 342]) { c.fillStyle = lg(c, px, 0, px + 4, 0, [[0, '#a81a20'], [.5, '#e8343a'], [1, '#a81a20']]); c.fillRect(px, FB, 4, G - FB); }
+  const DT = G - m(2.2); rect(c, '#2a2f38', x + 184, GT, 40, G - GT);
+  c.fillStyle = lg(c, 0, GT + 1, 0, DT - 1, [[0, '#d4e4f0'], [1, '#9ab4c8']]); c.fillRect(x + 187, GT + 1.4, 34, DT - GT - 2.8);
+  for (const dx of [x + 187, x + 205]) { c.fillStyle = lg(c, 0, DT, 0, G, [[0, '#d4e4f0'], [1, '#7a9ab4']]); c.fillRect(dx, DT + 1, 16, G - DT - 1); glare(c, dx, DT + 1, 16, G - DT - 1); rect(c, '#c0c6cc', dx + (dx === x + 187 ? 14 : 1.2), G - 26, .8, 10); }
   c.restore();
 };
 
@@ -1574,22 +1602,34 @@ const willow = (c, x, G, s2 = 1) => { rect(c, '#5a3d2a', x - 2.6 * s2, G - 52 * 
 // Luton Sixth Form College: yellow-buff brick, white canopy with posts over the side entrance, tall glazed entrance block with the
 // red drum roof and thin white posts, grey plant room with windows, Luton / SIXTH FORM / COLLEGE lettering (not lit), green gates
 HD.sixthform = (c, x0, G) => {
-  c.save(); c.lineJoin = 'round';
-  brick(c, x0, G - 70, 112, 70, '#dcab52'); c.strokeStyle = LINE; c.lineWidth = .45; c.strokeRect(x0, G - 70, 112, 70); rect(c, '#3d3d42', x0, G - 6, 112, 6);
-  for (let i = 0; i < 3; i++) curtain(c, x0 + 10 + i * 34, G - 52, 18, 28, 2, 2, ['#a8dcd8', '#5aa6a4', '#2e6e6c']);
-  poly(c, '#efefee', [[x0 + 4, G - 64], [x0 + 70, G - 64], [x0 + 62, G - 58], [x0 + 10, G - 58]], LINE, .35); rect(c, '#e8e8e8', x0 + 12, G - 58, 1.6, 58); rect(c, '#e8e8e8', x0 + 60, G - 58, 1.6, 58);
-  for (let i = 0; i < 10; i++) rect(c, '#2e8b57', x0 + 4 + i * 6, G - 28, 1.6, 28); rect(c, '#2e8b57', x0 + 4, G - 28, 58, 1.6); rect(c, '#2e8b57', x0 + 4, G - 16, 58, 1);
+  // two-storey teaching wings with high ceilings (4 m a floor, parapet 8.6 m) either side of the full-height glass atrium (12.4 m);
+  // classroom windows on both floors, entrance doors 2.3 m under a canopy (9.84 units a metre here)
+  c.save(); c.lineJoin = 'round'; const u = 9.84, m = v => v * u, SG = ['#a8dcd8', '#5aa6a4', '#2e6e6c'], WH = m(8.6);
+  const wing = (wx, ww) => { brick(c, wx, G - WH, ww, WH, '#dcab52'); c.strokeStyle = LINE; c.lineWidth = .45; c.strokeRect(wx, G - WH, ww, WH); rect(c, '#3d3d42', wx, G - 6, ww, 6); rect(c, '#c9963e', wx, G - m(4.1), ww, 1.2); rect(c, '#efefee', wx - 1, G - WH - 1.6, ww + 2, 1.6, LINE, .3); };
+  const cw = (wx, fl, w) => curtain(c, wx, G - m(fl ? 7.3 : 3.1), w, m(fl ? 2.4 : 2.2), 2, 2, SG);
+  wing(x0, 112);
+  for (const wx of [x0 + 10, x0 + 44, x0 + 78]) cw(wx, 1, 22); cw(x0 + 78, 0, 22);
+  poly(c, '#efefee', [[x0 + 6, G - m(2.85)], [x0 + 56, G - m(2.85)], [x0 + 52, G - m(2.6)], [x0 + 10, G - m(2.6)]], LINE, .35); rect(c, '#e8e8e8', x0 + 12, G - m(2.6), 1.4, m(2.6)); rect(c, '#e8e8e8', x0 + 50, G - m(2.6), 1.4, m(2.6));
+  rect(c, '#2a3038', x0 + 18, G - m(2.3), 28, m(2.3)); for (const dx of [x0 + 19.4, x0 + 32.6]) { c.fillStyle = lg(c, 0, G - m(2.3), 0, G, [[0, '#cfe0ec'], [1, '#5a7a92']]); c.fillRect(dx, G - m(2.3) + 1.2, 12, m(2.3) - 1.2); glare(c, dx, G - m(2.3) + 1.2, 12, m(2.3) - 1.2); }
+  const fence = (fx, fw) => { for (let i = 0; i * 4 < fw; i++) rect(c, '#2e8b57', fx + i * 4, G - m(1.8), 1, m(1.8)); rect(c, '#2e8b57', fx, G - m(1.8), fw, 1.2); rect(c, '#2e8b57', fx, G - m(.6), fw, .8); };
+  fence(x0 + 62, 46);
   const x = x0 + 110;
-  brick(c, x, G - 70, 244, 70, '#dcab52'); c.strokeStyle = LINE; c.strokeRect(x, G - 70, 244, 70); rect(c, '#3d3d42', x, G - 6, 244, 6);
-  panels(c, x + 150, G - 92, 70, 22, '#70747a', 11); for (let i = 0; i < 3; i++) curtain(c, x + 154 + i * 22, G - 88, 18, 12, 1, 1, ['#a8dcd8', '#5aa6a4', '#2e6e6c']);
-  c.fillStyle = lg(c, 0, G - 112, 0, G - 100, [[0, '#e05a3e'], [1, '#a8321e']]); c.beginPath(); c.moveTo(x + 58, G - 100); c.lineTo(x + 64, G - 108); c.quadraticCurveTo(x + 100, G - 114, x + 136, G - 108); c.lineTo(x + 142, G - 100); c.closePath(); c.fill(); c.strokeStyle = LINE; c.lineWidth = .4; c.stroke(); rect(c, '#dcab52', x + 58, G - 100, 84, 4);
-  curtain(c, x + 62, G - 90, 76, 90, 7, 4, ['#8ab0c8', '#3e566c', '#24323e']);
-  rect(c, '#7e838a', x + 46, G - 96, 108, 5, LINE, .35); for (const px of [x + 60, x + 86, x + 112, x + 138]) rect(c, '#f6f4ee', px, G - 91, 2, 91);
-  curtain(c, x + 16, G - 48, 16, 26, 1, 2, ['#a8dcd8', '#5aa6a4', '#2e6e6c']);
-  for (let i = 0; i < 3; i++) poly(c, i === 1 ? '#d8262f' : '#9aa0a8', [[x + 174 + i * 7, G - 64], [x + 180 + i * 7, G - 64], [x + 176 + i * 7, G - 58], [x + 170 + i * 7, G - 58]]);
-  txt(c, 'Luton', x + 186, G - 49, 15, '#26292f', { f: 'Mont, sans-serif', w: 600 }); txt(c, 'SIXTH FORM', x + 186, G - 37, 5.6, '#5e6b5a', { f: 'Mont, sans-serif', w: 600, ls: .6 }); txt(c, 'COLLEGE', x + 186, G - 31, 5.6, '#5e6b5a', { f: 'Mont, sans-serif', w: 600, ls: .6 });
-  for (let i = 0; i < 6; i++) rect(c, '#2e8b57', x + 214 + i * 6, G - 28, 1.6, 28); rect(c, '#2e8b57', x + 212, G - 28, 32, 1.6); rect(c, '#2e8b57', x + 212, G - 16, 32, 1);
-  rect(c, '#5a5e66', x0 - 6.6, G - 80, 1.4, 80); rect(c, '#5a5e66', x0 - 6.6, G - 80, 7, 1.4); rect(c, '#e8e8e8', x0 - 1, G - 79.6, 4, 2);
+  wing(x, 62); wing(x + 138, 106);
+  for (const wx of [x + 8, x + 34]) { cw(wx, 1, 20); cw(wx, 0, 20); }
+  for (const wx of [x + 146, x + 222]) { cw(wx, 1, 18); cw(wx, 0, 18); }
+  panels(c, x + 160, G - m(10.4), 64, m(1.8), '#70747a', 6); for (let i = 0; i < 3; i++) curtain(c, x + 164 + i * 20, G - m(10.2), 16, m(1.3), 1, 1, SG);
+  // the atrium: full-height glass between the wings, red roof oversailing on top
+  c.fillStyle = lg(c, 0, G - m(12.4), 0, G - m(10.5), [[0, '#e05a3e'], [1, '#a8321e']]); c.beginPath(); c.moveTo(x + 56, G - m(10.5)); c.lineTo(x + 62, G - m(11.7)); c.quadraticCurveTo(x + 100, G - m(12.4), x + 138, G - m(11.7)); c.lineTo(x + 144, G - m(10.5)); c.closePath(); c.fill(); c.strokeStyle = LINE; c.lineWidth = .4; c.stroke(); rect(c, '#dcab52', x + 56, G - m(10.5), 88, 3);
+  curtain(c, x + 62, G - m(10.2), 76, m(10.2), 7, 5, ['#8ab0c8', '#3e566c', '#24323e']);
+  for (const px of [x + 62, x + 86, x + 112, x + 136]) rect(c, '#f6f4ee', px, G - m(10.2), 2, m(10.2));
+  for (const fl of [4.1, 8.1]) rect(c, '#7e838a', x + 62, G - m(fl), 76, 1.4);   // floors seen through the glass
+  rect(c, '#2a3038', x + 84, G - m(2.4), 32, m(2.4)); for (const dx of [x + 85.4, x + 100.6]) { c.fillStyle = lg(c, 0, G - m(2.4), 0, G, [[0, '#e4eef4'], [1, '#7a9ab0']]); c.fillRect(dx, G - m(2.4) + 1.2, 14, m(2.4) - 1.2); }
+  // Luton Sixth Form College sign on the panel between the window bays
+  rect(c, '#efe9dc', x + 166, G - m(6.9), 54, m(3.6), LINE, .35);
+  for (let i = 0; i < 3; i++) poly(c, i === 1 ? '#d8262f' : '#9aa0a8', [[x + 182 + i * 7, G - m(6.6)], [x + 188 + i * 7, G - m(6.6)], [x + 184 + i * 7, G - m(6.1)], [x + 178 + i * 7, G - m(6.1)]]);
+  txt(c, 'Luton', x + 193, G - m(5.4), 13, '#26292f', { f: 'Mont, sans-serif', w: 600 }); txt(c, 'SIXTH FORM', x + 193, G - m(4.55), 5, '#5e6b5a', { f: 'Mont, sans-serif', w: 600, ls: .6 }); txt(c, 'COLLEGE', x + 193, G - m(3.95), 5, '#5e6b5a', { f: 'Mont, sans-serif', w: 600, ls: .6 });
+  fence(x + 186, 58);
+  rect(c, '#5a5e66', x0 - 6.6, G - m(6), 1.4, m(6)); rect(c, '#5a5e66', x0 - 6.6, G - m(6), 7, 1.4); rect(c, '#e8e8e8', x0 - 1, G - m(6) + .4, 4, 2);
   c.restore();
 };
 
@@ -1795,6 +1835,35 @@ HD.airport = (c, x, G) => {
 };
 
 
+// ---------- storey heights (owner, 22 Nov) ----------
+// Every shop is fitted to the same real measurements so doors, signs and windows line up along the street (UK shopfront
+// guides + typical storey heights): shop door ~2.1-2.2 m, shopfront glass to 2.4 m, fascia board 2.4-3.2 m, first-floor
+// window sill 3.6 m / head ~4.9 m, eaves 5.6 m on a two-storey terrace; second floor sill 6.3 m / head 7.6 m, parapet ~8.4 m.
+// Houses use the same storeys (sill 3.5 m, head 4.75 m, eaves 5.55 m, door 2.05 m). REFLOOR maps each drawing's own heights
+// (units above the pavement) onto those metres at 20 drawing units a metre; the game's JK for these is 19.9 / (SCALE * 20).
+const REFLOOR = {
+  kahwa:     [[0, 0], [40, 2.2], [42, 2.4], [62, 3.2], [68, 3.6], [110, 4.9], [128, 5.6], [154, 7.7], [176, 8.8], [212, 10.6]],
+  gna:       [[0, 0], [40, 2.2], [42, 2.4], [68, 3.4], [71, 3.55], [133, 5.25], [136, 5.45], [166, 7.6], [188, 8.7], [218, 10.2]],
+  topspizza: [[0, 0], [46, 2.4], [68, 3.2], [96, 3.5], [128, 4.9], [133, 5.15], [142, 5.6], [152, 6.1], [194, 8.5]],
+  alquds:    [[0, 0], [10, .5], [38, 2.4], [40, 2.45], [66, 3.4], [72, 3.6], [78, 3.75], [108, 5.0], [116, 5.4], [124, 6.3], [150, 7.6], [162, 8.3], [176, 9.2], [192, 10]],
+  toros:     [[0, 0], [46, 2.4], [68, 3.3], [82, 3.75], [120, 5.25], [138, 6.1], [150, 6.6], [184, 8.0], [196, 8.55], [204, 8.9]],
+  oak:       [[0, 0], [38, 2.05], [40, 2.2], [46, 2.4], [66, 3.2], [75, 3.5], [100, 4.75], [112, 5.55], [146, 8.0], [168, 9.1]],
+  krispy:    [[0, 0], [44, 2.4], [50, 2.7], [76, 3.6], [79, 3.75], [109, 5.05], [112, 5.2], [120, 5.55]],
+};
+const REF_U = 20, REF_R = 6, REF_M = 30, refCache = {};
+for (const key of Object.keys(REFLOOR)) { const orig = HD[key]; if (!orig) continue;
+  HD[key] = (c, x, G) => {
+    const map = REFLOOR[key], W = ((window.LANDMARKS && LANDMARKS[key] && LANDMARKS[key].w) || 300) + 2 * REF_M, top = map[map.length - 1][0] + 40;
+    let off = refCache[key];
+    if (!off) { off = document.createElement('canvas'); off.width = Math.ceil(W * REF_R); off.height = Math.ceil(top * REF_R); const o = off.getContext('2d'); o.scale(REF_R, REF_R); orig(o, REF_M, top); refCache[key] = off; }
+    const pts = map.concat([[top, map[map.length - 1][1] + (top - map[map.length - 1][0]) * ((map[map.length - 1][1] - map[map.length - 2][1]) / (map[map.length - 1][0] - map[map.length - 2][0]))]]);
+    for (let i = 0; i < pts.length - 1; i++) { const [s0, m0] = pts[i], [s1, m1] = pts[i + 1], d0 = m0 * REF_U, d1 = m1 * REF_U;
+      c.drawImage(off, 0, (top - s1) * REF_R, off.width, (s1 - s0) * REF_R, x - REF_M, G - d1 - .12, W, d1 - d0 + .24); }
+  };
+}
+window.REFLOOR = REFLOOR;
+
+
 // ======================= HOUSES (HD) =======================
 // From the owner's Leagrave Road / 3D-game references: red-brick terraces with square bays under little hipped roofs, porches,
 // 1930s semis with tile-hung gables, white-rendered rows, uPVC windows (some top openers, nets/blinds), stone sills, downpipes,
@@ -1829,26 +1898,26 @@ HH.terrace = (c, x, G) => { c.save(); c.lineJoin = 'round';
     hBrick(c, hx, G - 70, 60, 70, col); rect(c, '#ece4d2', hx, G - 44, 60, 1.6);
     hWin(c, hx + 8, G - 64, 16, 18, { inner: k ? 'nets' : 'curtain' }); hWin(c, hx + 34, G - 64, 16, 18, { inner: 'blind' });
     hBay(c, hx + 6, G, 26, 26, { inner: 'nets', base: col }); slate(c, [[hx + 36, G - 28], [hx + 56, G - 28], [hx + 53, G - 33], [hx + 39, G - 33]], '#4a3e38'); hDoor(c, hx + 40, G, k ? '#2f4fa8' : '#f4f2ec'); }
-  hPipe(c, x + 59, G - 70, G); hRoof(c, x, G, 120, 70, 18); hChim(c, x + 53, G - 106); hAerial(c, x + 22, G - 126); hDish(c, x + 112, G - 58);
+  hPipe(c, x + 59, G - 70, G); hRoof(c, x, G, 120, 70, 30); hChim(c, x + 53, G - 118); hAerial(c, x + 22, G - 138); hDish(c, x + 112, G - 58);
   hWall(c, x, G, 28, true); hWall(c, x + 60, G, 28); hBin(c, x + 102, G, '#2f6f3a'); c.restore(); };
 HH.pebble = (c, x, G) => { c.save(); c.lineJoin = 'round'; const PB = '#ece3cf';
   c.fillStyle = PB; c.fillRect(x, G - 72, 70, 72); for (let i = 0; i < 700; i++) { c.beginPath(); c.arc(x + (i * 17.31) % 70, G - 72 + (i * 13.7) % 64, .45, 0, 7); c.fillStyle = ['#d8cdb4', '#c4b89c', '#f6f0e0', '#b8ac94'][i % 4]; c.fill(); } c.strokeStyle = LINE; c.lineWidth = .45; c.strokeRect(x, G - 72, 70, 72);
-  brick(c, x, G - 8, 70, 8, '#3a3a3e'); hRoof(c, x, G, 70, 72, 14); hChim(c, x + 50, G - 102);
+  brick(c, x, G - 8, 70, 8, '#3a3a3e'); hRoof(c, x, G, 70, 72, 26); hChim(c, x + 50, G - 114);
   hWin(c, x + 6, G - 66, 32, 22, { inner: 'nets' }); hDish(c, x + 24, G - 40); hBay(c, x + 4, G - 8, 34, 28, { inner: 'blind' });
   hWin(c, x + 46, G - 66, 14, 16); slate(c, [[x + 43, G - 36], [x + 65, G - 36], [x + 62, G - 41], [x + 46, G - 41]], '#4a3e38'); hDoor(c, x + 48, G - 8, '#8a1d2a'); rect(c, '#bdb7aa', x + 44, G - 8, 20, 3); c.restore(); };
 // 1930s semi (Leagrave Road): render upper, brick lower, two-storey bay under a tile-hung gable, side porch with a lean-to roof
 HH.semi = (c, x, G) => { c.save(); c.lineJoin = 'round';
   c.fillStyle = lg(c, x, 0, x + 90, 0, [[0, '#ead09a'], [1, '#d8b878']]); c.fillRect(x, G - 70, 90, 70); for (let i = 0; i < 260; i++) rect(c, 'rgba(160,120,60,.25)', x + (i * 23.7) % 88, G - 68 + (i * 11.3) % 44, .5, .5);
-  hBrick(c, x, G - 26, 90, 26, '#b0533c'); slate(c, [[x - 3, G - 70], [x + 93, G - 70], [x + 80, G - 90], [x + 10, G - 90]], '#5a4e48');
+  hBrick(c, x, G - 26, 90, 26, '#b0533c'); slate(c, [[x - 3, G - 70], [x + 93, G - 70], [x + 78, G - 100], [x + 12, G - 100]], '#5a4e48');
   poly(c, '#d8b070', [[x + 3, G - 70], [x + 22, G - 106], [x + 41, G - 70]], LINE, .4);
   c.save(); c.beginPath(); c.moveTo(x + 5, G - 70); c.lineTo(x + 22, G - 103); c.lineTo(x + 39, G - 70); c.closePath(); c.clip(); for (let r = 0; r < 18; r++) for (let i = 0; i < 20; i++) { c.beginPath(); c.arc(x + 4 + i * 1.8 + (r % 2) * .9, G - 71 + -r * 1.9, .95, 0, Math.PI); c.fillStyle = (i + r) % 5 ? '#b8603e' : '#c8724a'; c.fill(); } c.restore();
   line(c, '#f4f2ec', 1, [[x + 3, G - 70], [x + 22, G - 106], [x + 41, G - 70]]);
   c.fillStyle = '#f4f2ec'; c.fillRect(x + 6, G - 68, 32, 26); hWin(c, x + 7, G - 66, 30, 22, { inner: 'nets' }); hBay(c, x + 6, G - 2, 32, 24, { inner: 'curtain', cc: '#7a4a6a', base: '#b0533c' });
   hWin(c, x + 50, G - 64, 30, 18, { inner: 'blind' }); hBrick(c, x + 44, G - 34, 46, 34, '#b0533c'); slate(c, [[x + 42, G - 34], [x + 92, G - 34], [x + 88, G - 41], [x + 46, G - 41]], '#5a4e48');
-  hDoor(c, x + 50, G, '#c8892a'); hWin(c, x + 68, G - 28, 16, 14, { top: false }); hChim(c, x + 60, G - 108); hAerial(c, x + 67, G - 128); hPipe(c, x + 88, G - 70, G - 34); c.restore(); };
+  hDoor(c, x + 50, G, '#c8892a'); hWin(c, x + 68, G - 28, 16, 14, { top: false }); hChim(c, x + 60, G - 118); hAerial(c, x + 67, G - 138); hPipe(c, x + 88, G - 70, G - 34); c.restore(); };
 HH.render = (c, x, G) => { c.save(); c.lineJoin = 'round';
   c.fillStyle = lg(c, x, 0, x + 70, 0, [[0, '#f6f0e6'], [1, '#e4dccc']]); c.fillRect(x, G - 70, 70, 70); c.strokeStyle = LINE; c.lineWidth = .45; c.strokeRect(x, G - 70, 70, 70); brick(c, x, G - 6, 70, 6, '#3a3a3e');
-  hRoof(c, x, G, 70, 70, 12, '#6a5a50'); hChim(c, x + 8, G - 98);
+  hRoof(c, x, G, 70, 70, 24, '#6a5a50'); hChim(c, x + 8, G - 110);
   hWin(c, x + 6, G - 64, 34, 20, { inner: 'blind' }); hBay(c, x + 6, G - 6, 34, 26, { inner: 'nets', roof: '#3a3d44' });
   hWin(c, x + 48, G - 64, 14, 14); slate(c, [[x + 45, G - 34], [x + 67, G - 34], [x + 64, G - 39], [x + 48, G - 39]], '#3a3d44'); hDoor(c, x + 50, G - 6, '#3a3d44'); rect(c, '#2a2c30', x + 52.6, G - 25, 3, 3);
   c.fillStyle = '#4a6a3a'; c.beginPath(); c.arc(x + 43, G - 9, 3.6, 0, 7); c.fill(); rect(c, '#7a5a3a', x + 41, G - 7, 4, 4); hBin(c, x + 62, G); c.restore(); };
@@ -1859,9 +1928,9 @@ const hTerr = (wall, roof, door, n = 4, painted) => (c, x, G) => { c.save(); c.l
     hWin(c, hx + 7, G - 60, 16, 16, { inner: inns[(k + 1) % 4] }); hWin(c, hx + 33, G - 60, 16, 16, { inner: inns[(k + 2) % 4], cc: ['#b8484a', '#3a6a8a', '#7a6a3a'][k % 3] });
     hBay(c, hx + 5, G, 26, 26, { inner: inns[k % 4], base: painted ? null : col }); slate(c, [[hx + 35, G - 28], [hx + 55, G - 28], [hx + 52, G - 33], [hx + 38, G - 33]], roof);
     hDoor(c, hx + 38, G, door[k % door.length]); hWall(c, hx, G, 26, k % 2 === 0); if (k % 3 === 1) hDish(c, hx + 52, G - 50); if (k) hPipe(c, hx - .8, G - 66, G); }
-  hRoof(c, x, G, n * 58, 66, 16, roof);
-  for (let k = 1; k < n; k++) if (n < 4 || k % 2) hChim(c, x + k * 58 - 7, G - 100);   // on the party walls
-  hAerial(c, x + 63, G - 120); hBin(c, x + n * 58 - 12, G, '#2f6f3a'); c.restore(); };
+  hRoof(c, x, G, n * 58, 66, 28, roof);
+  for (let k = 1; k < n; k++) if (n < 4 || k % 2) hChim(c, x + k * 58 - 7, G - 112);   // on the party walls
+  hAerial(c, x + 63, G - 132); hBin(c, x + n * 58 - 12, G, '#2f6f3a'); c.restore(); };
 HH.rowGrey = hTerr('#9a9a96', '#3e4248', ['#2f4fa8', '#f4f2ec', '#8a1d2a']);
 HH.rowYellow = hTerr('#d9b86a', '#7a3e30', ['#f4f2ec', '#2f6f3a', '#1a1a1e']);
 HH.rowBrown = hTerr('#7a5038', '#4a5a52', ['#c8892a', '#f4f2ec', '#2f4fa8'], 3);
@@ -1873,7 +1942,7 @@ HH.bungalow = (c, x, G) => { c.save(); c.lineJoin = 'round';
   hWin(c, x + 6, G - 28, 22, 16, { inner: 'nets' }); slate(c, [[x + 33, G - 28], [x + 51, G - 28], [x + 48, G - 32], [x + 36, G - 32]], '#5a4e48'); hDoor(c, x + 36, G, '#f4f2ec'); hWin(c, x + 56, G - 28, 22, 16, { inner: 'blind' }); hWall(c, x + 50, G, 30, true); c.restore(); };
 HH.newbuild = (c, x, G) => { c.save(); c.lineJoin = 'round';
   hBrick(c, x, G - 74, 72, 74, '#c27a52'); ribbed(c, x + 40, G - 74, 32, 30, '#6e747c', 2.4);
-  slate(c, [[x - 3, G - 74], [x + 75, G - 74], [x + 62, G - 92], [x + 10, G - 92]], '#3e4248');
+  slate(c, [[x - 3, G - 74], [x + 75, G - 74], [x + 60, G - 100], [x + 12, G - 100]], '#3e4248');
   hWin(c, x + 8, G - 66, 22, 18, { frame: '#f4f2ec', inner: 'blind' }); hWin(c, x + 46, G - 66, 18, 16, { frame: '#2a2c30' }); hWin(c, x + 8, G - 34, 22, 20, { frame: '#f4f2ec', inner: 'nets' });
   rect(c, '#3a3d44', x + 42, G - 36, 26, 2.6, '#1a1c20', .3); hDoor(c, x + 48, G, '#3a3d44'); rect(c, '#2a2c30', x + 62, G - 26, 4, 6); hBin(c, x + 64, G); hPipe(c, x + 70, G - 74, G); c.restore(); };
 window.HOUSES_HD = HH;
