@@ -17,7 +17,7 @@ const FLOOR = 390;                    // hero feet when running
 const CEIL = 3;                       // invisible ceiling: his head can go right up to the top of the screen (like Barry)
 const HW = 48, HH0 = 58, HS = 1.06, HH = HH0 * HS;   // hero sprite cell + its on-screen scale (owner 22 Nov: whole hero ≈ the height of Barry's jetpack in Jetpack Joyride, ~12% of the screen)
 const HSR = 1.5, HHR = HH0 * HSR;   // size he's drawn at inside the rides (tuk-tuk, carpet, pigeon, Corolla roof), which kept their size
-const NPCK = .6375;   // owner 22 Nov: walkers ≈ JJ's scientists, ~9.5% of the screen
+const NPCK = .733;   // owner 22 Nov: walkers ≈ JJ's scientists, ~9.5% of the screen
 const BS = .8;                        // buildings drawn a bit smaller so there's more sky to fly in
 let S = 1, W = 600, dpr = 1, KR = 2;  // units->px, screen width in units, render scale for buildings
 
@@ -1186,7 +1186,7 @@ function draw() {
   gifts.forEach(drawGift);
   // people + hero, sorted by depth (feet y)
   const list = npcs.map(p => ({ y: p.y, f: () => drawNpc(p) })); mobs.forEach(m => list.push({ y: m.y, f: () => { const M = NPC_META.mobility, im = npcGet('mobility'); if (!M || !im.naturalWidth) return; const sc = .9 * NPCK / M.k, w = M.w * sc, h = M.h * sc, f = Math.floor(m.roll / 9) % M.n;
-    ctx.save(); ctx.translate(m.x, m.y); if (m.d < 0) ctx.scale(-1, 1); ctx.drawImage(im, f * M.w, 0, M.w, M.h, -w / 2, -h, w, h); ctx.restore(); } })); list.push({ y: hero.dead ? FLOOR + 6 : (hero.ground ? FLOOR : FLOOR + 1), f: drawHero });
+    ctx.save(); ctx.translate(m.x, m.y); if (m.d < 0) ctx.scale(-1, 1); ctx.imageSmoothingQuality = 'high'; ctx.drawImage(im, f * M.w, 0, M.w, M.h, -w / 2, -h, w, h); ctx.imageSmoothingQuality = 'low'; ctx.restore(); } })); list.push({ y: hero.dead ? FLOOR + 6 : (hero.ground ? FLOOR : FLOOR + 1), f: drawHero });
   list.sort((a, b) => a.y - b.y).forEach(o => o.f());
   dust.forEach(p => { ctx.globalAlpha = Math.max(0, p.l * 1.6) * .6; ctx.fillStyle = '#d8ccc6'; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 7); ctx.fill(); }); ctx.globalAlpha = 1;
   rings.forEach(r => { ctx.strokeStyle = `rgba(255,255,255,${.8 * (1 - r.t / .6)})`; ctx.lineWidth = 3 * (1 - r.t / .6) + .5; ctx.beginPath(); ctx.arc(r.x, r.y, 10 + r.t * 220, 0, 7); ctx.stroke(); });
@@ -1227,7 +1227,7 @@ function drawHero() {
   ctx.restore(); ctx.save();
   const gap = Math.max(0, FLOOR - hero.y); ctx.fillStyle = `rgba(30,10,30,${Math.max(.08, .32 - gap / 600)})`; ctx.beginPath(); ctx.ellipse(hero.x, FLOOR + 1, 20 - Math.min(10, gap / 25), 3.4, 0, 0, 7); ctx.fill();
   ctx.translate(hero.x, hero.y - (hero.slide ? HW * HS * .4 : 0)); ctx.rotate(hero.rot); if (hero.dead && hero.squash > 0) ctx.scale(1 + hero.squash * .18, 1 - hero.squash * .22); ctx.imageSmoothingEnabled = false;
-  ctx.imageSmoothingEnabled = true; ctx.drawImage(heroImg, f * HW * HX4, 0, HW * HX4, HH0 * HX4, -HW * HS / 2, -HH, HW * HS, HH);
+  ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high'; ctx.drawImage(heroImg, f * HW * HX4, 0, HW * HX4, HH0 * HX4, -HW * HS / 2, -HH, HW * HS, HH); ctx.imageSmoothingQuality = 'low';
   if (hero.dead && hero.shockT > 0) {   // frazzled: flashes electric white/blue with crackles round him
     if (Math.floor(t * 24) % 2) { tintCv.width = HW * HX4; tintCv.height = HH0 * HX4; const tc = tintCv.getContext('2d'); tc.drawImage(heroImg, f * HW * HX4, 0, HW * HX4, HH0 * HX4, 0, 0, HW * HX4, HH0 * HX4);
       tc.globalCompositeOperation = 'source-atop'; tc.fillStyle = flashCol === '255,90,90' ? 'rgba(255,220,220,.9)' : 'rgba(220,245,255,.92)'; tc.fillRect(0, 0, tintCv.width, tintCv.height); ctx.drawImage(tintCv, -HW * HS / 2, -HH, HW * HS, HH); }
@@ -1263,7 +1263,7 @@ function drawNpc(p) {
     ctx.translate(0, -lift); ctx.rotate(p.fallDir * a); if (T > .2) ctx.translate(0, 3);
   }
   if (facing < 0) ctx.scale(-1, 1); ctx.imageSmoothingEnabled = true;
-  ctx.drawImage(im, f * M.w, 0, M.w, M.h, -w / 2, -h, w, h); ctx.restore(); ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high'; ctx.drawImage(im, f * M.w, 0, M.w, M.h, -w / 2, -h, w, h); ctx.imageSmoothingQuality = 'low'; ctx.restore(); ctx.imageSmoothingEnabled = true;   // people drawn from the full-size sheets with high-quality smoothing, so no detail is lost at any size
   if (p.fall > 0 && (M.v3 ? (p.fall0 || 1.9) - p.fall > .3 : p.fall < 1.6)) {   // little stars circling the head
     const cx = M.v3 ? p.x + p.fallDir * 26 : p.x + p.fallDir * h * .62, cy = M.v3 ? p.y - 13 : p.y - 14;
     for (let i = 0; i < 3; i++) { const a = t * 6 + i * 2.1; ctx.fillStyle = i % 2 ? '#ffe36a' : '#ffffff'; drawStar(cx + Math.cos(a) * 10, cy + Math.sin(a) * 3.5, 2.6); }
