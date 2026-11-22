@@ -1821,6 +1821,14 @@ const MSG = (() => { const q = []; let open = false;
   $('cNt').addEventListener('click', async () => { try { await SMRCar.notify(); $('cNt').classList.add('hide'); $('cNs').textContent = "Done! We'll send a notification when your car is ready."; }
     catch (x) { $('cNs').textContent = /iPhone|iPad/.test(navigator.userAgent) && !navigator.standalone ? 'On iPhone, add Jummah Dash to your Home Screen first, then turn notifications on. You\'ll still see the message here in the game.' : 'Notifications are off, but you\'ll still see the message here in the game.'; } });
 })();
+// owner 22 Nov: an X on every pop-up (uses the pop-up's own close button when it has one, so its tidy-up still runs)
+(() => { const CL = { pick: () => { pickThenPlay = false; $('pick').classList.add('hide'); }, msgBox: () => $('msgOk').click() };
+  const add = s => { if (!s.id || s.id === 'shop' || s.querySelector(':scope > .box > .sx')) return; const box = s.querySelector(':scope > .box'); if (!box) return;
+    const x = document.createElement('button'); x.className = 'sx'; x.type = 'button'; x.setAttribute('aria-label', 'Close'); x.textContent = '×'; box.appendChild(x);
+    x.addEventListener('pointerdown', e => { e.preventDefault(); e.stopPropagation(); if (CL[s.id]) return CL[s.id](); const own = s.querySelector('#' + s.id + 'Close, #cX, #recX, #smrClose');
+      if (own && own.offsetParent !== null) { own.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, cancelable: true })); own.click(); } if (!s.classList.contains('hide')) s.classList.add('hide'); }); };
+  const all = () => document.querySelectorAll('.sheet').forEach(add); all(); addEventListener('DOMContentLoaded', all); setTimeout(all, 1500);
+  new MutationObserver(all).observe($('ui'), { childList: true }); })();
 resize(); seedStars(); reset(); refreshHome(); if (myMosque) setTimeout(refreshHome, 300);
 if (!myMosque) setTimeout(() => { if (!myMosque && state === 'menu') { pickThenPlay = false; openPick(); } }, 900);   // first time: pick your masjid (later: Settings)
 
