@@ -65,7 +65,7 @@ header span { color:var(--dim); font-size:13px; letter-spacing:.08em; }
 .wrap { display:grid; grid-template-columns: 1fr; gap:18px; padding:10px max(14px, env(safe-area-inset-right)) 24px max(14px, env(safe-area-inset-left)); max-width:1100px; margin:0 auto; }
 .wrap > div { min-width:0; }
 .fx .tm { overflow-wrap:normal; word-break:normal; hyphens:manual; min-width:0; }
-@media (min-width: 860px) { .wrap { grid-template-columns: 380px 1fr; align-items:start; } .stage { position:sticky; top:14px; } }
+@media (min-width: 860px) { .wrap { grid-template-columns: 380px 1fr; align-items:start; } .stage { position:sticky; top:14px; } #stageSp { display:none; } }
 .stage { display:flex; flex-direction:column; align-items:center; gap:10px; }
 .screen { position:relative; width:min(100%, 380px); aspect-ratio:9/16; border-radius:18px; overflow:hidden; background:#000; box-shadow:0 20px 60px rgba(0,0,0,.6), 0 0 0 1px #2a2418; }
 .screen.post { aspect-ratio:4/5; }
@@ -73,6 +73,7 @@ header span { color:var(--dim); font-size:13px; letter-spacing:.08em; }
 .screen.sized { aspect-ratio:auto; }
 .screen.morph { transition:width .55s cubic-bezier(.22,.8,.24,1), height .55s cubic-bezier(.22,.8,.24,1); }
 @media (max-width: 859px) {
+  .wrap { display:block; } .wrap > div:not(.stage):not(#stageSp) { margin-top:18px; }
   .stage.stick { position:sticky; top:0; z-index:5; margin:-10px -14px 0; padding:10px 14px 10px; background:var(--bg); }
   .stage.stick.down { box-shadow:0 10px 18px -6px rgba(0,0,0,.85); }
   .stage.stick .ctrl .pill { white-space:nowrap; }
@@ -208,6 +209,7 @@ button:active, .big:active, .pill:active, .chip:active, .fx:active, .hsBtn:activ
       <button class="pill" id="sndBtn">🔇 Sound off</button>
     </div>
   </div>
+  <div id="stageSp"></div>
 
   <div>
     <section>
@@ -329,7 +331,9 @@ let _lt = 0; document.addEventListener('touchend', e => { const n = Date.now(); 
 const W = 1080, H = 1920, FPS = 30, DUR = 15;
 // Post format (Instagram feed, 4:5): the lounge fills 1080×1350 and the story layout sits in the middle, trimmed of its empty top/bottom
 const POST = { h: 1350, k: .8, top: 150 };
+let fmtP = 0;   // preview blend: 0 = story, 1 = post
 const outH = fmt => fmt === 'post' ? POST.h : H;
+const ohP = p => Math.round(H + (POST.h - H) * p);
 const $ = s => document.querySelector(s);
 
 /* ---------------- data ---------------- */
@@ -363,7 +367,7 @@ const state = {
   venue: { title: 'KAYA LOUNGE', l1: '10 MARSH ROAD, LUTON, LU3 2NH', l2: '35 GOLDINGTON ROAD, BEDFORD, MK40 3LH' },
 };
 let hadSaved = false;
-try { const s = JSON.parse(localStorage.getItem('kaya-state') || 'null'); if (s && s.games) { Object.assign(state, s); if (state.format !== 'post') state.format = 'story'; if (state.kind !== 'still') state.kind = 'video'; hadSaved = true; state.games.forEach(g => { g.home = MIGRATE[g.home] || g.home; g.away = MIGRATE[g.away] || g.away; }); } } catch (e) {}
+try { const s = JSON.parse(localStorage.getItem('kaya-state') || 'null'); if (s && s.games) { Object.assign(state, s); if (state.format !== 'post') state.format = 'story'; if (state.kind !== 'still') state.kind = 'video'; fmtP = state.format === 'post' ? 1 : 0; hadSaved = true; state.games.forEach(g => { g.home = MIGRATE[g.home] || g.home; g.away = MIGRATE[g.away] || g.away; }); } } catch (e) {}
 function persistLocal() { try { localStorage.setItem('kaya-state', JSON.stringify(state)); } catch (e) {} }
 
 /* ---------------- images ---------------- */
@@ -579,9 +583,11 @@ function drawFooter(ctx, t, L, st) {
 }
 function render(ctx, t, st, L, video) {
   ctx.save();
-  const post = st.format === 'post', oh = post ? POST.h : H, ok = video && (video.readyState >= 2 || video.complete);
-  if (ok) { if (post) ctx.drawImage(video, 0, (H - oh) / 2, W, oh, 0, 0, W, oh); else ctx.drawImage(video, 0, 0, W, H); } else { ctx.fillStyle = '#060504'; ctx.fillRect(0, 0, W, oh); }
-  if (post) { ctx.translate(W * (1 - POST.k) / 2, -POST.top * POST.k); ctx.scale(POST.k, POST.k); }
+  // p = 0 story … 1 post; the preview blends between them when the format changes
+  const p = (ctx.canvas && ctx.canvas.id === 'cv') ? fmtP : (st.format === 'post' ? 1 : 0);
+  const oh = ohP(p), k = 1 + (POST.k - 1) * p, ok = video && (video.readyState >= 2 || video.complete);
+  if (ok) { if (p > 0) ctx.drawImage(video, 0, (H - oh) / 2, W, oh, 0, 0, W, oh); else ctx.drawImage(video, 0, 0, W, H); } else { ctx.fillStyle = '#060504'; ctx.fillRect(0, 0, W, oh); }
+  if (p > 0) { ctx.translate(W * (1 - k) / 2, -POST.top * p * k); ctx.scale(k, k); }
   drawLogo(ctx, t, L.F);
   for (const it of L.items) { if (it.type === 'row') drawRow(ctx, it, t, st); else drawLabel(ctx, it, t); }
   drawFooter(ctx, t, L, st);
@@ -657,11 +663,13 @@ function syncSound(force) {
 /* ---------------- preview ---------------- */
 const cv = $('#cv'), cctx = cv.getContext('2d'), bgv = $('#bgv');
 const dpr = Math.min(2, window.devicePixelRatio || 1);
-function sizePreview() { const bw = Math.min(380, ($('#scroller').clientWidth || 380) - 28); const s = Math.min(1, (bw * dpr) / W) || .5; cv.width = Math.round(W * s); cv.height = Math.round(outH(state.format) * s); }
+function sizePreview() { const bw = Math.min(380, ($('#scroller').clientWidth || 380) - 28); const s = Math.min(1, (bw * dpr) / W) || .5; const w = Math.round(W * s), h = Math.round(ohP(fmtP) * s); if (cv.width !== w) cv.width = w; if (cv.height !== h) cv.height = h; }
 let layout = buildLayout(state), playing = true, frozenT = 0;
+let fmtAnim = null;
 let relayout = function () { layout = buildLayout(state); persistLocal(); renderMusic(); };
 function preloadCrests() { return Promise.all(state.games.flatMap(g => [g.home, g.away]).map(id => { const t = teamById(id); const r = t && loadImg(t.src); return r ? r.p : null; })); }
 function tick() {
+  if (fmtAnim) { const q = Math.min(1, (performance.now() - fmtAnim.t0) / 620), e = q < .5 ? 4 * q * q * q : 1 - Math.pow(-2 * q + 2, 3) / 2; fmtP = fmtAnim.a + (fmtAnim.b - fmtAnim.a) * e; if (q >= 1) fmtAnim = null; sizePreview(); fitStage(); }
   const t = playing ? (bgv.currentTime || 0) : frozenT;
   const s = cv.width / W; cctx.setTransform(s, 0, 0, s, 0, 0);
   render(cctx, t, state, layout, bgv);
@@ -911,7 +919,7 @@ function syncFormat() {
   sizePreview(); updateSafe(); fitStage();
 }
 function popBtn(b) { b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop'); }
-document.querySelectorAll('#fmtSeg button').forEach(b => b.onclick = () => { popBtn(b); if (state.format === b.dataset.f) return; state.format = b.dataset.f; morphNext = true; syncFormat(); relayout(); });
+document.querySelectorAll('#fmtSeg button').forEach(b => b.onclick = () => { popBtn(b); if (state.format === b.dataset.f) return; state.format = b.dataset.f; fmtAnim = { a: fmtP, b: state.format === 'post' ? 1 : 0, t0: performance.now() }; syncFormat(); relayout(); });
 function syncKind() {
   document.querySelectorAll('#kindSeg button').forEach(b => b.classList.toggle('on', b.dataset.k === state.kind));
   $('#kindNote').textContent = state.kind === 'still' ? 'A still picture (JPEG) of the finished design, with everything in place.' : 'A 15-second video with the animation and music.';
@@ -919,24 +927,21 @@ function syncKind() {
 }
 document.querySelectorAll('#kindSeg button').forEach(b => b.onclick = () => { popBtn(b); if (state.kind === b.dataset.k) return; state.kind = b.dataset.k; syncKind(); relayout(); });
 /* preview size: full width at the top; on phones it sticks and shrinks to the top half as you scroll */
-let morphNext = false;
 function fitStage() {
   const sc = $('#scroller'), scr = $('#screen'), stage = scr.closest('.stage');
-  const ar = state.format === 'post' ? 4 / 5 : 9 / 16;
+  const ar = W / ohP(fmtP);
   const bw = Math.min(380, sc.clientWidth - 28);
   const phone = innerWidth < 860;
   stage.classList.toggle('stick', phone);
-  const hNat = bw / ar;
+  const hNat = bw / ar, hStory = bw * 16 / 9;
   let h = hNat;
   if (phone) {
-    const ctrl = stage.querySelector('.ctrl').offsetHeight + 30;
     const hMin = Math.min(hNat, Math.max(220, sc.clientHeight * .5));
     h = Math.max(hMin, hNat - sc.scrollTop);
-    stage.style.marginBottom = (hNat - h) + 'px';
+    $('#stageSp').style.height = (hStory - h) + 'px';   // page below never moves, whatever the format
     stage.classList.toggle('down', sc.scrollTop > 4);
-  } else stage.style.marginBottom = '';
+  } else $('#stageSp').style.height = '0px';
   const w = h * ar;
-  if (morphNext) { scr.classList.add('morph'); clearTimeout(fitStage.t); fitStage.t = setTimeout(() => scr.classList.remove('morph'), 600); morphNext = false; }
   scr.classList.add('sized'); scr.style.width = w + 'px'; scr.style.height = h + 'px';
 }
 $('#optNames').checked = state.names; $('#optNames').onchange = e => { state.names = e.target.checked; relayout(); };
