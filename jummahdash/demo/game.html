@@ -63,8 +63,8 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .stats{position:absolute;top:10px;right:calc(var(--sr,0px) + 64px);display:flex;gap:8px;font-size:clamp(9px,1.3vw,13px)}
 .stats div{background:rgba(18,12,38,.8);border-radius:9px;padding:7px 10px;box-shadow:0 0 0 2px rgba(255,255,255,.2) inset;display:flex;align-items:center;gap:7px}
 .stats .gold{color:#ffd75a}
-.play{position:absolute;left:2%;right:var(--hz);text-align:center;bottom:9%;font-size:clamp(11px,1.9vw,19px);color:#ffd75a;text-shadow:3px 3px 0 #160c28;animation:pulse 1s infinite}
-.mine{position:absolute;left:2%;right:var(--hz);text-align:center;bottom:calc(9% + 34px);font-family:Silk;font-size:clamp(10px,1.4vw,14px);color:#e8e4ff;text-shadow:2px 2px 0 #160c28}
+.play{margin-top:6px;text-align:center;font-size:clamp(11px,1.9vw,19px);color:#ffd75a;text-shadow:3px 3px 0 #160c28;animation:pulse 1s infinite}
+.mine{position:absolute;left:2%;right:var(--hz);text-align:center;bottom:calc(5% + 30px);font-family:Silk;font-size:clamp(10px,1.4vw,14px);color:#e8e4ff;text-shadow:2px 2px 0 #160c28}
 .mine b{color:#7dffa0}
 @keyframes pulse{50%{opacity:.4}}
 
@@ -186,6 +186,16 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .side .tile .ti{width:clamp(22px,9cqh,48px);height:clamp(22px,9cqh,48px);flex:none;filter:drop-shadow(0 2px 0 rgba(0,0,0,.25))}
 .side .tile .lb{flex:1;text-align:left}
 .side .mos{flex:1;height:100%}.side .mos canvas{height:clamp(22px,9cqh,48px);width:auto;aspect-ratio:92/62}
+
+@font-face{font-family:Pix;src:url(silkb.woff2)}
+.badge{display:inline-flex!important;align-items:center;gap:10px;font-family:Pix,monospace!important;font-weight:400!important;font-size:11px!important;letter-spacing:2.5px!important;color:#fff!important;background:#141320!important;border:2px solid #ffd75a!important;border-radius:22px!important;padding:5px 16px!important;box-shadow:0 3px 8px rgba(0,0,0,.35)}
+.badge .bp{color:#fff}.badge .bp.y{color:#ffd75a}.badge .smrm{height:15px;width:auto}
+.credit{position:absolute;left:2%;right:var(--hz);bottom:4%;margin:auto;width:max-content;background:rgba(18,12,38,.7);border:0;border-radius:20px;padding:6px 14px;color:#d9d3ff;font-family:Silk;font-size:clamp(10px,1.3vw,13px);box-shadow:0 0 0 1.5px rgba(255,255,255,.22) inset;cursor:pointer;pointer-events:auto}
+.credit b{background:linear-gradient(90deg,#8a5cff,#ff4fa0);-webkit-background-clip:text;background-clip:text;color:transparent}.credit span{opacity:.8;margin-left:2px}
+.smrbox{max-height:92%;overflow:auto}.smrhd{display:flex;align-items:center;justify-content:center;gap:8px;margin:2px 0 10px}.smrhd .smrm.big{height:26px;width:auto}
+.smrhd span{font-family:Poppins,Mont,sans-serif;font-weight:300;font-size:26px;background:linear-gradient(90deg,#8a5cff,#ff4fa0);-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1}
+.smrlist{margin:0 0 6px;padding-left:18px;font-family:Silk;font-size:clamp(10px,1.3vw,13px);color:#d9d3ff;line-height:1.5;text-align:left}.smrlist b{color:#fff}
+.smrgo{display:block;text-align:center;text-decoration:none;background:linear-gradient(90deg,#8a5cff,#ff4fa0)!important;box-shadow:0 5px 0 #5a2a8a!important}
 </style>
 </head>
 <body>
@@ -207,16 +217,32 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
       <button class="tile" id="bMis"><svg viewBox="0 0 40 40" class="ti"><g stroke="#1a1030" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M12 5h16v9a8 8 0 0 1-16 0z" fill="#ffd23a"/><path d="M12 8H6c0 6 3 9 7 9M28 8h6c0 6-3 9-7 9" fill="none"/><path d="M17 21h6l1 7h-8z" fill="#e0a21a"/><rect x="11" y="28" width="18" height="7" rx="1.5" fill="#7a4cff"/><path d="M20 7.5l1.6 3.3 3.6.5-2.6 2.5.6 3.6-3.2-1.7-3.2 1.7.6-3.6-2.6-2.5 3.6-.5z" fill="#fff" stroke-width="1.2"/></g></svg><span class="lb">MISSIONS</span> <small id="misStars"></small></button>
     </div>
     <div class="main">
-      <div class="title"><div class="badge">AN SMR ORIGINAL</div>
+      <div class="title"><div class="badge"><span class="bp">AN</span><svg class="smrm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 256.4"><path fill="#fff" fill-rule="evenodd" d="M340.2 1.0 L340.2 255.3 L340.7 256.1 L399.6 255.8 L400.9 254.8 L400.6 103.9 L401.1 102.9 L402.2 102.9 L507.3 217.8 L509.9 220.4 L510.7 220.4 L617.9 103.4 L619.7 102.6 L620.2 103.4 L619.7 254.8 L620.7 256.1 L682.2 255.6 L682.7 255.1 L682.4 0.5 L627.7 0.5 L594.9 36.8 L510.4 133.2 L505.8 128.6 L422.1 32.7 L393.2 0.5 L340.7 0.5ZM712.8 0.8 L713.0 191.1 L822.3 85.4 L820.3 83.1 L792.2 63.5 L793.0 62.2 L807.9 61.7 L873.7 56.9 L905.4 55.3 L906.1 56.1 L906.1 59.4 L905.4 60.9 L896.6 112.1 L890.5 145.8 L889.7 147.3 L889.7 150.2 L888.9 150.9 L887.4 150.2 L886.3 148.1 L869.6 126.0 L868.9 126.0 L807.9 183.3 L807.9 184.1 L880.7 253.3 L884.0 255.8 L1000.0 255.6 L997.2 251.7 L926.5 173.3 L926.5 172.3 L927.7 171.3 L929.5 171.0 L938.5 167.2 L949.9 160.6 L957.8 154.2 L964.4 147.0 L970.8 138.1 L975.9 128.3 L980.1 116.5 L982.6 105.9 L984.0 96.9 L984.5 82.8 L982.9 67.6 L980.4 57.1 L976.8 46.5 L971.0 35.2 L964.3 25.9 L958.1 19.5 L948.8 12.5 L937.0 6.4 L925.9 2.9 L911.5 0.6 L808.2 0.0ZM28.8 27.0 L23.6 34.3 L20.2 40.1 L17.0 47.1 L14.1 55.5 L11.4 68.9 L11.5 87.4 L12.9 95.4 L15.0 102.6 L18.1 110.3 L22.4 118.5 L27.1 125.5 L32.5 131.9 L38.3 137.2 L44.7 142.0 L53.7 147.3 L64.8 151.8 L74.8 154.4 L87.9 156.2 L210.1 156.6 L237.9 157.3 L242.0 158.3 L245.8 160.1 L251.7 165.3 L254.1 168.7 L255.8 172.5 L256.9 177.2 L256.9 180.8 L254.8 187.8 L250.6 193.6 L244.8 197.9 L237.9 199.9 L44.5 200.1 L0.0 255.3 L0.3 256.4 L243.3 255.9 L251.2 254.9 L260.7 252.6 L267.9 250.1 L275.6 246.4 L282.1 242.5 L288.0 238.0 L294.7 231.5 L299.1 226.0 L303.5 219.3 L307.1 212.4 L309.7 206.0 L311.9 198.3 L313.3 191.3 L314.4 180.3 L313.1 167.1 L311.1 158.1 L308.7 150.7 L306.0 144.5 L301.6 136.8 L297.1 130.5 L291.6 124.2 L278.7 114.1 L269.7 109.1 L258.9 104.7 L246.9 101.7 L237.1 100.4 L154.3 100.0 L84.3 99.0 L77.2 96.1 L72.0 91.2 L68.3 84.1 L67.5 76.6 L68.0 73.0 L69.1 69.7 L73.6 63.1 L79.7 59.0 L87.4 57.0 L263.6 57.3 L264.8 56.3 L308.3 1.3 L308.0 0.5 L90.3 0.0 L78.7 0.6 L64.0 3.6 L51.2 8.9 L45.3 12.3 L39.1 16.8Z"/></svg><span class="bp y">ORIGINAL</span></div>
       <img class="logo" src="art/logo.webp?h=d69bcb982d" alt="Jummah Dash">
-      <div class="tag">LATE FOR <b>JUMMAH</b>. AGAIN.</div></div>
+      <div class="tag">LATE FOR <b>JUMMAH</b>. AGAIN.</div><div class="play">TOUCH ANYWHERE TO PLAY</div></div>
       <div class="heroWrap" id="heroWrap"><canvas id="steamCv"></canvas><img class="hero" src="art/hero_hd.webp?h=198cf84203" alt=""></div>
       <div class="stats"><div>BEST <span id="hBest">0m</span></div><div class="gold"><span class="coin">£</span><span id="hBank">£0</span></div></div>
       <div class="mine">Heading to <b id="mineName">your masjid</b></div>
-      <div class="play">TOUCH ANYWHERE TO PLAY</div>
+      <button class="credit" id="bSmr">Designed &amp; built by <b>SMR Digital</b> <span>ⓘ</span></button>
     </div>
   </div>
 
+  <div class="sheet hide" id="smrInfo">
+    <div class="box mbox smrbox">
+      <div class="smrhd"><svg class="smrm big" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 256.4"><path fill="#fff" fill-rule="evenodd" d="M340.2 1.0 L340.2 255.3 L340.7 256.1 L399.6 255.8 L400.9 254.8 L400.6 103.9 L401.1 102.9 L402.2 102.9 L507.3 217.8 L509.9 220.4 L510.7 220.4 L617.9 103.4 L619.7 102.6 L620.2 103.4 L619.7 254.8 L620.7 256.1 L682.2 255.6 L682.7 255.1 L682.4 0.5 L627.7 0.5 L594.9 36.8 L510.4 133.2 L505.8 128.6 L422.1 32.7 L393.2 0.5 L340.7 0.5ZM712.8 0.8 L713.0 191.1 L822.3 85.4 L820.3 83.1 L792.2 63.5 L793.0 62.2 L807.9 61.7 L873.7 56.9 L905.4 55.3 L906.1 56.1 L906.1 59.4 L905.4 60.9 L896.6 112.1 L890.5 145.8 L889.7 147.3 L889.7 150.2 L888.9 150.9 L887.4 150.2 L886.3 148.1 L869.6 126.0 L868.9 126.0 L807.9 183.3 L807.9 184.1 L880.7 253.3 L884.0 255.8 L1000.0 255.6 L997.2 251.7 L926.5 173.3 L926.5 172.3 L927.7 171.3 L929.5 171.0 L938.5 167.2 L949.9 160.6 L957.8 154.2 L964.4 147.0 L970.8 138.1 L975.9 128.3 L980.1 116.5 L982.6 105.9 L984.0 96.9 L984.5 82.8 L982.9 67.6 L980.4 57.1 L976.8 46.5 L971.0 35.2 L964.3 25.9 L958.1 19.5 L948.8 12.5 L937.0 6.4 L925.9 2.9 L911.5 0.6 L808.2 0.0ZM28.8 27.0 L23.6 34.3 L20.2 40.1 L17.0 47.1 L14.1 55.5 L11.4 68.9 L11.5 87.4 L12.9 95.4 L15.0 102.6 L18.1 110.3 L22.4 118.5 L27.1 125.5 L32.5 131.9 L38.3 137.2 L44.7 142.0 L53.7 147.3 L64.8 151.8 L74.8 154.4 L87.9 156.2 L210.1 156.6 L237.9 157.3 L242.0 158.3 L245.8 160.1 L251.7 165.3 L254.1 168.7 L255.8 172.5 L256.9 177.2 L256.9 180.8 L254.8 187.8 L250.6 193.6 L244.8 197.9 L237.9 199.9 L44.5 200.1 L0.0 255.3 L0.3 256.4 L243.3 255.9 L251.2 254.9 L260.7 252.6 L267.9 250.1 L275.6 246.4 L282.1 242.5 L288.0 238.0 L294.7 231.5 L299.1 226.0 L303.5 219.3 L307.1 212.4 L309.7 206.0 L311.9 198.3 L313.3 191.3 L314.4 180.3 L313.1 167.1 L311.1 158.1 L308.7 150.7 L306.0 144.5 L301.6 136.8 L297.1 130.5 L291.6 124.2 L278.7 114.1 L269.7 109.1 L258.9 104.7 L246.9 101.7 L237.1 100.4 L154.3 100.0 L84.3 99.0 L77.2 96.1 L72.0 91.2 L68.3 84.1 L67.5 76.6 L68.0 73.0 L69.1 69.7 L73.6 63.1 L79.7 59.0 L87.4 57.0 L263.6 57.3 L264.8 56.3 L308.3 1.3 L308.0 0.5 L90.3 0.0 L78.7 0.6 L64.0 3.6 L51.2 8.9 L45.3 12.3 L39.1 16.8Z"/></svg><span>Digital</span></div>
+      <p>Jummah Dash is an SMR Original, designed and built in Luton by <b>SMR Digital</b>. We make:</p>
+      <ul class="smrlist">
+        <li><b>Websites &amp; apps</b> designed and built from scratch</li>
+        <li><b>Ordering apps</b> for takeaways, with 0% commission</li>
+        <li><b>Back-end systems</b>: admin dashboards, bookings, loyalty, staff tools</li>
+        <li><b>Graphic design</b>: logos, menus, branding</li>
+        <li><b>Printing</b>: banners, flyers, signs, business cards</li>
+        <li><b>Marketing</b>: social media content that brings customers in</li>
+      </ul>
+      <a class="go smrgo" id="smrOpen" href="https://smrgraphics.co.uk/?s=jummahdash" target="_blank" rel="noopener">OPEN TO FIND OUT MORE ▸</a>
+      <button class="go alt" id="smrClose">CLOSE</button>
+    </div>
+  </div>
   <div class="sheet hide" id="pick">
     <div class="box">
       <h2>WHICH IS YOUR MASJID?</h2>
@@ -322,6 +348,6 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 <script src="vehicles.js?h=32fdac20ce"></script>
 <script src="hd/cars_v3.js?h=333148ab5d"></script>
 <script src="hd/landmarks_hd.js?h=008cc0e557"></script>
-<script src="game.js?h=dc3f161deb"></script>
+<script src="game.js?h=fde673298c"></script>
 </body>
 </html>

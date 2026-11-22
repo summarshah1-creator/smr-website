@@ -1359,7 +1359,9 @@ function showOver() {
   missionRows($('ovRows'));
   $('over').classList.remove('hide'); }
 const tap = (id, fn) => $(id).addEventListener('pointerdown', e => { e.preventDefault(); e.stopPropagation(); fn(e); });
-tap('home', e => { if (e.target.closest('.tile')) return; start(); });
+tap('home', e => { if (e.target.closest('.tile,.credit')) return; start(); });
+tap('bSmr', () => $('smrInfo').classList.remove('hide')); tap('smrClose', () => $('smrInfo').classList.add('hide'));
+$('smrOpen').addEventListener('pointerdown', e => e.stopPropagation());
 tap('bMos', openPick); tap('pickClose', () => $('pick').classList.add('hide'));
 tap('bHow', () => $('how').classList.remove('hide'));
 
