@@ -949,6 +949,37 @@ L.gurdwara = { n: 'Guru Nanak Gurdwara', w: 440, d(c, x, G) {
   for (const [sx, dir] of [[x + 120, 1], [x + 290, -1]]) for (let i = 0; i < 10; i++) R(c, i % 2 ? '#b9bcc0' : '#a8abb0', sx + (dir > 0 ? i * 3 : 30 - i * 3), G - 44 + i * 4.4, 30, 4);
 } };
 
+L.murganos = { n: 'Murganos', w: 186, d(c, x, G) {
+  // 53 Bute Street (owner's photos): 1930s four-storey block, red brick piers, three floors of tall white steel windows (each as
+  // tall as a house door) with black spandrel panels between them (half a door), a cream parapet a little deeper than the panels,
+  // with fluted art-deco blocks over the piers. Webs N Roots entrance (white sign, glass door) on the left = Murganos' neighbour door;
+  // Murganos: dark timber cladding, yellow letters with a chilli for the g, black awning, four bi-fold windows up two steps.
+  // Metres at 20 units a metre (SCALE .82), like the other shops. No lamppost (owner).
+  const BR = '#8a3e2a', BL = '#7a3424', WH = '#ece6d6', BK = '#2a2c30', TB = '#6a4a34', m = v => G - Math.round(v * 20);
+  BRICK(c, x, m(14.1), 186, m(4.2) - m(14.1), BR, BL); R(c, OUT, x - 1, m(14.1) - 1, 188, 1); R(c, OUT, x - 1, m(14.1), 1, m(0) - m(14.1)); R(c, OUT, x + 186, m(14.1), 1, m(0) - m(14.1));
+  BOX(c, WH, x - 1, m(14.1), 188, m(12.85) - m(14.1)); R(c, SH(WH, .9), x - 1, m(12.85) - 2, 188, 2);
+  for (const px of [x + 12, x + 51, x + 178]) { BOX(c, WH, px - 4, m(14.1) - 4, 8, 6); for (let k = 0; k < 3; k++) R(c, SH(WH, .8), px - 3 + k * 3, m(14.1) - 3, 1, 5); }
+  const bay = (bx, panes) => { const bw = panes * 34 + 4; BOX(c, '#f2f0ea', bx, m(12.85), bw, m(4.6) - m(12.85));
+    for (let fl = 0; fl < 3; fl++) { const y0 = m(6.75 + fl * 3.05), y1 = m(4.7 + fl * 3.05);
+      for (let k = 0; k < panes; k++) { const wx = bx + 4 + k * 34; R(c, '#8fa4b4', wx, y0, 30, y1 - y0); for (let a = 1; a < 3; a++) R(c, '#f2f0ea', wx + a * 10, y0, 1, y1 - y0); for (let b = 1; b < 6; b++) R(c, '#f2f0ea', wx, y0 + Math.round(b * (y1 - y0) / 6), 30, 1); R(c, '#f2f0ea', wx, y0 + Math.round((y1 - y0) / 2), 30, 2); R(c, 'rgba(240,240,236,.45)', wx + 1, y0 + Math.round((y1 - y0) * .55), 28, Math.round((y1 - y0) * .4)); }
+      if (fl < 2) { const p0 = m(7.75 + fl * 3.05); BOX(c, BK, bx, p0, bw, y0 - p0 - (fl ? 0 : 0) - (y0 - p0 > 0 ? 0 : 0)); R(c, '#1e2024', bx + 3, p0 + 3, bw - 6, y0 - p0 - 6); R(c, '#34363c', bx + 4, p0 + 4, bw - 8, 1);
+        if (panes === 1) { R(c, '#5a5c62', bx + 8, p0 + 7, 1, 7); R(c, '#5a5c62', bx + 13, p0 + 7, 1, 7); R(c, '#5a5c62', bx + 18, p0 + 7, 1, 7); R(c, '#5a5c62', bx + 23, p0 + 7, 1, 7); R(c, '#5a5c62', bx + 13, p0 + 13, 6, 1); } else for (const sx of [bx + 14, bx + 50, bx + 80]) R(c, '#7a4a30', sx, p0 + 5, 3, 2); } } };
+  bay(x + 2, 1); bay(x + 66, 3);
+  // cream band over the shops, purple pipe under it
+  BOX(c, WH, x - 1, m(4.6), 188, m(4.2) - m(4.6)); R(c, '#5a4a5a', x, m(4.2) + 1, 186, 1);
+  // Webs N Roots: white sign with the round logo, glass door into a lit hallway
+  BOX(c, '#f4f4f2', x + 1, m(4.15), 42, m(3.0) - m(4.15)); CIRC(c, '#3a8a4a', x + 22, m(3.58), 9); CIRC(c, '#f4f4f2', x + 22, m(3.58), 8); CIRC(c, '#c8303a', x + 22, m(3.58), 7); CIRC(c, '#f4f4f2', x + 22, m(3.58), 6); R(c, '#3a8a4a', x + 19, m(3.58) - 2, 2, 4); R(c, '#3a8a4a', x + 23, m(3.58) - 3, 2, 5);
+  BOX(c, '#2a2c30', x + 1, m(3.0), 42, m(0) - m(3.0)); R(c, '#f2ead8', x + 8, m(2.25), 26, m(0) - m(2.25)); R(c, '#d8c8a8', x + 8, m(1.0), 26, m(0) - m(1.0)); R(c, '#2a2c30', x + 20, m(2.25), 2, m(0) - m(2.25)); R(c, '#c8303a', x + 11, m(1.6), 6, 4); R(c, '#9fb7c9', x + 8, m(2.8), 26, m(2.3) - m(2.8));
+  // Murganos: timber cladding, letters, awning, bi-fold windows up the steps
+  BOX(c, TB, x + 44, m(4.2), 142, m(0) - m(4.2)); for (let yy = m(4.2) + 4; yy < m(0); yy += 4) R(c, SH(TB, (yy % 8) ? .9 : 1.06), x + 45, yy, 140, 1);
+  c.font = '700 15px Silk'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = '#5a4a10'; c.fillText('Mur anos', x + 116, m(3.52) + 1); c.fillStyle = '#f8e01c'; c.fillText('Mur anos', x + 115, m(3.52));
+  P(c, '#d8402a', [[x + 117, m(3.85)], [x + 121, m(3.75)], [x + 120, m(3.3)], [x + 114, m(3.05)], [x + 117, m(3.4)]]); P(c, '#3a9a3a', [[x + 116, m(3.88)], [x + 118, m(3.95)], [x + 118, m(3.8)]]);
+  BOX(c, '#1c1c1e', x + 54, m(3.05), 124, m(2.72) - m(3.05)); T(c, '53', x + 57, m(3.02), 5, '#ffffff', 'left'); T(c, 'FAMOUS FLAME GRILLED CHICKEN', x + 112, m(3.02), 5, '#ffffff'); T(c, '01582 410310', x + 174, m(3.02), 5, '#ffffff', 'right');
+  BOX(c, '#3a3c42', x + 62, m(2.7), 108, m(1.1) - m(2.7)); for (let k = 0; k < 4; k++) { R(c, '#7a8a96', x + 64 + k * 26, m(2.62), 24, m(1.18) - m(2.62)); R(c, 'rgba(255,255,255,.35)', x + 66 + k * 26, m(2.55), 3, m(1.25) - m(2.55)); R(c, '#3a5a3a', x + 64 + k * 26, m(1.6), 24, m(1.18) - m(1.6)); }
+  for (let k = 0; k < 10; k++) R(c, ['#c8783a', '#a85a2a', '#e8c070', '#8a4a20'][k % 4], x + 48 + (k % 2) * 6, m(2.6) + Math.floor(k / 2) * 6, 6, 6);
+  R(c, '#141416', x + 50, m(2.85), 2, 3); R(c, '#141416', x + 175, m(2.85), 2, 3);
+  R(c, '#3a3a3e', x + 44, m(.3), 142, m(0) - m(.3)); R(c, '#4a4a50', x + 44, m(.3), 142, 1);
+} };
 L.cycleking = { n: 'Cycle King', w: 344, d(c, x, G) {
   const B = '#9a4a34', BL = '#86402c', Y = '#f7d21e', RD = '#d8262f', WF = '#f2f0ea';
   // three brick blocks over the shops: tall left, low middle, tall right, each with a stepped parapet
@@ -1361,7 +1392,7 @@ const SHARP = {
     BOX(c, '#151618', X(-4), Y(88), Math.round(96 * f), 17); T(c, 'CHAIIKHANA', X(44), Y(88) + 4, 8, '#f4f4f2', 'center', true);
     T(c, 'ORDER', X(34), Y(30) + 2, 8, '#e0458a', 'center', true); },
 };
-const SCALE = { jdgyms: 1.3, vauxhall: 1.25, kaya: .85, galaxy: 1.25, leagrave: .9, letters: .8, townhall: 1.2, masjidali: 1.5, inspire: 1.21, funfair: 1.25, airport: 1.2, sixthform: 1.44, uob: 1.2, chiltern: 1.2, lewsey: 1.2, grandbazar: 1.2, lidl: 1.2, matalan: 1.5, bandq: 1.56, tesco: 1.5, cycleking: .98, topspizza: .82, alquds: .82, kahwa: .82, gna: .82, toros: .82, krispy: .82, lutonhoo: 1.5, currys: 1.15, masjid: 1.32, suffa: 1.08, oak: .82, chaiikhana: .85, spudkingz: .48, nadeem: 1.52, chaiiwala: 1.32, frasers: 1.6, stmarys: 1.02, hatfactory: 1.3 };
+const SCALE = { jdgyms: 1.3, vauxhall: 1.25, kaya: .85, galaxy: 1.25, leagrave: .9, letters: .8, townhall: 1.2, masjidali: 1.5, inspire: 1.21, funfair: 1.25, airport: 1.2, sixthform: 1.44, uob: 1.2, chiltern: 1.2, lewsey: 1.2, grandbazar: 1.2, lidl: 1.2, matalan: 1.5, bandq: 1.56, tesco: 1.5, cycleking: .98, topspizza: .82, alquds: .82, kahwa: .82, gna: .82, toros: .82, murganos: .82, krispy: .82, lutonhoo: 1.5, currys: 1.15, masjid: 1.32, suffa: 1.08, oak: .82, chaiikhana: .85, spudkingz: .48, nadeem: 1.52, chaiiwala: 1.32, frasers: 1.6, stmarys: 1.02, hatfactory: 1.3 };
 // (SCALE is applied at the end of the file, once every landmark is defined)
 
 /* things drawn after scaling, so they keep their own size */
@@ -1758,7 +1789,7 @@ window.LM_ANIM.funfair = (c, x, G, t) => {
   CIRC(c, OUT, px, py, 5); CIRC(c, '#9aa3ad', px, py, 4); BOX(c, '#d32f2f', px - 4, py - 10, 8, 6);
 };
 
-window.LM_ORDER = ['galaxy', 'townhall', 'stmarys', 'letters', 'frasers', 'station', 'smr', 'hatfactory', 'chaiiwala', 'chaiikhana', 'spudkingz', 'miamicrispy', 'barak', 'masjid', 'masjidali', 'suffa', 'gurdwara', 'ldh', 'lutonhoo', 'foodbank', 'inspire', 'nadeem', 'oak', 'periperi', 'toros', 'cycleking', 'gna', 'kahwa', 'leagrave', 'topspizza', 'alquds', 'kaya', 'karwan', 'krispy', 'tesco', 'currys', 'bandq', 'matalan', 'lidl', 'jdgyms', 'bigyellow', 'orbital', 'grandbazar', 'lewsey', 'marshfarm', 'venue', 'chiltern', 'uob', 'sixthform', 'wardownfield', 'wardown', 'wardownbridge', 'funfair', 'stockwood', 'welcome', 'vauxhall', 'airport'];
+window.LM_ORDER = ['galaxy', 'townhall', 'stmarys', 'letters', 'frasers', 'station', 'smr', 'hatfactory', 'chaiiwala', 'chaiikhana', 'spudkingz', 'miamicrispy', 'barak', 'masjid', 'masjidali', 'suffa', 'gurdwara', 'ldh', 'lutonhoo', 'foodbank', 'inspire', 'nadeem', 'oak', 'periperi', 'toros', 'murganos', 'cycleking', 'gna', 'kahwa', 'leagrave', 'topspizza', 'alquds', 'kaya', 'karwan', 'krispy', 'tesco', 'currys', 'bandq', 'matalan', 'lidl', 'jdgyms', 'bigyellow', 'orbital', 'grandbazar', 'lewsey', 'marshfarm', 'venue', 'chiltern', 'uob', 'sixthform', 'wardownfield', 'wardown', 'wardownbridge', 'funfair', 'stockwood', 'welcome', 'vauxhall', 'airport'];
 Object.keys(SCALE).forEach(k => { const f = SCALE[k], d0 = L[k].d, w0 = L[k].w, M = 80, H = 320; L[k].w = Math.round(w0 * f);
   // drawn natively at the new size (not a stretched picture), so edges, lines and text stay sharp
   L[k].d = (c, x, G) => { const pk = RK; c.save(); c.translate(Math.round(x), Math.round(G)); c.scale(f, f); c.beginPath(); c.rect(-M, -H, w0 + M * 2, H); c.clip(); RK = f; try { d0(c, 0, 0); } finally { RK = pk; c.restore(); } if (SHARP[k]) SHARP[k](c, x, G, f); }; });

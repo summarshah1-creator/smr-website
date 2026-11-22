@@ -1877,6 +1877,66 @@ HD.airport = (c, x, G) => {
 };
 
 
+// Murganos, 53 Bute Street (owner's photos, 22 Nov): 1930s four-storey block, red-brick piers between bays of tall white steel
+// windows on three floors (each window as tall as a house door, 2.05 m), black spandrel panels between floors (half that, 1 m;
+// the narrow bay's panels carry the raised LVI mark, the wide bay's are peeling), a cream parapet a little deeper than the
+// panels (1.25 m) with fluted art-deco blocks over the piers, a cream band over the shops. Webs N Roots' entrance on the left
+// (white sign + round logo, glazed door into a lit hall). Murganos up two steps: dark timber cladding, yellow letters with a
+// chilli for the g, black awning (53 / FAMOUS FLAME GRILLED CHICKEN / 01582 410310), four grey bi-fold windows, food photos,
+// wall lights, granite plinth. No lamppost (owner). Metres at 20 units a metre.
+HD.murganos = (c, x, G) => {
+  c.save(); c.lineJoin = 'round'; const WH = '#ece6d6', BK = '#25272b', TB = '#6e4c34', m = v => G - v * 20;
+  brick(c, x, m(14.1), 186, m(4.2) - m(14.1), '#8e402c'); c.strokeStyle = LINE; c.lineWidth = .5; c.strokeRect(x, m(14.1), 186, m(0) - m(14.1));
+  c.fillStyle = lg(c, 0, m(14.1), 0, m(12.85), [[0, '#f2ede0'], [1, '#dcd4c2']]); c.fillRect(x - 1, m(14.1), 188, m(12.85) - m(14.1)); c.strokeStyle = LINE; c.lineWidth = .4; c.strokeRect(x - 1, m(14.1), 188, m(12.85) - m(14.1));
+  rect(c, 'rgba(0,0,0,.12)', x - 1, m(12.85) - 1.2, 188, 1.2); for (let i = 0; i < 9; i++) rect(c, 'rgba(120,110,90,.18)', x + i * 21, m(14.1), .4, m(12.85) - m(14.1));
+  for (const px of [x + 12, x + 53, x + 177]) { rect(c, WH, px - 4.5, m(14.1) - 5, 9, 7, LINE, .35); for (let k = 0; k < 4; k++) rect(c, 'rgba(90,80,60,.4)', px - 3 + k * 2, m(14.1) - 4.2, .5, 5.6); rect(c, '#d8d0bc', px - 5.5, m(14.1) - 5.8, 11, 1.2, LINE, .25); }
+  const win = (wx, y0, h) => { rect(c, '#f4f2ec', wx, y0, 30, h, '#9a988e', .3);
+    c.fillStyle = lg(c, wx, y0, wx + 20, y0 + h, [[0, '#c4d2dc'], [.5, '#8a9cac'], [1, '#5a6a78']]); c.fillRect(wx + 1, y0 + 1, 28, h - 2);
+    c.fillStyle = 'rgba(244,242,236,.55)'; c.fillRect(wx + 1, y0 + h * .5, 28, h * .5 - 1); for (let k = 0; k < 14; k++) rect(c, 'rgba(210,206,196,.45)', wx + 1.5 + k * 2, y0 + h * .5, .5, h * .5 - 1);   // nets
+    for (let a = 1; a < 3; a++) rect(c, '#f4f2ec', wx + a * 10 - .4, y0, .8, h); for (let b = 1; b < 6; b++) rect(c, '#f4f2ec', wx, y0 + b * h / 6 - .3, 30, .6); rect(c, '#f4f2ec', wx, y0 + h / 2 - .8, 30, 1.6);
+    glare(c, wx + 1, y0 + 1, 28, h - 2); };
+  const bay = (bx, panes) => { const bw = panes * 34 + 4; rect(c, '#f4f2ec', bx, m(12.85), bw, m(4.6) - m(12.85), LINE, .4);
+    for (let fl = 0; fl < 3; fl++) { const y0 = m(6.75 + fl * 3.05), y1 = m(4.7 + fl * 3.05); for (let k = 0; k < panes; k++) win(bx + 4 + k * 34, y0, y1 - y0);
+      if (fl < 2) { const p0 = m(7.75 + fl * 3.05); c.fillStyle = lg(c, 0, p0, 0, y0, [[0, '#33363b'], [1, '#202226']]); c.fillRect(bx, p0, bw, y0 - p0); c.strokeStyle = '#111'; c.lineWidth = .4; c.strokeRect(bx, p0, bw, y0 - p0);
+        const nP = panes === 1 ? 1 : 3; for (let k = 0; k < nP; k++) { const qx = bx + 3 + k * (bw - 6) / nP; c.strokeStyle = 'rgba(90,92,98,.8)'; c.lineWidth = .6; c.strokeRect(qx + 1.5, p0 + 2.5, (bw - 6) / nP - 3, y0 - p0 - 5); }
+        if (panes === 1) txt(c, 'LVI', bx + 19, (p0 + y0) / 2 + .4, 8, '#4a4c52', { f: 'Georgia, serif', w: 700, ls: 1.2, sh: 'rgba(0,0,0,.6)' });
+        else for (const [sx, sw] of [[14, 6], [38, 3], [72, 5], [96, 4]]) { c.fillStyle = 'rgba(150,80,50,.7)'; c.beginPath(); c.ellipse(bx + sx, p0 + 6 + (sx % 7), sw / 2, 1.6, .3, 0, 7); c.fill(); } } }
+    rect(c, 'rgba(0,0,0,.15)', bx - 1, m(12.85), 1, m(4.6) - m(12.85)); };
+  bay(x + 2, 1); bay(x + 66, 3);
+  // dishes on the first floor
+  for (const [dx, dy] of [[x + 58, 5.2], [x + 92, 4.95], [x + 156, 5.1]]) { c.fillStyle = lg(c, dx - 4, 0, dx + 4, 0, [[0, '#5a5e66'], [1, '#2e3238']]); c.beginPath(); c.ellipse(dx, m(dy), 4.4, 3.2, -.2, 0, 7); c.fill(); rect(c, '#2a2c30', dx - .4, m(dy) - 1, .8, 4); }
+  // cream band over the shops, pipe under it
+  c.fillStyle = lg(c, 0, m(4.6), 0, m(4.2), [[0, '#efe9da'], [1, '#d4ccb8']]); c.fillRect(x - 2, m(4.6), 190, m(4.2) - m(4.6)); c.strokeStyle = LINE; c.lineWidth = .4; c.strokeRect(x - 2, m(4.6), 190, m(4.2) - m(4.6)); rect(c, '#5a4a5e', x, m(4.2) + .6, 186, .8);
+  // Webs N Roots entrance
+  rect(c, '#f6f6f4', x + 1, m(4.15), 42, m(3.0) - m(4.15), '#9a9a96', .4);
+  { const lx = x + 22, ly = (m(4.15) + m(3.0)) / 2; c.beginPath(); c.arc(lx, ly, 8.4, 0, 7); c.strokeStyle = '#3a8a4a'; c.lineWidth = .9; c.stroke(); c.beginPath(); c.arc(lx, ly, 6.6, 0, 7); c.strokeStyle = '#c8303a'; c.lineWidth = .6; c.stroke();
+    txt(c, 'WEBS N ROOTS', lx, ly - 4.4, 1.7, '#3a7a44', { f: 'Mont, sans-serif' }); rect(c, '#3a8a4a', lx - 3, ly - 2, 1.4, 4.6); rect(c, '#3a8a4a', lx + 1.4, ly - 2.6, 1.4, 5.2); line(c, '#3a8a4a', .8, [[lx - 3, ly + 2.6], [lx + 2.8, ly + 2.6]]); txt(c, 'NIGERIAN RESTAURANT', lx, ly + 4.8, 1.2, '#c8303a', { f: 'Mont, sans-serif' }); }
+  rect(c, '#26282c', x + 1, m(3.0), 42, m(0) - m(3.0)); rect(c, '#9fb4c4', x + 6, m(2.85), 32, m(2.35) - m(2.85));
+  c.fillStyle = lg(c, 0, m(2.25), 0, m(0), [[0, '#f8f0dc'], [.6, '#e6d6b4'], [1, '#b8a07a']]); c.fillRect(x + 6, m(2.25), 32, m(0) - m(2.25));
+  rect(c, '#e8e8e4', x + 14, m(2.1), 14, 3.6, '#555', .2); txt(c, 'WELCOME', x + 21, m(2.1) + 1.8, 1.6, '#3a3a3e', { f: 'Mont, sans-serif' }); rect(c, '#2a2a2e', x + 18, m(1.6), 8, 7); txt(c, 'WE ARE OPEN', x + 22, m(1.6) + 3.4, 1.1, '#f2c43a', { f: 'Mont, sans-serif' });
+  rect(c, '#8a6a4a', x + 9, m(.9), 6, m(0) - m(.9)); rect(c, '#2a2c30', x + 21.6, m(2.25), 1, m(0) - m(2.25)); glare(c, x + 6, m(2.25), 32, m(0) - m(2.25));
+  // Murganos: timber cladding
+  c.fillStyle = TB; c.fillRect(x + 44, m(4.2), 142, m(0) - m(4.2)); for (let yy = m(4.2), r = 0; yy < m(0); yy += 2.6, r++) { rect(c, r % 3 ? 'rgba(40,20,10,.25)' : 'rgba(255,220,180,.08)', x + 44, yy, 142, .35); for (let k = 0; k < 3; k++) rect(c, 'rgba(30,15,8,.25)', x + 44 + ((r * 53 + k * 47) % 140), yy, .35, 2.6); if (r % 4 === 1) rect(c, 'rgba(255,230,200,.06)', x + 44, yy, 142, 2.6); }
+  c.strokeStyle = LINE; c.lineWidth = .45; c.strokeRect(x + 44, m(4.2), 142, m(0) - m(4.2));
+  { const ty = m(3.55); c.save(); c.font = 'italic 900 15px Mont, sans-serif'; c.textBaseline = 'middle'; c.textAlign = 'left'; const L = 'Mur', Rr = 'anos', wL = c.measureText(L).width, wR = c.measureText(Rr).width, gap = 7, tx = x + 116 - (wL + gap + wR) / 2;
+    c.fillStyle = 'rgba(70,50,0,.55)'; c.fillText(L, tx + .7, ty + .8); c.fillText(Rr, tx + wL + gap + .7, ty + .8); c.fillStyle = '#ffe81c'; c.fillText(L, tx, ty); c.fillText(Rr, tx + wL + gap, ty);
+    const gx = tx + wL + gap / 2; c.fillStyle = lg(c, gx - 3, 0, gx + 3, 0, [[0, '#a82a1a'], [.5, '#e84a2a'], [1, '#b83020']]); c.beginPath(); c.moveTo(gx - 1, ty - 6); c.quadraticCurveTo(gx + 4, ty - 3, gx + 2.4, ty + 5); c.quadraticCurveTo(gx - .5, ty + 9.6, gx - 5, ty + 8.6); c.quadraticCurveTo(gx - .6, ty + 5, gx - 1.6, ty - 4.6); c.fill();
+    c.fillStyle = '#3aa03a'; c.beginPath(); c.moveTo(gx - 3, ty - 7.6); c.quadraticCurveTo(gx - 1, ty - 9.6, gx + 1.4, ty - 8.4); c.quadraticCurveTo(gx + .4, ty - 5.4, gx - 1, ty - 4.8); c.fill(); c.restore(); }
+  // awning
+  c.fillStyle = lg(c, 0, m(3.08), 0, m(2.72), [[0, '#3a3a3c'], [.3, '#1c1c1e'], [1, '#121214']]); c.beginPath(); c.moveTo(x + 52, m(3.08)); c.lineTo(x + 180, m(3.08)); c.lineTo(x + 182, m(2.72)); c.lineTo(x + 50, m(2.72)); c.closePath(); c.fill();
+  txt(c, '53', x + 54, m(2.86), 4, '#fff', { a: 'left', f: 'Mont, sans-serif', w: 800 }); txt(c, 'FAMOUS FLAME GRILLED CHICKEN', x + 106, m(2.86), 4, '#fff', { f: 'Mont, sans-serif', w: 800 }); txt(c, '01582 410310', x + 178, m(2.86), 4, '#fff', { a: 'right', f: 'Mont, sans-serif', w: 800 });
+  // bi-fold windows up two steps, food photos, wall lights
+  rect(c, '#3a3d44', x + 62, m(2.7), 110, m(1.05) - m(2.7), '#1a1c20', .4);
+  for (let k = 0; k < 4; k++) { const wx = x + 64.4 + k * 26.6; c.fillStyle = lg(c, 0, m(2.62), 0, m(1.12), [[0, '#9aaab6'], [.55, '#5a6a76'], [1, '#2a3a32']]); c.fillRect(wx, m(2.62), 24.4, m(1.12) - m(2.62));
+    rect(c, 'rgba(40,90,50,.7)', wx, m(1.55), 24.4, m(1.12) - m(1.55)); rect(c, '#e8e4d0', wx + 6, m(2.4), 6, 4); rect(c, '#f0ead0', wx + 14, m(2.35), 5, 3); glare(c, wx, m(2.62), 24.4, m(1.12) - m(2.62)); }
+  rect(c, '#f4f2ec', x + 116, m(1.95), 8, 2.4); txt(c, 'OPEN', x + 120, m(1.95) + 1.2, 1.7, '#1a1a1a', { f: 'Georgia, serif', w: 700 }); rect(c, '#3aa050', x + 104, m(1.7), 3, 4); rect(c, '#3aa050', x + 134, m(1.75), 3, 4);
+  for (let k = 0; k < 10; k++) { const fx = x + 47 + (k % 2) * 6.6, fy = m(2.55) + Math.floor(k / 2) * 6.4; rect(c, '#f2ead8', fx, fy, 6.2, 6, '#8a8070', .2); c.fillStyle = ['#b8642a', '#8a3a1a', '#d8a050', '#6a2a10', '#c87a3a'][k % 5]; c.beginPath(); c.ellipse(fx + 3.1, fy + 3.2, 2.4, 1.8, k, 0, 7); c.fill(); }
+  for (const lx of [x + 49, x + 176]) { rect(c, '#141416', lx, m(2.9), 2, 3); const g = c.createRadialGradient(lx + 1, m(2.9) + 3, 0, lx + 1, m(2.9) + 3, 6); g.addColorStop(0, 'rgba(255,240,200,.35)'); g.addColorStop(1, 'rgba(255,240,200,0)'); c.fillStyle = g; c.fillRect(lx - 5, m(2.9), 12, 10); }
+  // two steps / granite plinth
+  rect(c, '#3c3c40', x + 44, m(.3), 142, m(0) - m(.3)); rect(c, '#55565c', x + 44, m(.3), 142, .8); rect(c, '#2e2e32', x + 44, m(.15), 142, .5);
+  c.restore();
+};
+
 // ---------- storey heights (owner, 22 Nov) ----------
 // Every shop is fitted to the same real measurements so doors, signs and windows line up along the street (UK shopfront
 // guides + typical storey heights): shop door ~2.1-2.2 m, shopfront glass to 2.4 m, fascia board 2.4-3.2 m, first-floor
