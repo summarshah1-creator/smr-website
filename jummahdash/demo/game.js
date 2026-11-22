@@ -187,7 +187,7 @@ function hazed(id, v) {   // pale, sunset-tinted copy for the far skyline
 
 /* vehicles, rendered at KR, both directions */
 const NEAR_ONLY = { police: 1, policevan: 1, ambulance: 1, fire: 1, postvan: 1 };   // lettering on the side would read backwards in the far lane
-const CAR_KEYS = ['jazz', 'yaris', 'polo', 'fiesta', 'focus', 'zafira', 'avensis', 'x6', 'x7', 'prius', 'prius2', 'taxi2', 'sclass', 'rolls', 'golfr', 'v60', 'xc40', 'corsa', 'fiat500', 'sportage', 'gt3', 'f812', 'lambo', 'astra', 'golf', 'bmw1', 'a3', 'aold', 'a45', 'bmw3', 'c63s', 'c63', 'tesla', 'qashqai', 'rangerover', 'gwagon', 'urus', 'taxi', 'bigvan', 'postvan', 'smallvan', 'police', 'policevan', 'tractor', 'artic', 'moped', 'bike', 'binlorry', 'ambulance', 'fire'];
+const CAR_KEYS = ['jazz', 'yaris', 'polo', 'fiesta', 'focus', 'zafira', 'avensis', 'x6', 'x7', 'prius', 'prius2', 'taxi2', 'sclass', 'rolls', 'golfr', 'v60', 'xc40', 'corsa', 'fiat500', 'sportage', 'gt3', 'f812', 'lambo', 'astra', 'golf', 'bmw1', 'a3', 'aold', 'a45', 'bmw3', 'c63s', 'c63', 'tesla', 'qashqai', 'rangerover', 'gwagon', 'urus', 'taxi', 'bigvan', 'postvan', 'smallvan', 'police', 'policevan', 'tractor', 'artic', 'binlorry', 'ambulance', 'fire', 'bus', 'dd', 'coach', 'moped_b', 'moped_g', 'moped_o', 'motorbike', 'cycle_0', 'cycle_1', 'cycle_2', 'cycle_3', 'cycle_4'];
 const carCache = new Map();
 /* HD pass for the vehicle art (owner, 21 Nov): the shared Flappy drawings go through a context wrapper that turns the flat body
    colour into a glossy gradient with a reflection band, thins the dark outlines, gives the glass a sky reflection and the rims a
@@ -205,23 +205,23 @@ window.hdCtx = (o, body, top, bot) => {
     if (p === 'stroke') return (...a) => { const lw = t.lineWidth, ss = typeof t.strokeStyle === 'string' ? t.strokeStyle.toLowerCase() : ''; if (ss === OUTL || ss === '#000000') t.lineWidth = Math.min(lw, .55); t.stroke(...a); t.lineWidth = lw; };
     const v = t[p]; return typeof v === 'function' ? v.bind(t) : v; }, set(t, p, v) { t[p] = v; return true; } });
 };
-function carSprite(k, ci, flip) {
-  const id = k + ci + flip + '@' + KR; if (carCache.has(id)) return carCache.get(id);
+function carSprite(k, ci, flip, fr = 0) {
+  const id = k + ci + flip + '@' + KR + '#' + fr; if (carCache.has(id)) return carCache.get(id);
   const V = VEHICLES[k]; const col = V.colours[ci % V.colours.length]; const SC = 1.6, k2 = KR * SC;
   const c = document.createElement('canvas'); c.width = Math.ceil((V.w + 6) * k2); c.height = Math.ceil(90 * k2); const o = c.getContext('2d');
-  o.scale(k2, k2); window.__WREC = []; try { V.d(V.v3 ? o : hdCtx(o, col[1], 86 - (V.h || 24), 86), 3, 86, col); } catch (e) {} const wr = window.__WREC; window.__WREC = null;
+  o.scale(k2, k2); window.__WREC = []; window.__RF = fr; try { V.d(V.v3 ? o : hdCtx(o, col[1], 86 - (V.h || 24), 86), 3, 86, col); } catch (e) {} const wr = window.__WREC; window.__WREC = null;
   // specular sweep across the bodywork
   o.setTransform(1, 0, 0, 1, 0, 0); if (!(wr || []).some(w => w.under)) { o.globalCompositeOperation = 'source-atop'; const sg = o.createLinearGradient(c.width * .2, 0, c.width * .55, c.height); sg.addColorStop(0, 'rgba(255,255,255,0)'); sg.addColorStop(.48, 'rgba(255,255,255,.1)'); sg.addColorStop(.52, 'rgba(255,255,255,0)'); o.fillStyle = sg; o.fillRect(0, 0, c.width, c.height); o.globalCompositeOperation = 'source-over'; }
   let out = c;
   if (flip) { const f = document.createElement('canvas'); f.width = c.width; f.height = c.height; const g = f.getContext('2d'); g.translate(f.width, 0); g.scale(-1, 1); g.drawImage(c, 0, 0); g.setTransform(1, 0, 0, 1, 0, 0);
     if (V.fixMirror) { g.scale(k2, k2); try { V.fixMirror(hdCtx(g, col[1], 86 - (V.h || 24), 86), 3, 86, f.width / k2); } catch (e) {} } out = f; }
-  const wh = (wr || []).map(w => ({ x: (flip ? c.width - w.x : w.x) / KR, y: w.y / KR, r: w.r / KR, rim: w.rim, spokes: w.spokes || 5, wi: w.wi }));
+  const wh = (wr || []).map(w => ({ x: (flip ? c.width - w.x : w.x) / KR, y: w.y / KR, r: w.r / KR, rim: w.rim, spokes: w.spokes || 5, wi: w.wi, well: w.well }));
   const under = (wr || []).some(w => w.under);
   let lt = null; if (V.lights) { const Lr = V.lights(), W2 = c.width / KR, m = q => ({ x: flip ? W2 - q.x * SC : q.x * SC, y: q.y * SC, t: q.t }); lt = { bl: Lr.bl.map(m), hl: Lr.hl.map(m) }; }
   const v = { c: out, w: (V.w + 6) * SC, h: 90 * SC, gy: 86 * SC, sp: V.speed, wh, under, lt };
-  carCache.set(id, v); if (carCache.size > 40) carCache.delete(carCache.keys().next().value); return v;
+  carCache.set(id, v); if (carCache.size > 140) carCache.delete(carCache.keys().next().value); return v;
 }
-function drawTrafficCar(c) { const far = c.lane === 0, sp = carSprite(c.k, c.ci, far), gy = (far ? ROAD_T + 19 : ROAD_B - 3) + c.yo, X = px(c.x), Y = px(gy - sp.gy), k = c.crash, K = far ? .9 : 1;   // far lane a touch smaller (further away)
+function drawTrafficCar(c) { const VV = VEHICLES[c.k], far = c.lane === 0, sp = carSprite(c.k, c.ci, far, VV.frames > 1 ? Math.floor((c.roll || 0) * .25) % VV.frames : 0), gy = (far ? ROAD_T + 19 : ROAD_B - 3) + c.yo, X = px(c.x), Y = px(gy - sp.gy), k = c.crash, K = far ? .9 : 1;   // far lane a touch smaller (further away)
   ctx.fillStyle = 'rgba(0,0,0,.24)'; ctx.beginPath(); ctx.ellipse(c.x + sp.w / 2, gy, sp.w * .44 * K, 2.8 * K, 0, 0, 7); ctx.fill();
   ctx.save(); if (k && k.rot) { const cx = c.x + sp.w / 2, cy = gy - 10; ctx.translate(cx, cy); ctx.rotate(k.rot); ctx.translate(-cx, -cy); }
   else if (!k) { const b = Math.sin((c.roll || 0) * .09) * .35; ctx.translate(0, b); }   // a little suspension bob
@@ -245,7 +245,7 @@ function drawTrafficCar(c) { const far = c.lane === 0, sp = carSprite(c.k, c.ci,
   ctx.restore(); }
 // turning wheels: the rim + spokes are redrawn over each wheel every frame, rotated by how far the car has rolled
 function drawWheels(sp, x0, y0, roll) { for (const w of sp.wh) { const cx = x0 + w.x, cy = y0 + w.y, r = w.r * .64; if (r < 1.2) continue;
-  if (sp.under) { ctx.beginPath(); ctx.arc(cx, cy, w.r * .98, 0, 7); ctx.fillStyle = '#1b1c20'; ctx.fill(); }
+  if (sp.under) { ctx.beginPath(); if (w.well) { ctx.arc(cx, cy, w.r * 1.16, Math.PI, 0); ctx.lineTo(cx + w.r * 1.16, cy + w.r * .2); ctx.lineTo(cx - w.r * 1.16, cy + w.r * .2); } else ctx.arc(cx, cy, w.r * .98, 0, 7); ctx.fillStyle = '#141418'; ctx.fill(); }
   const WI = window.WHEEL_IMG; if (w.wi != null && WI && WI.complete && WI.naturalWidth) {   // the owner's wheel pictures, turning
     const R = w.r * .985; ctx.save(); ctx.translate(cx, cy); ctx.rotate(roll / w.r); ctx.drawImage(WI, (w.wi % 5) * 128, (w.wi / 5 | 0) * 128, 128, 128, -R, -R, R * 2, R * 2); ctx.restore(); continue; }
   ctx.save(); ctx.translate(cx, cy); ctx.beginPath(); ctx.arc(0, 0, r, 0, 7); ctx.fillStyle = w.rim || '#9aa2ab'; ctx.fill(); ctx.beginPath(); ctx.arc(-r * .2, -r * .2, r * .55, 0, 7); ctx.fillStyle = 'rgba(255,255,255,.25)'; ctx.fill();
@@ -471,7 +471,7 @@ function updateTraffic(dt, dx) {
     const gap = c.dir > 0 ? r.x - (c.x + c.L) : c.x - (r.x + r.L); c.cv = r.cv + (gap - 5) * 2; c.ot = null;
     if ((c.beepT -= dt) <= 0) { c.beepT = 1.6 + Math.random() * 2.4; if (c.x > -40 && c.x < W + 40) SFX.horn(Math.random() * .6); } });
   chaseCD -= dt; if (moving && jamT <= 0 && (chaseCD <= 0 && Math.random() < dt * .02 || window.__chase)) { window.__chase = 0; startChase(); }
-  zoomCD -= dt; if (moving && jamT <= 0 && zoomCD <= 0 && Math.random() < dt * .03) { const ks = ['lambo', 'f812', 'gt3', 'golfr', 'c63', 'urus', 'a45', 'motorbike', 'motorbike']; if (spawnCar(null, ks[Math.random() * ks.length | 0], true)) zoomCD = 30 + Math.random() * 40; }
+  zoomCD -= dt; if (moving && jamT <= 0 && zoomCD <= 0 && Math.random() < dt * .03) { const ks = ['lambo', 'f812', 'gt3', 'golfr', 'c63', 'urus', 'a45']; if (spawnCar(null, ks[Math.random() * ks.length | 0], true)) zoomCD = 30 + Math.random() * 40; }
   cars.forEach(c => { if ((c.zoom && Math.random() < dt * 30) || (c.ot && c.ot.out > .1 && Math.random() < dt * 16)) dust.push({ x: c.dir > 0 ? c.x : c.x + c.L + 6, y: (c.lane ? ROAD_B - 5 : ROAD_T + 17) + c.yo, vx: -c.dir * 30 - scroll / dt * 0, vy: -6, r: 1.5, l: .5 }); });
   for (let i = csmoke.length - 1; i >= 0; i--) { const p = csmoke[i]; p.x += p.vx * dt - scroll; p.y += p.vy * dt; p.r += 9 * dt; p.a -= .4 * dt; if (p.a <= 0) csmoke.splice(i, 1); }
   cars = cars.filter(c => c.x > -c.L - 300 && c.x < W + 320);
@@ -732,7 +732,7 @@ function giftsUpdate(dt, dx) {
   gifts.forEach(gf => { gf.x -= dx; gf.b += dt;
     if (!gf.got && !hero.dead && state === 'play' && heroCircles().some(([x, y, r]) => Math.hypot(x - gf.x, y - gf.y) < r + 13)) {
       gf.got = 1;
-      if (gf.k === 'box') startVehicle(RIDES[Math.random() * RIDES.length | 0]);
+      if (gf.k === 'box') startVehicle(nextRide());
       else { eidi++; RUN.eidi++; pops.push({ x: gf.x, y: gf.y - 12, txt: 'EIDI!', col: '#7dffa0', t: 0 }); tone(988, .1, 'square', .05); setTimeout(() => tone(1318, .16, 'square', .05), 90); for (let i = 0; i < 10; i++) sparks.push({ x: gf.x, y: gf.y, vx: (Math.random() - .5) * 140, vy: (Math.random() - .5) * 140, l: .4, c: i % 2 ? '#ffd75a' : '#7dffa0' }); }
     } });
   gifts = gifts.filter(gf => gf.x > -40 && !gf.got);
@@ -761,6 +761,11 @@ function roundRect(x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.a
 /* rides: tuk-tuk (drives on the pavement, tap to jump) and magic carpet (hold to rise, glides down). One hit = the ride blows up and he's thrown clear. */
 const VEH_NAME = { tuktuk: 'TUK-TUK', carpet: 'MAGIC CARPET', kabootar: 'FLAPPY KABOOTAR', sandals: 'GRAVITY SANDALS' };
 const RIDES = ['tuktuk', 'carpet', 'kabootar', 'sandals'];
+// gift-box rides come from a shuffled deck: every ride once before any repeats, never the same one twice in a row, kept between games (owner, 22 Nov)
+function nextRide() { let bag = []; try { bag = JSON.parse(localStorage.getItem('jd_ridebag') || '[]').filter(k => RIDES.includes(k)); } catch (e) {}
+  let last = ''; try { last = localStorage.getItem('jd_lastride') || ''; } catch (e) {}
+  if (!bag.length) { bag = RIDES.slice(); for (let i = bag.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [bag[i], bag[j]] = [bag[j], bag[i]]; } if (bag[0] === last) bag.push(bag.shift()); }
+  const k = bag.shift(); try { localStorage.setItem('jd_ridebag', JSON.stringify(bag)); localStorage.setItem('jd_lastride', k); } catch (e) {} return k; }
 /* Flappy Kabootar crossover: the exact pigeon from Flappy Kabootar, drawn big (each art pixel = PK units) */
 const PIG_COL = { o: '#1b1a24', h: '#7f899e', e: '#f08a2a', k: '#1b1a24', c: '#eef0f4', b: '#3a3d44', n: '#4fa36a', p: '#8a5fb0', l: '#c3cad8', g: '#9aa3b5', d: '#7d8698', t: '#5a6476', f: '#e88a7a', w: '#d4dae4', K: '#2e3442' };
 const PIG_BODY = ['...................ooo...', '..................ohhhoo.', '..................ohekhho', '.................oohhhhcbb', '...ooooooooooooonnhhhooo.', '..otlllllllllllnnnhho....', '.ottgglllllllllppnno.....', 'oKttggggggggggppnnno.....', 'oKttgggggggggggppgo......', '.ooKdgggggggggggggo......', '...odddgggggggggggo......', '....oodddddddddddo.......', '......ooooffoffoo........'];
@@ -771,7 +776,7 @@ const PK = 2.4, pigCv = [0, 1, 2].map(f => { const c = document.createElement('c
 function runStarted() {   // start of the run proper: offer head starts (like their HEAD START buttons), golden misbaha ride
   usedSave = 0;
   if (SHOP.hs500 > 0 || SHOP.hs1000 > 0) { $('hs5').style.display = SHOP.hs500 > 0 ? '' : 'none'; $('hs10').style.display = SHOP.hs1000 > 0 ? '' : 'none'; $('hs5n').textContent = 'x' + SHOP.hs500; $('hs10n').textContent = 'x' + SHOP.hs1000; $('hsBox').classList.add('on'); clearTimeout(runStarted.t); runStarted.t = setTimeout(() => $('hsBox').classList.remove('on'), 3800); }
-  if (hasG('misbaha')) setTimeout(() => { if (state === 'play' && !veh && !boost && !hero.dead) startVehicle(RIDES[Math.random() * RIDES.length | 0]); }, 600);
+  if (hasG('misbaha')) setTimeout(() => { if (state === 'play' && !veh && !boost && !hero.dead) startVehicle(nextRide()); }, 600);
 }
 /* HEAD START: uncle's silver Corolla hatchback flies down the pavement with him holding on to the roof */
 let boost = null, usedSave = 0;
@@ -840,7 +845,8 @@ function vehUpdate(dt) {
   veh.t += dt; hero.run += dt * (6 + speed / 22); if (hissG) hissG.gain.setTargetAtTime(0, AC.currentTime, .06);
   if (veh.k === 'kabootar') {   // flappy controls: tap to flap
     const press = holding && !veh.held; veh.held = holding; veh.flap -= dt;
-    if (press) { hero.vy = -270; veh.flap = .28; veh.tip = 0; RUN.flaps++; tone(700, .05, 'square', .04, 1.4); for (let i = 0; i < 4; i++) sparks.push({ x: hero.x - 10, y: hero.y - 90, vx: -80 - Math.random() * 60, vy: 40 + Math.random() * 60, l: .4, c: '#e8ecf4' }); }
+    veh.ft = (veh.ft || 0) + dt; if (veh.ft > (hero.vy < 0 ? .07 : .14)) { veh.ft = 0; veh.wf = ((veh.wf | 0) + 1) % 3; }   // wings always flapping, quicker on the way up (as in Flappy Kabootar)
+    if (press) { hero.vy = -270; veh.flap = .28; veh.wf = 0; veh.ft = 0; veh.tip = 0; RUN.flaps++; tone(700, .05, 'square', .04, 1.4); for (let i = 0; i < 4; i++) sparks.push({ x: hero.x - 10, y: hero.y - 90, vx: -80 - Math.random() * 60, vy: 40 + Math.random() * 60, l: .4, c: '#e8ecf4' }); }
     hero.vy += 860 * dt; hero.y += hero.vy * dt;
     if (hero.y >= FLOOR) { hero.y = FLOOR; hero.vy = 0; }
     if (hero.y - 118 < CEIL) { hero.y = CEIL + 118; hero.vy = Math.max(0, hero.vy); }   // the pigeon can fly right up to the top of the screen
@@ -893,7 +899,7 @@ function vehCrash() {
 function drawVehicle() {
   const x = hero.x, y = hero.y, k = veh.k;
   if (k === 'kabootar') {   // the exact Flappy pigeon (small); one arm reaches up over his head and his fist grips its tail
-    const f = veh.flap > .14 ? 2 : veh.flap > 0 ? 1 : Math.floor(t * 4) % 2 ? 0 : 1, SX = -3, SY = -47, GX = -1, GY = -88, EX = -13, EY = -64;   // shoulder at the top of the thobe, not on his chest   // shoulder (in the sprite) + grip, feet-relative
+    const f = veh.wf | 0, SX = -3, SY = -47, GX = -1, GY = -88, EX = -13, EY = -64;   // shoulder at the top of the thobe, not on his chest   // shoulder (in the sprite) + grip, feet-relative
     const col = { luton: ['#f67a20', '#d65c10'], puffer: ['#2c2c34', '#1c1c22'], moroccan: ['#963a2e', '#74281f'], eid: ['#fcf0ce', '#e8d4a2'] }[SHOP.outfit] || ['#f8f6fa', '#d4d4e4'];
     ctx.save(); ctx.translate(x, y); ctx.rotate(hero.rot * .5);
     ctx.save(); ctx.translate(GX, GY); ctx.rotate(Math.sin(t * 5) * .05); ctx.translate(-GX, -GY); ctx.imageSmoothingEnabled = true; const hf = 'hang' + (Math.floor(t * 8) % 4) + '_happy';
