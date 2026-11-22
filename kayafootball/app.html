@@ -306,17 +306,19 @@ function buildLayout(st) {
   const measure = S => {
     const k = clamp(S / 274, .6, 1.05), kt = Math.max(k, .85), items = [], nameH = st.names ? 46 * k : 0;
     let h = 0;
+    const vb = S / 2 - TXT.v.cap * k / 2;                      // V bottom → crest bottom
+    const tight = g => .7 * (vb + g) - vb;                     // 30% less space from the V down to the time/date
     const rows = gr => gr.games.forEach((g, i) => { if (i) h += S * .14; items.push({ type: 'row', g, y: h, S, k }); h += S + nameH; });
     if (single) {                                   // exactly the master frame: crests, date, bold time
       rows(groups[0]);
-      h += (groups[0].games.length > 1 ? 120 : 232) * k;
+      h += tight((groups[0].games.length > 1 ? 120 : 232) * k);
       items.push({ type: 'date', text: fmtDate(groups[0].date, st.weekday), y: h, k: kt }); h += TXT.date.cap * kt + 29 * kt;
       items.push({ type: 'time', text: fmtTime(groups[0].time), y: h, k: kt }); h += TXT.time.cap * kt;
     } else {
       if (sameDate) { items.push({ type: 'date', text: fmtDate(sorted[0].date, st.weekday), y: h, k: kt }); h += TXT.date.cap * kt + 70 * kt; }
       groups.forEach((gr, gi) => {
         if (gi) h += 78 * k;
-        rows(gr); h += 52 * k;
+        rows(gr); h += tight(52 * k);
         if (!sameDate) { items.push({ type: 'date', text: fmtDate(gr.date, st.weekday), y: h, k: kt }); h += TXT.date.cap * kt + 24 * kt; }
         items.push({ type: 'time', text: fmtTime(gr.time), y: h, k: kt }); h += TXT.time.cap * kt;
       });
