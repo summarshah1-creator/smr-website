@@ -40,7 +40,7 @@ button{font:inherit;cursor:pointer;border:0;pointer-events:auto}
 #bbtn.off{opacity:.45;filter:grayscale(.7)}
 #toast{position:absolute;left:50%;top:27%;transform:translate(-50%,-50%) scale(.6);font-size:30px;opacity:0;white-space:nowrap;transition:transform .28s cubic-bezier(.3,1.7,.5,1),opacity .2s}
 #toast.show{opacity:1;transform:translate(-50%,-50%) scale(1)}#toast.gold{color:#ffd86a}#toast.red{color:#ff8a7a}
-#toast.lm{font-size:18px;top:20%;background:rgba(30,24,64,.55);padding:8px 16px;border-radius:16px;text-shadow:none}
+#toast .pin{width:16px;height:20px;vertical-align:-3px;margin-right:7px}#toast.lm{font-size:18px;top:20%;background:rgba(30,24,64,.55);padding:8px 16px;border-radius:16px;text-shadow:none}
 #hint{position:absolute;left:0;right:0;top:36%;text-align:center;font-size:17px;opacity:0;transition:opacity .4s}#hint.show{opacity:1}
 #hint div{display:inline-block;background:rgba(30,24,64,.5);border-radius:16px;padding:10px 16px;line-height:1.6}
 /* ---------- screens ---------- */
@@ -55,7 +55,7 @@ body.menu #menu,body.paused #pause,body.over #over{display:flex}
 .panel h4{margin:0 0 6px;font-size:13px;display:flex;justify-content:space-between;align-items:center}
 .panel h4 span{background:linear-gradient(#ffd86a,#e8a320);color:#5a3200;border-radius:9px;padding:2px 8px;text-shadow:none}
 .ms{display:flex;align-items:center;gap:8px;font-size:12px;padding:5px 0;border-top:1px solid rgba(255,255,255,.1)}.ms b{width:18px;height:18px;border-radius:6px;background:rgba(255,255,255,.15);display:grid;place-items:center;font-size:12px}
-.ms span{flex:1}.ms em{font-style:normal;opacity:.8}.ms.done b{background:#38c95c}.ms.done span{opacity:.7}
+.ms span{flex:1}.ms em{font-style:normal;opacity:.8}.ms.done b{background:#38c95c}.ms.done b::after{content:'';width:5px;height:9px;border:solid #fff;border-width:0 3px 3px 0;transform:rotate(45deg) translate(-1px,-1px)}.ms.done span{opacity:.7}
 .stats{display:flex;gap:10px;justify-content:center;margin-bottom:12px}
 .stat{background:rgba(30,24,64,.66);border-radius:16px;padding:7px 14px;min-width:104px}.stat small{display:block;font-size:11px;opacity:.8;text-shadow:none}.stat b{font-size:21px}
 .big{font:900 26px Mont,sans-serif;color:#fff;border-radius:22px;padding:16px 50px;background:linear-gradient(#7ae08a,#34b956);box-shadow:0 6px 0 #1f7f3a,inset 0 3px 0 rgba(255,255,255,.55)}
@@ -73,6 +73,8 @@ body.menu #menu,body.paused #pause,body.over #over{display:flex}
 .sheet{position:fixed;left:0;right:0;bottom:0;top:12%;background:linear-gradient(#3a2f72,#2a2350);border-radius:26px 26px 0 0;z-index:9;transform:translateY(105%);transition:transform .35s cubic-bezier(.2,.9,.3,1);pointer-events:auto;display:flex;flex-direction:column}
 .sheet.open{transform:none}
 .sheet header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;font-size:22px}
+.sheet header .x{position:relative}.sheet header .x::before,.sheet header .x::after{content:'';position:absolute;left:11px;top:18px;width:18px;height:4px;border-radius:2px;background:#fff;transform:rotate(45deg)}.sheet header .x::after{transform:rotate(-45deg)}
+.hand{display:block;width:120px;height:40px;margin:0 auto 6px;position:relative}.hand::before{content:'';position:absolute;left:10px;right:10px;top:18px;height:4px;border-radius:2px;background:rgba(255,255,255,.5)}.hand i{position:absolute;top:8px;left:0;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 2px 0 #221a48;animation:sw 1.4s ease-in-out infinite}@keyframes sw{0%,100%{left:0}50%{left:96px}}
 .sheet header button{width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.14);color:#fff;font-size:20px}
 #shopBody{overflow:auto;padding:0 14px calc(env(safe-area-inset-bottom) + 20px);touch-action:pan-y}
 #shopBody h3{font-size:13px;opacity:.85;margin:14px 2px 6px;text-shadow:none}
@@ -82,7 +84,7 @@ body.menu #menu,body.paused #pause,body.over #over{display:flex}
 .buy{font:900 14px Mont,sans-serif;color:#5a3200;background:linear-gradient(#ffd86a,#e8a320);border-radius:12px;padding:9px 12px;box-shadow:0 3px 0 #a86a10;min-width:78px}
 .buy.max{background:rgba(255,255,255,.2);color:#fff;box-shadow:none}
 .sw{width:46px;height:46px;border-radius:14px;display:grid;place-items:center}.sw i{width:18px;height:18px;border-radius:50%}
-#mute{position:absolute;right:12px;bottom:calc(env(safe-area-inset-bottom) + 12px);pointer-events:auto;font-size:20px;background:rgba(30,24,64,.5);border-radius:12px;width:44px;height:44px}
+#mute svg{width:24px;height:24px}#mute{display:grid;place-items:center;position:absolute;right:12px;bottom:calc(env(safe-area-inset-bottom) + 12px);pointer-events:auto;font-size:20px;background:rgba(30,24,64,.5);border-radius:12px;width:44px;height:44px}
 body.play #mute{display:none}
 #lo{position:absolute;left:12px;top:calc(env(safe-area-inset-top) + 12px);pointer-events:auto;font:900 10px Mont,sans-serif;background:rgba(30,24,64,.5);color:#fff;border-radius:10px;padding:6px 9px;display:none}body.menu #lo{display:block}
 #fps{position:absolute;right:12px;top:calc(env(safe-area-inset-top) + 92px);font-size:10px;opacity:.55;text-shadow:0 1px 2px #000}
@@ -99,7 +101,7 @@ body.play #mute{display:none}
     <div id="pw" class="t"></div>
     <button id="bbtn" class="t"><img id="bImg" alt=""><b id="bct">3</b></button>
     <div id="toast" class="t"></div>
-    <div id="hint" class="t"><div>Swipe ⬅ ➡ to change lane<br>Swipe ⬆ jump · ⬇ roll<br>Double tap for a hoverboard</div></div>
+    <div id="hint" class="t"><div><span class="hand"><i></i></span>SWIPE to change lane<br>Swipe up to jump · down to roll<br>Double tap for a hoverboard</div></div>
   </div>
   <div class="scr" id="menu">
     <div><div class="logo t"><span class="a">DELIVERY</span><span class="b">RUSH</span></div><div class="tag t">Get the order there hot. Leagrave Road, Luton.</div><div class="pill t">AN SMR ORIGINAL · DEMO</div></div>
@@ -119,10 +121,10 @@ body.play #mute{display:none}
     <div id="oMs"></div>
     <div class="btns"><button class="big t" id="again">RUN AGAIN</button><button class="small t" id="home">HOME</button></div>
   </div></div>
-  <button id="mute">🔊</button><button id="lo">Low detail: OFF</button><div id="fps"></div>
+  <button id="mute"></button><button id="lo">Low detail: OFF</button><div id="fps"></div>
 </div>
-<div class="sheet t" id="shop"><header><span>SHOP · <span class="ci">£</span> <span id="shopBank">0</span></span><button id="shopX">✕</button></header><div id="shopBody"></div></div>
+<div class="sheet t" id="shop"><header><span>SHOP · <span class="ci">£</span> <span id="shopBank">0</span></span><button id="shopX" class="x" aria-label="Close"></button></header><div id="shopBody"></div></div>
 <script type="importmap">{"imports": {"three": "/flappy/3d/three.module.min.js"}}</script>
-<script type="module" src="/rush/demo/game.js?v=2"></script>
+<script type="module" src="/rush/demo/game.js?v=3"></script>
 <script>addEventListener('error', e => { const l = document.getElementById('load'); if (l) l.innerHTML = 'Something went wrong loading the game.<br><small style="font-size:12px;opacity:.7">' + (e.message || '') + '</small>'; });</script>
 </body></html>

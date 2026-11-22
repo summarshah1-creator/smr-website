@@ -6,25 +6,25 @@ import { mergeGeometries } from '/flappy/3d/BufferGeometryUtils.js';
 import { T, U, rb, rbs, cyl, sph, plane, roof, canvasTex, sign, board, rr, blobShadow, C } from './kit.js';
 
 /* ================= layout ================= */
-export const LANE = 2.6;                                     // lane spacing
+export const LANE = 2.3;                                     // lane spacing
 export const LX = [-1.5 * LANE, -.5 * LANE, .5 * LANE, 1.5 * LANE];   // left pavement, left road, right road, right pavement
 export const RW = LANE, KERB = .22, PAV_H = .16;               // half road width, kerb width, pavement height
 export const EDGE = RW + KERB + LANE;                          // back of the pavement
 export const baseY = x => Math.abs(x) > RW + KERB * .3 ? PAV_H : 0;
 
 /* ================= textures (big, soft, clean: no pixel noise) ================= */
-const roadT = canvasTex(512, 1024, (x, w, h) => { x.fillStyle = '#4d5463'; x.fillRect(0, 0, w, h);
+const roadT = canvasTex(512, 1024, (x, w, h) => { x.fillStyle = '#4a5266'; x.fillRect(0, 0, w, h);
   for (let i = 0; i < 40; i++) { x.fillStyle = `rgba(${Math.random() < .5 ? '255,255,255' : '20,24,34'},${.012 + Math.random() * .015})`; x.beginPath(); x.ellipse(Math.random() * w, Math.random() * h, 20 + Math.random() * 60, 30 + Math.random() * 120, 0, 0, 7); x.fill(); }
   [.25, .75].forEach(f => { const g = x.createLinearGradient(w * f - 50, 0, w * f + 50, 0); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(.5, 'rgba(20,24,34,.12)'); g.addColorStop(1, 'rgba(0,0,0,0)'); x.fillStyle = g; x.fillRect(w * f - 50, 0, 100, h); });
   x.fillStyle = '#f1f2f4'; for (let y = 0; y < h; y += 256) rr(x, w / 2 - 7, y + 40, 14, 150, 7), x.fill();
-  x.fillStyle = '#e4bb4c'; [18, 38, w - 38, w - 18].forEach(c => x.fillRect(c - 6, 0, 12, h)); });
+  x.fillStyle = '#f2c53c'; [18, 38, w - 38, w - 18].forEach(c => x.fillRect(c - 6, 0, 12, h)); });
 roadT.wrapS = roadT.wrapT = THREE.RepeatWrapping;
-const pavT = canvasTex(512, 512, (x, w, h) => { x.fillStyle = '#cfc5b6'; x.fillRect(0, 0, w, h); const cols = ['#e3dacd', '#ddd3c5', '#e7dfd3', '#d9cebf']; const s = w / 6;
+const pavT = canvasTex(512, 512, (x, w, h) => { x.fillStyle = '#cdb38f'; x.fillRect(0, 0, w, h); const cols = ['#efdcc0', '#e8d2b2', '#f3e4cb', '#e2caa8']; const s = w / 6;
   for (let j = 0; j < 6; j++) for (let i = 0; i < 6; i++) { x.fillStyle = cols[(i * 7 + j * 5 + (i * j) % 4) % 4]; rr(x, i * s + 2, j * s + 2, s - 4, s - 4, 6); x.fill();
     x.fillStyle = 'rgba(255,255,255,.22)'; rr(x, i * s + 6, j * s + 6, s - 22, 7, 3); x.fill(); }
   x.fillStyle = 'rgba(140,120,100,.12)'; for (let i = 0; i < 14; i++) { x.beginPath(); x.ellipse(Math.random() * w, Math.random() * h, 5 + Math.random() * 12, 3 + Math.random() * 7, Math.random() * 3, 0, 7); x.fill(); } });
 pavT.wrapS = pavT.wrapT = THREE.RepeatWrapping;
-const grassT = canvasTex(256, 256, (x, w, h) => { x.fillStyle = '#8db56b'; x.fillRect(0, 0, w, h); for (let i = 0; i < 90; i++) { x.fillStyle = Math.random() < .5 ? 'rgba(120,170,90,.5)' : 'rgba(150,195,110,.45)'; x.beginPath(); x.ellipse(Math.random() * w, Math.random() * h, 8 + Math.random() * 18, 5 + Math.random() * 10, Math.random() * 3, 0, 7); x.fill(); } });
+const grassT = canvasTex(256, 256, (x, w, h) => { x.fillStyle = '#7cc25a'; x.fillRect(0, 0, w, h); for (let i = 0; i < 90; i++) { x.fillStyle = Math.random() < .5 ? 'rgba(98,168,69,.55)' : 'rgba(150,214,110,.5)'; x.beginPath(); x.ellipse(Math.random() * w, Math.random() * h, 8 + Math.random() * 18, 5 + Math.random() * 10, Math.random() * 3, 0, 7); x.fill(); } });
 grassT.wrapS = grassT.wrapT = THREE.RepeatWrapping;
 // windows: crisp painted panes with a soft reflection and different curtains / blinds
 const WIN = [0, 1, 2, 3, 4, 5].map(k => canvasTex(256, 320, (x, w, h) => { x.fillStyle = '#f4f2ee'; rr(x, 0, 0, w, h, 18); x.fill();

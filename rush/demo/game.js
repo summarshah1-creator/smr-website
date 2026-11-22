@@ -7,20 +7,21 @@ import * as THREE from 'three';
 import { BEND, LOW, T, U, rb, rbs, cyl, sph, plane, canvasTex, sign, board, rr, blobShadow, C } from './kit.js';
 import { rider, shadow, animRider, setOutfit, OUTFITS } from './rider.js';
 import { vehicle } from './vehicles.js';
+import { mergeGeometries } from '/flappy/3d/BufferGeometryUtils.js';
 import { LX, LANE, RW, KERB, PAV_H, EDGE, baseY, TILE, roadTile, lamp, treeP, planter, bollard, HOUSES, LM, LM_NAMES, bake } from './world.js';
 
 const $ = id => document.getElementById(id), qs = new URLSearchParams(location.search);
 /* ================= renderer, scene, light, sky ================= */
 const renderer = new THREE.WebGLRenderer({ antialias: !LOW, powerPreference: 'high-performance' });
 renderer.setPixelRatio(Math.min(devicePixelRatio, LOW ? 1 : 2)); renderer.setSize(innerWidth, innerHeight); renderer.outputColorSpace = THREE.SRGBColorSpace;
-renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.08; document.body.prepend(renderer.domElement);
-const scene = new THREE.Scene(), HORIZON = new THREE.Color(0xd7e6ef);
-scene.fog = new THREE.Fog(HORIZON, 55, 150); scene.background = HORIZON;
+renderer.toneMapping = THREE.NoToneMapping; document.body.prepend(renderer.domElement);
+const scene = new THREE.Scene(), HORIZON = new THREE.Color(0xbfe0f6);
+scene.fog = new THREE.Fog(HORIZON, 60, 160); scene.background = HORIZON;
 const camera = new THREE.PerspectiveCamera(66, innerWidth / innerHeight, .1, 260);
-scene.add(new THREE.HemisphereLight(0xeaf2ff, 0xc7b7a0, 1.6));
-const sun = new THREE.DirectionalLight(0xfff0dc, 1.7); sun.position.set(-6, 12, 5); scene.add(sun); scene.add(sun.target);
+scene.add(new THREE.HemisphereLight(0xf2f7ff, 0xd8c2a0, 1.35));
+const sun = new THREE.DirectionalLight(0xfff2dc, 1.55); sun.position.set(-6, 12, 5); scene.add(sun); scene.add(sun.target);
 // sky dome: soft gradient + painted clouds (not bent)
-const sky = new THREE.Mesh(new THREE.SphereGeometry(240, 24, 12), new THREE.MeshBasicMaterial({ side: THREE.BackSide, fog: false, depthWrite: false, map: canvasTex(16, 256, (x, w, h) => { const g = x.createLinearGradient(0, 0, 0, h); g.addColorStop(0, '#5f9fd6'); g.addColorStop(.42, '#9cc7ea'); g.addColorStop(.5, '#d7e6ef'); g.addColorStop(1, '#e8dccb'); x.fillStyle = g; x.fillRect(0, 0, w, h); }) }));
+const sky = new THREE.Mesh(new THREE.SphereGeometry(240, 24, 12), new THREE.MeshBasicMaterial({ side: THREE.BackSide, fog: false, depthWrite: false, map: canvasTex(16, 256, (x, w, h) => { const g = x.createLinearGradient(0, 0, 0, h); g.addColorStop(0, '#2f86d8'); g.addColorStop(.38, '#6db6ee'); g.addColorStop(.5, '#bfe0f6'); g.addColorStop(1, '#f2e2c6'); x.fillStyle = g; x.fillRect(0, 0, w, h); }) }));
 scene.add(sky);
 const cloudT = canvasTex(256, 128, (x, w, h) => { x.fillStyle = '#fff'; [[70, 80, 46], [120, 62, 58], [175, 78, 44], [128, 88, 52], [210, 92, 30], [40, 96, 28]].forEach(([a, b, r]) => { x.beginPath(); x.arc(a, b, r, 0, 7); x.fill(); }); });
 const clouds = []; for (let i = 0; i < 9; i++) { const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: cloudT, transparent: true, opacity: .92, fog: false, depthWrite: false })); s.scale.set(40, 20, 1); s.position.set((Math.random() - .5) * 200, 45 + Math.random() * 30, -60 - Math.random() * 160); scene.add(s); clouds.push(s); }
@@ -81,10 +82,10 @@ const rampG = (L, H) => { const g = new THREE.Group(), deck = new THREE.Mesh(new
 P.ramp = { bus: rampG(5, 3.3), van: rampG(4.2, 2.45), car: rampG(3, 1.55) };
 
 /* ================= coins (instanced £ tips) + sparkles ================= */
-const MAXC = 400, coinGeo = new THREE.CylinderGeometry(.38, .38, .1, 30); coinGeo.rotateX(Math.PI / 2);
+const MAXC = 400, coinGeo = (() => { const side = new THREE.CylinderGeometry(.38, .38, .1, 30, 1, true); side.rotateX(Math.PI / 2); const f = new THREE.CircleGeometry(.38, 30); f.translate(0, 0, .05); const b = new THREE.CircleGeometry(.38, 30); b.rotateY(Math.PI); b.translate(0, 0, -.05);
+  [side, f, b].forEach(q => { for (const k of Object.keys(q.attributes)) if (!['position', 'normal', 'uv'].includes(k)) q.deleteAttribute(k); }); return mergeGeometries([side.toNonIndexed(), f.toNonIndexed(), b.toNonIndexed()], true); })();
 const coinT = canvasTex(256, 256, (x, w, h) => { const g = x.createRadialGradient(100, 90, 10, 128, 128, 128); g.addColorStop(0, '#fff6b8'); g.addColorStop(.55, '#ffcf3a'); g.addColorStop(1, '#e09a10'); x.fillStyle = g; x.fillRect(0, 0, w, h);
   x.lineWidth = 14; x.strokeStyle = '#e8a320'; x.beginPath(); x.arc(128, 128, 104, 0, 7); x.stroke(); x.fillStyle = '#d18810'; x.font = 'bold 160px Arial, Helvetica, sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('£', 132, 140); x.fillStyle = '#fff2b0'; x.fillText('£', 126, 134); });
-coinT.center.set(.5, .5); coinT.rotation = -Math.PI / 2;
 const coinMesh = new THREE.InstancedMesh(coinGeo, [U({ color: 0xf0b01c }), U({ map: coinT }), U({ map: coinT })], MAXC); coinMesh.frustumCulled = false; coinMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage); scene.add(coinMesh);
 const coins = []; const addCoin = (x, y, z) => { if (coins.length < MAXC) coins.push({ x, y, z, got: 0 }); };
 const line = (x, z, n, y) => { for (let i = 0; i < n; i++) addCoin(x, y, z - i * 2.2); };
@@ -194,14 +195,15 @@ function genRow() {
 
 /* ================= HUD ================= */
 const fmt = n => String(Math.floor(n)).padStart(6, '0');
-let toastT = 0; function toast(t, cls = '') { const e = $('toast'); e.className = 'show ' + cls; e.textContent = t; toastT = 1.6; }
+const PIN = '<svg class="pin" viewBox="0 0 24 30"><path d="M12 1C6 1 2 5.4 2 11c0 7.5 10 18 10 18s10-10.5 10-18C22 5.4 18 1 12 1z" fill="#ff6f61" stroke="#fff" stroke-width="2"/><circle cx="12" cy="11" r="4" fill="#fff"/></svg>';
+let toastT = 0; function toast(t, cls = '', pin = 0) { const e = $('toast'); e.className = 'show ' + cls; e.innerHTML = (pin ? PIN : '') + '<span></span>'; e.lastChild.textContent = t; toastT = 1.6; }
 function hud() { $('sc').textContent = fmt(score); $('cn').textContent = coinN; const m = D.mult * (PW.x2 > 0 ? 2 : 1); $('mul').textContent = 'x' + m; $('mul').classList.toggle('hot', PW.x2 > 0);
   $('bct').textContent = D.boards; $('bbtn').classList.toggle('off', D.boards <= 0 || PW.board > 0);
   const ks = ['rocket', 'board', 'magnet', 'x2', 'shoes'].filter(k => PW[k] > 0), box = $('pw');
   if (box.dataset.k !== ks.join()) { box.dataset.k = ks.join(); box.innerHTML = ks.map(k => `<div class="pwr" data-k="${k}"><img src="${ICON_URL[k]}"><span><i></i></span></div>`).join(''); }
   box.querySelectorAll('.pwr').forEach(e => { const k = e.dataset.k, tot = k === 'board' ? 30 : upT(k); e.querySelector('i').style.width = Math.max(0, PW[k] / tot * 100) + '%'; }); }
 function menuHud() { $('best').textContent = D.best.toLocaleString(); $('bank').textContent = D.bank.toLocaleString(); $('mMult').textContent = 'x' + D.mult;
-  $('msList').innerHTML = D.ms.map(m => { const d = msDef(m.id), done = m.c >= m.n; return `<div class="ms${done ? ' done' : ''}"><b>${done ? '✓' : ''}</b><span>${d.txt(m.n)}</span><em>${done ? 'DONE' : m.c + '/' + m.n}</em></div>`; }).join(''); }
+  $('msList').innerHTML = D.ms.map(m => { const d = msDef(m.id), done = m.c >= m.n; return `<div class="ms${done ? ' done' : ''}"><b></b><span>${d.txt(m.n)}</span><em>${done ? 'DONE' : m.c + '/' + m.n}</em></div>`; }).join(''); }
 
 /* ================= controls ================= */
 function lane(d) { if (state !== 'play') return; const n = Math.max(0, Math.min(3, B.lane + d)); if (n === B.lane) { B.lean = d * .8; SND.bump(); return; } B.prev = B.lane; B.lane = n; B.lean = d; SND.lane(); if (!B.air) puff(B.x, B.y, B.z, 2); }
@@ -281,7 +283,7 @@ function step(dt) {
   for (let i = pickups.length - 1; i >= 0; i--) { const p = pickups[i]; p.g.rotation.y = t * 2.6; p.g.position.y = baseY(p.x) + 1.15 + Math.sin(t * 3.4) * .15;
     if (state === 'play' && Math.abs(p.x - B.x) < 1.1 && Math.abs(p.z - B.z) < 1.1 && B.y < p.g.position.y + .9) { scene.remove(p.g); pickups.splice(i, 1); spark(p.x, p.g.position.y, p.z, 3); power(p.k); } else if (p.z > B.z + 12) { scene.remove(p.g); pickups.splice(i, 1); } }
   if (PW.rocket > 0 && Math.random() < dt * 5) line(LX[Math.random() * 4 | 0], B.z - 45, 5, 8.5);
-  for (const m of lmMarks) if (!m.shown && B.z < m.z + 10) { m.shown = true; if (state === 'play') { toast('📍 ' + m.name, 'lm'); msEvent('lm'); } }
+  for (const m of lmMarks) if (!m.shown && B.z < m.z + 10) { m.shown = true; if (state === 'play') { toast(m.name, 'lm', 1); msEvent('lm'); } }
   // keep the street coming
   fill();
   for (let i = world.length - 1; i >= 0; i--) if (world[i].z1 > B.z + 26) { const w = world[i]; scene.remove(w.g); if (w.own) w.g.traverse(o => { if (o.isMesh) o.geometry.dispose(); }); world.splice(i, 1); }
@@ -305,16 +307,16 @@ function step(dt) {
   // camera: Subway Surfers framing — high, behind, looking down the lanes; follows lane and height softly
   const camH = PW.rocket > 0 ? 8 : Math.max(0, ground * .85 + Math.max(0, B.y - ground - 1.2) * .5);
   lastGround += (camH - lastGround) * Math.min(1, dt * 4);
-  camPos.set(B.x * .72, lastGround + 6.4, B.z + 8.6); camera.position.lerp(camPos, Math.min(1, dt * (state === 'menu' ? 3 : 9)));
+  camPos.set(B.x * .72, lastGround + 5.4, B.z + 6.6); camera.position.lerp(camPos, Math.min(1, dt * (state === 'menu' ? 3 : 9)));
   if (shake > 0) { shake -= dt; camera.position.x += (Math.random() - .5) * shake * .5; camera.position.y += (Math.random() - .5) * shake * .5; }
-  camLook.set(B.x * .74, lastGround + .2, B.z - 13); camera.lookAt(camLook);
+  camLook.set(B.x * .74, lastGround - .4, B.z - 9); camera.lookAt(camLook);
   BEND.z.value = camera.position.z - 6; BEND.kx.value = Math.sin(B.z * .004) * .0009;
   sun.position.set(B.x - 6, 14, B.z + 6); sun.target.position.set(B.x, 0, B.z - 8); sky.position.set(camera.position.x, 0, camera.position.z);
   hudT -= dt; if (hudT <= 0 && state === 'play') { hudT = .08; hud(); }
 }
 function loop(now) { const dt = Math.min(.05, (now - last) / 1000); last = now; if (state !== 'paused') step(dt); renderer.render(scene, camera);
   fpsN++; fpsT += dt; if (fpsT > 1) { $('fps').textContent = Math.round(fpsN / fpsT) + ' fps'; fpsN = 0; fpsT = 0; } requestAnimationFrame(loop); }
-const fit = () => { renderer.setSize(innerWidth, innerHeight); camera.aspect = innerWidth / innerHeight; camera.fov = camera.aspect < .75 ? 66 : 54; camera.updateProjectionMatrix(); }; fit(); addEventListener('resize', fit);
+const fit = () => { renderer.setSize(innerWidth, innerHeight); camera.aspect = innerWidth / innerHeight; camera.fov = camera.aspect < .75 ? 64 : 52; camera.updateProjectionMatrix(); }; fit(); addEventListener('resize', fit);
 
 /* ================= menus: shop, missions, outfits ================= */
 function shopHtml() {
@@ -337,11 +339,11 @@ $('play').onclick = e => { e.stopPropagation(); start(); }; $('again').onclick =
 $('home').onclick = e => { e.stopPropagation(); reset(); state = 'menu'; document.body.className = 'menu'; menuHud(); };
 $('pauseBtn').onclick = e => { e.stopPropagation(); pause(); }; $('resume').onclick = e => { e.stopPropagation(); pause(); }; $('quit').onclick = e => { e.stopPropagation(); state = 'dead'; B.dead = 2; D.bank += coinN; save(); reset(); state = 'menu'; document.body.className = 'menu'; menuHud(); };
 $('bbtn').onclick = e => { e.stopPropagation(); useBoard(); };
-const setMute = () => { $('mute').textContent = D.mute ? '🔇' : '🔊'; }; setMute(); $('mute').onclick = e => { e.stopPropagation(); D.mute = D.mute ? 0 : 1; save(); setMute(); };
+const SPK = '<svg viewBox="0 0 24 24"><path d="M3 9h4l5-4v14l-5-4H3z" fill="#fff"/>', setMute = () => { $('mute').innerHTML = SPK + (D.mute ? '<path d="M16 9l6 6M22 9l-6 6" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg>' : '<path d="M15.5 8.5a5 5 0 010 7M18.5 6a8.5 8.5 0 010 12" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg>'); }; setMute(); $('mute').onclick = e => { e.stopPropagation(); D.mute = D.mute ? 0 : 1; save(); setMute(); };
 $('lo').textContent = 'Low detail: ' + (LOW ? 'ON' : 'OFF'); $('lo').onclick = e => { e.stopPropagation(); localStorage.setItem('rr_low', LOW ? '0' : '1'); location.reload(); };
-$('bImg').src = ICON_URL.board; if (!matchMedia('(pointer:coarse)').matches) $('hint').firstElementChild.innerHTML = '← → change lane · ↑ / Space jump<br>↓ roll · E hoverboard · P pause';
+$('bImg').src = ICON_URL.board; if (!matchMedia('(pointer:coarse)').matches) $('hint').firstElementChild.innerHTML = 'ARROW KEYS to move, jump and roll<br>E hoverboard · P pause';
 if (qs.has('rich')) { D.bank = 99999; save(); }
-reset(); menuHud(); camera.position.set(B.x * .72, 6.4, B.z + 8.6); document.body.className = 'menu';
-window.__rr = { start, B, PW, obs, coins, D, get state() { return state; }, power, lane, jump, roll, useBoard, step: (ms, n = 1) => { for (let i = 0; i < n; i++) step(ms / 1000); renderer.render(scene, camera); }, god: () => { B.inv = 1e9; }, scene, camera, renderer, BEND, view: (px, py, pz, lx, ly, lz) => { camera.position.set(B.x + px, B.y + py, B.z + pz); camera.lookAt(B.x + lx, B.y + ly, B.z + lz); renderer.render(scene, camera); } };
+reset(); menuHud(); camera.position.set(B.x * .72, 5.4, B.z + 6.6); document.body.className = 'menu';
+window.__rr = { start, B, PW, obs, coins, D, get state() { return state; }, power, lane, jump, roll, useBoard, step: (ms, n = 1) => { for (let i = 0; i < n; i++) step(ms / 1000); renderer.render(scene, camera); }, god: () => { B.inv = 1e9; }, scene, camera, renderer, BEND, coins, view: (px, py, pz, lx, ly, lz) => { camera.position.set(B.x + px, B.y + py, B.z + pz); camera.lookAt(B.x + lx, B.y + ly, B.z + lz); renderer.render(scene, camera); } };
 $('load').remove();
 if (!qs.has('manual')) requestAnimationFrame(loop); else { step(.016); renderer.render(scene, camera); }

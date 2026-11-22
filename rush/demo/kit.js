@@ -9,7 +9,7 @@ export const LOW = localStorage.getItem('rr_low') === '1';
 
 // smooth toon ramp: dark side never goes black, a soft step into the lit side, a warm top light
 const RAMP = (() => { const c = document.createElement('canvas'); c.width = 256; c.height = 1; const x = c.getContext('2d'), g = x.createLinearGradient(0, 0, 256, 0);
-  g.addColorStop(0, '#6d7180'); g.addColorStop(.38, '#9a9cab'); g.addColorStop(.52, '#e2e2e6'); g.addColorStop(.8, '#f8f6f0'); g.addColorStop(1, '#ffffff'); x.fillStyle = g; x.fillRect(0, 0, 256, 1);
+  g.addColorStop(0, '#8a8aa0'); g.addColorStop(.36, '#aeb0c2'); g.addColorStop(.5, '#f0eef0'); g.addColorStop(.8, '#fffcf4'); g.addColorStop(1, '#ffffff'); x.fillStyle = g; x.fillRect(0, 0, 256, 1);
   const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.minFilter = t.magFilter = THREE.LinearFilter; t.generateMipmaps = false; return t; })();
 
 const bendVS = `
@@ -83,7 +83,7 @@ export function blobShadow(w, l, p, y = .02) { const m = new THREE.Mesh(cg('sh',
 
 /* ---------- palette: muted, warm, grown-up (not primary-colour kiddy) ---------- */
 export const C = {
-  road: 0x4c5260, roadLine: 0xeef0f2, yellow: 0xe2b84a, kerb: 0xc9c6bf, pave: 0xd8d0c3, paveDark: 0xc6bcad, grass: 0x8bb06a, grassDark: 0x749a57, hedge: 0x5f8a4a, tree: 0x6f9a52, trunk: 0x7a5a44,
-  brick: 0xb26a52, brickDark: 0x96563f, render: 0xf0e7d6, renderB: 0xe6dccb, cream: 0xf3ead8, grey: 0xb9bcc3, slate: 0x6a6f7d, roofBrown: 0x8a5a4a, roofGrey: 0x6b7180, roofRed: 0xa8604d,
-  white: 0xf7f5f0, frame: 0xf4f2ee, glass: 0x6f93b4, glassDark: 0x3a4d63, door: 0x5b6d82, metal: 0x9aa3ae, dark: 0x30333b, black: 0x24262c,
-  green: 0x3d9a68, teal: 0x2f9fa5, orange: 0xe8873a, red: 0xd2574a, blue: 0x4a77b8, purple: 0x7a5bb5, gold: 0xf2c14a };
+  road: 0x4a5266, roadLine: 0xf6f7f9, yellow: 0xf2c53c, kerb: 0xd9d6cf, pave: 0xe8dcc6, paveDark: 0xd8c8ae, grass: 0x7cc25a, grassDark: 0x62a845, hedge: 0x4f9a46, tree: 0x63b04a, trunk: 0x8a5e3e,
+  brick: 0xc8613f, brickDark: 0xa84d33, render: 0xfbf1df, renderB: 0xf2e4cb, cream: 0xfff3dc, grey: 0xbcc3ce, slate: 0x5f6a82, roofBrown: 0x8e4f3a, roofGrey: 0x5d6782, roofRed: 0xbb5a3e,
+  white: 0xffffff, frame: 0xffffff, glass: 0x66a3d6, glassDark: 0x335577, door: 0x3f6fa8, metal: 0x9aa6b6, dark: 0x2e3340, black: 0x22252c,
+  green: 0x2fae6a, teal: 0x1fb0b8, orange: 0xf28a2c, red: 0xe2503f, blue: 0x3f7fd6, purple: 0x7a52c8, gold: 0xffc93a };
