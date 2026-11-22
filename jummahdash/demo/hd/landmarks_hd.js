@@ -1041,7 +1041,7 @@ HD.currys = (c, x, G) => {
 };
 
 // B&Q: long grey clad warehouse with an orange top band, loading doors, central glazed tower with the orange B&Q board, entrance
-// canopy, trees, a lamp column and two parked cars
+// canopy, trees and a lamp column
 HD.bandq = (c, x, G) => {
   c.save(); c.lineJoin = 'round'; const OR = '#ee6a1c';
   panels(c, x, G - 120, 440, 120, '#cdd2da', 9); rect(c, OR, x - 2, G - 126, 444, 6, '#9a3e08', .4); rect(c, '#c94e10', x - 2, G - 121.4, 444, 1.4);
@@ -1055,7 +1055,7 @@ HD.bandq = (c, x, G) => {
   rect(c, '#2a3036', x + 170, G - 34, 100, 34); for (const dx of [x + 186, x + 224]) { c.fillStyle = lg(c, 0, G - 30, 0, G, [[0, '#d4e4f0'], [1, '#6f8ea8']]); c.fillRect(dx, G - 30, 30, 30); glare(c, dx, G - 30, 30, 30); }
   tree(c, x + 40, G, 1.2, { d: '#4f8a2c', m: '#6faa3e', l: '#9ccc66' }); tree(c, x + 410, G, 1.1, { d: '#4f8a2c', m: '#6faa3e', l: '#9ccc66' });
   rect(c, '#9aa3ad', x + 136, G - 70, 1.6, 70); rect(c, '#ecebe7', x + 128, G - 72, 18, 2.4, '#8a8880', .3);
-  hatch(c, x + 300, G, '#f2f2f2'); hatch(c, x + 116, G, '#7a8290');
+  // no parked cars (owner, 22 Nov: nothing in front of buildings unless asked for)
   c.restore();
 };
 
