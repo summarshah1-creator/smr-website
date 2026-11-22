@@ -32,6 +32,8 @@ button, input, select { font-family:inherit; }
 @media (min-width: 860px) { #bar { padding-left:calc(50% - 535px); padding-right:calc(50% - 535px); } }
 #bar .msg:empty { display:none; }
 #shareBtn { font-size:17px; }
+.credit { display:flex; flex-direction:column; align-items:center; gap:8px; padding:26px 0 18px; color:var(--dim); font-size:12px; letter-spacing:.06em; text-decoration:none; }
+.credit img { height:26px; width:auto; display:block; }
 .hsBtn { display:flex; align-items:center; justify-content:center; gap:10px; width:100%; padding:9px 12px; border-radius:12px; border:1px solid var(--line); background:#15130f; color:var(--text); font-size:14.5px; letter-spacing:.03em; cursor:pointer; }
 .hsBtn img { width:26px; height:26px; border-radius:6px; }
 .panel.hs { gap:14px; padding-bottom:calc(18px + env(safe-area-inset-bottom)); }
@@ -49,7 +51,7 @@ header h1 { margin:0; font-size:20px; font-weight:600; letter-spacing:.22em; bac
 header span { color:var(--dim); font-size:13px; letter-spacing:.08em; }
 .wrap { display:grid; grid-template-columns: 1fr; gap:18px; padding:10px max(14px, env(safe-area-inset-right)) 24px max(14px, env(safe-area-inset-left)); max-width:1100px; margin:0 auto; }
 .wrap > div { min-width:0; }
-.fx .tm { overflow-wrap:anywhere; }
+.fx .tm { overflow-wrap:normal; word-break:normal; hyphens:manual; min-width:0; }
 @media (min-width: 860px) { .wrap { grid-template-columns: 380px 1fr; align-items:start; } .stage { position:sticky; top:14px; } }
 .stage { display:flex; flex-direction:column; align-items:center; gap:10px; }
 .screen { position:relative; width:min(100%, 380px); aspect-ratio:9/16; border-radius:18px; overflow:hidden; background:#000; box-shadow:0 20px 60px rgba(0,0,0,.6), 0 0 0 1px #2a2418; }
@@ -80,7 +82,7 @@ input[type=date], input[type=time], input[type=text], input[type=search] { width
 .seg button.on { background:linear-gradient(180deg,#2c2416,#1d180f); color:var(--gold2); box-shadow: inset 0 -2px 0 var(--gold); }
 label.chk { display:flex; gap:8px; align-items:center; font-size:14px; color:var(--text); margin-top:10px; }
 label.chk input { width:18px; height:18px; accent-color: var(--gold); }
-.big { width:100%; padding:15px; border-radius:14px; border:0; font-size:16px; font-weight:600; letter-spacing:.08em; cursor:pointer; color:#1a1206; background:linear-gradient(180deg,#f6e2a6,#d3a24a 55%,#b9852e); box-shadow:0 6px 20px rgba(214,171,82,.25); }
+.big { width:100%; padding:15px; border-radius:14px; border:0; font-size:16px; font-weight:600; letter-spacing:.08em; cursor:pointer; color:#1a1206; background:linear-gradient(180deg,#eac13e,#c19612); box-shadow:0 6px 20px rgba(214,170,36,.25); }
 .big.alt { color:var(--text); background:linear-gradient(135deg,#3b1f3d,#5c2a4a 40%,#7a4a22); box-shadow:none; border:1px solid #6b4a35; }
 .big:disabled { opacity:.5; cursor:default; }
 .exports { display:grid; gap:10px; }
@@ -110,12 +112,12 @@ details[open] summary { margin-bottom:12px; }
 .chip { flex:none; border:1px solid var(--line); background:#1b1813; color:var(--dim); border-radius:999px; padding:7px 12px; font-size:13px; cursor:pointer; white-space:nowrap; }
 .chip.on { color:#1a1206; background:linear-gradient(180deg,#f3dc9c,#c99a44); border-color:transparent; }
 #fxList { margin-top:10px; display:grid; gap:6px; max-height:420px; overflow:auto; }
-.fx { display:grid; grid-template-columns: 34px 1fr auto 1fr 34px 40px; align-items:center; gap:8px; padding:8px; border:1px solid var(--line); border-radius:12px; background:#100e0b; cursor:pointer; }
+.fx { display:grid; grid-template-columns: 28px minmax(0,1fr) auto minmax(0,1fr) 28px 28px; align-items:center; gap:5px; padding:8px 7px; border:1px solid var(--line); border-radius:12px; background:#100e0b; cursor:pointer; }
 .fx.on { border-color:var(--gold); background:#1a150c; }
-.fx img { width:34px; height:34px; object-fit:contain; }
-.fx .tm { font-size:14px; line-height:1.15; } .fx .tm.r { text-align:right; }
-.fx .mid { text-align:center; font-size:12px; color:var(--dim); line-height:1.25; } .fx .mid b { display:block; color:var(--text); font-size:14px; font-weight:600; }
-.fx .ck { width:30px; height:30px; border-radius:50%; border:1px solid #4a4232; display:grid; place-items:center; color:var(--gold2); font-size:16px; }
+.fx img { width:28px; height:28px; object-fit:contain; }
+.fx .tm { font-size:12.5px; line-height:1.15; } @media (min-width:600px){ .fx .tm { font-size:13.5px; } } .fx .tm.r { text-align:right; }
+.fx .mid { text-align:center; font-size:11px; color:var(--dim); line-height:1.25; } .fx .mid b { display:block; color:var(--text); font-size:14px; font-weight:600; }
+.fx .ck { width:28px; height:28px; border-radius:50%; border:1px solid #4a4232; display:grid; place-items:center; color:var(--gold2); font-size:16px; }
 .fx.on .ck { background:var(--gold); color:#1a1206; border-color:transparent; }
 .fx .star { color:var(--gold2); font-size:11px; letter-spacing:.06em; }
 .tag { position:absolute; top:4px; left:4px; font-style:normal; font-size:9.5px; letter-spacing:.08em; padding:2px 5px; border-radius:6px; background:#2b2418; color:var(--dim); }
@@ -165,8 +167,8 @@ details[open] summary { margin-bottom:12px; }
     <section>
       <h2>Format</h2>
       <div class="seg" id="fmtSeg">
-        <button data-f="tiktok" class="on">TikTok / Reels</button>
-        <button data-f="story">Instagram Story</button>
+        <button data-f="story" class="on">Story format</button>
+        <button data-f="tiktok">Post format</button>
       </div>
       <p class="small" id="fmtNote" style="margin:8px 0 0"></p>
       <label class="chk"><input type="checkbox" id="optNames"> Show team names under crests</label>
@@ -183,16 +185,18 @@ details[open] summary { margin-bottom:12px; }
       </details>
     </section>
   </div>
-</div></main>
+</div>
+<a class="credit" href="https://smrgraphics.co.uk/?s=kayamatchday" target="_blank" rel="noopener"><span>Designed &amp; built by</span><img src="smr-digital.svg" alt="SMR Digital"></a>
+</main>
 <footer id="bar">
   <div class="prog" id="prog"><i></i></div>
   <div class="msg" id="msg"></div>
   <button class="big" id="shareBtn"><span class="ic">↑</span> Share</button>
-  <button class="hsBtn" id="hsBtn"><img src="apple-touch-icon.png" alt=""> Add to your Home Screen</button>
+  <button class="hsBtn" id="hsBtn"><img src="apple-touch-icon.png" alt=""> Add app to Home Screen</button>
 </footer>
 <div class="sheet" id="hsSheet">
   <div class="panel hs">
-    <div class="top"><b>ADD TO HOME SCREEN</b><button class="pill" id="hsClose">Close</button></div>
+    <div class="top"><b>ADD APP TO HOME SCREEN</b><button class="pill" id="hsClose">Close</button></div>
     <div class="hsHead"><img src="apple-touch-icon.png" alt=""><div><b>Kaya Matchday</b><span>Opens full screen, just like an app.</span></div></div>
     <div id="hsSteps"></div>
   </div>
@@ -257,11 +261,11 @@ const state = {
     { home: 'fc-barcelona', away: 'aston-villa', date: iso(today), time: '20:00' },
     { home: 'manchester-united', away: 'as-roma', date: iso(today), time: '20:00' },
   ],
-  format: 'tiktok', names: false, weekday: false,
+  format: 'story', names: false, weekday: false,
   venue: { title: 'KAYA LOUNGE', l1: '10 MARSH ROAD, LUTON, LU3 2NH', l2: '35 GOLDINGTON ROAD, BEDFORD, MK40 3LH' },
 };
 let hadSaved = false;
-try { const s = JSON.parse(localStorage.getItem('kaya-state') || 'null'); if (s && s.games) { Object.assign(state, s); hadSaved = true; state.games.forEach(g => { g.home = MIGRATE[g.home] || g.home; g.away = MIGRATE[g.away] || g.away; }); } } catch (e) {}
+try { const s = JSON.parse(localStorage.getItem('kaya-state') || 'null'); if (s && s.games) { Object.assign(state, s); state.format = 'story'; hadSaved = true; state.games.forEach(g => { g.home = MIGRATE[g.home] || g.home; g.away = MIGRATE[g.away] || g.away; }); } } catch (e) {}
 function persistLocal() { try { localStorage.setItem('kaya-state', JSON.stringify(state)); } catch (e) {} }
 
 /* ---------------- images ---------------- */
@@ -343,7 +347,7 @@ function buildLayout(st) {
       items.push({ type: 'date', text: fmtDate(groups[0].date, st.weekday), y: h, k: kt }); h += TXT.date.cap * kt + 29 * kt;
       items.push({ type: 'time', text: fmtTime(groups[0].time), y: h, k: kt }); h += TXT.time.cap * kt;
     } else {
-      if (sameDate) { items.push({ type: 'date', text: fmtDate(sorted[0].date, st.weekday), y: h, k: kt }); h += TXT.date.cap * kt + 70 * kt; }
+      if (sameDate && sorted.length) { items.push({ type: 'date', text: fmtDate(sorted[0].date, st.weekday), y: h, k: kt }); h += TXT.date.cap * kt + 70 * kt; }
       groups.forEach((gr, gi) => {
         if (gi) h += 78 * k;
         rows(gr); h += tight(52 * k);
@@ -645,16 +649,27 @@ async function removeTeam(t) {
 function badgeDataURL(team) { const c = document.createElement('canvas'); c.width = c.height = 200; badge(c.getContext('2d'), team, 100, 100, 200); return c.toDataURL('image/png'); }
 
 /* ---------------- upcoming fixtures ---------------- */
-const BIG = new Set(['arsenal', 'chelsea', 'liverpool', 'manchester-city', 'manchester-united', 'tottenham-hotspur', 'newcastle-united', 'aston-villa',
-  'real-madrid', 'barcelona', 'bayern-munchen', 'paris-saint-germain', 'inter', 'juventus', 'ac-milan', 'atletico-de-madrid', 'borussia-dortmund', 'napoli']);
+/* Priority list: how big a draw each team is for the lounge (higher = shown first). */
+const TEAM_RANK = (() => {
+  const r = {}, tier = (pts, ids) => ids.split(' ').forEach(id => r[id] = pts);
+  tier(100, 'manchester-united liverpool manchester-city arsenal chelsea real-madrid fc-barcelona');
+  tier(85, 'tottenham-hotspur newcastle-united bayern-munich paris-saint-germain inter-milan juventus ac-milan atletico-de-madrid');
+  tier(70, 'aston-villa borussia-dortmund ssc-napoli bayer-04-leverkusen as-roma luton-town');
+  // national teams, for when international games are on
+  tier(95, 'england brazil argentina spain france portugal');
+  tier(75, 'germany italy netherlands belgium croatia morocco pakistan scotland wales');
+  tier(55, 'everton west-ham-united nottingham-forest brighton-hove-albion crystal-palace fulham brentford afc-bournemouth wolverhampton-wanderers leeds-united sunderland '
+    + 'sporting-cp fc-porto sl-benfica ajax psv-eindhoven celtic rangers galatasaray fenerbahce olympique-marseille ss-lazio atalanta-bc rb-leipzig sevilla real-sociedad villarreal real-betis-balompie');
+  return r;
+})();
+const COMP_RANK = { 'Champions League': 30, 'Premier League': 20, 'La Liga': 5, 'Serie A': 0, 'Bundesliga': 0, 'Ligue 1': -5, 'Championship': -10, 'Eredivisie': -15, 'Primeira Liga': -15 };
 const ENG = new Set(); // filled from catalog
 const COMPS = ['All', 'Premier League', 'Champions League', 'Championship', 'La Liga', 'Serie A', 'Bundesliga', 'Ligue 1', 'Eredivisie', 'Primeira Liga'];
 let fxDay = null, fxComp = 'All';
 const fxRef = (id, name) => id || ('n:' + name);
 function fxScore(m) {
-  const b = (BIG.has(m.hi) ? 1 : 0) + (BIG.has(m.ai) ? 1 : 0);
-  const eng = (ENG.has(m.hi) || ENG.has(m.ai)) ? 1 : 0;
-  return m.p * 10 - b * 9 - (m.c === 'Champions League' && eng ? 12 : 0) - (b === 2 ? 6 : 0);
+  const a = TEAM_RANK[m.hi] || 25, b = TEAM_RANK[m.ai] || 25;
+  return -(Math.max(a, b) + .7 * Math.min(a, b) + (COMP_RANK[m.c] || -10));
 }
 function fxSelected(m) { return state.games.findIndex(g => g.date === m.d && g.home === fxRef(m.hi, m.h) && g.away === fxRef(m.ai, m.a)); }
 function dayLabel(d) {
@@ -663,7 +678,7 @@ function dayLabel(d) {
   const [y, m, dd] = d.split('-').map(Number); const dt = new Date(y, m - 1, dd);
   return ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][dt.getDay()] + ' ' + dd + ' ' + MONTHS[m - 1].slice(0, 3).toLowerCase().replace(/^./, c => c.toUpperCase());
 }
-function fxDays() { const t = iso(new Date()); return [...new Set(FIXTURES.filter(m => m.d >= t).map(m => m.d))].slice(0, 14); }
+function fxDays() { const t = iso(new Date()); return [...new Set([t, ...FIXTURES.filter(m => m.d >= t).map(m => m.d).sort()])].slice(0, 14); }
 function dayMatches(d) { return FIXTURES.filter(m => m.d === d && (fxComp === 'All' || m.c === fxComp)).sort((a, b) => fxScore(a) - fxScore(b) || a.t.localeCompare(b.t)); }
 function renderFixtures() {
   if (!FIXTURES.length) { $('#fxList').innerHTML = '<p class="small">Loading fixtures…</p>'; return; }
@@ -684,7 +699,7 @@ function renderFixtures() {
     d.onclick = () => toggleFixture(m);
     el.appendChild(d);
   });
-  if (!list.length) el.innerHTML = '<p class="small">No games in this competition on this day.</p>';
+  if (!list.length) el.innerHTML = `<p class="small">${fxComp === 'All' && fxDay === iso(new Date()) ? 'No games today. Pick another day above.' : 'No games in this competition on this day.'}</p>`;
 }
 function toggleFixture(m) {
   const i = fxSelected(m);
@@ -707,9 +722,12 @@ async function loadData() {
     CATALOG = cat.map(t => ({ ...t, src: cr[t.id] || null }));
     CATALOG.filter(t => t.country === 'England').forEach(t => ENG.add(t.id));
     FIXTURES = fx.matches || [];
-    if (!hadSaved) {
-      const d = fxDays()[0]; if (d) { fxDay = d; const list = dayMatches(d).slice(0, 2); if (list.length) state.games = list.map(m => ({ home: fxRef(m.hi, m.h), away: fxRef(m.ai, m.a), date: m.d, time: m.t || '' })); }
-    }
+    const today0 = iso(new Date());
+    const upcoming = state.games.filter(g => (g.home || g.away) && g.date >= today0);
+    if (!hadSaved || !upcoming.length) {
+      const d = fxDays().find(x => dayMatches(x).length);
+      if (d) { fxDay = d; const top = dayMatches(d)[0]; state.games = top ? [{ home: fxRef(top.hi, top.h), away: fxRef(top.ai, top.a), date: top.d, time: top.t || '' }] : []; }
+    } else fxDay = upcoming.map(g => g.date).sort()[0];
   } catch (e) { $('#fxList').innerHTML = '<p class="small">Couldn\u2019t load the fixture list.</p>'; }
   renderGames(); relayout(); preloadCrests(); renderFixtures();
 }
@@ -865,7 +883,7 @@ shareBtn.onclick = async () => {
 /* ---------------- add to home screen ---------------- */
 const IS_IOS = /iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.maxTouchPoints > 1 && /Macintosh/.test(navigator.userAgent));
 const IS_ANDROID = /Android/i.test(navigator.userAgent);
-const INSTALLED = matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+const INSTALLED = ['standalone', 'fullscreen', 'minimal-ui'].some(m => matchMedia(`(display-mode: ${m})`).matches) || navigator.standalone === true;
 let installEvt = null;
 addEventListener('beforeinstallprompt', e => { e.preventDefault(); installEvt = e; });
 addEventListener('appinstalled', () => { $('#hsBtn').style.display = 'none'; $('#hsSheet').classList.remove('open'); });
