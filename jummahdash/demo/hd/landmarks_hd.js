@@ -529,32 +529,74 @@ HD.kahwa = (c, x, G) => {
 
 // Toro's Steakhouse: dark brick flats (upper floors shorter), white cornice, two white bays, black fascia with gold frame,
 // bull head, TORO'S red with a white edge + STEAKHOUSE; living-wall shopfront; four windows each showing a different room
+// Toro's Steakhouse, 52-54 Bute Street (owner's Street View, Aug 2024): three-storey brick block, two matching bays. First floor:
+// a narrow window either side of a wide window in a white pilastered surround; a white band with a pediment over each surround;
+// second floor three windows on bracketed sills; dentil cornice and a white parapet. The flats' own black door (No 54) in a white
+// rendered strip at the left, so the shop doesn't start at the very edge. Black fascia (bull head, TORO'S, STEAKHOUSE, halal
+// roundel, web address), living-wall piers, four windows into the restaurant and the recessed door on the right.
+// Drawn in metres (20 units a metre): shop glass to 2.45 m, fascia 2.5-3.4 m, door 2.2 m, first floor 3.7-6.6 m, second 6.9-9.2 m.
 HD.toros = (c, x, G) => {
-  c.save(); c.lineJoin = 'round'; const WH = '#f1eee6';
-  c.save(); c.translate(0, -18);
-  brick(c, x, G - 178, 200, 130, '#6a4234'); c.strokeStyle = LINE; c.lineWidth = .5; c.strokeRect(x, G - 178, 200, 130);
-  rect(c, WH, x - 2, G - 184, 204, 8, LINE, .45); rect(c, '#d8d4ca', x - 2, G - 178, 204, 2); for (let i = 0; i < 50; i++) rect(c, 'rgba(0,0,0,.16)', x + i * 4, G - 176, 1.6, 1.2);
-  for (const [px, pw] of [[x + 20, 40], [x + 120, 44]]) { c.fillStyle = lg(c, px, 0, px + pw, 0, [[0, '#ffffff'], [1, '#dedad2']]); c.fillRect(px, G - 108, pw, 60); c.strokeStyle = LINE; c.lineWidth = .4; c.strokeRect(px, G - 108, pw, 60); poly(c, WH, [[px - 4, G - 108], [px + pw / 2, G - 120], [px + pw + 4, G - 108]], LINE, .45); rect(c, '#d8d4ca', px, G - 106, pw, 1.6); }
-  for (let r = 0; r < 2; r++) for (let i = 0; i < 5; i++) { const wx = x + 10 + i * 40, wy = r ? G - 102 : G - 166; sash(c, wx, wy, 16, r ? 38 : 34, { stone: WH, key: r === 0 }); }
-  for (let i = 0; i < 25; i++) rect(c, WH, x + 2 + i * 8, G - 52, 4, 1.6);
-  c.fillStyle = lg(c, 0, G - 50, 0, G - 26, [[0, '#2a2829'], [1, '#141213']]); c.fillRect(x - 2, G - 50, 204, 24); c.strokeStyle = '#000'; c.lineWidth = .4; c.strokeRect(x - 2, G - 50, 204, 24);
-  c.strokeStyle = '#c9a64a'; c.lineWidth = .6; c.strokeRect(x, G - 48.4, 200, 20.8);
-  { const bx = x + 14, by = G - 38; c.fillStyle = '#f4f2ec'; c.beginPath(); c.moveTo(bx - 9.5, by - 7.5); c.quadraticCurveTo(bx - 7, by - 2.5, bx - 3.8, by - 2.6); c.lineTo(bx + 3.8, by - 2.6); c.quadraticCurveTo(bx + 7, by - 2.5, bx + 9.5, by - 7.5); c.quadraticCurveTo(bx + 8.6, by - .6, bx + 4.2, by); c.quadraticCurveTo(bx + 3.6, by + 7.6, bx, by + 8.4); c.quadraticCurveTo(bx - 3.6, by + 7.6, bx - 4.2, by); c.quadraticCurveTo(bx - 8.6, by - .6, bx - 9.5, by - 7.5); c.fill();
-    for (const ex of [-2, 2]) { c.beginPath(); c.arc(bx + ex, by + .6, .7, 0, 7); c.fillStyle = '#1f1d1e'; c.fill(); } c.beginPath(); c.ellipse(bx, by + 6, 1.8, 1, 0, 0, 7); c.fillStyle = '#c9a64a'; c.fill(); }
-  c.save(); c.font = '400 15px Georgia, serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.lineJoin = 'round'; c.lineWidth = 1.8; c.strokeStyle = '#f4f2ec'; c.strokeText("TORO'S", x + 76, G - 37.6); c.fillStyle = '#d8262f'; c.fillText("TORO'S", x + 76, G - 37.6); c.restore();
-  txt(c, 'STEAKHOUSE', x + 162, G - 40.4, 7.4, '#f4f2ec', { f: 'Georgia, serif', w: 400, ls: 1.2 }); rect(c, '#c9a64a', x + 132, G - 34, 60, .6);
-  c.restore();
-  // living wall
-  c.fillStyle = '#24561f'; c.fillRect(x, G - 46, 200, 46); for (let i = 0; i < 900; i++) { const lx = x + (i * 37.3) % 199, ly = G - 45.5 + (i * 13.7) % 45; c.fillStyle = ['#2f6a2e', '#3e8238', '#1c4a18', '#4f9a44'][i % 4]; c.beginPath(); c.ellipse(lx, ly, 1.1, .6, (i % 7) * .45, 0, 7); c.fill(); }
+  c.save(); c.lineJoin = 'round'; const WH = '#f1eee6', WD = '#d8d4ca', B = '#5e3a2e', m = v => G - v * 20;
+  brick(c, x, m(10.3), 230, m(0) - m(10.3), B); c.strokeStyle = LINE; c.lineWidth = .5; c.strokeRect(x, m(10.3), 230, m(0) - m(10.3));
+  // parapet + dentil cornice
+  rect(c, WH, x - 1, m(10.3), 232, m(9.5) - m(10.3), LINE, .4); rect(c, WD, x - 2, m(9.5), 234, 2.2, LINE, .3);
+  for (let i = 0; i < 38; i++) rect(c, WH, x + 2 + i * 6, m(9.5) + 2.2, 3, 2.4, 'rgba(0,0,0,.25)', .2);
+  // first/second floor white band
+  rect(c, WH, x - 1, m(6.9), 232, m(6.6) - m(6.9), LINE, .35);
+  const win = (wx, y0, w, h, top) => { rect(c, '#f6f6f2', wx, y0, w, h, '#8a8a84', .35); c.fillStyle = lg(c, wx, y0, wx + w * .6, y0 + h, [[0, '#d4e0ea'], [.5, '#7a8fa4'], [1, '#4a5a6c']]); c.fillRect(wx + 1.4, y0 + 1.4, w - 2.8, h - 2.8);
+    for (let k = 0; k < (w - 2.8) / 1.6; k++) rect(c, 'rgba(236,236,240,.35)', wx + 1.6 + k * 1.6, y0 + (top ? h * .22 : 1.4), .6, h * (top ? .76 : .6));   // vertical blinds
+    if (top) rect(c, '#f6f6f2', wx, y0 + h * .22, w, 1.2); glare(c, wx + 1.4, y0 + 1.4, w - 2.8, h - 2.8); };
+  const sill = (wx, y0, w) => { rect(c, WH, wx - 2.4, y0, w + 4.8, 1.8, LINE, .3); for (const bx of [wx - 1.6, wx + w - .4]) rect(c, WH, bx, y0 + 1.8, 2, 2.2, 'rgba(0,0,0,.3)', .2); };
+  for (const bx of [x + 22, x + 126]) {
+    // first floor: pilastered surround with the wide window, a narrow window either side
+    rect(c, WH, bx + 32, m(6.6), 44, m(3.7) - m(6.6), LINE, .35); rect(c, WD, bx + 32, m(6.6), 5, m(3.7) - m(6.6)); rect(c, WD, bx + 71, m(6.6), 5, m(3.7) - m(6.6));
+    for (const px of [bx + 31, bx + 70]) rect(c, WH, px, m(6.6) - 2, 7, 2, LINE, .3);
+    win(bx + 39, m(6.0), 30, m(4.0) - m(6.0), true); rect(c, WD, bx + 37, m(4.0), 34, 1.6);
+    for (const wx of [bx + 8, bx + 84]) { win(wx, m(6.0), 14, m(4.0) - m(6.0)); sill(wx, m(4.0), 14); }
+    // pediment over the surround on the white band
+    poly(c, WH, [[bx + 26, m(6.9)], [bx + 54, m(7.7)], [bx + 82, m(6.9)]], LINE, .4); poly(c, WD, [[bx + 34, m(6.9) - .6], [bx + 54, m(7.45)], [bx + 74, m(6.9) - .6]]);
+    // second floor
+    for (const [wx, w, top] of [[bx + 8, 15], [bx + 38, 32, 1], [bx + 82, 16]]) { win(wx, m(8.9), w, m(7.3) - m(8.9), top); sill(wx, m(7.3), w); rect(c, WH, wx - 2, m(8.9) - 2.4, w + 4, 2.4, LINE, .3); }
+  }
+  // flats' door (No 54) in a white rendered strip
+  rect(c, '#efece4', x, m(3.6), 22, m(0) - m(3.6), LINE, .35); rect(c, '#1c1a1c', x + 3, m(2.6), 16, m(0) - m(2.6), '#000', .3);
+  c.fillStyle = lg(c, 0, m(2.6), 0, m(2.25), [[0, '#9ab0c0'], [1, '#4a5a68']]); c.fillRect(x + 4.4, m(2.6) + 1.2, 13.2, m(2.25) - m(2.6) - 1.6);
+  rect(c, '#2a282c', x + 4.4, m(2.2), 13.2, m(0) - m(2.2) - .6); rect(c, '#3a383c', x + 6, m(2.0), 10, 12); rect(c, '#3a383c', x + 6, m(1.1), 10, 14); rect(c, '#c9a64a', x + 7, m(1.35), 2.4, .8); rect(c, '#c9a64a', x + 15, m(1.05), .8, 2.6);
+  rect(c, '#2a2a2e', x + 20.2, m(3.6), 1.4, m(0) - m(3.6));   // downpipe
+  // cornice over the fascia with brackets
+  rect(c, WH, x + 20, m(3.7), 210, m(3.4) - m(3.7), LINE, .35); for (let i = 0; i < 26; i++) rect(c, WH, x + 24 + i * 8, m(3.4), 3, 2.6, 'rgba(0,0,0,.3)', .2);
+  // fascia
+  const FT = m(3.4), FB = m(2.5);
+  c.fillStyle = lg(c, 0, FT, 0, FB, [[0, '#2c2a2b'], [1, '#141213']]); c.fillRect(x + 22, FT, 206, FB - FT); c.strokeStyle = '#000'; c.lineWidth = .4; c.strokeRect(x + 22, FT, 206, FB - FT);
+  { const bx = x + 46, by = FT + 8; c.fillStyle = '#f4f2ec';
+    c.beginPath(); c.moveTo(bx - 14, by - 6); c.quadraticCurveTo(bx - 10, by - 1, bx - 4, by - 1.4); c.lineTo(bx + 4, by - 1.4); c.quadraticCurveTo(bx + 10, by - 1, bx + 13, by - 8); c.quadraticCurveTo(bx + 11, by + .6, bx + 4.4, by + 1); c.quadraticCurveTo(bx + 3.6, by + 8, bx, by + 9.4); c.quadraticCurveTo(bx - 3.6, by + 8, bx - 4.4, by + 1); c.quadraticCurveTo(bx - 11, by + 1, bx - 14, by - 6); c.fill();
+    c.fillStyle = '#1c1a1b'; c.beginPath(); c.moveTo(bx - 2.4, by + 1.4); c.quadraticCurveTo(bx, by + 8, bx + 2.4, by + 1.4); c.fill(); }
+  txt(c, 'EST 2009', x + 84, FT + 3.4, 2.6, '#f4f2ec', { f: 'Georgia, serif', w: 400, ls: .6, a: 'left' });
+  c.save(); c.font = '400 13px Georgia, serif'; c.textAlign = 'left'; c.textBaseline = 'middle'; c.fillStyle = '#d8262f'; c.fillText("TORO'S", x + 64, FT + 10.4); c.restore();
+  txt(c, 'STEAKHOUSE', x + 160, FT + 10, 7.6, '#f4f2ec', { f: 'Georgia, serif', w: 400, ls: 1.6 });
+  txt(c, 'www.torosluton.co.uk', x + 26, FB - 2.4, 2.2, '#d8d4ca', { f: 'Georgia, serif', w: 400, a: 'left' });
+  { const hx = x + 216, hy = FT + 8.4; c.beginPath(); c.arc(hx, hy, 5.4, 0, 7); c.strokeStyle = '#f4f2ec'; c.lineWidth = .6; c.stroke(); txt(c, 'حلال', hx, hy - .8, 3.6, '#f4f2ec', { f: 'Amiri', rtl: 1 }); txt(c, 'HALAL', hx, hy + 2.8, 1.5, '#f4f2ec', { f: 'Mont, sans-serif' }); }
   const head = (hx, hy, skin, hair, top) => { c.beginPath(); c.moveTo(hx - 3.4, hy + 10); c.quadraticCurveTo(hx - 3.6, hy + 4.2, hx, hy + 4); c.quadraticCurveTo(hx + 3.6, hy + 4.2, hx + 3.4, hy + 10); c.fillStyle = top; c.fill(); c.beginPath(); c.arc(hx, hy + 2, 2.2, 0, 7); c.fillStyle = skin; c.fill(); c.beginPath(); c.arc(hx, hy + 1.4, 2.3, Math.PI, 0); c.fillStyle = hair; c.fill(); };
-  for (let i = 0; i < 4; i++) { const wx = x + 10 + i * 36, wy = G - 41;
-    rect(c, '#1f1d1e', wx, G - 42, 30, 38); c.fillStyle = lg(c, 0, wy, 0, wy + 36, [[0, '#5a3a2c'], [.75, '#4a3026'], [.76, '#2e1e18'], [1, '#24160f']]); c.fillRect(wx + 1, wy, 28, 36); for (let k = 0; k < 5; k++) rect(c, '#3a261e', wx + 1 + k * 6, wy + 28, .4, 8);
+  const scene = (i, wx, wy) => {
+    c.fillStyle = lg(c, 0, wy, 0, wy + 36, [[0, '#5a3a2c'], [.75, '#4a3026'], [.76, '#2e1e18'], [1, '#24160f']]); c.fillRect(wx + 1, wy, 28, 36); for (let k = 0; k < 5; k++) rect(c, '#3a261e', wx + 1 + k * 6, wy + 28, .4, 8);
     if (i === 0) { pend(c, wx + 14.5, wy, 4, '#c9a64a'); head(c, wx + 8, wy + 13, '#c58c5c', '#1b1b1d', '#2f4a8a'); head(c, wx + 21, wy + 13, '#e0b48a', '#5a3a1e', '#a83a32'); tableT(c, wx + 6, wy + 22, 18); rect(c, '#f4f2ec', wx + 9, wy + 21.2, 4, .8); rect(c, '#f4f2ec', wx + 17, wy + 21.2, 4, .8); rect(c, '#b02a22', wx + 14.4, wy + 19, .6, 2.4); }
     else if (i === 1) { rect(c, '#c9a64a', wx + 9, wy + 3, 12, 8, '#6a4a10', .3); rect(c, '#2a1a14', wx + 10.4, wy + 4.4, 9.2, 5.2); rect(c, '#f4f2ec', wx + 13, wy + 6, 4, 1.6); c.fillStyle = lg(c, 0, wy + 15, 0, wy + 25, [[0, '#b83a30'], [1, '#7a1e1e']]); c.fillRect(wx + 2, wy + 15, 26, 10); head(c, wx + 7, wy + 12, '#8a5a3a', '#1b1b1d', '#e8e4dc'); head(c, wx + 15, wy + 14, '#c58c5c', '#2a1a14', '#3e7a4a'); head(c, wx + 23, wy + 12, '#c58c5c', '#1b1b1d', '#5a5f6e'); tableT(c, wx + 3, wy + 24, 24); }
     else if (i === 2) { rect(c, '#1f1d1e', wx + 2, wy + 3, 26, 7); for (let k = 0; k < 3; k++) { rect(c, '#f4f2ec', wx + 4 + k * 8, wy + 5, 6, .6); rect(c, '#f4f2ec', wx + 4 + k * 8, wy + 7, 4, .6); } c.fillStyle = lg(c, 0, wy + 11, 0, wy + 17, [[0, 'rgba(255,150,60,.6)'], [1, 'rgba(255,150,60,0)']]); c.fillRect(wx + 2, wy + 11, 26, 6); rect(c, '#e06a2a', wx + 2, wy + 12, 26, 2); head(c, wx + 15, wy + 11, '#e0b48a', '#f4f2ec', '#f4f2ec'); rect(c, '#f4f2ec', wx + 12.6, wy + 9, 5, 2.4); rect(c, '#6a4a3a', wx + 1, wy + 20, 28, 9); rect(c, '#8a6450', wx + 1, wy + 20, 28, 1.6); }
     else { pend(c, wx + 21.5, wy, 4, '#c9a64a'); tableT(c, wx + 10, wy + 17, 16); stool(c, wx + 9, wy + 29); stool(c, wx + 26, wy + 29); head(c, wx + 21, wy + 8, '#8a5a3a', '#1b1b1d', '#c8202a'); plant(c, wx + 5, wy + 30, .9); }
-    glare(c, wx + 1, wy, 28, 36); }
-  rect(c, '#3a2a20', x + 164, G - 40, 18, 40, '#1e140e', .4); c.fillStyle = lg(c, 0, G - 37, 0, G - 21, [[0, '#cfe0ee'], [1, '#6f8aa2']]); c.fillRect(x + 167, G - 37, 12, 16); c.beginPath(); c.arc(x + 173, G - 14, 1.4, 0, 7); c.fillStyle = '#f2c43a'; c.fill();
+    };
+  // living-wall piers + stall riser, four windows into the restaurant, recessed door on the right
+  const hedge = (hx, hy, w, h) => { c.fillStyle = '#24561f'; c.fillRect(hx, hy, w, h); for (let i = 0; i < w * h * .35; i++) { const lx = hx + (i * 37.3) % w, ly = hy + (i * 13.7) % h; c.fillStyle = ['#2f6a2e', '#3e8238', '#1c4a18', '#4f9a44'][i % 4]; c.beginPath(); c.ellipse(lx, ly, 1.1, .6, (i % 7) * .45, 0, 7); c.fill(); } };
+  hedge(x + 22, FB, 206, m(0) - FB);
+  const GT = m(2.45), GB = m(.45);
+  for (const [i, wx, w] of [[0, x + 30, 32], [1, x + 63, 33], [2, x + 104, 25], [3, x + 130, 26]]) {
+    rect(c, '#1f1d1e', wx, GT, w, GB - GT); c.save(); c.beginPath(); c.rect(wx + 1, GT + 1, w - 2, GB - GT - 2); c.clip();
+    c.fillStyle = '#4a3026'; c.fillRect(wx + 1, GT + 1, w - 2, GB - GT - 2); c.translate(0, GB - GT - 38); scene(i, wx + (w - 30) / 2, GT + 1); c.restore();
+    c.fillStyle = 'rgba(255,255,255,.08)'; c.fillRect(wx + 1, GT + 1, w - 2, 4); glare(c, wx + 1, GT + 1, w - 2, GB - GT - 2); }
+  rect(c, '#141214', x + 164, m(2.45), 44, m(0) - m(2.45)); rect(c, '#2a2628', x + 164, m(2.45), 44, 3);
+  rect(c, '#3a3436', x + 172, m(2.2), 26, m(0) - m(2.2), '#000', .3); c.fillStyle = lg(c, 0, m(2.2), 0, m(0), [[0, '#6a5a50'], [1, '#2a2220']]); c.fillRect(x + 174, m(2.2) + 2, 22, m(0) - m(2.2) - 4);
+  rect(c, '#3a6ad8', x + 174, m(1.05), 22, 1.6); rect(c, '#f2c43a', x + 188, m(1.75), 5, 6, '#7a5a10', .2); glare(c, x + 174, m(2.2) + 2, 22, m(0) - m(2.2) - 4);
+  rect(c, '#4a3a34', x + 166, m(.12), 40, 2.4);
+  rect(c, '#f4f2ec', x + 228, m(3.7), 2, m(0) - m(3.7));
   c.restore();
 };
 
@@ -1846,7 +1888,6 @@ const REFLOOR = {
   gna:       [[0, 0], [40, 2.2], [42, 2.4], [68, 3.4], [71, 3.55], [133, 5.25], [136, 5.45], [166, 7.6], [188, 8.7], [218, 10.2]],
   topspizza: [[0, 0], [46, 2.4], [68, 3.2], [96, 3.5], [128, 4.9], [133, 5.15], [142, 5.6], [152, 6.1], [194, 8.5]],
   alquds:    [[0, 0], [10, .5], [38, 2.4], [40, 2.45], [66, 3.4], [72, 3.6], [78, 3.75], [108, 5.0], [116, 5.4], [124, 6.3], [150, 7.6], [162, 8.3], [176, 9.2], [192, 10]],
-  toros:     [[0, 0], [46, 2.4], [68, 3.3], [82, 3.75], [120, 5.25], [138, 6.1], [150, 6.6], [184, 8.0], [196, 8.55], [204, 8.9]],
   oak:       [[0, 0], [38, 2.05], [40, 2.2], [46, 2.4], [66, 3.2], [75, 3.5], [100, 4.75], [112, 5.55], [146, 8.0], [168, 9.1]],
   krispy:    [[0, 0], [44, 2.4], [50, 2.7], [76, 3.6], [79, 3.75], [109, 5.05], [112, 5.2], [120, 5.55]],
 };

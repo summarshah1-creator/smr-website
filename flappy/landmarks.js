@@ -982,24 +982,37 @@ L.cycleking = { n: 'Cycle King', w: 344, d(c, x, G) {
   BOX(c, '#2a2f38', x + 184, G - 42, 40, 42); R(c, '#9fb7c9', x + 187, G - 39, 15, 34); R(c, '#9fb7c9', x + 206, G - 39, 15, 34); R(c, '#2a2f38', x + 203, G - 39, 2, 34);
 } };
 
-L.toros = { n: "Toro's Steakhouse", w: 220, d(c, x, G) {
-  const B = '#6a4234', BL = '#5a382c', WH = '#efece4';
-  c.save(); c.translate(0, -18);
-  BRICK(c, x, G - 178, 200, 130, B, BL); R(c, OUT, x - 1, G - 179, 202, 1); R(c, OUT, x - 1, G - 178, 1, 130); BOX(c, WH, x - 2, G - 184, 204, 8); R(c, '#d8d4ca', x - 2, G - 178, 204, 2);
-  for (const [px, pw] of [[x + 20, 40], [x + 120, 44]]) { BOX(c, WH, px, G - 108, pw, 60); P(c, WH, [[px - 4, G - 108], [px + pw / 2, G - 120], [px + pw + 4, G - 108]], true); R(c, '#d8d4ca', px, G - 106, pw, 2); }
-  for (let r = 0; r < 2; r++) for (let i = 0; i < 5; i++) { const wx = x + 10 + i * 40, wy = r ? G - 102 : G - 166; WIN(c, wx, wy, 16, r ? 40 : 36, '#f4f2ec', '#9fb7c9'); R(c, WH, wx - 2, wy + (r ? 40 : 36), 20, 3); }
-  for (let i = 0; i < 25; i++) R(c, WH, x + 2 + i * 8, G - 52, 4, 2);
-  // shopfront sign: black fascia with a thin gold frame, bull head, TORO'S in red with a white edge, STEAKHOUSE in white
-  BOX(c, '#1f1d1e', x - 2, G - 50, 204, 24); R(c, '#c9a64a', x, G - 48, 200, 1); R(c, '#c9a64a', x, G - 29, 200, 1);
-  { const bx = x + 14, by = G - 38; P(c, '#f4f2ec', [[bx - 9, by - 7], [bx - 5, by - 3], [bx + 5, by - 3], [bx + 9, by - 7], [bx + 7, by - 1], [bx + 4, by], [bx + 3, by + 6], [bx, by + 8], [bx - 3, by + 6], [bx - 4, by], [bx - 7, by - 1]]); R(c, '#1f1d1e', bx - 3, by + 1, 2, 2); R(c, '#1f1d1e', bx + 1, by + 1, 2, 2); R(c, '#d8262f', bx - 1, by + 6, 2, 1); }
-  c.font = '700 16px Silk'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.lineJoin = 'round'; c.lineWidth = 3; c.strokeStyle = '#f4f2ec'; c.strokeText("TORO'S", x + 76, G - 38); c.fillStyle = '#d8262f'; c.fillText("TORO'S", x + 76, G - 38);
-  T(c, 'STEAKHOUSE', x + 162, G - 42, 8, '#f4f2ec', 'center', false); R(c, '#c9a64a', x + 132, G - 33, 60, 1);
-  c.restore();
-  BOX(c, '#2f6a2e', x, G - 46, 200, 46); for (let i = 0; i < 180; i++) R(c, i % 2 ? '#24561f' : '#3e8238', x + (i * 37) % 198, G - 45 + (i * 13) % 44, 2, 2);
-  // four windows, each looking into a different part of the restaurant (warm dark wood inside, a soft glare on the glass)
+L.toros = { n: "Toro's Steakhouse", w: 230, d(c, x, G) {
+  // 52-54 Bute Street (owner's Street View): three storeys, two matching bays (narrow window / wide window in a white
+  // pilastered surround / narrow window, pediment over the surround, three windows on the second floor), dentil cornice + white
+  // parapet; the flats' black door in a white strip at the left; black fascia, living-wall piers, four windows, door on the right.
+  // Heights in metres at 20 units a metre, the same as the other shops (door 2.2 m, fascia 2.5-3.4 m, floors 3.7 / 6.9 m).
+  const B = '#6a4234', BL = '#5a382c', WH = '#efece4', WD = '#d8d4ca', m = v => G - Math.round(v * 20);
+  BRICK(c, x, m(10.3), 230, m(0) - m(10.3), B, BL); R(c, OUT, x - 1, m(10.3) - 1, 232, 1); R(c, OUT, x - 1, m(10.3), 1, m(0) - m(10.3)); R(c, OUT, x + 230, m(10.3), 1, m(0) - m(10.3));
+  BOX(c, WH, x - 1, m(10.3), 232, m(9.5) - m(10.3)); R(c, WD, x - 2, m(9.5), 234, 2); for (let i = 0; i < 38; i++) R(c, WH, x + 2 + i * 6, m(9.5) + 2, 3, 2);
+  BOX(c, WH, x - 1, m(6.9), 232, m(6.6) - m(6.9));
+  const sill = (wx, y0, w) => { R(c, WH, wx - 2, y0, w + 4, 2); R(c, WD, wx - 1, y0 + 2, 2, 2); R(c, WD, wx + w - 1, y0 + 2, 2, 2); };
+  for (const bx of [x + 22, x + 126]) {
+    BOX(c, WH, bx + 32, m(6.6), 44, m(3.7) - m(6.6)); R(c, WD, bx + 32, m(6.6), 5, m(3.7) - m(6.6)); R(c, WD, bx + 71, m(6.6), 5, m(3.7) - m(6.6));
+    WIN(c, bx + 39, m(6.0), 30, m(4.0) - m(6.0), '#f4f2ec', '#9fb7c9'); R(c, '#f4f2ec', bx + 39, m(6.0) + 9, 30, 1);
+    for (const wx of [bx + 8, bx + 84]) { WIN(c, wx, m(6.0), 14, m(4.0) - m(6.0), '#f4f2ec', '#9fb7c9'); sill(wx, m(4.0), 14); }
+    P(c, WH, [[bx + 26, m(6.9)], [bx + 54, m(7.7)], [bx + 82, m(6.9)]], true);
+    for (const [wx, w] of [[bx + 8, 15], [bx + 38, 32], [bx + 82, 16]]) { WIN(c, wx, m(8.9), w, m(7.3) - m(8.9), '#f4f2ec', '#9fb7c9'); sill(wx, m(7.3), w); BOX(c, WH, wx - 2, m(8.9) - 3, w + 4, 3); }
+  }
+  // flats' door in a white rendered strip, downpipe
+  BOX(c, WH, x, m(3.6), 22, m(0) - m(3.6)); BOX(c, '#1c1a1c', x + 3, m(2.6), 16, m(0) - m(2.6)); R(c, '#5a6a78', x + 5, m(2.6) + 2, 12, m(2.25) - m(2.6) - 2);
+  R(c, '#2e2c30', x + 5, m(2.2), 12, m(0) - m(2.2) - 1); R(c, '#c9a64a', x + 7, m(1.3), 3, 1); R(c, '#2a2a2e', x + 20, m(3.6), 1, m(0) - m(3.6));
+  // cornice + fascia
+  BOX(c, WH, x + 20, m(3.7), 210, m(3.4) - m(3.7)); for (let i = 0; i < 26; i++) R(c, WH, x + 24 + i * 8, m(3.4), 3, 2);
+  const FT = m(3.4), FB = m(2.5);
+  BOX(c, '#1f1d1e', x + 22, FT, 206, FB - FT);
+  { const bx = x + 46, by = FT + 8; P(c, '#f4f2ec', [[bx - 14, by - 6], [bx - 4, by - 2], [bx + 4, by - 2], [bx + 13, by - 8], [bx + 5, by + 1], [bx + 3, by + 7], [bx, by + 9], [bx - 3, by + 7], [bx - 5, by + 1]]); }
+  c.font = '700 14px Silk'; c.textAlign = 'left'; c.textBaseline = 'middle'; c.fillStyle = '#d8262f'; c.fillText("TORO'S", x + 64, FT + 10);
+  T(c, 'STEAKHOUSE', x + 160, FT + 10, 8, '#f4f2ec', 'center', false);
+  CIRC(c, '#f4f2ec', x + 216, FT + 8, 5); CIRC(c, '#1f1d1e', x + 216, FT + 8, 4); R(c, '#f4f2ec', x + 213, FT + 7, 6, 1); R(c, '#f4f2ec', x + 214, FT + 9, 4, 1);
   const HEAD = (hx, hy, skin, hair, top) => { R(c, top, hx - 3, hy + 4, 7, 6); R(c, skin, hx - 2, hy, 5, 4); R(c, hair, hx - 2, hy - 1, 5, 2); };
   const CHAIR = (cx2, cy2, col) => { R(c, col, cx2, cy2 - 6, 2, 9); R(c, col, cx2, cy2 + 1, 6, 2); R(c, col, cx2 + 5, cy2 + 1, 1, 4); };
-  for (let i = 0; i < 4; i++) { const wx = x + 10 + i * 36, wy = G - 41; BOX(c, '#1f1d1e', wx, G - 42, 30, 38);
+  const scene = (i, wx, wy) => {
     R(c, '#4a3026', wx + 1, wy, 28, 36); R(c, '#5a3a2c', wx + 1, wy, 28, 2); R(c, '#2e1e18', wx + 1, wy + 28, 28, 8); for (let k = 0; k < 4; k++) R(c, '#3a261e', wx + 1 + k * 8, wy + 29, 1, 7);   // wall, floor boards
     if (i === 0) {   // a table for two by the window, pendant lamp
       R(c, '#1a1210', wx + 14, wy, 1, 7); R(c, '#e8b84a', wx + 12, wy + 7, 5, 2); R(c, 'rgba(255,214,140,.25)', wx + 8, wy + 9, 13, 10);
@@ -1022,9 +1035,14 @@ L.toros = { n: "Toro's Steakhouse", w: 220, d(c, x, G) {
       R(c, '#7a5a3a', wx + 2, wy + 22, 5, 7); CIRC(c, '#2f6a2e', wx + 5, wy + 16, 5); CIRC(c, '#3e8238', wx + 4, wy + 14, 3);
     }
     R(c, 'rgba(255,255,255,.1)', wx + 1, wy, 28, 36); P(c, 'rgba(255,255,255,.14)', [[wx + 3, wy + 36], [wx + 9, wy + 36], [wx + 21, wy], [wx + 15, wy]]);   // glass glare
-  }
-  BOX(c, '#3a2a20', x + 164, G - 40, 18, 40); R(c, '#9fc1d8', x + 167, G - 37, 12, 16); CIRC(c, '#f2c43a', x + 173, G - 14, 2);
-  // neighbours
+  };
+  // living-wall piers + stall riser, four windows, recessed door
+  BOX(c, '#2f6a2e', x + 22, FB, 206, m(0) - FB); for (let i = 0; i < 200; i++) R(c, i % 2 ? '#24561f' : '#3e8238', x + 22 + (i * 37) % 204, FB + 1 + (i * 13) % (m(0) - FB - 2), 2, 2);
+  const GT = m(2.45), GB = m(.45);
+  for (const [i, wx, w] of [[0, x + 30, 32], [1, x + 63, 33], [2, x + 104, 25], [3, x + 130, 26]]) {
+    BOX(c, '#1f1d1e', wx, GT, w, GB - GT); c.save(); c.beginPath(); c.rect(wx + 1, GT + 1, w - 2, GB - GT - 2); c.clip(); R(c, '#4a3026', wx + 1, GT + 1, w - 2, GB - GT - 2); scene(i, wx + Math.round((w - 30) / 2), GT + 3); c.restore(); R(c, 'rgba(255,255,255,.12)', wx + 3, GT + 2, 3, GB - GT - 4); }
+  BOX(c, '#141214', x + 164, m(2.45), 44, m(0) - m(2.45)); BOX(c, '#3a3436', x + 172, m(2.2), 26, m(0) - m(2.2)); R(c, '#5a4a42', x + 174, m(2.2) + 2, 22, m(0) - m(2.2) - 4); R(c, '#3a6ad8', x + 174, m(1.05), 22, 2); R(c, '#f2c43a', x + 188, m(1.75), 5, 6);
+  R(c, WH, x + 228, m(3.7), 2, m(0) - m(3.7));
 } };
 
 L.gna = { n: 'G and A Fast Food', w: 150, d(c, x, G) {

@@ -219,7 +219,7 @@ body.x2on #place{opacity:0!important}#pwrTip{position:absolute;left:12px;right:1
 </div></div>
   <div id="tap" class="hide">TAP TO FLAP</div>
 </div>
-<script src="landmarks.js?v=1122a"></script>
+<script src="landmarks.js?v=1122b"></script>
 <script src="vehicles.js?v=1121b"></script>
 <script src="namecheck.js"></script>
 <script src="sky.js?v=1119d"></script>
@@ -1165,7 +1165,7 @@ window.__shut = () => ({ shutNow, shutterArt, hour: SKY.hour });
 /* shop fronts glow softly from inside at night while the shop is open (dimmer than the big lit signs) */
 const GLOW_R = Object.assign({}, SHUT_R, { grandbazar: [[97, 137, 86], [207, 427, 86]], karwan: [[95, 310, 48, 4]],
   nadeem: [[127, 283, 50, 5]], orbital: [[558, 662, 62, 0]],   // Coffee Pot: the whole ground floor is one cafe, lit together
-  barak: [[112, 192, 50, 20], [213, 239, 40, 18]], toros: [[98, 123, 35, 3], [128, 152, 35, 3], [157, 180, 35, 3], [187, 210, 35, 3], [223, 240, 33, 0]], spudkingz: [[115, 177, 35, 20]], chaiiwala: [[95, 255, 87, 0]], kaya: [[111, 140, 36, 0]] });
+  barak: [[112, 192, 50, 20], [213, 239, 40, 18]], toros: [[115, 141, 40, 7], [142, 169, 40, 7], [175, 196, 40, 7], [197, 218, 40, 7], [231, 252, 36, 0]], spudkingz: [[115, 177, 35, 20]], chaiiwala: [[95, 255, 87, 0]], kaya: [[111, 140, 36, 0]] });
 // shops whose front is lit only while open (no shutter): [closes, opens]
 const GLOW_STR = { kaya: .2,  orbital: .3, nadeem: .42, grandbazar: .3 };   // how warm the inside glow is (default .16)
 const GLOW_HOURS = { orbital: [21, 9] /* estimate */, nadeem: [21, 8] /* Coffee Pot, estimate */ };
