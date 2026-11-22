@@ -37,6 +37,12 @@ button, input, select { font-family:inherit; }
 #bar { flex:none; padding:10px 14px calc(12px + env(safe-area-inset-bottom)); background:linear-gradient(180deg, rgba(11,10,8,.85), #0b0a08 40%); border-top:1px solid var(--line); display:grid; gap:8px; }
 @media (min-width: 860px) { #bar { padding-left:calc(50% - 535px); padding-right:calc(50% - 535px); } }
 #bar .msg:empty { display:none; }
+#bar { position:relative; }
+#scrollHint { justify-self:center; display:flex; align-items:center; gap:8px; padding:0 4px; max-height:22px; overflow:hidden; border:0; background:none; color:#f3e6c4; font:600 13px/22px 'Josefin',sans-serif; letter-spacing:.06em; white-space:nowrap; cursor:pointer; transition:opacity .35s, max-height .35s, margin .35s; }
+#scrollHint svg { width:16px; height:16px; color:#eac13e; animation:hintBob 1.4s ease-in-out infinite; }
+#scrollHint.gone { opacity:0; max-height:0; margin-bottom:-8px; pointer-events:none; }
+@keyframes hintBob { 0%,100% { transform:translateY(-2px); } 50% { transform:translateY(3px); } }
+@media (min-width: 860px) { #scrollHint { display:none; } }
 #shareBtn { font-size:17px; }
 .credit { display:flex; flex-direction:column; align-items:center; gap:8px; padding:26px 0 18px; color:var(--dim); font-size:12px; letter-spacing:.06em; text-decoration:none; }
 .credit img { height:26px; width:auto; display:block; }
@@ -194,6 +200,7 @@ details[open] summary { margin-bottom:12px; }
 <a class="credit" href="https://smrgraphics.co.uk/?s=kayamatchday" target="_blank" rel="noopener"><span>Designed &amp; built by</span><img src="smr-digital.svg" alt="SMR Digital"></a>
 </main>
 <footer id="bar">
+  <button id="scrollHint" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v15M5 12l7 7 7-7"/></svg>Scroll down to pick your games</button>
   <div class="prog" id="prog"><i></i></div>
   <div class="msg" id="msg"></div>
   <button class="big" id="shareBtn"><span class="ic">↑</span> Share</button>
@@ -850,6 +857,12 @@ function fileName(fmt, ext) { const d = (state.games[0] && state.games[0].date) 
 const STANDALONE = !(window.claude && window.claude.use);
 let pending = null, busy = false;
 const shareBtn = $('#shareBtn');
+(() => {
+  const sc = $('#scroller'), h = $('#scrollHint');
+  const upd = () => h.classList.toggle('gone', sc.scrollTop > 40);
+  sc.addEventListener('scroll', upd, { passive: true }); upd();
+  h.onclick = () => { const t = $('#fxList').closest('section') || $('#fxList'); sc.scrollTo({ top: t.offsetTop - 10, behavior: 'smooth' }); };
+})();
 function msg(t, err) { $('#msg').textContent = t || ''; $('#msg').className = 'msg' + (err ? ' err' : ''); }
 function setShare(label) {
   shareBtn.classList.toggle('ready', !!pending);
