@@ -21,6 +21,8 @@ DirectoryIndex index.html
   RewriteRule ^kayafootball$ /kayafootball/ [R=301,L]
   # Flappy Kabootar game: /flappykabootar (and /flappy-kabootar) → /flappy/
   RewriteRule ^flappy-?kabootar/?$ /flappy/ [R=302,L,NC]
+  # Jummah Dash: /jummahdash (and /jummah-dash) → the game
+  RewriteRule ^jummah-?dash/?$ /jummahdash/demo/ [R=302,L,NC]
   # SMR Player (music): /player = all public tracks, /player/<slug> = one track (also private/hidden ones)
   RewriteRule ^player/?$ music/index.php [L,QSA]
   RewriteRule ^player/([A-Za-z0-9-]{1,80})/?$ music/index.php?t=$1 [L,QSA]
