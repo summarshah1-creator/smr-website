@@ -1717,7 +1717,7 @@ function rotCheck() {
   if (m && m !== 'welcome') pauseGame();
 }
 const goFull = async () => { if (!AND) return; try { const d = document.documentElement; await (d.requestFullscreen ? d.requestFullscreen({ navigationUI: 'hide' }) : d.webkitRequestFullscreen()); } catch (e) {} try { await screen.orientation.lock('landscape'); } catch (e) {} };
-tap('rotGo', () => { welcomed = true; goFull(); rotCheck(); });
+tap('rotGo', () => { welcomed = true; if (innerWidth > innerHeight) anyway = true; goFull(); rotCheck(); if (!$('rot').classList.contains('hide')) { anyway = true; rotCheck(); } });   // owner 22 Nov: PLAY always opens the game (already sideways = just play)
 tap('rotFs', () => { goFull(); setTimeout(rotCheck, 400); });
 tap('rotAny', () => { anyway = true; rotCheck(); });
 const reflow = () => { resize(); rotCheck(); };

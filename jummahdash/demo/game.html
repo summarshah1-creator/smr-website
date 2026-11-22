@@ -283,7 +283,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 @keyframes ricoShine{0%{left:-60%}38%,100%{left:130%}}
 @keyframes ricoIn{from{transform:scale(.4) rotate(-12deg);opacity:0}}
 @keyframes ricoBob{50%{transform:translateY(-5px)}}
-#rotGo.ld{opacity:.75;pointer-events:none}
+#rotGo.ld{opacity:.8}
 </style>
 </head>
 <body>
@@ -484,13 +484,14 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 var phone=matchMedia('(pointer: coarse)').matches&&Math.min(screen.width,screen.height)<520,app=matchMedia('(display-mode: fullscreen), (display-mode: standalone)').matches||navigator.standalone;
 if(!phone||app)return;r.dataset.os=ios?'ios':and?'and':'oth';r.dataset.m='welcome';r.classList.remove('hide');
 var g=document.getElementById('rotGo'),L=document.getElementById('load');if(L)L.style.display='none';g.classList.add('ld');g.textContent='LOADING…';
-var t=setInterval(function(){var lt=document.getElementById('loadTxt');if(lt&&/\d/.test(lt.textContent))g.textContent=lt.textContent.replace('LOADING… ','LOADING ');if(L&&L.classList.contains('done')){clearInterval(t);g.classList.remove('ld');g.textContent='PLAY ▸';}},150);})();
+var q=false,busy=true;g.addEventListener('pointerdown',function(e){if(busy){q=true;e.stopImmediatePropagation();e.preventDefault();g.textContent='STARTING…';}},true);
+var t=setInterval(function(){var lt=document.getElementById('loadTxt');if(!q&&lt&&/\d/.test(lt.textContent))g.textContent=lt.textContent.replace('LOADING… ','LOADING ');if(L&&L.classList.contains('done')){clearInterval(t);busy=false;g.classList.remove('ld');g.textContent='PLAY ▸';if(q)g.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,cancelable:true}));}},150);})();
 </script>
 <script src="landmarks.js?h=4649570284"></script>
 <script src="vehicles.js?h=32fdac20ce"></script>
 <script src="hd/cars_v3.js?h=b2c54b648f"></script>
 <script src="hd/landmarks_hd.js?h=9e40888703"></script>
-<script src="game.js?h=42c27e3d23"></script>
+<script src="game.js?h=ec7f65aa29"></script>
 <script src="jd-extra.js?h=5f6a2675de"></script>
 <script src="/flappy/carreq.js?v=1"></script>
 </body>
