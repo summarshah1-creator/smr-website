@@ -326,7 +326,7 @@ function audio() {
   const n = AC.createBufferSource(); n.buffer = b; n.loop = true; const f = AC.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 3200; f.Q.value = .7;
   MIX = {}; ['jet', 'coins', 'traffic', 'fx'].forEach(k => { MIX[k] = AC.createGain(); MIX[k].connect(AC.destination); }); applyMix();
   hissG = AC.createGain(); hissG.gain.value = 0; n.connect(f); f.connect(hissG); hissG.connect(MIX.jet); n.start();
-  fetch('art/snd/horn.mp3?h=ccf756a162').then(r => r.arrayBuffer()).then(a => new Promise((ok, no) => AC.decodeAudioData(a, ok, no))).then(b => { HORN_BUF = b; }).catch(() => {});   // owner's real horn recording
+  fetch('art/snd/horn.mp3?h=08c4e34100').then(r => r.arrayBuffer()).then(a => new Promise((ok, no) => AC.decodeAudioData(a, ok, no))).then(b => { HORN_BUF = b; }).catch(() => {});   // owner's real horn recording
 }
 let HORN_BUF = null;
 function tone(freq, dur, type = 'sine', vol = .12, slide = 0, bus = null) {
@@ -336,7 +336,7 @@ function tone(freq, dur, type = 'sine', vol = .12, slide = 0, bus = null) {
 }
 const SFX = { horn() {   // owner 23 Nov: his own horn recording (art/snd/horn.mp3, cut + cleaned + faded); synth air horn only until it has loaded
     if (!AC || !sndOn) return; const bus = MIX ? MIX.fx : AC.destination, t0 = AC.currentTime;
-    if (HORN_BUF) { const src = AC.createBufferSource(), g = AC.createGain(); src.buffer = HORN_BUF; g.gain.value = 1; src.connect(g); g.connect(bus); src.start(t0); tone(80, .3, 'sine', .1, .5, bus); return; }
+    if (HORN_BUF) { const src = AC.createBufferSource(), g = AC.createGain(); src.buffer = HORN_BUF; g.gain.value = 1; src.connect(g); g.connect(bus); src.start(t0); return; }   // only his recording, nothing mixed in
     const blast = (st, len) => { const f = AC.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 2600; f.Q.value = 1.2; const g = AC.createGain(); g.gain.setValueAtTime(.0001, t0 + st); g.gain.exponentialRampToValueAtTime(.07, t0 + st + .02); g.gain.setValueAtTime(.07, t0 + st + len - .05); g.gain.exponentialRampToValueAtTime(.0001, t0 + st + len); f.connect(g); g.connect(bus);
       [349, 440, 523, 351].forEach((fr, i) => { const o = AC.createOscillator(); o.type = i === 3 ? 'square' : 'sawtooth'; o.frequency.setValueAtTime(fr * .94, t0 + st); o.frequency.exponentialRampToValueAtTime(fr, t0 + st + .05); o.connect(f); o.start(t0 + st); o.stop(t0 + st + len + .02); }); };
     blast(0, .15); blast(.2, .42); tone(90, .35, 'sine', .14, .45, bus); },
@@ -482,7 +482,7 @@ const CONVOY = ['m4c', 'c63w', 'abarth', 'aclass', 'slwb']; let convoyT = 1e9;  
 // in frame (still under the game), drops to a quiet background once it has gone and then fades out; every few seconds the M4
 // revs and creeps forward, then the C63 does the same (rev clip + loop ducked + a touch of pitch)
 const CVS = (() => { const N = ['m4_loop', 'm4_rev', 'm4_rev2', 'c63_loop', 'c63_rev', 'c63_rev2'], buf = {}; let loading = false, bus = null; const voice = {}; let m4T = 3, c63T = 0;
-  function load() { if (loading || !AC) return; loading = true; N.forEach(n => fetch('art/snd/' + n + '.mp3?h=' + {"c63_loop": "d3e40a71af", "c63_rev": "a88aec5009", "c63_rev2": "832547414b", "horn": "ccf756a162", "m4_loop": "d8f509bb3d", "m4_rev": "88bd8ce917", "m4_rev2": "82e5130046"}[n]).then(r => r.arrayBuffer()).then(a => new Promise((ok, no) => AC.decodeAudioData(a, ok, no))).then(b => { buf[n] = b; }).catch(() => {})); }
+  function load() { if (loading || !AC) return; loading = true; N.forEach(n => fetch('art/snd/' + n + '.mp3?h=' + {"c63_loop": "d3e40a71af", "c63_rev": "a88aec5009", "c63_rev2": "832547414b", "horn": "08c4e34100", "m4_loop": "d8f509bb3d", "m4_rev": "88bd8ce917", "m4_rev2": "82e5130046"}[n]).then(r => r.arrayBuffer()).then(a => new Promise((ok, no) => AC.decodeAudioData(a, ok, no))).then(b => { buf[n] = b; }).catch(() => {})); }
   function vol(c) { const m = c.x + c.L / 2, d = m < 0 ? -m : m > W ? m - W : 0;   // distance outside the screen
     if (!d) return 1; if (d < 220) return 1 - .72 * d / 220; return Math.max(0, .28 * (1 - (d - 220) / 520)); }
   function mk(k) { const s = AC.createBufferSource(); s.buffer = buf[k + '_loop']; s.loop = true; s.loopStart = .05; s.loopEnd = s.buffer.duration - .05;
