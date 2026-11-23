@@ -548,7 +548,7 @@ function hitCar(car, sp, fire) { car.crash = { t: 0, rot: 0, st: 'hit', road: tr
 function startJam(cx, T) { jamT = T; cars.forEach(o => { if (!o.crash) o.free = o.dir > 0 ? o.x > cx : o.x + o.L < cx; }); }
 let csmoke = [];
 function smokeAt(x, y, dark) { if (csmoke.length < 90) csmoke.push({ x, y, vx: (Math.random() - .5) * 20, vy: -14 - Math.random() * 12, r: 3, a: dark ? .6 : .45, dark }); }
-window.__tinApi = { addCoins: n => { coins += n; $('coins').textContent = '£' + coins; }, get SHOP() { return SHOP; }, saveShop: () => saveShop(), get ITEMS() { return ITEMS; }, iconFor: (a, b, c) => iconFor(a, b, c), drawCorolla: (...a) => drawCorolla(...a), coin: () => SFX.coin(), tone: (...a) => tone(...a) };
+window.__tinApi = { addCoins: n => { if (POSTBANK) { bankAdd(n); return; } coins += n; $('coins').textContent = '£' + coins; }, get SHOP() { return SHOP; }, saveShop: () => saveShop(), get ITEMS() { return ITEMS; }, iconFor: (a, b, c) => iconFor(a, b, c), drawCorolla: (...a) => drawCorolla(...a), coin: () => SFX.coin(), tone: (...a) => tone(...a) };
 window.__tins = n => { btins = n || 1; die && die('rocket'); };
 window.__kit = () => ({ rideIcon, drawRocket, drawZap, drawGift, drawVehicle, drawLaser, drawCorolla, carSprite, makeCoins, coins: () => coinFrames, FK_ICON, setHero: im => { heroImg = im; }, hero, cv });   // poster/sketch tool hook
 window.__cars = () => cars; window.__spawn = (k, x) => spawnCar(x == null ? W * .5 : x, k, 0, 1);   // test hook: put a chosen car in the near lane
@@ -659,6 +659,16 @@ function spawnPattern() {
     const jb = hasG('jalebi') && Math.random() < .22; for (let i = 0; i < cols; i++) for (let j = 0; j < rows; j++) coinList.push({ x: x0 + i * 18, y: y0 + j * 18, got: 0, j: jb });
     return 160 + cols * 18;
   }
+  if (m > 220 && !veh && Math.random() < .14) { const mid = (top + bot) / 2, pk = Math.random();   // owner 23 Nov: set pieces with two ways through
+    if (pk < .34 && !obs.some(o => o.type === 'laser')) {   // speed-camera gate: two beams with a narrow gap and a coin line through it; the safe way is right above or below
+      [mid - 30, mid + 30].forEach((y, i) => obs.push({ type: 'laser', x: W / 2, y, ph: 'in', pt: 0, slide: 0, d: i * .05 }));
+      const ax = hero.x + speed * 1.75; for (let i = 0; i < 12; i++) coinList.push({ x: ax + i * 18, y: mid, got: 0 }); return speed * 3.8; }
+    if (pk < .67) {   // rotating zapper ringed with coins: skim the ring (near-miss bonus) or go round the top or bottom with nothing
+      const cx = x0 + 70; obs.push({ type: 'zap', x: cx, y: mid, len: 96, ang: 0, spin: 1.15, seed: Math.random() * 99 });
+      for (let i = 0; i < 14; i++) { const a = i / 14 * Math.PI * 2; coinList.push({ x: cx + Math.cos(a) * 66, y: mid + Math.sin(a) * 66, got: 0 }); } return 360; }
+    // rocket run: top and bottom lanes fire first, then the middle; coins sit in the middle lane (dash through or slip out late), the safe line between is empty
+    const ln = [CEIL + 44, FLOOR - 44, mid - 6]; ln.forEach((y, i) => obs.push({ type: 'rocket', x: W + 40, y, warn: 1.3 + (i === 2 ? .9 : 0), lock: 0, v: 0, fixY: 1 })); SFX.warn();
+    const ax = hero.x + speed * 2.2; for (let i = 0; i < 10; i++) coinList.push({ x: ax + i * 18, y: mid - 6, got: 0 }); return 460; }
   if (mechArmour()) {   // owner 23 Nov (like the SAM suit in JJ2): in the mech there are no lasers or cables, only rockets, a bit more often
     const k = Math.random(), base = -(85 * MCH - 30), mk = (oy, d) => obs.push({ type: 'rocket', x: W + 40 + d * 30, y: hero.y - 30 + oy, warn: 1.4 + d * .3, lock: 0, v: 0, off: oy });
     SFX.warn();
@@ -961,7 +971,7 @@ function update(dt) {
       else if (o.ph === 'fire') { if (o.pt > 1.15) { o.ph = 'out'; o.pt = 0; if (!hero.dead) { stats.dodged++; RUN.lasers++; } } }
       else if (o.ph === 'out') { o.slide = 1 - Math.min(1, o.pt / .4); if (o.pt > .4) o.x = -999; } }
     if (o.type === 'rocket') {
-      if (o.warn > 0) { o.warn -= dt; o.y += (Math.max(CEIL + 12, Math.min(FLOOR - 12, hero.y - 30 + (o.off || 0))) - o.y) * Math.min(1, dt * 3); panicT = .3; if ((o.warn * 6 | 0) !== ((o.warn + dt) * 6 | 0)) SFX.warn(); if (o.warn <= 0) { o.lock = .45; } }
+      if (o.warn > 0) { o.warn -= dt; if (!o.fixY) o.y += (Math.max(CEIL + 12, Math.min(FLOOR - 12, hero.y - 30 + (o.off || 0))) - o.y) * Math.min(1, dt * 3); panicT = .3; if ((o.warn * 6 | 0) !== ((o.warn + dt) * 6 | 0)) SFX.warn(); if (o.warn <= 0) { o.lock = .45; } }
       else if (o.lock > 0) { o.lock -= dt; panicT = .3; if (o.lock <= 0) { o.v = speed + 360; SFX.whoosh(); } }
       else { o.x -= o.v * dt; if (o.defl) { o.y += o.vy * dt; o.vy += (o.dud ? 1100 : 240) * dt; o.rot += o.spin * dt; if (o.dud && o.y > FLOOR - 8) rocketPop(o); } o.tr = o.tr || []; o.trT = (o.trT || 0) + dt; if (o.trT > .018) { o.trT = 0; o.tr.push({ x: o.x + 22, y: o.y + (Math.random() - .5) * 2, a: 0, r: 2 + Math.random() * 1.5 }); } o.tr.forEach(p => { p.a += dt; p.r += dt * 9; p.y -= dt * 4; }); while (o.tr.length && o.tr[0].a > 1.1) o.tr.shift(); }
     }
@@ -1061,6 +1071,8 @@ function rankHtml() { const n = RANKS[Math.min(MS.rank, RANKS.length - 1)]; retu
 /* gift box (= their vehicle token): rainbow box with a ?, gives a ride. Eidi envelopes (= spin tokens): opened at the end of a run. */
 function giftsUpdate(dt, dx) {
   if (state === 'play' && !FM) runT += dt;
+  if (FIRSTRUN && !firstBox && state === 'play' && !veh && !boost && runT >= 8.5) { firstBox = 1; gifts.push({ k: 'box', ride: 'tuktuk', x: W + 40, y: FLOOR - 52, b: 0 }); obs = obs.filter(o => o.type !== 'rocket' && o.type !== 'laser'); nextGift = 2600 + Math.random() * 1800; }   // owner 23 Nov: new players get the tuk-tuk early, low and easy
+  if (FIRSTRUN && veh && veh.k === 'tuktuk' && veh.asm >= 1 && !RUN.hornLesson) { RUN.hornLesson = 1; setTimeout(() => { if (!veh || veh.k !== 'tuktuk' || state !== 'play') return; obs.push({ type: 'zap', x: W + 70, y: FLOOR - 75, len: 120, ang: Math.PI / 2, spin: 0, seed: 7, lesson: 1 }); pops.push({ x: hero.x + 60, y: hero.y - 130, txt: 'HIT HORN TO BREAK IT!', col: '#ffd21f', t: 0 }); const hb = $('bHorn'); hb && hb.classList.add('teach'); setTimeout(() => hb && hb.classList.remove('teach'), 3500); }, 1300); }
   if (!FKDEMO && !MECHDEMO && !RIDEDEMO && !firstBox && state === 'play' && !veh && !boost && runT >= 20) { firstBox = 1; gifts.push({ k: 'box', ride: (() => { let k = nextRide(); for (let n = 0; n < 4 && k === lastBoxRide; n++) k = nextRide(); return lastBoxRide = k; })(), x: W + 40, y: CEIL + 90 + Math.random() * (FLOOR - CEIL - 200), b: 0 }); nextGift = 2600 + Math.random() * 1800; }
   if (state === 'play' && !veh && !boost) { nextGift -= dx; if (nextGift <= 0) { const rr = () => { let k = nextRide(); for (let i = 0; i < 4 && k === lastBoxRide; i++) k = nextRide(); return lastBoxRide = k; }; gifts.push({ k: 'box', ride: RIDEDEMO ? rideDemoNext() : MECHDEMO ? 'mech' : FKDEMO ? 'kabootar' : rr(), x: W + 40, y: CEIL + 80 + Math.random() * (FLOOR - CEIL - 180), b: Math.random() * 6 }); nextGift = RIDEDEMO ? 900 + Math.random() * 500 : MECHDEMO ? 2400 + Math.random() * 1200 : FKDEMO ? 700 + Math.random() * 300 : (2600 + Math.random() * 1800) * (hasG('dates') ? .5 : 1); } }
   if (state === 'play') { nextTin -= dx; if (nextTin <= 0) { gifts.push({ k: 'btin', x: W + 30, y: CEIL + 60 + Math.random() * (FLOOR - CEIL - 140), b: Math.random() * 6 }); nextTin = TINDEMO ? 900 + Math.random() * 500 : 7000 + Math.random() * 5000; } }
@@ -1070,7 +1082,8 @@ function giftsUpdate(dt, dx) {
     if (gf.k === 'btin') { gf.tr = gf.tr || []; gf.tr.unshift([gf.x, gf.y + Math.sin(gf.b * 3) * 4]); if (gf.tr.length > 9) gf.tr.pop(); }
     if (!gf.got && !hero.dead && state === 'play' && heroCircles().some(([x, y, r]) => Math.hypot(x - gf.x, y - gf.y) < r + (gf.k === 'box' ? 26 : gf.k === 'btin' ? 18 : 13))) {
       gf.got = 1;
-      if (gf.k === 'box') startReveal(gf.ride || nextRide());
+      if (gf.k === 'box') { const rk = gf.ride || nextRide(); let seen = []; try { seen = JSON.parse(localStorage.getItem('jd_seenRides') || '[]'); } catch (e) {}
+        if (seen.includes(rk) && rk !== 'kabootar') quickRide(rk); else { if (!seen.includes(rk)) { seen.push(rk); try { localStorage.setItem('jd_seenRides', JSON.stringify(seen)); } catch (e) {} } startReveal(rk); } }
       else if (gf.k === 'btin') { btins++; tinHud(false, btins - 1); $('tinHud').style.display = 'flex'; tinFly.push({ x: gf.x, y: gf.y, t: 0 }); pops.push({ x: gf.x, y: gf.y - 16, txt: "AMMI'S TIN!", col: '#7fb6ff', t: 0 }); tone(330, .08, 'square', .06); setTimeout(() => tone(240, .1, 'square', .05), 70); for (let i = 0; i < 10; i++) sparks.push({ x: gf.x, y: gf.y, vx: (Math.random() - .5) * 140, vy: (Math.random() - .5) * 140, l: .4, c: i % 2 ? '#ffd75a' : '#7fb6ff' }); }
       else { eidi++; RUN.eidi++; pops.push({ x: gf.x, y: gf.y - 12, txt: 'EIDI!', col: '#7dffa0', t: 0 }); tone(988, .1, 'square', .05); setTimeout(() => tone(1318, .16, 'square', .05), 90); for (let i = 0; i < 10; i++) sparks.push({ x: gf.x, y: gf.y, vx: (Math.random() - .5) * 140, vy: (Math.random() - .5) * 140, l: .4, c: i % 2 ? '#ffd75a' : '#7dffa0' }); }
     } });
@@ -1371,6 +1384,9 @@ function drawBoost() {
    (teal energy band, the ride's picture, its name, an arrow streak; ~1.6 s) -> the band wipes off -> the ride's parts fly in
    from off screen with white streaks and lock onto him one by one -> a final white flash and off he goes. */
 let REVEAL = null; const CARD = {}; ['mech', 'carpet', 'sandals', 'kabootar', 'tuktuk'].forEach(k => { CARD[k] = img('art/card/' + k + '.webp?v=1'); });
+function quickRide(k) {   // owner 23 Nov: repeat pickups skip the title card: a flash, a quick snap-together and straight back into play
+  flashT = .18; flashCol = '255,255,255'; inv = Math.max(inv, 1.2); tone(880, .06, 'square', .05); setTimeout(() => tone(1320, .1, 'square', .05), 60);
+  startVehicle(k, true); if (!veh) return; if (k === 'mech') veh.su = Math.max(veh.su || 0, .72); else { veh.asm = .5; veh.fast = 1; } POL.fx.push({ k: 'ring', x: hero.x, y: hero.y - 30, t: 0, l: .4, col: '255,255,255' }); }
 function startReveal(k) { REVEAL = { k, t: 0, seed: Math.random() * 99 }; flashT = .3; flashCol = '255,255,255'; inv = Math.max(inv, 2.5);
   tone(392, .12, 'sawtooth', .05, 2); setTimeout(() => { tone(523, .1, 'square', .06); setTimeout(() => tone(659, .1, 'square', .06), 80); setTimeout(() => tone(988, .25, 'square', .06), 160); }, 120); }
 function revealTick(dt) { REVEAL.t += dt; if (flashT > 0) flashT -= dt; if (REVEAL.t >= 1.75) { const k = REVEAL.k; REVEAL = null; startVehicle(k, true); } }
@@ -1412,7 +1428,7 @@ function vehCircles() { const x = hero.x, y = hero.y;
   if (veh.k === 'sandals') { const sg = veh.s < 0 ? -1 : 1, q = HS / 1.5; return [[x + 3 * q, y - 31 * q * sg, 10 * q], [x + 7 * q, y - 58 * q * sg, 9 * q]]; }
   return veh.k === 'tuktuk' ? [[x - 5, y - 26, 21], [x + 19, y - 19, 14], [x - 2, y - 58, 14]] : [[x, y - 8, 16], [x + 4, y - 36, 12]]; }
 function vehUpdate(dt) {
-  if (veh.asm !== undefined && veh.asm < 1) { const a0 = veh.asm; veh.asm = Math.min(1, veh.asm + dt / 1.15); inv = Math.max(inv, .4);
+  if (veh.asm !== undefined && veh.asm < 1) { const a0 = veh.asm; veh.asm = Math.min(1, veh.asm + dt / (veh.fast ? .4 : 1.15)); inv = Math.max(inv, .4);
     for (let i = 0; i < 3; i++) { const at = .22 + i * .2 + .32; if (a0 < at && veh.asm >= at) { tone(180 - i * 20, .09, 'square', .07); tone(900 + i * 150, .05, 'triangle', .04); shake = Math.max(shake, .06); for (let j = 0; j < 8; j++) sparks.push({ x: hero.x + (i - 1) * 22, y: hero.y - 40, vx: (Math.random() - .5) * 160, vy: (Math.random() - .5) * 160, l: .3, c: '#fff' }); } }
     if (a0 < 1 && veh.asm >= 1) { flashT = .2; flashCol = '255,255,255'; tone(784, .2, 'square', .06); setTimeout(() => tone(1046, .25, 'square', .06), 90); } }
   veh.t += dt; hero.run += dt * (6 + speed / 22); if (hissG) hissG.gain.setTargetAtTime(0, AC.currentTime, .06);
@@ -1849,10 +1865,19 @@ function tinHud(bump, n) {   // tin counter under the money (owner 23 Nov), like
     el.style.cssText = 'margin-top:4px;display:none;align-items:center;gap:6px;transition:transform .15s;transform-origin:left center'; el.innerHTML = '<img src="art/tin/closed.webp?v=1" style="width:24px;height:auto;filter:drop-shadow(0 1px 1px rgba(0,0,0,.5))"><span id="tinHudN"></span>'; c.after(el); }
   const k = n == null ? btins : n; el.style.display = k > 0 ? 'flex' : 'none'; $('tinHudN').textContent = '×' + k; if (bump) { el.style.transform = 'scale(1.4)'; setTimeout(() => el.style.transform = '', 170); } }
 function tinTarget() { const el = $('tinHud'), r = el && el.getBoundingClientRect(), cr = cv.getBoundingClientRect(); if (!r || !r.width || !cr.width) return [40, 70]; const k = W / cr.width; return [(r.left - cr.left + 12) * k, (r.top - cr.top + r.height / 2) * k]; }
-function postRun() {   // after the run: biscuit tins first (owner 23 Nov), then Eidi, then the results
-  if (btins > 0 && window.TIN) { const n = btins; btins = 0; TIN.open(n, () => { if (eidi > 0) openEidi(); else showOver(); }); return; }
-  if (eidi > 0) openEidi(); else showOver();
-}
+// owner 23 Nov evening: the results screen (with RUN AGAIN) comes first; tins and Eidi from the run are banked and can be opened from there or the home screen any time
+let FIRSTRUN = !localStorage.getItem('jd_played');
+let BANK_T = +(localStorage.getItem('jd_bankT') || 0), BANK_E = +(localStorage.getItem('jd_bankE') || 0), POSTBANK = false, BANK_FROM = 'over';
+const saveBanked = () => { try { localStorage.setItem('jd_bankT', BANK_T); localStorage.setItem('jd_bankE', BANK_E); } catch (e) {} };
+function postRun() { if (btins > 0) BANK_T += btins; btins = 0; if (eidi > 0) BANK_E += eidi; eidi = 0; saveBanked(); showOver(); }
+function bankAdd(n) { bank += n; shopBankSave(); const ob = $('ovBankMoney'); if (ob) { ob.textContent = '+£' + (+(ob.dataset.n || 0) + n); ob.dataset.n = +(ob.dataset.n || 0) + n; } refreshHome(); }
+function bankedButtons() { const host = $('ovBank'), hb = $('hBanked'); const html = (BANK_T ? `<button class="go bk" data-bk="t"><img src="art/tin/closed.webp?v=1" alt="">OPEN AMMI'S TINS ×${BANK_T}</button>` : '') + (BANK_E ? `<button class="go bk" data-bk="e"><span class="eicon">✉</span>OPEN EIDI ×${BANK_E}</button>` : '');
+  if (host) host.innerHTML = html + '<span id="ovBankMoney" class="bkm"></span>'; if (hb) { hb.innerHTML = html; hb.hidden = !html; }
+  document.querySelectorAll('[data-bk]').forEach(b => b.addEventListener('pointerdown', e => { e.preventDefault(); e.stopPropagation(); openBanked(b.dataset.bk, b.closest('#home') ? 'home' : 'over'); })); }
+function openBanked(which, from) { BANK_FROM = from; POSTBANK = true; $('over').classList.add('hide'); if (from === 'home') $('home').classList.add('hide');
+  if (which === 't' && BANK_T > 0 && window.TIN) { const n = BANK_T; BANK_T = 0; saveBanked(); TIN.open(n, bankedDone); }
+  else if (which === 'e' && BANK_E > 0) { eidi = BANK_E; BANK_E = 0; saveBanked(); openEidi(); } else bankedDone(); }
+function bankedDone() { POSTBANK = false; eidi = 0; $('eidiBox').classList.add('hide'); saveShop(); bankedButtons(); if (BANK_FROM === 'home') { $('home').classList.remove('hide'); refreshHome(); } else $('over').classList.remove('hide'); }
 function openEidi() {
   const box = $('eidiBox'), row = $('eidiRow'); row.innerHTML = ''; let left = eidi, won = 0, life = false;
   $('eidiTxt').textContent = 'Tap each envelope to open it'; $('eidiGo').classList.add('hide');
@@ -1862,9 +1887,10 @@ function openEidi() {
     c.addEventListener('pointerdown', e => { e.stopPropagation(); if (c.classList.contains('open')) return; c.classList.add('open');
       let r = Math.random() * 100, p = PRIZES[0][0]; for (const [v, w] of PRIZES) { if ((r -= w) < 0) { p = v; break; } }
       if (p === 'life' && (life || revived)) p = 20;
+      if (p === 'life' && POSTBANK) { SHOP.save = (SHOP.save || 0) + 1; c.querySelector('.b').innerHTML = '<b>❤</b><small>SECOND<br>CHANCE</small>'; tone(660, .2, 'square', .06); setTimeout(() => tone(990, .3, 'square', .06), 120); p = null; }
       if (p === 'life') { life = true; c.querySelector('.b').innerHTML = '<b>❤</b><small>SECOND<br>CHANCE</small>'; tone(660, .2, 'square', .06); setTimeout(() => tone(990, .3, 'square', .06), 120); }
-      else { won += p; coins += p; c.querySelector('.b').innerHTML = `<b>£${p}</b><small>EIDI</small>`; SFX.coin(); }
-      if (--left === 0) { $('eidiTxt').textContent = life ? 'Second chance! Get back up and keep going.' : `You got £${won} in Eidi!`; const go = $('eidiGo'); go.textContent = life ? 'GET BACK UP!' : 'CARRY ON'; go.classList.remove('hide'); go.dataset.life = life ? 1 : ''; }
+      else if (p != null) { won += p; if (POSTBANK) bankAdd(p); else coins += p; c.querySelector('.b').innerHTML = `<b>£${p}</b><small>EIDI</small>`; SFX.coin(); }
+      if (--left === 0) { if (POSTBANK) life = false; $('eidiTxt').textContent = life ? 'Second chance! Get back up and keep going.' : `You got £${won} in Eidi!`; const go = $('eidiGo'); go.textContent = life ? 'GET BACK UP!' : 'CARRY ON'; go.classList.remove('hide'); go.dataset.life = life ? 1 : ''; }
     });
     row.appendChild(c); }
   box.classList.remove('hide');
@@ -2035,7 +2061,7 @@ function draw() {
   dust.forEach(p => { ctx.globalAlpha = Math.max(0, p.l * 1.6) * .6; ctx.fillStyle = '#d8ccc6'; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 7); ctx.fill(); }); ctx.globalAlpha = 1;
   rings.forEach(r => { ctx.strokeStyle = `rgba(255,255,255,${.8 * (1 - r.t / .6)})`; ctx.lineWidth = 3 * (1 - r.t / .6) + .5; ctx.beginPath(); ctx.arc(r.x, r.y, 10 + r.t * 220, 0, 7); ctx.stroke(); });
   // steam (soft, HD) over everything near him
-  ctx.fillStyle = '#f4f1fa'; steam.forEach(p => { ctx.globalAlpha = Math.max(0, p.l / p.l0) * .85; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 7); ctx.fill(); });
+  ctx.fillStyle = STEAMC[SHOP.st] || '#f4f1fa'; steam.forEach(p => { ctx.globalAlpha = Math.max(0, p.l / p.l0) * .85; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 7); ctx.fill(); });
   ctx.globalAlpha = 1;
   sparks.forEach(p => { ctx.globalAlpha = Math.min(1, p.l * 3); ctx.fillStyle = p.c; ctx.fillRect(p.x, p.y, 1.6, 1.6); }); ctx.globalAlpha = 1; POL.drawTop();
   drawHorns();   // the horn's sound waves bend everything drawn so far
@@ -2069,13 +2095,21 @@ function drawSkillHud() {
     ctx.fillStyle = '#7fe3ff'; ctx.fillText('CLOSE x' + nearMult, x + 10, y); ctx.fillStyle = 'rgba(127,227,255,.35)'; ctx.fillRect(x + 8, y + 7, 70, 2); ctx.fillStyle = '#7fe3ff'; ctx.fillRect(x + 8, y + 7, 70 * Math.max(0, nearT / 3), 2); ctx.globalAlpha = 1; }
   ctx.restore();
 }
-function drawHeat() {   // cooker temperature gauge beside him: green -> amber -> red, flashes before it overheats
+function drawHeat() { heatHud(); }   // owner 23 Nov: the cooker gauge lives under the money now (HUD), not over the street
+let heatPuffT = 0;
+function heatHud() { const el = $('heatBar'); if (!el) return; const show = !veh && !boost && !hero.dead && state === 'play'; el.classList.toggle('show', show && (hero.heat > .03 || hero.oh > 0)); if (!show) return;
+  const k = hero.oh > 0 ? 1 : hero.heat; el.style.setProperty('--h', (k * 100).toFixed(1) + '%');
+  el.classList.toggle('warm', k >= .5 && k < .78 && hero.oh <= 0); el.classList.toggle('hot', k >= .78 && hero.oh <= 0); el.classList.toggle('burnt', hero.oh > 0);
+  $('heatTxt').textContent = hero.oh > 0 ? 'COOLING…' : k >= .78 ? 'TOO HOT!' : 'COOKER';
+  if ((hero.oh > 0 || k > .88) && (heatPuffT -= 1 / 60) <= 0) { heatPuffT = hero.oh > 0 ? .12 : .25; const p = document.createElement('i'); p.className = 'hsmoke'; p.style.left = (20 + Math.random() * 70) + '%'; el.appendChild(p); setTimeout(() => p.remove(), 1100); } }
+function drawHeatOld() {
   if (veh || boost || hero.dead || state !== 'play' || (hero.heat < .05 && hero.oh <= 0)) return;
   const x = hero.x - 30, y1 = hero.y - 58, h = 34, k = hero.heat, fl = (k > .8 || hero.oh > 0) && Math.floor(t * 10) % 2;
   ctx.save(); ctx.fillStyle = 'rgba(10,12,20,.55)'; ctx.beginPath(); ctx.roundRect(x - 3.5, y1 - 2, 7, h + 4, 3.5); ctx.fill();
   const col = hero.oh > 0 ? '#ff3a2a' : k < .5 ? '#5be37a' : k < .8 ? '#ffc23a' : '#ff5a3a'; ctx.fillStyle = fl ? '#ffffff' : col;
   ctx.beginPath(); ctx.roundRect(x - 2, y1 + h * (1 - k), 4, h * k, 2); ctx.fill(); ctx.restore(); }
-function drawHero() {
+function drawHero() { const hi = heroImg, alt = SHOP.ck ? ckSheet(hi) : null; if (alt) { heroImg = alt; heroImg.complete = true; } try { drawHero0(); } finally { heroImg = hi; } }
+function drawHero0() {
   if (!heroImg.complete || state === 'menu') return;
   drawHeat();
   if (boost) { drawBoost(); if (!boost.out) return; }
@@ -2193,7 +2227,7 @@ function thumb(cnv, key) {   // a masjid drawn small for the picker / the home t
   const k = Math.min(cnv.width * .94 / v.c.width, cnv.height * .9 / v.c.height); o.imageSmoothingQuality = 'high';
   o.drawImage(v.c, (cnv.width - v.c.width * k) / 2, cnv.height - v.c.height * k - 2, v.c.width * k, v.c.height * k);
 }
-function refreshHome() {
+function refreshHome() { try { bankedButtons(); } catch (e) {}
   $('hBest').textContent = best + 'm'; $('hBank').textContent = '£' + bank.toLocaleString('en-GB'); $('misStars').textContent = '★'.repeat(MS.stars) + '☆'.repeat(3 - MS.stars);
   $('outName').textContent = (ITEMS.outfit.find(o => o.id === SHOP.outfit) || {}).name.split(' ')[0].toLowerCase(); $('mineName').textContent = mosName();
 }
@@ -2238,7 +2272,8 @@ function showOver() {
   $('ovWhy').textContent = `Still no sign of ${mosName()}…` + (passed ? ` You flew past ${passed} other masjid${passed > 1 ? 's' : ''}.` : '');
   $('oS').textContent = stats.steamed; $('oZ').textContent = stats.dodged; $('oM').textContent = stats.missed;
   const lm = lastMissions; $('ovMis').innerHTML = (lm && lm.got.length ? `<div class="mdone">${lm.got.map(x => '<div>✔ MISSION COMPLETE · ' + x + '</div>').join('')}${lm.rankUp ? '<div class="lvl">RANK UP! ' + lm.rankUp.toUpperCase() + '</div>' : ''}<div class="rew">+£${lm.reward} to your bank</div></div>` : '') + rankHtml() + '<div id="ovRows"></div>';
-  missionRows($('ovRows'));
+  missionRows($('ovRows')); bankedButtons();
+  try { localStorage.setItem('jd_played', '1'); } catch (e) {}
   $('over').classList.remove('hide'); }
 document.addEventListener('pointerdown', e => { if (e.target.closest && e.target.closest('.tile,.go,.seg button,.mcard')) { audio(); tone(1250, .035, 'square', .03, .7, MIX && MIX.fx); } }, true);   // every button clicks (owner 23 Nov)
 const tap = (id, fn) => $(id).addEventListener('pointerdown', e => { e.preventDefault(); e.stopPropagation(); fn(e); });
@@ -2268,6 +2303,16 @@ $('pick').addEventListener('pointerdown', e => { if (e.target.id === 'pick') { p
 tap('bHow', () => $('how').classList.remove('hide'));
 
 /* ================= SHOP: utilities, gadgets (2 slots, buy a 3rd), outfits ================= */
+const CKFIN = { ck_copper: ['#5a2410', '#c8642a', '#ffc89a', '#b8501c', '#6a2a10'], ck_black: ['#050507', '#2a2c34', '#8a90a0', '#1a1b22', '#050507'] };
+const STEAMC = { st_green: '#b6f7c6', st_pink: '#ffc4e2' };
+// cooker finish: the cooker pixels (art/cookmask.webp, same place in every outfit sheet) recoloured along a metal ramp, made once per outfit + finish
+const COOKMASK = img('art/cookmask.webp?h=7ac58ac59b'); const CKC = {};
+function ckSheet(src) { const fin = SHOP.ck; if (!fin || !CKFIN[fin] || !src.complete || !src.naturalWidth || !COOKMASK.complete || !COOKMASK.naturalWidth) return null; const key = fin + ':' + src.src; if (CKC[key]) return CKC[key];
+  const w = src.naturalWidth, h = src.naturalHeight, c = document.createElement('canvas'); c.width = w; c.height = h; const g = c.getContext('2d', { willReadFrequently: true }); g.drawImage(src, 0, 0); const d = g.getImageData(0, 0, w, h);
+  const mc = document.createElement('canvas'); mc.width = w; mc.height = h; const mg = mc.getContext('2d', { willReadFrequently: true }); mg.drawImage(COOKMASK, 0, 0, w, h); const md = mg.getImageData(0, 0, w, h).data;
+  const ramp = CKFIN[fin].map(hx => [parseInt(hx.slice(1, 3), 16), parseInt(hx.slice(3, 5), 16), parseInt(hx.slice(5, 7), 16)]), R = [ramp[0], ramp[1], ramp[3], ramp[2]];   // dark → mid → light
+  for (let i = 0; i < d.data.length; i += 4) { if (md[i] < 128) continue; const L = (d.data[i] + d.data[i + 1] + d.data[i + 2]) / 765, p = L * 3, k = Math.min(2, Math.floor(p)), f = p - k, A = R[k], B = R[k + 1]; d.data[i] = A[0] + (B[0] - A[0]) * f; d.data[i + 1] = A[1] + (B[1] - A[1]) * f; d.data[i + 2] = A[2] + (B[2] - A[2]) * f; }
+  g.putImageData(d, 0, 0); return CKC[key] = c; }
 const ITEMS = {
   util: [
     { id: 'hs500', name: 'HEAD START 500M', desc: "Your uncle's Corolla blasts you 500m down the road. Tap it as the run starts.", price: 250, use: 1 },
@@ -2283,6 +2328,12 @@ const ITEMS = {
     { id: 'cat', name: 'BILLI THE CAT', desc: 'Your cat runs alongside you, jumps for coins you miss and trips up the odd person. Rides along on every power-up.', price: 3000 },
     { id: 'jalebi', name: 'HOT JALEBI', desc: 'Some coin trails turn into hot jalebis worth £3 each. Sticky fingers, full pockets.', price: 1800 },
     { id: 'misbaha', name: 'GOLDEN MISBAHA', desc: 'Start every run on a random ride: tuk-tuk, carpet, Flappy Kabootar, the sandals or the Hoover Mech.', price: 2500 },
+  ],
+  style: [
+    { id: 'ck_copper', name: 'COPPER COOKER', desc: "Polished copper, like Nani's best pan.", price: 300, k: 'ck' },
+    { id: 'ck_black', name: 'BLACK CHROME COOKER', desc: 'Murdered-out black chrome. Very serious.', price: 400, k: 'ck' },
+    { id: 'st_green', name: 'GREEN STEAM', desc: 'Your jetpack puffs out mint-green steam.', price: 200, k: 'st' },
+    { id: 'st_pink', name: 'PINK STEAM', desc: 'Candyfloss-pink steam clouds behind you.', price: 250, k: 'st' },
   ],
   outfit: [
     { id: 'classic', name: 'CLASSIC THOBE', desc: 'Fresh white thobe. Ironed this morning. Probably.', price: 0 },
@@ -2300,6 +2351,9 @@ function iconFor(cv, tab, it) {
   if (tab === 'outfit') { const im = heroImgs[it.id]; const f = FR('run1_normal'); if (im.complete && im.naturalWidth) { c.imageSmoothingEnabled = true; c.drawImage(im, f * HW * HX4, 0, HW * HX4, HH0 * HX4, 5, 4, 48, 58); } else im.onload = () => iconFor(cv, tab, it); }
   else if (it.id === 'hs500' || it.id === 'hs1000') { drawCorolla(c, 29, 40, .34, true); c.font = '9px PS'; c.textAlign = 'center'; c.fillStyle = O; c.fillText(it.id === 'hs500' ? '500' : '1000', 30, 54); c.fillStyle = '#ffd75a'; c.fillText(it.id === 'hs500' ? '500' : '1000', 29, 53); }
   else if (it.id === 'save') { c.translate(29, 30); c.rotate(-.15); c.fillStyle = '#0f3d26'; rr(-17, -12, 34, 24, 4); c.fill(); c.fillStyle = '#1f8a4c'; rr(-15.5, -10.5, 31, 21, 3); c.fill(); c.fillStyle = '#25a35a'; c.beginPath(); c.moveTo(-15.5, -10.5); c.lineTo(0, 3); c.lineTo(15.5, -10.5); c.fill(); c.fillStyle = '#ffd75a'; c.beginPath(); c.arc(0, 2, 5, 0, 7); c.fill(); c.fillStyle = '#1f8a4c'; c.beginPath(); c.arc(2, 1, 4, 0, 7); c.fill(); c.fillStyle = '#ff5a6a'; c.font = '12px PS'; c.fillText('+', 10, -9); }
+  else if (tab === 'style' && it.k === 'ck') { const fin = CKFIN[it.id], g2 = c.createLinearGradient(16, 0, 42, 0); fin.forEach((col, i) => g2.addColorStop(i / (fin.length - 1), col));
+    c.fillStyle = O; rr(15, 14, 28, 34, 6); c.fill(); c.fillStyle = g2; rr(17, 16, 24, 30, 5); c.fill(); c.fillStyle = 'rgba(255,255,255,.55)'; c.fillRect(21, 18, 3, 26); c.fillStyle = O; rr(24, 6, 10, 9, 3); c.fill(); c.fillStyle = '#e0262e'; c.beginPath(); c.arc(29, 8, 5, Math.PI, 0); c.fill(); c.fillStyle = O; c.fillRect(20, 47, 6, 5); c.fillRect(32, 47, 6, 5); }
+  else if (tab === 'style' && it.k === 'st') { const col = STEAMC[it.id]; [[18, 38, 9], [30, 30, 11], [42, 36, 8], [26, 20, 7], [38, 18, 6]].forEach(([x, y, r]) => { c.fillStyle = 'rgba(30,20,40,.35)'; c.beginPath(); c.arc(x + 1, y + 1.5, r, 0, 7); c.fill(); c.fillStyle = col; c.beginPath(); c.arc(x, y, r, 0, 7); c.fill(); c.fillStyle = 'rgba(255,255,255,.55)'; c.beginPath(); c.arc(x - r * .35, y - r * .35, r * .35, 0, 7); c.fill(); }); }
   else if (it.id === 'slot') { c.strokeStyle = '#ffd75a'; c.setLineDash([4, 3]); c.lineWidth = 2; rr(13, 13, 32, 32, 7); c.stroke(); c.setLineDash([]); c.fillStyle = '#ffd75a'; c.fillRect(26, 20, 6, 18); c.fillRect(20, 26, 18, 6); }
   else if (it.id === 'tin') {   // owner 23 Nov: COIN MAGNET (id stays 'tin' so saves keep it): red horseshoe magnet, silver tips, a coin being pulled in
     c.save(); c.lineCap = 'butt'; c.strokeStyle = O; c.lineWidth = 17; c.beginPath(); c.moveTo(14, 12); c.lineTo(14, 30); c.arc(29, 30, 15, Math.PI, 0, true); c.lineTo(44, 12); c.stroke();
@@ -2316,7 +2370,7 @@ function iconFor(cv, tab, it) {
     c.fillStyle = '#e8b830'; c.fillRect(27, 41, 4, 9); c.fillStyle = '#c8901c'; c.beginPath(); c.moveTo(24, 50); c.lineTo(34, 50); c.lineTo(29, 56); c.fill(); }
   c.restore();
 }
-function owned(tab, it) { return tab === 'outfit' ? !!SHOP.own[it.id] || it.price === 0 : tab === 'gadget' ? !!SHOP.own[it.id] : it.id === 'slot' ? SHOP.slots >= 3 : false; }
+function owned(tab, it) { return tab === 'style' ? !!SHOP.own[it.id] : tab === 'outfit' ? !!SHOP.own[it.id] || it.price === 0 : tab === 'gadget' ? !!SHOP.own[it.id] : it.id === 'slot' ? SHOP.slots >= 3 : false; }
 function renderShop() {
   $('shBank').textContent = bank.toLocaleString('en-GB');
   document.querySelectorAll('.shopTabs button').forEach(b => b.classList.toggle('on', b.dataset.tab === shopTab));
@@ -2324,14 +2378,14 @@ function renderShop() {
   const L = $('shopList'); L.innerHTML = '';
   ITEMS[shopTab].forEach((it, i) => {
     const row = document.createElement('div'); row.className = 'item'; row.style.animationDelay = i * .04 + 's';
-    const own = owned(shopTab, it), on = shopTab === 'gadget' ? hasG(it.id) : shopTab === 'outfit' ? SHOP.outfit === it.id : false; if (on) row.classList.add('on');
+    const own = owned(shopTab, it), on = shopTab === 'gadget' ? hasG(it.id) : shopTab === 'outfit' ? SHOP.outfit === it.id : shopTab === 'style' ? SHOP[it.k] === it.id : false; if (on) row.classList.add('on');
     const cnt = it.use ? `<span class="own">You have ${SHOP[it.id] || 0}</span>` : '';
     let btn, cls = '';
     if (it.use) btn = '£' + it.price.toLocaleString('en-GB');
     else if (!own) btn = '£' + it.price.toLocaleString('en-GB');
     else if (it.id === 'slot') { btn = 'OWNED'; cls = 'eq'; }
-    else if (on) { btn = shopTab === 'outfit' ? 'WEARING' : 'EQUIPPED'; cls = 'on'; }
-    else { btn = shopTab === 'outfit' ? 'WEAR' : 'EQUIP'; cls = 'eq'; }
+    else if (on) { btn = shopTab === 'outfit' ? 'WEARING' : shopTab === 'style' ? 'IN USE' : 'EQUIPPED'; cls = 'on'; }
+    else { btn = shopTab === 'outfit' ? 'WEAR' : shopTab === 'style' ? 'USE' : 'EQUIP'; cls = 'eq'; }
     if ((it.use || !own) && bank < it.price) cls = 'no';
     row.innerHTML = `<canvas></canvas><div class="it"><b>${it.name}${cnt}</b><span>${it.desc}</span></div><button class="buy ${cls}">${btn}</button>`;
     iconFor(row.querySelector('canvas'), shopTab, it);
@@ -2348,6 +2402,8 @@ function shopAction(tab, it, row) {
     POL.buy(row);
     if (!it.use && tab === 'gadget' && SHOP.eq.length < SHOP.slots) SHOP.eq.push(it.id);
     if (!it.use && tab === 'outfit') SHOP.outfit = it.id;
+    if (tab === 'style') SHOP[it.k] = it.id;
+  } else if (tab === 'style') { SHOP[it.k] = SHOP[it.k] === it.id ? '' : it.id; tone(660, .06, 'square', .04);
   } else if (tab === 'gadget') {
     if (hasG(it.id)) SHOP.eq = SHOP.eq.filter(x => x !== it.id);
     else { if (SHOP.eq.length >= SHOP.slots) SHOP.eq.shift(); SHOP.eq.push(it.id); }
@@ -2392,7 +2448,7 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
 tap('bMis', () => { $('misRank').innerHTML = rankHtml(); missionRows($('misRows')); $('mis').classList.remove('hide'); }); tap('misClose', () => $('mis').classList.add('hide')); tap('howClose', () => $('how').classList.add('hide'));
 tap('bShare', () => share('Late for Jummah? Play Jummah Dash – an SMR Original 🕌💨'));
 tap('again', start); tap('ovHome', goHome);
-tap('eidiGo', () => { if ($('eidiGo').dataset.life) revive(); else { $('eidiBox').classList.add('hide'); eidi = 0; showOver(); } });
+tap('eidiGo', () => { if (POSTBANK) { bankedDone(); return; } if ($('eidiGo').dataset.life) revive(); else { $('eidiBox').classList.add('hide'); eidi = 0; showOver(); } });
 tap('ovShare', () => share(`I flew ${Math.floor(dist / 10)}m and grabbed £${coins} trying to get to Jummah 😂 Beat that on Jummah Dash:`));
 tap('snd', () => setSound(!sndOn));
 const noHold = el => el && el.closest && el.closest('.btn,#home,.sheet,#over,#eidiBox,#pz,#rot,#bShield,#bDash,#bHorn');
@@ -2638,7 +2694,7 @@ const POL = (() => { const P = { fx: [], flock: [], nextFlock: 4, streak: 0, str
   P.chunks = cols => { for (let i = 0; i < 12; i++) P.fx.push({ k: 'chunk', x: hero.x + (Math.random() - .5) * 60, y: hero.y - 10 - Math.random() * 50, vx: (Math.random() - .3) * 320, vy: -120 - Math.random() * 260, t: 0, l: 1.6, a: Math.random() * 6, sp: (Math.random() - .5) * 14, w: 4 + Math.random() * 8, h: 3 + Math.random() * 5, c: cols[i % cols.length], b: 0 }); };
   P.crack = x => P.fx.push({ k: 'crack', x, y: FLOOR + 1, t: 0, l: 1.4, seed: Math.random() * 100 });
   P.flipFx = () => { P.fx.push({ k: 'ring', x: hero.x, y: veh.g < 0 ? CEIL + 6 : FLOOR, t: 0, l: .45, col: '125,255,160' }); P.fx.push({ k: 'streak', x: hero.x, y0: hero.y, t: 0, l: .3 }); };
-  P.over = (newBest) => { const box = document.querySelector('#over .box'); if (box) { box.classList.remove('popin'); void box.offsetWidth; box.classList.add('popin'); }
+  P.over = (newBest) => { const box = document.querySelector('#over .card'); if (box) { box.classList.remove('popin'); void box.offsetWidth; box.classList.add('popin'); }
     const count = (id, to, pre, suf) => { const el = $(id); if (!el) return; const t0 = performance.now(), D = 900; const step = () => { const k = Math.min(1, (performance.now() - t0) / D), e = 1 - Math.pow(1 - k, 3); el.textContent = pre + Math.round(to * e).toLocaleString('en-GB') + suf; if (k < 1) { if (Math.random() < .5) tone(900 + k * 600, .03, 'square', .02, 0, MIX && MIX.fx); requestAnimationFrame(step); } }; step(); };
     count('oD', Math.floor(dist / 10), '', 'm'); count('oC', coins, '£', '');
     if (newBest) setTimeout(() => { const b = document.createElement('div'); b.className = 'nbest'; b.textContent = 'NEW BEST!'; (box || document.body).appendChild(b); setTimeout(() => b.remove(), 3200);
