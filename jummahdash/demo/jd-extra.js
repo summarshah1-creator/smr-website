@@ -27,12 +27,19 @@
   // ---- games played and how far they got ----
   var lastState = '';
   setInterval(function () { var s = window.__jd && window.__jd.state; if (!s) return; if (s !== lastState && s === 'intro') ev('play'); lastState = s; }, 300);
+  // audit 23 Nov: count presses of the action buttons per run (sent with the run's end)
+  var btnN = {};
+  addEventListener('jd-daily', function (e) { ev('daily', e.detail && e.detail.n || 6, 'done'); });
+  document.addEventListener('pointerdown', function (e) { var b = e.target.closest && e.target.closest('#bDash,#bShield,#bHorn,#bBat'); if (!b) return;
+    var k = b.id === 'bDash' ? (b.classList.contains('warp') ? 'warp' : 'dash') : b.id === 'bShield' ? 'shield' : b.id === 'bHorn' ? 'horn' : 'bat'; btnN[k] = (btnN[k] || 0) + 1; }, true);
   function watchOver() {
     var o = $('over'); if (!o) return;
     var was = o.classList.contains('hide');
     new MutationObserver(function () { var now = o.classList.contains('hide'); if (was && !now) {
       var d = parseInt(($('oD') && $('oD').textContent || '0').replace(/[^0-9]/g, ''), 10) || 0, c = ($('oC') && $('oC').textContent || '').replace(/[^0-9]/g, '');
-      ev('over', d, c); } was = now; }).observe(o, { attributes: true, attributeFilter: ['class'] });
+      ev('over', d, c);
+      try { var R = window.__jd && window.__jd.run; if (R) { if (R.why) ev('die', d, R.why); (R.rl || []).slice(0, 8).forEach(function (r) { if (r[1] > 0) ev('ride', r[1], r[0]); }); }   // audit: what ended it, which rides
+        Object.keys(btnN).forEach(function (k) { if (btnN[k]) ev('btn', btnN[k], k); }); } catch (e) {} btnN = {}; } was = now; }).observe(o, { attributes: true, attributeFilter: ['class'] });
   }
   // taps on menu items (the game's own handlers still run)
   addEventListener('pointerdown', function (e) { var t = e.target && e.target.closest ? e.target.closest('#bShare,#bInst,#smrOpen,#bShop,#bOutfit') : null; if (!t) return;
@@ -67,7 +74,7 @@
     s.addEventListener('pointerdown', function (e) { e.stopPropagation(); if (e.target === s) closeRec(); });
     $('recX').addEventListener('click', closeRec); $('recOk').addEventListener('click', closeRec);
     $('recGo').addEventListener('click', sendRec);
-    fetch(API + '?a=cfg', { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (c) { if (c && c.show_recommend === false) b.style.display = 'none'; }).catch(function () {});
+    fetch(API + '?a=cfg', { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (c) { if (c && c.show_recommend === false) b.style.display = 'none'; window.JD_LAKRI = !!(c && c.lakri); }).catch(function () {});
   }
   function openRec() { $('recForm').classList.remove('hide'); $('recThx').classList.add('hide'); $('recM').textContent = ''; $('recM').className = 'rmsg'; $('recBox').classList.remove('hide'); }
   function closeRec() { var a = document.activeElement; if (a && a.blur) a.blur(); $('recBox').classList.add('hide'); }

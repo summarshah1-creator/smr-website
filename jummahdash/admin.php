@@ -66,10 +66,20 @@ function sinceBox(){if(!SINCE)return '<div class="since"><div class="hd">Since y
  return '<div class="since"><div class="hd">Since you last checked <span>'+esc(at)+'</span></div><div class="big">'+n(j.games)+'<small>new game'+(j.games===1?'':'s')+'</small></div>'+(j.games||j.visits?'<div class="g">'+c.map(function(x){return '<div'+(x[2]?' class="hl"':'')+'><b>'+(typeof x[0]==='number'?n(x[0]):x[0])+'</b><small>'+x[1]+'</small></div>'}).join('')+'</div>':'<p class="none">Nothing new yet. Your own phones are never counted.</p>')+'</div>'}
 function todayBox(){if(!TD)return '<div class="secT">Today</div><p class="mut">Loading…</p>';var p=ev(TD,'play');
  return '<div class="secT">Today</div>'+kp([[n(p.n),'Games'],[n(p.u),'Players'],[n(TD.new),'New people'],[n(TD.opens),'Visits'],[n(TD.best)+'m','Best run'],[n(ev(TD,'share').n),'Shares']],'kp3')}
+// audit 23 Nov: why runs end, rides, buttons, first-timers, next-day return
+var WHY={rocket:'Rockets',zap:'Zappers (electric cables)',laser:'Speed-camera lasers'},RIDEN={tuktuk:'Tuk-tuk',carpet:'Magic carpet',kabootar:'Flappy Kabootar',sandals:'Gravity sandals',mech:'Hoover Mech',logman:'Lakri Man',box:'Warp Box',headstart:'Head start'},BTN={dash:'DASH',warp:'WARP (Warp Box)',shield:'SHIELD (mech)',horn:'HORN (tuk-tuk)',bat:'BAT (Lakri Man)'};
+function deepStats(S){if(!S.first_runs)return '';var h='',f=S.first_runs,b=f.buckets,nd=S.next_day;
+ h+='<h3>First-time players</h3>'+kp([[n(f.n),'First games','in this period'],[n(f.avg)+'m','Average first run','how far a new player gets'],[(nd.n?Math.round(100*nd.back/nd.n):0)+'%','Came back next day',n(nd.back)+' of '+n(nd.n)+' new people'],[n(S.daily_done),'Daily words finished','JUMMAH letters']]);
+ h+=bars([['Under 200m',b[0]],['200 to 500m',b[1]],['500m to 1km',b[2]],['Over 1km',b[3]]].map(function(x){return {l:x[0],v:x[1]}}),function(r){return r.l},'v');
+ h+='<h3>What ends runs</h3>'+bars(S.deaths,function(r){return (WHY[r.k]||r.k||'Other')+' · avg '+n(Math.round(+r.a))+'m'},'n');
+ h+='<h3>Rides picked up</h3>'+bars(S.rides,function(r){return (RIDEN[r.k]||r.k)+' · lasts '+Math.round(+r.a)+'s'},'n');
+ h+='<h3>Buttons used (players)</h3>'+bars(S.buttons,function(r){return (BTN[r.k]||r.k)+' · '+n(+r.n)+' presses'},'u');
+ return h}
 function drawStats(){var h=sinceBox()+todayBox()+'<div class="secT">More</div><div class="rng">'+[[7,'This week'],[30,'This month'],[0,'All time']].map(function(r){return '<button data-r="'+r[0]+'" class="'+(RANGE===r[0]?'on':'')+'">'+r[1]+'</button>'}).join('')+'</div>';
  if(!ST)return h+'<p class="empty">Loading…</p>';var S=ST,pl=ev(S,'play');
  h+='<h3 style="margin-top:0">Visitors</h3>'+kp([[n(S.opens),'Total opens','every time the game was opened'],[n(S.unique),'Unique people','different phones/computers'],[n(S.new),'New people','first time ever in this period'],[n(S.returning),'Returning people','opened it on 2+ different days'],[n(S.app_users),'Playing from home screen','installed the app'],[(S.unique?(S.opens/S.unique).toFixed(1):0),'Opens per person','on average']]);
  h+='<h3>Playing</h3>'+kp([[n(pl.n),'Games played',(pl.u?(pl.n/pl.u).toFixed(1):0)+' games per player'],[n(pl.u),'People who played',(S.unique?Math.round(100*pl.u/S.unique):0)+'% of visitors'],[n(S.best)+'m','Best run','average '+n(S.avg)+'m'],[ '£'+n(S.coins),'Coins collected','in finished runs'],[n(ev(S,'share').n),'Shares','from the Share tile'],[n(ev(S,'smr').n),'Opened SMR Digital','from Designed & built by']]);
+ h+=deepStats(S);
  h+='<h3>Where people came from</h3>'+bars(S.sources,function(r){return SRC[r.src]||r.src||'Unknown'},'u');
  h+='<h3>Last 30 days</h3><div class="chart">'+S.daily.map(function(d){var m=Math.max.apply(null,S.daily.map(function(x){return Math.max(+x.v,+x.g)}).concat([1]));return '<div title="'+d.day+': '+d.v+' people, '+d.g+' games"><s style="height:'+(100*d.v/m)+'%"></s><s class="g" style="height:'+(100*d.g/m)+'%"></s></div>'}).join('')+'</div><div class="leg"><span><i style="background:#5b5bff"></i>People</span><span><i style="background:#d63bff"></i>Games</span></div>';
  h+='<h3>Phones</h3>'+bars(S.devices,function(r){return DEV[r.dev]||r.dev||'Unknown'},'u');
@@ -82,7 +92,7 @@ function drawDevs(){if(!DEVS){api('devices').then(function(j){DEVS=j.devices;var
  if(!DEVS.length)return '<p class="mut">No devices yet.</p>';
  return DEVS.map(function(d){return '<div class="dv'+(d.mine?' me':'')+'"><div class="i"><b>'+(DEVN[d.dev]||'Device')+(d.app?' · home screen app':'')+'</b><small>Last played '+when(d.last)+' · '+n(d.games)+' game'+(d.games===1?'':'s')+(d.best?' · best '+n(d.best)+'m':'')+' · ID '+esc(d.id)+'</small></div><button data-own="'+esc(d.vid)+'" data-on="'+(d.mine?0:1)+'">'+(d.mine?'✓ Mine':'This is me')+'</button></div>'}).join('')}
 function drawSet(){var c=ST?ST.settings:{show_recommend:true};
- return '<h3 style="margin-top:4px">Game</h3><label class="tg">Show "Recommend a place" on the menu<input type="checkbox" id="sRec"'+(c.show_recommend?' checked':'')+'></label>'
+ return '<h3 style="margin-top:4px">Game</h3><label class="tg">Show "Recommend a place" on the menu<input type="checkbox" id="sRec"'+(c.show_recommend?' checked':'')+'></label>'+'<label class="tg">Lakri Man in the ride boxes<input type="checkbox" id="sLak"'+(c.lakri?' checked':'')+'></label>'
  +'<button class="save" id="sSave">Save settings</button><p class="ok" id="sOk"></p>'
  +'<h3>Your devices</h3><p class="mut" style="margin:0 0 10px">Your own phones are left out of every number. Any phone you play on while logged in to SMR Admin is spotted by itself; tick any other phone or tablet of yours here (the one at the top is usually the one you just played on).</p><div id="devs">'+drawDevs()+'</div>'
  +'<div class="tip">Game link: <code>smrgraphics.co.uk/jummahdash/demo/</code> · <a class="lk" href="/jummahdash/demo/" target="_blank">Open the game</a></div>'}
@@ -98,7 +108,7 @@ document.addEventListener('click',function(e){var b=e.target.closest('button');i
  if(b.dataset.v){V=b.dataset.v;document.querySelectorAll('.seg button').forEach(function(x){x.classList.toggle('on',x===b)});draw();return}
  if(b.dataset.r!=null){RANGE=+b.dataset.r;ST=null;draw();loadStats();return}
  if(b.dataset.own){b.disabled=true;api('owner',{vid:b.dataset.own,on:b.dataset.on==='1'}).then(function(j){DEVS=j.devices;$('devs').innerHTML=drawDevs();loadToday();loadStats();api('since&t='+SEEN).then(function(x){SINCE=x;draw()})});return}
- if(b.id==='sSave'){api('settings_save',{show_recommend:$('sRec').checked}).then(function(j){if(ST)ST.settings=j.settings;$('sOk').textContent='Saved. The game picks it up next time it opens.'}).catch(function(er){$('sOk').textContent=er.message});return}
+ if(b.id==='sSave'){api('settings_save',{show_recommend:$('sRec').checked,lakri:$('sLak').checked}).then(function(j){if(ST)ST.settings=j.settings;$('sOk').textContent='Saved. The game picks it up next time it opens.'}).catch(function(er){$('sOk').textContent=er.message});return}
  if(b.dataset.done){api('rec_done',{id:+b.dataset.done,undo:b.dataset.u==='1'}).then(load);return}
  if(b.dataset.del){if(confirm('Delete this recommendation?'))api('rec_del',{id:+b.dataset.del}).then(load)}});
 draw();load();loadToday();loadStats();setInterval(function(){load();if(V==='stats'){loadToday();loadStats()}},60000);

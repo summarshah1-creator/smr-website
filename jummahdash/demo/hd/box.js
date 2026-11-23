@@ -8,7 +8,7 @@
   const H = 698, BW = 415, HW = .9614 * BW / 2;                     // art pixels: full height, body half-width (cropped inside the outline)
   const SL = { lb: [.2072, 92, 113], r1: [.547, 113, 136], r2: [.7325, 136, 164], r3: [.8988, 164, 196], base: [1.0627, 646, 698] };   // owner 23 Nov: simpler art (same spin), old lantern kept
   const ok = im => im && im.complete && im.naturalWidth;
-  const STR = 26, PER = .07, L = [-.55, .35];                       // strips per face, perspective, light (x, z) direction
+  const STR = 14, PER = .07, L = [-.55, .35];                       // strips per face, perspective, light (x, z) direction
   // one square slab (half width hw art px, rows y0..y1): draw its visible faces, texture 'tex' per face index
   function slab(g, cx, cy, s, A, hw, y0, y1, tex, noLine) {
     const c = Math.cos(A), sn = Math.sin(A), edges = [];

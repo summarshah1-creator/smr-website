@@ -24,13 +24,14 @@ function jd_today(): string { return date('Y-m-d'); }
 function jd_ip(): string { return substr(hash('sha256', client_ip() . '|jd'), 0, 16); }
 function jd_clean(string $s, int $max): string { $s = preg_replace('/[\x00-\x1F\x7F]/u', ' ', $s); return mb_substr(trim(preg_replace('/\s+/u', ' ', $s)), 0, $max); }
 const JD_ADMIN_CODE = '1279';   // in-game admin mode code (owner, 23 Nov)
-const JD_DEFAULTS = ['show_recommend' => true];
+const JD_DEFAULTS = ['show_recommend' => true, 'lakri' => false];   // lakri: Lakri Man in the ride boxes (owner 23 Nov: off for now)
 function jd_settings(): array {
     $st = jd_db()->prepare('SELECT v FROM jd_meta WHERE k = ?'); $st->execute(['settings']); $v = json_decode((string) $st->fetchColumn(), true);
     return array_merge(JD_DEFAULTS, is_array($v) ? array_intersect_key($v, JD_DEFAULTS) : []);
 }
 /* visit, play, over (val = metres, extra = coins), share, install, hs_open (Get the app), smr (opened the SMR website), rec, shop, mission */
-const JD_EVENTS = ['visit', 'play', 'over', 'share', 'install', 'hs_open', 'smr', 'rec', 'shop', 'outfit', 'sound_on'];
+/* audit 23 Nov: die (val = metres, extra = what got him: rocket / zap / laser), ride (val = seconds it lasted, extra = ride), btn (val = presses that run, extra = dash / warp / shield / horn / bat), daily (val = letters, extra = 'done' when the daily word was finished) */
+const JD_EVENTS = ['visit', 'play', 'over', 'share', 'install', 'hs_open', 'smr', 'rec', 'shop', 'outfit', 'sound_on', 'die', 'ride', 'btn', 'daily'];
 function jd_stats(int $days): array {
     $p = jd_db(); $from = $days > 0 ? date('Y-m-d', strtotime('-' . ($days - 1) . ' days')) : '0000-00-00';
     $q = function (string $sql, array $a = []) use ($p) { $st = $p->prepare($sql); $st->execute($a); return $st; };
@@ -45,7 +46,17 @@ function jd_stats(int $days): array {
     $dev = $q("SELECT dev, COUNT(DISTINCT vid) u FROM jd_ev WHERE ev = 'visit' AND day >= ? GROUP BY dev ORDER BY u DESC", [$from])->fetchAll();
     $daily = $q("SELECT day, COUNT(DISTINCT vid) v, SUM(ev = 'play') g FROM jd_ev WHERE day >= ? GROUP BY day ORDER BY day", [date('Y-m-d', strtotime('-29 days'))])->fetchAll();
     $top = $q("SELECT at, dev, val, extra, app FROM jd_ev WHERE ev = 'over' AND val > 0 AND day >= ? ORDER BY val DESC LIMIT 10", [$from])->fetchAll(PDO::FETCH_ASSOC);
-    return ['days' => $days, 'opens' => $opens, 'unique' => $uniq, 'new' => $new, 'returning' => $back, 'app_users' => $appv, 'events' => $tot,
+    // audit 23 Nov: why runs end, rides, buttons, how far first-timers get, and who comes back the next day
+    $deaths = $q("SELECT extra k, COUNT(*) n, AVG(val) a FROM jd_ev WHERE ev = 'die' AND day >= ? GROUP BY extra ORDER BY n DESC", [$from])->fetchAll(PDO::FETCH_ASSOC);
+    $rides = $q("SELECT extra k, COUNT(*) n, AVG(val) a FROM jd_ev WHERE ev = 'ride' AND day >= ? GROUP BY extra ORDER BY n DESC", [$from])->fetchAll(PDO::FETCH_ASSOC);
+    $btns = $q("SELECT extra k, COUNT(DISTINCT vid) u, SUM(val) n FROM jd_ev WHERE ev = 'btn' AND day >= ? GROUP BY extra ORDER BY u DESC", [$from])->fetchAll(PDO::FETCH_ASSOC);
+    $first = $q("SELECT val FROM jd_ev e WHERE ev = 'over' AND day >= ? AND at = (SELECT MIN(at) FROM jd_ev x WHERE x.vid = e.vid AND x.ev = 'over') AND vid NOT IN (SELECT vid FROM jd_ev WHERE ev = 'over' AND day < ?)", [$from, $from])->fetchAll(PDO::FETCH_COLUMN);
+    $fb = [0, 0, 0, 0]; foreach ($first as $v) $fb[$v < 200 ? 0 : ($v < 500 ? 1 : ($v < 1000 ? 2 : 3))]++;
+    $nd = $q("SELECT COUNT(*) n, SUM(EXISTS (SELECT 1 FROM jd_ev y WHERE y.vid = f.vid AND y.ev = 'visit' AND y.day = date(f.d, '+1 day'))) b FROM (SELECT vid, MIN(day) d FROM jd_ev WHERE ev = 'visit' GROUP BY vid) f WHERE f.d >= ? AND f.d < ?", [$from, jd_today()])->fetch();
+    $daily_done = (int) $q("SELECT COUNT(*) FROM jd_ev WHERE ev = 'daily' AND extra = 'done' AND day >= ?", [$from])->fetchColumn();
+    return ['deaths' => $deaths, 'rides' => $rides, 'buttons' => $btns, 'first_runs' => ['n' => count($first), 'avg' => $first ? (int) round(array_sum($first) / count($first)) : 0, 'buckets' => $fb],
+        'next_day' => ['n' => (int) $nd['n'], 'back' => (int) $nd['b']], 'daily_done' => $daily_done,
+        'days' => $days, 'opens' => $opens, 'unique' => $uniq, 'new' => $new, 'returning' => $back, 'app_users' => $appv, 'events' => $tot,
         'games' => (int) $sc['n'], 'avg' => (int) round((float) $sc['a']), 'best' => (int) $sc['m'], 'coins' => (int) $sc['c'], 'sources' => $src, 'devices' => $dev, 'daily' => $daily, 'top' => $top];
 }
 
@@ -108,7 +119,7 @@ try {
         if ($a === 'devices') json_out(['devices' => gs_devices($p, 'jd')]);
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') json_out(['error' => 'POST only'], 405);
         if ($a === 'owner') { gs_set_owner($p, 'jd', (string) ($in['vid'] ?? ''), !empty($in['on'])); json_out(['ok' => true, 'devices' => gs_devices($p, 'jd')]); }
-        if ($a === 'settings_save') { $new = ['show_recommend' => !empty($in['show_recommend'])];
+        if ($a === 'settings_save') { $new = ['show_recommend' => !empty($in['show_recommend']), 'lakri' => !empty($in['lakri'])];
             $p->prepare('INSERT INTO jd_meta (k, v) VALUES (?, ?) ON CONFLICT(k) DO UPDATE SET v = excluded.v')->execute(['settings', json_encode($new)]); json_out(['ok' => true, 'settings' => $new]); }
         $id = (int) ($in['id'] ?? 0);
         if ($a === 'rec_done') { $p->prepare('UPDATE jd_recs SET done = ? WHERE id = ?')->execute([empty($in['undo']) ? 1 : 0, $id]); json_out(['ok' => true]); }

@@ -357,10 +357,10 @@ const SFX = { charge() { if (!AC || !sndOn) return; [[392, 0], [523, .15], [659,
     [[0, 554], [.35, 440]].forEach(([dt, f]) => { const at = t0 + .3 + dt, o = AC.createOscillator(), og = AC.createGain(), lp2 = AC.createBiquadFilter(); lp2.type = 'lowpass'; lp2.frequency.value = 1800; o.type = 'sawtooth'; o.frequency.value = f; og.gain.setValueAtTime(.0001, at); og.gain.exponentialRampToValueAtTime(.03, at + .04); og.gain.setValueAtTime(.03, at + .28); og.gain.exponentialRampToValueAtTime(.0001, at + .34); o.connect(lp2); lp2.connect(og); og.connect(bus); o.start(at); o.stop(at + .4); }); },
   tukHorn() {   // owner 23 Nov: his own horn (named tukHorn: the traffic kit's car horn() used to overwrite it) recording (art/snd/horn.mp3, cut + cleaned + faded); synth air horn only until it has loaded
     if (!AC || !sndOn) return; const bus = MIX ? MIX.fx : AC.destination, t0 = AC.currentTime;
-    if (HORN_BUF) { const src = AC.createBufferSource(), g = AC.createGain(); src.buffer = HORN_BUF; g.gain.value = .6; src.connect(g); g.connect(bus); src.start(t0); return; }   // only his recording, nothing mixed in
-    const blast = (st, len) => { const f = AC.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 2600; f.Q.value = 1.2; const g = AC.createGain(); g.gain.setValueAtTime(.0001, t0 + st); g.gain.exponentialRampToValueAtTime(.042, t0 + st + .02); g.gain.setValueAtTime(.042, t0 + st + len - .05); g.gain.exponentialRampToValueAtTime(.0001, t0 + st + len); f.connect(g); g.connect(bus);
+    if (HORN_BUF) { const src = AC.createBufferSource(), g = AC.createGain(); src.buffer = HORN_BUF; g.gain.value = .45; src.connect(g); g.connect(bus); src.start(t0); return; }   // only his recording, nothing mixed in
+    const blast = (st, len) => { const f = AC.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 2600; f.Q.value = 1.2; const g = AC.createGain(); g.gain.setValueAtTime(.0001, t0 + st); g.gain.exponentialRampToValueAtTime(.0315, t0 + st + .02); g.gain.setValueAtTime(.0315, t0 + st + len - .05); g.gain.exponentialRampToValueAtTime(.0001, t0 + st + len); f.connect(g); g.connect(bus);
       [349, 440, 523, 351].forEach((fr, i) => { const o = AC.createOscillator(); o.type = i === 3 ? 'square' : 'sawtooth'; o.frequency.setValueAtTime(fr * .94, t0 + st); o.frequency.exponentialRampToValueAtTime(fr, t0 + st + .05); o.connect(f); o.start(t0 + st); o.stop(t0 + st + len + .02); }); };
-    blast(0, .15); blast(.2, .42); tone(90, .35, 'sine', .084, .45, bus); },
+    blast(0, .15); blast(.2, .42); tone(90, .35, 'sine', .063, .45, bus); },
   coin(m = 1) { tone(1320 * m, .09, 'square', .04, 0, MIX && MIX.coins); setTimeout(() => tone(1760 * m, .12, 'square', .036, 0, MIX && MIX.coins), 55); },   /* pitch climbs on a coin streak (owner 23 Nov) */   /* coin ping 20% quieter (owner 22 Nov) */
   zap() { tone(120, .5, 'sawtooth', .16, .5); tone(900, .25, 'square', .06, .3); }, thud() { tone(140, .25, 'triangle', .3, .4); },
   warn() { tone(880, .08, 'square', .05); },
@@ -435,9 +435,10 @@ function reset() {
   t = 0; dist = 0; speed = 0; coins = 0; obs = []; wrecks = []; coinList = []; steam = []; sparks = []; panicT = 0; deadT = 0;
   RUN = newRun(); lastCoin = 0; mtQueue = []; boost = null; usedSave = 0; $('hsBox') && $('hsBox').classList.remove('on'); heroImg = heroImgs[SHOP.outfit] || heroImgs.classic;
   hero.heat = 0; hero.oh = 0; hero.dashT = 0; hero.dashOff = 0; hero.threaded = 0; dashCD = 0; nearMult = 1; nearT = 0; speedKick = 0;
-  flashT = 0; shake = 0; banner = null; rings = []; horns = []; hornCD = 0; veh = null; inv = 0; gifts = []; eidi = 0; pops = []; dust = []; revived = 0; nextGift = RIDEDEMO ? 600 : MECHDEMO ? 1400 : FKDEMO ? 500 : 1e9; runT = 0; convoyT = 150 + Math.random() * 150; firstBox = 0; lastBoxRide = ''; nextEidi = 1600; btins = 0; tinFly = []; tinHud(); nextTin = TINDEMO ? 300 : 5200 + Math.random() * 4000; stats.steamed = stats.dodged = stats.missed = 0;
+  flashT = 0; shake = 0; banner = null; rings = []; horns = []; hornCD = 0; veh = null; inv = 0; gifts = []; eidi = 0; pops = []; dust = []; revived = 0; nextGift = RIDEDEMO ? 600 : MECHDEMO ? 1400 : FKDEMO ? 500 : 1e9; runT = 0; convoyT = 150 + Math.random() * 150; firstBox = 0; lastBoxRide = ''; nextEidi = 1600; btins = 0; tinFly = []; tinHud(); nextTin = TINDEMO ? 300 : 9000 + Math.random() * 6000; stats.steamed = stats.dodged = stats.missed = 0;
   Object.assign(hero, { x: -40, y: FLOOR, vy: 0, thrust: false, ground: true, landT: 0, rot: 0, run: 0, dead: false, vx: 0, bounce: 0 });
-  nextObs = 380; nextNpc = 0; nextCar = 0;
+  bestPassed = 0; dailyUI(); nextLtr = DAILY.done || !DAILY_ON ? 1e9 : 3500 + Math.random() * 3500;
+  nextObs = 380; nextNpc = 0; nextCar = 0; rideWas = false; restT = 0; lastVolleyT = -9;
   if (!street.length) fillStreet(); if (!skyline.length) fillSkyline();
   if (!cars.length) for (let i = 0; i < 6; i++) spawnCar(Math.random() * W);
   if (!npcs.length) for (let i = 0; i < 5; i++) spawnNpc(60 + Math.random() * (W - 60));
@@ -659,7 +660,7 @@ function spawnPattern() {
   const x0 = W + 60, top = CEIL + 14, bot = FLOOR - 14, r = Math.random(), m = dist / 10;
   if (BOX_SOLID()) {   // owner 23 Nov: in the Warp Box: no big lasers at all; rockets and zappers he has to dodge (or WARP past), spaced for the much bigger box
     const q = Math.random();
-    if (q < .45) { for (let i = 0; i < 8; i++) coinList.push({ x: x0 + 80 + i * 30, y: top + 40 + (i % 4) * (bot - top - 80) / 3, got: 0 });
+    if (q < .45 && rocketRoom(2)) { lastVolleyT = t; for (let i = 0; i < 8; i++) coinList.push({ x: x0 + 80 + i * 30, y: top + 40 + (i % 4) * (bot - top - 80) / 3, got: 0 });
       const n = 1 + (Math.random() < .6 ? 1 : 0); for (let i = 0; i < n; i++) setTimeout(() => { if (state === 'play' && BOXR) obs.push({ type: 'rocket', x: W + 40, y: hero.y - 50, warn: 1.6, lock: 0, v: 0 }); }, i * 900); return 520; }
     if (q < .78) {   // single short zappers hugging the top or the bottom, far apart, leaving a wide lane for the box
       const n = 2 + (Math.random() < .4 ? 1 : 0); let hi = Math.random() < .5;
@@ -680,17 +681,17 @@ function spawnPattern() {
     if (pk < .34 && !obs.some(o => o.type === 'laser')) {   // speed-camera gate: two beams with a narrow gap and a coin line through it; the safe way is right above or below
       [mid - 30, mid + 30].forEach((y, i) => obs.push({ type: 'laser', x: W / 2, y, ph: 'in', pt: 0, slide: 0, d: i * .05 }));
       const ax = hero.x + speed * 1.75; for (let i = 0; i < 12; i++) coinList.push({ x: ax + i * 18, y: mid, got: 0 }); return speed * 3.8; }
-    if (pk < .67) {   // rotating zapper ringed with coins: skim the ring (near-miss bonus) or go round the top or bottom with nothing
+    if (pk < .67 || !rocketRoom(3)) {   // rotating zapper ringed with coins: skim the ring (near-miss bonus) or go round the top or bottom with nothing
       const cx = x0 + 70; obs.push({ type: 'zap', x: cx, y: mid, len: 96, ang: 0, spin: 1.15, seed: Math.random() * 99 });
       for (let i = 0; i < 14; i++) { const a = i / 14 * Math.PI * 2; coinList.push({ x: cx + Math.cos(a) * 66, y: mid + Math.sin(a) * 66, got: 0 }); } return 360; }
     // rocket run: top and bottom lanes fire first, then the middle; coins sit in the middle lane (dash through or slip out late), the safe line between is empty
-    const ln = [CEIL + 44, FLOOR - 44, mid - 6]; ln.forEach((y, i) => obs.push({ type: 'rocket', x: W + 40, y, warn: 1.3 + (i === 2 ? .9 : 0), lock: 0, v: 0, fixY: 1 })); SFX.warn();
+    lastVolleyT = t; const ln = [CEIL + 44, FLOOR - 44, mid - 6]; ln.forEach((y, i) => obs.push({ type: 'rocket', x: W + 40, y, warn: 1.3 + (i === 2 ? .9 : 0), lock: 0, v: 0, fixY: 1 })); SFX.warn();
     const ax = hero.x + speed * 2.2; for (let i = 0; i < 10; i++) coinList.push({ x: ax + i * 18, y: mid - 6, got: 0 }); return 460; }
-  if (mechArmour()) {   // owner 23 Nov (like the SAM suit in JJ2): in the mech there are no lasers or cables, only rockets, a bit more often
+  if (mechArmour() && rocketRoom(1)) {   // owner 23 Nov (like the SAM suit in JJ2): in the mech there are no lasers or cables, only rockets, a bit more often
     const k = Math.random(), base = -(85 * MCH - 30), mk = (oy, d) => obs.push({ type: 'rocket', x: W + 40 + d * 30, y: hero.y - 30 + oy, warn: 1.4 + d * .3, lock: 0, v: 0, off: oy });
-    SFX.warn();
-    if (k < .55) { mk(base + (Math.random() - .5) * 130 * MCH, 0); return 230; }
-    if (k < .85) { mk(base - 55 * MCH, 0); mk(base + 45 * MCH, 1); return 300; }
+    SFX.warn(); lastVolleyT = t;
+    if (k < .55 || !rocketRoom(2)) { mk(base + (Math.random() - .5) * 130 * MCH, 0); return 230; }
+    if (k < .85 || !rocketRoom(3)) { mk(base - 55 * MCH, 0); mk(base + 45 * MCH, 1); return 300; }
     [-70, 0, 70].forEach((o, i) => mk(base + o * MCH, i)); return 360;
   }
   if (r < .62 && r >= .5 && m > 150 && !obs.some(o => o.type === 'laser')) { // speed-camera lasers: slide in, warn, fire, slide out (they stay on screen, not scrolling)
@@ -699,11 +700,22 @@ function spawnPattern() {
     ys.forEach((y, i) => obs.push({ type: 'laser', x: W / 2, y, ph: 'in', pt: 0, slide: 0, d: i * .12 }));
     return speed * 3.6;
   }
-  if (r < .5 && m > 120) { // firework rocket with a warning
-    if (m > 700 && Math.random() < .4) { [-70, 0, 70].forEach((oy, i) => obs.push({ type: 'rocket', x: W + 40 + i * 30, y: hero.y - 30 + oy, warn: 1.5 + i * .25, lock: 0, v: 0, off: oy })); SFX.warn(); return 320; }
+  if (r < .5 && m > 120 && rocketRoom(1)) { // firework rocket with a warning
+    if (m > 700 && Math.random() < Math.min(.45, .15 + (m - 700) / 4500) && rocketRoom(3)) { lastVolleyT = t; [-70, 0, 70].forEach((oy, i) => obs.push({ type: 'rocket', x: W + 40 + i * 30, y: hero.y - 30 + oy, warn: 1.5 + i * .25, lock: 0, v: 0, off: oy })); SFX.warn(); return 320; }
     obs.push({ type: 'rocket', x: W + 40, y: hero.y - 30, warn: 1.5, lock: 0, v: 0 }); SFX.warn();
     return 200;
   }
+  // staged patterns (audit): double zappers from 1 km, zapper + rocket combos from 3 km
+  if (m > 1000 && Math.random() < Math.min(.3, (m - 1000) / 5000)) {   // two short vertical cables, one high one low, a clear lane between them that shifts
+    const len = 70 + Math.random() * 30, gap = 120 + Math.random() * 30, gy = top + 70 + Math.random() * (bot - top - 140 - gap);
+    obs.push({ type: 'zap', x: x0 + 40, y: Math.max(top + len / 2, gy - len / 2), len, ang: Math.PI / 2, spin: 0, seed: Math.random() * 99 });
+    obs.push({ type: 'zap', x: x0 + 40, y: Math.min(bot - len / 2, gy + gap + len / 2), len, ang: Math.PI / 2, spin: 0, seed: Math.random() * 99 });
+    for (let i = 0; i < 4; i++) coinList.push({ x: x0 + 10 + i * 20, y: gy + gap / 2, got: 0 });
+    return 330 + Math.random() * 80; }
+  if (m > 3000 && Math.random() < .18 && rocketRoom(1)) {   // a cable plus a tracking rocket a beat later
+    const len = 80 + Math.random() * 40, cy = top + len / 2 + Math.random() * (bot - top - len);
+    obs.push({ type: 'zap', x: x0 + 40, y: cy, len, ang: Math.PI / 2, spin: 0, seed: Math.random() * 99 });
+    lastVolleyT = t; obs.push({ type: 'rocket', x: W + 40, y: hero.y - 30, warn: 1.8, lock: 0, v: 0 }); SFX.warn(); return 360; }
   // sparking cable between two insulators: vertical, horizontal, diagonal, sometimes spinning
   const kind = Math.random(), len = 70 + Math.random() * 60 + Math.min(40, m / 20);
   let ang = kind < .35 ? Math.PI / 2 : kind < .6 ? 0 : kind < .85 ? (Math.random() < .5 ? .7 : -.7) : 0;
@@ -712,7 +724,7 @@ function spawnPattern() {
   const cy = top + half + Math.random() * Math.max(1, (bot - top) - 2 * half);
   obs.push({ type: 'zap', x: x0 + len / 2, y: spin ? (top + bot) / 2 : cy, len: spin ? 80 : len, ang, spin, seed: Math.random() * 99 });
   if (Math.random() < .6) { const off = (cy < (top + bot) / 2 ? 60 : -60); for (let i = 0; i < 5; i++) coinList.push({ x: x0 + len + 30 + i * 18, y: Math.min(bot - 10, Math.max(top + 10, cy + off)), got: 0 }); }
-  return 190 + len * .6 + Math.random() * 90;
+  return (190 + len * .6 + Math.random() * 90) * (m < 300 ? 1.3 - m / 1000 : 1);   // a little more room in the first ~300 m (audit)
 }
 
 /* hero hit circles (world units, relative to feet) */
@@ -918,7 +930,7 @@ function die(why) {
   if (veh && veh.k === 'logman' && veh.morph >= 1 && veh.swT >= 0 && veh.swT < .4 && (veh.batHP || 0) > 0 && (why === 'laser' || why === 'rocket' || why === 'zap')) return;   // mid-swing: the bat deals with it
   if (veh && veh.k === 'logman' && veh.morph < 1) return;   // can't be hurt while he's transforming
   if (veh) { vehCrash(); return; }
-  POL.died(why); deadCookOff(); hero.dead = true; hero.vx = speed; hero.vy = -140; hero.flail = 0; hero.squash = 0; hero.bounce = 0; hero.slide = 0; hero.restT = 0; deadT = 0; state = 'dead'; holding = false;
+  RUN.why = why; if (RUN.rk) { (RUN.rl = RUN.rl || []).push([RUN.rk, Math.round(runT - RUN.rt)]); RUN.rk = ''; } POL.died(why); deadCookOff(); hero.dead = true; hero.vx = speed; hero.vy = -140; hero.flail = 0; hero.squash = 0; hero.bounce = 0; hero.slide = 0; hero.restT = 0; deadT = 0; state = 'dead'; holding = false;
   hero.shockT = why === 'rocket' ? 0 : .5; if (why === 'rocket') hero.vy = -260; flashT = .18; flashCol = why === 'rocket' ? '255,170,60' : why === 'laser' ? '230,110,255' : '200,240,255'; shake = .35;
   if (why === 'zap') { SFX.zap(); for (let i = 0; i < 30; i++) sparks.push({ x: hero.x, y: hero.y - 30, vx: (Math.random() - .5) * 260, vy: (Math.random() - .5) * 260, l: .5 + Math.random() * .4, c: Math.random() < .5 ? '#bff4ff' : '#fff6a8' }); }
   else if (why === 'laser') { SFX.zap(); for (let i = 0; i < 26; i++) sparks.push({ x: hero.x, y: hero.y - 30, vx: (Math.random() - .5) * 260, vy: (Math.random() - .5) * 260, l: .5 + Math.random() * .4, c: Math.random() < .5 ? '#ffd0d0' : '#ff5050' }); }
@@ -926,13 +938,32 @@ function die(why) {
 }
 
 /* ---------------- update ---------------- */
+// owner 23 Nov (audit): the run keeps getting harder instead of topping out after a minute: same climb to 300 by 1,250 m,
+// then a slow creep towards 380 (≈330 at 2.5 km, ≈355 at 4 km, ≈370 at 6 km)
+function baseSpeed() { return dist < 12500 ? 150 + dist * .012 : 300 + 80 * (1 - Math.exp(-(dist - 12500) / 22000)); }
+// rocket cap (audit): never more than 3 on screen (or waiting off screen), and a gap after every volley
+let lastVolleyT = -9;
+function giftGap() { const m = dist / 10; return (7500 + Math.random() * 4500) * (1 + Math.min(.5, m / 10000)) * (hasG('dates') ? .5 : 1); }   // audit: a ride box every ~25-40 s of normal flying, slowly rarer further in
+function rocketRoom(n) { return obs.filter(o => o.type === 'rocket' && !o.defl && o.x > hero.x - 40).length + n <= 3 && t - lastVolleyT > 1.5; }
+// breather (audit): when a ride or the Warp Box ends, hazards still off screen are cleared and nothing new comes for 2.5 s
+let rideWas = false, restT = 0;
+// owner 23 Nov (audit): daily word, like JJ's S.A.M. letters: J-U-M-M-A-H letter tokens float in during runs (next letter in order,
+// one at a time); collect all six in a day for a £500 prize. Resets at midnight. Progress on the home screen.
+const DAILY_ON = false;   // owner 23 Nov: on hold for now (code kept, set true to switch it on)
+const DW = 'JUMMAH', DAILY_PRIZE = 500; let nextLtr = 1e9;
+function dayKey() { const d = new Date(); return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); }
+let DAILY = (() => { try { const d = JSON.parse(localStorage.getItem('jd_daily') || 'null'); if (d && d.day === dayKey()) return d; } catch (e) {} return { day: dayKey(), n: 0, done: 0 }; })();
+setTimeout(() => dailyUI(), 0);
+function dailySave() { try { localStorage.setItem('jd_daily', JSON.stringify(DAILY)); } catch (e) {} }
+function dailyUI() { if (DAILY.day !== dayKey()) { DAILY = { day: dayKey(), n: 0, done: 0 }; dailySave(); } const el = $('dailyP'); if (!el) return; if (!DAILY_ON) { el.style.display = 'none'; return; }
+  el.className = 'daily' + (DAILY.done ? ' done' : ''); el.innerHTML = (DAILY.done ? 'DAILY WORD DONE ' : 'DAILY WORD ') + DW.split('').map((ch, i) => '<i class="' + (i < DAILY.n ? 'on' : '') + '">' + ch + '</i>').join('') + (DAILY.done ? '' : ' £' + DAILY_PRIZE); }
 function update(dt) {
   t += dt;
   const playing = state === 'play' || state === 'intro';
   // speed: walk-in, then builds up over the run (Jetpack-style)
   if (state === 'intro') speed += (120 - speed) * Math.min(1, dt * 2);
-  else if (state === 'play' && boost) speed = boost.out ? speed + (Math.min(300, 150 + dist * .012) - speed) * Math.min(1, dt * 3) : Math.min(1150, speed + 1500 * dt);
-  else if (state === 'play') speed = Math.min(300, 150 + dist * .012) + speedKick + warpBoost();
+  else if (state === 'play' && boost) speed = boost.out ? speed + (baseSpeed() - speed) * Math.min(1, dt * 3) : Math.min(1150, speed + 1500 * dt);
+  else if (state === 'play') speed = baseSpeed() + speedKick + warpBoost();
   else if (state === 'dead') speed = hero.shockT > 0 ? speed * Math.pow(.25, dt) : Math.max(0, speed - (hero.slide ? 75 : 30) * dt);
   else if (state === 'menu') speed = 55;
   if (state === 'play' && veh && veh.nb) speed *= 1 + .8 * veh.nb;   // tuk-tuk nitro
@@ -1023,7 +1054,9 @@ function update(dt) {
   }
 
   // obstacles
-  if (state === 'play' && !boost) { nextObs -= dx; if (nextObs <= 0) nextObs = spawnPattern(); }
+  { const on = !!veh || !!boost || BXD(), rk = veh ? veh.k : boost ? 'headstart' : BXD() ? 'box' : ''; if (rk !== (RUN.rk || '')) { if (RUN.rk) (RUN.rl = RUN.rl || []).push([RUN.rk, Math.round(runT - RUN.rt)]); RUN.rk = rk; RUN.rt = runT; }   // ride log for the stats
+    if (rideWas && !on && state === 'play') { restT = 2.5; obs = obs.filter(o => o.x < W - 10 || (o.type === 'laser' && o.ph !== 'in')); } rideWas = on; if (restT > 0) restT -= dt; }
+  if (state === 'play' && !boost) { nextObs -= dx; if (nextObs <= 0) nextObs = restT > 0 ? 60 : spawnPattern(); }
   panicT = Math.max(0, panicT - dt);
   obs.forEach(o => {
     if (o.type === 'zap') { o.x -= dx; if (o.spin) o.ang += o.spin * dt; if (!o.passed && o.x + o.len / 2 < hero.x - 20 && !hero.dead) { o.passed = 1; stats.dodged++; } }
@@ -1133,12 +1166,13 @@ function rankHtml() { const n = RANKS[Math.min(MS.rank, RANKS.length - 1)]; retu
 /* gift box (= their vehicle token): rainbow box with a ?, gives a ride. Eidi envelopes (= spin tokens): opened at the end of a run. */
 function giftsUpdate(dt, dx) {
   if (state === 'play' && !FM) runT += dt;
-  if (FIRSTRUN && !firstBox && state === 'play' && !veh && !boost && runT >= 8.5) { firstBox = 1; gifts.push({ k: 'box', ride: 'tuktuk', x: W + 40, y: FLOOR - 52, b: 0 }); obs = obs.filter(o => o.type !== 'rocket' && o.type !== 'laser'); nextGift = 2600 + Math.random() * 1800; }   // owner 23 Nov: new players get the tuk-tuk early, low and easy
+  if (FIRSTRUN && !firstBox && state === 'play' && !veh && !boost && runT >= 8.5) { firstBox = 1; gifts.push({ k: 'box', ride: 'tuktuk', x: W + 40, y: FLOOR - 52, b: 0 }); obs = obs.filter(o => o.type !== 'rocket' && o.type !== 'laser'); nextGift = giftGap(); }   // owner 23 Nov: new players get the tuk-tuk early, low and easy
   if (FIRSTRUN && veh && veh.k === 'tuktuk' && veh.asm >= 1 && !RUN.hornLesson) { RUN.hornLesson = 1; setTimeout(() => { if (!veh || veh.k !== 'tuktuk' || state !== 'play') return; obs.push({ type: 'zap', x: W + 70, y: FLOOR - 75, len: 120, ang: Math.PI / 2, spin: 0, seed: 7, lesson: 1 }); pops.push({ x: hero.x + 60, y: hero.y - 130, txt: 'HIT HORN TO BREAK IT!', col: '#ffd21f', t: 0 }); const hb = $('bHorn'); hb && hb.classList.add('teach'); setTimeout(() => hb && hb.classList.remove('teach'), 3500); }, 1300); }
-  if (!FKDEMO && !MECHDEMO && !RIDEDEMO && !firstBox && state === 'play' && !veh && !boost && runT >= 20) { firstBox = 1; gifts.push({ k: 'box', ride: (() => { let k = nextRide(); for (let n = 0; n < 4 && k === lastBoxRide; n++) k = nextRide(); return lastBoxRide = k; })(), x: W + 40, y: CEIL + 90 + Math.random() * (FLOOR - CEIL - 200), b: 0 }); nextGift = 2600 + Math.random() * 1800; }
-  if (state === 'play' && !veh && !boost) { nextGift -= dx; if (nextGift <= 0) { const rr = () => { let k = nextRide(); for (let i = 0; i < 4 && k === lastBoxRide; i++) k = nextRide(); return lastBoxRide = k; }; gifts.push({ k: 'box', ride: RIDEDEMO ? rideDemoNext() : MECHDEMO ? 'mech' : FKDEMO ? 'kabootar' : rr(), x: W + 40, y: CEIL + 80 + Math.random() * (FLOOR - CEIL - 180), b: Math.random() * 6 }); nextGift = RIDEDEMO ? 900 + Math.random() * 500 : MECHDEMO ? 2400 + Math.random() * 1200 : FKDEMO ? 700 + Math.random() * 300 : (2600 + Math.random() * 1800) * (hasG('dates') ? .5 : 1); } }
-  if (state === 'play') { nextTin -= dx; if (nextTin <= 0) { gifts.push({ k: 'btin', x: W + 30, y: CEIL + 60 + Math.random() * (FLOOR - CEIL - 140), b: Math.random() * 6 }); nextTin = TINDEMO ? 900 + Math.random() * 500 : 7000 + Math.random() * 5000; } }
-  if (state === 'play') { nextEidi -= dx; if (nextEidi <= 0) { gifts.push({ k: 'eidi', x: W + 30, y: CEIL + 50 + Math.random() * (FLOOR - CEIL - 120), b: Math.random() * 6 }); nextEidi = (2200 + Math.random() * 2400) * (hasG('envelope') ? .5 : 1); } }
+  if (!FKDEMO && !MECHDEMO && !RIDEDEMO && !firstBox && state === 'play' && !veh && !boost && runT >= 20) { firstBox = 1; gifts.push({ k: 'box', ride: (() => { let k = nextRide(); for (let n = 0; n < 4 && k === lastBoxRide; n++) k = nextRide(); return lastBoxRide = k; })(), x: W + 40, y: CEIL + 90 + Math.random() * (FLOOR - CEIL - 200), b: 0 }); nextGift = giftGap(); }
+  if (state === 'play' && !veh && !boost && !BXD()) { nextGift -= dx; if (nextGift <= 0) { const rr = () => { let k = nextRide(); for (let i = 0; i < 4 && k === lastBoxRide; i++) k = nextRide(); return lastBoxRide = k; }; gifts.push({ k: 'box', ride: RIDEDEMO ? rideDemoNext() : MECHDEMO ? 'mech' : FKDEMO ? 'kabootar' : rr(), x: W + 40, y: CEIL + 80 + Math.random() * (FLOOR - CEIL - 180), b: Math.random() * 6 }); nextGift = RIDEDEMO ? 900 + Math.random() * 500 : MECHDEMO ? 2400 + Math.random() * 1200 : FKDEMO ? 700 + Math.random() * 300 : giftGap(); } }
+  if (state === 'play') { nextTin -= dx; if (nextTin <= 0) { gifts.push({ k: 'btin', x: W + 30, y: CEIL + 60 + Math.random() * (FLOOR - CEIL - 140), b: Math.random() * 6 }); nextTin = TINDEMO ? 900 + Math.random() * 500 : 14000 + Math.random() * 10000; } }
+  if (state === 'play' && !DAILY.done && !gifts.some(g => g.k === 'ltr')) { nextLtr -= dx; if (nextLtr <= 0) { gifts.push({ k: 'ltr', ch: DW[DAILY.n], x: W + 30, y: CEIL + 70 + Math.random() * (FLOOR - CEIL - 170), b: Math.random() * 6 }); nextLtr = 5500 + Math.random() * 4500; } }
+  if (state === 'play') { nextEidi -= dx; if (nextEidi <= 0) { gifts.push({ k: 'eidi', x: W + 30, y: CEIL + 50 + Math.random() * (FLOOR - CEIL - 120), b: Math.random() * 6 }); nextEidi = (4400 + Math.random() * 4800) * (hasG('envelope') ? .5 : 1); } }
   gifts.forEach(gf => { gf.x -= dx; gf.b += dt;
     if (gf.k === 'btin') { if (gf.y0 === undefined) gf.y0 = gf.y; gf.x += dx * (gf.k === 'btin' ? .45 : .3); const A = gf.k === 'btin' ? 80 : 50; gf.y = Math.max(CEIL + 40, Math.min(FLOOR - 50, gf.y0 + Math.sin(gf.b * (gf.k === 'btin' ? 2.1 : 1.7)) * A)); }
     if (gf.k === 'btin') { gf.tr = gf.tr || []; gf.tr.unshift([gf.x, gf.y + Math.sin(gf.b * 3) * 4]); if (gf.tr.length > 9) gf.tr.pop(); }
@@ -1147,6 +1181,14 @@ function giftsUpdate(dt, dx) {
       if (gf.k === 'box') { const rk = gf.ride || nextRide(); let seen = []; try { seen = JSON.parse(localStorage.getItem('jd_seenRides') || '[]'); } catch (e) {}
         if (seen.includes(rk) && rk !== 'kabootar') quickRide(rk); else { if (!seen.includes(rk)) { seen.push(rk); try { localStorage.setItem('jd_seenRides', JSON.stringify(seen)); } catch (e) {} } startReveal(rk); } }
       else if (gf.k === 'btin') { btins++; tinHud(false, btins - 1); $('tinHud').style.display = 'flex'; tinFly.push({ x: gf.x, y: gf.y, t: 0 }); pops.push({ x: gf.x, y: gf.y - 16, txt: "AMMI'S TIN!", col: '#7fb6ff', t: 0 }); tone(330, .08, 'square', .06); setTimeout(() => tone(240, .1, 'square', .05), 70); for (let i = 0; i < 10; i++) sparks.push({ x: gf.x, y: gf.y, vx: (Math.random() - .5) * 140, vy: (Math.random() - .5) * 140, l: .4, c: i % 2 ? '#ffd75a' : '#7fb6ff' }); }
+      else if (gf.k === 'ltr') { if (DAILY.day !== dayKey()) DAILY = { day: dayKey(), n: 0, done: 0 }; DAILY.n = Math.min(DW.length, DAILY.n + 1);
+        const word = DW.split('').map((ch, i) => i < DAILY.n ? ch : '_').join(' ');
+        for (let i = 0; i < 14; i++) sparks.push({ x: gf.x, y: gf.y, vx: (Math.random() - .5) * 200, vy: (Math.random() - .5) * 200, l: .5, c: i % 2 ? '#ffe27a' : '#ffffff' });
+        if (DAILY.n >= DW.length) { DAILY.done = 1; coins += DAILY_PRIZE; $('coins').textContent = '£' + coins; flashT = .12; flashCol = '255,225,120'; shake = Math.max(shake, .15);
+          pops.push({ x: hero.x + 30, y: hero.y - 110, txt: 'DAILY WORD! +£' + DAILY_PRIZE, col: '#ffd21f', t: 0 }); [784, 988, 1175, 1568].forEach((f, i) => setTimeout(() => tone(f, .16, 'square', .05), i * 110));
+          try { window.dispatchEvent(new CustomEvent('jd-daily', { detail: { n: DAILY.n, done: 1 } })); } catch (e) {} }
+        else { pops.push({ x: gf.x, y: gf.y - 18, txt: word, col: '#ffe27a', t: 0 }); tone(880, .08, 'square', .05); setTimeout(() => tone(1175, .14, 'square', .05), 80); }
+        dailySave(); }
       else { eidi++; RUN.eidi++; pops.push({ x: gf.x, y: gf.y - 12, txt: 'EIDI!', col: '#7dffa0', t: 0 }); tone(988, .1, 'square', .05); setTimeout(() => tone(1318, .16, 'square', .05), 90); for (let i = 0; i < 10; i++) sparks.push({ x: gf.x, y: gf.y, vx: (Math.random() - .5) * 140, vy: (Math.random() - .5) * 140, l: .4, c: i % 2 ? '#ffd75a' : '#7dffa0' }); }
     } });
   gifts = gifts.filter(gf => gf.x > -40 && !gf.got);
@@ -1154,6 +1196,15 @@ function giftsUpdate(dt, dx) {
 function drawGift(gf) {
   const y = gf.k === 'box' ? gf.y : gf.y + Math.sin(gf.b * 3) * 4;   // power-up tokens stay put (fixed to the street, like JJ); only the tin floats
   ctx.save(); ctx.translate(gf.x, y);
+  if (gf.k === 'ltr') {   // daily word letter: a gold tile with the letter, soft glow, gentle tilt
+    const tl = Math.sin(gf.b * 2.4) * .12, s2 = 1 + Math.sin(gf.b * 5) * .04; ctx.rotate(tl); ctx.scale(s2, s2);
+    ctx.save(); ctx.globalCompositeOperation = 'lighter'; const gl = ctx.createRadialGradient(0, 0, 2, 0, 0, 26); gl.addColorStop(0, 'rgba(255,220,110,.55)'); gl.addColorStop(1, 'rgba(255,200,80,0)'); ctx.fillStyle = gl; ctx.fillRect(-26, -26, 52, 52); ctx.restore();
+    const rr = (x0, y0, w, h, r) => { ctx.beginPath(); ctx.moveTo(x0 + r, y0); ctx.arcTo(x0 + w, y0, x0 + w, y0 + h, r); ctx.arcTo(x0 + w, y0 + h, x0, y0 + h, r); ctx.arcTo(x0, y0 + h, x0, y0, r); ctx.arcTo(x0, y0, x0 + w, y0, r); ctx.closePath(); };
+    rr(-12, -12, 24, 24, 5); ctx.fillStyle = '#3a2300'; ctx.fill(); rr(-10.5, -10.5, 21, 21, 4); const g2 = ctx.createLinearGradient(0, -11, 0, 11); g2.addColorStop(0, '#fff1a6'); g2.addColorStop(.5, '#ffd24a'); g2.addColorStop(1, '#d9930f'); ctx.fillStyle = g2; ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,.45)'; ctx.fillRect(-8, -9, 16, 3);
+    ctx.fillStyle = '#4a2c00'; ctx.font = '700 15px Oswald, Mont, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(gf.ch || 'J', 0, 1.2);
+    const sw = (gf.b * .6) % 1.6 - .3; if (sw > 0 && sw < 1) { ctx.save(); rr(-10.5, -10.5, 21, 21, 4); ctx.clip(); ctx.fillStyle = 'rgba(255,255,255,.5)'; ctx.translate(-14 + sw * 28, 0); ctx.rotate(.5); ctx.fillRect(-2, -20, 4, 40); ctx.restore(); }
+    ctx.restore(); return; }
   if (gf.k === 'btin') {   // owner 23 Nov: no ring: the tin just floats with a soft shiny glow round it and a motion trail behind it
     ctx.restore();
     // owner 23 Nov: motion lines behind the tin, alive: each one stretches and shrinks on its own beat and bends along the path the tin
@@ -1308,11 +1359,13 @@ const VEH_NAME = { box: 'WARP BOX', tuktuk: 'TUK-TUK', carpet: 'MAGIC CARPET', k
 const RIDES = ['tuktuk', 'carpet', 'kabootar', 'sandals', 'mech', 'logman', 'box'];
 const MCH = 1.08;   // Hoover Mech size (owner 23 Nov: doubled, then 25% smaller: about 45% of the screen tall)
 // gift-box rides come from a shuffled deck: every ride once before any repeats, never the same one twice in a row, kept between games (owner, 22 Nov)
-function nextRide() { let bag = []; try { bag = JSON.parse(localStorage.getItem('jd_ridebag') || '[]').filter(k => RIDES.includes(k)); } catch (e) {}
+// owner 23 Nov: Lakri Man is off for now; SMR Admin → Jummah Dash → Settings turns him back on (window.JD_LAKRI from api cfg)
+function rideList() { return RIDES.filter(k => k !== 'logman' || window.JD_LAKRI); }
+function nextRide() { let bag = []; try { bag = JSON.parse(localStorage.getItem('jd_ridebag') || '[]').filter(k => rideList().includes(k)); } catch (e) {}
   let last = ''; try { last = localStorage.getItem('jd_lastride') || ''; } catch (e) {}
   if (!bag.length) {   // owner 23 Nov: every ride twice per bag, Flappy Kabootar once (a bit rarer); jumbled, never the same one twice in a row
     let fkb = 0; try { fkb = +(localStorage.getItem('jd_fkbag') || 0); localStorage.setItem('jd_fkbag', fkb ? 0 : 1); } catch (e) {}
-    const base = RIDES.flatMap(k => k === 'kabootar' ? (fkb ? [k] : []) : [k, k]);   // owner 23 Nov: Flappy Kabootar rarer: in every other bag only
+    const base = rideList().flatMap(k => k === 'kabootar' ? (fkb ? [k] : []) : [k, k]);   // owner 23 Nov: Flappy Kabootar rarer: in every other bag only
     for (let tries = 0; tries < 60; tries++) { bag = base.slice(); for (let i = bag.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [bag[i], bag[j]] = [bag[j], bag[i]]; }
       if (bag[0] !== last && bag.every((k, i) => !i || k !== bag[i - 1])) break; } }
   const k = bag.shift(); try { localStorage.setItem('jd_ridebag', JSON.stringify(bag)); localStorage.setItem('jd_lastride', k); } catch (e) {} return k; }
@@ -1626,7 +1679,7 @@ function mechShock(x, y) { veh.shock = .35; if ((veh.shT || 0) <= 0) { veh.shT =
    and a shockwave of sound rolls out in front: zappers shatter, flying rockets are blown back, incoming rockets are cancelled, lasers shut
    down and people on the pavement are knocked flat. Every hazard it clears pays £2. 3.2 s to recharge (ring on the button). */
 var TINSH = null, TINSHX = null;
-const HORN_CD = 1.8; var horns = [], hornCD = 0;   // owner 23 Nov: recharges quicker (was 3.2 s)
+const HORN_CD = 4; var horns = [], hornCD = 0;   // owner 23 Nov late: 4 s recharge so players mix the horn with jumping and dodging (was 1.8)
 function tukLaser(o) {   // owner 23 Nov: the tuk-tuk is laser-proof: the beam just crackles over the bodywork
   if (Math.random() < .5) sparks.push({ x: hero.x + (Math.random() - .5) * 70, y: o.y + (Math.random() - .5) * 8, vx: (Math.random() - .5) * 220, vy: (Math.random() - .5) * 220, l: .25, c: Math.random() < .5 ? '#ff9ad8' : '#ffffff' });
   if (!o.tukP) { o.tukP = 1; pops.push({ x: hero.x + 20, y: hero.y - 120, txt: 'LASER-PROOF!', col: '#ff9ad8', t: 0 }); tone(1600, .08, 'square', .03, .5, MIX && MIX.fx); }
@@ -2293,7 +2346,7 @@ function draw() {
   obs.forEach(o => { if (o.type === 'zap') drawZap(o); else if (o.type === 'laser') drawLaser(o); else drawRocket(o); }); drawWrecks(); POL.draw(); drawLogBits(); drawDeadCook();
   gifts.forEach(drawGift);
   // people + hero, sorted by depth (feet y)
-  drawShadows();
+  drawBestSign(); drawShadows();
   const list = npcs.map(p => ({ y: p.y, f: () => drawNpc(p) })); mobs.forEach(m => list.push({ y: m.y, f: () => { const M = NPC_META.mobility, im = npcGet('mobility'); if (!M || !im.naturalWidth) return; const sc = .9 * NPCK / M.k, w = M.w * sc, h = M.h * sc, f = Math.floor(m.roll / 9) % M.n;
     ctx.save(); ctx.translate(m.x, m.y); if (m.d < 0) ctx.scale(-1, 1); ctx.imageSmoothingQuality = 'high'; ctx.drawImage(im, f * M.w, 0, M.w, M.h, -w / 2, -h, w, h); ctx.imageSmoothingQuality = 'low'; ctx.restore(); } })); list.push({ y: hero.dead ? FLOOR + 6 : (hero.ground ? FLOOR : FLOOR + 1), f: drawHero }); if (CAT.on && !CAT.ride) list.push({ y: FLOOR + 2, f: () => CAT.draw() });
   list.sort((a, b) => a.y - b.y).forEach(o => o.f());
@@ -2389,6 +2442,20 @@ const tintCv = document.createElement('canvas');
 // owner 23 Nov: everything in the air casts a soft shadow on the pavement (smaller and fainter the higher it is)
 function gshadow(x, y, w, k = 1, always) { const gap = Math.max(0, FLOOR - y); if ((gap < 3 && !always) || x < -80 || x > W + 80) return; const f = Math.max(.12, 1 - gap / 380), rx = w * (.45 + .55 * f);
   ctx.globalAlpha = .26 * f * k; ctx.beginPath(); ctx.ellipse(x, FLOOR + 2, rx, Math.max(1.5, rx * .17), 0, 0, 7); ctx.fill(); }
+// owner 23 Nov (audit): a sign on the pavement where your best run ended, so you can see it coming and try to beat it
+let bestPassed = 0;
+function drawBestSign() { if ((state !== 'play' && state !== 'dead') || best < 150) return; const x = hero.x + (best * 10 - dist); if (x < -80 || x > W + 80) return;
+  if (state === 'play' && !bestPassed && x < hero.x) { bestPassed = 1; pops.push({ x: hero.x + 30, y: hero.y - 100, txt: 'PAST YOUR BEST!', col: '#ffd21f', t: 0 }); [988, 1318].forEach((f, i) => setTimeout(() => tone(f, .14, 'square', .045), i * 90)); }
+  const gy = FLOOR - 4; ctx.save();
+  ctx.fillStyle = 'rgba(255,214,70,.85)'; for (let i = 0; i < 6; i++) ctx.fillRect(x - 1.5, gy - 2 + i * 3, 3, 2);   // dashed gold line across the pavement
+  ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.beginPath(); ctx.ellipse(x + 2, gy + 1, 9, 2.2, 0, 0, 7); ctx.fill();
+  const pg = ctx.createLinearGradient(x - 1.6, 0, x + 1.6, 0); pg.addColorStop(0, '#6d7480'); pg.addColorStop(.5, '#dfe4ea'); pg.addColorStop(1, '#5d6470'); ctx.fillStyle = pg; ctx.fillRect(x - 1.6, gy - 74, 3.2, 74);   // pole
+  const bw = 58, bh = 26, bx = x - bw / 2, by = gy - 100, r = 5;
+  ctx.beginPath(); ctx.moveTo(bx + r, by); ctx.arcTo(bx + bw, by, bx + bw, by + bh, r); ctx.arcTo(bx + bw, by + bh, bx, by + bh, r); ctx.arcTo(bx, by + bh, bx, by, r); ctx.arcTo(bx, by, bx + bw, by, r); ctx.closePath();
+  ctx.fillStyle = '#1d1036'; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = '#ffd21f'; ctx.stroke();
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#ffd21f'; ctx.font = '700 7px Oswald, Mont, sans-serif'; ctx.fillText('YOUR BEST', x, by + 8);
+  ctx.fillStyle = '#ffffff'; ctx.font = '700 11px Oswald, Mont, sans-serif'; ctx.fillText(best.toLocaleString('en-GB') + 'm', x, by + 18.5);
+  ctx.restore(); }
 function drawShadows() { if (state !== 'play' && state !== 'intro' && state !== 'dead') return; ctx.save(); ctx.fillStyle = '#1e0a1e';
   obs.forEach(o => { if (o.type === 'rocket' && o.v) gshadow(o.x, o.y, 22 * 1.35); else if (o.type === 'zap') { const ca = Math.cos(o.ang || 0), sa = Math.sin(o.ang || 0), hl = (o.len || 100) / 2; gshadow(o.x + ca * hl, o.y + sa * hl, 12); gshadow(o.x - ca * hl, o.y - sa * hl, 12); gshadow(o.x, Math.max(o.y + sa * hl, o.y - sa * hl), Math.abs(ca) * hl + 8, .6); } });
   coinList.forEach(c => { if (!c.got) gshadow(c.x, c.y, COIN_R * .9, .8); });
@@ -2523,7 +2590,7 @@ function saveMe() {   // their SAVE ME: spend a Second Chance to carry on, 3 sec
   clearInterval(saveMe.iv); saveMe.iv = setInterval(() => { left--; $('smT').textContent = Math.max(0, left); if (left <= 0) { clearInterval(saveMe.iv); box.classList.add('hide'); usedSave = 1; postRun(); } }, 1000);
 }
 function showOver() {
-  missionsEndRun(); const m = Math.floor(dist / 10); const nb = m > best && best > 0; setTimeout(() => POL.over(nb), 30); if (m > best) { best = m; try { localStorage.setItem('jd_best', best); } catch (e) {} }
+  dailyUI(); missionsEndRun(); const m = Math.floor(dist / 10); const nb = m > best && best > 0; setTimeout(() => POL.over(nb), 30); if (m > best) { best = m; try { localStorage.setItem('jd_best', best); } catch (e) {} }
   bank += coins; try { localStorage.setItem('jd_bank', bank); } catch (e) {}
   $('oD').textContent = m + 'm'; $('oC').textContent = '£' + coins; $('oB').textContent = best + 'm';
   $('ovT').textContent = ['MISSED THE KHUTBAH!', 'SO CLOSE, AKHI!', 'THE IMAM STARTED!', 'BACK OF THE SAFF FOR YOU'][Math.random() * 4 | 0];
@@ -3038,5 +3105,5 @@ const POL = (() => { const P = { fx: [], flock: [], nextFlock: 4, streak: 0, str
 window.__pol = POL;
 function frame(now) { const dt = Math.min(.05, (now - last) / 1000); last = now; shieldBtn(); dashBtn(); hornBtn(); batBtn(); SLOW = veh && veh.k === 'mech' && veh.su < 1.05 ? .12 : Math.min(1, SLOW + dt * 3); if (FM) { if (!paused) { FMS.step(dt); if (FM && FM.ph === 'out' && FM.back) update(dt); } FMS.frame(); requestAnimationFrame(frame); return; } if (REVEAL && !paused) { revealTick(dt); holding = false; } else if (!paused) { let k = 1; if (HITT > 0) { HITT -= dt; k = 0; } else if (SMT > 0) { SMT -= dt; k = .35; } update(dt * SLOW * k); } else holding = false; draw(); if (bakeQ.length) bakeOne(); requestAnimationFrame(frame); }
 requestAnimationFrame(frame);
-window.__jd = { get circles() { return heroCircles(); }, get pops() { return pops; }, get box() { return BOXR; }, get veh() { return veh; }, get gifts2() { return gifts; }, zap: (x, y, len = 120, ang = Math.PI / 2) => obs.push({ type: 'zap', x, y, len, ang, spin: 0, seed: 1 }), horn: () => hornBlast(), get hornCD() { return hornCD; }, get fm() { return FM; }, get speed() { return speed; }, get coinList() { return coinList; }, get W() { return W; }, get gifts() { return gifts; }, get runT() { return runT; }, veh: (k, r) => startVehicle(k, r), laser: () => [CEIL + 40, (CEIL + FLOOR) / 2].forEach((y, i) => obs.push({ type: 'laser', x: W / 2, y, ph: 'in', pt: 0, slide: 0, d: i * .12 })), eidi: n => { eidi = n; }, kill: w => die(w), gift: (k, r, x, y) => gifts.push({ k, ride: r, x: x || W * .6, y: y || 200, b: 0 }), get state() { return state; }, get V() { return veh; }, start, hero, get obs() { return obs; }, spawnRocket: () => obs.push({ type: "rocket", x: W + 40, y: hero.y - 30, warn: 1.5, lock: 0, v: 0 }), setHold: v => holding = v, get dist() { return dist; }, mis: (s, c) => { RUN.steamed = s; coins = c; }, get npcs() { return npcs; }, boost: m => startBoost(m), get SHOP() { return SHOP; }, bc: (k, kd) => buildingCanvas(kd || "lm", k), carSprite: (k, ci, f) => carSprite(k, ci, f), queue: k => deck.unshift([k]), street: () => street, npc: x => spawnNpc(x), car: (x, k, l) => spawnCar(x, k, false, l), get STREET() { return STREET; } };
+window.__jd = { get run() { return RUN; }, get circles() { return heroCircles(); }, get pops() { return pops; }, get box() { return BOXR; }, get vk() { return veh; }, zap: (x, y, len = 120, ang = Math.PI / 2) => obs.push({ type: 'zap', x, y, len, ang, spin: 0, seed: 1 }), horn: () => hornBlast(), get hornCD() { return hornCD; }, get fm() { return FM; }, get speed() { return speed; }, get coinList() { return coinList; }, get W() { return W; }, get gifts() { return gifts; }, get runT() { return runT; }, veh: (k, r) => startVehicle(k, r), laser: () => [CEIL + 40, (CEIL + FLOOR) / 2].forEach((y, i) => obs.push({ type: 'laser', x: W / 2, y, ph: 'in', pt: 0, slide: 0, d: i * .12 })), eidi: n => { eidi = n; }, kill: w => die(w), gift: (k, r, x, y) => gifts.push({ k, ride: r, x: x || W * .6, y: y || 200, b: 0 }), get state() { return state; }, get V() { return veh; }, start, hero, get obs() { return obs; }, spawnRocket: () => obs.push({ type: "rocket", x: W + 40, y: hero.y - 30, warn: 1.5, lock: 0, v: 0 }), setHold: v => holding = v, get dist() { return dist; }, mis: (s, c) => { RUN.steamed = s; coins = c; }, get npcs() { return npcs; }, boost: m => startBoost(m), get SHOP() { return SHOP; }, bc: (k, kd) => buildingCanvas(kd || "lm", k), carSprite: (k, ci, f) => carSprite(k, ci, f), queue: k => deck.unshift([k]), street: () => street, npc: x => spawnNpc(x), car: (x, k, l) => spawnCar(x, k, false, l), get STREET() { return STREET; } };
 })();

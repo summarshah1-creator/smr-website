@@ -1807,11 +1807,15 @@ HD.welcome = (c, x, G) => {
   const TOP = G - 62, BOT = G - 12;   // the tarmac slope: narrow far (top) edge, wide near (bottom) edge
   const tl = x + 44, tr = x + 228, bl = x + 18, br = x + 252;
   // grass bank behind and round the slope
-  c.fillStyle = lg(c, 0, G - 78, 0, G, [[0, '#86bc62'], [.5, '#6aa448'], [1, '#4f8a36']]); c.beginPath(); c.moveTo(x - 4, G); c.lineTo(x - 2, G - 40); c.quadraticCurveTo(x + 30, G - 74, x + 70, G - 72); c.lineTo(x + 250, G - 70); c.quadraticCurveTo(x + 262, G - 60, x + 264, G - 40); c.lineTo(x + 264, G); c.closePath(); c.fill();
-  for (let i = 0; i < 420; i++) { const gx = x + (i * 37.3) % 264, gy = G - 70 + (i * 23.7) % 70; c.strokeStyle = i % 3 ? 'rgba(60,110,40,.8)' : 'rgba(150,205,110,.8)'; c.lineWidth = .45; c.beginPath(); c.moveTo(gx, gy + 1.8); c.lineTo(gx + (i % 2 ? .5 : -.4), gy); c.stroke(); }
+  // owner 23 Nov: a proper hill: both sides slope evenly down to the ground (no cut-off edges)
+  const hill = () => { c.beginPath(); c.moveTo(x - 6, G); c.bezierCurveTo(x + 12, G, x + 22, G - 72, x + 44, G - 72); c.lineTo(x + 230, G - 72); c.bezierCurveTo(x + 252, G - 72, x + 262, G, x + 280, G); c.closePath(); };
+  c.fillStyle = lg(c, 0, G - 78, 0, G, [[0, '#86bc62'], [.5, '#6aa448'], [1, '#4f8a36']]); hill(); c.fill();
+  c.save(); hill(); c.clip();
+  for (let i = 0; i < 460; i++) { const gx = x - 6 + (i * 37.3) % 286, gy = G - 72 + (i * 23.7) % 72; c.strokeStyle = i % 3 ? 'rgba(60,110,40,.8)' : 'rgba(150,205,110,.8)'; c.lineWidth = .45; c.beginPath(); c.moveTo(gx, gy + 1.8); c.lineTo(gx + (i % 2 ? .5 : -.4), gy); c.stroke(); }
+  c.restore();
   // stakes and young trees along the top, lamp columns to the right
   for (let i = 0; i < 14; i++) { const sx = x + 70 + i * 11.5, sy = G - 71 + Math.sin(i) * .6; rect(c, '#8a7a5a', sx, sy - 6, .9, 6); if (i % 3 === 1) { c.fillStyle = 'rgba(70,90,50,.7)'; c.beginPath(); c.arc(sx + .4, sy - 7, 1.6, 0, 7); c.fill(); } }
-  for (const lx of [x + 224, x + 246]) { c.fillStyle = lg(c, lx, 0, lx + 1.4, 0, [[0, '#8a929c'], [.5, '#d0d4d8'], [1, '#7a828c']]); c.fillRect(lx, G - 112, 1.4, 42); rect(c, '#9aa3ad', lx - 3, G - 113, 4.4, 1.2); }
+  for (const lx of [x + 206, x + 222]) { c.fillStyle = lg(c, lx, 0, lx + 1.4, 0, [[0, '#8a929c'], [.5, '#d0d4d8'], [1, '#7a828c']]); c.fillRect(lx, G - 112, 1.4, 42); rect(c, '#9aa3ad', lx - 3, G - 113, 4.4, 1.2); }
   // the tarmac surface with a soft top-to-bottom shade (tilted towards us at the bottom)
   c.fillStyle = lg(c, 0, TOP, 0, BOT, [[0, '#54585e'], [1, '#3e4248']]); c.beginPath(); c.moveTo(bl, BOT); c.lineTo(tl, TOP); c.lineTo(tr, TOP); c.lineTo(br, BOT); c.closePath(); c.fill();
   c.save(); c.beginPath(); c.moveTo(bl, BOT); c.lineTo(tl, TOP); c.lineTo(tr, TOP); c.lineTo(br, BOT); c.closePath(); c.clip();
@@ -1825,9 +1829,10 @@ HD.welcome = (c, x, G) => {
   // kerb edge round the tarmac and a lip where it meets the grass
   c.strokeStyle = 'rgba(200,200,190,.65)'; c.lineWidth = .7; c.beginPath(); c.moveTo(bl, BOT); c.lineTo(tl, TOP); c.lineTo(tr, TOP); c.lineTo(br, BOT); c.stroke();
   // grass in front of the bottom edge
-  c.fillStyle = lg(c, 0, BOT - 2, 0, G, [[0, '#6aa448'], [1, '#4c8434']]); c.beginPath(); c.moveTo(x - 4, G); c.lineTo(x - 4, BOT + 1); c.quadraticCurveTo(x + 130, BOT - 3, x + 264, BOT + 1); c.lineTo(x + 264, G); c.closePath(); c.fill();
-  for (let i = 0; i < 260; i++) { const gx = x + (i * 29.1) % 268 - 4, gy = BOT + 1 + (i * 13.7) % (G - BOT - 1); c.strokeStyle = i % 3 ? 'rgba(60,110,40,.9)' : 'rgba(160,210,120,.9)'; c.lineWidth = .5; c.beginPath(); c.moveTo(gx, gy + 2.4); c.lineTo(gx + (i % 2 ? .7 : -.6), gy); c.stroke(); }
-  c.restore();
+  c.save(); hill(); c.clip();
+  c.fillStyle = lg(c, 0, BOT - 2, 0, G, [[0, '#6aa448'], [1, '#4c8434']]); c.beginPath(); c.moveTo(x - 6, G); c.lineTo(x - 6, BOT + 1); c.quadraticCurveTo(x + 137, BOT - 3, x + 280, BOT + 1); c.lineTo(x + 280, G); c.closePath(); c.fill();
+  for (let i = 0; i < 280; i++) { const gx = x + (i * 29.1) % 286 - 6, gy = BOT + 1 + (i * 13.7) % (G - BOT - 1); c.strokeStyle = i % 3 ? 'rgba(60,110,40,.9)' : 'rgba(160,210,120,.9)'; c.lineWidth = .5; c.beginPath(); c.moveTo(gx, gy + 2.4); c.lineTo(gx + (i % 2 ? .7 : -.6), gy); c.stroke(); }
+  c.restore(); c.restore();
 };
 
 // Vauxhall Luton plant: long white main hall, tall silver chimneys, grey vent towers, teal plant rooms; white office block with window
