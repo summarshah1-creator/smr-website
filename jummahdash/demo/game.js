@@ -683,7 +683,9 @@ function carpetWave(u) { return Math.sin(t * 6.5 - u * 7) * (2.2 + u * 3.2) + Ma
 const CAT = (() => { const K = { on: 0, ride: 0, x: 0, y: 0, vy: 0, air: 0, ph: 0, sit: 0, got: 0 };
   function rideSpot() { if (boost && !boost.out) return [hero.x - 18, hero.y - 30];
     if (!veh) return null; const k = veh.k;
-    if (k === 'tuktuk') return [hero.x - 16 * 1.2, hero.y - 87 * 1.2];   // on the roof if (k === 'carpet') { const r = hero.rot || 0, ox = -30, oy = -1 + carpetWave(.2); return [hero.x + Math.cos(r) * ox - Math.sin(r) * oy, hero.y + Math.sin(r) * ox + Math.cos(r) * oy]; }   // sits on the cloth and rides its ripple if (k === 'kabootar') return [hero.x - 16, hero.y - 26];
+    if (k === 'tuktuk') return [hero.x - 16 * 1.2, hero.y - 87 * 1.2];   // on the roof
+    if (k === 'carpet') { const r = hero.rot || 0, ox = -30, oy = -1 + carpetWave(.2); return [hero.x + Math.cos(r) * ox - Math.sin(r) * oy, hero.y + Math.sin(r) * ox + Math.cos(r) * oy]; }   // sits on the cloth and rides its ripple
+    if (k === 'kabootar') return [hero.x - 16, hero.y - 26];
     if (k === 'mech') return veh.su >= 1 ? [hero.x - 18 * MCH, hero.y - 125 * MCH] : null; return null; }
   K.tick = dt => { K.on = hasG('cat') && (state === 'play' || state === 'intro' || state === 'dead') && hero.x > -60; if (!K.on) { K.x = hero.x - 40; K.y = FLOOR; return; }
     const rs = state === 'play' ? rideSpot() : null; K.ride = !!rs;
@@ -692,7 +694,8 @@ const CAT = (() => { const K = { on: 0, ride: 0, x: 0, y: 0, vy: 0, air: 0, ph: 
         K.x = J.x0 + (rs[0] - J.x0) * e; K.y = J.y0 + (rs[1] - J.y0) * e - Math.sin(Math.PI * J.t) * 70; K.jvy = J.t < .5 ? -1 : 1; if (J.t >= 1) { K.att = 1; K.jmp = null; K.land = .25; tone(900, .05, 'sine', .02, 1.3, MIX && MIX.fx); } }
       else { K.x = rs[0]; K.y = rs[1]; } K.vy = 0; K.air = 0; K.sit = 1;
       coinList.forEach(c => { if (!c.got && Math.hypot(c.x - K.x, c.y - (K.y - 8)) < 60) { const k2 = Math.min(1, dt * 8); c.x += (K.x - c.x) * k2; c.y += (K.y - 8 - c.y) * k2; if (Math.hypot(c.x - K.x, c.y - K.y + 8) < 12) grab(c); } }); return; }
-    K.att = 0; K.jmp = null; K.sit = hero.dead ? 1 : 0;   // owner 23 Nov: walks/runs in at the start (no sitting) - only sits once he's down if (K.y < FLOOR - 40 && !K.air) { K.air = 1; K.vy = 0; }   // dropped off a ride
+    K.att = 0; K.jmp = null; K.sit = hero.dead ? 1 : 0;   // owner 23 Nov: walks/runs in at the start (no sitting) - only sits once he's down
+    if (K.y < FLOOR - 40 && !K.air) { K.air = 1; K.vy = 0; }   // dropped off a ride
     let tx = hero.x - 34;
     if (state === 'play' && !hero.dead) {   // look for a coin or gift box low enough to jump for
       let best = null, bd = 1e9; coinList.forEach(c => { if (c.got) return; const ax = c.x - K.x; if (ax > -10 && ax < 190 && c.y > FLOOR - 150 && ax < bd) { bd = ax; best = c; } });
@@ -1134,17 +1137,30 @@ function drawGift(gf) {
 }
 const BLANK_HERO = (() => { const c = document.createElement('canvas'); c.width = c.height = 2; return c; })();
 const RIDE_ICON = {}, FK_ICON = img('art/fk-icon.png?h=6f7419c1df');
-const ZBALL = img('art/zapball.webp?h=5b5c8088b3');   // owner 23 Nov: zapper ends = his silver balls with the hole the beam comes out of (cut from his sheet)
+   // owner 23 Nov: zapper ends = his silver balls with the hole the beam comes out of (cut from his sheet)
 const ZBR = 13;   // ball radius on screen
+let ZBC = null;   // the silver ball, drawn once at 4x and reused
+function zapBallArt() { const R = ZBR, S = 4, P = 6, c = document.createElement('canvas'); c.width = c.height = (R * 2 + P * 2) * S; const g = c.getContext('2d'); g.scale(S, S); g.translate(R + P, R + P);
+  // owner 23 Nov: all-silver ball, the only coloured part is the hole the beam comes out of (faces +x, towards the other ball)
+  g.fillStyle = '#15171c'; g.beginPath(); g.arc(0, 0, R + .9, 0, 7); g.fill();
+  const sp = g.createRadialGradient(-R * .38, -R * .42, R * .05, 0, 0, R); sp.addColorStop(0, '#ffffff'); sp.addColorStop(.22, '#e6e9ee'); sp.addColorStop(.55, '#aab1bc'); sp.addColorStop(.85, '#646c79'); sp.addColorStop(1, '#3c414b'); g.fillStyle = sp; g.beginPath(); g.arc(0, 0, R, 0, 7); g.fill();
+  g.save(); g.beginPath(); g.arc(0, 0, R, 0, 7); g.clip(); g.globalAlpha = .12; g.strokeStyle = '#ffffff'; g.lineWidth = .35; for (let i = -R; i < R; i += 1.3) { g.beginPath(); g.ellipse(0, i, R * 1.1, R * .18, -.15, 0, Math.PI); g.stroke(); } g.globalAlpha = 1;   // brushed metal
+  g.strokeStyle = 'rgba(255,255,255,.4)'; g.lineWidth = 1.1; g.beginPath(); g.arc(0, 0, R - .9, Math.PI * .15, Math.PI * .55); g.stroke();   // rim light
+  g.strokeStyle = 'rgba(30,32,38,.55)'; g.lineWidth = .6; g.beginPath(); g.ellipse(R * .3, 0, R * .3, R * .92, 0, -Math.PI / 2, Math.PI / 2); g.stroke();   // seam where the nose cap joins
+  const col = g.createLinearGradient(R * .35, -R, R * 1.05, R); col.addColorStop(0, '#f2f4f7'); col.addColorStop(.45, '#8d95a2'); col.addColorStop(1, '#3a3f48'); g.fillStyle = col; g.beginPath(); g.ellipse(R * .68, 0, R * .3, R * .64, 0, 0, 7); g.fill();   // collar round the hole
+  g.strokeStyle = '#22252b'; g.lineWidth = .6; g.stroke(); g.fillStyle = '#2a1a08'; g.beginPath(); g.ellipse(R * .72, 0, R * .2, R * .46, 0, 0, 7); g.fill(); g.restore();
+  g.strokeStyle = '#0d0e12'; g.lineWidth = .9; g.beginPath(); g.arc(0, 0, R, 0, 7); g.stroke(); return c; }
 function zapBall(x, y, ang, glow) {   // ang = way the hole faces
-  ctx.save(); ctx.translate(x, y); ctx.rotate(ang);
-  if (ZBALL.complete && ZBALL.naturalWidth) { const d = ZBR * 2 * 88 / 80; ctx.drawImage(ZBALL, -d / 2, -d / 2, d, d); }
-  else { const g = ctx.createRadialGradient(-4, -5, 1, 0, 0, ZBR); g.addColorStop(0, '#fff'); g.addColorStop(.5, '#b9c0cc'); g.addColorStop(1, '#5d6573'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, ZBR, 0, 7); ctx.fill(); }
-  if (glow > 0) { ctx.globalCompositeOperation = 'lighter'; const hg = ctx.createRadialGradient(ZBR * .8, 0, 0, ZBR * .8, 0, 13); hg.addColorStop(0, `rgba(255,250,210,${glow})`); hg.addColorStop(.35, `rgba(255,200,60,${.7 * glow})`); hg.addColorStop(1, 'rgba(255,150,20,0)'); ctx.fillStyle = hg; ctx.beginPath(); ctx.arc(ZBR * .8, 0, 13, 0, 7); ctx.fill(); }
+  if (!ZBC) ZBC = zapBallArt(); const R = ZBR, D = (R * 2 + 12);
+  ctx.save(); ctx.translate(x, y); ctx.rotate(ang); ctx.drawImage(ZBC, -D / 2, -D / 2, D, D);
+  const hx = R * .72, gl = Math.max(0, glow);
+  const hole = ctx.createRadialGradient(hx, 0, 0, hx, 0, R * .5); hole.addColorStop(0, `rgba(255,255,235,${gl})`); hole.addColorStop(.35, `rgba(255,200,60,${gl})`); hole.addColorStop(1, `rgba(200,90,10,${.9 * gl})`);
+  ctx.fillStyle = gl > .05 ? hole : '#3a2410'; ctx.beginPath(); ctx.ellipse(hx, 0, R * .2, R * .46, 0, 0, 7); ctx.fill();
+  if (gl > .05) { ctx.globalCompositeOperation = 'lighter'; const hg = ctx.createRadialGradient(hx + 2, 0, 0, hx + 2, 0, 14); hg.addColorStop(0, `rgba(255,236,160,${.8 * gl})`); hg.addColorStop(.5, `rgba(255,170,40,${.35 * gl})`); hg.addColorStop(1, 'rgba(255,140,20,0)'); ctx.fillStyle = hg; ctx.beginPath(); ctx.arc(hx + 2, 0, 14, 0, 7); ctx.fill(); }
   ctx.restore(); }
-function ballCrackle(x, y, seed, a) {   // little jagged arcs licking round a ball
+function ballCrackle(x, y, ang, a) {   // little jagged arcs licking round the hole side only (the rest of the ball stays plain silver)
   ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.lineCap = ctx.lineJoin = 'round';
-  for (let k = 0; k < 2; k++) { const a0 = Math.random() * 6.283, n = 5; ctx.beginPath(); for (let i = 0; i <= n; i++) { const b = a0 + i * .32, r = ZBR + 1 + Math.random() * 5; const px = x + Math.cos(b) * r, py = y + Math.sin(b) * r; i ? ctx.lineTo(px, py) : ctx.moveTo(px, py); }
+  for (let k = 0; k < 2; k++) { const a0 = ang - .7 + Math.random() * 1.0, n = 4; ctx.beginPath(); for (let i = 0; i <= n; i++) { const b = a0 + i * .32, r = ZBR + 1 + Math.random() * 5; const px = x + Math.cos(b) * r, py = y + Math.sin(b) * r; i ? ctx.lineTo(px, py) : ctx.moveTo(px, py); }
     ctx.strokeStyle = `rgba(255,214,80,${.5 * a})`; ctx.lineWidth = 2.6; ctx.stroke(); ctx.strokeStyle = `rgba(255,255,230,${.9 * a})`; ctx.lineWidth = 1; ctx.stroke(); }
   ctx.restore(); }
 const CARPET_ICON = img('art/icon_carpet.webp?h=d79b0ad5d2');   // owner 23 Nov: his carpet render on the token (the drawn one looked like bacon)
@@ -1534,7 +1550,7 @@ function drawWrecks() {
           ctx.beginPath(); ctx.moveTo(p.x + ux * ZBR * .8, p.y + uy * ZBR * .8); for (let i = 1; i <= 6; i++) { const k = i / 6, j = (Math.random() - .5) * 16; ctx.lineTo(p.x + ux * len * k - uy * j, p.y + uy * len * k + ux * j); }
           ctx.strokeStyle = 'rgba(255,200,60,.6)'; ctx.lineWidth = 4; ctx.stroke(); ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.3; ctx.stroke(); }); ctx.restore(); }
       const gl = w.t < .45 ? (Math.random() < .5 ? .9 : .15) : Math.max(0, .6 - (w.t - .45)) * (Math.random() < .6 ? 1 : .2);
-      zapBall(A.x, A.y, A.a, gl); zapBall(B.x, B.y, B.a, gl); if (w.t < 1.1) { ballCrackle(A.x, A.y, 0, Math.random()); ballCrackle(B.x, B.y, 0, Math.random()); } }
+      zapBall(A.x, A.y, A.a, gl); zapBall(B.x, B.y, B.a, gl); if (w.t < 1.1) { ballCrackle(A.x, A.y, A.a, Math.random()); ballCrackle(B.x, B.y, B.a, Math.random()); } }
     else if (w.k === 'laser') { const live = w.t < .4;
       if (live && Math.random() < .55) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; const x0 = w.L.x + 12 + Math.random() * (W * .3), x1 = x0 + 40 + Math.random() * W * .3; ctx.fillStyle = 'rgba(230,70,255,.55)'; ctx.fillRect(x0, w.y - 3, x1 - x0, 6); ctx.fillStyle = 'rgba(255,235,255,.9)'; ctx.fillRect(x0, w.y - 1, x1 - x0, 2); ctx.restore(); }
       [w.L, w.R].forEach(p => laserBox(p.x, p.y, p.s, p.a, live && Math.random() < .5 ? '#ffe0ff' : '#2a0f33')); } });
@@ -2072,12 +2088,14 @@ function drawNpc(p) {
 function drawStar(x, y, r) { ctx.beginPath(); for (let i = 0; i < 10; i++) { const a = i / 10 * Math.PI * 2 - Math.PI / 2, rr = i % 2 ? r * .45 : r; ctx.lineTo(x + Math.cos(a) * rr, y + Math.sin(a) * rr); } ctx.closePath(); ctx.fill(); }
 function drawZap(o) {   // owner 22 Nov: JJ-style electric beam: no casing or dark outline, glowing, jagged and random, crackling orbs at the ends
   const c = Math.cos(o.ang), s = Math.sin(o.ang), cax = o.x - c * o.len / 2, cay = o.y - s * o.len / 2, cbx = o.x + c * o.len / 2, cby = o.y + s * o.len / 2;
-  const ax = cax + c * ZBR * .8, ay = cay + s * ZBR * .8, bx = cbx - c * ZBR * .8, by = cby - s * ZBR * .8;
+  const ax = cax + c * ZBR * .85, ay = cay + s * ZBR * .85, bx = cbx - c * ZBR * .85, by = cby - s * ZBR * .85;
   const fr = Math.floor(t * 22), R = n => { const v = Math.sin(n * 127.1 + o.seed * 311.7 + fr * 74.7) * 43758.5453; return v - Math.floor(v); };
   const bolt = (seed, amp, n) => { ctx.beginPath(); ctx.moveTo(ax, ay);
     for (let i = 1; i < n; i++) { const k = i / n, env = Math.sin(k * Math.PI) * .7 + .3, j = (R(seed * 31 + i) - .5) * 2 * amp * env; ctx.lineTo(ax + (bx - ax) * k - s * j, ay + (by - ay) * k + c * j); }
     ctx.lineTo(bx, by); };
-  ctx.save(); ctx.lineCap = ctx.lineJoin = 'round'; ctx.globalCompositeOperation = 'lighter';
+  ctx.save(); ctx.lineCap = ctx.lineJoin = 'round';
+  bolt(20, 5, 9); ctx.strokeStyle = 'rgba(255,176,30,.45)'; ctx.lineWidth = 9; ctx.stroke(); bolt(21, 4, 11); ctx.strokeStyle = 'rgba(255,214,60,.7)'; ctx.lineWidth = 4.5; ctx.stroke();   // golden body of the beam (shows on a bright sky too)
+  ctx.globalCompositeOperation = 'lighter';
   const pulse = .8 + .2 * R(99);
   // soft uneven glow (a few wobbling wide strokes, not one neat tube)
   for (let g = 0; g < 3; g++) { bolt(10 + g, 7, 7); ctx.strokeStyle = `rgba(255,${170 + g * 25},40,${(.16 * pulse).toFixed(3)})`; ctx.lineWidth = 26 - g * 7; ctx.stroke(); }
@@ -2088,7 +2106,7 @@ function drawZap(o) {   // owner 22 Nov: JJ-style electric beam: no casing or da
   if (R(7) < .5) { bolt(4, 13, 12); ctx.strokeStyle = 'rgba(255,220,90,.6)'; ctx.lineWidth = 1.1; ctx.stroke(); }
   ctx.restore();
   // owner 23 Nov: silver balls with the beam coming out of their holes, crackling
-  zapBall(cax, cay, o.ang, .9 + .1 * R(3)); zapBall(cbx, cby, o.ang + Math.PI, .9 + .1 * R(4)); ballCrackle(cax, cay, 0, 1); ballCrackle(cbx, cby, 5, 1);
+  zapBall(cax, cay, o.ang, .9 + .1 * R(3)); zapBall(cbx, cby, o.ang + Math.PI, .9 + .1 * R(4)); ballCrackle(cax, cay, o.ang, .8); ballCrackle(cbx, cby, o.ang + Math.PI, .8);
   if (Math.random() < .3) sparks.push({ x: ax + (bx - ax) * Math.random(), y: ay + (by - ay) * Math.random(), vx: (Math.random() - .5) * 90, vy: (Math.random() - .5) * 90, l: .22, c: Math.random() < .5 ? '#fff3a0' : '#ffffff' });
 }
 function drawRocket(o) {   // silver missile (owner 23 Nov: silver body, blue nose + fins, one blue + one white stripe), fins, roaring flame, long trail of smoke puffs
