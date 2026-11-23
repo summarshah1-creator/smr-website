@@ -874,6 +874,7 @@ function boxTick(dt) { if (!BOXR) return; if (hero.dead || veh) { BOXR = null; r
     for (let i = 0; i < (ph < 3 ? 8 : 22); i++) sparks.push({ x: hero.x + (Math.random() - .5) * 60, y: hero.y - Math.random() * 90, vx: (Math.random() - .5) * 120 - speed * .2, vy: -Math.random() * 120, l: .45, c: Math.random() < .5 ? '#9fc4ff' : '#fff6c8' });
     if (ph === 3) { flashT = .12; flashCol = '170,200,255'; shake = Math.max(shake, .12); } } }
 const BOX_LIFE = 22;   // seconds the box lasts (owner: it runs out)
+const BXD = () => !!(BOXR && !veh && BOXR.t >= BOX_P * 3);   // inside the warp box (stuck on)
 const BOX_SOLID = () => BOXR && BOXR.t >= BOX_P * 3.7;
 const WARP_CD = 2.4, WO = .24, WG = .42, WI = .3;   // warp: fade out, gone (the street rushes past), fade back in further along
 function boxWarp(auto) { if (!BOX_SOLID() || BOXR.w || (!auto && (BOXR.cd || 0) > 0) || state !== 'play' || hero.dead) return false;
@@ -887,7 +888,13 @@ function boxAlpha() { const t = BOXR.t, ph = Math.floor(t / BOX_P), p = (t % BOX
   return Math.min(1, (t - BOX_P * 3) / (BOX_P * .7)); }
 function drawBoxR() { if (!BOXR || !window.drawBox) return; const al = boxAlpha(), h = HH * 1.62, gy = hero.y + 8;
   ctx.save(); ctx.globalCompositeOperation = 'lighter'; const gr = ctx.createRadialGradient(hero.x, gy - h * .5, 4, hero.x, gy - h * .5, h * .8); gr.addColorStop(0, `rgba(140,180,255,${(.28 * Math.min(1, al + .3)).toFixed(3)})`); gr.addColorStop(1, 'rgba(120,160,255,0)'); ctx.fillStyle = gr; ctx.fillRect(hero.x - h, gy - h * 1.35, h * 2, h * 1.5); ctx.restore();
-  ctx.save(); ctx.globalAlpha = al; drawBox(ctx, hero.x, gy, h, BOXR.a); ctx.restore(); }
+  ctx.save(); ctx.globalAlpha = al; drawBox(ctx, hero.x, gy, h, BOXR.a); ctx.restore();
+  if (BXD() && !BOXR.w) { const up = hero.thrust ? 1 : Math.max(0, Math.min(1, -hero.vy / 200)), fall = Math.max(0, Math.min(1, hero.vy / 300)), m = Math.max(up, fall); if (m > .05) {   // a few soft motion lines, no sound
+    ctx.save(); ctx.strokeStyle = 'rgba(220,235,255,1)'; ctx.lineCap = 'round'; const w = h * .62;
+    for (let i = 0; i < 4; i++) { const ph = (t * 2.6 + i * .27) % 1, lx = hero.x - w * .55 + i * w * .37, len = h * (.16 + .1 * ((i * 7) % 3) / 2);
+      const ly = up >= fall ? gy + 6 + ph * h * .35 : gy - h - 6 - ph * h * .3; ctx.globalAlpha = .55 * m * (1 - ph); ctx.lineWidth = 2.2 - ph;
+      ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(lx, ly + (up >= fall ? len : -len)); ctx.stroke(); }
+    ctx.restore(); } } }
 function skillTick(dt) { boxTick(dt);
   dashCD = Math.max(0, dashCD - dt); speedKick = Math.max(0, speedKick - 110 * dt);
   if (nearT > 0) { nearT -= dt; if (nearT <= 0) nearMult = 1; }
@@ -982,10 +989,10 @@ function update(dt) {
   else if (playing && !hero.dead) {
     hero.thrust = holding && state === 'play' && hero.oh <= 0 && hero.dashT <= 0;
     if (hero.dashT > 0) hero.vy = 0;   // the dash goes dead straight
-    if (hero.thrust) { hero.heat += dt / HEAT_UP; if (hero.heat >= 1) overheat(); }
+    if (hero.thrust && !BXD()) { hero.heat += dt / HEAT_UP; if (hero.heat >= 1) overheat(); }
     else if (hero.oh > 0) { hero.oh -= dt; if (Math.random() < dt * 30) { const nz = nozzle(); steam.push({ x: nz[0] - 4, y: nz[1] - 30, vx: -30 - Math.random() * 40, vy: -60 - Math.random() * 60, r: 3 + Math.random() * 3, l: .5, l0: .6 }); } if (hero.oh <= 0) hero.heat = .55; }
     else hero.heat = Math.max(0, hero.heat - dt / HEAT_DOWN);
-    if (hero.thrust) { if (!hero.wasThrust) { if (hero.ground) hero.sq = -.55; hero.vy = Math.min(hero.vy, -90); for (let i = 0; i < 8; i++) { const nz = nozzle(); steam.push({ x: nz[0], y: nz[1], vx: -speed * .3 - 40 - Math.random() * 60, vy: 120 + Math.random() * 120, r: 3 + Math.random() * 2.5, l: .45, l0: .6 }); } } hero.vy -= 1900 * dt; hero.ground = false; if (hissG && sndOn) hissG.gain.setTargetAtTime(.03, AC.currentTime, .03); /* jetpack hiss 30% then another 15% quieter (owner 22 Nov) */ }
+    if (hero.thrust) { if (!hero.wasThrust) { if (hero.ground) hero.sq = -.55; hero.vy = Math.min(hero.vy, -90); if (!BXD()) for (let i = 0; i < 8; i++) { const nz = nozzle(); steam.push({ x: nz[0], y: nz[1], vx: -speed * .3 - 40 - Math.random() * 60, vy: 120 + Math.random() * 120, r: 3 + Math.random() * 2.5, l: .45, l0: .6 }); } } hero.vy -= 1900 * dt; hero.ground = false; if (hissG && sndOn) hissG.gain.setTargetAtTime(BXD() ? 0 : .03, AC.currentTime, .03); /* jetpack hiss 30% then another 15% quieter (owner 22 Nov) */ }
     else if (hissG) hissG.gain.setTargetAtTime(0, AC.currentTime, .06);
     hero.wasThrust = hero.thrust; hero.vy += (hasG('chappal') ? 1150 : 820) * dt; hero.vy = Math.max(-300, Math.min(hasG('chappal') ? 540 : 420, hero.vy)); hero.y += hero.vy * dt;
     if (hero.y >= FLOOR) { if (!hero.ground && hero.vy > 120) { hero.landT = .14; hero.sq = Math.min(1, hero.vy / 420); for (let i = 0; i < 6; i++) steam.push({ x: hero.x - 10 * HS, y: hero.y - 16 * HS, vx: (Math.random() - .5) * 140, vy: -10 - Math.random() * 30, r: 2 + Math.random() * 2, l: .35, l0: .45 }); tone(180, .08, 'triangle', .08); for (let i = 0; i < 6; i++) dust.push({ x: hero.x + (Math.random() - .5) * 20, y: FLOOR, vx: (Math.random() - .5) * 120, vy: -Math.random() * 30, r: 2, l: .45 }); npcs.forEach(p => { if (!p.esc && p.fall <= 0 && Math.abs(p.x - hero.x) < 150) { p.flee = 1.6 + Math.random() * .8; p.dir = p.x > hero.x ? 1 : -1; } }); } hero.y = FLOOR; hero.vy = 0; hero.ground = true; }
@@ -994,7 +1001,8 @@ function update(dt) {
     hero.rot += ((hero.ground ? 0 : Math.max(-.3, Math.min(.3, hero.vy / 1000))) - hero.rot) * Math.min(1, dt * 8);   // owner 23 Nov: leans back climbing, forward dropping
     // steam out of the nozzle
     const nz = nozzle();
-    if (hero.thrust && Math.random() < .6) steam.push({ x: nz[0] + (Math.random() - .5) * 3, y: nz[1] + 20, vx: -speed * .35 - 30 - Math.random() * 40, vy: 120 + Math.random() * 80, r: 2.5 + Math.random() * 2, l: .45 + Math.random() * .3, l0: .75 });
+    if (BXD()) {}   // in the warp box: no steam, no hiss (owner) - just motion lines (drawBoxR)
+    else if (hero.thrust && Math.random() < .6) steam.push({ x: nz[0] + (Math.random() - .5) * 3, y: nz[1] + 20, vx: -speed * .35 - 30 - Math.random() * 40, vy: 120 + Math.random() * 80, r: 2.5 + Math.random() * 2, l: .45 + Math.random() * .3, l0: .75 });
     else if (Math.random() < dt * 10) steam.push({ x: nz[0], y: nz[1], vx: -speed * .3 - 10, vy: 30, r: 1.6, l: .4, l0: .4 });
   } else if (hissG) hissG.gain.setTargetAtTime(0, AC.currentTime, .06);
   if (state === 'menu') { hero.x = -200; hero.y = FLOOR; }
@@ -2927,7 +2935,7 @@ const POL = (() => { const P = { fx: [], flock: [], nextFlock: 4, streak: 0, str
   // ---- hero, drawn inside his own transform ----
   P.heroPre = () => { if (state !== 'play' && state !== 'intro') return;
     const sq = hero.sq || 0; if (sq) { ctx.scale(1 + sq * .14, 1 - sq * .18); }
-    if (hero.thrust) { const j = (hero.heat > .7 ? 1.6 : .5) * hero.heat; ctx.translate((Math.random() - .5) * j, (Math.random() - .5) * j);   // the cooker rattles under pressure
+    if (hero.thrust && !BXD()) { const j = (hero.heat > .7 ? 1.6 : .5) * hero.heat; ctx.translate((Math.random() - .5) * j, (Math.random() - .5) * j);   // the cooker rattles under pressure
       const nx = -14 * HS, ny = -16 * HS, L = 36 + Math.random() * 12 + (hero.thrustT < .12 ? 18 : 0); P.jet(ctx, nx, ny, L, 7, hero.heat); }
     else if (!hero.ground && hero.oh <= 0) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; const pf = 4 + Math.random() * 2, lg = ctx.createLinearGradient(0, -16 * HS, 0, -16 * HS + pf); lg.addColorStop(0, 'rgba(180,220,255,.85)'); lg.addColorStop(1, 'rgba(80,140,255,0)'); ctx.fillStyle = lg; ctx.beginPath(); ctx.moveTo(-14 * HS - 2, -16 * HS); ctx.quadraticCurveTo(-14 * HS, -16 * HS + pf * 1.4, -14 * HS + 2, -16 * HS); ctx.fill(); ctx.restore(); } };   // pilot flame while gliding
   P.heroPost = () => { if (state !== 'play' && state !== 'intro') return; const h = hero.heat || 0;
@@ -2964,7 +2972,7 @@ const POL = (() => { const P = { fx: [], flock: [], nextFlock: 4, streak: 0, str
     hero.thrustT = hero.thrust ? (hero.thrustT || 0) + dt : 0; if (hero.fizz > 0) hero.fizz -= dt;
     const play = state === 'play' && !hero.dead;
     if (play && !veh && !boost) {
-      if (hero.thrust && Math.random() < dt * (1.5 + hero.heat * 9)) { steam.push({ x: hero.x - 12 * HS, y: hero.y - 47 * HS, vx: -30 - Math.random() * 30, vy: -70 - Math.random() * 50, r: 1.6 + Math.random() * 1.4, l: .35, l0: .4 }); if (Math.random() < .3) tone(3200 + Math.random() * 800, .04, 'sawtooth', .012, .6, MIX && MIX.jet); }   // valve spits
+      if (hero.thrust && !BXD() && Math.random() < dt * (1.5 + hero.heat * 9)) { steam.push({ x: hero.x - 12 * HS, y: hero.y - 47 * HS, vx: -30 - Math.random() * 30, vy: -70 - Math.random() * 50, r: 1.6 + Math.random() * 1.4, l: .35, l0: .4 }); if (Math.random() < .3) tone(3200 + Math.random() * 800, .04, 'sawtooth', .012, .6, MIX && MIX.jet); }   // valve spits
       if (hero.ground) { const rf = Math.floor(hero.run) % 6; if (rf !== P.lastRun && (rf === 1 || rf === 4)) for (let i = 0; i < 2; i++) dust.push({ x: hero.x + (rf === 1 ? 4 : -4) + (Math.random() - .5) * 6, y: FLOOR, vx: -speed * .25 - 20 - Math.random() * 30, vy: -10 - Math.random() * 15, r: 1.4 + Math.random(), l: .35 }); P.lastRun = rf; } }
     if (play && veh) {
       if (veh.k === 'carpet' && Math.random() < dt * 26) { const end = Math.random() < .5 ? -1 : 1; P.fx.push({ k: 'star', x: hero.x + end * 48, y: hero.y - 2 + (Math.random() - .5) * 6, vx: -speed * .3 - 20, vy: 20 + Math.random() * 30, t: 0, l: .6, r: 1.2 + Math.random(), col: Math.random() < .5 ? '#ffd75a' : '#fff3b0' }); }
