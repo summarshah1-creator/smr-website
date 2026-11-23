@@ -1440,7 +1440,7 @@ function vehCircles() { const x = hero.x, y = hero.y;
   return veh.k === 'tuktuk' ? [[x - 5, y - 26, 21], [x + 19, y - 19, 14], [x - 2, y - 58, 14]] : [[x, y - 8, 16], [x + 4, y - 36, 12]]; }
 function vehUpdate(dt) {
   if (veh.asm !== undefined && veh.asm < 1) { const a0 = veh.asm; veh.asm = Math.min(1, veh.asm + dt / (veh.fast ? .4 : 1.15)); inv = Math.max(inv, .4);
-    for (let i = 0; i < 3; i++) { const at = .22 + i * .2 + .32; if (a0 < at && veh.asm >= at) { tone(180 - i * 20, .09, 'square', .07); tone(900 + i * 150, .05, 'triangle', .04); shake = Math.max(shake, .06); for (let j = 0; j < 8; j++) sparks.push({ x: hero.x + (i - 1) * 22, y: hero.y - 40, vx: (Math.random() - .5) * 160, vy: (Math.random() - .5) * 160, l: .3, c: '#fff' }); } }
+    if (veh.k !== 'tuktuk') for (let i = 0; i < 3; i++) { const at = .22 + i * .2 + .32; if (a0 < at && veh.asm >= at) { tone(180 - i * 20, .09, 'square', .07); tone(900 + i * 150, .05, 'triangle', .04); shake = Math.max(shake, .06); for (let j = 0; j < 8; j++) sparks.push({ x: hero.x + (i - 1) * 22, y: hero.y - 40, vx: (Math.random() - .5) * 160, vy: (Math.random() - .5) * 160, l: .3, c: '#fff' }); } }
     if (a0 < 1 && veh.asm >= 1) { flashT = .2; flashCol = '255,255,255'; tone(784, .2, 'square', .06); setTimeout(() => tone(1046, .25, 'square', .06), 90); } }
   veh.t += dt; hero.run += dt * (6 + speed / 22); if (hissG) hissG.gain.setTargetAtTime(0, AC.currentTime, .06);
   if (veh.k === 'kabootar') {   // flappy controls: tap to flap
@@ -1784,6 +1784,7 @@ function drawLogVeh() { const x = hero.x, y = hero.y, m = veh.morph || 0, onG = 
   [.24, .46, .7].forEach((p0, i) => { if (mm > p0 && !(veh.thump & (1 << i))) { veh.thump = (veh.thump || 0) | (1 << i); shake = Math.max(shake, .15 + i * .08); tone(70 - i * 8, .18, 'triangle', .08, .6, MIX && MIX.fx); for (let k = 0; k < 6; k++) dust.push({ x: x + (Math.random() - .5) * 40, y: FLOOR, vx: (Math.random() - .5) * 200, vy: -Math.random() * 40, r: 3, l: .5 }); } });
   if (mm > .93 && !veh.burst) { veh.burst = 1; flashT = .1; flashCol = '255,190,110'; shake = Math.max(shake, .35); for (let i = 0; i < 20; i++) sparks.push({ x: x + (Math.random() - .5) * 40, y: y - Math.random() * HL, vx: (Math.random() - .5) * 320, vy: -Math.random() * 260, l: .6, c: ['#d16c2a', '#ffa64a', '#ad4f1b', '#fff0c0'][i % 4] }); }
 }
+const TUK_PARTS = [[-28, -9, -430, 0, -14], [-8, -56, 0, -320, 0], [0, -24, -520, -40, .5], [-8, -62, 0, -440, -.6], [29, -60, 400, -280, .9], [38, -54, 430, -120, 2.2], [40, -26, 470, 30, 1.6], [30, -8, 470, 0, 14], [-4, -8, -180, 300, -1], [-50, -15, -430, 150, -2.4], [36, -54, 380, -360, 3.2]];
 function drawVehicle() {
   const x = hero.x, y = hero.y, k = veh.k; if (k === 'logman') { drawLogVeh(); return; }
   if (k === 'kabootar') {   // owner 22 Nov: he rides ON the Flappy pigeon (sitting on its back, wings flapping over his legs)
@@ -1838,6 +1839,16 @@ function drawVehicle() {
     if (veh.rock > 0) ctx.rotate(-Math.sin(veh.rock / .25 * Math.PI) * .07);   // rocks back on the horn blast
     { const sq = veh.sq || 0; ctx.scale(1.2 * (1 + sq * .08), 1.2 * (1 - sq * .12)); }   // bigger tuk-tuk (owner 22 Nov), squash on landing, stretch on take-off
     ctx.translate(0, bob);
+    // owner 23 Nov: the tuk-tuk is put together from its real parts (wheels, cabin, body, canopy, windscreen, mirror, headlight, thrusters,
+    // exhaust, horn), each flying in on its own path, spinning, and clicking into place with a glint. Not strips of a picture.
+    const AS = window.__aT != null ? window.__aT : veh.asm !== undefined && veh.asm < 1 ? veh.asm : 1;
+    const PT = (i, fn) => { if (AS >= 1) { fn(); return; } const P = TUK_PARTS[i], st = .06 + i * .07, p = Math.max(0, Math.min(1, (AS - st) / .2)); if (p <= 0) return;
+      const e = p < 1 ? 1 + 2.2 * Math.pow(p - 1, 3) + 1.2 * Math.pow(p - 1, 2) : 1, r = 1 - e;   // ease out with a little overshoot
+      if (p < 1) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.strokeStyle = `rgba(255,255,255,${(.6 * (1 - p)).toFixed(3)})`; ctx.lineWidth = 5; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(P[0] + P[2] * Math.min(1.4, r + .35), P[1] + P[3] * Math.min(1.4, r + .35)); ctx.lineTo(P[0] + P[2] * r, P[1] + P[3] * r); ctx.stroke(); ctx.restore(); }
+      ctx.save(); ctx.translate(P[0] + P[2] * r, P[1] + P[3] * r); ctx.rotate(P[4] * r); ctx.translate(-P[0], -P[1]); fn(); ctx.restore();
+      if (p >= 1 && !(veh.lk & (1 << i))) { veh.lk = (veh.lk || 0) | (1 << i); veh.glint = veh.glint || []; veh.glint.push({ x: P[0], y: P[1], t: 0 });
+        tone(260 + i * 40, .06, 'square', .05, .7, MIX && MIX.fx); tone(1400 + i * 90, .04, 'triangle', .03, 1, MIX && MIX.fx); shake = Math.max(shake, .04);
+        for (let j = 0; j < 6; j++) sparks.push({ x: x + P[0] * 1.2, y: y + P[1] * 1.2, vx: (Math.random() - .5) * 180, vy: (Math.random() - .5) * 180, l: .25, c: j % 2 ? '#fff' : '#ffd75a' }); } };
     // owner 23 Nov: redrawn to match the new car renders: real tyres with tread and sidewall, chrome rims that blur when fast
     const wheel = (wx, r) => { ctx.save(); ctx.translate(wx, -r - bob);
       ctx.fillStyle = '#0e0e12'; ctx.beginPath(); ctx.arc(0, 0, r, 0, 7); ctx.fill();
@@ -1850,16 +1861,21 @@ function drawVehicle() {
       ctx.fillStyle = '#dfe3e9'; for (let i = 0; i < 6; i++) { ctx.save(); ctx.rotate(i * 1.0472); ctx.globalAlpha = fast ? .35 : 1; ctx.fillRect(-r * .06, -r * .46, r * .12, r * .4); ctx.restore(); } ctx.globalAlpha = 1;
       ctx.fillStyle = '#1b1d22'; ctx.beginPath(); ctx.arc(0, 0, r * .17, 0, 7); ctx.fill(); ctx.fillStyle = '#e04848'; ctx.beginPath(); ctx.arc(0, 0, r * .09, 0, 7); ctx.fill();
       ctx.restore(); };
+    PT(0, () => {
     wheel(-28, 9);
+    });
     if (onG && Math.random() < .5) dust.push({ x: x - 50, y: y - 8, vx: -40 - Math.random() * 30, vy: -10 - Math.random() * 12, r: 1.6 + Math.random(), l: .45 });   // exhaust
     // inside first: dark cabin, seat, then our hero (scaled to fit), all clipped to the side opening
     const OP = (np) => { if (!np) ctx.beginPath(); ctx.moveTo(-38, -36); ctx.lineTo(-38, -66); ctx.quadraticCurveTo(-37, -76, -26, -77); ctx.lineTo(10, -77); ctx.quadraticCurveTo(18, -76, 20, -66); ctx.lineTo(22, -36); ctx.closePath(); };
+    PT(1, () => {
     ctx.save(); OP(); ctx.clip(); ctx.fillStyle = '#2a1e2e'; ctx.fillRect(-40, -80, 64, 46); ctx.fillStyle = '#8a1e2e'; roundRect(-36, -52, 26, 14, 3); ctx.fill(); ctx.fillStyle = '#a8283a'; roundRect(-36, -64, 8, 26, 3); ctx.fill();
     const hs = .72; ctx.drawImage(heroImg, FR('run0_happy') * HW * HX4, 0, HW * HX4, HH0 * HX4, -HW * HSR * hs / 2 - 2, -HHR * hs - 22, HW * HSR * hs, HHR * hs);
     ctx.fillStyle = '#1a1a1e'; ctx.fillRect(8, -58, 2, 18); ctx.fillStyle = '#2a2a30'; ctx.beginPath(); ctx.ellipse(10, -58, 2, 5, -.4, 0, 7); ctx.fill();   // handlebar in front of him
     ctx.restore();
+    });
     // body (owner 23 Nov redraw): glossy yellow paint with a clear-coat reflection, panel lines, black stripe, chrome bumper, step and mudguards
     const BODY = () => { ctx.beginPath(); ctx.moveTo(-46, -10); ctx.lineTo(-46, -34); ctx.quadraticCurveTo(-46, -40, -40, -40); ctx.lineTo(24, -40); ctx.lineTo(38, -22); ctx.quadraticCurveTo(42, -14, 40, -8); ctx.lineTo(-44, -8); ctx.closePath(); };
+    PT(2, () => {
     { const pg = ctx.createLinearGradient(0, -40, 0, -8); pg.addColorStop(0, '#fff3a0'); pg.addColorStop(.18, '#ffd935'); pg.addColorStop(.55, '#f5bd12'); pg.addColorStop(.85, '#c98f00'); pg.addColorStop(1, '#8a5e00'); ctx.fillStyle = pg; BODY(); ctx.fill();
       ctx.save(); BODY(); ctx.clip();
       const rf = ctx.createLinearGradient(-46, 0, 42, 0); rf.addColorStop(0, 'rgba(255,255,255,0)'); rf.addColorStop(.3, 'rgba(255,255,255,.42)'); rf.addColorStop(.45, 'rgba(255,255,255,.08)'); rf.addColorStop(.7, 'rgba(255,255,255,.3)'); rf.addColorStop(1, 'rgba(255,255,255,0)');
@@ -1875,7 +1891,9 @@ function drawVehicle() {
     { const mg = ctx.createLinearGradient(0, -20, 0, -8); mg.addColorStop(0, '#2c2c33'); mg.addColorStop(1, '#0c0c10'); ctx.strokeStyle = mg; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(30, -8, 11, Math.PI * 1.05, Math.PI * 1.95); ctx.stroke(); }   // front mudguard
     { const cb = ctx.createLinearGradient(0, -15, 0, -9); cb.addColorStop(0, '#ffffff'); cb.addColorStop(.4, '#b9c0cc'); cb.addColorStop(1, '#5d6573'); ctx.fillStyle = cb; roundRect(36, -15, 7.5, 5.5, 2); ctx.fill(); }   // chrome front bumper
     ctx.fillStyle = '#f4f4f6'; roundRect(-27, -17.5, 22, 7, 1.2); ctx.fill(); ctx.strokeStyle = '#222'; ctx.lineWidth = .5; ctx.stroke(); ctx.fillStyle = '#1a1a1e'; ctx.font = '700 5.4px Mont, sans-serif'; ctx.textAlign = 'center'; ctx.fillText('LUTON', -16, -12.2);   // plate
+    });
     // canopy: black fabric roof curving down to the windscreen, frame round the opening, stitching and a soft sheen
+    PT(3, () => {
     { const cg = ctx.createLinearGradient(0, -88, 0, -36); cg.addColorStop(0, '#3a3a44'); cg.addColorStop(.25, '#1e1e24'); cg.addColorStop(1, '#141418'); ctx.fillStyle = cg; }
     ctx.beginPath(); ctx.moveTo(-48, -34); ctx.lineTo(-48, -70); ctx.quadraticCurveTo(-46, -86, -26, -87); ctx.lineTo(12, -87); ctx.quadraticCurveTo(28, -86, 32, -70); ctx.lineTo(38, -40); ctx.lineTo(24, -40); ctx.lineTo(22, -36); ctx.lineTo(-38, -36); ctx.closePath();
     OP(true); ctx.fill('evenodd'); ctx.strokeStyle = '#000'; ctx.lineWidth = .9; ctx.stroke();
@@ -1883,10 +1901,16 @@ function drawVehicle() {
     ctx.fillStyle = 'rgba(255,255,255,.16)'; ctx.beginPath(); ctx.moveTo(-44, -72); ctx.quadraticCurveTo(-42, -84, -26, -85); ctx.lineTo(10, -85); ctx.lineTo(10, -82.5); ctx.lineTo(-26, -82.5); ctx.quadraticCurveTo(-40, -81, -42, -70); ctx.fill();
     { const gr2 = ctx.createLinearGradient(0, -77, 0, -36); gr2.addColorStop(0, '#e8ecf2'); gr2.addColorStop(1, '#7d8592'); ctx.strokeStyle = gr2; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(-40, -40); ctx.lineTo(-40, -64); ctx.quadraticCurveTo(-38, -73, -28, -73); ctx.lineTo(4, -73); ctx.stroke(); }   // chrome grab rail
     ctx.fillStyle = '#ffd21f'; ctx.fillRect(-48, -76, 3, 30); ctx.fillStyle = 'rgba(255,255,255,.4)'; ctx.fillRect(-48, -76, 1, 30);   // yellow stripe on the back
+    });
+    PT(4, () => {
     { const ws = ctx.createLinearGradient(22, -82, 35, -44); ws.addColorStop(0, 'rgba(210,235,255,.75)'); ws.addColorStop(.5, 'rgba(140,190,230,.45)'); ws.addColorStop(1, 'rgba(90,140,190,.6)'); ctx.fillStyle = ws; ctx.beginPath(); ctx.moveTo(22, -82); ctx.quadraticCurveTo(28, -80, 31, -70); ctx.lineTo(35, -44); ctx.lineTo(26, -44); ctx.closePath(); ctx.fill();
       ctx.strokeStyle = 'rgba(255,255,255,.7)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(25, -76); ctx.lineTo(29, -52); ctx.stroke(); }   // windscreen with a glint
+    });
+    PT(5, () => {
     ctx.fillStyle = '#1a1a1e'; ctx.fillRect(34, -54, 5, 1.4); { const mr = ctx.createLinearGradient(38, -58, 41, -50); mr.addColorStop(0, '#ffffff'); mr.addColorStop(1, '#8a92a0'); ctx.fillStyle = mr; roundRect(38.4, -58.5, 3, 6, 1.2); ctx.fill(); }   // mirror
+    });
     // headlight: chrome bezel, glowing lens, a soft cone of light that spreads and shimmers, and a pool of light on the road
+    PT(6, () => {
     { const fl = .9 + .1 * Math.sin(t * 23) * Math.sin(t * 7.1), lx = 39.5, ly = -26;
       ctx.save(); ctx.globalCompositeOperation = 'lighter';
       for (const [len, sp, a] of [[120, 26, .07], [100, 17, .09], [80, 9, .12]]) { const bg = ctx.createLinearGradient(lx, 0, lx + len, 0); bg.addColorStop(0, `rgba(255,246,200,${(a * fl).toFixed(3)})`); bg.addColorStop(.6, `rgba(255,240,190,${(a * .5 * fl).toFixed(3)})`); bg.addColorStop(1, 'rgba(255,240,190,0)');
@@ -1897,9 +1921,13 @@ function drawVehicle() {
       const bz = ctx.createLinearGradient(lx - 4, ly - 4, lx + 4, ly + 4); bz.addColorStop(0, '#ffffff'); bz.addColorStop(.5, '#9aa2b0'); bz.addColorStop(1, '#4a5260'); ctx.fillStyle = bz; ctx.beginPath(); ctx.arc(lx - 1, ly, 4.4, 0, 7); ctx.fill();
       const ln = ctx.createRadialGradient(lx - 1.6, ly - 1.2, 0, lx - 1, ly, 3.3); ln.addColorStop(0, '#ffffff'); ln.addColorStop(.5, '#fff6c8'); ln.addColorStop(1, '#ffd56a'); ctx.fillStyle = ln; ctx.beginPath(); ctx.arc(lx - 1, ly, 3.3, 0, 7); ctx.fill();
       ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.strokeStyle = `rgba(255,255,240,${(.55 * fl).toFixed(3)})`; ctx.lineWidth = .7; ctx.beginPath(); ctx.moveTo(lx - 7, ly); ctx.lineTo(lx + 5, ly); ctx.moveTo(lx - 1, ly - 6); ctx.lineTo(lx - 1, ly + 6); ctx.stroke(); ctx.restore(); }
+    });
+    PT(7, () => {
     wheel(30, 8);
+    });
     // thrusters (owner 23 Nov): metal nozzles that glow hot, and a real roaring jet out of them: white-hot core, yellow and orange layers,
     // shock diamonds, a heat glow on the nozzle and the road, embers; a much bigger blast on the double jump; a tiny blue pilot flame in the air
+    PT(8, () => {
     { veh.heat = (veh.heat || 0) + (((veh.thr || veh.dbl > 0) ? 1 : 0) - (veh.heat || 0)) * .18; const H = veh.heat, big = veh.dbl > 0 ? Math.min(1, veh.dbl / .35) : 0, air = !onG;
       [-30, 22].forEach((tx, ni) => {
         if (H > .03 || big > 0) { const L = (26 + 12 * Math.random()) * H + 34 * big, w = 4.6 + 2.4 * big;
@@ -1922,13 +1950,20 @@ function drawVehicle() {
         ctx.fillStyle = '#1a1a1e'; ctx.fillRect(tx - 5, -11.2, 10, 1.6);
         ctx.fillStyle = `rgb(${Math.round(40 + 215 * H)},${Math.round(40 + 120 * H)},${Math.round(45 + 20 * H)})`; ctx.beginPath(); ctx.ellipse(tx, -4, 5.4, 1.5, 0, 0, 7); ctx.fill(); });
     }
+    });
+    PT(9, () => {
     { const ex = ctx.createLinearGradient(0, -18, 0, -12); ex.addColorStop(0, '#ffffff'); ex.addColorStop(.5, '#9aa2b0'); ex.addColorStop(1, '#4a5260'); ctx.fillStyle = ex; roundRect(-54, -17, 9, 5, 2); ctx.fill(); ctx.fillStyle = '#121214'; ctx.beginPath(); ctx.ellipse(-54, -14.5, 1.2, 2.2, 0, 0, 7); ctx.fill(); }   // chrome exhaust
+    });
+    PT(10, () => {
     { const hk = Math.max(0, veh.hornK || 0) / .32, sq = Math.sin(hk * Math.PI);   // brass bulb horn on the front pillar: the rubber bulb squeezes and the bell flares when he honks
       ctx.save(); ctx.translate(30, -54); ctx.lineJoin = 'round';
       ctx.fillStyle = '#2a1a10'; ctx.beginPath(); ctx.ellipse(-3, 0, 4.2 * (1 - sq * .45), 3.4 * (1 + sq * .25), 0, 0, 7); ctx.fill(); ctx.fillStyle = 'rgba(255,255,255,.3)'; ctx.beginPath(); ctx.ellipse(-4, -1.2, 1.6, 1, 0, 0, 7); ctx.fill();
       const bg = ctx.createLinearGradient(0, -3, 0, 3); bg.addColorStop(0, '#fff0a8'); bg.addColorStop(.45, '#e0a42a'); bg.addColorStop(1, '#8a5a10'); ctx.fillStyle = bg;
       ctx.beginPath(); ctx.moveTo(0, -1.2); ctx.lineTo(9, -1.4); ctx.quadraticCurveTo(12, -1.6, 14, -4.6 - sq * 1.6); ctx.lineTo(14, 4.6 + sq * 1.6); ctx.quadraticCurveTo(12, 1.6, 9, 1.4); ctx.lineTo(0, 1.2); ctx.closePath(); ctx.fill();
       ctx.strokeStyle = '#5a3a08'; ctx.lineWidth = .7; ctx.stroke(); ctx.fillStyle = '#3a2408'; ctx.beginPath(); ctx.ellipse(14, 0, 1.3, 4.4 + sq * 1.6, 0, 0, 7); ctx.fill(); ctx.restore(); }
+    });
+    if (veh.glint) { for (let i = veh.glint.length - 1; i >= 0; i--) { const G = veh.glint[i]; G.t += 1 / 60; if (G.t > .3) { veh.glint.splice(i, 1); continue; } const a = 1 - G.t / .3, R = 4 + G.t * 60; ctx.save(); ctx.globalCompositeOperation = 'lighter'; const gg = ctx.createRadialGradient(G.x, G.y, 0, G.x, G.y, R); gg.addColorStop(0, `rgba(255,255,255,${(.9 * a).toFixed(3)})`); gg.addColorStop(1, 'rgba(255,255,255,0)'); ctx.fillStyle = gg; ctx.fillRect(G.x - R, G.y - R, R * 2, R * 2);
+      ctx.strokeStyle = `rgba(255,255,255,${a.toFixed(3)})`; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(G.x - R * .9, G.y); ctx.lineTo(G.x + R * .9, G.y); ctx.moveTo(G.x, G.y - R * .9); ctx.lineTo(G.x, G.y + R * .9); ctx.stroke(); ctx.restore(); } }
     if (CAT.built()) { ctx.save(); ctx.translate(-16, -87); CAT.lie(ctx, 1.2, { wind: 1 }); ctx.restore(); }   // Billi flat on the roof, tail streaming
     // (nitro gauge removed, owner 22 Nov)
     if (onG && Math.floor(t * 20) % 3 === 0) { ctx.strokeStyle = 'rgba(255,255,255,.35)'; ctx.lineWidth = 1; for (let i = 0; i < 3; i++) { ctx.beginPath(); ctx.moveTo(-60 - i * 6, -50 + i * 12); ctx.lineTo(-72 - i * 6, -50 + i * 12); ctx.stroke(); } }   // speed lines
@@ -2244,6 +2279,7 @@ function drawHero0() {
   if (boost) { drawBoost(); if (!boost.out) return; }
   if (veh && veh.asm !== undefined && veh.asm < 1 && veh.k !== 'mech') {   // ride parts flying in and locking on (JJ style)
     const v = veh; veh = null; drawHero(); veh = v; const hi = heroImg; heroImg = BLANK_HERO;
+    if (veh.k === 'tuktuk') { drawVehicle(); heroImg = hi; return; }
     const ONE = veh.k === 'carpet' || veh.k === 'sandals', DIRS = veh.k === 'carpet' ? [[-700, 140]] : veh.k === 'sandals' ? [[0, 420]] : [[-60, -520], [-640, 60], [620, -160]], x = hero.x, y = hero.y;
     for (let i = 0; i < DIRS.length; i++) { const p = Math.min(1, Math.max(0, (veh.asm - .22 - i * .2) / .32)); if (p <= 0) continue; const e = 1 - Math.pow(1 - p, 3), ox = DIRS[i][0] * (1 - e), oy = DIRS[i][1] * (1 - e);
       if (p < 1) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.strokeStyle = `rgba(255,255,255,${.75 * (1 - p)})`; ctx.lineWidth = 14; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(x + DIRS[i][0] * 1.2, y - 40 + DIRS[i][1] * 1.2); ctx.lineTo(x + ox, y - 40 + oy); ctx.stroke(); ctx.restore(); }
@@ -2907,5 +2943,5 @@ const POL = (() => { const P = { fx: [], flock: [], nextFlock: 4, streak: 0, str
 window.__pol = POL;
 function frame(now) { const dt = Math.min(.05, (now - last) / 1000); last = now; shieldBtn(); dashBtn(); hornBtn(); batBtn(); SLOW = veh && veh.k === 'mech' && veh.su < 1.05 ? .12 : Math.min(1, SLOW + dt * 3); if (FM) { if (!paused) { FMS.step(dt); if (FM && FM.ph === 'out' && FM.back) update(dt); } FMS.frame(); requestAnimationFrame(frame); return; } if (REVEAL && !paused) { revealTick(dt); holding = false; } else if (!paused) { let k = 1; if (HITT > 0) { HITT -= dt; k = 0; } else if (SMT > 0) { SMT -= dt; k = .35; } update(dt * SLOW * k); } else holding = false; draw(); if (bakeQ.length) bakeOne(); requestAnimationFrame(frame); }
 requestAnimationFrame(frame);
-window.__jd = { zap: (x, y, len = 120, ang = Math.PI / 2) => obs.push({ type: 'zap', x, y, len, ang, spin: 0, seed: 1 }), horn: () => hornBlast(), get hornCD() { return hornCD; }, get fm() { return FM; }, get speed() { return speed; }, get coinList() { return coinList; }, get W() { return W; }, get gifts() { return gifts; }, get runT() { return runT; }, veh: k => startVehicle(k), laser: () => [CEIL + 40, (CEIL + FLOOR) / 2].forEach((y, i) => obs.push({ type: 'laser', x: W / 2, y, ph: 'in', pt: 0, slide: 0, d: i * .12 })), eidi: n => { eidi = n; }, kill: w => die(w), gift: (k, r, x, y) => gifts.push({ k, ride: r, x: x || W * .6, y: y || 200, b: 0 }), get state() { return state; }, get V() { return veh; }, start, hero, get obs() { return obs; }, spawnRocket: () => obs.push({ type: "rocket", x: W + 40, y: hero.y - 30, warn: 1.5, lock: 0, v: 0 }), setHold: v => holding = v, get dist() { return dist; }, mis: (s, c) => { RUN.steamed = s; coins = c; }, get npcs() { return npcs; }, boost: m => startBoost(m), get SHOP() { return SHOP; }, bc: (k, kd) => buildingCanvas(kd || "lm", k), carSprite: (k, ci, f) => carSprite(k, ci, f), queue: k => deck.unshift([k]), street: () => street, npc: x => spawnNpc(x), car: (x, k, l) => spawnCar(x, k, false, l), get STREET() { return STREET; } };
+window.__jd = { zap: (x, y, len = 120, ang = Math.PI / 2) => obs.push({ type: 'zap', x, y, len, ang, spin: 0, seed: 1 }), horn: () => hornBlast(), get hornCD() { return hornCD; }, get fm() { return FM; }, get speed() { return speed; }, get coinList() { return coinList; }, get W() { return W; }, get gifts() { return gifts; }, get runT() { return runT; }, veh: (k, r) => startVehicle(k, r), laser: () => [CEIL + 40, (CEIL + FLOOR) / 2].forEach((y, i) => obs.push({ type: 'laser', x: W / 2, y, ph: 'in', pt: 0, slide: 0, d: i * .12 })), eidi: n => { eidi = n; }, kill: w => die(w), gift: (k, r, x, y) => gifts.push({ k, ride: r, x: x || W * .6, y: y || 200, b: 0 }), get state() { return state; }, get V() { return veh; }, start, hero, get obs() { return obs; }, spawnRocket: () => obs.push({ type: "rocket", x: W + 40, y: hero.y - 30, warn: 1.5, lock: 0, v: 0 }), setHold: v => holding = v, get dist() { return dist; }, mis: (s, c) => { RUN.steamed = s; coins = c; }, get npcs() { return npcs; }, boost: m => startBoost(m), get SHOP() { return SHOP; }, bc: (k, kd) => buildingCanvas(kd || "lm", k), carSprite: (k, ci, f) => carSprite(k, ci, f), queue: k => deck.unshift([k]), street: () => street, npc: x => spawnNpc(x), car: (x, k, l) => spawnCar(x, k, false, l), get STREET() { return STREET; } };
 })();
