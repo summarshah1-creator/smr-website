@@ -31,17 +31,19 @@
     const p = st.ph || 0, air = st.air || 0, run = 1 - air;
     const lift = Math.abs(Math.sin(p)) * 6 * run;   // bob
     // legs: run cycle on the ground, tucked and kicking in the air
-    const legA = s => { const q = p + s; const thigh = (-0.55 * Math.sin(q)) * run + air * (s ? 0.1 : -0.65), shin = (0.15 + 0.95 * Math.max(0, -Math.cos(q))) * run + air * (s ? 0.9 : 0.55), foot = -(thigh + shin) * 0.75; return [thigh, shin, foot]; };
+    const legA = s => { const q = p + s; const thigh = (-0.55 * Math.sin(q)) * run + air * (s ? 0.1 : -0.65), shin = (0.15 + 0.95 * Math.max(0, -Math.cos(q))) * run + air * (s ? 0.9 : 0.55), foot = -(thigh + shin) * 0.75; const tk = st.tuck || 0; if (tk) { const T = [s ? -2.0 : -2.2, s ? 2.75 : 2.85, s ? -0.4 : -0.5]; return [thigh + (T[0] - thigh) * tk, shin + (T[1] - shin) * tk, foot + (T[2] - foot) * tk]; } return [thigh, shin, foot]; };   // owner 23 Nov: real somersault: knees pulled up to the chest, heels to the bum
     const armA = s => { const q = p + s; if (st.spin) { const a = st.spin * (s ? 1 : 1) + (s ? Math.PI : 0); return [a, -0.3, 0]; }
-      const up = air * (-2.2 + Math.sin((st.t || 0) * 18 + s) * .35); return [0.5 * Math.sin(q) * run + up, (-0.35 - 0.35 * Math.max(0, Math.sin(q))) * run - air * 0.5, 0]; };
-    g.save(); g.translate(x, y); if (st.flip) { g.translate(0, -LEG * sc - 240 * sc); g.rotate(st.flip); g.translate(0, LEG * sc + 240 * sc); }
+      const up = air * (-2.2 + Math.sin((st.t || 0) * 18 + s) * .35); let r = [0.5 * Math.sin(q) * run + up, (-0.35 - 0.35 * Math.max(0, Math.sin(q))) * run - air * 0.5, 0];
+      const tk = st.tuck || 0; if (tk) { const T = [s ? -1.5 : -1.7, s ? -1.4 : -1.2, 0]; r = r.map((v, i) => v + (T[i] - v) * tk); } return r; };   // arms hug the shins in the tuck
+    g.save(); g.translate(x, y); if (st.flip && !window.__noRot) { const pv = (LEG + 240 - (st.tuck || 0) * 120) * sc; g.translate(0, -pv - (st.tuck || 0) * 60 * sc); g.rotate(st.flip); g.translate(0, pv); }
     const sq = st.squash || 0; g.scale(sc * (1 + sq * .12), sc * (1 - sq * .15)); g.translate(-BODY.hipN[0] - 10, -(LEG + 470) + lift * -1 + (air ? -6 : 0));
     g.imageSmoothingEnabled = true; g.imageSmoothingQuality = 'high';
     const at = (pt, fn) => { g.save(); g.translate(pt[0], pt[1]); fn(); g.restore(); };
     at(BODY.shF, () => limb(g, 'f', ['uarm', 'farm', 'hand'], armA(Math.PI)));
     at(BODY.hipF, () => limb(g, 'f', ['thigh', 'shin', 'foot'], legA(Math.PI)));
-    at(BODY.hipN, () => limb(g, 'n', ['thigh', 'shin', 'foot'], legA(0)));
+    if ((st.tuck || 0) <= .3) at(BODY.hipN, () => limb(g, 'n', ['thigh', 'shin', 'foot'], legA(0)));
     g.save(); g.translate(0, 0); if (ok(SKIN.body)) g.drawImage(SKIN.body, 0, 0); g.restore();
+    if ((st.tuck || 0) > .3) at(BODY.hipN, () => limb(g, 'n', ['thigh', 'shin', 'foot'], legA(0)));   // tucked knee comes in front of the log
     const fi = SKIN['face_' + (st.face || 'smile')] || SKIN.face_smile; if (ok(fi)) g.drawImage(fi, BODY.face[0] - fi.naturalWidth / 2, BODY.face[1] - fi.naturalHeight / 2);
     at(BODY.shN, () => limb(g, 'n', ['uarm', 'farm', st.bat ? 'bat' : 'hand'], st.swing != null ? [st.swing, st.swingE || 0, 0] : armA(0)));
     g.restore(); };
