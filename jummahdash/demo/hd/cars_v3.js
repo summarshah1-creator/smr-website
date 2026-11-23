@@ -267,7 +267,7 @@
     const sw = x.createLinearGradient(P.w * .25, 0, P.w * .5, P.h); sw.addColorStop(0, 'rgba(255,255,255,0)'); sw.addColorStop(.47, 'rgba(255,255,255,.1)'); sw.addColorStop(.53, 'rgba(255,255,255,0)'); x.fillStyle = sw; x.fillRect(0, 0, P.w, P.h); x.globalCompositeOperation = 'source-over';
     tints.set(id, cv); if (tints.size > 80) tints.delete(tints.keys().next().value); return cv; }
   const CAL = { c63w: '#d11a22', m4c: '#1f63e0' };
-  const WSZ = { corsa: .9, a45: .91, focus: .91, tesla: .95, rangerover: .94, xc40: .94 };
+  const WSZ = { corsa: .9, a45: .91, focus: .91, tesla: .95, rangerover: .94, xc40: .94, yaris: .87 };
   function drawPic(c, x0, G, col, s, k) { const P = PICS[k], sx = s.L * U / P.w, sy = s.H * U / (P.g - P.top), sr = Math.sqrt(sx * sy), B = typeof col === 'string' ? col : col[1];
     c.save(); c.translate(x0, G); c.save(); c.scale(sx, sy); c.translate(0, -P.g);
     c.drawImage(pic[k].a, 0, 0); c.drawImage(tinted(k, B), 0, 0); c.restore();
