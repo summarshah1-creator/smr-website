@@ -4,9 +4,9 @@
 // with a touch of perspective (near edges a little taller), light from the upper left and the lantern glowing on top.
 (() => {
   const N = ['front', 'side', 'lb', 'r1', 'r2', 'r3', 'base', 'lantern'], I = {};
-  N.forEach(n => { const im = new Image(); im.src = 'art/box/' + n + '.webp?v=1'; I[n] = im; });
-  const H = 1477, BW = 757, HW = .967 * BW / 2;                     // art pixels: full height, body half-width (cropped inside the outline)
-  const SL = { lb: [.1982, 182, 219], r1: [.5892, 219, 265], r2: [.7728, 265, 314], r3: [.9221, 314, 366], base: [1.0436, 1391, 1477] };
+  N.forEach(n => { const im = new Image(); im.src = 'art/box/' + n + '.webp?v=2'; I[n] = im; });
+  const H = 698, BW = 415, HW = .9614 * BW / 2;                     // art pixels: full height, body half-width (cropped inside the outline)
+  const SL = { lb: [.2072, 92, 113], r1: [.547, 113, 136], r2: [.7325, 136, 164], r3: [.8988, 164, 196], base: [1.0627, 646, 698] };   // owner 23 Nov: simpler art (same spin), old lantern kept
   const ok = im => im && im.complete && im.naturalWidth;
   const STR = 26, PER = .07, L = [-.55, .35];                       // strips per face, perspective, light (x, z) direction
   // one square slab (half width hw art px, rows y0..y1): draw its visible faces, texture 'tex' per face index
@@ -28,8 +28,10 @@
         const ky = 1 + Z * PER, top = cy + (y0 - H / 2) * s * ky, bot = cy + (y1 - H / 2) * s * ky;
         const sx = iw * u0, sw = Math.max(1, iw * (u1 - u0));
         g.drawImage(im, sx, 0, sw, ih, cx + xa * s, top, (xb - xa) * s + .7, bot - top);
-        if (shade > .01) { g.fillStyle = `rgba(8,12,40,${shade.toFixed(3)})`; g.fillRect(cx + xa * s, top, (xb - xa) * s + .7, bot - top); }
       }
+      if (shade > .01) {   // one shade over the whole face (per-strip fills doubled up at the seams and made stripes)
+        const k0 = 1 + Z0 / HW * PER, k1 = 1 + Z1 / HW * PER; g.fillStyle = `rgba(8,12,40,${shade.toFixed(3)})`; g.beginPath();
+        g.moveTo(cx + X0 * s, cy + (y0 - H / 2) * s * k0); g.lineTo(cx + X1 * s, cy + (y0 - H / 2) * s * k1); g.lineTo(cx + X1 * s, cy + (y1 - H / 2) * s * k1); g.lineTo(cx + X0 * s, cy + (y1 - H / 2) * s * k0); g.closePath(); g.fill(); }
     }
     if (noLine || !edges.length) return;   // one clean outline round the outside and a thin line down each corner
     const lw = Math.max(1.2, 10 * s); g.fillStyle = '#05070f';
@@ -41,10 +43,10 @@
     g.save(); g.imageSmoothingEnabled = true; g.imageSmoothingQuality = 'high';
     const sl = k => slab(g, x, cy, s, A, SL[k][0] * HW, SL[k][1], SL[k][2], () => I[k]);
     sl('base');
-    slab(g, x, cy, s, A, HW, 366, 1392, i => i === 0 ? I.front : I.side);   // body: door side + three plain sides
+    slab(g, x, cy, s, A, HW, 196, 646, i => i === 0 ? I.front : I.side);   // body: door side + three plain sides
     sl('r3'); sl('r2'); sl('r1'); sl('lb');
     if (ok(I.lantern)) {   // the lantern turns with the box: its glass is redrawn with four corner posts sliding round as it spins
-      const k = 2 * s, lw = I.lantern.naturalWidth * k, lh = I.lantern.naturalHeight * k, lx = x - lw / 2, ty = cy + (4 - H / 2) * s;
+      const k = .2166 * BW / I.lantern.naturalWidth * s, lw = I.lantern.naturalWidth * k, lh = I.lantern.naturalHeight * k, lx = x - lw / 2, ty = cy + (92 - H / 2) * s - lh;
       g.drawImage(I.lantern, lx, ty, lw, lh);
       const gx0 = lx + 12 * k, gx1 = lx + 70 * k, gy0 = ty + 53 * k, gy1 = ty + 91 * k, gc = (gx0 + gx1) / 2, r = (gx1 - gx0) / 2;
       const gg = g.createLinearGradient(gx0, 0, gx1, 0); gg.addColorStop(0, '#e9cf86'); gg.addColorStop(.5, '#fff6d2'); gg.addColorStop(1, '#e2c277'); g.fillStyle = gg; g.fillRect(gx0, gy0, gx1 - gx0, gy1 - gy0);
