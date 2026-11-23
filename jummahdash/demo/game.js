@@ -2294,6 +2294,7 @@ function drawTakeoff(b, t) { const k = BS * ((window.SCALE && SCALE.airport) || 
   ctx.restore();
   ctx.restore(); }
 
+const BG_MODE = (() => { const m = /[?&]bg=(\d)/.exec(location.search); return m ? +m[1] : 1; })();
 function px(v) { return Math.round(v * S) / S; }
 function draw() {
   ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'low';
@@ -2338,6 +2339,10 @@ function draw() {
   ctx.fillStyle = 'rgba(110,92,104,.55)'; const d3 = dist % 34;
   for (let r = 0; r < 4; r++) { const y = ROAD_B + 6 + r * 11; ctx.fillRect(0, y, W, .7); const o2 = r % 2 ? 17 : 0; for (let x = -d3 - o2; x < W; x += 34) ctx.fillRect(x, y, .7, 11); }
   ctx.fillStyle = 'rgba(16,8,38,.2)'; ctx.fillRect(0, 0, W, ROAD_B);   // knock the backdrop back a touch
+  { const bm = window.__bg == null ? BG_MODE : window.__bg | 0; if (bm) {   // owner 23 Nov: background muted (option 1) so the foreground stands out: sky, buildings, road and traffic only; people, hazards, coins and overlays stay full colour. ?bg=0 / ?bg=2 (muted + haze) to compare
+      ctx.save(); ctx.globalCompositeOperation = 'saturation'; ctx.fillStyle = 'rgba(128,128,128,.32)'; ctx.fillRect(0, 0, W, ROAD_B); ctx.restore();   // colours ~30% calmer
+      ctx.fillStyle = 'rgba(120,112,130,.10)'; ctx.fillRect(0, 0, W, ROAD_B);   // a little less contrast
+      if (bm >= 2) { const hz = ctx.createLinearGradient(0, 0, 0, ROAD_B); hz.addColorStop(0, 'rgba(196,214,236,.30)'); hz.addColorStop(.75, 'rgba(196,214,236,.22)'); hz.addColorStop(1, 'rgba(196,214,236,.08)'); ctx.fillStyle = hz; ctx.fillRect(0, 0, W, ROAD_B); } } }
   // coins
   if (coinK !== KR) makeCoins();
   coinList.forEach(c => { if (c.j) { const J = jalebiImg(), s3 = J.width / KR; ctx.save(); ctx.translate(c.x, c.y + Math.sin(t * 4 + c.x * .1) * .8); ctx.rotate(Math.sin(t * 2 + c.x) * .25); ctx.drawImage(J, -s3 / 2, -s3 / 2, s3, s3); ctx.restore(); return; }
