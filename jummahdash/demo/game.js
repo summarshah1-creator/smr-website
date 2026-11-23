@@ -334,7 +334,7 @@ function tone(freq, dur, type = 'sine', vol = .12, slide = 0, bus = null) {
   if (slide) o.frequency.exponentialRampToValueAtTime(Math.max(30, freq * slide), t + dur);
   g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(.0001, t + dur); o.connect(g); g.connect(bus || (MIX ? MIX.fx : AC.destination)); o.start(t); o.stop(t + dur + .02);
 }
-const SFX = { horn() {   // owner 23 Nov: his own horn recording (art/snd/horn.mp3, cut + cleaned + faded); synth air horn only until it has loaded
+const SFX = { tukHorn() {   // owner 23 Nov: his own horn (named tukHorn: the traffic kit's car horn() used to overwrite it) recording (art/snd/horn.mp3, cut + cleaned + faded); synth air horn only until it has loaded
     if (!AC || !sndOn) return; const bus = MIX ? MIX.fx : AC.destination, t0 = AC.currentTime;
     if (HORN_BUF) { const src = AC.createBufferSource(), g = AC.createGain(); src.buffer = HORN_BUF; g.gain.value = 1; src.connect(g); g.connect(bus); src.start(t0); return; }   // only his recording, nothing mixed in
     const blast = (st, len) => { const f = AC.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 2600; f.Q.value = 1.2; const g = AC.createGain(); g.gain.setValueAtTime(.0001, t0 + st); g.gain.exponentialRampToValueAtTime(.07, t0 + st + .02); g.gain.setValueAtTime(.07, t0 + st + len - .05); g.gain.exponentialRampToValueAtTime(.0001, t0 + st + len); f.connect(g); g.connect(bus);
@@ -1495,7 +1495,7 @@ function tukLaser(o) {   // owner 23 Nov: the tuk-tuk is laser-proof: the beam j
 function hornOrigin() { return [hero.x + 48, hero.y - 58]; }
 function hornBlast() { if (state !== 'play' || hero.dead || paused || !veh || veh.k !== 'tuktuk' || hornCD > 0 || (veh.asm !== undefined && veh.asm < 1)) return;
   hornCD = HORN_CD; const [x, y] = hornOrigin(); horns.push({ x, y, t: 0, R: W - x + 80, hit: 0, notes: [0, 1, 2, 3, 4].map(i => ({ d: i * .05, a: -.5 + i * .25, s: 120 + Math.random() * 60, w: Math.random() * 6, ch: i % 2 ? '♫' : '♪' })) });
-  veh.hornK = .32; veh.rock = .25; shake = Math.max(shake, .16); flashT = .06; flashCol = '255,236,170'; SFX.horn();
+  veh.hornK = .32; veh.rock = .25; shake = Math.max(shake, .16); flashT = .06; flashCol = '255,236,170'; SFX.tukHorn();
   pops.push({ x: hero.x + 10, y: hero.y - 120, txt: 'PAAP PAAP!', col: '#ffd21f', t: 0 }); RUN.horns = (RUN.horns || 0) + 1;
   for (let i = 0; i < 10; i++) dust.push({ x: x - 10, y: FLOOR - 2, vx: 60 + Math.random() * 160, vy: -20 - Math.random() * 40, r: 2 + Math.random() * 2, l: .5 }); }
 function hornPay(x, y, txt) { coins += 2; $('coins').textContent = '£' + coins; pops.push({ x, y: y - 20, txt: txt + ' +£2', col: '#ffe680', t: 0 }); RUN.honked = (RUN.honked || 0) + 1; }
