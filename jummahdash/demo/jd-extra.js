@@ -217,12 +217,7 @@
     q.addEventListener('pointerdown', function (e) { e.preventDefault(); e.stopPropagation(); if (window.__jd && window.__jd.state === 'menu') openAdm(); });
     setInterval(function () { if (ADM) q.style.visibility = window.__jd && window.__jd.state === 'menu' ? 'visible' : 'hidden'; }, 300);
     window.__jdAdmShow = function () { q.style.display = ''; };
-    // EXIT during a run (admin mode, so "can't die" runs can end): back to the home screen
-    var ex = document.createElement('button'); ex.className = 'btn'; ex.id = 'bAdmExit'; ex.textContent = 'EXIT';
-    ex.style.cssText = 'position:absolute;top:10px;right:calc(var(--sr,0px) * .4 + 64px);z-index:7;font:10px PS,monospace;color:#fff;background:#b8326e;padding:9px 12px;pointer-events:auto;visibility:hidden';
-    q.parentNode.appendChild(ex);
-    ex.addEventListener('pointerdown', function (e) { e.preventDefault(); e.stopPropagation(); location.reload(); });
-    setInterval(function () { var st = window.__jd && window.__jd.state; ex.style.visibility = ADM && st && st !== 'menu' ? 'visible' : 'hidden'; }, 300);
+    // owner 23 Nov: the pink admin EXIT button is gone; the pause button's menu has HOME instead
     if (ADM) {
       unlockAll(); applyGod();
       var rl = ''; try { rl = sessionStorage.getItem('jd_adm_rl'); sessionStorage.removeItem('jd_adm_rl'); } catch (e) {}
