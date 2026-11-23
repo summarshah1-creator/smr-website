@@ -1140,22 +1140,30 @@ const RIDE_ICON = {}, FK_ICON = img('art/fk-icon.png?h=6f7419c1df');
    // owner 23 Nov: zapper ends = his silver balls with the hole the beam comes out of (cut from his sheet)
 const ZBR = 13;   // ball radius on screen
 let ZBC = null;   // the silver ball, drawn once at 4x and reused
-function zapBallArt() { const R = ZBR, S = 4, P = 6, c = document.createElement('canvas'); c.width = c.height = (R * 2 + P * 2) * S; const g = c.getContext('2d'); g.scale(S, S); g.translate(R + P, R + P);
-  // owner 23 Nov: all-silver ball, the only coloured part is the hole the beam comes out of (faces +x, towards the other ball)
-  g.fillStyle = '#15171c'; g.beginPath(); g.arc(0, 0, R + .9, 0, 7); g.fill();
-  const sp = g.createRadialGradient(-R * .38, -R * .42, R * .05, 0, 0, R); sp.addColorStop(0, '#ffffff'); sp.addColorStop(.22, '#e6e9ee'); sp.addColorStop(.55, '#aab1bc'); sp.addColorStop(.85, '#646c79'); sp.addColorStop(1, '#3c414b'); g.fillStyle = sp; g.beginPath(); g.arc(0, 0, R, 0, 7); g.fill();
-  g.save(); g.beginPath(); g.arc(0, 0, R, 0, 7); g.clip(); g.globalAlpha = .12; g.strokeStyle = '#ffffff'; g.lineWidth = .35; for (let i = -R; i < R; i += 1.3) { g.beginPath(); g.ellipse(0, i, R * 1.1, R * .18, -.15, 0, Math.PI); g.stroke(); } g.globalAlpha = 1;   // brushed metal
-  g.strokeStyle = 'rgba(255,255,255,.4)'; g.lineWidth = 1.1; g.beginPath(); g.arc(0, 0, R - .9, Math.PI * .15, Math.PI * .55); g.stroke();   // rim light
-  g.strokeStyle = 'rgba(30,32,38,.55)'; g.lineWidth = .6; g.beginPath(); g.ellipse(R * .3, 0, R * .3, R * .92, 0, -Math.PI / 2, Math.PI / 2); g.stroke();   // seam where the nose cap joins
-  const col = g.createLinearGradient(R * .35, -R, R * 1.05, R); col.addColorStop(0, '#f2f4f7'); col.addColorStop(.45, '#8d95a2'); col.addColorStop(1, '#3a3f48'); g.fillStyle = col; g.beginPath(); g.ellipse(R * .68, 0, R * .3, R * .64, 0, 0, 7); g.fill();   // collar round the hole
-  g.strokeStyle = '#22252b'; g.lineWidth = .6; g.stroke(); g.fillStyle = '#2a1a08'; g.beginPath(); g.ellipse(R * .72, 0, R * .2, R * .46, 0, 0, 7); g.fill(); g.restore();
-  g.strokeStyle = '#0d0e12'; g.lineWidth = .9; g.beginPath(); g.arc(0, 0, R, 0, 7); g.stroke(); return c; }
+function zapBallArt() { const R = ZBR, S = 5, P = 6, c = document.createElement('canvas'); c.width = c.height = (R * 2 + P * 2) * S; const g = c.getContext('2d'); g.scale(S, S); g.translate(R + P, R + P);
+  // owner 23 Nov: drawn for the game (not his picture): polished chrome ball reflecting the sky and street, with one "eye" the beam comes out of (faces +x)
+  g.fillStyle = '#101216'; g.beginPath(); g.arc(0, 0, R + .9, 0, 7); g.fill();
+  g.save(); g.beginPath(); g.arc(0, 0, R, 0, 7); g.clip();
+  const env = g.createLinearGradient(0, -R, 0, R); env.addColorStop(0, '#f4f8ff'); env.addColorStop(.28, '#b9c8dc'); env.addColorStop(.46, '#59606c'); env.addColorStop(.52, '#2c3038'); env.addColorStop(.62, '#8a8f98'); env.addColorStop(.85, '#c9c3b8'); env.addColorStop(1, '#6d6a66');
+  g.fillStyle = env; g.fillRect(-R, -R, R * 2, R * 2);   // chrome: sky on top, dark horizon line, the street below
+  const sh = g.createRadialGradient(-R * .3, -R * .2, R * .2, 0, 0, R * 1.05); sh.addColorStop(0, 'rgba(255,255,255,0)'); sh.addColorStop(.75, 'rgba(10,12,18,.15)'); sh.addColorStop(1, 'rgba(10,12,18,.65)'); g.fillStyle = sh; g.fillRect(-R, -R, R * 2, R * 2);   // roundness
+  g.fillStyle = 'rgba(255,255,255,.95)'; g.beginPath(); g.ellipse(-R * .38, -R * .5, R * .32, R * .16, -.5, 0, 7); g.fill();   // window highlight
+  g.fillStyle = 'rgba(255,255,255,.5)'; g.beginPath(); g.ellipse(-R * .62, -R * .1, R * .08, R * .2, -.2, 0, 7); g.fill();
+  g.strokeStyle = 'rgba(255,255,255,.55)'; g.lineWidth = .9; g.beginPath(); g.arc(0, 0, R - .8, Math.PI * .2, Math.PI * .65); g.stroke();   // rim light
+  g.restore();
+  g.strokeStyle = '#0b0c10'; g.lineWidth = .9; g.beginPath(); g.arc(0, 0, R, 0, 7); g.stroke(); return c; }
 function zapBall(x, y, ang, glow) {   // ang = way the hole faces
   if (!ZBC) ZBC = zapBallArt(); const R = ZBR, D = (R * 2 + 12);
-  ctx.save(); ctx.translate(x, y); ctx.rotate(ang); ctx.drawImage(ZBC, -D / 2, -D / 2, D, D);
+  ctx.save(); ctx.translate(x, y); ctx.drawImage(ZBC, -D / 2, -D / 2, D, D); ctx.beginPath(); ctx.arc(0, 0, R, 0, 7); ctx.clip(); ctx.rotate(ang);   // the chrome keeps its lighting (sky on top); only the eye turns to face the other ball
+  // the eye: a raised chrome collar, a dark iris ring and the socket the beam fires from
+  const cl = ctx.createLinearGradient(R * .3, -R * .7, R * .95, R * .7); cl.addColorStop(0, '#ffffff'); cl.addColorStop(.4, '#9aa3b0'); cl.addColorStop(.7, '#4a505b'); cl.addColorStop(1, '#c4cad3'); ctx.fillStyle = cl; ctx.beginPath(); ctx.ellipse(R * .66, 0, R * .32, R * .66, 0, 0, 7); ctx.fill();
+  ctx.strokeStyle = '#1c1f25'; ctx.lineWidth = .55; ctx.stroke();
+  ctx.fillStyle = '#17191e'; ctx.beginPath(); ctx.ellipse(R * .72, 0, R * .23, R * .5, 0, 0, 7); ctx.fill();
+
   const hx = R * .72, gl = Math.max(0, glow);
   const hole = ctx.createRadialGradient(hx, 0, 0, hx, 0, R * .5); hole.addColorStop(0, `rgba(255,255,235,${gl})`); hole.addColorStop(.35, `rgba(255,200,60,${gl})`); hole.addColorStop(1, `rgba(200,90,10,${.9 * gl})`);
   ctx.fillStyle = gl > .05 ? hole : '#3a2410'; ctx.beginPath(); ctx.ellipse(hx, 0, R * .2, R * .46, 0, 0, 7); ctx.fill();
+  if (gl > .05) { ctx.fillStyle = `rgba(255,255,255,${gl})`; ctx.beginPath(); ctx.ellipse(hx + 1, 0, R * .07, R * .2, 0, 0, 7); ctx.fill(); ctx.strokeStyle = `rgba(255,150,20,${.9 * gl})`; ctx.lineWidth = .8; ctx.beginPath(); ctx.ellipse(hx, 0, R * .2, R * .46, 0, 0, 7); ctx.stroke(); }   // iris ring + white-hot pupil
   if (gl > .05) { ctx.globalCompositeOperation = 'lighter'; const hg = ctx.createRadialGradient(hx + 2, 0, 0, hx + 2, 0, 14); hg.addColorStop(0, `rgba(255,236,160,${.8 * gl})`); hg.addColorStop(.5, `rgba(255,170,40,${.35 * gl})`); hg.addColorStop(1, 'rgba(255,140,20,0)'); ctx.fillStyle = hg; ctx.beginPath(); ctx.arc(hx + 2, 0, 14, 0, 7); ctx.fill(); }
   ctx.restore(); }
 function ballCrackle(x, y, ang, a) {   // little jagged arcs licking round the hole side only (the rest of the ball stays plain silver)
