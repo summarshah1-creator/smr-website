@@ -54,6 +54,17 @@ cd ../smr-website && git add .github/tools/seeds.json demo-data/seed && git comm
 
 Pushing `smr-website` to `main` deploys it. The demo (slug `mysirat`) then shows in SMR Admin → My demos with its icon, tagline and the "App features" tips, ready to send as a link. For later updates run the same command with the next version (1.1, 1.2 … 1.9, then 2.0: small fix +0.1, a few changes +0.2/0.3, a big redesign = next whole number). The demo name, tagline, description and tips live in `seeds.json` (first-time defaults are in `tools/make_smr_demo.py`). Pack is ~20 MB.
 
+## Where this repository lives
+
+Right now: the **`mysirat` branch of `summarshah1-creator/smr-website`** (its own history, nothing shared with the site; pushing it never deploys anything). Claude can't create new GitHub repositories from a chat, so if Summar makes an empty private repository called `mysirat` on GitHub, move it there with:
+
+```bash
+git clone -b mysirat https://github.com/summarshah1-creator/smr-website mysirat && cd mysirat
+git push https://github.com/summarshah1-creator/mysirat.git mysirat:main
+```
+
+then update this section and delete the `mysirat` branch from smr-website.
+
 ## Starting a new chat
 
-Open the MySirat project in Claude, start a chat, attach this repository (`summarshah1-creator/mysirat`) and say what you'd like changed. The chat should read this file first.
+Open the MySirat project in Claude, start a chat, attach `summarshah1-creator/smr-website` (or `mysirat` once moved), check out the `mysirat` branch and read this file first. Commit and push MySirat work to that branch only, never to smr-website's `main` (except the demo pack made by `tools/make_smr_demo.py`).
