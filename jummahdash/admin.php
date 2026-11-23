@@ -75,11 +75,13 @@ function deepStats(S){if(!S.first_runs)return '';var h='',f=S.first_runs,b=f.buc
  h+='<h3>Rides picked up</h3>'+bars(S.rides,function(r){return (RIDEN[r.k]||r.k)+' · lasts '+Math.round(+r.a)+'s'},'n');
  h+='<h3>Buttons used (players)</h3>'+bars(S.buttons,function(r){return (BTN[r.k]||r.k)+' · '+n(+r.n)+' presses'},'u');
  return h}
+function loadLb(){api('lb').then(function(j){var d=document.getElementById('lbAdm');if(!d)return;var t=function(rows,lab){return '<div class="card"><b>'+lab+'</b><table class="lb">'+(rows.length?rows.map(function(r,i){return '<tr><td>'+(i+1)+'</td><td>'+esc(r.name)+'</td><td class="s">'+n(+r.score)+'m</td><td><button data-lbdel="'+esc(r.pid)+'" title="Remove this player">×</button></td></tr>'}).join(''):'<tr><td class="empty">No scores yet.</td></tr>')+'</table></div>'};d.innerHTML=t(j.week||[],'This week')+t(j.all||[],'All time')+'<p class="mut">× removes a rude name or fake score (all of that player\'s scores).</p>'}).catch(function(){})}
 function drawStats(){var h=sinceBox()+todayBox()+'<div class="secT">More</div><div class="rng">'+[[7,'This week'],[30,'This month'],[0,'All time']].map(function(r){return '<button data-r="'+r[0]+'" class="'+(RANGE===r[0]?'on':'')+'">'+r[1]+'</button>'}).join('')+'</div>';
  if(!ST)return h+'<p class="empty">Loading…</p>';var S=ST,pl=ev(S,'play');
  h+='<h3 style="margin-top:0">Visitors</h3>'+kp([[n(S.opens),'Total opens','every time the game was opened'],[n(S.unique),'Unique people','different phones/computers'],[n(S.new),'New people','first time ever in this period'],[n(S.returning),'Returning people','opened it on 2+ different days'],[n(S.app_users),'Playing from home screen','installed the app'],[(S.unique?(S.opens/S.unique).toFixed(1):0),'Opens per person','on average']]);
  h+='<h3>Playing</h3>'+kp([[n(pl.n),'Games played',(pl.u?(pl.n/pl.u).toFixed(1):0)+' games per player'],[n(pl.u),'People who played',(S.unique?Math.round(100*pl.u/S.unique):0)+'% of visitors'],[n(S.best)+'m','Best run','average '+n(S.avg)+'m'],[ '£'+n(S.coins),'Coins collected','in finished runs'],[n(ev(S,'share').n),'Shares','from the Share tile'],[n(ev(S,'smr').n),'Opened SMR Digital','from Designed & built by']]);
  h+=deepStats(S);
+ h+='<h3>Leaderboard</h3><div id="lbAdm"><p class="mut">Loading…</p></div>'; setTimeout(loadLb,0);
  h+='<h3>Where people came from</h3>'+bars(S.sources,function(r){return SRC[r.src]||r.src||'Unknown'},'u');
  h+='<h3>Last 30 days</h3><div class="chart">'+S.daily.map(function(d){var m=Math.max.apply(null,S.daily.map(function(x){return Math.max(+x.v,+x.g)}).concat([1]));return '<div title="'+d.day+': '+d.v+' people, '+d.g+' games"><s style="height:'+(100*d.v/m)+'%"></s><s class="g" style="height:'+(100*d.g/m)+'%"></s></div>'}).join('')+'</div><div class="leg"><span><i style="background:#5b5bff"></i>People</span><span><i style="background:#d63bff"></i>Games</span></div>';
  h+='<h3>Phones</h3>'+bars(S.devices,function(r){return DEV[r.dev]||r.dev||'Unknown'},'u');
@@ -104,7 +106,7 @@ function draw(){$('v').innerHTML=V==='stats'?drawStats():V==='set'?drawSet():dra
 function load(){api('admin').then(function(j){D=j;$('nb').textContent=j.new||'';try{parent.postMessage({jdNew:j.new},location.origin)}catch(e){}if(V==='inbox')draw()}).catch(function(e){if(V==='inbox')$('v').innerHTML='<p class="empty">'+esc(e.message)+'</p>'})}
 function loadToday(){api('stats&days=1').then(function(j){TD=j;if(V==='stats')draw()}).catch(function(){})}
 function loadStats(){api('stats&days='+RANGE).then(function(j){ST=j;if(V==='stats')draw()}).catch(function(e){if(V==='stats')$('v').innerHTML='<p class="empty">'+esc(e.message)+'</p>'})}
-document.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
+document.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;if(b.dataset.lbdel){if(!confirm('Remove this player from the leaderboard?'))return;api('lb_del',{pid:b.dataset.lbdel}).then(loadLb);return}
  if(b.dataset.v){V=b.dataset.v;document.querySelectorAll('.seg button').forEach(function(x){x.classList.toggle('on',x===b)});draw();return}
  if(b.dataset.r!=null){RANGE=+b.dataset.r;ST=null;draw();loadStats();return}
  if(b.dataset.own){b.disabled=true;api('owner',{vid:b.dataset.own,on:b.dataset.on==='1'}).then(function(j){DEVS=j.devices;$('devs').innerHTML=drawDevs();loadToday();loadStats();api('since&t='+SEEN).then(function(x){SINCE=x;draw()})});return}

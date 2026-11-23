@@ -308,6 +308,8 @@ function makeCoins() {   // the 12-sided £1: nickel-brass outer ring, nickel-pl
 let AC = null, sndOn = true, hissG = null;
 // Settings → Sound: separate volumes (owner 22 Nov). Every sound goes through one of these buses: jet (jetpack), coins, traffic (cars, convoy, sirens), fx (everything else)
 let MIX = null; const VOL = (() => { const d = { jet: 100, coins: 100, traffic: 100, fx: 100, music: 45 }; try { return Object.assign(d, JSON.parse(localStorage.getItem('jd_mix') || '{}')); } catch (e) { return d; } })();
+let FLASH = (() => { try { return localStorage.getItem('jd_flash') !== '0'; } catch (e) { return true; } })();   // owner 23 Nov: Settings → Flashes FULL / SOFT
+function buzz(ms) { try { if (SHAKE && navigator.vibrate) navigator.vibrate(ms); } catch (e) {} }   // Android only (iPhone browsers don't allow it)
 let SHAKE = (() => { try { return localStorage.getItem('jd_shake') !== '0'; } catch (e) { return true; } })();
 function applyMix() { if (!MIX) return; for (const k in VOL) MIX[k].gain.value = Math.max(0, Math.min(1, VOL[k] / 100)); }
 // Sound with the iPhone silent switch on (same as Flappy Kabootar): ask for 'playback' audio, and keep a silent looping
@@ -888,7 +890,7 @@ const BOX_LIFE = 22;   // seconds the box lasts (owner: it runs out)
 const BXD = () => !!(BOXR && !veh && BOXR.t >= BOX_P * 3);   // inside the warp box (stuck on)
 const BOX_SOLID = () => BOXR && BOXR.t >= BOX_P * 3.7;
 const WARP_CD = 2.4, WO = .24, WG = .42, WI = .3;   // warp: fade out, gone (the street rushes past), fade back in further along
-function boxBreak() { const x = hero.x, y = hero.y; BOXR = null; inv = Math.max(inv, 1.8); shake = Math.max(shake, .35); flashT = .14; flashCol = '170,200,255'; SFX.boom && SFX.boom(); tone(240, .3, 'square', .06, .4, MIX && MIX.fx);
+function boxBreak() { buzz(60); const x = hero.x, y = hero.y; BOXR = null; inv = Math.max(inv, 1.8); shake = Math.max(shake, .35); flashT = .14; flashCol = '170,200,255'; SFX.boom && SFX.boom(); tone(240, .3, 'square', .06, .4, MIX && MIX.fx);
   for (let i = 0; i < 30; i++) sparks.push({ x: x + (Math.random() - .5) * 50, y: y - Math.random() * HH * 1.5, vx: (Math.random() - .5) * 420, vy: -Math.random() * 360, l: .8 + Math.random() * .4, c: ['#1c3f8a', '#2a56b0', '#0d1b3d', '#fff3b0'][i % 4] });
   pops.push({ x: x + 20, y: y - HH * 2, txt: 'BOX SMASHED!', col: '#9fc4ff', t: 0 }); }
 function boxWarp(auto) { if (!BOX_SOLID() || BOXR.w || (!auto && (BOXR.cd || 0) > 0) || state !== 'play' || hero.dead) return false;
@@ -930,7 +932,7 @@ function die(why) {
   if (veh && veh.k === 'logman' && veh.morph >= 1 && veh.swT >= 0 && veh.swT < .4 && (veh.batHP || 0) > 0 && (why === 'laser' || why === 'rocket' || why === 'zap')) return;   // mid-swing: the bat deals with it
   if (veh && veh.k === 'logman' && veh.morph < 1) return;   // can't be hurt while he's transforming
   if (veh) { vehCrash(); return; }
-  RUN.why = why; if (RUN.rk) { (RUN.rl = RUN.rl || []).push([RUN.rk, Math.round(runT - RUN.rt)]); RUN.rk = ''; } POL.died(why); deadCookOff(); hero.dead = true; hero.vx = speed; hero.vy = -140; hero.flail = 0; hero.squash = 0; hero.bounce = 0; hero.slide = 0; hero.restT = 0; deadT = 0; state = 'dead'; holding = false;
+  buzz([40, 30, 90]); RUN.why = why; if (RUN.rk) { (RUN.rl = RUN.rl || []).push([RUN.rk, Math.round(runT - RUN.rt)]); RUN.rk = ''; } POL.died(why); deadCookOff(); hero.dead = true; hero.vx = speed; hero.vy = -140; hero.flail = 0; hero.squash = 0; hero.bounce = 0; hero.slide = 0; hero.restT = 0; deadT = 0; state = 'dead'; holding = false;
   hero.shockT = why === 'rocket' ? 0 : .5; if (why === 'rocket') hero.vy = -260; flashT = .18; flashCol = why === 'rocket' ? '255,170,60' : why === 'laser' ? '230,110,255' : '200,240,255'; shake = .35;
   if (why === 'zap') { SFX.zap(); for (let i = 0; i < 30; i++) sparks.push({ x: hero.x, y: hero.y - 30, vx: (Math.random() - .5) * 260, vy: (Math.random() - .5) * 260, l: .5 + Math.random() * .4, c: Math.random() < .5 ? '#bff4ff' : '#fff6a8' }); }
   else if (why === 'laser') { SFX.zap(); for (let i = 0; i < 26; i++) sparks.push({ x: hero.x, y: hero.y - 30, vx: (Math.random() - .5) * 260, vy: (Math.random() - .5) * 260, l: .5 + Math.random() * .4, c: Math.random() < .5 ? '#ffd0d0' : '#ff5050' }); }
@@ -957,7 +959,8 @@ setTimeout(() => dailyUI(), 0);
 function dailySave() { try { localStorage.setItem('jd_daily', JSON.stringify(DAILY)); } catch (e) {} }
 function dailyUI() { if (DAILY.day !== dayKey()) { DAILY = { day: dayKey(), n: 0, done: 0 }; dailySave(); } const el = $('dailyP'); if (!el) return; if (!DAILY_ON) { el.style.display = 'none'; return; }
   el.className = 'daily' + (DAILY.done ? ' done' : ''); el.innerHTML = (DAILY.done ? 'DAILY WORD DONE ' : 'DAILY WORD ') + DW.split('').map((ch, i) => '<i class="' + (i < DAILY.n ? 'on' : '') + '">' + ch + '</i>').join('') + (DAILY.done ? '' : ' £' + DAILY_PRIZE); }
-function update(dt) {
+let wasPlaying = false;
+function update(dt) { { const pl = (state === 'play' || state === 'intro') && !FM; if (pl !== wasPlaying) { wasPlaying = pl; document.body.classList.toggle('playing', pl); } } autoSmooth();
   t += dt;
   const playing = state === 'play' || state === 'intro';
   // speed: walk-in, then builds up over the run (Jetpack-style)
@@ -1035,7 +1038,7 @@ function update(dt) {
     // steam out of the nozzle
     const nz = nozzle();
     if (BXD()) {}   // in the warp box: no steam, no hiss (owner) - just motion lines (drawBoxR)
-    else if (hero.thrust && Math.random() < .6) steam.push({ x: nz[0] + (Math.random() - .5) * 3, y: nz[1] + 20, vx: -speed * .35 - 30 - Math.random() * 40, vy: 120 + Math.random() * 80, r: 2.5 + Math.random() * 2, l: .45 + Math.random() * .3, l0: .75 });
+    else if (hero.thrust) { for (let i = 0; i < 2; i++) if (Math.random() < .8) steam.push({ x: nz[0] + (Math.random() - .5) * 3, y: nz[1] + 5 + Math.random() * 4, vx: -speed * .35 - 30 - Math.random() * 40, vy: 80 + Math.random() * 60, r: 3 + Math.random() * 2.6, l: .55 + Math.random() * .4, l0: .95 }); }   // owner 23 Nov: mostly steam
     else if (Math.random() < dt * 10) steam.push({ x: nz[0], y: nz[1], vx: -speed * .3 - 10, vy: 30, r: 1.6, l: .4, l0: .4 });
   } else if (hissG) hissG.gain.setTargetAtTime(0, AC.currentTime, .06);
   if (state === 'menu') { hero.x = -200; hero.y = FLOOR; }
@@ -1108,7 +1111,8 @@ function update(dt) {
   if (state === 'dead' && hero.slide) RUN.slide += dx / 10;
   if (state === 'play' || state === 'dead') { $('dist').textContent = Math.floor(dist / 10) + 'm'; $('coins').textContent = '£' + coins; }
 }
-function nozzle() { const c = Math.cos(hero.rot), s = Math.sin(hero.rot), lx = -14 * HS, ly = -16 * HS; return [hero.x + lx * c - ly * s, hero.y + lx * s + ly * c]; }
+const NZX = -9.6, NZY = -12.4;   // owner 23 Nov: the outlet under the pressure cooker (was -14/-16, which put the flame behind him)
+function nozzle() { const c = Math.cos(hero.rot), s = Math.sin(hero.rot), lx = NZX * HS, ly = NZY * HS; return [hero.x + lx * c - ly * s, hero.y + lx * s + ly * c]; }
 
 
 
@@ -1177,7 +1181,7 @@ function giftsUpdate(dt, dx) {
     if (gf.k === 'btin') { if (gf.y0 === undefined) gf.y0 = gf.y; gf.x += dx * (gf.k === 'btin' ? .45 : .3); const A = gf.k === 'btin' ? 80 : 50; gf.y = Math.max(CEIL + 40, Math.min(FLOOR - 50, gf.y0 + Math.sin(gf.b * (gf.k === 'btin' ? 2.1 : 1.7)) * A)); }
     if (gf.k === 'btin') { gf.tr = gf.tr || []; gf.tr.unshift([gf.x, gf.y + Math.sin(gf.b * 3) * 4]); if (gf.tr.length > 9) gf.tr.pop(); }
     if (!gf.got && !hero.dead && state === 'play' && heroCircles().some(([x, y, r]) => Math.hypot(x - gf.x, y - gf.y) < r + (gf.k === 'box' ? 26 : gf.k === 'btin' ? 18 : 13))) {
-      gf.got = 1;
+      gf.got = 1; buzz(20);
       if (gf.k === 'box') { const rk = gf.ride || nextRide(); let seen = []; try { seen = JSON.parse(localStorage.getItem('jd_seenRides') || '[]'); } catch (e) {}
         if (seen.includes(rk) && rk !== 'kabootar') quickRide(rk); else { if (!seen.includes(rk)) { seen.push(rk); try { localStorage.setItem('jd_seenRides', JSON.stringify(seen)); } catch (e) {} } startReveal(rk); } }
       else if (gf.k === 'btin') { btins++; tinHud(false, btins - 1); $('tinHud').style.display = 'flex'; tinFly.push({ x: gf.x, y: gf.y, t: 0 }); pops.push({ x: gf.x, y: gf.y - 16, txt: "AMMI'S TIN!", col: '#7fb6ff', t: 0 }); tone(330, .08, 'square', .06); setTimeout(() => tone(240, .1, 'square', .05), 70); for (let i = 0; i < 10; i++) sparks.push({ x: gf.x, y: gf.y, vx: (Math.random() - .5) * 140, vy: (Math.random() - .5) * 140, l: .4, c: i % 2 ? '#ffd75a' : '#7fb6ff' }); }
@@ -1800,7 +1804,7 @@ function mechDeflect(o) { o.defl = 1; o.v = -(speed + 420); o.vy = -260 - Math.r
   SFX.clank(1); tone(600, .12, 'square', .05, 1.8, MIX && MIX.fx); shake = Math.max(shake, .12); flashT = .05; flashCol = '255,240,200';
   for (let i = 0; i < 16; i++) sparks.push({ x: o.x, y: o.y, vx: Math.random() * 260, vy: (Math.random() - .5) * 260, l: .35 + Math.random() * .25, c: ['#ffd75a', '#ffffff', '#ff9a2a'][i % 3] });
   pops.push({ x: hero.x + 30, y: hero.y - 175 * MCH, txt: 'DEFLECTED!', col: '#7fe3ff', t: 0 }); RUN.deflect = (RUN.deflect || 0) + 1; }
-function vehCrash() {
+function vehCrash() { buzz(70);
   const k = veh.k; if (k === 'logman' && veh.morph >= 1) logExplode(); veh = null; inv = 1.8; shake = .3; flashT = .15; flashCol = '255,200,120'; SFX.boom();
   hero.vy = -480; hero.ground = false;
   const cols = { tuktuk: ['#f7c51e', '#141414', '#ffe066', '#c9ced8'], carpet: ['#b3202e', '#ffd75a', '#7a1020', '#ffe9a8'], kabootar: ['#eef0f4', '#9aa3b5', '#7f899e', '#4fa36a'], sandals: ['#7dffa0', '#2fbf4a', '#c9a06a', '#ffffff'], mech: ['#e2252b', '#141418', '#ffffff', '#ff5a5c'], logman: ['#e8781e', '#b8500e', '#ffa64a', '#5a2a0a'] }[k];
@@ -2381,7 +2385,7 @@ function draw() {
   tinFly = tinFly.filter(f => !f.done);
   if (REVEAL) drawReveal();
   ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.drawImage(vigCv, 0, 0);
-  if (flashT > 0) { ctx.fillStyle = `rgba(${flashCol},${Math.min(.75, flashT * 4)})`; ctx.fillRect(0, 0, cv.width, cv.height); }
+  if (flashT > 0) { ctx.fillStyle = `rgba(${flashCol},${FLASH ? Math.min(.75, flashT * 4) : Math.min(.15, flashT)})`; ctx.fillRect(0, 0, cv.width, cv.height); }
 }
 
 function drawSkillHud() {
@@ -2557,7 +2561,7 @@ function thumb(cnv, key) {   // a masjid drawn small for the picker / the home t
   const k = Math.min(cnv.width * .94 / v.c.width, cnv.height * .9 / v.c.height); o.imageSmoothingQuality = 'high';
   o.drawImage(v.c, (cnv.width - v.c.width * k) / 2, cnv.height - v.c.height * k - 2, v.c.width * k, v.c.height * k);
 }
-function refreshHome() { try { bankedButtons(); } catch (e) {}
+function refreshHome() { try { bankedButtons(); } catch (e) {} try { homeInfo(); } catch (e) {}
   $('hBest').textContent = best + 'm'; $('hBank').textContent = '£' + bank.toLocaleString('en-GB'); $('misStars').textContent = '★'.repeat(MS.stars) + '☆'.repeat(3 - MS.stars);
   $('outName').textContent = (ITEMS.outfit.find(o => o.id === SHOP.outfit) || {}).name.split(' ')[0].toLowerCase(); $('mineName').textContent = mosName();
 }
@@ -2575,7 +2579,7 @@ function openPick() {
 }
 function setSound(on) { sndOn = !!on; $('snd').classList.toggle('off', !sndOn); if (!sndOn && hissG) hissG.gain.value = 0; if (sndOn) playback(); else if (keepAud) keepAud.pause(); syncSet(); }
 function syncSet() { const S1 = $('setSnd'), G1 = $('setGfx'), K1 = $('setShk'); if (!S1) return; [...S1.children].forEach(b => b.classList.toggle('on', (b.dataset.v === '1') === sndOn)); [...G1.children].forEach(b => b.classList.toggle('on', b.dataset.v === GFX));
-  [...K1.children].forEach(b => b.classList.toggle('on', (b.dataset.v === '1') === SHAKE)); document.querySelectorAll('#setBox input[data-mix]').forEach(r => { r.value = VOL[r.dataset.mix]; r.nextElementSibling.textContent = VOL[r.dataset.mix] + '%'; });
+  [...K1.children].forEach(b => b.classList.toggle('on', (b.dataset.v === '1') === SHAKE)); if ($('setFl')) [...$('setFl').children].forEach(b => b.classList.toggle('on', (b.dataset.v === '1') === FLASH)); document.querySelectorAll('#setBox input[data-mix]').forEach(r => { r.value = VOL[r.dataset.mix]; r.nextElementSibling.textContent = VOL[r.dataset.mix] + '%'; });
   $('setVols').classList.toggle('off', !sndOn); }
 function openSettings() { if (state !== 'menu') return; fillMasjids($('setMl')); syncSet(); $('setBox').classList.remove('hide'); }
 function share(txt) {
@@ -2586,7 +2590,7 @@ function share(txt) {
 function start() {
   if (!myMosque) { pickThenPlay = true; openPick(); return; }
   audio(); if (AC && AC.state === 'suspended') AC.resume();
-  street = []; skyline = []; reset(); passed = 0; state = 'intro'; hero.x = -30;
+  street = []; skyline = []; reset(); passed = 0; state = 'intro'; hero.x = -30; lbRun();
   ['home', 'over', 'pick', 'how'].forEach(id => $(id).classList.add('hide')); $('hud').style.display = 'block';
 }
 function goHome() { deadCook = null; boost = null; $('hsBox').classList.remove('on'); $('saveMe').classList.add('hide'); clearInterval(saveMe.iv); hero.dead = false; deadT = 0; veh = null; inv = 0; obs = []; coinList = []; gifts = []; $('eidiBox') && $('eidiBox').classList.add('hide'); window.TIN && TIN.close(); state = 'menu'; ['over'].forEach(id => $(id).classList.add('hide')); $('hud').style.display = 'none'; $('home').classList.remove('hide'); refreshHome(); }
@@ -2604,7 +2608,8 @@ function showOver() {
   const lm = lastMissions; $('ovMis').innerHTML = (lm && lm.got.length ? `<div class="mdone">${lm.got.map(x => '<div>✔ MISSION COMPLETE · ' + x + '</div>').join('')}${lm.rankUp ? '<div class="lvl">RANK UP! ' + lm.rankUp.toUpperCase() + '</div>' : ''}<div class="rew">+£${lm.reward} to your bank</div></div>` : '') + rankHtml() + '<div id="ovRows"></div>';
   missionRows($('ovRows')); bankedButtons();
   try { localStorage.setItem('jd_played', '1'); } catch (e) {}
-  $('over').classList.remove('hide'); }
+  $('over').classList.remove('hide'); $('over').classList.add('lock'); setTimeout(() => $('over').classList.remove('lock'), 900);   // owner 23 Nov: no accidental RUN AGAIN from frantic tapping
+  $('oR').hidden = true; nextUnlockUI(); lbSubmit(m, nb); }
 document.addEventListener('pointerdown', e => { if (e.target.closest && e.target.closest('.tile,.go,.seg button,.mcard')) { audio(); tone(1250, .035, 'square', .03, .7, MIX && MIX.fx); } }, true);   // every button clicks (owner 23 Nov)
 const tap = (id, fn) => $(id).addEventListener('pointerdown', e => { e.preventDefault(); e.stopPropagation(); fn(e); });
 // owner 22 Nov: taps on or near anything you can press never start the game (24 px dead zone round every button, the whole menu column)
@@ -2629,6 +2634,16 @@ $('bBat').addEventListener('touchstart', e => { e.preventDefault(); e.stopPropag
 function batBtn() { const b = $('bBat'); if (!b) return; const on = state === 'play' && !hero.dead && veh && veh.k === 'logman' && veh.morph >= 1 && (veh.batHP || 0) > 0 && !REVEAL; b.classList.toggle('hide', !on); if (!on) return; b.style.setProperty('--cd', ((1 - Math.max(0, veh.batCD || 0) / BAT_CD) * 100).toFixed(1) + '%'); b.classList.toggle('ready', (veh.batCD || 0) <= 0); }
 $('bHorn').addEventListener('touchstart', e => { e.preventDefault(); e.stopPropagation(); }, { passive: false }); window.addEventListener('keyup', e => { if (e.code === 'KeyS') shHold = false; });
 tap('bSet', openSettings); tap('setClose', () => $('setBox').classList.add('hide')); $('setBox').addEventListener('pointerdown', e => { e.stopPropagation(); if (e.target.id === 'setBox') $('setBox').classList.add('hide'); });
+tap('bPause', () => pauseGame()); tap('pzGo', () => setTimeout(() => { paused = false; $('pz').classList.add('hide'); }, 60));
+tap('pzHome', () => { paused = false; $('pz').classList.add('hide'); if (state === 'play' || state === 'intro') { bank += coins; try { localStorage.setItem('jd_bank', bank); } catch (e) {} coins = 0; } goHome(); });
+tap('bLb', () => openBoard('week')); $('oR').addEventListener('pointerdown', e => { e.stopPropagation(); openBoard('week'); }); tap('lbX', () => $('lbBox').classList.add('hide'));
+[...$('lbSeg').children].forEach(b => b.addEventListener('pointerdown', e => { e.stopPropagation(); LB.tab = b.dataset.v; renderBoard(); }));
+$('lbBox').addEventListener('pointerdown', e => { e.stopPropagation(); if (e.target.id === 'lbBox') $('lbBox').classList.add('hide'); });
+tap('nmGo', saveName); tap('nmNo', () => $('nameBox').classList.add('hide')); $('nmIn').addEventListener('keydown', e => { if (e.key === 'Enter') saveName(); });
+$('nameBox').addEventListener('pointerdown', e => e.stopPropagation()); $('bonusBox').addEventListener('pointerdown', e => e.stopPropagation()); tap('bnGo', collectBonus);
+if ($('setFl')) [...$('setFl').children].forEach(b => b.addEventListener('pointerdown', e => { e.stopPropagation(); FLASH = b.dataset.v === '1'; try { localStorage.setItem('jd_flash', FLASH ? '1' : '0'); } catch (x) {} syncSet(); }));
+setTimeout(() => { homeInfo(); apiGet('board', '&pid=' + PID).then(j => { LB.board = j; homeInfo(); }).catch(() => {}); }, 400);
+setTimeout(checkBonus, 2500);
 [...$('setSnd').children].forEach(b => b.addEventListener('pointerdown', e => { e.stopPropagation(); setSound(b.dataset.v === '1'); }));
 [...$('setShk').children].forEach(b => b.addEventListener('pointerdown', e => { e.stopPropagation(); SHAKE = b.dataset.v === '1'; try { localStorage.setItem('jd_shake', SHAKE ? '1' : '0'); } catch (x) {} syncSet(); }));
 document.querySelectorAll('#setBox input[data-mix]').forEach(r => { r.addEventListener('pointerdown', e => e.stopPropagation()); r.addEventListener('input', () => { VOL[r.dataset.mix] = +r.value; r.nextElementSibling.textContent = r.value + '%'; applyMix(); try { localStorage.setItem('jd_mix', JSON.stringify(VOL)); } catch (x) {} });
@@ -2789,7 +2804,7 @@ tap('bMis', () => { $('misRank').innerHTML = rankHtml(); missionRows($('misRows'
 tap('bShare', () => share('Late for Jummah? Play Jummah Dash – an SMR Original 🕌💨'));
 tap('again', start); tap('ovHome', goHome);
 tap('eidiGo', () => { if (POSTBANK) { bankedDone(); return; } if ($('eidiGo').dataset.life) revive(); else { $('eidiBox').classList.add('hide'); eidi = 0; showOver(); } });
-tap('ovShare', () => share(`I flew ${Math.floor(dist / 10)}m and grabbed £${coins} trying to get to Jummah 😂 Beat that on Jummah Dash:`));
+tap('ovShare', shareCard);
 tap('snd', () => setSound(!sndOn));
 const noHold = el => el && el.closest && el.closest('.btn,#home,.sheet,#over,#eidiBox,#pz,#rot,#bShield,#bDash,#bHorn,#bBat');
 window.addEventListener('pointerdown', e => { if (noHold(e.target)) return; holding = true; audio(); swipe = { x: e.clientX, y: e.clientY, t: performance.now(), id: e.pointerId, done: 0 }; });
@@ -2999,7 +3014,7 @@ const POL = (() => { const P = { fx: [], flock: [], nextFlock: 4, streak: 0, str
   P.star = star;
   // ---- jet flame: white-hot core, yellow and orange layers, flicker, shock diamonds, heat glow ----
   P.jet = (g, x, y, L, w, heat) => { g.save(); g.globalCompositeOperation = 'lighter';
-    const gl = g.createRadialGradient(x, y, 0, x, y, 10 + L * .45); gl.addColorStop(0, `rgba(255,${190 - heat * 60},90,.55)`); gl.addColorStop(1, 'rgba(255,120,40,0)'); g.fillStyle = gl; g.beginPath(); g.arc(x, y, 10 + L * .45, 0, 7); g.fill();
+    const gl = g.createRadialGradient(x, y + L * .3, 0, x, y + L * .3, 5 + L * .5); gl.addColorStop(0, `rgba(255,${190 - heat * 60},90,.4)`); gl.addColorStop(1, 'rgba(255,120,40,0)'); g.fillStyle = gl; g.beginPath(); g.arc(x, y + L * .3, 5 + L * .5, 0, 7); g.fill();
     const layer = (wd, len, c0, c1, c2, ph) => { const lg = g.createLinearGradient(0, y, 0, y + len); lg.addColorStop(0, c0); lg.addColorStop(.45, c1); lg.addColorStop(1, c2); g.fillStyle = lg; g.beginPath(); g.moveTo(x - wd, y);
       for (let k = 1; k <= 7; k++) { const yy = y + len * k / 7, ww = wd * (1 - k / 7) * (1 + .22 * Math.sin(t * 55 + k * 1.9 + ph)); g.lineTo(x - ww + (Math.random() - .5), yy); }
       for (let k = 7; k >= 1; k--) { const yy = y + len * k / 7, ww = wd * (1 - k / 7) * (1 + .22 * Math.cos(t * 51 + k * 2.3 + ph)); g.lineTo(x + ww + (Math.random() - .5), yy); } g.lineTo(x + wd, y); g.closePath(); g.fill(); };
@@ -3013,8 +3028,8 @@ const POL = (() => { const P = { fx: [], flock: [], nextFlock: 4, streak: 0, str
   P.heroPre = () => { if (state !== 'play' && state !== 'intro') return;
     const sq = hero.sq || 0; if (sq) { ctx.scale(1 + sq * .14, 1 - sq * .18); }
     if (hero.thrust && !BXD()) { const j = (hero.heat > .7 ? 1.6 : .5) * hero.heat; ctx.translate((Math.random() - .5) * j, (Math.random() - .5) * j);   // the cooker rattles under pressure
-      const nx = -14 * HS, ny = -16 * HS, L = 36 + Math.random() * 12 + (hero.thrustT < .12 ? 18 : 0); P.jet(ctx, nx, ny, L, 7, hero.heat); }
-    else if (!hero.ground && hero.oh <= 0) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; const pf = 4 + Math.random() * 2, lg = ctx.createLinearGradient(0, -16 * HS, 0, -16 * HS + pf); lg.addColorStop(0, 'rgba(180,220,255,.85)'); lg.addColorStop(1, 'rgba(80,140,255,0)'); ctx.fillStyle = lg; ctx.beginPath(); ctx.moveTo(-14 * HS - 2, -16 * HS); ctx.quadraticCurveTo(-14 * HS, -16 * HS + pf * 1.4, -14 * HS + 2, -16 * HS); ctx.fill(); ctx.restore(); } };   // pilot flame while gliding
+      const nx = NZX * HS, ny = NZY * HS, L = 13 + Math.random() * 5 + (hero.thrustT < .12 ? 7 : 0); P.jet(ctx, nx, ny, L, 3.6, hero.heat); }   // owner 23 Nov: a small flame right out of the cooker's outlet, mostly steam
+    else if (!hero.ground && hero.oh <= 0) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; const pf = 3 + Math.random() * 1.5, lg = ctx.createLinearGradient(0, NZY * HS, 0, NZY * HS + pf); lg.addColorStop(0, 'rgba(180,220,255,.85)'); lg.addColorStop(1, 'rgba(80,140,255,0)'); ctx.fillStyle = lg; ctx.beginPath(); ctx.moveTo(NZX * HS - 1.6, NZY * HS); ctx.quadraticCurveTo(NZX * HS, NZY * HS + pf * 1.4, NZX * HS + 1.6, NZY * HS); ctx.fill(); ctx.restore(); } };   // pilot flame while gliding
   P.heroPost = () => { if (state !== 'play' && state !== 'intro') return; const h = hero.heat || 0;
     if (h > .62 || hero.oh > 0) { const k = hero.oh > 0 ? .8 : (h - .62) / .38, pu = .6 + .4 * Math.sin(t * (10 + k * 20));   // the cooker glows red-hot before it blows
       ctx.save(); ctx.globalCompositeOperation = 'lighter'; const cx = -13 * HS, cy = -31 * HS, rg = ctx.createRadialGradient(cx, cy, 0, cx, cy, 15 * HS); rg.addColorStop(0, `rgba(255,70,30,${(.55 * k * pu).toFixed(3)})`); rg.addColorStop(1, 'rgba(255,40,20,0)'); ctx.fillStyle = rg; ctx.beginPath(); ctx.arc(cx, cy, 15 * HS, 0, 7); ctx.fill(); ctx.restore(); } };
@@ -3110,5 +3125,89 @@ const POL = (() => { const P = { fx: [], flock: [], nextFlock: 4, streak: 0, str
 window.__pol = POL;
 function frame(now) { const dt = Math.min(.05, (now - last) / 1000); last = now; shieldBtn(); dashBtn(); hornBtn(); batBtn(); SLOW = veh && veh.k === 'mech' && veh.su < 1.05 ? .12 : Math.min(1, SLOW + dt * 3); if (FM) { if (!paused) { FMS.step(dt); if (FM && FM.ph === 'out' && FM.back) update(dt); } FMS.frame(); requestAnimationFrame(frame); return; } if (REVEAL && !paused) { revealTick(dt); holding = false; } else if (!paused) { let k = 1; if (HITT > 0) { HITT -= dt; k = 0; } else if (SMT > 0) { SMT -= dt; k = .35; } update(dt * SLOW * k); } else holding = false; draw(); if (bakeQ.length) bakeOne(); requestAnimationFrame(frame); }
 requestAnimationFrame(frame);
-window.__jd = { get run() { return RUN; }, get circles() { return heroCircles(); }, get pops() { return pops; }, get box() { return BOXR; }, get vk() { return veh; }, zap: (x, y, len = 120, ang = Math.PI / 2) => obs.push({ type: 'zap', x, y, len, ang, spin: 0, seed: 1 }), horn: () => hornBlast(), get hornCD() { return hornCD; }, get fm() { return FM; }, get speed() { return speed; }, get coinList() { return coinList; }, get W() { return W; }, get gifts() { return gifts; }, get runT() { return runT; }, veh: (k, r) => startVehicle(k, r), laser: () => [CEIL + 40, (CEIL + FLOOR) / 2].forEach((y, i) => obs.push({ type: 'laser', x: W / 2, y, ph: 'in', pt: 0, slide: 0, d: i * .12 })), eidi: n => { eidi = n; }, kill: w => die(w), gift: (k, r, x, y) => gifts.push({ k, ride: r, x: x || W * .6, y: y || 200, b: 0 }), get state() { return state; }, get V() { return veh; }, start, hero, get obs() { return obs; }, spawnRocket: () => obs.push({ type: "rocket", x: W + 40, y: hero.y - 30, warn: 1.5, lock: 0, v: 0 }), setHold: v => holding = v, get dist() { return dist; }, mis: (s, c) => { RUN.steamed = s; coins = c; }, get npcs() { return npcs; }, boost: m => startBoost(m), get SHOP() { return SHOP; }, bc: (k, kd) => buildingCanvas(kd || "lm", k), carSprite: (k, ci, f) => carSprite(k, ci, f), queue: k => deck.unshift([k]), street: () => street, npc: x => spawnNpc(x), car: (x, k, l) => spawnCar(x, k, false, l), get STREET() { return STREET; } };
+
+/* ===== owner 23 Nov: pause, daily bonus, next unlock, leaderboard, score card, auto-smooth ===== */
+const API = '/jummahdash/api.php';
+const PID = (() => { let p = ''; try { p = localStorage.getItem('jd_pid') || ''; } catch (e) {} if (!p) { p = (Math.random().toString(36).slice(2, 10) + Date.now().toString(36)).slice(0, 20); try { localStorage.setItem('jd_pid', p); } catch (e) {} } return p; })();
+let LBNAME = (() => { try { return localStorage.getItem('jd_name') || ''; } catch (e) { return ''; } })();
+const LB = { rid: '', board: null, tab: 'week', rank: 0, lastM: 0 };
+function apiGet(a, q) { return fetch(API + '?a=' + a + (q || ''), { cache: 'no-store', credentials: 'same-origin' }).then(r => r.json()); }
+function apiPost(a, b) { return fetch(API + '?a=' + a, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(b) }).then(r => r.json()); }
+function lbRun() { LB.rid = ''; apiPost('run', {}).then(j => { if (j && j.id) LB.rid = j.id; }).catch(() => {}); }
+function lbRankText(r) { return r ? '#' + r + ' THIS WEEK' : ''; }
+function lbSubmit(m, nb) { LB.lastM = m; if (m < 20 || !LB.rid) return;
+  apiPost('score', { pid: PID, name: LBNAME, score: m, run: LB.rid }).then(j => { if (!j || !j.ok) return;
+    if (j.saved) { LB.board = j; const r = j.me && j.me.week ? j.me.week.rank : 0; if (j.me && j.me.week && j.me.week.score === m) showRank(r); else if (r) showRank(r, true); homeInfo(); }
+    else if (j.needName) setTimeout(() => openName(j.rank), 1300); }).catch(() => {}); }
+function showRank(r, best) { const el = $('oR'); if (!el || !r) return; el.textContent = (best ? 'YOU: ' : '') + lbRankText(r); el.hidden = false; }
+function openName(rank, rename) { const b = $('nameBox'); $('nmRank').textContent = rename ? '' : '#' + rank; $('nmRank').style.display = rename ? 'none' : ''; $('nmT').textContent = rename ? 'CHANGE YOUR NAME' : "YOU'RE ON THE BOARD!";
+  $('nmIn').value = LBNAME; $('nmE').textContent = ''; b.dataset.mode = rename ? 'rename' : 'new'; b.classList.remove('hide'); setTimeout(() => { try { $('nmIn').focus(); } catch (e) {} }, 350); }
+function saveName() { const n = $('nmIn').value.trim(); if (n.length < 2) { $('nmE').textContent = 'At least 2 letters.'; return; }
+  const b = $('nameBox'), done = name => { LBNAME = name; try { localStorage.setItem('jd_name', name); } catch (e) {} b.classList.add('hide'); };
+  if (b.dataset.mode === 'rename') { apiPost('name', { pid: PID, name: n }).then(j => { if (!j.ok) { $('nmE').textContent = j.err || 'Try another name.'; return; } done(j.name); toast('Name changed'); openBoard(); }).catch(() => { $('nmE').textContent = 'No connection, try again.'; }); return; }
+  apiPost('score', { pid: PID, name: n, score: LB.lastM, run: LB.rid }).then(j => { if (!j || !j.ok) { $('nmE').textContent = (j && j.err && j.err !== 'check') ? j.err : 'Try another name.'; return; }
+    done(j.name || n); LB.board = j; const r = j.me && j.me.week ? j.me.week.rank : 0; showRank(r); homeInfo(); toast("You're " + lbRankText(r).toLowerCase() + '!'); }).catch(() => { $('nmE').textContent = 'No connection, try again.'; }); }
+function renderBoard() { const j = LB.board, L = $('lbList'); if (!j) { L.innerHTML = '<p class="lbmut">Loading…</p>'; return; }
+  const rows = j[LB.tab] || []; L.innerHTML = rows.length ? rows.map((r, i) => `<div class="lbr g${i + 1}${r.me ? ' me' : ''}"><span class="n">${i + 1}</span><span class="nm">${esc(r.name)}${r.me ? ' (YOU)' : ''}</span><span class="sc">${r.score.toLocaleString('en-GB')}m</span></div>`).join('') : '<p class="lbmut">No scores yet. Be the first!</p>';
+  [...$('lbSeg').children].forEach(b => b.classList.toggle('on', b.dataset.v === LB.tab));
+  const me = j.me && j.me[LB.tab]; $('lbMe').innerHTML = me ? `Your best: <b>${me.score.toLocaleString('en-GB')}m</b> · #${me.rank}${LBNAME ? ` · <button id="lbRen">Change name</button>` : ''}` : 'Fly 20m or more to get on the board.';
+  const rb = $('lbRen'); if (rb) rb.addEventListener('pointerdown', e => { e.stopPropagation(); $('lbBox').classList.add('hide'); openName(0, true); }); }
+function esc(t) { return String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+function openBoard(tab) { if (tab) LB.tab = tab; $('lbBox').classList.remove('hide'); renderBoard(); apiGet('board', '&pid=' + PID).then(j => { LB.board = j; renderBoard(); homeInfo(); }).catch(() => { if (!LB.board) $('lbList').innerHTML = '<p class="lbmut">Can\'t load the board right now.</p>'; }); }
+// next thing to unlock (results + home)
+function nextUnlock() { const L = [];
+  ITEMS.gadget.forEach(it => L.push(['gadget', it])); ITEMS.outfit.forEach(it => L.push(['outfit', it])); ITEMS.style.filter(it => !/^bat_/.test(it.id) || window.JD_LAKRI).forEach(it => L.push(['style', it]));
+  const slot = ITEMS.util.find(i => i.id === 'slot'); if (slot) L.push(['util', slot]);
+  const left = L.filter(([tab, it]) => it.price > 0 && !owned(tab, it)); if (!left.length) return null;
+  const can = left.filter(([, it]) => it.price <= bank).sort((a, b) => b[1].price - a[1].price); if (can.length) return { tab: can[0][0], it: can[0][1], can: 1 };
+  const nx = left.sort((a, b) => a[1].price - b[1].price)[0]; return { tab: nx[0], it: nx[1], need: nx[1].price - bank, pct: Math.max(.03, bank / nx[1].price) }; }
+function titleCase(s) { return s.toLowerCase().replace(/(^|\s)\S/g, c => c.toUpperCase()); }
+function nextUnlockUI() { const n = nextUnlock(), el = $('ovNext'); if (!el) return; if (!n) { el.innerHTML = ''; return; }
+  el.innerHTML = n.can ? `<div class="nx can" data-tab="${n.tab}"><span class="ic">🛍️</span><div style="flex:1"><small>YOU CAN AFFORD</small><b>${titleCase(n.it.name)} <em>£${n.it.price.toLocaleString('en-GB')}</em></b></div></div>`
+    : `<div class="nx" data-tab="${n.tab}"><span class="ic">🎯</span><div style="flex:1"><small>NEXT UNLOCK</small><b><em>£${n.need.toLocaleString('en-GB')}</em> more for ${titleCase(n.it.name)}</b><div class="bar"><i style="width:${(n.pct * 100).toFixed(1)}%"></i></div></div></div>`;
+  el.firstChild.addEventListener('pointerdown', e => { e.stopPropagation(); openShop(n.tab); }); }
+// daily login bonus (7-day streak)
+const BONUS = [50, 75, 100, 150, 200, 300, 500];
+function dayKeyOf(d) { return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); }
+function loginState() { let L = null; try { L = JSON.parse(localStorage.getItem('jd_login') || 'null'); } catch (e) {} return L || { d: '', n: 0 }; }
+function checkBonus() { let adm = ''; try { adm = localStorage.getItem('jd_admin') || ''; } catch (e) {} if (state !== 'menu' || adm) return; if (!$('home') || $('home').classList.contains('hide') || document.querySelector('.sheet:not(.hide)')) { setTimeout(checkBonus, 2000); return; } const L = loginState(), today = dayKeyOf(new Date()); if (L.d === today) return;
+  const yest = dayKeyOf(new Date(Date.now() - 864e5)), n = L.d === yest ? (L.n % 7) + 1 : 1, amt = BONUS[n - 1];
+  $('bnP').textContent = n === 1 ? 'Come back every day for bigger rewards' : 'Day ' + n + ' in a row · keep it going!';
+  $('bnDays').innerHTML = BONUS.map((v, i) => `<div class="bnd${i + 1 < n ? ' done' : i + 1 === n ? ' today' : ''}"><small>DAY ${i + 1}</small><b>£${v}</b></div>`).join('');
+  $('bnGo').textContent = 'COLLECT £' + amt; $('bonusBox').dataset.n = n; $('bonusBox').classList.remove('hide'); }
+function collectBonus() { const n = +$('bonusBox').dataset.n || 1, amt = BONUS[n - 1]; bank += amt; try { localStorage.setItem('jd_bank', bank); localStorage.setItem('jd_login', JSON.stringify({ d: dayKeyOf(new Date()), n })); } catch (e) {}
+  audio(); [988, 1175, 1568].forEach((f, i) => setTimeout(() => tone(f, .12, 'square', .045), i * 90)); $('bonusBox').classList.add('hide'); toast('+£' + amt + ' daily bonus!'); refreshHome(); }
+// home info pills: weekly rank, next unlock, streak
+function homeInfo() { const el = $('hInfo'); if (!el) return; const h = [], j = LB.board, L = loginState(), n = nextUnlock();
+  if (j && j.me && j.me.week) h.push(`<span class="hp" data-go="lb">🏆 <i>#${j.me.week.rank}</i> THIS WEEK</span>`); else h.push(`<span class="hp" data-go="lb">🏆 LEADERBOARD</span>`);
+  if (n) h.push(n.can ? `<span class="hp" data-go="shop" data-tab="${n.tab}">🛍️ <i>${titleCase(n.it.name)}</i> READY TO BUY</span>` : `<span class="hp" data-go="shop" data-tab="${n.tab}">🎯 <i>£${n.need.toLocaleString('en-GB')}</i> TO ${titleCase(n.it.name).toUpperCase()} <u><b style="width:${(n.pct * 100).toFixed(0)}%"></b></u></span>`);
+  if (L.n > 1 && L.d === dayKeyOf(new Date())) h.push(`<span class="hp">🔥 <i>${L.n}-DAY</i> STREAK</span>`);
+  el.innerHTML = h.join('');
+  el.querySelectorAll('.hp[data-go]').forEach(b => b.addEventListener('pointerdown', e => { e.stopPropagation(); e.preventDefault(); if (b.dataset.go === 'lb') openBoard('week'); else openShop(b.dataset.tab); })); }
+// score card picture to share
+const CARD_IMGS = {}; ['art/logo.webp?h=d69bcb982d', 'art/hero_hd.webp?h=198cf84203'].forEach(src => { const im = new Image(); im.src = src; CARD_IMGS[src] = im; });
+function scoreCard() { const W2 = 1080, H2 = 1350, c = document.createElement('canvas'); c.width = W2; c.height = H2; const g = c.getContext('2d'), m = LB.lastM || Math.floor(dist / 10);
+  const bg = g.createRadialGradient(W2 * .35, H2 * .25, 50, W2 * .5, H2 * .5, H2 * .9); bg.addColorStop(0, '#5a33a8'); bg.addColorStop(.5, '#2a1756'); bg.addColorStop(1, '#120a2a'); g.fillStyle = bg; g.fillRect(0, 0, W2, H2);
+  g.save(); g.translate(W2 / 2, H2 * .42); g.fillStyle = 'rgba(255,220,120,.07)'; for (let i = 0; i < 20; i++) { g.rotate(Math.PI / 10); g.beginPath(); g.moveTo(0, 0); g.lineTo(-90, -1400); g.lineTo(90, -1400); g.fill(); } g.restore();
+  g.strokeStyle = '#ffd75a'; g.lineWidth = 14; g.strokeRect(28, 28, W2 - 56, H2 - 56);
+  const lg = CARD_IMGS['art/logo.webp?h=d69bcb982d']; if (lg.complete && lg.naturalWidth) { const w = 820, h = w * lg.naturalHeight / lg.naturalWidth; g.drawImage(lg, (W2 - w) / 2, 70, w, h); }
+  const hr = CARD_IMGS['art/hero_hd.webp?h=198cf84203']; if (hr.complete && hr.naturalWidth) { const h = 700, w = h * hr.naturalWidth / hr.naturalHeight; g.drawImage(hr, W2 - w - 30, H2 - h - 150, w, h); }
+  g.textAlign = 'left'; g.fillStyle = '#cfc6ff'; g.font = '600 44px Silk, sans-serif'; g.fillText('I FLEW', 90, 470);
+  const dg = g.createLinearGradient(0, 480, 0, 660); dg.addColorStop(0, '#ffffff'); dg.addColorStop(.6, '#ffe27a'); dg.addColorStop(1, '#ffb52e');
+  g.font = '700 190px PS, Oswald, sans-serif'; g.lineWidth = 16; g.strokeStyle = '#2a1050'; g.strokeText(m.toLocaleString('en-GB') + 'm', 80, 650); g.fillStyle = dg; g.fillText(m.toLocaleString('en-GB') + 'm', 80, 650);
+  g.font = '700 58px PS, Oswald, sans-serif'; g.fillStyle = '#ffd75a'; g.fillText('£' + coins + ' COLLECTED', 90, 740);
+  const r = LB.board && LB.board.me && LB.board.me.week ? LB.board.me.week.rank : 0; let y = 820;
+  if (r) { g.fillStyle = '#ffd23a'; const tw = 520; g.beginPath(); g.roundRect ? g.roundRect(84, y - 58, tw, 80, 40) : g.rect(84, y - 58, tw, 80); g.fill(); g.fillStyle = '#3a1600'; g.font = '700 50px PS, Oswald, sans-serif'; g.fillText('#' + r + ' IN LUTON THIS WEEK', 112, y); y += 100; }
+  g.fillStyle = '#e9e4ff'; g.font = '600 38px Silk, sans-serif'; g.fillText('Still not at ' + mosName().replace(/^Luton /, '') + '…', 90, y);
+  g.fillStyle = 'rgba(10,5,28,.75)'; g.fillRect(28, H2 - 160, W2 - 56, 132); g.textAlign = 'center'; g.fillStyle = '#fff'; g.font = '700 54px PS, Oswald, sans-serif'; g.fillText('CAN YOU BEAT ME?', W2 / 2, H2 - 98); g.fillStyle = '#ffd75a'; g.font = '600 36px Silk, sans-serif'; g.fillText('smrgraphics.co.uk/jummahdash', W2 / 2, H2 - 50);
+  return c; }
+function shareCard() { const m = LB.lastM || Math.floor(dist / 10), txt = `I flew ${m}m on Jummah Dash trying to get to Jummah 😂 Can you beat me?`, url = 'https://smrgraphics.co.uk/jummahdash';
+  toast('Making your score card…'); setTimeout(() => { const c = scoreCard(); c.toBlob(b => { if (!b) { share(txt); return; } const f = new File([b], 'jummah-dash-' + m + 'm.png', { type: 'image/png' });
+    if (navigator.canShare && navigator.canShare({ files: [f] })) navigator.share({ files: [f], text: txt + ' ' + url }).catch(() => {});
+    else { const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = f.name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000); toast('Score card saved'); } }, 'image/png'); }, 60); }
+// auto-smooth: if HD stutters in the first runs (and the player never picked), switch to SMOOTH by itself
+const AUTO = { n: 0, slow: 0, last: 0, done: (() => { try { return !!localStorage.getItem('jd_gfx'); } catch (e) { return true; } })() };
+function autoSmooth() { if (AUTO.done || state !== 'play' || paused) { AUTO.last = 0; return; } const now = performance.now(); if (AUTO.last) { const ms = now - AUTO.last; if (ms < 250) { AUTO.n++; if (ms > 26) AUTO.slow++; } } AUTO.last = now;
+  if (AUTO.n >= 600) { AUTO.done = true; if (AUTO.slow / AUTO.n > .35 && GFX === 'hd') { GFX = 'lo'; try { localStorage.setItem('jd_gfx', 'lo'); } catch (e) {} resize(); toast('Smooth graphics switched on for your phone'); } else { try { localStorage.setItem('jd_gfx', GFX); } catch (e) {} } } }
+window.__jd = { card: () => scoreCard().toDataURL('image/jpeg', .85), get run() { return RUN; }, get circles() { return heroCircles(); }, get pops() { return pops; }, get box() { return BOXR; }, get vk() { return veh; }, zap: (x, y, len = 120, ang = Math.PI / 2) => obs.push({ type: 'zap', x, y, len, ang, spin: 0, seed: 1 }), horn: () => hornBlast(), get hornCD() { return hornCD; }, get fm() { return FM; }, get speed() { return speed; }, get coinList() { return coinList; }, get W() { return W; }, get gifts() { return gifts; }, get runT() { return runT; }, veh: (k, r) => startVehicle(k, r), laser: () => [CEIL + 40, (CEIL + FLOOR) / 2].forEach((y, i) => obs.push({ type: 'laser', x: W / 2, y, ph: 'in', pt: 0, slide: 0, d: i * .12 })), eidi: n => { eidi = n; }, kill: w => die(w), gift: (k, r, x, y) => gifts.push({ k, ride: r, x: x || W * .6, y: y || 200, b: 0 }), get state() { return state; }, get V() { return veh; }, start, hero, get obs() { return obs; }, spawnRocket: () => obs.push({ type: "rocket", x: W + 40, y: hero.y - 30, warn: 1.5, lock: 0, v: 0 }), setHold: v => holding = v, get dist() { return dist; }, mis: (s, c) => { RUN.steamed = s; coins = c; }, get npcs() { return npcs; }, boost: m => startBoost(m), get SHOP() { return SHOP; }, bc: (k, kd) => buildingCanvas(kd || "lm", k), carSprite: (k, ci, f) => carSprite(k, ci, f), queue: k => deck.unshift([k]), street: () => street, npc: x => spawnNpc(x), car: (x, k, l) => spawnCar(x, k, false, l), get STREET() { return STREET; } };
 })();
