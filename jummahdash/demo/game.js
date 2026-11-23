@@ -334,7 +334,13 @@ function tone(freq, dur, type = 'sine', vol = .12, slide = 0, bus = null) {
   if (slide) o.frequency.exponentialRampToValueAtTime(Math.max(30, freq * slide), t + dur);
   g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(.0001, t + dur); o.connect(g); g.connect(bus || (MIX ? MIX.fx : AC.destination)); o.start(t); o.stop(t + dur + .02);
 }
-const SFX = { planeT() {   // owner 23 Nov: jet climbing out of the airport: deep roar rising and fading, a whine on top
+const SFX = { mutate() {   // a creaking, growling transformation
+    if (!AC || !sndOn) return; const bus = MIX ? MIX.fx : AC.destination, t0 = AC.currentTime;
+    const o = AC.createOscillator(), g = AC.createGain(), lp = AC.createBiquadFilter(); o.type = 'sawtooth'; o.frequency.setValueAtTime(140, t0); o.frequency.exponentialRampToValueAtTime(55, t0 + 1.2); lp.type = 'lowpass'; lp.frequency.setValueAtTime(400, t0); lp.frequency.linearRampToValueAtTime(1400, t0 + .8); lp.frequency.linearRampToValueAtTime(300, t0 + 1.3);
+    g.gain.setValueAtTime(.0001, t0); g.gain.exponentialRampToValueAtTime(.12, t0 + .2); g.gain.setValueAtTime(.12, t0 + .9); g.gain.exponentialRampToValueAtTime(.0001, t0 + 1.4); o.connect(lp); lp.connect(g); g.connect(bus); o.start(t0); o.stop(t0 + 1.5);
+    for (let i = 0; i < 7; i++) { const at = t0 + .1 + i * .13 + Math.random() * .05, c = AC.createOscillator(), cg = AC.createGain(); c.type = 'square'; c.frequency.setValueAtTime(260 + Math.random() * 200, at); c.frequency.exponentialRampToValueAtTime(90, at + .07); cg.gain.setValueAtTime(.03, at); cg.gain.exponentialRampToValueAtTime(.0001, at + .08); c.connect(cg); cg.connect(bus); c.start(at); c.stop(at + .1); }   // wood creaks
+    setTimeout(() => { tone(90, .4, 'sawtooth', .09, .5, bus); tone(180, .3, 'square', .05, .6, bus); }, 720); },
+  planeT() {   // owner 23 Nov: jet climbing out of the airport: deep roar rising and fading, a whine on top
     if (!AC || !sndOn) return; const t0 = AC.currentTime, D = 6.5, bus = MIX ? MIX.traffic : AC.destination;
     const n = AC.createBufferSource(), b = AC.createBuffer(1, AC.sampleRate * 2, AC.sampleRate), d = b.getChannelData(0); let last = 0; for (let i = 0; i < d.length; i++) { last = last * .985 + (Math.random() * 2 - 1) * .15; d[i] = last; } n.buffer = b; n.loop = true;
     const lp = AC.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.setValueAtTime(380, t0); lp.frequency.linearRampToValueAtTime(900, t0 + 2.5); lp.frequency.linearRampToValueAtTime(500, t0 + D);
@@ -987,7 +993,7 @@ function update(dt) {
     if (!hero.dead && (state === 'play')) {
       const hc = heroCircles();
       if (o.type === 'zap') { const ax = o.x - Math.cos(o.ang) * o.len / 2, ay = o.y - Math.sin(o.ang) * o.len / 2, bx = o.x + Math.cos(o.ang) * o.len / 2, by = o.y + Math.sin(o.ang) * o.len / 2;
-        if (hc.some(([x, y, r]) => segDist(x, y, ax, ay, bx, by) < r + 1.5)) { if (mechArmour()) mechShock(o.x, o.y); else die('zap'); } }
+        if (hc.some(([x, y, r]) => segDist(x, y, ax, ay, bx, by) < r + 1.5)) { if (mechArmour()) mechShock(o.x, o.y); else if (veh && veh.k === 'logman' && veh.morph >= 1) logZap(o); else die('zap'); } }
       if (o.type === 'rocket' && o.v && !o.defl && mechShieldUp() && o.x < hero.x + 112 * MCH && o.x > hero.x && Math.abs(o.y - (hero.y - 90 * MCH)) < 98 * MCH) { mechDeflect(o); shieldBlock(o.x, o.y); }   // hits the shield first
       if (o.type === 'rocket' && o.v && !o.defl && hc.some(([x, y, r]) => Math.hypot(x - o.x, y - o.y) < r + 4)) { if (mechShieldUp()) mechDeflect(o); else die('rocket'); }
       if (o.type === 'laser' && o.ph === 'fire' && hc.some(([x, y, r]) => Math.abs(y - o.y) < r + 2.5)) { if (veh && veh.k === 'tuktuk') { tukLaser(o); } else if (mechShieldUp()) { if (Math.random() < .3) shieldBlock(hero.x + 98 * MCH, o.y); veh.shHit = Math.max(veh.shHit || 0, .6); } else die('laser'); }
@@ -1200,7 +1206,7 @@ function ballCrackle(x, y, ang, a) {   // little jagged arcs licking round the h
     ctx.strokeStyle = `rgba(255,214,80,${.5 * a})`; ctx.lineWidth = 2.6; ctx.stroke(); ctx.strokeStyle = `rgba(255,255,230,${.9 * a})`; ctx.lineWidth = 1; ctx.stroke(); }
   ctx.restore(); }
 const CARPET_ICON = img('art/icon_carpet.webp?h=d79b0ad5d2');   // owner 23 Nov: his carpet render on the token (the drawn one looked like bacon)
-function rideIcon(k) { if (k === 'carpet' && CARPET_ICON.complete && CARPET_ICON.naturalWidth) return CARPET_ICON; if (RIDE_ICON[k]) return RIDE_ICON[k];
+function rideIcon(k) { if (k === 'carpet' && CARPET_ICON.complete && CARPET_ICON.naturalWidth) return CARPET_ICON; if (k === 'logman') return CARD.logman && CARD.logman.complete && CARD.logman.naturalWidth ? CARD.logman : null; if (RIDE_ICON[k]) return RIDE_ICON[k];
   if (k === 'kabootar') return FK_ICON.complete && FK_ICON.naturalWidth ? FK_ICON : null;   // the real Flappy Kabootar app icon
   const c = document.createElement('canvas'); c.width = c.height = 192; const g = c.getContext('2d'); g.scale(3, 3); g.lineJoin = g.lineCap = 'round'; g.lineWidth = 2; g.strokeStyle = '#1a1024';
   const lg = (y0, y1, stops) => { const q = g.createLinearGradient(0, y0, 0, y1); stops.forEach(([o, col]) => q.addColorStop(o, col)); return q; };
@@ -1242,8 +1248,8 @@ function rideIcon(k) { if (k === 'carpet' && CARPET_ICON.complete && CARPET_ICON
 function roundRect(x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
 
 /* rides: tuk-tuk (drives on the pavement, tap to jump) and magic carpet (hold to rise, glides down). One hit = the ride blows up and he's thrown clear. */
-const VEH_NAME = { tuktuk: 'TUK-TUK', carpet: 'MAGIC CARPET', kabootar: 'FLAPPY KABOOTAR', sandals: 'GRAVITY SANDALS', mech: 'HOOVER MECH' };
-const RIDES = ['tuktuk', 'carpet', 'kabootar', 'sandals', 'mech'];
+const VEH_NAME = { tuktuk: 'TUK-TUK', carpet: 'MAGIC CARPET', kabootar: 'FLAPPY KABOOTAR', sandals: 'GRAVITY SANDALS', mech: 'HOOVER MECH', logman: 'LAKRI MAN' };
+const RIDES = ['tuktuk', 'carpet', 'kabootar', 'sandals', 'mech', 'logman'];
 const MCH = 1.08;   // Hoover Mech size (owner 23 Nov: doubled, then 25% smaller: about 45% of the screen tall)
 // gift-box rides come from a shuffled deck: every ride once before any repeats, never the same one twice in a row, kept between games (owner, 22 Nov)
 function nextRide() { let bag = []; try { bag = JSON.parse(localStorage.getItem('jd_ridebag') || '[]').filter(k => RIDES.includes(k)); } catch (e) {}
@@ -1383,10 +1389,10 @@ function drawBoost() {
 /* owner 23 Nov, from his Jetpack Joyride 2 recording: grab the token -> white flash -> the game freezes under a big title card
    (teal energy band, the ride's picture, its name, an arrow streak; ~1.6 s) -> the band wipes off -> the ride's parts fly in
    from off screen with white streaks and lock onto him one by one -> a final white flash and off he goes. */
-let REVEAL = null; const CARD = {}; ['mech', 'carpet', 'sandals', 'kabootar', 'tuktuk'].forEach(k => { CARD[k] = img('art/card/' + k + '.webp?v=1'); });
+let REVEAL = null; const CARD = {}; ['mech', 'carpet', 'sandals', 'kabootar', 'tuktuk', 'logman'].forEach(k => { CARD[k] = img('art/card/' + k + '.webp?v=1'); });
 function quickRide(k) {   // owner 23 Nov: repeat pickups skip the title card: a flash, a quick snap-together and straight back into play
   flashT = .18; flashCol = '255,255,255'; inv = Math.max(inv, 1.2); tone(880, .06, 'square', .05); setTimeout(() => tone(1320, .1, 'square', .05), 60);
-  startVehicle(k, true); if (!veh) return; if (k === 'mech') veh.su = Math.max(veh.su || 0, .72); else { veh.asm = .5; veh.fast = 1; } POL.fx.push({ k: 'ring', x: hero.x, y: hero.y - 30, t: 0, l: .4, col: '255,255,255' }); }
+  startVehicle(k, true); if (!veh) return; if (k === 'mech') veh.su = Math.max(veh.su || 0, .72); else if (k === 'logman') veh.morph = .2; else { veh.asm = .5; veh.fast = 1; } POL.fx.push({ k: 'ring', x: hero.x, y: hero.y - 30, t: 0, l: .4, col: '255,255,255' }); }
 function startReveal(k) { REVEAL = { k, t: 0, seed: Math.random() * 99 }; flashT = .3; flashCol = '255,255,255'; inv = Math.max(inv, 2.5);
   tone(392, .12, 'sawtooth', .05, 2); setTimeout(() => { tone(523, .1, 'square', .06); setTimeout(() => tone(659, .1, 'square', .06), 80); setTimeout(() => tone(988, .25, 'square', .06), 160); }, 120); }
 function revealTick(dt) { REVEAL.t += dt; if (flashT > 0) flashT -= dt; if (REVEAL.t >= 1.75) { const k = REVEAL.k; REVEAL = null; startVehicle(k, true); } }
@@ -1419,6 +1425,7 @@ function startVehicle(k, fromReveal) {
   RUN[k] = 1;
   veh = { k, t: 0, vy: 0, jumps: 0, held: false, wob: 0, g: 1, s: 1, flap: 0, fuel: 1, nb: 0, ht: 0 }; if (k === 'kabootar') veh.tip = 1; if (k === 'tuktuk' && !RUN.nitroTip) { RUN.nitroTip = 1; setTimeout(() => pops.push({ x: hero.x + 30, y: hero.y - 110, txt: 'TAP TO JUMP · HOLD TO GO HIGHER!', col: '#ffd21f', t: 0 }), 900); setTimeout(() => pops.push({ x: hero.x + 60, y: hero.y - 140, txt: 'HIT HORN TO BLAST HAZARDS!', col: '#ffe680', t: 0 }), 2600); } if (k === 'tuktuk') hornCD = 0; hero.thrust = false; if (k === 'kabootar') hero.vy = -200;
   if (k === 'mech') { veh.su = 0; veh.wp = 0; veh.air = 1; veh.shOn = 0; veh.bat = 1; veh.shA = 0; hero.y = Math.max(hero.y, CEIL + 172 * MCH); hero.vy = 0; veh.lk = 0; SFX.mechStart(); rings.push({ x: hero.x, y: hero.y - 30, t: 0 }); veh.noBanner = fromReveal; return; }   // banner comes after the suit-up (skipped when the title card already showed)
+  if (k === 'logman') { veh.morph = 0; veh.ph = 0; veh.face = 'angry'; inv = Math.max(inv, 1.8); SFX.mutate && SFX.mutate(); return; }   // no part assembly: he mutates (drawn in drawVehicle)
   if (fromReveal) { veh.asm = 0; veh.lockd = 0; } else { banner = { k, t: 0 }; flashT = .12; flashCol = '255,255,255'; } rings.push({ x: hero.x, y: hero.y - 30, t: 0 });
   tone(523, .1, 'square', .06); setTimeout(() => tone(659, .1, 'square', .06), 90); setTimeout(() => tone(784, .2, 'square', .06), 180);
 }
@@ -1426,6 +1433,7 @@ function vehCircles() { const x = hero.x, y = hero.y;
   if (veh.k === 'kabootar') return [[x, y - 18, 17], [x + 30, y - 38, 8], [x - 14, y - 50, 11], [x - 13, y - 74, 10]];
   if (veh.k === 'mech') return [[x - 2 * MCH, y - 30 * MCH, 24 * MCH], [x, y - 92 * MCH, 34 * MCH], [x + 4 * MCH, y - 132 * MCH, 22 * MCH], [x + 40 * MCH, y - 84 * MCH, 12 * MCH]];
   if (veh.k === 'sandals') { const sg = veh.s < 0 ? -1 : 1, q = HS / 1.5; return [[x + 3 * q, y - 31 * q * sg, 10 * q], [x + 7 * q, y - 58 * q * sg, 9 * q]]; }
+  if (veh.k === 'logman') { if ((veh.morph || 0) < 1) return [[x, y - 20, 12], [x + 4, y - 44, 12]]; const q = LMS * (window.LOGMAN_H || 685) / 685; return [[x + 2, y - 16 * q, 11 * q], [x + 4, y - 44 * q, 12 * q], [x + 6, y - 64 * q, 12 * q]]; }
   return veh.k === 'tuktuk' ? [[x - 5, y - 26, 21], [x + 19, y - 19, 14], [x - 2, y - 58, 14]] : [[x, y - 8, 16], [x + 4, y - 36, 12]]; }
 function vehUpdate(dt) {
   if (veh.asm !== undefined && veh.asm < 1) { const a0 = veh.asm; veh.asm = Math.min(1, veh.asm + dt / (veh.fast ? .4 : 1.15)); inv = Math.max(inv, .4);
@@ -1494,6 +1502,21 @@ function vehUpdate(dt) {
     if (hero.y <= top) { if (hero.vy < -300) { shake = .08; tone(160, .08, 'triangle', .07); } hero.y = top; hero.vy = 0; veh.on = 1; }
     veh.s += ((veh.g < 0 ? -1 : 1) - veh.s) * Math.min(1, dt * 14); hero.rot = 0;
     if (veh.on && Math.random() < dt * 20) sparks.push({ x: hero.x - 6, y: hero.y, vx: -speed * .4 - 30, vy: (Math.random() - .5) * 30, l: .3, c: '#7dffa0' });
+    return;
+  }
+  if (veh.k === 'logman') {   // Lakri Man: tap = big leap, tap again in the air = flip leap, hold in the air = windmill arms slow the fall; zappers can't hurt wood
+    const press = holding && !veh.held; veh.held = holding; const onG = hero.y >= FLOOR - .5; veh.sq = Math.max(0, (veh.sq || 0) - dt * 5);
+    if (veh.morph < 1) { veh.morph = Math.min(1, veh.morph + dt / 1.35); if (veh.morph >= 1) { veh.face = 'grin'; veh.sq = .8; shake = Math.max(shake, .25); } }
+    else {
+      if (press && onG) { hero.vy = -720; veh.dj = 0; veh.sq = -.6; RUN.jumps++; SFX.whoosh(); tone(220, .12, 'square', .05, 1.6); veh.face = 'laugh'; for (let i = 0; i < 8; i++) dust.push({ x: hero.x - 20 + Math.random() * 40, y: FLOOR, vx: -60 - Math.random() * 90, vy: -Math.random() * 40, r: 3, l: .5 }); }
+      else if (press && !onG && !veh.dj) { veh.dj = 1; hero.vy = Math.min(hero.vy, 0) - 620; veh.flipT = 0; SFX.whoosh(); tone(330, .12, 'square', .05, 1.8); veh.face = 'grin'; } }
+    if (veh.flipT !== undefined) { veh.flipT += dt; if (veh.flipT > .5) veh.flipT = undefined; }
+    veh.spin = !onG && holding && veh.morph >= 1 && hero.vy > -100 ? (veh.spin || 0) + dt * 22 : 0;
+    let g = 1900; if (veh.spin) { g = 600; if (hero.vy > 140) hero.vy = 140; if (Math.random() < dt * 8) tone(160 + Math.random() * 40, .05, 'triangle', .02, 1.4, MIX && MIX.fx); }
+    hero.vy += g * dt; hero.y += hero.vy * dt; if (hero.y - 90 < CEIL) { hero.y = CEIL + 90; hero.vy = Math.max(0, hero.vy); }
+    if (hero.y >= FLOOR) { if (hero.vy > 250 && veh.morph >= 1) { veh.sq = Math.min(1, hero.vy / 800); shake = Math.max(shake, .1); tone(110, .14, 'triangle', .08); veh.face = 'smile'; for (let i = 0; i < 8; i++) dust.push({ x: hero.x + (Math.random() - .5) * 50, y: FLOOR, vx: (Math.random() - .5) * 160, vy: -Math.random() * 40, r: 3, l: .5 }); }
+      hero.y = FLOOR; hero.vy = 0; veh.dj = 0; }
+    if (onG) veh.ph += dt * (speed / 26); hero.rot = 0; veh.ft = (veh.ft || 0) - dt; if (veh.ft <= 0 && onG && veh.morph >= 1) { veh.ft = 2 + Math.random() * 2; veh.face = ['smile', 'grin', 'smug', 'smile'][Math.random() * 4 | 0]; }
     return;
   }
   if (veh.k === 'tuktuk') {
@@ -1649,14 +1672,40 @@ function mechDeflect(o) { o.defl = 1; o.v = -(speed + 420); o.vy = -260 - Math.r
 function vehCrash() {
   const k = veh.k; veh = null; inv = 1.8; shake = .3; flashT = .15; flashCol = '255,200,120'; SFX.boom();
   hero.vy = -480; hero.ground = false;
-  const cols = { tuktuk: ['#f7c51e', '#141414', '#ffe066', '#c9ced8'], carpet: ['#b3202e', '#ffd75a', '#7a1020', '#ffe9a8'], kabootar: ['#eef0f4', '#9aa3b5', '#7f899e', '#4fa36a'], sandals: ['#7dffa0', '#2fbf4a', '#c9a06a', '#ffffff'], mech: ['#e2252b', '#141418', '#ffffff', '#ff5a5c'] }[k];
+  const cols = { tuktuk: ['#f7c51e', '#141414', '#ffe066', '#c9ced8'], carpet: ['#b3202e', '#ffd75a', '#7a1020', '#ffe9a8'], kabootar: ['#eef0f4', '#9aa3b5', '#7f899e', '#4fa36a'], sandals: ['#7dffa0', '#2fbf4a', '#c9a06a', '#ffffff'], mech: ['#e2252b', '#141418', '#ffffff', '#ff5a5c'], logman: ['#e8781e', '#b8500e', '#ffa64a', '#5a2a0a'] }[k];
   POL.chunks(cols); if (k === 'kabootar') pops.push({ x: hero.x + 20, y: hero.y - 140, txt: 'COO!', col: '#e8ecf4', t: 0 });
   for (let i = 0; i < 26; i++) sparks.push({ x: hero.x + (Math.random() - .5) * 50, y: hero.y - 20 + (Math.random() - .5) * 30, vx: (Math.random() - .4) * 300, vy: -Math.random() * 280, l: .9 + Math.random() * .5, c: cols[i % 4] });
   for (let i = 0; i < 12; i++) steam.push({ x: hero.x + (Math.random() - .5) * 40, y: hero.y - 20, vx: (Math.random() - .5) * 120, vy: -Math.random() * 80, r: 5 + Math.random() * 4, l: .7, l0: .9 });
-  pops.push({ x: hero.x, y: hero.y - 70, txt: { tuktuk: 'TUK-TUK GONE!', carpet: 'CARPET GONE!', kabootar: 'KABOOTAR FLEW OFF!', sandals: 'SANDALS SNAPPED!', mech: 'MECH WRECKED!' }[k], col: '#ffd75a', t: 0 });
+  pops.push({ x: hero.x, y: hero.y - 70, txt: { tuktuk: 'TUK-TUK GONE!', carpet: 'CARPET GONE!', kabootar: 'KABOOTAR FLEW OFF!', sandals: 'SANDALS SNAPPED!', mech: 'MECH WRECKED!', logman: 'SPLINTERED!' }[k], col: '#ffd75a', t: 0 });
+}
+const LMS = .096;   // Lakri Man scale: a bit taller than the hero (owner 23 Nov)
+function logZap(o) { if (Math.random() < .5) sparks.push({ x: hero.x + (Math.random() - .5) * 30, y: hero.y - 40 - Math.random() * 30, vx: (Math.random() - .5) * 220, vy: (Math.random() - .5) * 220, l: .25, c: Math.random() < .5 ? '#fff6a8' : '#ffffff' });
+  if (!o.logP) { o.logP = 1; veh.face = 'smug'; pops.push({ x: hero.x + 20, y: hero.y - 110, txt: "WOOD DON'T CONDUCT!", col: '#ffb04a', t: 0 }); tone(1600, .06, 'square', .03, .5, MIX && MIX.fx); } }
+const LMC = {};   // the hero split for the mutation: body without the cooker, and the cooker on its own (art/cookmask.webp)
+function heroSplit(f) { const key = (heroImg.src || '') + ':' + f; if (LMC[key]) return LMC[key]; if (!COOKMASK.complete || !COOKMASK.naturalWidth || !heroImg.naturalWidth) return null;
+  const cw = HW * HX4, ch = HH0 * HX4, mk = op => { const c = document.createElement('canvas'); c.width = cw; c.height = ch; const g = c.getContext('2d'); g.drawImage(heroImg, f * cw, 0, cw, ch, 0, 0, cw, ch); g.globalCompositeOperation = op; g.drawImage(COOKMASK, f * cw, 0, cw, ch, 0, 0, cw, ch); return c; };
+  return LMC[key] = { body: mk('destination-out'), cook: mk('destination-in') }; }
+function drawLogVeh() { const x = hero.x, y = hero.y, m = veh.morph || 0, onG = y >= FLOOR - .5, st = { ph: veh.ph, air: onG ? 0 : 1, face: veh.face, t, spin: veh.spin || 0, flip: veh.flipT !== undefined ? veh.flipT / .5 * Math.PI * 2 : 0, squash: veh.sq || 0 };
+  ctx.fillStyle = 'rgba(30,10,30,.25)'; ctx.beginPath(); ctx.ellipse(x, FLOOR + 1, 16, 3, 0, 0, 7); ctx.fill();
+  if (m >= 1) { drawLogman(ctx, x, y, LMS, st); return; }
+  // ---- the mutation (owner 23 Nov: like the Hulk): he shakes and turns orange, the cooker drops off, his body stretches and his head is squashed into the log, then the log man bursts out ----
+  const f = FR('run0_normal'), sp = heroSplit(f), e = k => Math.max(0, Math.min(1, k));
+  const shakeA = (m < .7 ? 1.5 + m * 5 : 0), jx = (Math.random() - .5) * shakeA, jy = (Math.random() - .5) * shakeA;
+  const orange = e(m / .45), stretch = e((m - .25) / .4), out = e((m - .55) / .25), grow = e((m - .5) / .35);
+  if (sp && out < 1) { ctx.save(); ctx.translate(x + jx, y + jy); ctx.globalAlpha = 1 - out;
+    const sx = 1 - stretch * .35 + Math.sin(m * 40) * .03 * stretch, sy = 1 + stretch * .55; ctx.scale(sx, sy);
+    tintCv.width = sp.body.width; tintCv.height = sp.body.height; const tc = tintCv.getContext('2d'); tc.drawImage(sp.body, 0, 0); tc.globalCompositeOperation = 'source-atop'; tc.fillStyle = `rgba(232,120,30,${(orange * .85).toFixed(3)})`; tc.fillRect(0, 0, tintCv.width, tintCv.height);
+    tc.globalCompositeOperation = 'source-over'; ctx.drawImage(tintCv, -HW * HS / 2, -HH, HW * HS, HH);
+    if (stretch > 0) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; const vg = ctx.createRadialGradient(0, -HH * .6, 0, 0, -HH * .6, 30); vg.addColorStop(0, `rgba(255,150,40,${(.5 * stretch).toFixed(3)})`); vg.addColorStop(1, 'rgba(255,120,20,0)'); ctx.fillStyle = vg; ctx.fillRect(-40, -HH - 20, 80, HH + 20); ctx.restore(); }   // veins of orange light
+    ctx.restore(); }
+  // the cooker comes off: falls and bounces away on the pavement
+  if (sp) { if (!veh.ck) veh.ck = { x: x - 10, y: y - 30, vx: -70, vy: -160, a: 0, b: 0 }; const C = veh.ck; if (m > .3) { const dt = 1 / 60; C.vy += 1100 * dt; C.x += (C.vx - speed * .5) * dt; C.y += C.vy * dt; C.a -= 7 * dt * (C.b ? .4 : 1); if (C.y > FLOOR - 8) { C.y = FLOOR - 8; if (C.vy > 120) { C.vy = -C.vy * .4; C.b++; if (C.b === 1) { tone(700, .08, 'square', .05, .7, MIX && MIX.fx); tone(1100, .06, 'square', .04, .8, MIX && MIX.fx); } } else C.vy = 0; } }
+    ctx.save(); ctx.translate(m > .3 ? C.x : x + jx, m > .3 ? C.y : y + jy); if (m > .3) { ctx.rotate(C.a); ctx.translate(10, -(HH - 30)); } ctx.drawImage(sp.cook, -HW * HS / 2, -HH, HW * HS, HH); ctx.restore(); }
+  if (grow > 0) { const ov = grow < 1 ? 1 + Math.sin(grow * Math.PI) * .18 : 1; ctx.save(); ctx.globalAlpha = Math.min(1, grow * 1.6); ctx.translate(x, y); ctx.scale(.55 + .45 * grow * ov, (.4 + .6 * grow) * ov); drawLogman(ctx, 0, 0, LMS, { ph: 0, air: 0, face: grow < .6 ? 'angry' : 'shock', t }); ctx.restore(); }
+  if (m > .5 && m < .62 && !veh.burst) { veh.burst = 1; flashT = .14; flashCol = '255,180,90'; shake = Math.max(shake, .3); for (let i = 0; i < 26; i++) sparks.push({ x: x + (Math.random() - .5) * 30, y: y - 40 - Math.random() * 40, vx: (Math.random() - .5) * 380, vy: -Math.random() * 300, l: .7, c: ['#e8781e', '#ffa64a', '#b8500e', '#fff0c0'][i % 4] }); for (let i = 0; i < 10; i++) steam.push({ x: x + (Math.random() - .5) * 40, y: y - 30 - Math.random() * 40, vx: (Math.random() - .5) * 160, vy: -40 - Math.random() * 60, r: 4 + Math.random() * 4, l: .6, l0: .7 }); }
 }
 function drawVehicle() {
-  const x = hero.x, y = hero.y, k = veh.k;
+  const x = hero.x, y = hero.y, k = veh.k; if (k === 'logman') { drawLogVeh(); return; }
   if (k === 'kabootar') {   // owner 22 Nov: he rides ON the Flappy pigeon (sitting on its back, wings flapping over his legs)
     const f = veh.wf | 0, K = 1.4, U = PK * K;   // owner 22 Nov: half the old size
     ctx.save(); ctx.translate(x, y); ctx.rotate(hero.rot * .5);
