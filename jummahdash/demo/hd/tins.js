@@ -2,7 +2,7 @@
    Grab biscuit tins during a run; at the end of the run each tin = one round:
    three blue biscuit tins on the kitchen table, one is shown to hold the jackpot, they shuffle (cup game),
    you pick one, the camera moves in, the lid is prised off and you see what's inside: usually Ammi's sewing kit,
-   sometimes money, a second chance, a head start or a free jugaad. Then the other two tins open too.
+   sometimes money, a second chance, a head start or a free gadget. Then the other two tins open too.
    No brand names on the tins (owner rule). Uses game.js globals: coins, SHOP, saveShop, ITEMS, iconFor, drawCorolla,
    coinFrames, tone, SFX, $. Exposes window.TIN = { open(n, done), close(), mini(ctx, x, y, r) }. */
 (() => {
@@ -163,7 +163,7 @@
     ct.seed = seed0;
   }
   /* the prize rising out of the open tin (drawn upright) */
-  function drawPrize(c, ct, x, y, R, k) {   // only a free jugaad pops its icon up out of the tin; the heading names every other prize
+  function drawPrize(c, ct, x, y, R, k) {   // only a free gadget pops its icon up out of the tin; the heading names every other prize
     if (k <= 0 || ct.t !== 'gadget') return; c.save(); c.translate(x, y - R * .55 - Math.min(1, k) * R * .35); const s = .3 + .7 * Math.min(1, k); c.scale(s, s);
     const gl = c.createRadialGradient(0, 0, 4, 0, 0, R * .7); gl.addColorStop(0, 'rgba(255,240,170,.8)'); gl.addColorStop(1, 'rgba(255,220,100,0)'); c.fillStyle = gl; c.beginPath(); c.arc(0, 0, R * .7, 0, 7); c.fill();
     const ic = document.createElement('canvas'); try { API().iconFor(ic, 'gadget', ct.it); } catch (e) {} c.drawImage(ic, -R * .4, -R * .4, R * .8, R * .8); c.restore();
@@ -205,7 +205,7 @@
     save2: () => ['2 SECOND CHANCES', 'Two spare Eidi envelopes!'],
     hs500: () => ['HEAD START 500M', "Uncle's spare car keys were in there."],
     hs1000: () => ['HEAD START 1000M', "Uncle's car keys AND a full tank!"],
-    gadget: p => ['FREE JUGAAD!', `${p.it.name} is yours. Switch it on in the shop.`],
+    gadget: p => ['FREE GADGET!', `${p.it.name} is yours. Switch it on in the shop.`],
   };
   function award(p) {
     const A = API(), SH = A.SHOP;
