@@ -5,11 +5,11 @@
   const P = {}, names = ['body', 'n_uarm', 'f_uarm', 'n_farm', 'f_farm', 'n_hand', 'f_hand', 'n_thigh', 'f_thigh', 'n_shin', 'f_shin', 'n_foot', 'f_foot',
     'n_bat', 'face_neutral', 'face_smile', 'face_grin', 'face_laugh', 'face_shock', 'face_scared', 'face_frown', 'face_angry', 'face_smug', 'face_sad'];
   names.push('n_bat_tape', 'n_bat_alu', 'n_bat_gold');
-  names.forEach(n => { const im = new Image(); im.src = 'art/logman/' + n + '.webp?v=2'; P[n] = im; });
-  const G = {}; let gLoaded = false; const gold = () => { if (!gLoaded) { gLoaded = true; names.forEach(n => { const im = new Image(); im.src = 'art/logman_gold/' + n + '.webp?v=1'; G[n] = im; }); } return G; };   // golden Lakri Man (rare), loaded when first needed
+  names.forEach(n => { const im = new Image(); im.src = 'art/logman/' + n + '.webp?v=3'; P[n] = im; });
+  const G = {}; let gLoaded = false; const gold = () => { if (!gLoaded) { gLoaded = true; names.forEach(n => { const im = new Image(); im.src = 'art/logman_gold/' + n + '.webp?v=2'; G[n] = im; }); } return G; };   // golden Lakri Man (rare), loaded when first needed
   window.LOGMAN_GOLD_PRELOAD = gold;
   // joints in each part's own picture (art pixels): [top joint x, y, bottom joint x, y]
-  const J = { uarm: [40, 13, 17.5, 83], farm: [19, 5.5, 19, 78], hand: [26.5, 4.5], bat: [16, 7], thigh: [22.5, 5, 19, 80], shin: [21.5, 5, 19, 85], foot: [24.5, 5] };
+  const J = { uarm: [40, 13, 17.5, 83], farm: [19, 5.5, 19, 78], hand: [26.5, 4.5], bat: [48, 7], thigh: [22.5, 5, 19, 80], shin: [21.5, 5, 19, 85], foot: [24.5, 5] };
   const BODY = { hipN: [66, 468], hipF: [88, 466], shN: [44, 272], shF: [58, 266], face: [136, 152] };
   const LEG = 75 + 80 + 52;   // hip to sole when straight
   const ok = im => im.complete && im.naturalWidth;
@@ -25,7 +25,7 @@
     for (let i = 0; i < parts.length; i++) { const k = parts[i], j = J[k], im = k === 'bat' && BATK ? (SKIN['n_bat_' + BATK] || SKIN.n_bat) : SKIN[side + '_' + k]; g.rotate(angs[i]); if (ok(im)) g.drawImage(im, -j[0], -j[1]); if (j.length > 2) g.translate(j[2] - j[0], j[3] - j[1]); }
     g.fillStyle = (SKIN === P ? FILLS : FILLG)[side]; joints.forEach(([m, r]) => { g.save(); g.setTransform(m); g.beginPath(); g.arc(0, 0, r - 3.6, 0, 7); g.fill(); g.restore(); });   // paint over the seams
     g.setTransform(base); }
-  window.LOGMAN_H = LEG + 478;   // full height in art pixels
+  window.LOGMAN_P = P; window.LOGMAN_H = LEG + 478;   // full height in art pixels
   window.drawLogman = (g, x, y, sc, st = {}) => {
     SKIN = st.skin === 'gold' ? gold() : P; BATK = st.batK || ''; if (SKIN === G && !(ok(G.body))) SKIN = P;
     const p = st.ph || 0, air = st.air || 0, run = 1 - air;

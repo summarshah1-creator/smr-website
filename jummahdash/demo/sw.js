@@ -1,15 +1,15 @@
 /* Jummah Dash: keeps the whole game on the phone. First visit downloads it once;
    after that it opens from the phone, and an update only downloads the files that changed. */
-const BUILD = '20261123201605';
+const BUILD = '20261123202334';
 const FILES = {
 "jd-extra.js": "fe18b26942",
 "hd/landmarks_hd.js": "7d60d75c5a",
 "hd/cars_v3.js": "51ebab1eae",
 "hd/mech.js": "e8ac3de068",
-"hd/logman.js": "d65b845cd3",
+"hd/logman.js": "c25b61fc82",
 "hd/tins.js": "aa419cd2f9",
 "hd/foodbank.png": "8f4400d5e6",
-"game.js": "239cc2ee01",
+"game.js": "2677bc9bbf",
 "landmarks.js": "4649570284",
 "vehicles.js": "32fdac20ce",
 "manifest.webmanifest": "f337af2b13",
@@ -201,10 +201,10 @@ const FILES = {
 "art/logman/face_smile.webp": "8a1e07902a",
 "art/logman/face_smug.webp": "e0c5698dd7",
 "art/logman/meta.json": "2b6bc73b55",
-"art/logman/n_bat.webp": "6b8f7fa528",
-"art/logman/n_bat_alu.webp": "3212c216ea",
-"art/logman/n_bat_gold.webp": "7c4a9247bd",
-"art/logman/n_bat_tape.webp": "cd8c120502",
+"art/logman/n_bat.webp": "f1092eb613",
+"art/logman/n_bat_alu.webp": "721cc6477f",
+"art/logman/n_bat_gold.webp": "b300704eca",
+"art/logman/n_bat_tape.webp": "fb654ffbb7",
 "art/logman/n_farm.webp": "5d3abca8a9",
 "art/logman/n_foot.webp": "8a1865a6fc",
 "art/logman/n_hand.webp": "bbb764c27c",
@@ -228,7 +228,7 @@ const FILES = {
 "art/logman_gold/face_shock.webp": "47669be5eb",
 "art/logman_gold/face_smile.webp": "efa8a5359b",
 "art/logman_gold/face_smug.webp": "594150315f",
-"art/logman_gold/n_bat.webp": "92be1b4118",
+"art/logman_gold/n_bat.webp": "b300704eca",
 "art/logman_gold/n_bat_alu.webp": "3212c216ea",
 "art/logman_gold/n_bat_gold.webp": "7c4a9247bd",
 "art/logman_gold/n_bat_tape.webp": "cd8c120502",

@@ -865,6 +865,8 @@ function die(why) {
   if (hero.dashT > 0 && !veh) { hero.threaded = 1; return; }   // a steam dash goes straight through
   if (hero.dead || inv > 0) return; if (window.__god) { window.__hits = (window.__hits || 0) + 1; window.__hitW = why; return; }
   if (veh && veh.k === 'tuktuk' && veh.nb > .4) { inv = .35; shake = .2; flashT = .08; flashCol = '255,220,120'; SFX.boom(); pops.push({ x: hero.x + 20, y: hero.y - 90, txt: 'SMASH!', col: '#ffd21f', t: 0 }); for (let i = 0; i < 18; i++) sparks.push({ x: hero.x + 30, y: hero.y - 30, vx: Math.random() * 260, vy: (Math.random() - .5) * 260, l: .5, c: ['#ffd75a', '#ffffff', '#ff9a2a'][i % 3] }); return; }
+  if (veh && veh.k === 'logman' && veh.morph >= 1 && veh.swT >= 0 && veh.swT < .4 && (veh.batHP || 0) > 0 && (why === 'laser' || why === 'rocket' || why === 'zap')) return;   // mid-swing: the bat deals with it
+  if (veh && veh.k === 'logman' && veh.morph < 1) return;   // can't be hurt while he's transforming
   if (veh) { vehCrash(); return; }
   POL.died(why); hero.dead = true; hero.vx = speed; hero.vy = -140; hero.flail = 0; hero.squash = 0; hero.bounce = 0; hero.slide = 0; hero.restT = 0; deadT = 0; state = 'dead'; holding = false;
   hero.shockT = why === 'rocket' ? 0 : .5; if (why === 'rocket') hero.vy = -260; flashT = .18; flashCol = why === 'rocket' ? '255,170,60' : why === 'laser' ? '230,110,255' : '200,240,255'; shake = .35;
@@ -1507,17 +1509,17 @@ function vehUpdate(dt) {
   }
   if (veh.k === 'logman') {   // Lakri Man: tap = big leap, tap again in the air = flip leap, hold in the air = windmill arms slow the fall; zappers can't hurt wood
     const press = holding && !veh.held; veh.held = holding; const onG = hero.y >= FLOOR - .5; veh.sq = Math.max(0, (veh.sq || 0) - dt * 5);
-    if (veh.morph < 1) { veh.morph = Math.min(1, veh.morph + dt / 1.35); if (veh.morph >= 1) { veh.face = 'grin'; veh.sq = .8; shake = Math.max(shake, .25); veh.life = LOG_LIFE * (veh.gold ? 2 : 1); veh.batHP = SHOP.bat === 'bat_tape' ? 10 : BAT_HP; veh.swT = -1; veh.streak = 0; } }
+    if (veh.morph < 1) { veh.morph = Math.min(1, veh.morph + dt / 2.1); if (veh.morph >= 1) { veh.face = 'grin'; veh.sq = .8; shake = Math.max(shake, .25); veh.life = LOG_LIFE * (veh.gold ? 2 : 1); veh.batHP = SHOP.bat === 'bat_tape' ? 10 : BAT_HP; veh.swT = -1; veh.streak = 0; } }
     if (veh.morph >= 1) { veh.life -= dt; if (veh.life < 5 && Math.floor(veh.life * 4) !== Math.floor((veh.life + dt) * 4)) { tone(220 + Math.random() * 80, .07, 'square', .03, .6, MIX && MIX.fx); for (let i = 0; i < 4; i++) sparks.push({ x: hero.x + (Math.random() - .5) * 20, y: hero.y - Math.random() * 70, vx: (Math.random() - .5) * 120, vy: -Math.random() * 120, l: .4, c: '#a8622a' }); if (veh.life < 3) veh.face = 'scared'; }   // owner 23 Nov: he can't stay a log for ever: he starts creaking and cracking, then turns back
       if (veh.life <= 0) { logRevert(); return; }
       batTick(dt); }
-    else {
+    if (veh.morph >= 1) {
       if (press && onG) { hero.vy = -720; veh.jn = 1; veh.sq = -.6; RUN.jumps++; SFX.whoosh(); tone(220, .12, 'square', .05, 1.6); veh.face = 'laugh'; for (let i = 0; i < 8; i++) dust.push({ x: hero.x - 20 + Math.random() * 40, y: FLOOR, vx: -60 - Math.random() * 90, vy: -Math.random() * 40, r: 3, l: .5 }); }
       else if (press && !onG && (veh.jn || 1) < 3) { veh.jn = (veh.jn || 1) + 1; const big = veh.jn === 3; hero.vy = Math.min(hero.vy, 0) - (big ? 560 : 620); veh.flipT = 0; veh.flipD = big ? .62 : .45; veh.flipN = big ? 2 : 1; SFX.whoosh(); tone(big ? 440 : 330, .12, 'square', .05, 1.8); veh.face = big ? 'laugh' : 'grin'; rings.push({ x: hero.x, y: hero.y - 40, t: 0 }); if (big) pops.push({ x: hero.x + 20, y: hero.y - 120, txt: 'TRIPLE!', col: '#ffb04a', t: 0 }); } }   // owner 23 Nov: jump, flip, then a double flip
     if (veh.flipT !== undefined) { veh.flipT += dt; if (veh.flipT > (veh.flipD || .45)) veh.flipT = undefined; }
     veh.spin = !onG && holding && veh.morph >= 1 && hero.vy > -100 ? (veh.spin || 0) + dt * 22 : 0;
     let g = 1900; if (veh.spin) { g = 600; if (hero.vy > 140) hero.vy = 140; if (Math.random() < dt * 8) tone(160 + Math.random() * 40, .05, 'triangle', .02, 1.4, MIX && MIX.fx); }
-    hero.vy += g * dt; hero.y += hero.vy * dt; if (hero.y - 90 < CEIL) { hero.y = CEIL + 90; hero.vy = Math.max(0, hero.vy); }
+    hero.vy += g * dt; hero.y += hero.vy * dt; if (hero.y - 120 < CEIL) { hero.y = CEIL + 120; hero.vy = Math.max(0, hero.vy); }
     if (hero.y >= FLOOR) { if (hero.vy > 250 && veh.morph >= 1) { veh.sq = Math.min(1, hero.vy / 800); shake = Math.max(shake, .1); tone(110, .14, 'triangle', .08); veh.face = 'smile'; for (let i = 0; i < 8; i++) dust.push({ x: hero.x + (Math.random() - .5) * 50, y: FLOOR, vx: (Math.random() - .5) * 160, vy: -Math.random() * 40, r: 3, l: .5 }); }
       hero.y = FLOOR; hero.vy = 0; veh.jn = 0; }
     if (onG) veh.ph += dt * (speed / 26); hero.rot = 0; veh.ft = (veh.ft || 0) - dt; if (veh.ft <= 0 && onG && veh.morph >= 1) { veh.ft = 2 + Math.random() * 2; veh.face = ['smile', 'grin', 'smug', 'smile'][Math.random() * 4 | 0]; }
@@ -1674,7 +1676,7 @@ function mechDeflect(o) { o.defl = 1; o.v = -(speed + 420); o.vy = -260 - Math.r
   for (let i = 0; i < 16; i++) sparks.push({ x: o.x, y: o.y, vx: Math.random() * 260, vy: (Math.random() - .5) * 260, l: .35 + Math.random() * .25, c: ['#ffd75a', '#ffffff', '#ff9a2a'][i % 3] });
   pops.push({ x: hero.x + 30, y: hero.y - 175 * MCH, txt: 'DEFLECTED!', col: '#7fe3ff', t: 0 }); RUN.deflect = (RUN.deflect || 0) + 1; }
 function vehCrash() {
-  const k = veh.k; veh = null; inv = 1.8; shake = .3; flashT = .15; flashCol = '255,200,120'; SFX.boom();
+  const k = veh.k; if (k === 'logman' && veh.morph >= 1) logExplode(); veh = null; inv = 1.8; shake = .3; flashT = .15; flashCol = '255,200,120'; SFX.boom();
   hero.vy = -480; hero.ground = false;
   const cols = { tuktuk: ['#f7c51e', '#141414', '#ffe066', '#c9ced8'], carpet: ['#b3202e', '#ffd75a', '#7a1020', '#ffe9a8'], kabootar: ['#eef0f4', '#9aa3b5', '#7f899e', '#4fa36a'], sandals: ['#7dffa0', '#2fbf4a', '#c9a06a', '#ffffff'], mech: ['#e2252b', '#141418', '#ffffff', '#ff5a5c'], logman: ['#e8781e', '#b8500e', '#ffa64a', '#5a2a0a'] }[k];
   POL.chunks(cols); if (k === 'kabootar') pops.push({ x: hero.x + 20, y: hero.y - 140, txt: 'COO!', col: '#e8ecf4', t: 0 });
@@ -1682,21 +1684,22 @@ function vehCrash() {
   for (let i = 0; i < 12; i++) steam.push({ x: hero.x + (Math.random() - .5) * 40, y: hero.y - 20, vx: (Math.random() - .5) * 120, vy: -Math.random() * 80, r: 5 + Math.random() * 4, l: .7, l0: .9 });
   pops.push({ x: hero.x, y: hero.y - 70, txt: { tuktuk: 'TUK-TUK GONE!', carpet: 'CARPET GONE!', kabootar: 'KABOOTAR FLEW OFF!', sandals: 'SANDALS SNAPPED!', mech: 'MECH WRECKED!', logman: 'STRIKE OUT!' }[k], col: '#ffd75a', t: 0 });
 }
-const LMS = .096;   // Lakri Man scale: a bit taller than the hero (owner 23 Nov)
+const LMS = .1344;   // owner 23 Nov: 40% bigger (was .096)
+const LMS_OLD = .096;   // Lakri Man scale: a bit taller than the hero (owner 23 Nov)
 const LOG_LIFE = 24, BAT_HP = 6, BAT_CD = .45;
 function batAngle() { if (!veh || (veh.swT == null) || veh.swT < 0) return null; const k = veh.swT / .34; if (k < .25) return 2.4 + k / .25 * .5; const f = (k - .25) / .45; if (f < 1) return 2.9 - f * f * 4.5; return -1.6 + Math.min(1, (k - .7) / .3) * 1.6; }   // wind up behind the head, whip round, follow through
 function batSwing() { if (!veh || veh.k !== 'logman' || veh.morph < 1 || (veh.batHP || 0) <= 0 || state !== 'play' || paused || (veh.batCD || 0) > 0) return; veh.swT = 0; veh.batCD = BAT_CD; veh.hitDone = 0; veh.face = 'angry'; SFX.whoosh(); tone(200, .1, 'triangle', .04, 2.4, MIX && MIX.fx); }
-function batTick(dt) { if (veh.batCD > 0) veh.batCD -= dt; if (veh.swT < 0) return; if (veh.swT === 0) veh.missed = 0; veh.swT += dt; if (veh.swT > .34) { veh.swT = -1; return; }
-  if (veh.swT < .08 || veh.swT > .26) return;   // the bat's sweet spot is on the forward whip
-  const q = LMS * (window.LOGMAN_H || 685) / 685, wide = SHOP.bat === 'bat_alu' || veh.gold ? 1.3 : 1, bx0 = hero.x - 6, bx1 = hero.x + 95 * q * wide, by0 = hero.y - 105 * q, by1 = hero.y - 8;
+function batTick(dt) { if (veh.batCD > 0) veh.batCD -= dt; if (veh.swT < 0) return; if (veh.swT === 0) veh.missed = 0; veh.swT += dt; if (veh.swT > .4) { veh.swT = -1; return; }
+  if (veh.swT < .02 || veh.swT > .36) return;   // owner 23 Nov: generous timing window over the whole forward whip
+  const q = LMS * (window.LOGMAN_H || 685) / 685, wide = SHOP.bat === 'bat_alu' || veh.gold ? 1.3 : 1, bx0 = hero.x - 6, bx1 = hero.x + 120 * q * wide, by0 = hero.y - 120 * q, by1 = hero.y - 4;
   const inBox = (x, y, m = 0) => x > bx0 - m && x < bx1 + m && y > by0 - m && y < by1 + m; let hit = 0;
   obs.forEach(o => { if (o.honk) return;
-    if (o.type === 'zap') { const ca = Math.cos(o.ang), sa = Math.sin(o.ang), hl = o.len / 2; let near = false; for (let u = -1; u <= 1; u += .25) if (inBox(o.x + ca * hl * u, o.y + sa * hl * u, 12)) near = true; if (near) { o.honk = 1; wreckZap(o); batHit(o.x, o.y, 'BASE HIT!'); hit++; } }
-    else if (o.type === 'rocket' && o.v && !o.defl && inBox(o.x, o.y, 22)) { o.defl = 1; o.v = -(speed + 560); o.vy = -260 - Math.random() * 160; o.rot = Math.PI; o.spin = (Math.random() < .5 ? -1 : 1) * (7 + Math.random() * 4); o.homer = 1; batHit(o.x, o.y, 'HOME RUN!'); SFX.charge && SFX.charge(); setTimeout(() => homeRunLands(), 700 + Math.random() * 300); hit++; }
-    else if (o.type === 'laser' && (o.ph === 'fire' || o.ph === 'warn') && o.y > by0 - 10 && o.y < by1 + 10) { o.honk = 1; wreckLaser(o); batHit(hero.x + 60 * q, o.y, 'BATTED!'); hit++; } });
+    if (o.type === 'zap') { const ca = Math.cos(o.ang), sa = Math.sin(o.ang), hl = o.len / 2; let near = false; for (let u = -1; u <= 1; u += .25) if (inBox(o.x + ca * hl * u, o.y + sa * hl * u, 20)) near = true; if (near) { o.honk = 1; wreckZap(o); batHit(o.x, o.y, 'BASE HIT!'); hit++; } }
+    else if (o.type === 'rocket' && o.v && !o.defl && inBox(o.x, o.y, 40)) { o.defl = 1; o.v = -(speed + 560); o.vy = -260 - Math.random() * 160; o.rot = Math.PI; o.spin = (Math.random() < .5 ? -1 : 1) * (7 + Math.random() * 4); o.homer = 1; batHit(o.x, o.y, 'HOME RUN!'); SFX.charge && SFX.charge(); setTimeout(() => homeRunLands(), 700 + Math.random() * 300); hit++; }
+    else if (o.type === 'laser' && (o.ph === 'fire' || o.ph === 'warn') && o.y > by0 - 22 && o.y < by1 + 22) { o.honk = 1; wreckLaser(o); batHit(hero.x + 60 * q, o.y, 'BATTED!'); hit++; } });
   if (!hit && veh.swT > .25 && !veh.missed) { veh.missed = 1; if (veh.streak > 1) pops.push({ x: hero.x + 20, y: hero.y - 110, txt: 'STREAK OVER', col: '#c8c0e0', t: 0 }); veh.streak = 0; }
   if (hit) { veh.batHP -= SHOP.bat === 'bat_gold' && Math.random() < .3 ? 0 : 1; if (veh.batHP <= 0) { pops.push({ x: hero.x + 30, y: hero.y - 140, txt: 'BAT SNAPPED!', col: '#ff8a4a', t: 0 }); tone(300, .2, 'square', .06, .4, MIX && MIX.fx); POL.chunks(['#c06a2c', '#8a4a1c', '#e09050']); veh.face = 'sad'; } } }
-function batHit(x, y, txt) { veh.face = 'grin'; shake = Math.max(shake, .14); HITT = .06; tone(180, .12, 'square', .07, .5, MIX && MIX.fx); if (SHOP.bat === 'bat_alu') tone(2600, .25, 'sine', .05, .98, MIX && MIX.fx); else tone(900, .06, 'square', .05, .6, MIX && MIX.fx);
+function batHit(x, y, txt) { inv = Math.max(inv, .2); veh.face = 'grin'; shake = Math.max(shake, .14); HITT = .06; tone(180, .12, 'square', .07, .5, MIX && MIX.fx); if (SHOP.bat === 'bat_alu') tone(2600, .25, 'sine', .05, .98, MIX && MIX.fx); else tone(900, .06, 'square', .05, .6, MIX && MIX.fx);
   veh.streak = (veh.streak || 0) + 1; const mult = Math.min(5, veh.streak), pay = 2 * mult + (SHOP.bat === 'bat_gold' || veh.gold ? 3 : 0); coins += pay; $('coins').textContent = '£' + coins; RUN.honked = (RUN.honked || 0) + 1;
   pops.push({ x, y: y - 20, txt: txt + ' +£' + pay, col: '#ffe680', t: 0 }); if (mult > 1) pops.push({ x: hero.x + 10, y: hero.y - 140, txt: '×' + mult + ' STREAK', col: '#7dffa0', t: 0 });
   if (SHOP.bat === 'bat_gold' || veh.gold) for (let i = 0; i < 4; i++) POL.fx.push({ k: 'spill', x, y, vx: 40 + Math.random() * 120, vy: -120 - Math.random() * 120, t: 0, l: 1.2, b: 0, sp: Math.random() * 6 });
@@ -1708,35 +1711,78 @@ function homeRunLands() {   // the batted rocket comes down somewhere off to the
   else if (r < .55) { for (let i = 0; i < 8; i++) POL.fx.push({ k: 'feather', x: x + (Math.random() - .5) * 30, y: y - 40 - Math.random() * 30, vx: (Math.random() - .5) * 120, vy: -40 - Math.random() * 60, t: 0, l: 1.6, a: Math.random() * 6, sp: (Math.random() - .5) * 8 }); pops.push({ x, y: y - 60, txt: 'PIGEONS!', col: '#e8ecf4', t: 0 }); tone(1800, .05, 'triangle', .02, .7, MIX && MIX.fx); }
   else if (r < .85) { pops.push({ x, y: y - 60, txt: 'CAR ALARM!', col: '#ff8a8a', t: 0 }); for (let i = 0; i < 8; i++) setTimeout(() => tone(i % 2 ? 880 : 660, .16, 'square', .025, 0, MIX && MIX.traffic), i * 180); }
   else { coins += 10; $('coins').textContent = '£' + coins; pops.push({ x, y: y - 60, txt: 'GRAND SLAM! +£10', col: '#ffd75a', t: 0 }); flashT = .1; flashCol = '255,230,150'; [523, 659, 784, 1046].forEach((f, i) => setTimeout(() => tone(f, .12, 'square', .05), i * 80)); } }
+let logBits = [];
+function logExplode() {   // owner 23 Nov: when Lakri Man is finished he explodes and the normal hero (cooker on) is standing underneath
+  const x = hero.x, y = hero.y, P = window.LOGMAN_P || {}, q = LMS, HL = LMS * (window.LOGMAN_H || 685);
+  [['body', 0, -.55], ['n_uarm', .2, -.75], ['f_uarm', -.2, -.75], ['n_farm', .3, -.6], ['f_farm', -.3, -.6], ['n_thigh', .1, -.35], ['f_thigh', -.1, -.35], ['n_shin', .15, -.15], ['f_shin', -.15, -.15], ['n_foot', .2, 0], ['f_foot', -.2, 0], ['n_bat', .4, -.5]].forEach(([k, dx, dy]) => { const im = P[k]; if (!im || !im.naturalWidth) return;
+    logBits.push({ im, x: x + dx * 40, y: y + dy * HL, vx: dx * 520 + (Math.random() - .5) * 260 - speed * .15, vy: -320 - Math.random() * 380, a: 0, va: (Math.random() - .5) * 18, s: q, l: 1.6 }); });
+  for (let i = 0; i < 40; i++) sparks.push({ x: x + (Math.random() - .5) * 50, y: y - Math.random() * HL, vx: (Math.random() - .5) * 600, vy: -Math.random() * 500, l: .6 + Math.random() * .5, c: ['#d16c2a', '#ad4f1b', '#ffcf8a', '#fff0c0', '#7a3a12'][i % 5] });
+  for (let i = 0; i < 18; i++) steam.push({ x: x + (Math.random() - .5) * 50, y: y - Math.random() * HL, vx: (Math.random() - .5) * 220, vy: -40 - Math.random() * 120, r: 6 + Math.random() * 6, l: .8, l0: .9 });
+  POL.fx.push({ k: 'ring', x, y: y - HL * .5, t: 0, l: .45, col: '255,190,110' }); POL.fx.push({ k: 'ring', x, y: y - HL * .5, t: -.08, l: .5, col: '255,255,255' });
+  flashT = .2; flashCol = '255,200,130'; shake = Math.max(shake, .5); HITT = .08; SFX.boom(); tone(60, .4, 'sawtooth', .09, .4, MIX && MIX.fx); }
+let lbT = 0; function drawLogBits() { if (!logBits.length) { lbT = 0; return; } const nw = performance.now(), dt = lbT ? Math.min(.05, (nw - lbT) / 1000) * (paused ? 0 : 1) : 1 / 60; lbT = nw; for (let i = logBits.length - 1; i >= 0; i--) { const b = logBits[i]; b.l -= dt; b.vy += 1300 * dt; b.x += (b.vx - speed * .4) * dt; b.y += b.vy * dt; b.a += b.va * dt; if (b.y > FLOOR) { b.y = FLOOR; b.vy *= -.35; b.vx *= .6; b.va *= .6; }
+    if (b.l <= 0) { logBits.splice(i, 1); continue; } ctx.save(); ctx.globalAlpha = Math.min(1, b.l * 2); ctx.translate(b.x, b.y); ctx.rotate(b.a); ctx.scale(b.s, b.s); ctx.drawImage(b.im, -b.im.naturalWidth / 2, -b.im.naturalHeight / 2); ctx.restore(); } }
 function logRevert() {   // back to normal: he splinters back into the hero with a puff, never a death
-  const x = hero.x, y = hero.y; POL.chunks(['#c06a2c', '#8a4a1c', '#e09050', '#5a2a0a']); for (let i = 0; i < 12; i++) steam.push({ x: x + (Math.random() - .5) * 40, y: y - 20 - Math.random() * 50, vx: (Math.random() - .5) * 140, vy: -30 - Math.random() * 60, r: 4 + Math.random() * 4, l: .6, l0: .7 });
-  flashT = .12; flashCol = '255,200,140'; tone(392, .12, 'square', .05); setTimeout(() => tone(262, .2, 'square', .05), 110); pops.push({ x, y: y - 100, txt: 'BACK TO NORMAL!', col: '#ffd75a', t: 0 });
+  const x = hero.x, y = hero.y; logExplode(); setTimeout(() => tone(262, .2, 'square', .05), 160); pops.push({ x, y: y - 100, txt: 'BACK TO NORMAL!', col: '#ffd75a', t: 0 });
   veh = null; inv = 1.6; hero.vy = -380; hero.ground = false; }
 function logZap(o) { if (Math.random() < .5) sparks.push({ x: hero.x + (Math.random() - .5) * 30, y: hero.y - 40 - Math.random() * 30, vx: (Math.random() - .5) * 220, vy: (Math.random() - .5) * 220, l: .25, c: Math.random() < .5 ? '#fff6a8' : '#ffffff' });
   if (!o.logP) { o.logP = 1; veh.face = 'smug'; pops.push({ x: hero.x + 20, y: hero.y - 110, txt: "WOOD DON'T CONDUCT!", col: '#ffb04a', t: 0 }); tone(1600, .06, 'square', .03, .5, MIX && MIX.fx); } }
 const LMC = {};   // the hero split for the mutation: body without the cooker, and the cooker on its own (art/cookmask.webp)
 function heroSplit(f) { const key = (heroImg.src || '') + ':' + f; if (LMC[key]) return LMC[key]; if (!COOKMASK.complete || !COOKMASK.naturalWidth || !heroImg.naturalWidth) return null;
-  const cw = HW * HX4, ch = HH0 * HX4, mk = op => { const c = document.createElement('canvas'); c.width = cw; c.height = ch; const g = c.getContext('2d'); g.drawImage(heroImg, f * cw, 0, cw, ch, 0, 0, cw, ch); g.globalCompositeOperation = op; g.drawImage(COOKMASK, f * cw, 0, cw, ch, 0, 0, cw, ch); return c; };
+  const cw = HW * HX4, ch = HH0 * HX4;
+  // the mask picture is white-on-black with no transparency, so turn its brightness into alpha first (otherwise the whole hero counts as 'cooker')
+  const am = document.createElement('canvas'); am.width = cw; am.height = ch; const ag = am.getContext('2d'); ag.drawImage(COOKMASK, f * cw, 0, cw, ch, 0, 0, cw, ch); const id = ag.getImageData(0, 0, cw, ch), d = id.data; for (let i = 0; i < d.length; i += 4) { d[i + 3] = Math.max(d[i], d[i + 1], d[i + 2]); d[i] = d[i + 1] = d[i + 2] = 255; } ag.putImageData(id, 0, 0);
+  const mk = op => { const c = document.createElement('canvas'); c.width = cw; c.height = ch; const g = c.getContext('2d'); g.drawImage(heroImg, f * cw, 0, cw, ch, 0, 0, cw, ch); g.globalCompositeOperation = op; g.drawImage(am, 0, 0); return c; };
   return LMC[key] = { body: mk('destination-out'), cook: mk('destination-in') }; }
 function drawLogVeh() { const x = hero.x, y = hero.y, m = veh.morph || 0, onG = y >= FLOOR - .5, st = { ph: veh.ph, air: onG ? 0 : 1, face: veh.face, t, spin: veh.spin || 0, flip: veh.flipT !== undefined ? veh.flipT / (veh.flipD || .45) * Math.PI * 2 * (veh.flipN || 1) : 0, bat: (veh.batHP || 0) > 0, swing: batAngle(), swingE: 0, skin: veh.gold ? 'gold' : '', batK: veh.gold ? 'gold' : ({ bat_tape: 'tape', bat_alu: 'alu', bat_gold: 'gold' }[SHOP.bat] || ''), squash: veh.sq || 0 };
   ctx.fillStyle = 'rgba(30,10,30,.25)'; ctx.beginPath(); ctx.ellipse(x, FLOOR + 1, 16, 3, 0, 0, 7); ctx.fill();
   if (m >= 1) { if (veh.gold) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; const gl = ctx.createRadialGradient(x, y - 40, 4, x, y - 40, 60); gl.addColorStop(0, 'rgba(255,215,90,.35)'); gl.addColorStop(1, 'rgba(255,200,60,0)'); ctx.fillStyle = gl; ctx.fillRect(x - 60, y - 100, 120, 110); ctx.restore(); if (Math.random() < .5) POL.fx.push({ k: 'star', x: x - 10 + (Math.random() - .5) * 20, y: y - Math.random() * 70, vx: -speed * .3 - 20, vy: -10 - Math.random() * 30, t: 0, l: .7, r: 1.4 + Math.random(), col: Math.random() < .5 ? '#ffd75a' : '#fff6c0' }); }
     drawLogman(ctx, x, y, LMS, st); return; }
-  // ---- the mutation (owner 23 Nov: like the Hulk): he shakes and turns orange, the cooker drops off, his body stretches and his head is squashed into the log, then the log man bursts out ----
-  const f = FR('run0_normal'), sp = heroSplit(f), e = k => Math.max(0, Math.min(1, k));
-  const shakeA = (m < .7 ? 1.5 + m * 5 : 0), jx = (Math.random() - .5) * shakeA, jy = (Math.random() - .5) * shakeA;
-  const orange = e(m / .45), stretch = e((m - .25) / .4), out = e((m - .55) / .25), grow = e((m - .5) / .35);
-  if (sp && out < 1) { ctx.save(); ctx.translate(x + jx, y + jy); ctx.globalAlpha = 1 - out;
-    const sx = 1 - stretch * .35 + Math.sin(m * 40) * .03 * stretch, sy = 1 + stretch * .55; ctx.scale(sx, sy);
-    tintCv.width = sp.body.width; tintCv.height = sp.body.height; const tc = tintCv.getContext('2d'); tc.drawImage(sp.body, 0, 0); tc.globalCompositeOperation = 'source-atop'; tc.fillStyle = `rgba(232,120,30,${(orange * .85).toFixed(3)})`; tc.fillRect(0, 0, tintCv.width, tintCv.height);
+  // ---- the mutation (owner 23 Nov, redone: a real Hulk-style transformation, one body the whole way through) ----
+  // he hunches and shakes, glows orange, then grows in three heaving pulses; wood creeps up his body from the feet
+  // (below the glowing seam he IS Lakri Man, above it he's still the hero, both at the same growing height), the cooker
+  // bursts off his back, his head is squashed into the log last, then a final roar.
+  const mm = window.__mT != null ? window.__mT : m, e = k => Math.max(0, Math.min(1, k)), ease = k => k * k * (3 - 2 * k);
+  const f = FR('run0_normal'), sp = heroSplit(f);
+  const HL = LMS * (window.LOGMAN_H || 685);                       // Lakri Man's height on screen
+  const hunch = e(mm / .14) * (1 - e((mm - .2) / .1));                 // crouch down first
+  const pulse = k => ease(e(k));                                        // three heaving growth spurts with overshoot
+  const g = (pulse((mm - .18) / .14) * .3 + pulse((mm - .4) / .14) * .3 + pulse((mm - .62) / .16) * .4);
+  const heave = Math.sin(Math.min(1, Math.max(0, (mm - .18) / .62)) * Math.PI * 6) * .045 * (mm < .82 ? 1 : 0);
+  const Hc = (HH + (HL - HH) * g) * (1 - hunch * .12 + heave) * (mm > .86 ? 1 + Math.sin(e((mm - .86) / .14) * Math.PI) * .08 : 1);
+  const line = ease(e((mm - .24) / .6));                                // the wood line rising from his feet to the top of his head
+  const shakeA = mm < .9 ? 1 + mm * 3.5 : 0, jx = (Math.random() - .5) * shakeA, jy = (Math.random() - .5) * shakeA * .5;
+  const orange = e(mm / .3);
+  ctx.save(); ctx.translate(x + jx, y + jy);
+  const seamY = -Hc * line;                                             // local y of the seam (feet = 0, head = -Hc)
+  // orange glow round him while it happens
+  if (mm < .95) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; const gr = ctx.createRadialGradient(0, -Hc * .5, 4, 0, -Hc * .5, Hc * .75); gr.addColorStop(0, `rgba(255,150,50,${(.28 * orange).toFixed(3)})`); gr.addColorStop(1, 'rgba(255,120,30,0)'); ctx.fillStyle = gr; ctx.fillRect(-Hc, -Hc * 1.3, Hc * 2, Hc * 1.4); ctx.restore(); }
+  // the hero part, above the seam: stretched to the growing height and bulked out, tinted orange, head squashed at the end
+  if (sp && line < 1) { ctx.save(); ctx.beginPath(); ctx.rect(-80, -Hc - 60, 160, Hc + 60 + seamY + 1); ctx.clip();
+    const sy = Hc / HH, sx = sy * (1 + g * .35 + hunch * .1) * (1 + Math.sin(t * 38) * .02 * e(mm / .2)) * (line > .78 ? 1 + (line - .78) * 1.4 : 1);
+    ctx.scale(sx, sy * (line > .78 ? 1 - (line - .78) * .9 : 1));
+    tintCv.width = sp.body.width; tintCv.height = sp.body.height; const tc = tintCv.getContext('2d'); tc.drawImage(sp.body, 0, 0); tc.globalCompositeOperation = 'source-atop'; tc.fillStyle = `rgba(209,108,42,${(orange * .45 + e((mm - .4) / .4) * .3).toFixed(3)})`; tc.fillRect(0, 0, tintCv.width, tintCv.height);
+    // veins of wood grain crawling up ahead of the seam
+    tc.strokeStyle = `rgba(120,50,15,${(.6 * orange).toFixed(3)})`; tc.lineWidth = 3; const sh = tintCv.height, sw = tintCv.width, top = sh * (1 - line) - sh * .25;
+    for (let k = 0; k < 6; k++) { const vx = sw * (.25 + k * .1); tc.beginPath(); tc.moveTo(vx, sh); for (let yy = sh; yy > top; yy -= 10) tc.lineTo(vx + Math.sin(yy * .05 + k) * 6, yy); tc.stroke(); }
     tc.globalCompositeOperation = 'source-over'; ctx.drawImage(tintCv, -HW * HS / 2, -HH, HW * HS, HH);
-    if (stretch > 0) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; const vg = ctx.createRadialGradient(0, -HH * .6, 0, 0, -HH * .6, 30); vg.addColorStop(0, `rgba(255,150,40,${(.5 * stretch).toFixed(3)})`); vg.addColorStop(1, 'rgba(255,120,20,0)'); ctx.fillStyle = vg; ctx.fillRect(-40, -HH - 20, 80, HH + 20); ctx.restore(); }   // veins of orange light
+    if (!veh.ckOff) ctx.drawImage(sp.cook, -HW * HS / 2, -HH, HW * HS, HH);
     ctx.restore(); }
-  // the cooker comes off: falls and bounces away on the pavement
-  if (sp) { if (!veh.ck) veh.ck = { x: x - 10, y: y - 30, vx: -70, vy: -160, a: 0, b: 0 }; const C = veh.ck; if (m > .3) { const dt = 1 / 60; C.vy += 1100 * dt; C.x += (C.vx - speed * .5) * dt; C.y += C.vy * dt; C.a -= 7 * dt * (C.b ? .4 : 1); if (C.y > FLOOR - 8) { C.y = FLOOR - 8; if (C.vy > 120) { C.vy = -C.vy * .4; C.b++; if (C.b === 1) { tone(700, .08, 'square', .05, .7, MIX && MIX.fx); tone(1100, .06, 'square', .04, .8, MIX && MIX.fx); } } else C.vy = 0; } }
-    ctx.save(); ctx.translate(m > .3 ? C.x : x + jx, m > .3 ? C.y : y + jy); if (m > .3) { ctx.rotate(C.a); ctx.translate(10, -(HH - 30)); } ctx.drawImage(sp.cook, -HW * HS / 2, -HH, HW * HS, HH); ctx.restore(); }
-  if (grow > 0) { const ov = grow < 1 ? 1 + Math.sin(grow * Math.PI) * .18 : 1; ctx.save(); ctx.globalAlpha = Math.min(1, grow * 1.6); ctx.translate(x, y); ctx.scale(.55 + .45 * grow * ov, (.4 + .6 * grow) * ov); drawLogman(ctx, 0, 0, LMS, { ph: 0, air: 0, face: grow < .6 ? 'angry' : 'shock', t }); ctx.restore(); }
-  if (m > .5 && m < .62 && !veh.burst) { veh.burst = 1; flashT = .14; flashCol = '255,180,90'; shake = Math.max(shake, .3); for (let i = 0; i < 26; i++) sparks.push({ x: x + (Math.random() - .5) * 30, y: y - 40 - Math.random() * 40, vx: (Math.random() - .5) * 380, vy: -Math.random() * 300, l: .7, c: ['#e8781e', '#ffa64a', '#b8500e', '#fff0c0'][i % 4] }); for (let i = 0; i < 10; i++) steam.push({ x: x + (Math.random() - .5) * 40, y: y - 30 - Math.random() * 40, vx: (Math.random() - .5) * 160, vy: -40 - Math.random() * 60, r: 4 + Math.random() * 4, l: .6, l0: .7 }); }
+  // Lakri Man, below the seam, at the same height
+  if (line > 0) { ctx.save(); ctx.beginPath(); ctx.rect(-120, seamY - 1, 240, -seamY + 40); ctx.clip(); const k = Hc / HL; ctx.scale(k * (1 + (1 - line) * .12), k);
+    drawLogman(ctx, 0, 0, LMS, { ph: 0, air: 0, face: line < .9 ? 'angry' : (mm > .93 ? 'grin' : 'shock'), t, bat: mm > .8 }); ctx.restore(); }
+  // the glowing seam where flesh turns to wood, spitting chips
+  if (line > 0 && line < 1) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; const wdt = 22 + g * 12, sg = ctx.createLinearGradient(0, seamY - 5, 0, seamY + 5); sg.addColorStop(0, 'rgba(255,140,40,0)'); sg.addColorStop(.5, 'rgba(255,215,140,.75)'); sg.addColorStop(1, 'rgba(255,140,40,0)'); ctx.fillStyle = sg; ctx.fillRect(-wdt, seamY - 5, wdt * 2, 10); ctx.restore();
+    if (Math.random() < .7) sparks.push({ x: x + (Math.random() - .5) * 30, y: y + seamY, vx: (Math.random() - .5) * 220 - speed * .2, vy: -60 - Math.random() * 160, l: .45, c: ['#d16c2a', '#ad4f1b', '#ffcf8a', '#7a3a12'][Math.random() * 4 | 0] });
+    if (Math.random() < .12) tone(140 + Math.random() * 120, .06, 'sawtooth', .025, .5, MIX && MIX.fx); }   // creaking wood
+  ctx.restore();
+  // the cooker bursts off his back when the wood reaches it, and bounces away down the pavement
+  if (sp && line > .45 && !veh.ckOff) { veh.ckOff = 1; veh.ck = { x: x - 12, y: y - Hc * .55, vx: -90, vy: -280, a: 0, b: 0 }; tone(700, .08, 'square', .05, .7, MIX && MIX.fx); shake = Math.max(shake, .2); for (let i = 0; i < 10; i++) steam.push({ x: x - 10, y: y - Hc * .55, vx: -40 - Math.random() * 120, vy: -30 - Math.random() * 80, r: 4 + Math.random() * 4, l: .6, l0: .7 }); }
+  if (sp && veh.ck) { const C = veh.ck, dt = 1 / 60; C.vy += 1100 * dt; C.x += (C.vx - speed * .5) * dt; C.y += C.vy * dt; C.a -= 7 * dt * (C.b ? .4 : 1); if (C.y > FLOOR - 8) { C.y = FLOOR - 8; if (C.vy > 120) { C.vy = -C.vy * .4; C.b++; if (C.b === 1) tone(1100, .06, 'square', .04, .8, MIX && MIX.fx); } else C.vy = 0; }
+    ctx.save(); ctx.translate(C.x, C.y); ctx.rotate(C.a); ctx.translate(10, -(HH - 30)); ctx.drawImage(sp.cook, -HW * HS / 2, -HH, HW * HS, HH); ctx.restore(); }
+  // growth-spurt thumps and the final roar
+  [.24, .46, .7].forEach((p0, i) => { if (mm > p0 && !(veh.thump & (1 << i))) { veh.thump = (veh.thump || 0) | (1 << i); shake = Math.max(shake, .15 + i * .08); tone(70 - i * 8, .18, 'triangle', .08, .6, MIX && MIX.fx); for (let k = 0; k < 6; k++) dust.push({ x: x + (Math.random() - .5) * 40, y: FLOOR, vx: (Math.random() - .5) * 200, vy: -Math.random() * 40, r: 3, l: .5 }); } });
+  if (mm > .93 && !veh.burst) { veh.burst = 1; flashT = .1; flashCol = '255,190,110'; shake = Math.max(shake, .35); for (let i = 0; i < 20; i++) sparks.push({ x: x + (Math.random() - .5) * 40, y: y - Math.random() * HL, vx: (Math.random() - .5) * 320, vy: -Math.random() * 260, l: .6, c: ['#d16c2a', '#ffa64a', '#ad4f1b', '#fff0c0'][i % 4] }); }
 }
 function drawVehicle() {
   const x = hero.x, y = hero.y, k = veh.k; if (k === 'logman') { drawLogVeh(); return; }
@@ -2135,7 +2181,7 @@ function draw() {
   coinList.forEach(c => { if (c.j) { const J = jalebiImg(), s3 = J.width / KR; ctx.save(); ctx.translate(c.x, c.y + Math.sin(t * 4 + c.x * .1) * .8); ctx.rotate(Math.sin(t * 2 + c.x) * .25); ctx.drawImage(J, -s3 / 2, -s3 / 2, s3, s3); ctx.restore(); return; }
     const f = coinFrames[Math.floor((t * 14 + c.x * .05)) % 16]; const s2 = f.width / KR; ctx.drawImage(f, c.x - s2 / 2, c.y - s2 / 2 + Math.sin(t * 4 + c.x * .1) * .8, s2, s2); POL.glint(c, s2); });
   // obstacles
-  obs.forEach(o => { if (o.type === 'zap') drawZap(o); else if (o.type === 'laser') drawLaser(o); else drawRocket(o); }); drawWrecks(); POL.draw();
+  obs.forEach(o => { if (o.type === 'zap') drawZap(o); else if (o.type === 'laser') drawLaser(o); else drawRocket(o); }); drawWrecks(); POL.draw(); drawLogBits();
   gifts.forEach(drawGift);
   // people + hero, sorted by depth (feet y)
   const list = npcs.map(p => ({ y: p.y, f: () => drawNpc(p) })); mobs.forEach(m => list.push({ y: m.y, f: () => { const M = NPC_META.mobility, im = npcGet('mobility'); if (!M || !im.naturalWidth) return; const sc = .9 * NPCK / M.k, w = M.w * sc, h = M.h * sc, f = Math.floor(m.roll / 9) % M.n;
@@ -2390,7 +2436,7 @@ tap('bHow', () => $('how').classList.remove('hide'));
 
 /* ================= SHOP: utilities, gadgets (2 slots, buy a 3rd), outfits ================= */
 const CKFIN = { ck_copper: ['#5a2410', '#c8642a', '#ffc89a', '#b8501c', '#6a2a10'], ck_black: ['#050507', '#2a2c34', '#8a90a0', '#1a1b22', '#050507'] };
-const BATIMG = { bat_tape: img('art/logman/n_bat_tape.webp?h=cd8c120502'), bat_alu: img('art/logman/n_bat_alu.webp?h=3212c216ea'), bat_gold: img('art/logman/n_bat_gold.webp?h=7c4a9247bd') };
+const BATIMG = { bat_tape: img('art/logman/n_bat_tape.webp?h=fb654ffbb7'), bat_alu: img('art/logman/n_bat_alu.webp?h=721cc6477f'), bat_gold: img('art/logman/n_bat_gold.webp?h=b300704eca') };
 const STEAMC = { st_green: '#b6f7c6', st_pink: '#ffc4e2' };
 // cooker finish: the cooker pixels (art/cookmask.webp, same place in every outfit sheet) recoloured along a metal ramp, made once per outfit + finish
 const COOKMASK = img('art/cookmask.webp?h=7ac58ac59b'); const CKC = {};
@@ -2861,5 +2907,5 @@ const POL = (() => { const P = { fx: [], flock: [], nextFlock: 4, streak: 0, str
 window.__pol = POL;
 function frame(now) { const dt = Math.min(.05, (now - last) / 1000); last = now; shieldBtn(); dashBtn(); hornBtn(); batBtn(); SLOW = veh && veh.k === 'mech' && veh.su < 1.05 ? .12 : Math.min(1, SLOW + dt * 3); if (FM) { if (!paused) { FMS.step(dt); if (FM && FM.ph === 'out' && FM.back) update(dt); } FMS.frame(); requestAnimationFrame(frame); return; } if (REVEAL && !paused) { revealTick(dt); holding = false; } else if (!paused) { let k = 1; if (HITT > 0) { HITT -= dt; k = 0; } else if (SMT > 0) { SMT -= dt; k = .35; } update(dt * SLOW * k); } else holding = false; draw(); if (bakeQ.length) bakeOne(); requestAnimationFrame(frame); }
 requestAnimationFrame(frame);
-window.__jd = { zap: (x, y, len = 120, ang = Math.PI / 2) => obs.push({ type: 'zap', x, y, len, ang, spin: 0, seed: 1 }), horn: () => hornBlast(), get hornCD() { return hornCD; }, get fm() { return FM; }, get speed() { return speed; }, get coinList() { return coinList; }, get W() { return W; }, get gifts() { return gifts; }, get runT() { return runT; }, veh: k => startVehicle(k), laser: () => [CEIL + 40, (CEIL + FLOOR) / 2].forEach((y, i) => obs.push({ type: 'laser', x: W / 2, y, ph: 'in', pt: 0, slide: 0, d: i * .12 })), eidi: n => { eidi = n; }, kill: w => die(w), gift: (k, r, x, y) => gifts.push({ k, ride: r, x: x || W * .6, y: y || 200, b: 0 }), get state() { return state; }, start, hero, get obs() { return obs; }, spawnRocket: () => obs.push({ type: "rocket", x: W + 40, y: hero.y - 30, warn: 1.5, lock: 0, v: 0 }), setHold: v => holding = v, get dist() { return dist; }, mis: (s, c) => { RUN.steamed = s; coins = c; }, get npcs() { return npcs; }, boost: m => startBoost(m), get SHOP() { return SHOP; }, bc: (k, kd) => buildingCanvas(kd || "lm", k), carSprite: (k, ci, f) => carSprite(k, ci, f), queue: k => deck.unshift([k]), street: () => street, npc: x => spawnNpc(x), car: (x, k, l) => spawnCar(x, k, false, l), get STREET() { return STREET; } };
+window.__jd = { zap: (x, y, len = 120, ang = Math.PI / 2) => obs.push({ type: 'zap', x, y, len, ang, spin: 0, seed: 1 }), horn: () => hornBlast(), get hornCD() { return hornCD; }, get fm() { return FM; }, get speed() { return speed; }, get coinList() { return coinList; }, get W() { return W; }, get gifts() { return gifts; }, get runT() { return runT; }, veh: k => startVehicle(k), laser: () => [CEIL + 40, (CEIL + FLOOR) / 2].forEach((y, i) => obs.push({ type: 'laser', x: W / 2, y, ph: 'in', pt: 0, slide: 0, d: i * .12 })), eidi: n => { eidi = n; }, kill: w => die(w), gift: (k, r, x, y) => gifts.push({ k, ride: r, x: x || W * .6, y: y || 200, b: 0 }), get state() { return state; }, get V() { return veh; }, start, hero, get obs() { return obs; }, spawnRocket: () => obs.push({ type: "rocket", x: W + 40, y: hero.y - 30, warn: 1.5, lock: 0, v: 0 }), setHold: v => holding = v, get dist() { return dist; }, mis: (s, c) => { RUN.steamed = s; coins = c; }, get npcs() { return npcs; }, boost: m => startBoost(m), get SHOP() { return SHOP; }, bc: (k, kd) => buildingCanvas(kd || "lm", k), carSprite: (k, ci, f) => carSprite(k, ci, f), queue: k => deck.unshift([k]), street: () => street, npc: x => spawnNpc(x), car: (x, k, l) => spawnCar(x, k, false, l), get STREET() { return STREET; } };
 })();
