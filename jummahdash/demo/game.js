@@ -334,7 +334,8 @@ function tone(freq, dur, type = 'sine', vol = .12, slide = 0, bus = null) {
   if (slide) o.frequency.exponentialRampToValueAtTime(Math.max(30, freq * slide), t + dur);
   g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(.0001, t + dur); o.connect(g); g.connect(bus || (MIX ? MIX.fx : AC.destination)); o.start(t); o.stop(t + dur + .02);
 }
-const SFX = { mutate() {   // a creaking, growling transformation
+const SFX = { charge() { if (!AC || !sndOn) return; [[392, 0], [523, .15], [659, .3], [784, .45], [659, .62], [784, .74]].forEach(([f, d]) => setTimeout(() => { tone(f, .14, 'square', .035, 0, MIX && MIX.fx); tone(f * 2, .14, 'sine', .02, 0, MIX && MIX.fx); }, d * 1000)); },   // ballpark organ 'charge!'
+  mutate() {   // a creaking, growling transformation
     if (!AC || !sndOn) return; const bus = MIX ? MIX.fx : AC.destination, t0 = AC.currentTime;
     const o = AC.createOscillator(), g = AC.createGain(), lp = AC.createBiquadFilter(); o.type = 'sawtooth'; o.frequency.setValueAtTime(140, t0); o.frequency.exponentialRampToValueAtTime(55, t0 + 1.2); lp.type = 'lowpass'; lp.frequency.setValueAtTime(400, t0); lp.frequency.linearRampToValueAtTime(1400, t0 + .8); lp.frequency.linearRampToValueAtTime(300, t0 + 1.3);
     g.gain.setValueAtTime(.0001, t0); g.gain.exponentialRampToValueAtTime(.12, t0 + .2); g.gain.setValueAtTime(.12, t0 + .9); g.gain.exponentialRampToValueAtTime(.0001, t0 + 1.4); o.connect(lp); lp.connect(g); g.connect(bus); o.start(t0); o.stop(t0 + 1.5);
@@ -1425,7 +1426,7 @@ function startVehicle(k, fromReveal) {
   RUN[k] = 1;
   veh = { k, t: 0, vy: 0, jumps: 0, held: false, wob: 0, g: 1, s: 1, flap: 0, fuel: 1, nb: 0, ht: 0 }; if (k === 'kabootar') veh.tip = 1; if (k === 'tuktuk' && !RUN.nitroTip) { RUN.nitroTip = 1; setTimeout(() => pops.push({ x: hero.x + 30, y: hero.y - 110, txt: 'TAP TO JUMP · HOLD TO GO HIGHER!', col: '#ffd21f', t: 0 }), 900); setTimeout(() => pops.push({ x: hero.x + 60, y: hero.y - 140, txt: 'HIT HORN TO BLAST HAZARDS!', col: '#ffe680', t: 0 }), 2600); } if (k === 'tuktuk') hornCD = 0; hero.thrust = false; if (k === 'kabootar') hero.vy = -200;
   if (k === 'mech') { veh.su = 0; veh.wp = 0; veh.air = 1; veh.shOn = 0; veh.bat = 1; veh.shA = 0; hero.y = Math.max(hero.y, CEIL + 172 * MCH); hero.vy = 0; veh.lk = 0; SFX.mechStart(); rings.push({ x: hero.x, y: hero.y - 30, t: 0 }); veh.noBanner = fromReveal; return; }   // banner comes after the suit-up (skipped when the title card already showed)
-  if (k === 'logman') { veh.morph = 0; veh.ph = 0; veh.face = 'angry'; inv = Math.max(inv, 1.8); SFX.mutate && SFX.mutate(); return; }   // no part assembly: he mutates (drawn in drawVehicle)
+  if (k === 'logman') { veh.gold = !!(window.__goldLog || /goldlog=1/.test(location.search) || Math.random() < 1 / 200); window.__goldLog = 0; if (veh.gold) { window.LOGMAN_GOLD_PRELOAD && LOGMAN_GOLD_PRELOAD(); setTimeout(() => { pops.push({ x: hero.x + 20, y: hero.y - 130, txt: 'GOLDEN LAKRI MAN! 1 IN 200', col: '#ffd75a', t: 0 }); flashT = .2; flashCol = '255,220,120'; [784, 988, 1175, 1568].forEach((f, i) => setTimeout(() => tone(f, .14, 'triangle', .06), i * 90)); }, 1300); RUN.goldLog = 1; } veh.morph = 0; veh.ph = 0; veh.face = 'angry'; inv = Math.max(inv, 1.8); SFX.mutate && SFX.mutate(); return; }   // no part assembly: he mutates (drawn in drawVehicle)
   if (fromReveal) { veh.asm = 0; veh.lockd = 0; } else { banner = { k, t: 0 }; flashT = .12; flashCol = '255,255,255'; } rings.push({ x: hero.x, y: hero.y - 30, t: 0 });
   tone(523, .1, 'square', .06); setTimeout(() => tone(659, .1, 'square', .06), 90); setTimeout(() => tone(784, .2, 'square', .06), 180);
 }
@@ -1506,7 +1507,7 @@ function vehUpdate(dt) {
   }
   if (veh.k === 'logman') {   // Lakri Man: tap = big leap, tap again in the air = flip leap, hold in the air = windmill arms slow the fall; zappers can't hurt wood
     const press = holding && !veh.held; veh.held = holding; const onG = hero.y >= FLOOR - .5; veh.sq = Math.max(0, (veh.sq || 0) - dt * 5);
-    if (veh.morph < 1) { veh.morph = Math.min(1, veh.morph + dt / 1.35); if (veh.morph >= 1) { veh.face = 'grin'; veh.sq = .8; shake = Math.max(shake, .25); veh.life = LOG_LIFE; veh.batHP = BAT_HP; veh.swT = -1; } }
+    if (veh.morph < 1) { veh.morph = Math.min(1, veh.morph + dt / 1.35); if (veh.morph >= 1) { veh.face = 'grin'; veh.sq = .8; shake = Math.max(shake, .25); veh.life = LOG_LIFE * (veh.gold ? 2 : 1); veh.batHP = SHOP.bat === 'bat_tape' ? 10 : BAT_HP; veh.swT = -1; veh.streak = 0; } }
     if (veh.morph >= 1) { veh.life -= dt; if (veh.life < 5 && Math.floor(veh.life * 4) !== Math.floor((veh.life + dt) * 4)) { tone(220 + Math.random() * 80, .07, 'square', .03, .6, MIX && MIX.fx); for (let i = 0; i < 4; i++) sparks.push({ x: hero.x + (Math.random() - .5) * 20, y: hero.y - Math.random() * 70, vx: (Math.random() - .5) * 120, vy: -Math.random() * 120, l: .4, c: '#a8622a' }); if (veh.life < 3) veh.face = 'scared'; }   // owner 23 Nov: he can't stay a log for ever: he starts creaking and cracking, then turns back
       if (veh.life <= 0) { logRevert(); return; }
       batTick(dt); }
@@ -1679,23 +1680,34 @@ function vehCrash() {
   POL.chunks(cols); if (k === 'kabootar') pops.push({ x: hero.x + 20, y: hero.y - 140, txt: 'COO!', col: '#e8ecf4', t: 0 });
   for (let i = 0; i < 26; i++) sparks.push({ x: hero.x + (Math.random() - .5) * 50, y: hero.y - 20 + (Math.random() - .5) * 30, vx: (Math.random() - .4) * 300, vy: -Math.random() * 280, l: .9 + Math.random() * .5, c: cols[i % 4] });
   for (let i = 0; i < 12; i++) steam.push({ x: hero.x + (Math.random() - .5) * 40, y: hero.y - 20, vx: (Math.random() - .5) * 120, vy: -Math.random() * 80, r: 5 + Math.random() * 4, l: .7, l0: .9 });
-  pops.push({ x: hero.x, y: hero.y - 70, txt: { tuktuk: 'TUK-TUK GONE!', carpet: 'CARPET GONE!', kabootar: 'KABOOTAR FLEW OFF!', sandals: 'SANDALS SNAPPED!', mech: 'MECH WRECKED!', logman: 'SPLINTERED!' }[k], col: '#ffd75a', t: 0 });
+  pops.push({ x: hero.x, y: hero.y - 70, txt: { tuktuk: 'TUK-TUK GONE!', carpet: 'CARPET GONE!', kabootar: 'KABOOTAR FLEW OFF!', sandals: 'SANDALS SNAPPED!', mech: 'MECH WRECKED!', logman: 'STRIKE OUT!' }[k], col: '#ffd75a', t: 0 });
 }
 const LMS = .096;   // Lakri Man scale: a bit taller than the hero (owner 23 Nov)
 const LOG_LIFE = 24, BAT_HP = 6, BAT_CD = .45;
 function batAngle() { if (!veh || (veh.swT == null) || veh.swT < 0) return null; const k = veh.swT / .34; if (k < .25) return 2.4 + k / .25 * .5; const f = (k - .25) / .45; if (f < 1) return 2.9 - f * f * 4.5; return -1.6 + Math.min(1, (k - .7) / .3) * 1.6; }   // wind up behind the head, whip round, follow through
 function batSwing() { if (!veh || veh.k !== 'logman' || veh.morph < 1 || (veh.batHP || 0) <= 0 || state !== 'play' || paused || (veh.batCD || 0) > 0) return; veh.swT = 0; veh.batCD = BAT_CD; veh.hitDone = 0; veh.face = 'angry'; SFX.whoosh(); tone(200, .1, 'triangle', .04, 2.4, MIX && MIX.fx); }
-function batTick(dt) { if (veh.batCD > 0) veh.batCD -= dt; if (veh.swT < 0) return; veh.swT += dt; if (veh.swT > .34) { veh.swT = -1; return; }
+function batTick(dt) { if (veh.batCD > 0) veh.batCD -= dt; if (veh.swT < 0) return; if (veh.swT === 0) veh.missed = 0; veh.swT += dt; if (veh.swT > .34) { veh.swT = -1; return; }
   if (veh.swT < .08 || veh.swT > .26) return;   // the bat's sweet spot is on the forward whip
-  const q = LMS * (window.LOGMAN_H || 685) / 685, bx0 = hero.x - 6, bx1 = hero.x + 95 * q, by0 = hero.y - 105 * q, by1 = hero.y - 8;
+  const q = LMS * (window.LOGMAN_H || 685) / 685, wide = SHOP.bat === 'bat_alu' || veh.gold ? 1.3 : 1, bx0 = hero.x - 6, bx1 = hero.x + 95 * q * wide, by0 = hero.y - 105 * q, by1 = hero.y - 8;
   const inBox = (x, y, m = 0) => x > bx0 - m && x < bx1 + m && y > by0 - m && y < by1 + m; let hit = 0;
   obs.forEach(o => { if (o.honk) return;
-    if (o.type === 'zap') { const ca = Math.cos(o.ang), sa = Math.sin(o.ang), hl = o.len / 2; let near = false; for (let u = -1; u <= 1; u += .25) if (inBox(o.x + ca * hl * u, o.y + sa * hl * u, 12)) near = true; if (near) { o.honk = 1; wreckZap(o); batHit(o.x, o.y, 'SMASHED!'); hit++; } }
-    else if (o.type === 'rocket' && o.v && !o.defl && inBox(o.x, o.y, 22)) { o.defl = 1; o.v = -(speed + 560); o.vy = -260 - Math.random() * 160; o.rot = Math.PI; o.spin = (Math.random() < .5 ? -1 : 1) * (7 + Math.random() * 4); batHit(o.x, o.y, 'HOME RUN!'); hit++; }
+    if (o.type === 'zap') { const ca = Math.cos(o.ang), sa = Math.sin(o.ang), hl = o.len / 2; let near = false; for (let u = -1; u <= 1; u += .25) if (inBox(o.x + ca * hl * u, o.y + sa * hl * u, 12)) near = true; if (near) { o.honk = 1; wreckZap(o); batHit(o.x, o.y, 'BASE HIT!'); hit++; } }
+    else if (o.type === 'rocket' && o.v && !o.defl && inBox(o.x, o.y, 22)) { o.defl = 1; o.v = -(speed + 560); o.vy = -260 - Math.random() * 160; o.rot = Math.PI; o.spin = (Math.random() < .5 ? -1 : 1) * (7 + Math.random() * 4); o.homer = 1; batHit(o.x, o.y, 'HOME RUN!'); SFX.charge && SFX.charge(); setTimeout(() => homeRunLands(), 700 + Math.random() * 300); hit++; }
     else if (o.type === 'laser' && (o.ph === 'fire' || o.ph === 'warn') && o.y > by0 - 10 && o.y < by1 + 10) { o.honk = 1; wreckLaser(o); batHit(hero.x + 60 * q, o.y, 'BATTED!'); hit++; } });
-  if (hit) { veh.batHP -= 1; if (veh.batHP <= 0) { pops.push({ x: hero.x + 30, y: hero.y - 140, txt: 'BAT SNAPPED!', col: '#ff8a4a', t: 0 }); tone(300, .2, 'square', .06, .4, MIX && MIX.fx); POL.chunks(['#c06a2c', '#8a4a1c', '#e09050']); veh.face = 'sad'; } } }
-function batHit(x, y, txt) { veh.face = 'grin'; shake = Math.max(shake, .14); HITT = .06; tone(180, .12, 'square', .07, .5, MIX && MIX.fx); tone(900, .06, 'square', .05, .6, MIX && MIX.fx); hornPay(x, y, txt);
+  if (!hit && veh.swT > .25 && !veh.missed) { veh.missed = 1; if (veh.streak > 1) pops.push({ x: hero.x + 20, y: hero.y - 110, txt: 'STREAK OVER', col: '#c8c0e0', t: 0 }); veh.streak = 0; }
+  if (hit) { veh.batHP -= SHOP.bat === 'bat_gold' && Math.random() < .3 ? 0 : 1; if (veh.batHP <= 0) { pops.push({ x: hero.x + 30, y: hero.y - 140, txt: 'BAT SNAPPED!', col: '#ff8a4a', t: 0 }); tone(300, .2, 'square', .06, .4, MIX && MIX.fx); POL.chunks(['#c06a2c', '#8a4a1c', '#e09050']); veh.face = 'sad'; } } }
+function batHit(x, y, txt) { veh.face = 'grin'; shake = Math.max(shake, .14); HITT = .06; tone(180, .12, 'square', .07, .5, MIX && MIX.fx); if (SHOP.bat === 'bat_alu') tone(2600, .25, 'sine', .05, .98, MIX && MIX.fx); else tone(900, .06, 'square', .05, .6, MIX && MIX.fx);
+  veh.streak = (veh.streak || 0) + 1; const mult = Math.min(5, veh.streak), pay = 2 * mult + (SHOP.bat === 'bat_gold' || veh.gold ? 3 : 0); coins += pay; $('coins').textContent = '£' + coins; RUN.honked = (RUN.honked || 0) + 1;
+  pops.push({ x, y: y - 20, txt: txt + ' +£' + pay, col: '#ffe680', t: 0 }); if (mult > 1) pops.push({ x: hero.x + 10, y: hero.y - 140, txt: '×' + mult + ' STREAK', col: '#7dffa0', t: 0 });
+  if (SHOP.bat === 'bat_gold' || veh.gold) for (let i = 0; i < 4; i++) POL.fx.push({ k: 'spill', x, y, vx: 40 + Math.random() * 120, vy: -120 - Math.random() * 120, t: 0, l: 1.2, b: 0, sp: Math.random() * 6 });
   for (let i = 0; i < 14; i++) sparks.push({ x, y, vx: 80 + Math.random() * 280, vy: (Math.random() - .5) * 260, l: .4, c: ['#ffffff', '#ffd75a', '#c06a2c'][i % 3] }); }
+function homeRunLands() {   // the batted rocket comes down somewhere off to the right
+  if (state !== 'play') return; const r = Math.random(), x = W * (.55 + Math.random() * .35), y = FLOOR - 10;
+  for (let i = 0; i < 16; i++) sparks.push({ x, y: y - 20, vx: (Math.random() - .5) * 300, vy: -Math.random() * 260, l: .5, c: ['#ffd75a', '#ff8a2a', '#ffffff'][i % 3] }); SFX.thud && SFX.thud(); shake = Math.max(shake, .1);
+  if (r < .3) { for (let i = 0; i < 12; i++) coinList.push({ x: x + 30 + (i % 4) * 16, y: y - 30 - Math.floor(i / 4) * 16, got: 0 }); pops.push({ x, y: y - 60, txt: 'COIN SHOWER!', col: '#ffd75a', t: 0 }); }
+  else if (r < .55) { for (let i = 0; i < 8; i++) POL.fx.push({ k: 'feather', x: x + (Math.random() - .5) * 30, y: y - 40 - Math.random() * 30, vx: (Math.random() - .5) * 120, vy: -40 - Math.random() * 60, t: 0, l: 1.6, a: Math.random() * 6, sp: (Math.random() - .5) * 8 }); pops.push({ x, y: y - 60, txt: 'PIGEONS!', col: '#e8ecf4', t: 0 }); tone(1800, .05, 'triangle', .02, .7, MIX && MIX.fx); }
+  else if (r < .85) { pops.push({ x, y: y - 60, txt: 'CAR ALARM!', col: '#ff8a8a', t: 0 }); for (let i = 0; i < 8; i++) setTimeout(() => tone(i % 2 ? 880 : 660, .16, 'square', .025, 0, MIX && MIX.traffic), i * 180); }
+  else { coins += 10; $('coins').textContent = '£' + coins; pops.push({ x, y: y - 60, txt: 'GRAND SLAM! +£10', col: '#ffd75a', t: 0 }); flashT = .1; flashCol = '255,230,150'; [523, 659, 784, 1046].forEach((f, i) => setTimeout(() => tone(f, .12, 'square', .05), i * 80)); } }
 function logRevert() {   // back to normal: he splinters back into the hero with a puff, never a death
   const x = hero.x, y = hero.y; POL.chunks(['#c06a2c', '#8a4a1c', '#e09050', '#5a2a0a']); for (let i = 0; i < 12; i++) steam.push({ x: x + (Math.random() - .5) * 40, y: y - 20 - Math.random() * 50, vx: (Math.random() - .5) * 140, vy: -30 - Math.random() * 60, r: 4 + Math.random() * 4, l: .6, l0: .7 });
   flashT = .12; flashCol = '255,200,140'; tone(392, .12, 'square', .05); setTimeout(() => tone(262, .2, 'square', .05), 110); pops.push({ x, y: y - 100, txt: 'BACK TO NORMAL!', col: '#ffd75a', t: 0 });
@@ -1706,9 +1718,10 @@ const LMC = {};   // the hero split for the mutation: body without the cooker, a
 function heroSplit(f) { const key = (heroImg.src || '') + ':' + f; if (LMC[key]) return LMC[key]; if (!COOKMASK.complete || !COOKMASK.naturalWidth || !heroImg.naturalWidth) return null;
   const cw = HW * HX4, ch = HH0 * HX4, mk = op => { const c = document.createElement('canvas'); c.width = cw; c.height = ch; const g = c.getContext('2d'); g.drawImage(heroImg, f * cw, 0, cw, ch, 0, 0, cw, ch); g.globalCompositeOperation = op; g.drawImage(COOKMASK, f * cw, 0, cw, ch, 0, 0, cw, ch); return c; };
   return LMC[key] = { body: mk('destination-out'), cook: mk('destination-in') }; }
-function drawLogVeh() { const x = hero.x, y = hero.y, m = veh.morph || 0, onG = y >= FLOOR - .5, st = { ph: veh.ph, air: onG ? 0 : 1, face: veh.face, t, spin: veh.spin || 0, flip: veh.flipT !== undefined ? veh.flipT / (veh.flipD || .45) * Math.PI * 2 * (veh.flipN || 1) : 0, bat: (veh.batHP || 0) > 0, swing: batAngle(), swingE: 0, squash: veh.sq || 0 };
+function drawLogVeh() { const x = hero.x, y = hero.y, m = veh.morph || 0, onG = y >= FLOOR - .5, st = { ph: veh.ph, air: onG ? 0 : 1, face: veh.face, t, spin: veh.spin || 0, flip: veh.flipT !== undefined ? veh.flipT / (veh.flipD || .45) * Math.PI * 2 * (veh.flipN || 1) : 0, bat: (veh.batHP || 0) > 0, swing: batAngle(), swingE: 0, skin: veh.gold ? 'gold' : '', batK: veh.gold ? 'gold' : ({ bat_tape: 'tape', bat_alu: 'alu', bat_gold: 'gold' }[SHOP.bat] || ''), squash: veh.sq || 0 };
   ctx.fillStyle = 'rgba(30,10,30,.25)'; ctx.beginPath(); ctx.ellipse(x, FLOOR + 1, 16, 3, 0, 0, 7); ctx.fill();
-  if (m >= 1) { drawLogman(ctx, x, y, LMS, st); return; }
+  if (m >= 1) { if (veh.gold) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; const gl = ctx.createRadialGradient(x, y - 40, 4, x, y - 40, 60); gl.addColorStop(0, 'rgba(255,215,90,.35)'); gl.addColorStop(1, 'rgba(255,200,60,0)'); ctx.fillStyle = gl; ctx.fillRect(x - 60, y - 100, 120, 110); ctx.restore(); if (Math.random() < .5) POL.fx.push({ k: 'star', x: x - 10 + (Math.random() - .5) * 20, y: y - Math.random() * 70, vx: -speed * .3 - 20, vy: -10 - Math.random() * 30, t: 0, l: .7, r: 1.4 + Math.random(), col: Math.random() < .5 ? '#ffd75a' : '#fff6c0' }); }
+    drawLogman(ctx, x, y, LMS, st); return; }
   // ---- the mutation (owner 23 Nov: like the Hulk): he shakes and turns orange, the cooker drops off, his body stretches and his head is squashed into the log, then the log man bursts out ----
   const f = FR('run0_normal'), sp = heroSplit(f), e = k => Math.max(0, Math.min(1, k));
   const shakeA = (m < .7 ? 1.5 + m * 5 : 0), jx = (Math.random() - .5) * shakeA, jy = (Math.random() - .5) * shakeA;
@@ -2377,6 +2390,7 @@ tap('bHow', () => $('how').classList.remove('hide'));
 
 /* ================= SHOP: utilities, gadgets (2 slots, buy a 3rd), outfits ================= */
 const CKFIN = { ck_copper: ['#5a2410', '#c8642a', '#ffc89a', '#b8501c', '#6a2a10'], ck_black: ['#050507', '#2a2c34', '#8a90a0', '#1a1b22', '#050507'] };
+const BATIMG = { bat_tape: img('art/logman/n_bat_tape.webp?h=cd8c120502'), bat_alu: img('art/logman/n_bat_alu.webp?h=3212c216ea'), bat_gold: img('art/logman/n_bat_gold.webp?h=7c4a9247bd') };
 const STEAMC = { st_green: '#b6f7c6', st_pink: '#ffc4e2' };
 // cooker finish: the cooker pixels (art/cookmask.webp, same place in every outfit sheet) recoloured along a metal ramp, made once per outfit + finish
 const COOKMASK = img('art/cookmask.webp?h=7ac58ac59b'); const CKC = {};
@@ -2407,6 +2421,9 @@ const ITEMS = {
     { id: 'ck_black', name: 'BLACK CHROME COOKER', desc: 'Murdered-out black chrome. Very serious.', price: 400, k: 'ck' },
     { id: 'st_green', name: 'GREEN STEAM', desc: 'Your jetpack puffs out mint-green steam.', price: 200, k: 'st' },
     { id: 'st_pink', name: 'PINK STEAM', desc: 'Candyfloss-pink steam clouds behind you.', price: 250, k: 'st' },
+    { id: 'bat_tape', name: 'TAPED BAT', desc: "Lakri Man's bat wrapped in grip tape: lasts 10 hits instead of 6.", price: 500, k: 'bat' },
+    { id: 'bat_alu', name: 'ALUMINIUM BAT', desc: 'A wider swing and that metal TING on every hit.', price: 800, k: 'bat' },
+    { id: 'bat_gold', name: 'GOLDEN BAT', desc: 'Coins burst out on every hit, and it sometimes shrugs off the damage.', price: 1200, k: 'bat' },
   ],
   outfit: [
     { id: 'classic', name: 'CLASSIC THOBE', desc: 'Fresh white thobe. Ironed this morning. Probably.', price: 0 },
@@ -2426,6 +2443,7 @@ function iconFor(cv, tab, it) {
   else if (it.id === 'save') { c.translate(29, 30); c.rotate(-.15); c.fillStyle = '#0f3d26'; rr(-17, -12, 34, 24, 4); c.fill(); c.fillStyle = '#1f8a4c'; rr(-15.5, -10.5, 31, 21, 3); c.fill(); c.fillStyle = '#25a35a'; c.beginPath(); c.moveTo(-15.5, -10.5); c.lineTo(0, 3); c.lineTo(15.5, -10.5); c.fill(); c.fillStyle = '#ffd75a'; c.beginPath(); c.arc(0, 2, 5, 0, 7); c.fill(); c.fillStyle = '#1f8a4c'; c.beginPath(); c.arc(2, 1, 4, 0, 7); c.fill(); c.fillStyle = '#ff5a6a'; c.font = '12px PS'; c.fillText('+', 10, -9); }
   else if (tab === 'style' && it.k === 'ck') { const fin = CKFIN[it.id], g2 = c.createLinearGradient(16, 0, 42, 0); fin.forEach((col, i) => g2.addColorStop(i / (fin.length - 1), col));
     c.fillStyle = O; rr(15, 14, 28, 34, 6); c.fill(); c.fillStyle = g2; rr(17, 16, 24, 30, 5); c.fill(); c.fillStyle = 'rgba(255,255,255,.55)'; c.fillRect(21, 18, 3, 26); c.fillStyle = O; rr(24, 6, 10, 9, 3); c.fill(); c.fillStyle = '#e0262e'; c.beginPath(); c.arc(29, 8, 5, Math.PI, 0); c.fill(); c.fillStyle = O; c.fillRect(20, 47, 6, 5); c.fillRect(32, 47, 6, 5); }
+  else if (tab === 'style' && it.k === 'bat') { const B = BATIMG[it.id]; if (B && B.complete && B.naturalWidth) { c.save(); c.translate(29, 29); c.rotate(.75); c.drawImage(B, -B.naturalWidth * .11, -26, B.naturalWidth * .22, 52); c.restore(); } else if (B) B.onload = () => iconFor(cv, tab, it); }
   else if (tab === 'style' && it.k === 'st') { const col = STEAMC[it.id]; [[18, 38, 9], [30, 30, 11], [42, 36, 8], [26, 20, 7], [38, 18, 6]].forEach(([x, y, r]) => { c.fillStyle = 'rgba(30,20,40,.35)'; c.beginPath(); c.arc(x + 1, y + 1.5, r, 0, 7); c.fill(); c.fillStyle = col; c.beginPath(); c.arc(x, y, r, 0, 7); c.fill(); c.fillStyle = 'rgba(255,255,255,.55)'; c.beginPath(); c.arc(x - r * .35, y - r * .35, r * .35, 0, 7); c.fill(); }); }
   else if (it.id === 'slot') { c.strokeStyle = '#ffd75a'; c.setLineDash([4, 3]); c.lineWidth = 2; rr(13, 13, 32, 32, 7); c.stroke(); c.setLineDash([]); c.fillStyle = '#ffd75a'; c.fillRect(26, 20, 6, 18); c.fillRect(20, 26, 18, 6); }
   else if (it.id === 'tin') {   // owner 23 Nov: COIN MAGNET (id stays 'tin' so saves keep it): red horseshoe magnet, silver tips, a coin being pulled in

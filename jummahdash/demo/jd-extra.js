@@ -106,12 +106,12 @@
   function G() { return window.__jd && window.__jd.SHOP; }
   // game.js keeps bank/ITEMS private, so admin changes go through localStorage + the shared SHOP object (window.__jd.SHOP)
   var OUTFITS = [['classic', 'CLASSIC THOBE'], ['puffer', 'PUFFER JACKET'], ['eid', 'EID THOBE'], ['luton', 'LUTON TOWN KIT'], ['moroccan', 'MOROCCAN DJELLABA']];
-  var GADGETS = [['tin', 'CHARITY TIN'], ['chappal', "AMMI'S CHAPPAL"], ['dates', 'LUCKY DATES'], ['envelope', 'EIDI POUCH'], ['cat', 'BILLI THE CAT'], ['jalebi', 'HOT JALEBI'], ['misbaha', 'GOLDEN MISBAHA']];
+  var GADGETS = [['tin', 'COIN MAGNET'], ['chappal', "AMMI'S CHAPPAL"], ['dates', 'LUCKY DATES'], ['envelope', 'EIDI POUCH'], ['cat', 'BILLI THE CAT'], ['jalebi', 'HOT JALEBI'], ['misbaha', 'GOLDEN MISBAHA']];
   function saveS() { try { localStorage.setItem('jd_shop', JSON.stringify(G())); } catch (x) {} }
   function bankLow() { try { return +(localStorage.getItem('jd_bank') || 0) < 500000; } catch (e) { return false; } }
   function unlockAll() {
     var S = G(); if (!S) return;
-    OUTFITS.concat(GADGETS).forEach(function (it) { S.own[it[0]] = 1; });
+    OUTFITS.concat(GADGETS).forEach(function (it) { S.own[it[0]] = 1; }); ['ck_copper', 'ck_black', 'st_green', 'st_pink', 'bat_tape', 'bat_alu', 'bat_gold'].forEach(function (k) { S.own[k] = 1; });
     S.slots = 3; S.hs500 = Math.max(S.hs500 || 0, 99); S.hs1000 = Math.max(S.hs1000 || 0, 99); S.save = Math.max(S.save || 0, 99);
     saveS();
   }
@@ -121,7 +121,7 @@
   }
   function snapshot() { try { if (!localStorage.getItem('jd_admin_snap')) localStorage.setItem('jd_admin_snap', JSON.stringify({ shop: localStorage.getItem('jd_shop'), bank: localStorage.getItem('jd_bank') })); } catch (e) {} }
   // what admin runs start with, plus extras (kept on the phone). When a new ride / power-up is added to the game, add it to START here too (owner rule).
-  var START = [['', 'NOTHING'], ['tuktuk', 'TUK-TUK'], ['carpet', 'MAGIC CARPET'], ['kabootar', 'FLAPPY KABOOTAR'], ['sandals', 'GRAVITY SANDALS'], ['mech', 'HOOVER MECH'], ['hs500', 'HEAD START 500M'], ['hs1000', 'HEAD START 1000M']];
+  var START = [['', 'NOTHING'], ['tuktuk', 'TUK-TUK'], ['carpet', 'MAGIC CARPET'], ['kabootar', 'FLAPPY KABOOTAR'], ['sandals', 'GRAVITY SANDALS'], ['mech', 'HOOVER MECH'], ['logman', 'LAKRI MAN'], ['logmangold', 'GOLDEN LAKRI MAN'], ['hs500', 'HEAD START 500M'], ['hs1000', 'HEAD START 1000M']];
   var TOG = [['god', "CAN'T DIE"], ['boxes', 'RIDE BOX EVERY 10S'], ['magnet', 'COIN MAGNET']];
   var OPT = (function () { try { return JSON.parse(localStorage.getItem('jd_adm_opt')) || {}; } catch (e) { return {}; } })();
   function saveOpt() { try { localStorage.setItem('jd_adm_opt', JSON.stringify(OPT)); } catch (e) {} }
@@ -132,10 +132,10 @@
     if (ADM && st === 'play' && prevSt !== 'play') {   // run just started: give the chosen power-up
       applyGod(); var k = OPT.start || '';
       if (k === 'hs500' || k === 'hs1000') setTimeout(function () { try { J.boost(k === 'hs1000' ? 1000 : 500); } catch (e) {} }, 250);
-      else if (k) setTimeout(function () { try { J.veh(k); } catch (e) {} }, 350);
+      else if (k) setTimeout(function () { try { if (k === 'logmangold') { window.__goldLog = 1; J.veh('logman'); } else J.veh(k); } catch (e) {} }, 350);
       boxT = 0;
     }
-    if (ADM && OPT.boxes && st === 'play') { boxT += .25; if (boxT >= 10) { boxT = 0; var R = ['tuktuk', 'carpet', 'kabootar', 'sandals', 'mech'], r = OPT.start && R.indexOf(OPT.start) >= 0 ? OPT.start : R[nextRideI++ % R.length]; try { J.gift('box', r, J.W + 40, 210); } catch (e) {} } }
+    if (ADM && OPT.boxes && st === 'play') { boxT += .25; if (boxT >= 10) { boxT = 0; var R = ['tuktuk', 'carpet', 'kabootar', 'sandals', 'mech', 'logman'], r = OPT.start === 'logmangold' ? 'logman' : OPT.start && R.indexOf(OPT.start) >= 0 ? OPT.start : R[nextRideI++ % R.length]; if (OPT.start === 'logmangold') window.__goldLog = 1; try { J.gift('box', r, J.W + 40, 210); } catch (e) {} } }
     prevSt = st;
   }, 250);
   function buildAdmin() {
