@@ -23,6 +23,7 @@ function jd_db(): PDO {
 function jd_today(): string { return date('Y-m-d'); }
 function jd_ip(): string { return substr(hash('sha256', client_ip() . '|jd'), 0, 16); }
 function jd_clean(string $s, int $max): string { $s = preg_replace('/[\x00-\x1F\x7F]/u', ' ', $s); return mb_substr(trim(preg_replace('/\s+/u', ' ', $s)), 0, $max); }
+const JD_ADMIN_CODE = '1279';   // in-game admin mode code (owner, 23 Nov)
 const JD_DEFAULTS = ['show_recommend' => true];
 function jd_settings(): array {
     $st = jd_db()->prepare('SELECT v FROM jd_meta WHERE k = ?'); $st->execute(['settings']); $v = json_decode((string) $st->fetchColumn(), true);
@@ -67,6 +68,20 @@ try {
         $p->prepare('INSERT INTO jd_events (day, at, vid, ev, src, dev, app, val, extra) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)')
           ->execute([jd_today(), now(), $vid, $ev, $src, $dev, empty($in['app']) ? 0 : 1, max(0, min(999999, (int) ($in['val'] ?? 0))), jd_clean((string) ($in['extra'] ?? ''), 60)]);
         if (random_int(1, 200) === 1) $p->prepare('DELETE FROM jd_events WHERE at < ?')->execute([now() - 400 * 86400]);
+        json_out(['ok' => true]);
+    }
+
+    /* Admin mode in the game (owner, 23 Nov): checks the SMR Admin PIN on the server; the game then unlocks everything on that phone
+       and the phone is left out of the stats. Same limits as the SMR Admin login. */
+    if ($a === 'admin_pin' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+        $ipKey = 'admin:' . hash('sha256', client_ip());
+        if (too_many($ipKey, 6, 900) || too_many('admin:all', 20, 3600)) json_out(['error' => 'Too many tries. Wait 15 minutes.'], 429);
+        $pin = preg_replace('/\s/', '', (string) ($in['pin'] ?? ''));
+        $game = hash_equals(JD_ADMIN_CODE, $pin);                 // the game's own admin code (owner can give it to testers)
+        $owner = !$game && $pin !== '' && password_verify($pin, admin_hash());   // or the owner's SMR Admin PIN
+        if (!$game && !$owner) { note_fail($ipKey); note_fail('admin:all'); usleep(400000); json_out(['error' => 'Wrong PIN'], 403); }
+        $vid = preg_replace('/[^a-z0-9]/i', '', substr((string) ($in['vid'] ?? ''), 0, 20));
+        if ($owner && $vid !== '') gs_mark_owner(jd_db(), 'jd', $vid, 'admin-mode');
         json_out(['ok' => true]);
     }
 
