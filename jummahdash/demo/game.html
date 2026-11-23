@@ -44,7 +44,7 @@ html,body{margin:0;height:100%;background:#0c0820;overflow:hidden;overscroll-beh
 #stage{position:fixed;left:0;top:0;overflow:hidden;transform-origin:0 0}
 canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 #ui{position:absolute;inset:0;pointer-events:none;font-family:PS,monospace;color:#fff}
-.hud{position:absolute;top:12px;left:calc(var(--sl,0px) + 16px);font-size:20px;text-shadow:0 2px 0 #160c28,0 3px 6px rgba(22,12,40,.6);display:none}
+.hud{position:absolute;top:12px;left:calc(var(--sl,0px) * .6 + 10px);font-size:20px;text-shadow:0 2px 0 #160c28,0 3px 6px rgba(22,12,40,.6);display:none}
 .hud .c{font-size:15px;margin-top:9px;color:#ffd75a;display:flex;align-items:center;gap:7px}
 .coin{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#fff3b0,#e9b52b 55%,#a8761a);box-shadow:0 0 0 2px #6b4a12;color:#6b4a12;font:700 11px Silk}
 .top-r{position:absolute;top:10px;right:calc(var(--sr,0px) + 12px);display:flex;gap:8px;pointer-events:auto}
@@ -299,7 +299,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .cright{display:flex;flex-direction:column}.cright .cbtns{margin-top:auto;padding-top:6px}.cright .cbtns .go{width:100%}
 #recX{display:none!important}#recBox .rmsg:empty{display:none}#recBox .rmsg{margin:4px 0 0}#recBox .rbt .go{min-width:60%}
 @media (max-height:430px){.csteps li{margin:0}.chint{display:none}#recBox .rbt{margin-top:8px!important}#recBox label{margin:5px 0 3px!important}#recBox .box>div>p{font-size:10.5px!important;margin-bottom:2px!important}}
-#bShield{position:absolute;left:calc(var(--sl,0px) + 22px);bottom:22px;width:92px;height:92px;border-radius:50%;border:2px solid rgba(255,150,140,.75);background:radial-gradient(circle at 50% 35%,rgba(255,110,100,.32),rgba(120,10,20,.28) 70%);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;z-index:4;box-shadow:0 0 18px rgba(255,60,50,.45),inset 0 0 14px rgba(255,120,110,.35);touch-action:none;transition:opacity .3s,transform .3s,visibility .3s;pointer-events:auto;cursor:pointer;-webkit-tap-highlight-color:transparent}
+#bShield{position:absolute;left:calc(var(--sl,0px) * .6 + 6px);bottom:37px;width:74px;height:74px;border-radius:50%;border:2px solid rgba(255,150,140,.75);background:radial-gradient(circle at 50% 35%,rgba(255,110,100,.32),rgba(120,10,20,.28) 70%);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;z-index:4;box-shadow:0 0 18px rgba(255,60,50,.45),inset 0 0 14px rgba(255,120,110,.35);touch-action:none;transition:opacity .3s,transform .3s,visibility .3s;pointer-events:auto;cursor:pointer;-webkit-tap-highlight-color:transparent}
 #bShield b{font:700 12px Oswald,Mont,sans-serif;letter-spacing:1.5px;text-shadow:0 0 6px rgba(255,80,70,.9)}
 #bShield .ring{position:absolute;inset:-6px;border-radius:50%;background:conic-gradient(rgba(255,120,110,.95) var(--cd,100%),rgba(255,255,255,.12) 0);-webkit-mask:radial-gradient(circle,transparent 58%,#000 59%,#000 66%,transparent 67%);mask:radial-gradient(circle,transparent 58%,#000 59%,#000 66%,transparent 67%)}
 #bShield:not(.ready):not(.act){opacity:.7}
@@ -308,16 +308,26 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 #bShield.act{background:radial-gradient(circle at 50% 35%,rgba(255,150,140,.6),rgba(200,30,30,.45) 70%);box-shadow:0 0 30px rgba(255,70,60,.85),inset 0 0 18px rgba(255,200,190,.5);transform:scale(.94)}
 #bShield:active{transform:scale(.9)}
 #bShield.hide{opacity:0;visibility:hidden;transform:scale(.6);pointer-events:none}
-#bDash{position:absolute;left:calc(var(--sl,0px) + 22px);bottom:22px;width:74px;height:74px;border-radius:50%;border:2px solid rgba(170,220,255,.75);background:radial-gradient(circle at 50% 35%,rgba(120,190,255,.3),rgba(20,40,90,.3) 70%);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;z-index:4;box-shadow:0 0 14px rgba(90,170,255,.4),inset 0 0 10px rgba(150,210,255,.3);touch-action:none;transition:opacity .3s,transform .2s,visibility .3s;cursor:pointer;pointer-events:auto;-webkit-tap-highlight-color:transparent}
+#bDash{position:absolute;left:calc(var(--sl,0px) * .6 + 6px);bottom:37px;width:74px;height:74px;border-radius:50%;border:2px solid rgba(170,220,255,.75);background:radial-gradient(circle at 50% 35%,rgba(120,190,255,.3),rgba(20,40,90,.3) 70%);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;z-index:4;box-shadow:0 0 14px rgba(90,170,255,.4),inset 0 0 10px rgba(150,210,255,.3);touch-action:none;transition:opacity .3s,transform .2s,visibility .3s;cursor:pointer;pointer-events:auto;-webkit-tap-highlight-color:transparent}
+#bHorn{position:absolute;left:calc(var(--sl,0px) * .6 + 6px);bottom:37px;width:74px;height:74px;border-radius:50%;border:2px solid rgba(255,214,90,.85);background:radial-gradient(circle at 50% 35%,rgba(255,214,90,.38),rgba(110,60,0,.35) 70%);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;z-index:4;box-shadow:0 0 14px rgba(255,190,60,.45),inset 0 0 10px rgba(255,220,140,.3);cursor:pointer;pointer-events:auto;touch-action:none;transition:opacity .25s,transform .15s,visibility .25s;-webkit-tap-highlight-color:transparent}
+#bHorn svg{width:36px;height:26px}
+#bHorn b{font:700 11px Oswald,Mont,sans-serif;letter-spacing:1.5px;text-shadow:0 0 6px rgba(255,190,60,.95)}
+#bHorn .ring{position:absolute;inset:-5px;border-radius:50%;background:conic-gradient(rgba(255,220,110,.95) var(--cd,100%),rgba(255,255,255,.12) 0);-webkit-mask:radial-gradient(circle,transparent 58%,#000 59%,#000 66%,transparent 67%);mask:radial-gradient(circle,transparent 58%,#000 59%,#000 66%,transparent 67%)}
+#bHorn:not(.ready){opacity:.62}
+#bHorn.ready{animation:hnPulse 1.2s ease-in-out infinite}
+@keyframes hnPulse{0%,100%{box-shadow:0 0 0 rgba(255,210,80,0)}50%{box-shadow:0 0 22px rgba(255,210,80,.75)}}
+#bHorn.act{transform:scale(.86);box-shadow:0 0 34px rgba(255,220,110,.95)}
+#bHorn.hide{opacity:0;visibility:hidden;transform:scale(.6);pointer-events:none}
+@media (max-height:430px){#bHorn{width:63px;height:63px;bottom:26px}}
 #bDash svg{width:25px;height:25px}
 #bDash b{font:700 11px Oswald,Mont,sans-serif;letter-spacing:1.5px;text-shadow:0 0 6px rgba(90,170,255,.9)}
 #bDash .ring{position:absolute;inset:-5px;border-radius:50%;background:conic-gradient(rgba(160,215,255,.95) var(--cd,100%),rgba(255,255,255,.12) 0);-webkit-mask:radial-gradient(circle,transparent 58%,#000 59%,#000 66%,transparent 67%);mask:radial-gradient(circle,transparent 58%,#000 59%,#000 66%,transparent 67%)}
 #bDash:not(.ready){opacity:.6}
 #bDash.act{transform:scale(.9);box-shadow:0 0 30px rgba(120,200,255,.9)}
 #bDash.hide{opacity:0;visibility:hidden;transform:scale(.6);pointer-events:none}
-@media (max-height:430px){#bDash{width:63px;height:63px;bottom:16px}}
+@media (max-height:430px){#bDash{width:63px;height:63px;bottom:26px}}
 @keyframes shPulse{0%,100%{box-shadow:0 0 14px rgba(255,60,50,.4),inset 0 0 12px rgba(255,120,110,.3)}50%{box-shadow:0 0 30px rgba(255,80,60,.8),inset 0 0 18px rgba(255,160,150,.5)}}
-@media (max-height:430px){#bShield{width:76px;height:76px;bottom:16px}}
+@media (max-height:430px){#bShield{width:63px;height:63px;bottom:26px}}
 </style>
 </head>
 <body>
@@ -325,6 +335,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 <canvas id="cv"></canvas>
 <div id="ui">
   <div class="hud" id="hud"><div id="dist">0m</div><div class="c"><span class="coin">£</span><span id="coins">£0</span></div></div>
+  <button id="bHorn" class="hide" aria-label="Horn"><span class="ring"></span><svg viewBox="0 0 48 34"><ellipse cx="7" cy="17" rx="6" ry="5.5" fill="#2a1a10" stroke="#ffe7a0" stroke-width="1.4"/><path d="M12 15.5h12l9-8v19l-9-8H12z" fill="#ffd36a" stroke="#fff3c4" stroke-width="1.4" stroke-linejoin="round"/><path d="M37 11q4 6 0 12M41 7q7 10 0 20" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg><b>HORN</b></button>
   <button id="bDash" class="hide" aria-label="Dash"><span class="ring"></span><svg viewBox="0 0 40 40" width="28" height="28"><path d="M6 14h14M3 20h17M6 26h14" stroke="#cfeaff" stroke-width="2.6" stroke-linecap="round"/><path d="M22 10l12 10-12 10z" fill="#ffffff"/></svg><b>DASH</b></button>
   <button id="bShield" class="hide" aria-label="Shield"><span class="ring"></span><svg viewBox="0 0 40 40" width="30" height="30"><path d="M20 3l14 5v10c0 9-6 15.5-14 19C12 33.5 6 27 6 18V8z" fill="rgba(255,90,80,.35)" stroke="#ffd0c8" stroke-width="2.4" stroke-linejoin="round"/><path d="M20 9v23M12 15l8 4 8-4M12 23l8 4 8-4" stroke="#ffb0a6" stroke-width="1.4" fill="none" opacity=".8"/></svg><b>SHIELD</b></button>
   <div id="pz" class="hide"><b>PAUSED</b><span>TAP TO CARRY ON</span></div>
@@ -443,7 +454,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
     <div class="shopBox">
       <div class="shopTop"><h2>SHOP</h2><div class="shopBank">£<span id="shBank">0</span></div><button class="go alt" id="shopClose">DONE</button></div>
       <div class="shopMain">
-        <div class="shopTabs"><button data-tab="util" class="on">UTILITIES</button><button data-tab="gadget">GADGETS</button><button data-tab="outfit">OUTFITS</button><div class="slotInfo" id="slotInfo"></div></div>
+        <div class="shopTabs"><button data-tab="util" class="on">UTILITIES</button><button data-tab="gadget">JUGAAD</button><button data-tab="outfit">OUTFITS</button><div class="slotInfo" id="slotInfo"></div></div>
         <div class="shopList" id="shopList"></div>
       </div>
     </div>
@@ -527,8 +538,9 @@ var t=setInterval(function(){var lt=document.getElementById('loadTxt');if(!q&&lt
 <script src="vehicles.js?h=32fdac20ce"></script>
 <script src="hd/cars_v3.js?h=51ebab1eae"></script>
 <script src="hd/landmarks_hd.js?h=9e40888703"></script>
-<script src="hd/mech.js?h=42910a38da"></script>
-<script src="game.js?h=db7f44da70"></script>
+<script src="hd/mech.js?h=e8ac3de068"></script>
+<script src="game.js?h=c36cea0d9b"></script>
+<script src="hd/tins.js?h=722ca634bc"></script>
 <script src="jd-extra.js?h=5f6a2675de"></script>
 <script src="/flappy/carreq.js?v=1"></script>
 </body>

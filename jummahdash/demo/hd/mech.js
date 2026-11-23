@@ -188,6 +188,7 @@ let o_blink = 0;
     at('armF', () => { arm(g, PF, false); hoseSocket(g, PF); });
     if (su > P.hose[1] && prog('hose') >= 1) { g.save(); g.beginPath(); g.arc(PF.hx, PF.hy, 9, 0, 7); g.clip(); hose(g, hp(), 8, 1); g.restore(); hoseSocket(g, PF); }
     at('pad', () => pad(g));
+    if (o.cat && su >= 1) o.cat(g);   // Billi lying on the shoulder pad (owner 23 Nov)
     g.restore();
     if (o.shield > 0) drawShield(g, o.shield, o.t || 0, o.hit || 0);
     // power-on flash at the end of the suit-up
