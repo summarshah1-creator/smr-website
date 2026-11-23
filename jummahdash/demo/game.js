@@ -1045,7 +1045,7 @@ function giftsUpdate(dt, dx) {
   if (state === 'play' && !FM) runT += dt;
   if (!FKDEMO && !MECHDEMO && !RIDEDEMO && !firstBox && state === 'play' && !veh && !boost && runT >= 20) { firstBox = 1; gifts.push({ k: 'box', ride: (() => { let k = nextRide(); for (let n = 0; n < 4 && k === lastBoxRide; n++) k = nextRide(); return lastBoxRide = k; })(), x: W + 40, y: CEIL + 90 + Math.random() * (FLOOR - CEIL - 200), b: 0 }); nextGift = 2600 + Math.random() * 1800; }
   if (state === 'play' && !veh && !boost) { nextGift -= dx; if (nextGift <= 0) { const rr = () => { let k = nextRide(); for (let i = 0; i < 4 && k === lastBoxRide; i++) k = nextRide(); return lastBoxRide = k; }; gifts.push({ k: 'box', ride: RIDEDEMO ? rideDemoNext() : MECHDEMO ? 'mech' : FKDEMO ? 'kabootar' : rr(), x: W + 40, y: CEIL + 80 + Math.random() * (FLOOR - CEIL - 180), b: Math.random() * 6 }); nextGift = RIDEDEMO ? 900 + Math.random() * 500 : MECHDEMO ? 2400 + Math.random() * 1200 : FKDEMO ? 700 + Math.random() * 300 : (2600 + Math.random() * 1800) * (hasG('dates') ? .5 : 1); } }
-  if (state === 'play') { nextTin -= dx; if (nextTin <= 0) { gifts.push({ k: 'btin', x: W + 30, y: CEIL + 60 + Math.random() * (FLOOR - CEIL - 140), b: Math.random() * 6 }); nextTin = TINDEMO ? 1400 + Math.random() * 800 : 7000 + Math.random() * 5000; } }
+  if (state === 'play') { nextTin -= dx; if (nextTin <= 0) { gifts.push({ k: 'btin', x: W + 30, y: CEIL + 60 + Math.random() * (FLOOR - CEIL - 140), b: Math.random() * 6 }); nextTin = TINDEMO ? 900 + Math.random() * 500 : 7000 + Math.random() * 5000; } }
   if (state === 'play') { nextEidi -= dx; if (nextEidi <= 0) { gifts.push({ k: 'eidi', x: W + 30, y: CEIL + 50 + Math.random() * (FLOOR - CEIL - 120), b: Math.random() * 6 }); nextEidi = (2200 + Math.random() * 2400) * (hasG('envelope') ? .5 : 1); } }
   gifts.forEach(gf => { gf.x -= dx; gf.b += dt;
     if (gf.k === 'btin') { if (gf.y0 === undefined) gf.y0 = gf.y; gf.x += dx * (gf.k === 'btin' ? .45 : .3); const A = gf.k === 'btin' ? 80 : 50; gf.y = Math.max(CEIL + 40, Math.min(FLOOR - 50, gf.y0 + Math.sin(gf.b * (gf.k === 'btin' ? 2.1 : 1.7)) * A)); }
@@ -1063,16 +1063,30 @@ function drawGift(gf) {
   ctx.save(); ctx.translate(gf.x, y);
   if (gf.k === 'btin') {   // owner 23 Nov: no ring: the tin just floats with a soft shiny glow round it and a motion trail behind it
     ctx.restore();
-    // owner 23 Nov: motion lines straight out behind it (to the left: it's flying to the right), shimmering a little
-    ctx.save(); ctx.lineCap = 'round'; ctx.lineWidth = 3; ctx.shadowColor = 'rgba(255,210,90,.9)'; ctx.shadowBlur = 6;
-    [[-11, .7, 0], [-2, 1, 1.7], [7, .75, 3.1]].forEach(([o, a2, ph]) => { const L = 40 + Math.sin(gf.b * 7 + ph) * 8, x0 = gf.x - 17 - ((gf.b * 2 + ph) % 1) * 3, yy = y - 5 + o;
-      const g2 = ctx.createLinearGradient(x0, 0, x0 - L, 0); g2.addColorStop(0, `rgba(255,250,225,${.95 * a2})`); g2.addColorStop(1, 'rgba(255,240,190,0)'); ctx.strokeStyle = g2; ctx.beginPath(); ctx.moveTo(x0, yy); ctx.lineTo(x0 - L, yy); ctx.stroke(); });
-    ctx.restore();
+    // owner 23 Nov: motion lines behind the tin, alive: each one stretches and shrinks on its own beat and bends along the path the tin
+    // has just floated through (so they curve up and down with the wave), with little speed dashes peeling off the ends
+    { const Yat = bb => (gf.y0 === undefined ? gf.y : Math.max(CEIL + 40, Math.min(FLOOR - 50, gf.y0 + Math.sin(bb * 2.1) * 80))) + Math.sin(bb * 3) * 4, V = 230;
+      ctx.save(); ctx.lineCap = 'round'; ctx.shadowColor = 'rgba(255,210,90,.9)'; ctx.shadowBlur = 6;
+      [[-13, .55, 0, 4.1], [-5, .9, 1.7, 5.3], [3, 1, 3.1, 4.6], [11, .6, 4.4, 6.1]].forEach(([o, a2, ph, sp], li) => {
+        const pul = .5 + .5 * Math.sin(gf.b * sp + ph), L = 18 + 46 * pul, N = 8, pts = [];
+        for (let k = 0; k <= N; k++) { const d = L * k / N; pts.push([gf.x - 16 - d, Yat(gf.b - d / V) - 5 + o * (1 - .25 * k / N)]); }
+        ctx.lineWidth = 2.2 + pul * 1.6;
+        const g2 = ctx.createLinearGradient(pts[0][0], 0, pts[N][0], 0); g2.addColorStop(0, `rgba(255,250,225,${.95 * a2})`); g2.addColorStop(1, 'rgba(255,240,190,0)');
+        ctx.strokeStyle = g2; ctx.beginPath(); pts.forEach(([px, py], k) => k ? ctx.lineTo(px, py) : ctx.moveTo(px, py)); ctx.stroke();
+        const f = ((gf.b * (1.3 + li * .25) + ph) % 1), dd = L + 6 + f * 34, dl = 6 + 8 * (1 - f);   // a speed dash drifting off behind it
+        const x1 = gf.x - 16 - dd, y1 = Yat(gf.b - dd / V) - 5 + o * .75, y2 = Yat(gf.b - (dd + dl) / V) - 5 + o * .75;
+        ctx.globalAlpha = (1 - f) * .7 * a2; ctx.lineWidth = 2; ctx.strokeStyle = 'rgba(255,246,210,1)'; ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x1 - dl, y2); ctx.stroke(); ctx.globalAlpha = 1; });
+      ctx.restore(); }
     ctx.save(); ctx.translate(gf.x, y); ctx.rotate(Math.sin(gf.b * 2.2) * .12);
     const pu = .8 + Math.sin(gf.b * 4) * .2;
     { const hl = ctx.createRadialGradient(0, -5, 6, 0, -5, 30); hl.addColorStop(0, `rgba(255,232,150,${.45 * pu})`); hl.addColorStop(1, 'rgba(255,232,150,0)'); ctx.fillStyle = hl; ctx.beginPath(); ctx.ellipse(0, -5, 30, 26, 0, 0, 7); ctx.fill(); }
     ctx.save(); ctx.shadowColor = `rgba(255,224,120,${.95 * pu})`; ctx.shadowBlur = 16; window.TIN && TIN.mini(ctx, 0, -5, 15); ctx.shadowBlur = 7; ctx.shadowColor = 'rgba(255,250,220,.9)'; window.TIN && TIN.mini(ctx, 0, -5, 15); ctx.restore();   // shiny glow hugging the tin
-    const sw = (gf.b * .9) % 1.6 - .3; if (sw < 1) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.fillStyle = 'rgba(255,255,255,.35)'; ctx.beginPath(); const xs = -18 + sw * 36; ctx.moveTo(xs, -20); ctx.lineTo(xs + 6, -20); ctx.lineTo(xs - 4, 6); ctx.lineTo(xs - 10, 6); ctx.fill(); ctx.restore(); }   // shine sweep
+    const sw = (gf.b * .9) % 1.6 - .3; if (sw < 1 && window.TIN) {   // owner 23 Nov: the shine only runs over the round tin itself (masked to the tin's own pixels)
+      if (!TINSH) { TINSH = document.createElement('canvas'); TINSH.width = TINSH.height = 192; TINSHX = TINSH.getContext('2d'); }
+      const q = TINSHX; q.setTransform(1, 0, 0, 1, 0, 0); q.globalCompositeOperation = 'source-over'; q.clearRect(0, 0, 192, 192); q.setTransform(3, 0, 0, 3, 96, 96); TIN.mini(q, 0, -5, 15);
+      q.globalCompositeOperation = 'source-in'; const xs = -24 + sw * 48, lg = q.createLinearGradient(xs - 10, 0, xs + 10, 0); lg.addColorStop(0, 'rgba(255,255,255,0)'); lg.addColorStop(.5, 'rgba(255,255,255,.75)'); lg.addColorStop(1, 'rgba(255,255,255,0)');
+      q.fillStyle = lg; q.beginPath(); q.moveTo(xs + 2, -32); q.lineTo(xs + 14, -32); q.lineTo(xs - 2, 22); q.lineTo(xs - 14, 22); q.fill();
+      ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.drawImage(TINSH, -32, -32, 64, 64); ctx.restore(); }
     for (let i = 0; i < 2; i++) { const ph = (gf.b * 1.4 + i * .5) % 1, sz = Math.sin(ph * Math.PI) * 3.5, px = i ? 13 : -12, py = i ? -16 : 2; if (sz > .3) { ctx.fillStyle = '#fffbe6'; ctx.beginPath(); ctx.moveTo(px, py - sz * 2); ctx.lineTo(px + sz * .5, py); ctx.lineTo(px, py + sz * 2); ctx.lineTo(px - sz * .5, py); ctx.closePath(); ctx.moveTo(px - sz * 2, py); ctx.lineTo(px, py + sz * .5); ctx.lineTo(px + sz * 2, py); ctx.lineTo(px, py - sz * .5); ctx.fill(); } }   // twinkles on its edge
     ctx.restore(); return; }
   const gl = ctx.createRadialGradient(0, 0, 2, 0, 0, 24); gl.addColorStop(0, gf.k === 'box' ? 'rgba(255,255,255,.55)' : 'rgba(255,230,120,.5)'); gl.addColorStop(1, 'rgba(255,255,255,0)'); ctx.fillStyle = gl; ctx.beginPath(); ctx.arc(0, 0, 24, 0, 7); ctx.fill();
@@ -1459,6 +1473,7 @@ function mechShock(x, y) { veh.shock = .35; if ((veh.shT || 0) <= 0) { veh.shT =
    HORN button (or H / D key) while in the tuk-tuk: a two-tone desi truck horn, the bulb horn on the front squeezes, the tuk-tuk rocks back,
    and a shockwave of sound rolls out in front: zappers shatter, flying rockets are blown back, incoming rockets are cancelled, lasers shut
    down and people on the pavement are knocked flat. Every hazard it clears pays £2. 3.2 s to recharge (ring on the button). */
+var TINSH = null, TINSHX = null;
 const HORN_CD = 1.8; var horns = [], hornCD = 0;   // owner 23 Nov: recharges quicker (was 3.2 s)
 function tukLaser(o) {   // owner 23 Nov: the tuk-tuk is laser-proof: the beam just crackles over the bodywork
   if (Math.random() < .5) sparks.push({ x: hero.x + (Math.random() - .5) * 70, y: o.y + (Math.random() - .5) * 8, vx: (Math.random() - .5) * 220, vy: (Math.random() - .5) * 220, l: .25, c: Math.random() < .5 ? '#ff9ad8' : '#ffffff' });

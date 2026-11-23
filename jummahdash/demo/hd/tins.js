@@ -14,8 +14,14 @@
 #tinBox .tt div{font-family:Silk,monospace;font-size:clamp(11px,1.7vw,15px);color:#fff;margin-top:6px;text-shadow:0 2px 0 #000}
 #tinBox .tp{position:absolute;inset:18% 0 14% 0;display:flex}#tinBox .tp button{flex:1;background:none;border:0;cursor:pointer}
 #tinBox .tp.off{display:none}
-#tinBox #tinGo{position:absolute;left:50%;bottom:5%;transform:translateX(-50%);margin:0;font-size:clamp(12px,1.8vw,16px);padding:12px 22px;transition:opacity .2s}
+#tinBox #tinGo{position:absolute;left:50%;bottom:5%;transform:translateX(-50%);margin:0;display:flex;align-items:center;gap:10px;font-family:Oswald,Mont,sans-serif;font-weight:700;letter-spacing:2px;font-size:clamp(15px,2.3vw,21px);color:#3a1f00;padding:12px 30px 12px 22px;border-radius:999px;border:2px solid #fff2b8;background:linear-gradient(180deg,#fff1a6 0%,#ffd24a 45%,#f5a623 100%);box-shadow:0 5px 0 #a8620f,0 8px 22px rgba(255,180,40,.45),inset 0 2px 0 rgba(255,255,255,.8);text-shadow:0 1px 0 rgba(255,255,255,.6);overflow:hidden;transition:opacity .25s,transform .12s,box-shadow .12s;animation:tinPulse 1.4s ease-in-out infinite}
+#tinBox #tinGo::before{content:'';width:26px;height:22px;flex:none;background:center/contain no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 22'%3E%3Cpath d='M2 6h5c4 0 6 10 11 10h4M2 16h5c2 0 3-2 4-4M15 8c1-1 2-2 3-2h4' fill='none' stroke='%233a1f00' stroke-width='2.6' stroke-linecap='round'/%3E%3Cpath d='M20 2l4 4-4 4M20 12l4 4-4 4' fill='none' stroke='%233a1f00' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")}
+#tinBox #tinGo[data-k=next]::before{width:20px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 22'%3E%3Cpath d='M4 3l12 8-12 8z' fill='%233a1f00'/%3E%3C/svg%3E")}
+#tinBox #tinGo::after{content:'';position:absolute;top:0;bottom:0;width:40%;left:-60%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.75),transparent);animation:tinShine 2.2s ease-in-out infinite}
+#tinBox #tinGo:active{transform:translateX(-50%) translateY(4px);box-shadow:0 1px 0 #a8620f,0 4px 12px rgba(255,180,40,.4),inset 0 2px 0 rgba(255,255,255,.8)}
 #tinBox #tinGo.off{opacity:0;pointer-events:none}
+@keyframes tinPulse{0%,100%{transform:translateX(-50%) scale(1)}50%{transform:translateX(-50%) scale(1.06)}}
+@keyframes tinShine{0%{left:-60%}55%,100%{left:130%}}
 #tinBox .cnt{position:absolute;left:3%;top:5%;font-family:PS,monospace;font-size:12px;color:#9fc0ff}`;
   document.head.appendChild(css);
   const box = document.createElement('div'); box.id = 'tinBox'; box.className = 'hide';
@@ -177,9 +183,13 @@
     c.save(); c.translate(x + dx, bottom - h / 2 + dy); c.rotate(rot); c.drawImage(im, -w / 2, -h / 2, w, h); c.restore(); }
   function contentsS(c, x, y, sc, ct, pop = 1) {   // what's inside, clipped so the front rim stays in front of it
     const k = spriteOf(ct), im = IMG[k]; if (!ok(k)) return;
-    c.save(); c.beginPath(); c.moveTo(x - ORX * sc, y - 3000); c.lineTo(x - ORX * sc, y); c.ellipse(x, y, ORX * sc, ORY * sc, 0, Math.PI, 0, true); c.lineTo(x + ORX * sc, y - 3000); c.closePath(); c.clip();
-    const w = ORX * 2 * .9 * sc * (.86 + .14 * pop), h = im.height * w / im.width, by = y + ORY * .86 * sc - (pop < 1 ? (1 - pop) * 40 * sc : 0);
-    c.drawImage(im, x - w / 2, by - h, w, h); c.restore();
+    // owner 23 Nov: the contents sit down IN the tin: clipped to the opening plus only a low mound above the back rim, drawn smaller and lower, with the tin's inner wall shading over the back
+    c.save(); c.beginPath(); c.ellipse(x, y, ORX * .985 * sc, ORY * .97 * sc, 0, 0, Math.PI); c.ellipse(x, y - ORY * .1 * sc, ORX * .96 * sc, ORY * 1.25 * sc, 0, Math.PI, 0); c.closePath(); c.clip();
+    const w = ORX * 2 * .84 * sc * (.86 + .14 * pop), h = im.height * w / im.width, by = y + ORY * 1.02 * sc + h * .2 - (pop < 1 ? (1 - pop) * 40 * sc : 0);
+    c.drawImage(im, x - w / 2, by - h, w, h);
+    const sh = c.createLinearGradient(0, y - ORY * sc, 0, y + ORY * .2 * sc); sh.addColorStop(0, 'rgba(10,10,30,.55)'); sh.addColorStop(.55, 'rgba(10,10,30,.18)'); sh.addColorStop(1, 'rgba(10,10,30,0)');
+    c.fillStyle = sh; c.beginPath(); c.ellipse(x, y, ORX * sc, ORY * sc, 0, Math.PI, 0); c.lineTo(x + ORX * sc, y + ORY * .2 * sc); c.lineTo(x - ORX * sc, y + ORY * .2 * sc); c.closePath(); c.fill();
+    c.restore();
     if (k === 'jackpot') { const gl = c.createRadialGradient(x, y - 20 * sc, 4, x, y - 20 * sc, 320 * sc); gl.addColorStop(0, `rgba(255,220,110,${.45 * pop})`); gl.addColorStop(1, 'rgba(255,220,110,0)'); c.fillStyle = gl; c.fillRect(x - 340 * sc, y - 360 * sc, 680 * sc, 560 * sc); } }
 
   /* ---------- prizes ---------- */
@@ -212,28 +222,34 @@
   function layout() { W = box.clientWidth || 800; H = box.clientHeight || 400; DPR = Math.min(2, window.devicePixelRatio || 1); cv.width = W * DPR; cv.height = H * DPR; }
   function slotPos(i) { return [W * (.22 + i * .28), H * .58]; }
   function newRound() {
-    layout(); const R = Math.min(W * .115, H * .2), win = Math.random() * 3 | 0;
+    layout(); const R = Math.min(W * .115, H * .2) * .82, win = Math.random() * 3 | 0;
     S = { ph: 'drop', t: 0, R, win, k: .42, sw: [], tins: [0, 1, 2].map(i => ({ id: i, slot: i, from: i, x: slotPos(i)[0], y: slotPos(i)[1], s: 1, lidY: 0, lidR: 0, lidX: 0, off: 0, fly: 0, a: 1, rise: 0, ct: i === win ? topPrize() : pickW(LOW) })), cam: { z: 1, fx: W / 2, fy: H / 2, sx: W / 2, sy: H / 2 }, chosen: null, pk: .42 };
     S.tins.forEach(tn => { tn.ct.s0 = 1 + Math.random() * 999; });
     msg("AMMI'S TIN", 'One of these has the JACKPOT. Watch it!'); go.classList.add('off'); pick.classList.add('off'); NN.textContent = left > 1 ? `TINS LEFT: ${left}` : '';
   }
+  // owner 23 Nov: money wins = ka-ching + coins pouring out + confetti falling from the top
+  function kaching(n) { const A = API(); snd(2093, .05, 'square', .05); setTimeout(() => { snd(1568, .5, 'triangle', .07, .3); snd(2637, .4, 'sine', .05, .3); }, 40);
+    for (let i = 0; i < n; i++) setTimeout(() => { try { A.coin(); } catch (e) {} }, 140 + i * (60 + Math.random() * 45)); }
+  function coinShower(x, y, n) { for (let i = 0; i < n; i++) { const a = -Math.PI / 2 + (Math.random() - .5) * 2.2, v = 300 + Math.random() * 420; parts.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, l: 1.3 + Math.random() * .8, c: '#ffd34a', r: 5 + Math.random() * 3, coin: 1, sp: Math.random() * 6 }); } }
+  function confetti(n) { const cols = ['#ffd75a', '#7dffa0', '#7fb6ff', '#ff8ac0', '#ffffff', '#c58bff']; for (let i = 0; i < n; i++) parts.push({ x: Math.random() * W, y: -10 - Math.random() * H * .5, vx: (Math.random() - .5) * 80, vy: 40 + Math.random() * 90, l: 2.4 + Math.random() * 1.2, c: cols[i % cols.length], r: 3 + Math.random() * 3, cf: 1, sp: Math.random() * 6, rs: 4 + Math.random() * 6 }); }
+  const TSPD = { drop: 1.7, peek: 1.9, zoom: 2.2, prise: 2.6, pop: 1.5, show: 2, others: 2 };
   function setPh(p) { S.ph = p; S.t = 0; }
   function burst(x, y, n, cols, sp = 260) { for (let i = 0; i < n; i++) { const a = Math.random() * 6.283, v = sp * (.4 + Math.random()); parts.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - sp * .5, l: .9 + Math.random() * .6, c: cols[i % cols.length], r: 2 + Math.random() * 4, sq: Math.random() < .5 }); } }
 
   function step(dt) {
-    if (!S) return; S.t += dt; const T = S.t, R = S.R;
+    if (!S) return; S.t += dt * (TSPD[S.ph] || 1); const T = S.t, R = S.R;   // owner 23 Nov: keep it snappy (shuffle, see your prize, see what you missed, next)
     if (S.ph === 'drop') { S.tins.forEach((tn, i) => { const k = back((T - i * .12) / .55); tn.y = lerp(-R * 2, slotPos(tn.slot)[1], k); }); if (T > 1) setPh('peek'); }
     else if (S.ph === 'peek') {
       const tn = S.tins[S.win]; tn.peek = 1; const up = T < .5 ? ease(T / .5) : T < 1.9 ? 1 : 1 - ease((T - 1.9) / .45);
       tn.lidY = -R * 1.05 * up; tn.lidR = -.25 * up; if (T > .1 && !S.pk1) { S.pk1 = 1; snd(700, .1, 'triangle', .06, 1.5); }
-      if (T > 2.35) { tn.peek = 0; tn.lidY = 0; tn.lidR = 0; snd(160, .08, 'square', .06); setPh('ready'); msg("AMMI'S TIN", 'Keep your eye on it...'); go.textContent = 'SHUFFLE!'; go.classList.remove('off'); }
+      if (T > 2.35) { tn.peek = 0; tn.lidY = 0; tn.lidR = 0; snd(160, .08, 'square', .06); setPh('ready'); msg("AMMI'S TIN", 'Keep your eye on it...'); go.textContent = 'SHUFFLE!'; go.dataset.k = 'shuffle'; go.classList.remove('off'); }
     }
     else if (S.ph === 'shuffle') {
       if (!S.cur || S.cur.t >= S.cur.d) {
         if (S.cur) S.cur.pair.forEach(tn => { tn.slot = tn.to; });
         if (S.n >= S.N) { S.cur = null; setPh('pick'); msg('PICK A TIN!', 'Which one has the jackpot?'); pick.classList.remove('off'); return; }
         const a = Math.random() * 3 | 0, b = (a + 1 + (Math.random() * 2 | 0)) % 3, ta = S.tins.find(t => t.slot === a), tb = S.tins.find(t => t.slot === b);
-        ta.to = b; tb.to = a; S.cur = { pair: [ta, tb], t: 0, d: Math.max(.17, .42 - S.n * .03) }; S.n++; snd(150 + Math.random() * 80, .05, 'square', .05); snd(520, .03, 'triangle', .03);
+        ta.to = b; tb.to = a; S.cur = { pair: [ta, tb], t: 0, d: Math.max(.13, .24 - S.n * .025) }; S.n++; snd(150 + Math.random() * 80, .05, 'square', .05); snd(520, .03, 'triangle', .03);
       }
       const C = S.cur; C.t += dt; const k = ease(C.t / C.d);
       C.pair.forEach((tn, j) => { const [x0, y0] = slotPos(tn.slot), [x1] = slotPos(tn.to), dir = j ? 1 : -1; tn.x = lerp(x0, x1, k); tn.y = y0 + Math.sin(k * Math.PI) * R * .55 * dir; tn.s = 1 + Math.sin(k * Math.PI) * .08 * dir; });
@@ -254,6 +270,7 @@
       if (S.rv) ch.pop = Math.min(1, (ch.pop || 0) + dt * 2.4);
       if (T > .25 && !S.rv) { S.rv = 1; ch.open = 1; ch.pop = 0; award(ch.ct); const w = WORDS[ch.ct.t](ch.ct); msg(w[0], w[1]);
         if (ch.ct.t === 'sewing') [392, 370, 349, 311].forEach((f, i) => setTimeout(() => snd(f, .32, 'sawtooth', .05), i * 260));
+        else if (ch.ct.t === 'coins' || ch.ct.t === 'jackpot') { kaching(ch.ct.t === 'jackpot' ? 16 : 9); coinShower(ch.x, ch.y - R * .6, ch.ct.t === 'jackpot' ? 70 : 38); confetti(ch.ct.t === 'jackpot' ? 120 : 70); }
         else { [523, 659, 784, 1046].forEach((f, i) => setTimeout(() => snd(f, .16, 'square', .055), i * 90)); burst(ch.x, ch.y - R * .6, 60, ['#ffd75a', '#7dffa0', '#7fb6ff', '#ff8ac0', '#fff'], 380); } }
       if (T > .7) { ch.fly = 1; setPh('show'); }
     }
@@ -262,9 +279,9 @@
       const k = ease(T / .8); S.cam.z = lerp(1.7, 1, k); S.cam.fx = lerp(S.chosen.x, W / 2, k); S.cam.fy = lerp(S.chosen.y, H / 2, k); S.cam.sy = lerp(H * .52, H / 2, k); S.pk = lerp(.68, .5, k);
       S.tins.forEach(tn => { if (tn !== S.chosen) { tn.a = k; const kk = ease((T - .9 - (tn.slot === 0 ? 0 : .35)) / .3); if (kk > 0) { tn.lidY = -R * 5 * kk; tn.lidX = R * 2.2 * kk * (tn.x < W / 2 ? -1 : 1); tn.lidR = kk * (tn.x < W / 2 ? -.6 : .6); tn.open = 1; tn.pop = Math.min(1, (tn.pop || 0) + dt * 2.4); tn.off = 1; if (!tn.pp) { tn.pp = 1; snd(600, .08, 'triangle', .05, 1.6); } } } });
       S.chosen.rise = Math.max(.55, 1 - k * .45);
-      if (T > 2) { setPh('end'); left--; NN.textContent = left > 0 ? `TINS LEFT: ${left}` : ''; go.textContent = left > 0 ? `OPEN NEXT TIN (${left})` : 'CARRY ON'; go.classList.remove('off'); }
+      if (T > 2) { setPh('end'); left--; NN.textContent = left > 0 ? `TINS LEFT: ${left}` : ''; go.textContent = left > 0 ? `OPEN NEXT TIN (${left})` : 'CARRY ON'; go.dataset.k = 'next'; go.classList.remove('off'); }
     }
-    parts.forEach(p => { p.x += p.vx * dt; p.y += p.vy * dt; p.vy += 700 * dt; p.l -= dt; }); parts = parts.filter(p => p.l > 0);
+    parts.forEach(p => { p.x += p.vx * dt; p.y += p.vy * dt; p.vy += (p.cf ? 60 : 700) * dt; if (p.cf) { p.vy = Math.min(p.vy, 130); p.x += Math.sin(p.sp + p.l * 3) * 30 * dt; } p.sp += dt * (p.rs || 9); p.l -= dt; }); parts = parts.filter(p => p.l > 0);
   }
 
   function drawBG() {
@@ -295,11 +312,14 @@
     g.setTransform(DPR, 0, 0, DPR, 0, 0); drawBG();
     const C = S.cam; g.setTransform(DPR * C.z, 0, 0, DPR * C.z, DPR * (C.sx - C.fx * C.z), DPR * (C.sy - C.fy * C.z));
     [...S.tins].sort((a, b) => a.y - b.y).forEach(drawTinObj);
-    parts.forEach(p => { g.globalAlpha = Math.min(1, p.l * 2); g.fillStyle = p.c; if (p.sq) g.fillRect(p.x, p.y, p.r * 1.6, p.r); else { g.beginPath(); g.arc(p.x, p.y, p.r, 0, 7); g.fill(); } }); g.globalAlpha = 1;
+    parts.forEach(p => { g.globalAlpha = Math.min(1, p.l * 2); g.fillStyle = p.c;
+      if (p.coin) { const k = Math.abs(Math.cos(p.sp)); g.fillStyle = '#b8860b'; g.beginPath(); g.ellipse(p.x, p.y, Math.max(1, p.r * k), p.r, 0, 0, 7); g.fill(); g.fillStyle = k > .3 ? '#ffd94a' : '#e0a92a'; g.beginPath(); g.ellipse(p.x, p.y, Math.max(.6, p.r * .78 * k), p.r * .78, 0, 0, 7); g.fill(); if (k > .5) { g.fillStyle = 'rgba(255,255,230,.8)'; g.fillRect(p.x - p.r * .3 * k, p.y - p.r * .5, p.r * .25 * k, p.r * .35); } return; }
+      if (p.cf) { g.save(); g.translate(p.x, p.y); g.rotate(p.sp); g.scale(1, Math.cos(p.sp * 1.3)); g.fillRect(-p.r, -p.r * .45, p.r * 2, p.r * .9); g.restore(); return; }
+      if (p.sq) g.fillRect(p.x, p.y, p.r * 1.6, p.r); else { g.beginPath(); g.arc(p.x, p.y, p.r, 0, 7); g.fill(); } }); g.globalAlpha = 1;
     raf = requestAnimationFrame(frame);
   }
   go.addEventListener('pointerdown', e => { e.stopPropagation(); if (!S) return;
-    if (S.ph === 'ready') { go.classList.add('off'); S.n = 0; S.N = 8; S.cur = null; setPh('shuffle'); msg('SHUFFLING...', ''); }
+    if (S.ph === 'ready') { go.classList.add('off'); S.n = 0; S.N = 5; S.cur = null; setPh('shuffle'); msg('SHUFFLING...', ''); }
     else if (S.ph === 'end') { if (left > 0) newRound(); else finish(); } });
   pick.querySelectorAll('button').forEach(b => b.addEventListener('pointerdown', e => { e.stopPropagation(); if (!S || S.ph !== 'pick') return;
     const i = +b.dataset.i; S.chosen = S.tins.find(t => t.slot === i); pick.classList.add('off'); snd(300, .07, 'square', .06); msg(S.chosen.id === S.win ? 'GOOD EYE...' : 'THIS ONE?', 'Prising the lid off...'); setPh('zoom'); }));
