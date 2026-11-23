@@ -36,6 +36,19 @@ function music_db(): PDO {
         try { music_seed_import(); } catch (Throwable $e) {}
         try { music_video_seed_import(); } catch (Throwable $e) {}
         try { music_audio_seed_import(); } catch (Throwable $e) {}
+        // one-off: remove the stray "Untitled" track the replacement-audio pack created by mistake (22 Nov)
+        if (music_kv('fix:untitled-dupe') === null) {
+            $st = $pdo->query("SELECT code, slug FROM music_tracks WHERE (title = 'Untitled' OR title = '') AND artist = '' AND album = ''");
+            $redo = false;
+            foreach ($st->fetchAll() as $r) {
+                if ($r['slug'] === 'thats-gatsby-law') $redo = true;
+                rrmdir_any(music_dir($r['code'])); $pdo->prepare('DELETE FROM music_tracks WHERE code = ?')->execute([$r['code']]);
+            }
+            $pdo->exec("UPDATE music_tracks SET slug = 'thats-gatsby-law' WHERE slug LIKE 'thats-gatsby-law%' AND title LIKE '%Gatsby Law%'
+                AND NOT EXISTS (SELECT 1 FROM music_tracks WHERE slug = 'thats-gatsby-law')");
+            if ($redo) { $pdo->exec("DELETE FROM music_kv WHERE k LIKE 'vseed:%' OR k LIKE 'aseed:%'"); music_video_seed_import(); music_audio_seed_import(); }
+            music_kv('fix:untitled-dupe', '1');
+        }
         // one-off text fixes for tracks that were already imported (each runs once)
         if (music_kv('fix:gatsby-about-2') === null) {
             $pdo->prepare("UPDATE music_tracks SET about = ?, updated_at = ? WHERE slug = 'thats-gatsby-law'")->execute(["That’s Gatsby Law (NFA) is Saf Rathor’s story, told from his point of view. Two brothers, two bosses: Saf and his big brother started Gatsby Law with a desk, a phone and their dad’s belief that the future was bright. Ten years on, their name is on the building.\n\nThe song goes behind the results: 3am calls from worried mums, cases nobody thought could be won, and the long nights the cameras never show. NFA stands for No Further Action, the result every client hopes for, and the promise Saf makes when the phone rings.\n\nWhat drives them is simple: every case is a life, not a number. The nice cars came later; what they’re proudest of is showing the next generation what’s possible.", now()]);
@@ -208,6 +221,7 @@ function music_seed_import(): void {
     if (!is_dir($dir) || !class_exists('ZipArchive')) return;
     foreach (glob($dir . '/*.pack.php') ?: [] as $pack) {
         $slug = basename($pack, '.pack.php');
+        if (strpos($slug, '.') !== false) continue; // <name>.video / <name>.audio packs belong to an existing track, not a new one
         if (music_kv('seed:' . $slug) !== null) continue;
         $raw = (string) file_get_contents($pack);
         $at = strpos($raw, '__halt_compiler();'); if ($at === false) continue;
