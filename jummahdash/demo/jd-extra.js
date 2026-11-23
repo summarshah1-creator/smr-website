@@ -121,7 +121,7 @@
   }
   function snapshot() { try { if (!localStorage.getItem('jd_admin_snap')) localStorage.setItem('jd_admin_snap', JSON.stringify({ shop: localStorage.getItem('jd_shop'), bank: localStorage.getItem('jd_bank') })); } catch (e) {} }
   // what admin runs start with, plus extras (kept on the phone). When a new ride / power-up is added to the game, add it to START here too (owner rule).
-  var START = [['', 'NOTHING'], ['tuktuk', 'TUK-TUK'], ['carpet', 'MAGIC CARPET'], ['kabootar', 'FLAPPY KABOOTAR'], ['sandals', 'GRAVITY SANDALS'], ['mech', 'HOOVER MECH'], ['logman', 'LAKRI MAN'], ['logmangold', 'GOLDEN LAKRI MAN'], ['hs500', 'HEAD START 500M'], ['hs1000', 'HEAD START 1000M']];
+  var START = [['', 'NOTHING'], ['tuktuk', 'TUK-TUK'], ['carpet', 'MAGIC CARPET'], ['kabootar', 'FLAPPY KABOOTAR'], ['sandals', 'GRAVITY SANDALS'], ['mech', 'HOOVER MECH'], ['logman', 'LAKRI MAN'], ['box', 'BLUE BOX'], ['logmangold', 'GOLDEN LAKRI MAN'], ['hs500', 'HEAD START 500M'], ['hs1000', 'HEAD START 1000M']];
   var TOG = [['god', "CAN'T DIE"], ['boxes', 'RIDE BOX EVERY 10S'], ['magnet', 'COIN MAGNET']];
   var OPT = (function () { try { return JSON.parse(localStorage.getItem('jd_adm_opt')) || {}; } catch (e) { return {}; } })();
   function saveOpt() { try { localStorage.setItem('jd_adm_opt', JSON.stringify(OPT)); } catch (e) {} }

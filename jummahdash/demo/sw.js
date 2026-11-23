@@ -1,15 +1,16 @@
 /* Jummah Dash: keeps the whole game on the phone. First visit downloads it once;
    after that it opens from the phone, and an update only downloads the files that changed. */
-const BUILD = '20261123203948';
+const BUILD = '20261123205317';
 const FILES = {
-"jd-extra.js": "fe18b26942",
+"jd-extra.js": "077fef3017",
 "hd/landmarks_hd.js": "7d60d75c5a",
 "hd/cars_v3.js": "51ebab1eae",
 "hd/mech.js": "e8ac3de068",
 "hd/logman.js": "3eebaa7c57",
+"hd/box.js": "768b9463b2",
 "hd/tins.js": "aa419cd2f9",
 "hd/foodbank.png": "8f4400d5e6",
-"game.js": "e5671e606f",
+"game.js": "94c06af5e8",
 "landmarks.js": "4649570284",
 "vehicles.js": "32fdac20ce",
 "manifest.webmanifest": "f337af2b13",
@@ -173,6 +174,7 @@ const FILES = {
 "art/tin/lots.webp": "9ca790f26c",
 "art/tin/sewing.webp": "6f83d240f9",
 "art/tin/tin.webp": "551d646453",
+"art/card/box.webp": "b5e6c24513",
 "art/card/carpet.webp": "10915d8166",
 "art/card/kabootar.webp": "a2edd1a2ed",
 "art/card/logman.webp": "25734de29c",
@@ -238,6 +240,14 @@ const FILES = {
 "art/logman_gold/n_shin.webp": "73abc22a1c",
 "art/logman_gold/n_thigh.webp": "aaffa00576",
 "art/logman_gold/n_uarm.webp": "58f38074cd",
+"art/box/base.webp": "3fd1349f37",
+"art/box/front.webp": "7ba833a92a",
+"art/box/lantern.webp": "94f1c9763d",
+"art/box/lb.webp": "b13ab50723",
+"art/box/r1.webp": "fb471968b4",
+"art/box/r2.webp": "9fa23b2413",
+"art/box/r3.webp": "99f06cb030",
+"art/box/side.webp": "9c3299591a",
 "art/hero3s_classic.webp": "522b3e2d9c",
 "art/hero3s_eid.webp": "f6e3b5f896",
 "art/hero3s_luton.webp": "9d40f76781",
