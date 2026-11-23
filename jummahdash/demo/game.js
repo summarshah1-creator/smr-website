@@ -54,7 +54,7 @@ addEventListener('load', loadStep);
 let SHOP = (() => { try { return JSON.parse(localStorage.getItem('jd_shop')) || null; } catch (e) { return null; } })() || { own: { classic: 1 }, eq: [], slots: 2, outfit: 'classic', hs500: 0, hs1000: 0, save: 0 };
 const saveShop = () => { try { localStorage.setItem('jd_shop', JSON.stringify(SHOP)); } catch (e) {} };
 const OUTFIT_KEYS = ['classic', 'eid', 'luton', 'puffer', 'moroccan'];
-const heroImgs = {}; OUTFIT_KEYS.forEach(k => heroImgs[k] = img(k === 'classic' ? 'art/hero3.webp?h=3043153507' : 'art/hero3_' + k + '.webp?h=' + ({"eid": "a7e90643c1", "luton": "2065c9a3d3", "puffer": "d4fdc4d8de", "moroccan": "68919091f1"})[k]));
+const heroImgs = {}; OUTFIT_KEYS.forEach(k => heroImgs[k] = img(k === 'classic' ? 'art/hero3.webp?h=6a2471723d' : 'art/hero3_' + k + '.webp?h=' + ({"eid": "864d8270ba", "luton": "03ab0412cf", "puffer": "1b724ef406", "moroccan": "e2155e1ed2"})[k]));
 const sandImgs = {}; OUTFIT_KEYS.forEach(k => sandImgs[k] = img('art/hero3s_' + k + '.webp?v=1'));   // owner 23 Nov: same frames with thin brown shoes + glowing green soles (run0-5, glide0)
 let heroImg = heroImgs[SHOP.outfit] || heroImgs.classic; const HX4 = 6;   // sheet = 6 px per cell unit (smooth cartoon hero, hd/hero_rig.js)
 const hasG = id => SHOP.eq.includes(id);   // hero redrawn at 3x the pixels (smooth curves, finer detail)
@@ -868,7 +868,7 @@ function die(why) {
   if (veh && veh.k === 'logman' && veh.morph >= 1 && veh.swT >= 0 && veh.swT < .4 && (veh.batHP || 0) > 0 && (why === 'laser' || why === 'rocket' || why === 'zap')) return;   // mid-swing: the bat deals with it
   if (veh && veh.k === 'logman' && veh.morph < 1) return;   // can't be hurt while he's transforming
   if (veh) { vehCrash(); return; }
-  POL.died(why); hero.dead = true; hero.vx = speed; hero.vy = -140; hero.flail = 0; hero.squash = 0; hero.bounce = 0; hero.slide = 0; hero.restT = 0; deadT = 0; state = 'dead'; holding = false;
+  POL.died(why); deadCookOff(); hero.dead = true; hero.vx = speed; hero.vy = -140; hero.flail = 0; hero.squash = 0; hero.bounce = 0; hero.slide = 0; hero.restT = 0; deadT = 0; state = 'dead'; holding = false;
   hero.shockT = why === 'rocket' ? 0 : .5; if (why === 'rocket') hero.vy = -260; flashT = .18; flashCol = why === 'rocket' ? '255,170,60' : why === 'laser' ? '230,110,255' : '200,240,255'; shake = .35;
   if (why === 'zap') { SFX.zap(); for (let i = 0; i < 30; i++) sparks.push({ x: hero.x, y: hero.y - 30, vx: (Math.random() - .5) * 260, vy: (Math.random() - .5) * 260, l: .5 + Math.random() * .4, c: Math.random() < .5 ? '#bff4ff' : '#fff6a8' }); }
   else if (why === 'laser') { SFX.zap(); for (let i = 0; i < 26; i++) sparks.push({ x: hero.x, y: hero.y - 30, vx: (Math.random() - .5) * 260, vy: (Math.random() - .5) * 260, l: .5 + Math.random() * .4, c: Math.random() < .5 ? '#ffd0d0' : '#ff5050' }); }
@@ -1608,6 +1608,23 @@ function wreckTick(dt) { const G2 = FLOOR - 4;
     else if (w.k === 'laser') { [w.L, w.R].forEach(p => { if (w.t > .4) { fall(p, 10); if (p.b) p.x -= speed * dt; } if (w.t < 1.1 && Math.random() < .2) sparks.push({ x: p.x, y: p.y, vx: (Math.random() - .5) * 180, vy: (Math.random() - .5) * 180, l: .25, c: Math.random() < .5 ? '#f0b0ff' : '#ffffff' }); }); }
     else if (w.k === 'puff') { w.x -= speed * dt * .6; w.y += w.vy * dt; w.r += dt * 14; } });
   wrecks = wrecks.filter(w => w.k === 'puff' ? w.t < .9 : w.t < 4.5 && (w.k !== 'zap' || w.A.x > -60 || w.B.x > -60)); }
+// owner 23 Nov: when he dies the cooker jetpack breaks off his back and flies off, spinning, pouring smoke, then bounces and smoulders on the pavement
+let deadCook = null;
+function deadCookOff() { const f = FR('fall0_panic'), sp = heroSplit(f); if (!sp) { deadCook = null; return; } const cx = -.235 * HW * HS, cy = -.385 * HH, c = Math.cos(hero.rot || 0), sn = Math.sin(hero.rot || 0);
+  deadCook = { sp, dx: cx * c - cy * sn, x: 0, y: hero.y + cx * sn + cy * c, vx: -90 - Math.random() * 60, vy: -460 - Math.random() * 120, a: hero.rot || 0, va: -8 - Math.random() * 5, b: 0, t: 0, lt: 0 };
+  tone(620, .07, 'square', .05, .6, MIX && MIX.fx); tone(140, .25, 'sawtooth', .05, .5, MIX && MIX.fx); for (let i = 0; i < 10; i++) sparks.push({ x: deadCook.x, y: deadCook.y, vx: (Math.random() - .5) * 240, vy: -Math.random() * 200, l: .4, c: i % 2 ? '#ffd75a' : '#ffffff' }); }
+let dcT = 0;
+function drawDeadCook() { const D = deadCook; if (!D) { dcT = 0; return; } const nw = performance.now(), dt = dcT ? Math.min(.05, (nw - dcT) / 1000) * (paused ? 0 : 1) : 1 / 60; dcT = nw; D.t += dt;
+  D.vy += 1250 * dt; D.dx += D.vx * dt; D.x = hero.x + D.dx; D.y += D.vy * dt; D.a += D.va * dt; const G = FLOOR - 10;
+  if (D.y > G) { D.y = G; if (D.vy > 150) { D.vy = -D.vy * .42; D.vx *= .7; D.va *= .55; D.b++; tone(500 - D.b * 80, .06, 'square', .05, .6, MIX && MIX.fx); for (let i = 0; i < 6; i++) dust.push({ x: D.x, y: FLOOR, vx: (Math.random() - .5) * 140, vy: -Math.random() * 40, r: 3, l: .5 }); } else { D.vy = 0; D.va *= .85; D.vx *= .9; D.a += (Math.round(D.a / Math.PI) * Math.PI - D.a) * .1; } }
+  // smoke pouring from it (thick while flying, then smouldering), with flickers of flame at first
+  D.lt -= dt; if (D.lt <= 0) { D.lt = D.t < 1.2 ? .02 : .08; const th = D.t < 1.2 ? 1 : Math.max(.3, 1 - (D.t - 1.2) / 3);
+    steam.push({ x: D.x + (Math.random() - .5) * 6, y: D.y - 4, vx: -speed * .35 - 20 + (Math.random() - .5) * 30, vy: -30 - Math.random() * 40, r: (4 + Math.random() * 5) * th, l: .9 * th + .3, l0: .9 * th + .3, dark: 1 });
+    if (D.t < .9 && Math.random() < .6) sparks.push({ x: D.x, y: D.y, vx: (Math.random() - .5) * 60 - speed * .3, vy: -Math.random() * 60, l: .25, c: Math.random() < .5 ? '#ffb040' : '#ff6a20' }); }
+  if (D.x < -120 || D.t > 12) { deadCook = null; return; }
+  ctx.save(); ctx.translate(D.x, D.y); ctx.rotate(D.a); ctx.drawImage(D.sp.cook, .235 * HW * HS - HW * HS / 2, -HH + .385 * HH, HW * HS, HH);
+  if (D.t < 1) { ctx.globalCompositeOperation = 'lighter'; const g = ctx.createRadialGradient(0, 0, 0, 0, 0, 16); g.addColorStop(0, `rgba(255,150,60,${(.5 * (1 - D.t)).toFixed(3)})`); g.addColorStop(1, 'rgba(255,100,30,0)'); ctx.fillStyle = g; ctx.fillRect(-16, -16, 32, 32); }
+  ctx.restore(); }
 function drawWrecks() {
   wrecks.forEach(w => { if (w.k === 'puff') { const k = w.t / .9; ctx.fillStyle = w.dark ? `rgba(70,70,78,${(.35 * (1 - k)).toFixed(3)})` : `rgba(150,140,130,${(.5 * (1 - k)).toFixed(3)})`; ctx.beginPath(); ctx.arc(w.x, w.y, w.r, 0, 7); ctx.fill(); } });
   wrecks.forEach(w => {
@@ -2061,7 +2078,7 @@ function openEidi() {
 }
 function revive(keep) {   // second chance (Eidi or Save Me): he jumps back up and the run carries on
   $('eidiBox').classList.add('hide'); $('saveMe').classList.add('hide'); if (!keep) { revived = 1; eidi = 0; }
-  hero.dead = false; hero.slide = 0; hero.rot = 0; hero.y = FLOOR; hero.vy = -560; hero.ground = false; inv = 2.4; state = 'play';
+  deadCook = null; hero.dead = false; hero.slide = 0; hero.rot = 0; hero.y = FLOOR; hero.vy = -560; hero.ground = false; inv = 2.4; state = 'play';
   obs = obs.filter(o => o.type !== 'rocket' && (o.type !== 'zap' || o.x > hero.x + 200)); rings.push({ x: hero.x, y: hero.y - 30, t: 0 }); flashT = .12; flashCol = '255,255,255';
 }
 
@@ -2216,7 +2233,7 @@ function draw() {
   coinList.forEach(c => { if (c.j) { const J = jalebiImg(), s3 = J.width / KR; ctx.save(); ctx.translate(c.x, c.y + Math.sin(t * 4 + c.x * .1) * .8); ctx.rotate(Math.sin(t * 2 + c.x) * .25); ctx.drawImage(J, -s3 / 2, -s3 / 2, s3, s3); ctx.restore(); return; }
     const f = coinFrames[Math.floor((t * 14 + c.x * .05)) % 16]; const s2 = f.width / KR; ctx.drawImage(f, c.x - s2 / 2, c.y - s2 / 2 + Math.sin(t * 4 + c.x * .1) * .8, s2, s2); POL.glint(c, s2); });
   // obstacles
-  obs.forEach(o => { if (o.type === 'zap') drawZap(o); else if (o.type === 'laser') drawLaser(o); else drawRocket(o); }); drawWrecks(); POL.draw(); drawLogBits();
+  obs.forEach(o => { if (o.type === 'zap') drawZap(o); else if (o.type === 'laser') drawLaser(o); else drawRocket(o); }); drawWrecks(); POL.draw(); drawLogBits(); drawDeadCook();
   gifts.forEach(drawGift);
   // people + hero, sorted by depth (feet y)
   const list = npcs.map(p => ({ y: p.y, f: () => drawNpc(p) })); mobs.forEach(m => list.push({ y: m.y, f: () => { const M = NPC_META.mobility, im = npcGet('mobility'); if (!M || !im.naturalWidth) return; const sc = .9 * NPCK / M.k, w = M.w * sc, h = M.h * sc, f = Math.floor(m.roll / 9) % M.n;
@@ -2225,7 +2242,7 @@ function draw() {
   dust.forEach(p => { ctx.globalAlpha = Math.max(0, p.l * 1.6) * .6; ctx.fillStyle = '#d8ccc6'; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 7); ctx.fill(); }); ctx.globalAlpha = 1;
   rings.forEach(r => { ctx.strokeStyle = `rgba(255,255,255,${.8 * (1 - r.t / .6)})`; ctx.lineWidth = 3 * (1 - r.t / .6) + .5; ctx.beginPath(); ctx.arc(r.x, r.y, 10 + r.t * 220, 0, 7); ctx.stroke(); });
   // steam (soft, HD) over everything near him
-  ctx.fillStyle = STEAMC[SHOP.st] || '#f4f1fa'; steam.forEach(p => { ctx.globalAlpha = Math.max(0, p.l / p.l0) * .85; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 7); ctx.fill(); });
+  const stc = STEAMC[SHOP.st] || '#f4f1fa'; steam.forEach(p => { ctx.fillStyle = p.dark ? '#4a4448' : stc; ctx.globalAlpha = Math.max(0, p.l / p.l0) * (p.dark ? .7 : .85); ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 7); ctx.fill(); });
   ctx.globalAlpha = 1;
   sparks.forEach(p => { ctx.globalAlpha = Math.min(1, p.l * 3); ctx.fillStyle = p.c; ctx.fillRect(p.x, p.y, 1.6, 1.6); }); ctx.globalAlpha = 1; POL.drawTop();
   drawHorns();   // the horn's sound waves bend everything drawn so far
@@ -2289,7 +2306,7 @@ function drawHero0() {
   if (veh) { drawVehicle(); return; }
   if (inv > 0 && Math.floor(t * 14) % 2) return;
   let f;
-  if (hero.dead) f = hero.shockT > 0 || hero.slide ? FR('fall0_ko') : FR('fall' + (Math.floor((hero.flail || 0) * 14) % 3) + '_panic');   // arms flailing as he tumbles
+  if (hero.dead) f = FR('fall0_ko');   // owner 23 Nov: dead = limp with X eyes (no flailing, no grey)
   else if (state === 'menu') f = FR('fly' + (Math.floor(t * 9) % 3) + '_effort');
   else if (hero.ground) f = hero.landT > 0 ? FR('land0_effort') : FR('run' + (Math.floor(hero.run) % 6) + '_normal');
   else if (hero.thrust) f = FR('fly' + (Math.floor(t * 12) % 3) + (panicT > 0 ? '_panic' : '_effort'));
@@ -2300,10 +2317,10 @@ function drawHero0() {
   const gap = Math.max(0, FLOOR - hero.y); ctx.fillStyle = `rgba(30,10,30,${Math.max(.08, .32 - gap / 600)})`; ctx.beginPath(); ctx.ellipse(hero.x, FLOOR + 1, 20 - Math.min(10, gap / 25), 3.4, 0, 0, 7); ctx.fill();
   ctx.translate(hero.x, hero.y - (hero.slide ? HW * HS * .4 : 0)); ctx.rotate(hero.rot); if (hero.dead && hero.squash > 0) ctx.scale(1 + hero.squash * .18, 1 - hero.squash * .22); ctx.imageSmoothingEnabled = false;
   if (!hero.dead) POL.heroPre();
-  ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high'; ctx.drawImage(heroImg, f * HW * HX4, 0, HW * HX4, HH0 * HX4, -HW * HS / 2, -HH, HW * HS, HH); ctx.imageSmoothingQuality = 'low';
+  ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high'; { const sp = hero.dead && deadCook ? heroSplit(f) : null; if (sp) ctx.drawImage(sp.body, -HW * HS / 2, -HH, HW * HS, HH); else ctx.drawImage(heroImg, f * HW * HX4, 0, HW * HX4, HH0 * HX4, -HW * HS / 2, -HH, HW * HS, HH); } ctx.imageSmoothingQuality = 'low';
   if (!hero.dead) POL.heroPost(); else POL.deadPost(f);
   if (hero.dead && hero.shockT > 0) {   // frazzled: flashes electric white/blue with crackles round him
-    if (Math.floor(t * 24) % 2) { tintCv.width = HW * HX4; tintCv.height = HH0 * HX4; const tc = tintCv.getContext('2d'); tc.drawImage(heroImg, f * HW * HX4, 0, HW * HX4, HH0 * HX4, 0, 0, HW * HX4, HH0 * HX4);
+    if (false) { tintCv.width = HW * HX4; tintCv.height = HH0 * HX4; const tc = tintCv.getContext('2d'); tc.drawImage(heroImg, f * HW * HX4, 0, HW * HX4, HH0 * HX4, 0, 0, HW * HX4, HH0 * HX4);
       tc.globalCompositeOperation = 'source-atop'; tc.fillStyle = flashCol === '255,90,90' ? 'rgba(255,220,220,.9)' : 'rgba(220,245,255,.92)'; tc.fillRect(0, 0, tintCv.width, tintCv.height); ctx.drawImage(tintCv, -HW * HS / 2, -HH, HW * HS, HH); }
     ctx.strokeStyle = '#e8fbff'; ctx.lineWidth = 1.2; for (let i = 0; i < 3; i++) { ctx.beginPath(); let a = Math.random() * 6.3, r0 = 18 + Math.random() * 14; ctx.moveTo(Math.cos(a) * r0, -40 + Math.sin(a) * r0); for (let j = 0; j < 4; j++) { a += (Math.random() - .5) * 1.2; r0 += 6; ctx.lineTo(Math.cos(a) * r0, -40 + Math.sin(a) * r0); } ctx.stroke(); }
   }
@@ -2424,7 +2441,7 @@ function start() {
   street = []; skyline = []; reset(); passed = 0; state = 'intro'; hero.x = -30;
   ['home', 'over', 'pick', 'how'].forEach(id => $(id).classList.add('hide')); $('hud').style.display = 'block';
 }
-function goHome() { boost = null; $('hsBox').classList.remove('on'); $('saveMe').classList.add('hide'); clearInterval(saveMe.iv); hero.dead = false; deadT = 0; veh = null; inv = 0; obs = []; coinList = []; gifts = []; $('eidiBox') && $('eidiBox').classList.add('hide'); window.TIN && TIN.close(); state = 'menu'; ['over'].forEach(id => $(id).classList.add('hide')); $('hud').style.display = 'none'; $('home').classList.remove('hide'); refreshHome(); }
+function goHome() { deadCook = null; boost = null; $('hsBox').classList.remove('on'); $('saveMe').classList.add('hide'); clearInterval(saveMe.iv); hero.dead = false; deadT = 0; veh = null; inv = 0; obs = []; coinList = []; gifts = []; $('eidiBox') && $('eidiBox').classList.add('hide'); window.TIN && TIN.close(); state = 'menu'; ['over'].forEach(id => $(id).classList.add('hide')); $('hud').style.display = 'none'; $('home').classList.remove('hide'); refreshHome(); }
 function saveMe() {   // their SAVE ME: spend a Second Chance to carry on, 3 second countdown
   const box = $('saveMe'); $('smN').textContent = 'You have ' + SHOP.save; box.classList.remove('hide'); let left = 3; $('smT').textContent = left;
   clearInterval(saveMe.iv); saveMe.iv = setInterval(() => { left--; $('smT').textContent = Math.max(0, left); if (left <= 0) { clearInterval(saveMe.iv); box.classList.add('hide'); usedSave = 1; postRun(); } }, 1000);
@@ -2862,7 +2879,7 @@ const POL = (() => { const P = { fx: [], flock: [], nextFlock: 4, streak: 0, str
   P.glint = (c, s2) => { const ph = (t * .9 + c.x * .013) % 3; if (ph < .35) star(ctx, c.x + s2 * .18, c.y - s2 * .2, 1.4 * Math.sin(ph / .35 * Math.PI), .95); };
   // ---- warnings and hits ----
   P.warnLine = o => { const a = .25 + .2 * Math.sin(t * 20); ctx.save(); const lg = ctx.createLinearGradient(W - 40, 0, W * .45, 0); lg.addColorStop(0, `rgba(255,40,40,${a + .3})`); lg.addColorStop(1, 'rgba(255,40,40,0)'); ctx.strokeStyle = lg; ctx.lineWidth = 2; ctx.setLineDash([8, 6]); ctx.lineDashOffset = t * 80; ctx.beginPath(); ctx.moveTo(W - 40, o.y); ctx.lineTo(W * .45, o.y); ctx.stroke(); ctx.restore(); };
-  P.died = why => { HITT = .1; hero.soot = why === 'rocket' ? 1 : 0; hero.fizz = why === 'laser' ? 1.3 : 0; const n = Math.min(10, 3 + Math.floor(coins / 20));
+  P.died = why => { HITT = .1; hero.soot = 0; hero.fizz = why === 'laser' ? 1.3 : 0; const n = Math.min(10, 3 + Math.floor(coins / 20));
     for (let i = 0; i < n; i++) P.fx.push({ k: 'spill', x: hero.x, y: hero.y - 30, vx: 40 + Math.random() * 160, vy: -160 - Math.random() * 160, t: 0, l: 2.2, b: 0, sp: Math.random() * 6 }); };
   P.chunks = cols => { for (let i = 0; i < 12; i++) P.fx.push({ k: 'chunk', x: hero.x + (Math.random() - .5) * 60, y: hero.y - 10 - Math.random() * 50, vx: (Math.random() - .3) * 320, vy: -120 - Math.random() * 260, t: 0, l: 1.6, a: Math.random() * 6, sp: (Math.random() - .5) * 14, w: 4 + Math.random() * 8, h: 3 + Math.random() * 5, c: cols[i % cols.length], b: 0 }); };
   P.crack = x => P.fx.push({ k: 'crack', x, y: FLOOR + 1, t: 0, l: 1.4, seed: Math.random() * 100 });
