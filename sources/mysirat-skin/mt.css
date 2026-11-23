@@ -1,0 +1,32 @@
+/* MySirat: brand layer over the toolkit engine. Designed & built by SMR Digital. */
+:root{--mt-deep:#0b3b3a;--mt-deep2:#072826;--mt-em:#12806b;--mt-em2:#17936a;--mt-gold:#d9a441;--mt-gold2:#f2c35b}
+/* nothing from the radio station */
+#intro,.player,#player,.inst,.np,.npchip,.rfeed,#ahOA,
+[data-page=home]>.hero,[data-page=home] .sec:has(#podRail),[data-page=home] .reel-sec,[data-page=home] .adv-sec,[data-page=home] .nlp-wrap,
+#fbPrompt,#fbDisc,a[href="#listen"]:not(.mid),[data-play],.oa-play,.npbar{display:none!important}
+body{padding-bottom:0}
+/* tasbih widget in the On air slot */
+.mt-tas{position:relative;aspect-ratio:1/1;border-radius:22px;overflow:hidden;color:#fff;display:flex;flex-direction:column;justify-content:space-between;padding:14px;box-shadow:0 10px 24px rgba(0,0,0,.25);isolation:isolate;background:linear-gradient(160deg,#4a4844,#141413);border:0;font:inherit;text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.mt-tas small{font-size:.66rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
+.mt-tas .ar{display:block;font-family:var(--ar,serif);font-size:1.05rem;line-height:1.3}
+.mt-tas .big{font-family:var(--display);font-weight:700;font-size:2.5rem;line-height:1}
+.mt-tas .of{font-size:.72rem;opacity:.85}
+.mt-tas svg.ring{position:absolute;right:-18px;bottom:-18px;width:120px;height:120px;z-index:-1;opacity:.9}
+.mt-tas:active{transform:scale(.97)}
+/* Prayer is the centre tab */
+#tabbar a[data-t=prayer].mid .av svg{width:26px;height:26px}
+.flogo{display:block}
+.mt-wm{display:inline-flex;align-items:center;gap:10px}.mt-wm img{width:40px;height:40px;border-radius:11px;background:#0b0b0c}.mt-wm b{font-family:var(--display);font-size:1.2rem;color:#0b0b0c;letter-spacing:-.01em}
+html.dark .mt-wm b{color:#fff}
+.live-btn{display:none!important}
+a[href="#advertise"]{display:none!important}
+
+/* MySirat brand */
+:root{--sir-black:#0b0b0c;--sir-char:#1a1918;--sir-stone:#a8a49d;--sir-stone2:#7f7b75;--sir-paper:#f6f5f2}
+html:not(.dark) body{background:var(--sir-paper)}
+html:not(.dark) .ah{background:#ecebe7!important;color:#0b0b0c}
+footer .flogo{background:#0b0b0c}
+
+/* sleek type */
+b,strong,h1,h2,h3,h4,h5,h6,th{font-weight:600}
+h1,h2,h3,.ltitle,.sec-h h2{letter-spacing:-.02em}
