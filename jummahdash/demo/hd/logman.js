@@ -3,16 +3,16 @@
    st = { ph: run phase, air: 0..1, face: 'smile'..., spin: windmill arms, flip: rotation, squash } */
 (() => {
   const P = {}, names = ['body', 'n_uarm', 'f_uarm', 'n_farm', 'f_farm', 'n_hand', 'f_hand', 'n_thigh', 'f_thigh', 'n_shin', 'f_shin', 'n_foot', 'f_foot',
-    'face_neutral', 'face_smile', 'face_grin', 'face_laugh', 'face_shock', 'face_scared', 'face_frown', 'face_angry', 'face_smug', 'face_sad'];
+    'n_bat', 'face_neutral', 'face_smile', 'face_grin', 'face_laugh', 'face_shock', 'face_scared', 'face_frown', 'face_angry', 'face_smug', 'face_sad'];
   names.forEach(n => { const im = new Image(); im.src = 'art/logman/' + n + '.webp?v=1'; P[n] = im; });
   // joints in each part's own picture (art pixels): [top joint x, y, bottom joint x, y]
-  const J = { uarm: [40, 13, 17.5, 83], farm: [19, 5.5, 19, 78], hand: [26.5, 4.5], thigh: [22.5, 5, 19, 80], shin: [21.5, 5, 19, 85], foot: [24.5, 5] };
+  const J = { uarm: [40, 13, 17.5, 83], farm: [19, 5.5, 19, 78], hand: [26.5, 4.5], bat: [16, 7], thigh: [22.5, 5, 19, 80], shin: [21.5, 5, 19, 85], foot: [24.5, 5] };
   const BODY = { hipN: [66, 468], hipF: [88, 466], shN: [44, 272], shF: [58, 266], face: [136, 152] };
   const LEG = 75 + 80 + 52;   // hip to sole when straight
   const ok = im => im.complete && im.naturalWidth;
   function seg(g, im, jx, jy, ang) { g.rotate(ang); if (ok(im)) g.drawImage(im, -jx, -jy); }
   // joint sizes (outer radius incl. outline, art px) where part i meets part i+1
-  const JR = { uarm: 13.5, farm: 12.5, thigh: 15, shin: 13 }, FILL = { n: '#f5862a', f: '#cc6418' }, INK = '#1d120c';
+  const JR = { uarm: 13.5, farm: 12.5, thigh: 15, shin: 13 }, FILL = { n: '#d16c2a', f: '#ad4f1b' }, INK = '#1d120c';
   function limb(g, side, parts, angs) {   // a chain of parts hanging from the current origin; owner 23 Nov: no outlines across the joints, one clean outline round the whole limb
     const base = g.getTransform(), joints = [];
     for (let i = 0; i < parts.length; i++) { const k = parts[i], j = J[k]; g.rotate(angs[i]); if (j.length > 2) { g.translate(j[2] - j[0], j[3] - j[1]); joints.push([g.getTransform(), JR[k] || 12]); } }
@@ -38,6 +38,6 @@
     at(BODY.hipN, () => limb(g, 'n', ['thigh', 'shin', 'foot'], legA(0)));
     g.save(); g.translate(0, 0); if (ok(P.body)) g.drawImage(P.body, 0, 0); g.restore();
     const fi = P['face_' + (st.face || 'smile')] || P.face_smile; if (ok(fi)) g.drawImage(fi, BODY.face[0] - fi.naturalWidth / 2, BODY.face[1] - fi.naturalHeight / 2);
-    at(BODY.shN, () => limb(g, 'n', ['uarm', 'farm', 'hand'], armA(0)));
+    at(BODY.shN, () => limb(g, 'n', ['uarm', 'farm', st.bat ? 'bat' : 'hand'], st.swing != null ? [st.swing, st.swingE || 0, 0] : armA(0)));
     g.restore(); };
 })();
