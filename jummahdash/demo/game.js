@@ -657,16 +657,15 @@ function jalebiPop(c) { if (t - jalT > .6) { jalT = t; pops.push({ x: c.x, y: c.
 
 function spawnPattern() {
   const x0 = W + 60, top = CEIL + 14, bot = FLOOR - 14, r = Math.random(), m = dist / 10;
-  if (BOX_SOLID()) {   // owner 23 Nov: in the Warp Box the street throws rocket volleys and big lasers (no zapper walls)
+  if (BOX_SOLID()) {   // owner 23 Nov: in the Warp Box: no big lasers at all; rockets and zappers he has to dodge (or WARP past), spaced for the much bigger box
     const q = Math.random();
-    if (q > .58 && q <= .78) {   // owner 23 Nov: zappers well spread out so he can fly round them (no walls)
-      const n = 2 + (Math.random() * 2 | 0); let y = top + 60 + Math.random() * (bot - top - 120);
-      for (let i = 0; i < n; i++) { obs.push({ type: 'zap', x: x0 + i * 300, y, len: 70 + Math.random() * 40, ang: Math.random() < .5 ? Math.PI / 2 : 0, spin: 0, seed: Math.random() * 99 }); y = y < (top + bot) / 2 ? bot - 60 - Math.random() * 60 : top + 60 + Math.random() * 60; }
-      return n * 300 + 120; }
-    if (q > .78) { const n = 12, y0 = top + 30 + Math.random() * (bot - top - 80); for (let i = 0; i < n; i++) coinList.push({ x: x0 + i * 18, y: y0 + Math.sin(i / 2.2) * 26, got: 0 }); return 140 + n * 18; }   // breathers: plain coin waves
-    if (q < .4) { for (let i = 0; i < 10; i++) coinList.push({ x: x0 + 60 + i * 24, y: top + 30 + (i % 5) * (bot - top - 60) / 4, got: 0 });   // owner 23 Nov: no zapper walls in the Warp Box; rocket volleys with coins to warp through
-      const n = 2 + (Math.random() * 2 | 0); for (let i = 0; i < n; i++) setTimeout(() => { if (state === 'play') obs.push({ type: 'rocket', x: W + 40, y: hero.y - 30 + (Math.random() - .5) * 80, warn: 1.3, lock: 0, v: 0 }); }, i * 450); return 360; }
-    [CEIL + 40, (CEIL + FLOOR) / 2, FLOOR - 40].forEach((y, i) => obs.push({ type: 'laser', x: W / 2, y, ph: 'in', pt: 0, slide: 0, d: i * .12 })); return 380; }
+    if (q < .45) { for (let i = 0; i < 8; i++) coinList.push({ x: x0 + 80 + i * 30, y: top + 40 + (i % 4) * (bot - top - 80) / 3, got: 0 });
+      const n = 1 + (Math.random() < .6 ? 1 : 0); for (let i = 0; i < n; i++) setTimeout(() => { if (state === 'play' && BOXR) obs.push({ type: 'rocket', x: W + 40, y: hero.y - 50, warn: 1.6, lock: 0, v: 0 }); }, i * 900); return 520; }
+    if (q < .78) {   // single short zappers hugging the top or the bottom, far apart, leaving a wide lane for the box
+      const n = 2 + (Math.random() < .4 ? 1 : 0); let hi = Math.random() < .5;
+      for (let i = 0; i < n; i++) { const len = 55 + Math.random() * 20, y = hi ? top + 20 + len / 2 : bot - 20 - len / 2; obs.push({ type: 'zap', x: x0 + i * 440, y, len, ang: Math.PI / 2, spin: 0, seed: Math.random() * 99 }); hi = !hi; }
+      return n * 440 + 160; }
+    const n = 12, y0 = top + 40 + Math.random() * (bot - top - 100); for (let i = 0; i < n; i++) coinList.push({ x: x0 + i * 18, y: y0 + Math.sin(i / 2.2) * 26, got: 0 }); return 160 + n * 18; }
   if (r < .3) { // line / wave of coins
     const n = 8 + (Math.random() * 8 | 0), y0 = top + 20 + Math.random() * (bot - top - 60), wave = Math.random() < .5;
     const jb = hasG('jalebi') && Math.random() < .22; for (let i = 0; i < n; i++) coinList.push({ x: x0 + i * 18, y: y0 + (wave ? Math.sin(i / 2.2) * 26 : 0), got: 0, j: jb });
@@ -717,7 +716,7 @@ function spawnPattern() {
 }
 
 /* hero hit circles (world units, relative to feet) */
-function heroCircles() { const x = hero.x, y = hero.y, k = HS; if (boost && !boost.out) return [[x, y - 40, 20]]; if (veh) return vehCircles(); return [[x + 2 * k, y - 18.9 * k, 6.5 * k], [x + 5 * k, y - 36.8 * k, 6 * k]]; }   // hit area follows the shorter legs (owner 22 Nov)
+function heroCircles() { const x = hero.x, y = hero.y, k = HS; if (boost && !boost.out) return [[x, y - 40, 20]]; if (veh) return vehCircles(); if (BXD() && !(BOXR && BOXR.w)) { const h = HH * 1.62, gy = y + 8, r = h * .22; return [[x, gy - h * .2, r], [x, gy - h * .5, r], [x, gy - h * .8, r]]; } return [[x + 2 * k, y - 18.9 * k, 6.5 * k], [x + 5 * k, y - 36.8 * k, 6 * k]]; }   // hit area follows the shorter legs (owner 22 Nov)
 function segDist(px, py, ax, ay, bx, by) { const dx = bx - ax, dy = by - ay, l = dx * dx + dy * dy; let k = l ? ((px - ax) * dx + (py - ay) * dy) / l : 0; k = Math.max(0, Math.min(1, k)); const qx = ax + dx * k - px, qy = ay + dy * k - py; return Math.sqrt(qx * qx + qy * qy); }
 
 /* Billi the Cat (owner 23 Nov: works exactly like Flash the dog in Jetpack Joyride): a gadget; runs along the pavement with him,
@@ -872,7 +871,7 @@ function boxTick(dt) { if (!BOXR) return; if (hero.dead || veh) { BOXR = null; r
   if (BOXR.safe > 0) { BOXR.safe -= dt; inv = Math.max(inv, .05); } BOXR.a += dt * (BOXR.t < BOX_P * 3 ? 5 : 2.6);
   const ph = Math.floor(BOXR.t / BOX_P); if (ph !== BOXR.ph && ph <= 3) { BOXR.ph = ph; tone(ph < 3 ? 520 + ph * 90 : 880, ph < 3 ? .16 : .28, 'sine', .05, ph < 3 ? 1.6 : 1.25, MIX && MIX.fx); tone(ph < 3 ? 260 : 440, .2, 'triangle', .03, 1.4, MIX && MIX.fx);
     for (let i = 0; i < (ph < 3 ? 8 : 22); i++) sparks.push({ x: hero.x + (Math.random() - .5) * 60, y: hero.y - Math.random() * 90, vx: (Math.random() - .5) * 120 - speed * .2, vy: -Math.random() * 120, l: .45, c: Math.random() < .5 ? '#9fc4ff' : '#fff6c8' });
-    if (ph === 3) { flashT = .12; flashCol = '170,200,255'; shake = Math.max(shake, .12); } } }
+    if (ph === 3) { obs = obs.filter(o => o.type !== 'laser'); flashT = .12; flashCol = '170,200,255'; shake = Math.max(shake, .12); } } }
 const BOX_LIFE = 22;   // seconds the box lasts (owner: it runs out)
 const BXD = () => !!(BOXR && !veh && BOXR.t >= BOX_P * 3);   // inside the warp box (stuck on)
 const BOX_SOLID = () => BOXR && BOXR.t >= BOX_P * 3.7;
