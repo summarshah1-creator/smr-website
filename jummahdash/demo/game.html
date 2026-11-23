@@ -454,6 +454,27 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 #over .ovBtns{margin-top:min(10px,2vh)}
 #over .ovBtns .go{padding:min(10px,2.2vh) 16px}#over .ovGo{padding:min(11px,2.4vh) 26px!important;font-size:clamp(15px,4.4vh,19px)!important}
 #over .ovB .mrow{margin:min(6px,1.2vh) 0}
+/* owner 23 Nov: Add your car + Add a place pop-ups simplified: compact, smaller text, nothing hanging off the screen or scrolling */
+.sheet .carbox,#recBox .box{padding:12px 16px 12px!important;border-radius:16px;max-height:94%;overflow:hidden!important}
+.sheet .carbox{width:min(400px,92%)!important;overflow-y:auto!important}.carbox .cpv.on canvas{max-height:28vh;width:auto;margin:0 auto;display:block}#recBox .box{width:min(380px,92%)!important}
+.carbox h2,#recBox h2{font-size:clamp(14px,4.4vh,18px)!important;margin:0 34px 4px!important;text-align:center}
+.carbox .cintro,#recBox #recForm>p:first-of-type{font-family:Silk;font-size:11px!important;line-height:1.35;color:#cfc6ff;text-align:center;margin:0 0 8px!important}
+.carbox .ccols{display:block!important}.carbox .crow{display:grid;grid-template-columns:1fr 1fr;gap:10px}.carbox .cin{width:100%;box-sizing:border-box}.carbox .cpick{display:block;text-align:center}.carbox .cright{margin-top:8px}
+.carbox .cl,#recBox label{font-size:9px!important;margin:6px 0 3px!important;letter-spacing:.5px}
+.carbox .cin,#recBox input,#recBox textarea{font-size:13px!important;padding:7px 9px!important;border-radius:9px!important}
+#recBox textarea{height:40px!important}
+.carbox .cpick{padding:8px!important;font-size:11px!important}
+.carbox .chint{font-size:9px!important;margin-top:3px!important;opacity:.8}
+.carbox .cright{display:flex;flex-direction:column;justify-content:flex-end;gap:6px}
+.carbox .cst{font-size:10px!important;min-height:0}.carbox .cst:empty{display:none}
+.carbox .cnote:empty,.carbox .cerr:empty{display:none}
+.carbox .cpv:not(.on){display:none}
+.carbox .cbtns .go,#recBox .rbt .go{font-size:13px!important;padding:9px 16px!important}
+.carbox .cbtns .go{width:100%}
+#recBox .rrow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+#recBox .rmsg{margin:4px 0 0!important;font-size:10px!important;min-height:0!important}
+#recBox .rbt{margin-top:8px!important}
+.carbox .cok p,#recBox .thx p{font-size:11px!important}
 </style>
 </head>
 <body>
@@ -542,15 +563,15 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
   <div class="sheet hide" id="carBox">
     <div class="box carbox">
       <div id="carF"><h2>PUT YOUR CAR IN THE GAME</h2>
-        <ol class="csteps"><li><b>Send us your car</b> with your first name and a photo.</li><li><b>We turn it into a game car.</b></li><li><b>If it's approved, you'll get a message</b> and everyone will see your car in the game. On your phone it comes past at least every 30 seconds!</li></ol>
+        <p class="cintro">Send a photo and we'll turn it into a game car. If it's approved, it drives through everyone's game.</p>
         <div class="ccols"><div class="cleft">
-          <label class="cl" for="cN">YOUR FIRST NAME</label><input class="cin" id="cN" maxlength="20" placeholder="e.g. Adam" autocomplete="given-name">
-          <label class="cl" for="cM">YOUR CAR</label><input class="cin" id="cM" maxlength="60" placeholder="e.g. Black Audi A3" autocomplete="off">
+          <div class="crow"><div><label class="cl" for="cN">YOUR FIRST NAME</label><input class="cin" id="cN" maxlength="20" placeholder="e.g. Adam" autocomplete="given-name"></div>
+          <div><label class="cl" for="cM">YOUR CAR</label><input class="cin" id="cM" maxlength="60" placeholder="e.g. Black Audi A3" autocomplete="off"></div></div>
           <label class="cl">A PHOTO OF YOUR CAR</label><label class="cpick" for="cF">&#128247; ADD A PHOTO</label><input id="cF" type="file" accept="image/jpeg,image/png,image/*" hidden>
-          <div class="chint">From the side, with the whole car in. JPG or PNG, up to 20 MB.</div>
+          <div class="chint">Side view, whole car in shot.</div>
         </div><div class="cright">
           <div class="cpv" id="cPv"><canvas id="cCv"></canvas><div class="cpvb"><span>QUICK PREVIEW</span><button type="button" id="cFl">&#8644; FLIP</button></div></div>
-          <div class="cst" id="cSt">Your photo shows here.</div>
+          <div class="cst" id="cSt"></div>
           <div class="cerr" id="cE"></div><div class="cbtns"><button class="go" type="button" id="cS">SEND REQUEST</button><button class="go alt hide" type="button" id="cX">CLOSE</button></div>
         </div></div>
         <div class="cnote" id="cNo"></div></div>
@@ -678,7 +699,7 @@ var t=setInterval(function(){var lt=document.getElementById('loadTxt');if(!q&&lt
 <script src="hd/box.js?h=4d37ca66fa"></script>
 <script src="game.js?h=1a0dcbdf9b"></script>
 <script src="hd/tins.js?h=aa419cd2f9"></script>
-<script src="jd-extra.js?h=152adaab6e"></script>
+<script src="jd-extra.js?h=9827dd240e"></script>
 <script src="/flappy/carreq.js?v=1"></script>
 </body>
 </html>

@@ -64,9 +64,9 @@
     b.addEventListener('pointerdown', function (e) { e.preventDefault(); e.stopPropagation(); openRec(); });
     var holder = ($('smrInfo') && $('smrInfo').parentNode) || document.body;
     var s = document.createElement('div'); s.className = 'sheet hide'; s.id = 'recBox';
-    s.innerHTML = '<div class="box mbox"><div id="recForm"><h2>RECOMMEND A PLACE</h2><p>Know a Luton spot that should be in the game? A masjid, shop, takeaway, park, anywhere. Tell us and we might add it!</p>'
-      + '<label for="recN">PLACE NAME</label><input id="recN" maxlength="80" autocomplete="off" placeholder="e.g. Grand Bazar">'
-      + '<label for="recA">WHERE IS IT? (optional)</label><input id="recA" maxlength="160" autocomplete="off" placeholder="Road or area">'
+    s.innerHTML = '<div class="box mbox"><div id="recForm"><h2>RECOMMEND A PLACE</h2><p>Know a Luton spot that should be in the game? Tell us!</p>'
+      + '<div class="rrow"><div><label for="recN">PLACE NAME</label><input id="recN" maxlength="80" autocomplete="off" placeholder="e.g. Grand Bazar"></div>'
+      + '<div><label for="recA">WHERE? (optional)</label><input id="recA" maxlength="160" autocomplete="off" placeholder="Road or area"></div></div>'
       + '<label for="recT">ANYTHING ELSE? (optional)</label><textarea id="recT" maxlength="500" placeholder="Why it should be in the game"></textarea>'
       + '<p class="rmsg" id="recM"></p><div class="rbt"><button class="go" id="recGo">SEND</button><button class="go alt" id="recX">CLOSE</button></div></div>'
       + '<div id="recThx" class="thx hide"><h2>THANK YOU!</h2><b>🕌</b><p>We\'ll take a look. Keep an eye out for it in the game.</p><div class="rbt"><button class="go" id="recOk">CARRY ON</button></div></div></div>';
