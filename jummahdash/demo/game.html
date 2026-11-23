@@ -395,6 +395,19 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 #bBat:not(.ready){opacity:.65}#bBat.act{transform:scale(.88)}
 #bBat.hide{opacity:0;visibility:hidden;transform:scale(.6);pointer-events:none}
 @media (max-height:430px){#bBat{width:82px;height:82px;bottom:22px}}
+/* owner 23 Nov: tidy, balanced home screen: menu column | centred title block | hero column.
+   The title block and the credit share one centre line in the space between the menu and the hero, the title block sits in the
+   middle of the height, and the logo never runs into the cooker. */
+#home .main{position:relative!important;container-type:size!important;--hh:76cqh;--hw:calc(var(--hh) * .7105);--hr:calc(var(--sr,0px) * .4 + 2.5cqw);--cr:calc(var(--hw) + var(--hr) + 1.5cqw)}
+#home .heroWrap{height:var(--hh)!important;right:var(--hr)!important;bottom:3cqh!important}
+#home .title{left:3cqw!important;right:var(--cr)!important;width:auto!important;margin:0!important;top:0!important;bottom:calc(14px + 13cqh)!important;justify-content:center;gap:2.2cqh!important}
+#home .title .logo{width:100%;max-width:min(560px,100%);margin:.6cqh 0}
+#home .title .tag{margin-top:.4cqh}
+#home .title .play{margin-top:0}
+#home .credit{left:3cqw!important;right:var(--cr)!important;margin:0 auto!important;bottom:4.5cqh!important}
+#home .mine{left:3cqw!important;right:var(--cr)!important}
+.side .tile .lb{white-space:nowrap}
+.side .tile{font-size:clamp(10px,min(3.6cqh,9cqw),16px)!important}
 </style>
 </head>
 <body>
