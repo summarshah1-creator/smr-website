@@ -1390,7 +1390,7 @@ function drawBoost() {
 /* owner 23 Nov, from his Jetpack Joyride 2 recording: grab the token -> white flash -> the game freezes under a big title card
    (teal energy band, the ride's picture, its name, an arrow streak; ~1.6 s) -> the band wipes off -> the ride's parts fly in
    from off screen with white streaks and lock onto him one by one -> a final white flash and off he goes. */
-let REVEAL = null; const CARD = {}; ['mech', 'carpet', 'sandals', 'kabootar', 'tuktuk', 'logman'].forEach(k => { CARD[k] = img('art/card/' + k + '.webp?v=1'); });
+let REVEAL = null; const CARD = {}; ['mech', 'carpet', 'sandals', 'kabootar', 'tuktuk', 'logman'].forEach(k => { CARD[k] = img('art/card/' + k + '.webp?v=' + (k === 'logman' ? 2 : 1)); });
 function quickRide(k) {   // owner 23 Nov: repeat pickups skip the title card: a flash, a quick snap-together and straight back into play
   flashT = .18; flashCol = '255,255,255'; inv = Math.max(inv, 1.2); tone(880, .06, 'square', .05); setTimeout(() => tone(1320, .1, 'square', .05), 60);
   startVehicle(k, true); if (!veh) return; if (k === 'mech') veh.su = Math.max(veh.su || 0, .72); else if (k === 'logman') veh.morph = .2; else { veh.asm = .5; veh.fast = 1; } POL.fx.push({ k: 'ring', x: hero.x, y: hero.y - 30, t: 0, l: .4, col: '255,255,255' }); }

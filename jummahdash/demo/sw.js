@@ -1,6 +1,6 @@
 /* Jummah Dash: keeps the whole game on the phone. First visit downloads it once;
    after that it opens from the phone, and an update only downloads the files that changed. */
-const BUILD = '20261123201243';
+const BUILD = '20261123201605';
 const FILES = {
 "jd-extra.js": "fe18b26942",
 "hd/landmarks_hd.js": "7d60d75c5a",
@@ -9,7 +9,7 @@ const FILES = {
 "hd/logman.js": "d65b845cd3",
 "hd/tins.js": "aa419cd2f9",
 "hd/foodbank.png": "8f4400d5e6",
-"game.js": "e90fb45024",
+"game.js": "239cc2ee01",
 "landmarks.js": "4649570284",
 "vehicles.js": "32fdac20ce",
 "manifest.webmanifest": "f337af2b13",
@@ -175,13 +175,14 @@ const FILES = {
 "art/tin/tin.webp": "551d646453",
 "art/card/carpet.webp": "10915d8166",
 "art/card/kabootar.webp": "a2edd1a2ed",
-"art/card/logman.webp": "95e55b4013",
+"art/card/logman.webp": "25734de29c",
 "art/card/mech.webp": "957ac8065e",
 "art/card/sandals.webp": "f6fd358fd8",
 "art/card/tuktuk.webp": "2c1cebbc98",
 "art/jalebi.webp": "35f7aa9f66",
 "art/icon_carpet.webp": "d79b0ad5d2",
 "art/cookmask.webp": "7ac58ac59b",
+"art/bat_icon.webp": "4ba1e090c9",
 "art/logman/body.webp": "ffbec748df",
 "art/logman/f_farm.webp": "f79b31226f",
 "art/logman/f_foot.webp": "73b8a83016",
