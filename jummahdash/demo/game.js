@@ -334,7 +334,21 @@ function tone(freq, dur, type = 'sine', vol = .12, slide = 0, bus = null) {
   if (slide) o.frequency.exponentialRampToValueAtTime(Math.max(30, freq * slide), t + dur);
   g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(.0001, t + dur); o.connect(g); g.connect(bus || (MIX ? MIX.fx : AC.destination)); o.start(t); o.stop(t + dur + .02);
 }
-const SFX = { tukHorn() {   // owner 23 Nov: his own horn (named tukHorn: the traffic kit's car horn() used to overwrite it) recording (art/snd/horn.mp3, cut + cleaned + faded); synth air horn only until it has loaded
+const SFX = { planeT() {   // owner 23 Nov: jet climbing out of the airport: deep roar rising and fading, a whine on top
+    if (!AC || !sndOn) return; const t0 = AC.currentTime, D = 6.5, bus = MIX ? MIX.traffic : AC.destination;
+    const n = AC.createBufferSource(), b = AC.createBuffer(1, AC.sampleRate * 2, AC.sampleRate), d = b.getChannelData(0); let last = 0; for (let i = 0; i < d.length; i++) { last = last * .985 + (Math.random() * 2 - 1) * .15; d[i] = last; } n.buffer = b; n.loop = true;
+    const lp = AC.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.setValueAtTime(380, t0); lp.frequency.linearRampToValueAtTime(900, t0 + 2.5); lp.frequency.linearRampToValueAtTime(500, t0 + D);
+    const g = AC.createGain(); g.gain.setValueAtTime(.0001, t0); g.gain.exponentialRampToValueAtTime(.55, t0 + 1.6); g.gain.setValueAtTime(.55, t0 + 3); g.gain.exponentialRampToValueAtTime(.0001, t0 + D);
+    n.connect(lp); lp.connect(g); g.connect(bus); n.start(t0); n.stop(t0 + D + .1);
+    const o = AC.createOscillator(), og = AC.createGain(); o.type = 'sine'; o.frequency.setValueAtTime(1900, t0); o.frequency.linearRampToValueAtTime(2600, t0 + 3); o.frequency.linearRampToValueAtTime(2200, t0 + D); og.gain.setValueAtTime(.0001, t0); og.gain.exponentialRampToValueAtTime(.012, t0 + 1.5); og.gain.exponentialRampToValueAtTime(.0001, t0 + D); o.connect(og); og.connect(bus); o.start(t0); o.stop(t0 + D + .1); },
+  trainT() {   // Thameslink rolling through: rumble, wheel clacks over the joints, and a short two-tone horn
+    if (!AC || !sndOn) return; const t0 = AC.currentTime, D = 4.2, bus = MIX ? MIX.traffic : AC.destination;
+    const n = AC.createBufferSource(), b = AC.createBuffer(1, AC.sampleRate, AC.sampleRate), d = b.getChannelData(0); let last = 0; for (let i = 0; i < d.length; i++) { last = last * .97 + (Math.random() * 2 - 1) * .2; d[i] = last; } n.buffer = b; n.loop = true;
+    const lp = AC.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 260; const g = AC.createGain(); g.gain.setValueAtTime(.0001, t0); g.gain.exponentialRampToValueAtTime(.4, t0 + .8); g.gain.setValueAtTime(.4, t0 + 2.8); g.gain.exponentialRampToValueAtTime(.0001, t0 + D);
+    n.connect(lp); lp.connect(g); g.connect(bus); n.start(t0); n.stop(t0 + D + .1);
+    for (let c = 0; c < 9; c++) for (const dd of [0, .09]) { const at = t0 + .4 + c * .4 + dd, o = AC.createOscillator(), og = AC.createGain(); o.type = 'triangle'; o.frequency.setValueAtTime(150, at); o.frequency.exponentialRampToValueAtTime(70, at + .06); const env = Math.sin(Math.PI * (c + .5) / 9); og.gain.setValueAtTime(.09 * env, at); og.gain.exponentialRampToValueAtTime(.0001, at + .08); o.connect(og); og.connect(bus); o.start(at); o.stop(at + .1); }
+    [[0, 554], [.35, 440]].forEach(([dt, f]) => { const at = t0 + .3 + dt, o = AC.createOscillator(), og = AC.createGain(), lp2 = AC.createBiquadFilter(); lp2.type = 'lowpass'; lp2.frequency.value = 1800; o.type = 'sawtooth'; o.frequency.value = f; og.gain.setValueAtTime(.0001, at); og.gain.exponentialRampToValueAtTime(.03, at + .04); og.gain.setValueAtTime(.03, at + .28); og.gain.exponentialRampToValueAtTime(.0001, at + .34); o.connect(lp2); lp2.connect(og); og.connect(bus); o.start(at); o.stop(at + .4); }); },
+  tukHorn() {   // owner 23 Nov: his own horn (named tukHorn: the traffic kit's car horn() used to overwrite it) recording (art/snd/horn.mp3, cut + cleaned + faded); synth air horn only until it has loaded
     if (!AC || !sndOn) return; const bus = MIX ? MIX.fx : AC.destination, t0 = AC.currentTime;
     if (HORN_BUF) { const src = AC.createBufferSource(), g = AC.createGain(); src.buffer = HORN_BUF; g.gain.value = 1; src.connect(g); g.connect(bus); src.start(t0); return; }   // only his recording, nothing mixed in
     const blast = (st, len) => { const f = AC.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 2600; f.Q.value = 1.2; const g = AC.createGain(); g.gain.setValueAtTime(.0001, t0 + st); g.gain.exponentialRampToValueAtTime(.07, t0 + st + .02); g.gain.setValueAtTime(.07, t0 + st + len - .05); g.gain.exponentialRampToValueAtTime(.0001, t0 + st + len); f.connect(g); g.connect(bus);
@@ -538,6 +552,7 @@ window.__tinApi = { addCoins: n => { coins += n; $('coins').textContent = '£' +
 window.__tins = n => { btins = n || 1; die && die('rocket'); };
 window.__kit = () => ({ rideIcon, drawRocket, drawZap, drawGift, drawVehicle, drawLaser, drawCorolla, carSprite, makeCoins, coins: () => coinFrames, FK_ICON, setHero: im => { heroImg = im; }, hero, cv });   // poster/sketch tool hook
 window.__cars = () => cars; window.__spawn = (k, x) => spawnCar(x == null ? W * .5 : x, k, 0, 1);   // test hook: put a chosen car in the near lane
+window.__lm = (key, x) => { street.push({ kind: 'lm', key, x: x == null ? W * .5 : x, w: LANDMARKS[key].w * BS * jkL(key) }); };   // test hook: put a landmark on the street
 // strict lanes (owner, 22 Nov): never two cars overlapping in one lane. An overtaker only starts when there is room for it in
 // front of the car it passes, and only pulls back in when its own lane is clear around it (with space front and back).
 function slotFree(c) { return !cars.some(q => q !== c && !q.crash && q.lane === c.lane && !(q.ot && q.ot.out > .2) && q.x < c.x + c.L + 26 && q.x + q.L > c.x - 26); }
@@ -1902,6 +1917,7 @@ function drawJet() { const now = performance.now() / 1000, dt = Math.min(.05, no
    picture, a Thameslink train runs along the station viaduct and planes take off from behind the airport */
 const LIVE_ANIM = new Set(Object.keys(window.LM_ANIM || {}).filter(k => k !== 'train' && k !== 'plane' && k !== 'wardownbridge'));
 function drawTrain(b, t) { const k = BS * ((window.SCALE && SCALE.station) || 1), x0 = b.x / k, Gs = G / k; const span = 270, per = 9, ph = (t % per) / per, off = -230 + ph * (span + 460);
+  { const cyc = Math.floor(t / per); if (b.tc !== cyc && ph < .25 && b.x < W && b.x + 300 * k > 0) { b.tc = cyc; SFX.trainT && SFX.trainT(); } }   // owner 23 Nov: train sound as it rolls through
   ctx.save(); ctx.scale(k, k); ctx.beginPath(); ctx.rect(x0 - 6, Gs - 150, span + 12, 58); ctx.clip();
   const tx = x0 + off, deck = Gs - 94;
   for (let c2 = 0; c2 < 3; c2++) { const cx = tx + c2 * 68, L2 = c2 === 2 ? 70 : 64;
@@ -1915,17 +1931,50 @@ function drawTrain(b, t) { const k = BS * ((window.SCALE && SCALE.station) || 1)
   ctx.strokeStyle = '#3a3d44'; ctx.lineWidth = .6; for (let i = 0; i < 3; i++) { const px2 = tx + 20 + i * 68; ctx.beginPath(); ctx.moveTo(px2, deck - 28); ctx.lineTo(px2 + 6, deck - 35); ctx.lineTo(px2 + 12, deck - 35); ctx.stroke(); }
   ctx.restore(); }
 function drawTakeoff(b, t) { const k = BS * ((window.SCALE && SCALE.airport) || 1), x0 = b.x / k, Gs = G / k, per = 16, ph = (t % per) / per; if (ph > .7) return; const p = ph / .7;
-  const px2 = x0 + 40 + p * 520, py = Gs - 120 - Math.pow(p, 1.5) * 220, a = -.22 - p * .08, sc = 1.5;
+  // owner 23 Nov: a proper airliner (white with an orange swoosh, orange tail and engine, no airline name), gear tucking up, flashing lights and a long drifting exhaust trail
+  const path = q => [x0 + 40 + q * 520, Gs - 120 - Math.pow(q, 1.5) * 220], [px2, py] = path(p), a = -.2 - p * .09, sc = 1.55;
+  const cyc = Math.floor(t / per); if (b.pc !== cyc && p < .1) { b.pc = cyc; SFX.planeT && SFX.planeT(); }
   ctx.save(); ctx.scale(k, k);
-  for (let i = 0; i < 26; i++) { const q = p - i * .012; if (q < .1) break; const qx = x0 + 40 + q * 520 - 34, qy = Gs - 120 - Math.pow(q, 1.5) * 220 + 6, al = (1 - i / 26) * .14; ctx.fillStyle = `rgba(220,224,230,${al.toFixed(3)})`; ctx.beginPath(); ctx.ellipse(qx, qy, 3 + i * .5, 1.6 + i * .25, a, 0, 7); ctx.fill(); }
+  for (let i = 1; i < 46; i++) { const q = p - i * .009; if (q < .05) break; const [qx, qy] = path(q), age = i / 46, spread = 1 + i * .22, drift = i * .5;   // exhaust: two thin trails that thicken, soften and drift as they age
+    for (const ey of [5.5, 7.5]) { ctx.fillStyle = `rgba(232,236,242,${((1 - age) * .2).toFixed(3)})`; ctx.beginPath(); ctx.ellipse(qx - 40 + Math.sin(i * 1.7) * .8, qy + ey + drift * .3, 2.2 * spread, 1.2 * spread, a, 0, 7); ctx.fill(); } }
   ctx.translate(px2, py); ctx.rotate(a); ctx.scale(sc, sc);
-  ctx.fillStyle = '#a8b2be'; ctx.beginPath(); ctx.moveTo(-3, 0); ctx.lineTo(-12, 9); ctx.lineTo(-7.6, 9); ctx.lineTo(5, .6); ctx.fill();
-  const fg = ctx.createLinearGradient(0, -3, 0, 3); fg.addColorStop(0, '#ffffff'); fg.addColorStop(1, '#c4ccd6'); ctx.fillStyle = fg; ctx.beginPath(); ctx.moveTo(-19, -1.6); ctx.quadraticCurveTo(-20, 2, -16, 2.4); ctx.lineTo(13, 2.4); ctx.quadraticCurveTo(20, 2, 21, 0); ctx.quadraticCurveTo(19, -2.4, 13, -2.4); ctx.lineTo(-16, -2.4); ctx.closePath(); ctx.fill(); ctx.strokeStyle = 'rgba(0,0,0,.25)'; ctx.lineWidth = .25; ctx.stroke();
-  ctx.fillStyle = '#e8641c'; ctx.beginPath(); ctx.moveTo(-15, -2.2); ctx.lineTo(-20, -10); ctx.lineTo(-16.6, -10); ctx.lineTo(-9, -2.2); ctx.fill(); ctx.fillRect(-12, -.4, 24, .7);
-  ctx.fillStyle = '#d8dee6'; ctx.beginPath(); ctx.moveTo(-16, 0); ctx.lineTo(-21, 3); ctx.lineTo(-19, 3); ctx.lineTo(-13, .4); ctx.fill();
-  ctx.fillStyle = '#eef0f4'; ctx.beginPath(); ctx.moveTo(-1, .8); ctx.lineTo(-9, 8.6); ctx.lineTo(-5, 8.6); ctx.lineTo(7, 1.2); ctx.fill(); ctx.fillStyle = '#8a96a6'; ctx.beginPath(); ctx.ellipse(-3.4, 4.6, 2.6, 1.1, 0, 0, 7); ctx.fill();
-  ctx.fillStyle = '#3a4656'; for (let i = 0; i < 12; i++) ctx.fillRect(-9 + i * 2, -1.4, .8, .7); ctx.fillRect(16, -1.5, 2.4, 1);
-  if (p < .25) { ctx.fillStyle = '#2a2a2e'; ctx.fillRect(-4, 2.4, .6, 2.4); ctx.fillRect(10, 2.4, .6, 2.4); }
+  const W2 = '#fbfcfe', OR = '#ff6a14', ORd = '#d9500a';
+  // far wing + far engine
+  ctx.fillStyle = '#c6ced8'; ctx.beginPath(); ctx.moveTo(1, -.6); ctx.lineTo(-7, -6); ctx.lineTo(-4.6, -6.2); ctx.lineTo(7, -1); ctx.fill();
+  // tailplane (far)
+  ctx.fillStyle = '#d4dae2'; ctx.beginPath(); ctx.moveTo(-18, -.6); ctx.lineTo(-22.5, -3.2); ctx.lineTo(-21, -3.2); ctx.lineTo(-15, -.6); ctx.fill();
+  // fuselage
+  const fg = ctx.createLinearGradient(0, -3.2, 0, 3.2); fg.addColorStop(0, '#ffffff'); fg.addColorStop(.45, W2); fg.addColorStop(.75, '#dfe5ec'); fg.addColorStop(1, '#a9b3bf');
+  const BODY = () => { ctx.beginPath(); ctx.moveTo(-21, -1.4); ctx.quadraticCurveTo(-23.5, 1.4, -19, 2.6); ctx.lineTo(14, 3); ctx.bezierCurveTo(20, 3, 23, 2, 23.4, .4); ctx.bezierCurveTo(23, -1.6, 20, -2.9, 15, -3); ctx.lineTo(-15, -3); ctx.quadraticCurveTo(-18.5, -2.8, -21, -1.4); ctx.closePath(); };
+  ctx.fillStyle = fg; BODY(); ctx.fill();
+  ctx.save(); BODY(); ctx.clip();
+  ctx.fillStyle = OR; ctx.beginPath(); ctx.moveTo(-24, 3.5); ctx.lineTo(-24, -3.5); ctx.lineTo(-13, -3.5); ctx.bezierCurveTo(-6, 1.2, 2, 2.6, 12, -3.5); ctx.lineTo(24, -3.5); ctx.lineTo(24, -1.6); ctx.bezierCurveTo(12, -1.2, 4, 3.6, -9, 3.5); ctx.closePath(); ctx.fill();   // orange swoosh along the side
+  ctx.fillStyle = 'rgba(255,255,255,.55)'; ctx.fillRect(-22, -2.7, 44, .5);   // top shine
+  ctx.fillStyle = 'rgba(40,50,70,.12)'; ctx.fillRect(-22, 1.6, 46, 2);   // belly shade
+  ctx.restore(); ctx.strokeStyle = 'rgba(30,40,60,.35)'; ctx.lineWidth = .25; BODY(); ctx.stroke();
+  // windows, doors, cockpit
+  ctx.fillStyle = '#2c3a4e'; for (let i = 0; i < 26; i++) { const wx = -13 + i * 1.05; if (Math.abs(wx - (-2)) < .9) continue; ctx.beginPath(); ctx.ellipse(wx, -1.05, .28, .38, 0, 0, 7); ctx.fill(); }
+  ctx.strokeStyle = 'rgba(60,70,90,.45)'; ctx.lineWidth = .2; for (const dx of [-15.5, 14.6]) { ctx.strokeRect(dx, -2.2, 1, 3.2); }
+  ctx.fillStyle = '#1e2a3c'; ctx.beginPath(); ctx.moveTo(19.6, -1.6); ctx.lineTo(21.8, -1.4); ctx.lineTo(22.4, -.6); ctx.lineTo(19.6, -.6); ctx.closePath(); ctx.fill(); ctx.fillStyle = 'rgba(180,220,255,.6)'; ctx.fillRect(20, -1.45, .7, .25);
+  // tail fin (orange, curved leading edge)
+  const tg = ctx.createLinearGradient(-22, -12, -14, -2); tg.addColorStop(0, '#ff8a3a'); tg.addColorStop(1, ORd); ctx.fillStyle = tg; ctx.beginPath(); ctx.moveTo(-15.5, -2.8); ctx.lineTo(-21.4, -11.8); ctx.lineTo(-18.2, -11.8); ctx.lineTo(-10.5, -2.9); ctx.closePath(); ctx.fill();
+  ctx.fillStyle = 'rgba(255,255,255,.35)'; ctx.beginPath(); ctx.moveTo(-14.9, -3.1); ctx.lineTo(-20.6, -11.4); ctx.lineTo(-20, -11.4); ctx.lineTo(-14.3, -3.1); ctx.fill();
+  // near tailplane
+  ctx.fillStyle = '#e6ebf1'; ctx.beginPath(); ctx.moveTo(-16.5, .2); ctx.lineTo(-22.8, 2.6); ctx.lineTo(-21, 2.8); ctx.lineTo(-13.5, .8); ctx.fill();
+  // near wing with flap line and sharklet
+  const wg = ctx.createLinearGradient(0, 0, 0, 9); wg.addColorStop(0, '#f3f6f9'); wg.addColorStop(1, '#b9c2cd'); ctx.fillStyle = wg; ctx.beginPath(); ctx.moveTo(-2.5, 1.4); ctx.lineTo(-10.5, 9.4); ctx.lineTo(-8.2, 9.6); ctx.lineTo(6.5, 2.2); ctx.closePath(); ctx.fill(); ctx.strokeStyle = 'rgba(70,80,100,.4)'; ctx.lineWidth = .2; ctx.beginPath(); ctx.moveTo(-1.6, 2.6); ctx.lineTo(-8.8, 8.8); ctx.stroke();
+  ctx.fillStyle = OR; ctx.beginPath(); ctx.moveTo(-10.5, 9.4); ctx.lineTo(-11.6, 11.6); ctx.lineTo(-10.6, 11.6); ctx.lineTo(-8.2, 9.6); ctx.fill();   // sharklet
+  // engine (orange nacelle) under the wing
+  const eg = ctx.createLinearGradient(0, 2.4, 0, 6.6); eg.addColorStop(0, '#ff9a4a'); eg.addColorStop(.55, OR); eg.addColorStop(1, '#b84206'); ctx.fillStyle = eg; ctx.beginPath(); ctx.ellipse(1, 4.6, 4.4, 1.9, 0, 0, 7); ctx.fill();
+  ctx.fillStyle = '#2a2d33'; ctx.beginPath(); ctx.ellipse(5.2, 4.6, .6, 1.6, 0, 0, 7); ctx.fill(); ctx.fillStyle = '#c6ccd4'; ctx.beginPath(); ctx.ellipse(-3.6, 4.6, .9, 1.1, 0, 0, 7); ctx.fill(); ctx.fillStyle = 'rgba(255,255,255,.5)'; ctx.fillRect(-2, 3, 5, .4);
+  // landing gear tucking up
+  const g2 = Math.max(0, 1 - Math.max(0, p - .18) / .14); if (g2 > 0) { ctx.strokeStyle = '#3a3d44'; ctx.lineWidth = .5; ctx.fillStyle = '#18191d'; for (const gx of [-2, 15.5]) { ctx.beginPath(); ctx.moveTo(gx, 2.8); ctx.lineTo(gx - 1 + g2, 2.8 + 3 * g2); ctx.stroke(); ctx.beginPath(); ctx.arc(gx - 1 + g2, 2.8 + 3.2 * g2, .9 * g2, 0, 7); ctx.fill(); } }
+  // lights: red beacon, white strobes, wingtip nav
+  ctx.save(); ctx.globalCompositeOperation = 'lighter'; const bl = (t * 1.1) % 1 < .12, st = (t * .9 + .5) % 1 < .06;
+  const lamp = (x, y, r, col) => { const lg = ctx.createRadialGradient(x, y, 0, x, y, r); lg.addColorStop(0, `rgba(${col},1)`); lg.addColorStop(1, `rgba(${col},0)`); ctx.fillStyle = lg; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill(); };
+  if (bl) lamp(-2, -3.3, 3, '255,60,40'); if (st) { lamp(-11.2, 11.4, 4, '255,255,255'); lamp(-23, 0, 3, '255,255,255'); } lamp(-11, 11, 1.3, '60,255,120');
+  if (p < .35) { ctx.globalAlpha = .5; lamp(23, 1.6, 4, '255,250,220'); ctx.globalAlpha = 1; }   // landing light on the climb-out
+  ctx.restore();
   ctx.restore(); }
 
 function px(v) { return Math.round(v * S) / S; }
