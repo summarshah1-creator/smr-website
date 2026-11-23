@@ -7,7 +7,11 @@ const cv = document.getElementById('cv'), ctx = cv.getContext('2d');
 const $ = id => document.getElementById(id);
 const MOSQUES = [['masjid', 'Luton Central Mosque'], ['masjidali', 'Masjid-e-Ali'], ['suffa', 'Suffa-Tul-Islam']];
 const MOSQUE_K = MOSQUES.map(m => m[0]);
-const FKDEMO = /[?&]fkdemo=1/.test(location.search);   // Flappy Kabootar mode demo: the gift box is always the pigeon
+const MECHDEMO = /[?&]mechdemo=1/.test(location.search) || window.__MECHDEMO;   // Hoover Mech demo: every gift box is the mech, the first one comes straight away
+const RIDEDEMO = /[?&]ridedemo=1/.test(location.search) || window.__RIDEDEMO;   // owner 23 Nov: power-up demo: boxes come often, every ride except Flappy Kabootar in turn, never the same twice running
+let rdBag = [], rdLast = '';
+function rideDemoNext() { if (!rdBag.length) { rdBag = RIDES.filter(k => k !== 'kabootar').sort(() => Math.random() - .5); if (rdBag[0] === rdLast) rdBag.push(rdBag.shift()); } return rdLast = rdBag.shift(); }
+const FKDEMO = !MECHDEMO && /[?&]fkdemo=1/.test(location.search);   // Flappy Kabootar mode demo: the gift box is always the pigeon
 let myMosque = (() => { try { return localStorage.getItem('jd_mosque') || ''; } catch (e) { return ''; } })();
 let bank = +(localStorage.getItem('jd_bank') || 0), passed = 0;
 const VH = 400;                       // world height in units
@@ -50,7 +54,7 @@ addEventListener('load', loadStep);
 let SHOP = (() => { try { return JSON.parse(localStorage.getItem('jd_shop')) || null; } catch (e) { return null; } })() || { own: { classic: 1 }, eq: [], slots: 2, outfit: 'classic', hs500: 0, hs1000: 0, save: 0 };
 const saveShop = () => { try { localStorage.setItem('jd_shop', JSON.stringify(SHOP)); } catch (e) {} };
 const OUTFIT_KEYS = ['classic', 'eid', 'luton', 'puffer', 'moroccan'];
-const heroImgs = {}; OUTFIT_KEYS.forEach(k => heroImgs[k] = img(k === 'classic' ? 'art/hero3.webp?h=fd8d08b86d' : 'art/hero3_' + k + '.webp?v=5'));
+const heroImgs = {}; OUTFIT_KEYS.forEach(k => heroImgs[k] = img(k === 'classic' ? 'art/hero3.webp?h=3043153507' : 'art/hero3_' + k + '.webp?h=' + ({"eid": "a7e90643c1", "luton": "9affd4761d", "puffer": "1d1f479aeb", "moroccan": "68919091f1"})[k]));
 let heroImg = heroImgs[SHOP.outfit] || heroImgs.classic; const HX4 = 6;   // sheet = 6 px per cell unit (smooth cartoon hero, hd/hero_rig.js)
 const hasG = id => SHOP.eq.includes(id);   // hero redrawn at 3x the pixels (smooth curves, finer detail)
 const HERO_FR = ['run0_normal', 'run1_normal', 'run2_normal', 'run3_normal', 'run4_normal', 'run5_normal', 'fly0_effort', 'fly1_effort', 'fly2_effort', 'fly0_panic', 'fly1_panic', 'fly2_panic', 'glide0_normal', 'glide1_normal', 'land0_effort', 'glide0_ko', 'run0_happy', 'run0_blink', 'hang0_happy', 'hang1_happy', 'hang2_happy', 'hang3_happy', 'fall0_panic', 'fall1_panic', 'fall2_panic', 'fall0_ko', 'sit0_happy', 'sit1_happy'];
@@ -329,7 +333,11 @@ function tone(freq, dur, type = 'sine', vol = .12, slide = 0, bus = null) {
 }
 const SFX = { coin() { tone(1320, .09, 'square', .04, 0, MIX && MIX.coins); setTimeout(() => tone(1760, .12, 'square', .036, 0, MIX && MIX.coins), 55); },   /* coin ping 20% quieter (owner 22 Nov) */
   zap() { tone(120, .5, 'sawtooth', .16, .5); tone(900, .25, 'square', .06, .3); }, thud() { tone(140, .25, 'triangle', .3, .4); },
-  warn() { tone(880, .08, 'square', .05); }, whoosh() { tone(500, .5, 'sawtooth', .05, .3); }, boom() { tone(90, .6, 'sawtooth', .22, .3); } };
+  warn() { tone(880, .08, 'square', .05); },
+  stomp() { tone(58, .16, 'triangle', .11, .55, MIX && MIX.fx); tone(130, .07, 'square', .035, .4, MIX && MIX.fx); setTimeout(() => tone(900 + Math.random() * 300, .03, 'square', .015, .6, MIX && MIX.fx), 20); },
+  mechStart() { tone(140, .9, 'sawtooth', .05, 3.2, MIX && MIX.fx); tone(70, .5, 'square', .04, 1.5, MIX && MIX.fx); },
+  clank(big) { tone(big ? 150 : 210 + Math.random() * 80, .09, 'square', big ? .1 : .07, .45, MIX && MIX.fx); tone(1400 + Math.random() * 600, .05, 'triangle', .04, .8, MIX && MIX.fx); setTimeout(() => tone(2600 + Math.random() * 500, .03, 'square', .02, 1, MIX && MIX.fx), 25); },
+  mechOn() { tone(320, .35, 'sawtooth', .06, 2.6, MIX && MIX.fx); setTimeout(() => { tone(90, .45, 'square', .09, .5, MIX && MIX.fx); tone(880, .25, 'triangle', .05, 1.5, MIX && MIX.fx); }, 120); }, whoosh() { tone(500, .5, 'sawtooth', .05, .3); }, boom() { tone(90, .6, 'sawtooth', .22, .3); } };
 
 /* traffic sounds, ported from Flappy Kabootar (engine model, siren/wail/nee-naw, horns, skids, crashes) */
 Object.assign(SFX, (() => {
@@ -372,7 +380,10 @@ Object.assign(SFX, (() => {
 
 /* ---------------- game state ---------------- */
 let paused = false, state = 'menu', t = 0, dist = 0, speed = 0, coins = 0, best = +(localStorage.getItem('jd_best') || 0);
-const hero = { x: 0, y: FLOOR, vy: 0, thrust: false, ground: true, landT: 0, rot: 0, run: 0, dead: false, vx: 0, bounce: 0, blink: 0 };
+const hero = { x: 0, y: FLOOR, vy: 0, thrust: false, ground: true, landT: 0, rot: 0, run: 0, dead: false, vx: 0, bounce: 0, blink: 0, heat: 0, oh: 0, dashT: 0, dashOff: 0 };
+/* skill systems (owner 23 Nov): jetpack overheat, steam dash (swipe right), near-miss boost */
+let dashCD = 0, nearMult = 1, nearT = 0, speedKick = 0;
+const HEAT_UP = 2.8, HEAT_DOWN = 1.4, OH_TIME = 1.1, DASH_CD = 2.2;
 let holding = false;
 let street = [], skyline = [], cars = [], npcs = [], obs = [], coinList = [], steam = [], sparks = [], stars = [];
 let mobs = [], mobCD = 12; window.__mobsOn = () => mobs.some(m => m.x > 150 && m.x < 650); let nextObs = 0, nextNpc = 0, nextCar = 0, panicT = 0, deadT = 0;
@@ -384,7 +395,8 @@ function seedStars() { stars = []; for (let i = 0; i < 90; i++) stars.push({ x: 
 function reset() {
   t = 0; dist = 0; speed = 0; coins = 0; obs = []; coinList = []; steam = []; sparks = []; panicT = 0; deadT = 0;
   RUN = newRun(); lastCoin = 0; mtQueue = []; boost = null; usedSave = 0; $('hsBox') && $('hsBox').classList.remove('on'); heroImg = heroImgs[SHOP.outfit] || heroImgs.classic;
-  flashT = 0; shake = 0; banner = null; rings = []; veh = null; inv = 0; gifts = []; eidi = 0; pops = []; dust = []; revived = 0; nextGift = FKDEMO ? 500 : 1e9; runT = 0; convoyT = 8 + Math.random() * 44; firstBox = 0; lastBoxRide = 'kabootar'; nextEidi = 1600; stats.steamed = stats.dodged = stats.missed = 0;
+  hero.heat = 0; hero.oh = 0; hero.dashT = 0; hero.dashOff = 0; hero.threaded = 0; dashCD = 0; nearMult = 1; nearT = 0; speedKick = 0;
+  flashT = 0; shake = 0; banner = null; rings = []; veh = null; inv = 0; gifts = []; eidi = 0; pops = []; dust = []; revived = 0; nextGift = RIDEDEMO ? 600 : MECHDEMO ? 1400 : FKDEMO ? 500 : 1e9; runT = 0; convoyT = 8 + Math.random() * 80; firstBox = 0; lastBoxRide = ''; nextEidi = 1600; stats.steamed = stats.dodged = stats.missed = 0;
   Object.assign(hero, { x: -40, y: FLOOR, vy: 0, thrust: false, ground: true, landT: 0, rot: 0, run: 0, dead: false, vx: 0, bounce: 0 });
   nextObs = 380; nextNpc = 0; nextCar = 0;
   if (!street.length) fillStreet(); if (!skyline.length) fillSkyline();
@@ -496,7 +508,7 @@ function convoyTick(dt) { CVS.tick(dt);
   const sv = dir * v - speed * .92, x0 = sv > 0 ? -tot - 40 : W + 40;
   if (cars.some(c => c.lane === lane && x0 - 40 < c.x + c.L && c.x < x0 + tot + 40)) { convoyT = 1; return; }
   let x = x0; for (let i = CONVOY.length - 1; i >= 0; i--) { const L = Ls[i]; cars.push({ k: CONVOY[i], ci: 0, lane, dir, x, v, cv: v, yo: 0, L, convoy: 1, rolled: 1, headRolled: 1, otRolled: 1 }); x += L + gap; }
-  convoyT = 1e9; }   // only once per run
+  convoyT = 90 + Math.random() * 60; }   // owner 23 Nov: first within the first 1.5 minutes, then every 1.5-2.5 minutes
 function startChase() { const ks = ['lambo', 'gt3', 'f812', 'c63', 'a45', 'urus', 'golfr', 'gwagon'], f = spawnCar(null, ks[Math.random() * ks.length | 0], true, 1); if (!f) return;
   f.v = f.cv = (150 + Math.random() * 50) * VK; f.flee = 1; const PL = VEHICLES.police.w * CSC;
   cars.push({ k: 'police', ci: 0, lane: f.lane, dir: f.dir, x: f.dir > 0 ? f.x - PL - 50 - Math.random() * 30 : f.x + f.L + 50 + Math.random() * 30, v: f.v + 6 * VK, cv: f.v + 6 * VK, yo: 0, L: PL, zoom: true, police: 1, run: 1, emerg: 1, rolled: 1, headRolled: 1 });
@@ -603,6 +615,13 @@ function spawnPattern() {
     for (let i = 0; i < cols; i++) for (let j = 0; j < rows; j++) coinList.push({ x: x0 + i * 18, y: y0 + j * 18, got: 0 });
     return 160 + cols * 18;
   }
+  if (mechArmour()) {   // owner 23 Nov (like the SAM suit in JJ2): in the mech there are no lasers or cables, only rockets, a bit more often
+    const k = Math.random(), base = -(85 * MCH - 30), mk = (oy, d) => obs.push({ type: 'rocket', x: W + 40 + d * 30, y: hero.y - 30 + oy, warn: 1.4 + d * .3, lock: 0, v: 0, off: oy });
+    SFX.warn();
+    if (k < .55) { mk(base + (Math.random() - .5) * 130 * MCH, 0); return 230; }
+    if (k < .85) { mk(base - 55 * MCH, 0); mk(base + 45 * MCH, 1); return 300; }
+    [-70, 0, 70].forEach((o, i) => mk(base + o * MCH, i)); return 360;
+  }
   if (r < .62 && r >= .5 && m > 150 && !obs.some(o => o.type === 'laser')) { // speed-camera lasers: slide in, warn, fire, slide out (they stay on screen, not scrolling)
     const n = 1 + (Math.random() * (m > 400 ? 3 : 2) | 0), ys = [];
     const lanes = [CEIL + 40, (CEIL + FLOOR) / 2 - 30, (CEIL + FLOOR) / 2 + 20, FLOOR - 40]; while (ys.length < n) { const y = lanes[Math.random() * 4 | 0]; if (!ys.includes(y)) ys.push(y); }
@@ -629,8 +648,30 @@ function spawnPattern() {
 function heroCircles() { const x = hero.x, y = hero.y, k = HS; if (boost && !boost.out) return [[x, y - 40, 20]]; if (veh) return vehCircles(); return [[x + 2 * k, y - 18.9 * k, 6.5 * k], [x + 5 * k, y - 36.8 * k, 6 * k]]; }   // hit area follows the shorter legs (owner 22 Nov)
 function segDist(px, py, ax, ay, bx, by) { const dx = bx - ax, dy = by - ay, l = dx * dx + dy * dy; let k = l ? ((px - ax) * dx + (py - ay) * dy) / l : 0; k = Math.max(0, Math.min(1, k)); const qx = ax + dx * k - px, qy = ay + dy * k - py; return Math.sqrt(qx * qx + qy * qy); }
 
+function overheat() { hero.heat = 1; hero.oh = OH_TIME; hero.thrust = false; tone(1500, .45, 'square', .035, .3, MIX && MIX.fx); tone(160, .4, 'sawtooth', .05, .5, MIX && MIX.fx); shake = Math.max(shake, .1);
+  pops.push({ x: hero.x + 10, y: hero.y - 80, txt: 'OVERHEAT!', col: '#ff6a3a', t: 0 }); for (let i = 0; i < 16; i++) { const nz = nozzle(); steam.push({ x: nz[0], y: nz[1] - 20, vx: (Math.random() - .5) * 160, vy: -Math.random() * 160, r: 4 + Math.random() * 4, l: .7, l0: .8 }); } }
+function steamDash() { if (state !== 'play' || hero.dead || veh || boost || dashCD > 0 || paused) return;
+  hero.dashT = .3; dashCD = DASH_CD; hero.threaded = 0; hero.vy = 0; speedKick = Math.max(speedKick, 150); shake = Math.max(shake, .06); RUN.dash = (RUN.dash || 0) + 1;
+  SFX.whoosh(); tone(240, .25, 'sawtooth', .06, 2.2, MIX && MIX.fx);
+  for (let i = 0; i < 18; i++) { const nz = nozzle(); steam.push({ x: nz[0] - 10, y: nz[1] - 10 + (Math.random() - .5) * 20, vx: -260 - Math.random() * 200, vy: (Math.random() - .5) * 60, r: 3 + Math.random() * 4, l: .45, l0: .55 }); } }
+function nearMiss(x, y) { nearMult = Math.min(5, nearMult + 1); nearT = 3; speedKick = Math.max(speedKick, 90); RUN.near = (RUN.near || 0) + 1;
+  tone(700 + nearMult * 120, .12, 'square', .04, 1.5, MIX && MIX.fx); pops.push({ x: hero.x + 30, y: hero.y - 70, txt: 'CLOSE! x' + nearMult, col: '#7fe3ff', t: 0 });
+  for (let i = 0; i < 8; i++) sparks.push({ x, y, vx: (Math.random() - .5) * 160, vy: (Math.random() - .5) * 160, l: .3, c: i % 2 ? '#7fe3ff' : '#ffffff' }); }
+function skillTick(dt) {
+  dashCD = Math.max(0, dashCD - dt); speedKick = Math.max(0, speedKick - 110 * dt);
+  if (nearT > 0) { nearT -= dt; if (nearT <= 0) nearMult = 1; }
+  if (hero.dashT > 0) { hero.dashT -= dt; hero.dashOff += (110 - hero.dashOff) * Math.min(1, dt * 14);
+    if (Math.random() < dt * 60) speedLines.push({ y: hero.y - 10 - Math.random() * 50, l: .25 });
+    if (hero.dashT <= 0 && hero.threaded) { coins += 5; $('coins').textContent = '£' + coins; nearMult = Math.min(5, nearMult + 1); nearT = 3; pops.push({ x: hero.x + 20, y: hero.y - 90, txt: 'THREADED! +£5', col: '#ffd21f', t: 0 }); tone(990, .2, 'square', .05, 1.6, MIX && MIX.fx); } }
+  else hero.dashOff += (0 - hero.dashOff) * Math.min(1, dt * 1.6);
+  if (state === 'play' && !hero.dead) hero.x = W * .28 + hero.dashOff;
+  speedLines.forEach(l => l.l -= dt); while (speedLines.length && speedLines[0].l <= 0) speedLines.shift();
+}
+let speedLines = [];
 function die(why) {
   if (boost && !boost.out) return;
+  if (veh && veh.k === 'mech' && veh.su < 1.05) return;   // can't be hit while the suit is building round him
+  if (hero.dashT > 0 && !veh) { hero.threaded = 1; return; }   // a steam dash goes straight through
   if (hero.dead || inv > 0) return; if (window.__god) { window.__hits = (window.__hits || 0) + 1; window.__hitW = why; return; }
   if (veh && veh.k === 'tuktuk' && veh.nb > .4) { inv = .35; shake = .2; flashT = .08; flashCol = '255,220,120'; SFX.boom(); pops.push({ x: hero.x + 20, y: hero.y - 90, txt: 'SMASH!', col: '#ffd21f', t: 0 }); for (let i = 0; i < 18; i++) sparks.push({ x: hero.x + 30, y: hero.y - 30, vx: Math.random() * 260, vy: (Math.random() - .5) * 260, l: .5, c: ['#ffd75a', '#ffffff', '#ff9a2a'][i % 3] }); return; }
   if (veh) { vehCrash(); return; }
@@ -648,7 +689,7 @@ function update(dt) {
   // speed: walk-in, then builds up over the run (Jetpack-style)
   if (state === 'intro') speed += (120 - speed) * Math.min(1, dt * 2);
   else if (state === 'play' && boost) speed = boost.out ? speed + (Math.min(300, 150 + dist * .012) - speed) * Math.min(1, dt * 3) : Math.min(1150, speed + 1500 * dt);
-  else if (state === 'play') speed = Math.min(300, 150 + dist * .012);
+  else if (state === 'play') speed = Math.min(300, 150 + dist * .012) + speedKick;
   else if (state === 'dead') speed = hero.shockT > 0 ? speed * Math.pow(.25, dt) : Math.max(0, speed - (hero.slide ? 75 : 30) * dt);
   else if (state === 'menu') speed = 55;
   if (state === 'play' && veh && veh.nb) speed *= 1 + .8 * veh.nb;   // tuk-tuk nitro
@@ -698,11 +739,16 @@ function update(dt) {
   // hero
   if (state === 'intro') { hero.x += (W * .28 - hero.x) * Math.min(1, dt * 2.2) + 30 * dt; if (hero.x >= W * .28 - 2) { hero.x = W * .28; state = 'play'; runStarted(); } }
   if (inv > 0) inv -= dt;
+  skillTick(dt);
   if (boost) boostUpdate(dt);
   if (playing && !hero.dead && boost && !boost.out) { /* riding on the Corolla roof */ }
   else if (playing && !hero.dead && veh) vehUpdate(dt);
   else if (playing && !hero.dead) {
-    hero.thrust = holding && state === 'play';
+    hero.thrust = holding && state === 'play' && hero.oh <= 0 && hero.dashT <= 0;
+    if (hero.dashT > 0) hero.vy = 0;   // the dash goes dead straight
+    if (hero.thrust) { hero.heat += dt / HEAT_UP; if (hero.heat >= 1) overheat(); }
+    else if (hero.oh > 0) { hero.oh -= dt; if (Math.random() < dt * 30) { const nz = nozzle(); steam.push({ x: nz[0] - 4, y: nz[1] - 30, vx: -30 - Math.random() * 40, vy: -60 - Math.random() * 60, r: 3 + Math.random() * 3, l: .5, l0: .6 }); } if (hero.oh <= 0) hero.heat = .55; }
+    else hero.heat = Math.max(0, hero.heat - dt / HEAT_DOWN);
     if (hero.thrust) { if (!hero.wasThrust) { hero.vy = Math.min(hero.vy, -90); for (let i = 0; i < 8; i++) { const nz = nozzle(); steam.push({ x: nz[0], y: nz[1], vx: -speed * .3 - 40 - Math.random() * 60, vy: 120 + Math.random() * 120, r: 3 + Math.random() * 2.5, l: .45, l0: .6 }); } } hero.vy -= 1900 * dt; hero.ground = false; if (hissG && sndOn) hissG.gain.setTargetAtTime(.03, AC.currentTime, .03); /* jetpack hiss 30% then another 15% quieter (owner 22 Nov) */ }
     else if (hissG) hissG.gain.setTargetAtTime(0, AC.currentTime, .06);
     hero.wasThrust = hero.thrust; hero.vy += (hasG('chappal') ? 1150 : 820) * dt; hero.vy = Math.max(-300, Math.min(hasG('chappal') ? 540 : 420, hero.vy)); hero.y += hero.vy * dt;
@@ -743,17 +789,27 @@ function update(dt) {
     if (o.type === 'rocket') {
       if (o.warn > 0) { o.warn -= dt; o.y += (Math.max(CEIL + 12, Math.min(FLOOR - 12, hero.y - 30 + (o.off || 0))) - o.y) * Math.min(1, dt * 3); panicT = .3; if ((o.warn * 6 | 0) !== ((o.warn + dt) * 6 | 0)) SFX.warn(); if (o.warn <= 0) { o.lock = .45; } }
       else if (o.lock > 0) { o.lock -= dt; panicT = .3; if (o.lock <= 0) { o.v = speed + 360; SFX.whoosh(); } }
-      else { o.x -= o.v * dt; o.tr = o.tr || []; o.trT = (o.trT || 0) + dt; if (o.trT > .018) { o.trT = 0; o.tr.push({ x: o.x + 22, y: o.y + (Math.random() - .5) * 2, a: 0, r: 2 + Math.random() * 1.5 }); } o.tr.forEach(p => { p.a += dt; p.r += dt * 9; p.y -= dt * 4; }); while (o.tr.length && o.tr[0].a > 1.1) o.tr.shift(); }
+      else { o.x -= o.v * dt; if (o.defl) { o.y += o.vy * dt; o.vy += 240 * dt; o.rot += o.spin * dt; } o.tr = o.tr || []; o.trT = (o.trT || 0) + dt; if (o.trT > .018) { o.trT = 0; o.tr.push({ x: o.x + 22, y: o.y + (Math.random() - .5) * 2, a: 0, r: 2 + Math.random() * 1.5 }); } o.tr.forEach(p => { p.a += dt; p.r += dt * 9; p.y -= dt * 4; }); while (o.tr.length && o.tr[0].a > 1.1) o.tr.shift(); }
+    }
+    if (!hero.dead && state === 'play' && !(boost && !boost.out)) {   // near misses: how close each hazard came while it was passing
+      const hc = heroCircles(); let d = 99;
+      if (o.type === 'zap') { const ax = o.x - Math.cos(o.ang) * o.len / 2, ay = o.y - Math.sin(o.ang) * o.len / 2, bx = o.x + Math.cos(o.ang) * o.len / 2, by = o.y + Math.sin(o.ang) * o.len / 2; hc.forEach(([x, y, r]) => d = Math.min(d, segDist(x, y, ax, ay, bx, by) - r)); }
+      else if (o.type === 'rocket' && o.v && !o.defl) hc.forEach(([x, y, r]) => d = Math.min(d, Math.hypot(x - o.x, y - o.y) - r));
+      else if (o.type === 'laser' && o.ph === 'fire') hc.forEach(([x, y, r]) => d = Math.min(d, Math.abs(y - o.y) - r));
+      if (d < 99) o.nm = Math.min(o.nm == null ? 99 : o.nm, d);
+      const gone = o.type === 'zap' ? o.x + Math.abs(Math.cos(o.ang)) * o.len / 2 < hero.x - 24 : o.type === 'rocket' ? o.x < hero.x - 40 : o.type === 'laser' && o.ph === 'out';
+      if (gone && !o.nmd) { o.nmd = 1; if (o.nm != null && o.nm > 0 && o.nm < 16 && hero.dashT <= 0) nearMiss(hero.x + 10, hero.y - 30); }
     }
     if (!hero.dead && (state === 'play')) {
       const hc = heroCircles();
       if (o.type === 'zap') { const ax = o.x - Math.cos(o.ang) * o.len / 2, ay = o.y - Math.sin(o.ang) * o.len / 2, bx = o.x + Math.cos(o.ang) * o.len / 2, by = o.y + Math.sin(o.ang) * o.len / 2;
-        if (hc.some(([x, y, r]) => segDist(x, y, ax, ay, bx, by) < r + 1.5)) die('zap'); }
-      if (o.type === 'rocket' && o.v && hc.some(([x, y, r]) => Math.hypot(x - o.x, y - o.y) < r + 4)) die('rocket');
-      if (o.type === 'laser' && o.ph === 'fire' && hc.some(([x, y, r]) => Math.abs(y - o.y) < r + 2.5)) die('laser');
+        if (hc.some(([x, y, r]) => segDist(x, y, ax, ay, bx, by) < r + 1.5)) { if (mechArmour()) mechShock(o.x, o.y); else die('zap'); } }
+      if (o.type === 'rocket' && o.v && !o.defl && mechShieldUp() && o.x < hero.x + 112 * MCH && o.x > hero.x && Math.abs(o.y - (hero.y - 90 * MCH)) < 98 * MCH) { mechDeflect(o); shieldBlock(o.x, o.y); }   // hits the shield first
+      if (o.type === 'rocket' && o.v && !o.defl && hc.some(([x, y, r]) => Math.hypot(x - o.x, y - o.y) < r + 4)) { if (mechShieldUp()) mechDeflect(o); else die('rocket'); }
+      if (o.type === 'laser' && o.ph === 'fire' && hc.some(([x, y, r]) => Math.abs(y - o.y) < r + 2.5)) { if (mechShieldUp()) { if (Math.random() < .3) shieldBlock(hero.x + 98 * MCH, o.y); veh.shHit = Math.max(veh.shHit || 0, .6); } else die('laser'); }
     }
   });
-  obs = obs.filter(o => o.x > -200);
+  obs = obs.filter(o => o.x > -200 && !(o.defl && (o.x > W + 200 || o.y < -160 || o.y > VH + 100)));
   if (state === 'play' || state === 'intro') giftsUpdate(dt, dx);
   rings.forEach(r => r.t += dt); rings = rings.filter(r => r.t < .6);
   pops.forEach(p => { p.t += dt; p.y -= 18 * dt; }); pops = pops.filter(p => p.t < 1.1);
@@ -761,8 +817,8 @@ function update(dt) {
   if (flashT > 0) flashT -= dt; if (shake > 0) shake -= dt; if (banner) { banner.t += dt; if (banner.t > 1.8) banner = null; }
   // coins
   coinList.forEach(c => { c.x -= dx;
-    if (!c.got && !hero.dead && state === 'play' && (hasG('tin') || (veh && (veh.k === 'kabootar' || veh.nb > .3)) || boost)) { const hx = hero.x + 4, hy = hero.y - (veh && veh.k === 'kabootar' ? 44 : veh ? 36 : 24), d = Math.hypot(hx - c.x, hy - c.y); if (d < (boost ? 260 : 170) || c.mag) { c.mag = 1; const k = Math.min(1, dt * 9); c.x += (hx - c.x) * k; c.y += (hy - c.y) * k; } }
-    if (!c.got && !hero.dead && state === 'play') { const hc = heroCircles(); if (hc.some(([x, y, r]) => Math.hypot(x - c.x, y - c.y) < r + COIN_R + 2)) { c.got = 1; coins++; if (veh && veh.k === 'tuktuk') veh.fuel = Math.min(1, veh.fuel + .04); lastCoin = dist; SFX.coin(); for (let i = 0; i < 5; i++) sparks.push({ x: c.x, y: c.y, vx: (Math.random() - .5) * 90, vy: (Math.random() - .5) * 90, l: .3, c: '#fff3b0' }); } } });
+    if (!c.got && !hero.dead && state === 'play' && (hasG('tin') || (veh && (veh.k === 'kabootar' || veh.nb > .3 || (veh.k === 'mech' && veh.su >= 1))) || boost)) { const hx = hero.x + (veh && veh.k === 'mech' ? 30 * MCH : 4), hy = hero.y - (veh && veh.k === 'kabootar' ? 44 : veh && veh.k === 'mech' ? 100 * MCH : veh ? 36 : 24), d = Math.hypot(hx - c.x, hy - c.y); if (d < (boost ? 260 : 170) || c.mag) { c.mag = 1; const k = Math.min(1, dt * 9); c.x += (hx - c.x) * k; c.y += (hy - c.y) * k; } }
+    if (!c.got && !hero.dead && state === 'play') { const hc = heroCircles(); if (hc.some(([x, y, r]) => Math.hypot(x - c.x, y - c.y) < r + COIN_R + 2)) { c.got = 1; coins += nearMult; if (veh && veh.k === 'tuktuk') veh.fuel = Math.min(1, veh.fuel + .04); lastCoin = dist; SFX.coin(); for (let i = 0; i < 5; i++) sparks.push({ x: c.x, y: c.y, vx: (Math.random() - .5) * 90, vy: (Math.random() - .5) * 90, l: .3, c: '#fff3b0' }); } } });
   coinList.forEach(c => { if (!c.got && c.x < -18 && !c.m) { c.m = 1; stats.missed++; } });
   coinList = coinList.filter(c => c.x > -20 && !c.got);
   // particles
@@ -781,7 +837,7 @@ function nozzle() { const c = Math.cos(hero.rot), s = Math.sin(hero.rot), lx = -
 const MISSIONS = [
   ['run500', 'Fly 500m in one run', 'dist', 500, 1], ['coins50', 'Collect £50 in one run', 'coins', 50, 1], ['steam3', 'Steam 3 people in one run', 'steamed', 3, 1],
   ['tuktuk', 'Ride a tuk-tuk', 'tuktuk', 1, 0], ['cheer5', 'Make 5 people cheer in one run', 'cheer', 5, 1], ['games3', 'Play 3 games', 'games', 3, 0],
-  ['dodge15', 'Dodge 15 hazards in one run', 'dodged', 15, 1], ['masjid2', 'Fly past 2 other masjids in one run', 'masjids', 2, 1], ['carpet', 'Ride the magic carpet', 'carpet', 1, 0], ['kabootar', 'Hold on to Flappy Kabootar', 'kabootar', 1, 0], ['shop1', 'Buy something in the shop', 'bought', 1, 0],
+  ['dodge15', 'Dodge 15 hazards in one run', 'dodged', 15, 1], ['masjid2', 'Fly past 2 other masjids in one run', 'masjids', 2, 1], ['carpet', 'Ride the magic carpet', 'carpet', 1, 0], ['kabootar', 'Hold on to Flappy Kabootar', 'kabootar', 1, 0], ['mech', 'Suit up in the Hoover Mech', 'mech', 1, 0], ['stomp3', 'Stomp 3 people over in the Hoover Mech in one run', 'stomped', 3, 1], ['deflect3', 'Block 3 rockets with the Hoover Mech shield in one run', 'deflect', 3, 1], ['shop1', 'Buy something in the shop', 'bought', 1, 0],
   ['eidi2', 'Grab 2 Eidi envelopes in one run', 'eidi', 2, 1], ['slide50', 'Slide 50m on your face in total', 'slide', 50, 0], ['ground200', 'Run 200m along the pavement in one run', 'groundm', 200, 1],
   ['steam10', 'Steam 10 people in one run', 'steamed', 10, 1], ['run1000', 'Fly 1,000m in one run', 'dist', 1000, 1], ['nocoin300', 'Fly 300m without grabbing a £1', 'nocoin', 300, 1],
   ['jump5', 'Jump 5 times in the tuk-tuk in one run', 'jumps', 5, 1], ['flip10', 'Flip gravity 10 times in one run', 'flips', 10, 1], ['hs1', 'Use a head start', 'hs', 1, 0], ['flap15', 'Flap Flappy Kabootar 15 times in one run', 'flaps', 15, 1], ['laser5', 'Survive 5 speed-camera lasers in one run', 'lasers', 5, 1], ['bank1000', 'Collect £1,000 in total', 'coinsT', 1000, 0],
@@ -790,7 +846,7 @@ const MISSIONS = [
 ];
 const RANKS = ['Beginner', 'Learner', 'Regular', 'Front Row', 'Early Bird', 'Back Row Legend', 'Imam\'s Favourite', 'Jummah Legend'];
 let RUN = null, lastCoin = 0, mtQueue = [], mtT = 0;
-function newRun() { return { flaps: 0, flips: 0, hs: 0, kabootar: 0, sandals: 0, dist: 0, coins: 0, steamed: 0, cheer: 0, dodged: 0, masjids: 0, eidi: 0, jumps: 0, groundm: 0, nocoin: 0, lasers: 0, tuktuk: 0, carpet: 0, slide: 0 }; }
+function newRun() { return { flaps: 0, flips: 0, hs: 0, kabootar: 0, sandals: 0, dist: 0, coins: 0, steamed: 0, cheer: 0, dodged: 0, masjids: 0, eidi: 0, jumps: 0, groundm: 0, nocoin: 0, lasers: 0, tuktuk: 0, carpet: 0, slide: 0, mech: 0, stomped: 0, deflect: 0 }; }
 RUN = newRun();
 let MS = (() => { try { return JSON.parse(localStorage.getItem('jd_ms')) || null; } catch (e) { return null; } })() || { active: ['run500', 'coins50', 'steam3'], done: [], prog: {}, stars: 0, rank: 0, newDone: [] };
 const saveMS = () => { try { localStorage.setItem('jd_ms', JSON.stringify(MS)); } catch (e) {} };
@@ -809,7 +865,7 @@ function missionsTick(dt) {
 }
 function missionsEndRun() {   // bank running totals, award stars, swap finished missions for new ones, rank up every 3 stars
   MS.prog.games = (MS.prog.games || 0) + 1; MS.prog.coinsT = (MS.prog.coinsT || 0) + coins;
-  ['slide', 'tuktuk', 'carpet', 'kabootar', 'sandals', 'hs'].forEach(k => MS.prog[k] = (MS.prog[k] || 0) + (RUN[k] || 0));
+  ['slide', 'tuktuk', 'carpet', 'kabootar', 'sandals', 'mech', 'hs'].forEach(k => MS.prog[k] = (MS.prog[k] || 0) + (RUN[k] || 0));
   MS.active.forEach(id => { const m = mDef(id); if (!MS.newDone.includes(id) && m && mValue(m) >= m[3]) MS.newDone.push(id); });
   const got = MS.newDone.slice(); let rankUp = null, reward = 0;
   got.forEach(id => { if (!MS.done.includes(id)) { MS.done.push(id); MS.stars++; reward += 25; } });
@@ -831,8 +887,8 @@ function rankHtml() { const n = RANKS[Math.min(MS.rank, RANKS.length - 1)]; retu
 /* gift box (= their vehicle token): rainbow box with a ?, gives a ride. Eidi envelopes (= spin tokens): opened at the end of a run. */
 function giftsUpdate(dt, dx) {
   if (state === 'play' && !FM) runT += dt;
-  if (!FKDEMO && !firstBox && state === 'play' && !veh && !boost && runT >= 20) { firstBox = 1; gifts.push({ k: 'box', ride: 'kabootar', x: W + 40, y: CEIL + 90 + Math.random() * (FLOOR - CEIL - 200), b: 0 }); nextGift = 2600 + Math.random() * 1800; }
-  if (state === 'play' && !veh && !boost) { nextGift -= dx; if (nextGift <= 0) { const rr = () => { let k = nextRide(); for (let i = 0; i < 4 && k === lastBoxRide; i++) k = nextRide(); return lastBoxRide = k; }; gifts.push({ k: 'box', ride: FKDEMO ? 'kabootar' : rr(), x: W + 40, y: CEIL + 80 + Math.random() * (FLOOR - CEIL - 180), b: Math.random() * 6 }); nextGift = FKDEMO ? 700 + Math.random() * 300 : (2600 + Math.random() * 1800) * (hasG('dates') ? .5 : 1); } }
+  if (!FKDEMO && !MECHDEMO && !RIDEDEMO && !firstBox && state === 'play' && !veh && !boost && runT >= 20) { firstBox = 1; gifts.push({ k: 'box', ride: (() => { let k = nextRide(); for (let n = 0; n < 4 && k === lastBoxRide; n++) k = nextRide(); return lastBoxRide = k; })(), x: W + 40, y: CEIL + 90 + Math.random() * (FLOOR - CEIL - 200), b: 0 }); nextGift = 2600 + Math.random() * 1800; }
+  if (state === 'play' && !veh && !boost) { nextGift -= dx; if (nextGift <= 0) { const rr = () => { let k = nextRide(); for (let i = 0; i < 4 && k === lastBoxRide; i++) k = nextRide(); return lastBoxRide = k; }; gifts.push({ k: 'box', ride: RIDEDEMO ? rideDemoNext() : MECHDEMO ? 'mech' : FKDEMO ? 'kabootar' : rr(), x: W + 40, y: CEIL + 80 + Math.random() * (FLOOR - CEIL - 180), b: Math.random() * 6 }); nextGift = RIDEDEMO ? 900 + Math.random() * 500 : MECHDEMO ? 2400 + Math.random() * 1200 : FKDEMO ? 700 + Math.random() * 300 : (2600 + Math.random() * 1800) * (hasG('dates') ? .5 : 1); } }
   if (state === 'play') { nextEidi -= dx; if (nextEidi <= 0) { gifts.push({ k: 'eidi', x: W + 30, y: CEIL + 50 + Math.random() * (FLOOR - CEIL - 120), b: Math.random() * 6 }); nextEidi = (2200 + Math.random() * 2400) * (hasG('envelope') ? .5 : 1); } }
   gifts.forEach(gf => { gf.x -= dx; gf.b += dt;
     if (!gf.got && !hero.dead && state === 'play' && heroCircles().some(([x, y, r]) => Math.hypot(x - gf.x, y - gf.y) < r + (gf.k === 'box' ? 26 : 13))) {
@@ -897,6 +953,8 @@ function rideIcon(k) { if (RIDE_ICON[k]) return RIDE_ICON[k];
     g.strokeStyle = '#ffd75a'; g.lineWidth = 1.6; for (const [x, y] of [[6, 30], [6, 48], [58, 26], [58, 44]]) { g.beginPath(); g.moveTo(x, y); g.lineTo(x + (x < 30 ? -3.5 : 3.5), y + 5); g.stroke(); }
     shine(() => { g.moveTo(10, 30); g.quadraticCurveTo(19, 25, 30, 30); g.lineTo(30, 32); g.quadraticCurveTo(19, 28, 10, 32); g.closePath(); });
     g.fillStyle = '#fff'; [[17, 15, 2.6], [47, 13, 3.2], [32, 9, 2]].forEach(([x, y, r]) => { g.beginPath(); g.moveTo(x, y - r); g.lineTo(x + r * .3, y - r * .3); g.lineTo(x + r, y); g.lineTo(x + r * .3, y + r * .3); g.lineTo(x, y + r); g.lineTo(x - r * .3, y + r * .3); g.lineTo(x - r, y); g.lineTo(x - r * .3, y - r * .3); g.closePath(); g.fill(); });
+  } else if (k === 'mech') {   // the Hoover Mech itself, standing in the tile
+    if (!window.drawMech) return null; g.save(); g.translate(31, 60); g.scale(.33, .33); g.lineWidth = 2.2; window.drawMech(g, { su: 1, ph: 0, air: 0 }); g.restore();
   } else {   // gravity sandals: a pair of chappals seen from above, glowing green straps, a curved flip arrow
     const sole = (cx, cy, rot) => { g.save(); g.translate(cx, cy); g.rotate(rot);
       shape(() => { g.moveTo(0, -17); g.bezierCurveTo(8, -17, 9, -6, 7, 2); g.bezierCurveTo(6, 10, 7, 17, 0, 17); g.bezierCurveTo(-7, 17, -6, 10, -7, 2); g.bezierCurveTo(-9, -6, -8, -17, 0, -17); }, lg(-17, 17, [[0, '#e9c38a'], [1, '#a8743c']]));
@@ -912,12 +970,16 @@ function rideIcon(k) { if (RIDE_ICON[k]) return RIDE_ICON[k];
 function roundRect(x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
 
 /* rides: tuk-tuk (drives on the pavement, tap to jump) and magic carpet (hold to rise, glides down). One hit = the ride blows up and he's thrown clear. */
-const VEH_NAME = { tuktuk: 'TUK-TUK', carpet: 'MAGIC CARPET', kabootar: 'FLAPPY KABOOTAR', sandals: 'GRAVITY SANDALS' };
-const RIDES = ['tuktuk', 'carpet', 'kabootar', 'sandals'];
+const VEH_NAME = { tuktuk: 'TUK-TUK', carpet: 'MAGIC CARPET', kabootar: 'FLAPPY KABOOTAR', sandals: 'GRAVITY SANDALS', mech: 'HOOVER MECH' };
+const RIDES = ['tuktuk', 'carpet', 'kabootar', 'sandals', 'mech'];
+const MCH = 1.08;   // Hoover Mech size (owner 23 Nov: doubled, then 25% smaller: about 45% of the screen tall)
 // gift-box rides come from a shuffled deck: every ride once before any repeats, never the same one twice in a row, kept between games (owner, 22 Nov)
 function nextRide() { let bag = []; try { bag = JSON.parse(localStorage.getItem('jd_ridebag') || '[]').filter(k => RIDES.includes(k)); } catch (e) {}
   let last = ''; try { last = localStorage.getItem('jd_lastride') || ''; } catch (e) {}
-  if (!bag.length) { bag = RIDES.slice(); for (let i = bag.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [bag[i], bag[j]] = [bag[j], bag[i]]; } if (bag[0] === last) bag.push(bag.shift()); }
+  if (!bag.length) {   // owner 23 Nov: every ride twice per bag, Flappy Kabootar once (a bit rarer); jumbled, never the same one twice in a row
+    const base = RIDES.flatMap(k => k === 'kabootar' ? [k] : [k, k]);
+    for (let tries = 0; tries < 60; tries++) { bag = base.slice(); for (let i = bag.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [bag[i], bag[j]] = [bag[j], bag[i]]; }
+      if (bag[0] !== last && bag.every((k, i) => !i || k !== bag[i - 1])) break; } }
   const k = bag.shift(); try { localStorage.setItem('jd_ridebag', JSON.stringify(bag)); localStorage.setItem('jd_lastride', k); } catch (e) {} return k; }
 /* Flappy Kabootar crossover: the exact pigeon from Flappy Kabootar, drawn big (each art pixel = PK units) */
 const PIG_COL = { o: '#1b1a24', h: '#7f899e', e: '#f08a2a', k: '#1b1a24', c: '#eef0f4', b: '#3a3d44', n: '#4fa36a', p: '#8a5fb0', l: '#c3cad8', g: '#9aa3b5', d: '#7d8698', t: '#5a6476', f: '#e88a7a', w: '#d4dae4', K: '#2e3442' };
@@ -978,7 +1040,8 @@ const PIG_N = 8, pigArt = (() => { const out = [];
     const id = x.getImageData(0, 0, 60, 52), d = id.data; for (let i = 3; i < d.length; i += 4) d[i] = d[i] > 110 ? 255 : 0; x.putImageData(id, 0, 0);
     out.push(c); }
   window.__pigArt = out; return out; })();
-function runStarted() {   // start of the run proper: offer head starts (like their HEAD START buttons), golden misbaha ride
+function runStarted() {
+  if (!localStorage.getItem('jd_skilltip')) { try { localStorage.setItem('jd_skilltip', '1'); } catch (e) {} setTimeout(() => pops.push({ x: hero.x + 40, y: hero.y - 110, txt: 'TAP DASH (OR SWIPE RIGHT)!', col: '#ffd21f', t: 0 }), 2500); setTimeout(() => pops.push({ x: hero.x + 40, y: hero.y - 110, txt: 'FLY CLOSE TO HAZARDS = x2 COINS', col: '#7fe3ff', t: 0 }), 7000); }   // start of the run proper: offer head starts (like their HEAD START buttons), golden misbaha ride
   usedSave = 0;
   if (SHOP.hs500 > 0 || SHOP.hs1000 > 0) { $('hs5').style.display = SHOP.hs500 > 0 ? '' : 'none'; $('hs10').style.display = SHOP.hs1000 > 0 ? '' : 'none'; $('hs5n').textContent = 'x' + SHOP.hs500; $('hs10n').textContent = 'x' + SHOP.hs1000; $('hsBox').classList.add('on'); clearTimeout(runStarted.t); runStarted.t = setTimeout(() => $('hsBox').classList.remove('on'), 3800); }
   if (hasG('misbaha')) setTimeout(() => { if (state === 'play' && !veh && !boost && !hero.dead) startVehicle(nextRide()); }, 600);
@@ -1048,11 +1111,13 @@ function startVehicle(k) {
   if (k === 'kabootar' && !window.__oldPigeon && FMS.enter()) return;
   RUN[k] = 1;
   veh = { k, t: 0, vy: 0, jumps: 0, held: false, wob: 0, g: 1, s: 1, flap: 0, fuel: 1, nb: 0, ht: 0 }; if (k === 'kabootar') veh.tip = 1; if (k === 'tuktuk' && !RUN.nitroTip) { RUN.nitroTip = 1; setTimeout(() => pops.push({ x: hero.x + 30, y: hero.y - 110, txt: 'TAP TO JUMP · HOLD TO GO HIGHER!', col: '#ffd21f', t: 0 }), 900); } hero.thrust = false; if (k === 'kabootar') hero.vy = -200;
+  if (k === 'mech') { veh.su = 0; veh.wp = 0; veh.air = 1; veh.shOn = 0; veh.bat = 1; veh.shA = 0; hero.y = Math.max(hero.y, CEIL + 172 * MCH); hero.vy = 0; veh.lk = 0; SFX.mechStart(); rings.push({ x: hero.x, y: hero.y - 30, t: 0 }); return; }   // banner comes after the suit-up
   banner = { k, t: 0 }; rings.push({ x: hero.x, y: hero.y - 30, t: 0 }); flashT = .12; flashCol = '255,255,255';
   tone(523, .1, 'square', .06); setTimeout(() => tone(659, .1, 'square', .06), 90); setTimeout(() => tone(784, .2, 'square', .06), 180);
 }
 function vehCircles() { const x = hero.x, y = hero.y;
   if (veh.k === 'kabootar') return [[x, y - 18, 17], [x + 30, y - 38, 8], [x - 14, y - 50, 11], [x - 13, y - 74, 10]];
+  if (veh.k === 'mech') return [[x - 2 * MCH, y - 30 * MCH, 24 * MCH], [x, y - 92 * MCH, 34 * MCH], [x + 4 * MCH, y - 132 * MCH, 22 * MCH], [x + 40 * MCH, y - 84 * MCH, 12 * MCH]];
   if (veh.k === 'sandals') { const sg = veh.s < 0 ? -1 : 1, q = HS / 1.5; return [[x + 3 * q, y - 31 * q * sg, 10 * q], [x + 7 * q, y - 58 * q * sg, 9 * q]]; }
   return veh.k === 'tuktuk' ? [[x - 5, y - 26, 21], [x + 19, y - 19, 14], [x - 2, y - 58, 14]] : [[x, y - 8, 16], [x + 4, y - 36, 12]]; }
 function vehUpdate(dt) {
@@ -1065,6 +1130,41 @@ function vehUpdate(dt) {
     if (hero.y >= FLOOR) { hero.y = FLOOR; hero.vy = 0; }
     if (hero.y - 96 < CEIL) { hero.y = CEIL + 96; hero.vy = Math.max(0, hero.vy); }   // the pigeon can fly right up to the top of the screen
     hero.rot = Math.max(-.35, Math.min(.5, hero.vy / 700));
+    return;
+  }
+  if (veh.k === 'mech') {   // Hoover Mech (owner 23 Nov): Transformer-style suit-up in slow motion, then stomps along; tap = jump, hold = higher,
+    // keep holding on the way down = foot jets slow the fall; heavy landings knock people over; the hose sucks coins in
+    if (veh.su < 1.15) { const rd = dt / SLOW, p0 = veh.su; veh.su += rd / 1.6; hero.vy = 0; holding = false; veh.held = true;
+      (window.MECH_LOCKS || []).forEach(L => { if (p0 < L.at && veh.su >= L.at) { const lx = hero.x + L.x * MCH, ly = hero.y + L.y * MCH; SFX.clank(L.k === 'head' || L.k === 'chest' ? 1 : 0); shake = Math.max(shake, L.k === 'feet' ? .1 : .05);
+        for (let i = 0; i < 10; i++) sparks.push({ x: lx, y: ly, vx: (Math.random() - .5) * 220, vy: (Math.random() - .7) * 200, l: .25 + Math.random() * .25, c: ['#ffd75a', '#ffffff', '#ff9a2a'][i % 3] }); } });
+      if (p0 < 1 && veh.su >= 1) { obs = obs.filter(o => o.type !== 'laser'); SFX.mechOn(); flashT = .07; flashCol = '255,240,210'; shake = .18; banner = { k: 'mech', t: 0 }; rings.push({ x: hero.x, y: hero.y - 90 * MCH, t: 0 }); for (let i = 0; i < 12; i++) steam.push({ x: hero.x - 40 * MCH, y: hero.y - 100 * MCH, vx: -60 - Math.random() * 90, vy: -20 - Math.random() * 40, r: 4 + Math.random() * 4, l: .7, l0: .9 }); }
+      if (veh.su >= 1 && !RUN.mechTip) { RUN.mechTip = 1; setTimeout(() => pops.push({ x: hero.x + 30, y: hero.y - 160 * MCH, txt: 'HOLD TO FLY · HOLD SHIELD TO BLOCK!', col: '#ffd21f', t: 0 }), 500); }
+      return; }
+    // owner 23 Nov: foot thrusters work like his jetpack: hold to fly up anywhere on the screen, let go to drop
+    veh.held = holding; const onG = hero.y >= FLOOR - .5; veh.thr = holding ? 1 : 0;
+    if (holding && !veh.wasT) { hero.vy = Math.min(hero.vy, -80); tone(160, .14, 'square', .06, 1.6, MIX && MIX.fx); for (let i = 0; i < 8; i++) dust.push({ x: hero.x - 10 + Math.random() * 30, y: hero.y, vx: -60 - Math.random() * 90, vy: Math.random() * 40, r: 3, l: .45 }); }
+    veh.wasT = holding;
+    if (holding) hero.vy -= 1950 * dt; hero.vy += 880 * dt; hero.vy = Math.max(-290, Math.min(460, hero.vy)); hero.y += hero.vy * dt;
+    if (hero.y - 172 * MCH < CEIL) { hero.y = CEIL + 172 * MCH; hero.vy = Math.max(0, hero.vy); }
+    if (veh.thr && Math.random() < dt * 7) tone(85 + Math.random() * 30, .07, 'sawtooth', .022, 1.3, MIX && MIX.fx);
+    if (veh.thr && Math.random() < dt * 30) sparks.push({ x: hero.x + (Math.random() < .5 ? -9 : 9) * MCH + (Math.random() - .5) * 8, y: hero.y + 6, vx: -speed * .3 + (Math.random() - .5) * 40, vy: 160 + Math.random() * 120, l: .2 + Math.random() * .15, c: Math.random() < .5 ? '#bfe8ff' : '#6ab8ff' });
+    if (hero.y >= FLOOR) { if (hero.vy > 250) { const v = Math.min(1, hero.vy / 900); shake = .12 + v * .18; SFX.thudBig(.3 + v * .5); veh.sq = v;
+        for (let i = 0; i < 16; i++) dust.push({ x: hero.x + (Math.random() - .5) * 90, y: FLOOR, vx: (Math.random() - .5) * 260, vy: -Math.random() * 60, r: 3.5, l: .6 });
+        npcs.forEach(p => { if (!p.esc && p.fall <= 0 && Math.abs(p.x - hero.x) < 70 + v * 70) { p.fall = 99; p.fall0 = 99; p.landed = 0; p.fallDir = p.x < hero.x ? -1 : 1; p.done = 1; RUN.stomped = (RUN.stomped || 0) + 1; } }); }
+      hero.y = FLOOR; hero.vy = 0; }
+    veh.sq = Math.max(0, (veh.sq || 0) - dt * 4);
+    veh.air += ((onG ? 0 : 1) - veh.air) * Math.min(1, dt * 10);
+    const G = window.MECH_GAIT || { A: 24, ST: .55 };
+    if (onG) { const p0 = veh.wp; veh.wp += dt * Math.max(60, speed) * G.ST / (2 * G.A * MCH);   // planted feet move exactly with the street, so they never slide
+      if (Math.floor(p0 * 2) !== Math.floor(veh.wp * 2)) { const fr = Math.floor(veh.wp * 2) % 2 === 0, fx = hero.x + ((fr ? 9 : -9) + G.A) * MCH;   // a foot slams down: thump, shake, dust
+        SFX.stomp(); shake = Math.max(shake, .07); for (let i = 0; i < 6; i++) dust.push({ x: fx + (Math.random() - .5) * 20, y: FLOOR, vx: (Math.random() - .5) * 120 - speed * .3, vy: -Math.random() * 30, r: 2.5 + Math.random() * 1.5, l: .45 }); } }
+    veh.blink = ((veh.blink || 0) + dt * .45) % 1; veh.shock = Math.max(0, (veh.shock || 0) - dt); veh.shT = (veh.shT || 0) - dt;
+    { if (veh.bat == null) veh.bat = 1; const want = shHold && state === 'play' && (veh.shOn ? veh.bat > 0 : veh.bat > .15);   // hold to keep it up; let go and it recharges straight away
+      if (want && !veh.shOn) { veh.shOn = 1; RUN.shield = (RUN.shield || 0) + 1; tone(220, .3, 'sawtooth', .05, 3, MIX && MIX.fx); setTimeout(() => tone(880, .25, 'sine', .05, 1.4, MIX && MIX.fx), 80); }
+      if (!want && veh.shOn) { veh.shOn = 0; tone(600, .2, 'sine', .04, .4, MIX && MIX.fx); }
+      if (veh.shOn) veh.bat = Math.max(0, veh.bat - dt / SH_ON); else veh.bat = Math.min(1, veh.bat + dt / SH_CD); }
+    veh.shA = (veh.shA || 0) + ((veh.shOn ? 1 : 0) - (veh.shA || 0)) * Math.min(1, dt * 12); veh.shHit = Math.max(0, (veh.shHit || 0) - dt * 3);
+    hero.rot = 0;
     return;
   }
   if (veh.k === 'sandals') {   // gravity sandals: tap to flip between pavement and the top of the screen
@@ -1101,14 +1201,30 @@ function vehUpdate(dt) {
     if (Math.random() < dt * 24) sparks.push({ x: hero.x - 30 + Math.random() * 10, y: hero.y - 2 + Math.random() * 6, vx: -speed * .5 - 20, vy: (Math.random() - .5) * 20, l: .5, c: Math.random() < .5 ? '#ffd75a' : '#fff3b0' });
   }
 }
+/* Hoover Mech armour (owner 23 Nov, like the SAM suit in Jetpack Joyride 2): zappers and lasers only crackle over the suit, rockets bounce off */
+function mechArmour() { return veh && veh.k === 'mech' && veh.su >= 1; }
+/* SHIELD button (owner 23 Nov): his near arm comes up in front and a red holographic shield blocks lasers and rockets.
+   2.5 s up, then 3.5 s to recharge (ring on the button). Without it, lasers and rockets wreck the mech; zappers only crackle. */
+const SH_ON = 2.5, SH_CD = 3.5;   // a full battery lasts 2.5 s held; empty to full takes 3.5 s once you let go
+let shHold = false, shPid = null;
+function mechShieldUp() { return mechArmour() && (veh.shA || 0) > .55; }
+function shieldBtn() { const b = $('bShield'); if (!b) return; const on = mechArmour() && state === 'play'; b.classList.toggle('hide', !on); if (!on) return;
+  b.style.setProperty('--cd', ((veh.bat == null ? 1 : veh.bat) * 100).toFixed(1) + '%'); b.classList.toggle('act', !!veh.shOn); b.classList.toggle('ready', !veh.shOn && veh.bat > .99); b.classList.toggle('low', veh.bat < .2); }
+function shieldBlock(x, y) { veh.shHit = 1; SFX.clank(0); tone(500, .12, 'sine', .05, 1.8, MIX && MIX.fx); for (let i = 0; i < 12; i++) sparks.push({ x, y, vx: Math.random() * 200, vy: (Math.random() - .5) * 240, l: .3 + Math.random() * .25, c: ['#ff5a4a', '#ffd0c8', '#ffffff'][i % 3] }); }
+function mechShock(x, y) { veh.shock = .35; if ((veh.shT || 0) <= 0) { veh.shT = .22; tone(110 + Math.random() * 40, .18, 'sawtooth', .06, .6, MIX && MIX.fx); tone(1700 + Math.random() * 900, .07, 'square', .025, .5, MIX && MIX.fx); }
+  for (let i = 0; i < 3; i++) sparks.push({ x: hero.x + (Math.random() - .3) * 70 * MCH, y: hero.y - Math.random() * 160 * MCH, vx: (Math.random() - .5) * 220, vy: (Math.random() - .5) * 220, l: .2 + Math.random() * .2, c: Math.random() < .5 ? '#fff6a8' : '#bff4ff' }); }
+function mechDeflect(o) { o.defl = 1; o.v = -(speed + 420); o.vy = -260 - Math.random() * 160; o.rot = Math.PI; o.spin = (Math.random() < .5 ? -1 : 1) * (5 + Math.random() * 4);
+  SFX.clank(1); tone(600, .12, 'square', .05, 1.8, MIX && MIX.fx); shake = Math.max(shake, .12); flashT = .05; flashCol = '255,240,200';
+  for (let i = 0; i < 16; i++) sparks.push({ x: o.x, y: o.y, vx: Math.random() * 260, vy: (Math.random() - .5) * 260, l: .35 + Math.random() * .25, c: ['#ffd75a', '#ffffff', '#ff9a2a'][i % 3] });
+  pops.push({ x: hero.x + 30, y: hero.y - 175 * MCH, txt: 'DEFLECTED!', col: '#7fe3ff', t: 0 }); RUN.deflect = (RUN.deflect || 0) + 1; }
 function vehCrash() {
   const k = veh.k; veh = null; inv = 1.8; shake = .3; flashT = .15; flashCol = '255,200,120'; SFX.boom();
   hero.vy = -480; hero.ground = false;
-  const cols = { tuktuk: ['#f7c51e', '#141414', '#ffe066', '#c9ced8'], carpet: ['#b3202e', '#ffd75a', '#7a1020', '#ffe9a8'], kabootar: ['#eef0f4', '#9aa3b5', '#7f899e', '#4fa36a'], sandals: ['#7dffa0', '#2fbf4a', '#c9a06a', '#ffffff'] }[k];
+  const cols = { tuktuk: ['#f7c51e', '#141414', '#ffe066', '#c9ced8'], carpet: ['#b3202e', '#ffd75a', '#7a1020', '#ffe9a8'], kabootar: ['#eef0f4', '#9aa3b5', '#7f899e', '#4fa36a'], sandals: ['#7dffa0', '#2fbf4a', '#c9a06a', '#ffffff'], mech: ['#e2252b', '#141418', '#ffffff', '#ff5a5c'] }[k];
   if (k === 'kabootar') pops.push({ x: hero.x + 20, y: hero.y - 140, txt: 'COO!', col: '#e8ecf4', t: 0 });
   for (let i = 0; i < 26; i++) sparks.push({ x: hero.x + (Math.random() - .5) * 50, y: hero.y - 20 + (Math.random() - .5) * 30, vx: (Math.random() - .4) * 300, vy: -Math.random() * 280, l: .9 + Math.random() * .5, c: cols[i % 4] });
   for (let i = 0; i < 12; i++) steam.push({ x: hero.x + (Math.random() - .5) * 40, y: hero.y - 20, vx: (Math.random() - .5) * 120, vy: -Math.random() * 80, r: 5 + Math.random() * 4, l: .7, l0: .9 });
-  pops.push({ x: hero.x, y: hero.y - 70, txt: { tuktuk: 'TUK-TUK GONE!', carpet: 'CARPET GONE!', kabootar: 'KABOOTAR FLEW OFF!', sandals: 'SANDALS SNAPPED!' }[k], col: '#ffd75a', t: 0 });
+  pops.push({ x: hero.x, y: hero.y - 70, txt: { tuktuk: 'TUK-TUK GONE!', carpet: 'CARPET GONE!', kabootar: 'KABOOTAR FLEW OFF!', sandals: 'SANDALS SNAPPED!', mech: 'MECH WRECKED!' }[k], col: '#ffd75a', t: 0 });
 }
 function drawVehicle() {
   const x = hero.x, y = hero.y, k = veh.k;
@@ -1132,6 +1248,21 @@ function drawVehicle() {
       if (tp < .5) { ctx.strokeStyle = 'rgba(255,210,31,' + (1 - tp * 2) + ')'; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(-88, -18, 6 + tp * 28, 0, 7); ctx.stroke(); }
       ctx.restore(); }
     return;
+  }
+  if (k === 'mech' && window.drawMech) {
+    ctx.save(); ctx.translate(x, y);
+    if (veh.su < 1.1) { ctx.save(); ctx.globalAlpha = Math.min(.35, veh.su * 3) * (1 - Math.max(0, veh.su - 1) * 10); ctx.globalCompositeOperation = 'lighter'; const q = ctx.createRadialGradient(0, -60, 0, 0, -60, 140); q.addColorStop(0, 'rgba(255,220,150,.9)'); q.addColorStop(1, 'rgba(255,200,120,0)'); ctx.fillStyle = q; ctx.beginPath(); ctx.arc(0, -60, 140, 0, 7); ctx.fill(); ctx.restore(); }
+    const lift = FLOOR - y; ctx.fillStyle = 'rgba(20,10,30,.28)'; ctx.beginPath(); ctx.ellipse(0, lift + 1, 64 * MCH * (1 - Math.min(.5, lift / 400)), 4 + 3 * MCH, 0, 0, 7); ctx.fill();
+    const sq = veh.sq || 0; ctx.scale(MCH * (1 + sq * .06), MCH * (1 - sq * .08)); ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
+    window.drawMech(ctx, { su: veh.su, ph: veh.wp, air: veh.air, bob: (4.5 * Math.exp(-((veh.wp * 2) % 1) * 7) - 1) * (1 - veh.air), thr: veh.thr, t, blink: veh.blink,
+      push: veh.shA || 0, shield: veh.shA || 0, hit: veh.shHit || 0,
+      hero: (g) => { const w = HW * HS / MCH, h = HH0 * HS / MCH; g.drawImage(heroImg, FR('run0_happy') * HW * HX4, 0, HW * HX4, HH0 * HX4, -w / 2 + 2, -70 - h + 4, w, h); } });   // he stands in the chest at his normal size while the suit builds round him
+    if (veh.shock > 0) {   // electricity crawling over the suit: jagged arcs re-drawn every frame, the suit flashes pale blue
+      ctx.save(); ctx.globalCompositeOperation = 'lighter'; const a = Math.min(1, veh.shock / .2); { const q = ctx.createRadialGradient(0, -90, 0, 0, -90, 110); q.addColorStop(0, `rgba(160,232,255,${.28 * a})`); q.addColorStop(1, 'rgba(160,232,255,0)'); ctx.fillStyle = q; ctx.beginPath(); ctx.arc(0, -90, 110, 0, 7); ctx.fill(); } ctx.globalAlpha = a; ctx.lineJoin = 'round';
+      for (let k = 0; k < 4; k++) { let x0 = -40 + Math.random() * 80, y0 = -170 + Math.random() * 160; ctx.strokeStyle = k % 2 ? '#fff6a8' : '#c8f4ff'; ctx.shadowColor = '#7fe3ff'; ctx.shadowBlur = 8; ctx.lineWidth = 1.6 + Math.random();
+        ctx.beginPath(); ctx.moveTo(x0, y0); for (let j = 0; j < 6; j++) { x0 += (Math.random() - .5) * 28; y0 += (Math.random() - .3) * 24; ctx.lineTo(x0, y0); } ctx.stroke(); }
+      ctx.restore(); }
+    ctx.restore(); return;
   }
   if (k === 'sandals') {
     ctx.save(); ctx.translate(x, y); ctx.scale(1, veh.s);
@@ -1392,13 +1523,29 @@ function draw() {
       ctx.fillStyle = '#ffffff'; ctx.font = '900 22px Mont, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('!', 0, 3); }
     ctx.restore(); } });
   pops.forEach(p => { ctx.globalAlpha = Math.min(1, (1.1 - p.t) * 3); ctx.font = '12px PS'; ctx.textAlign = 'center'; ctx.fillStyle = '#160c28'; ctx.fillText(p.txt, p.x + 1.5, p.y + 1.5); ctx.fillStyle = p.col; ctx.fillText(p.txt, p.x, p.y); }); ctx.globalAlpha = 1;
+  drawSkillHud();
   if (banner) drawBanner();
   ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.drawImage(vigCv, 0, 0);
   if (flashT > 0) { ctx.fillStyle = `rgba(${flashCol},${Math.min(.75, flashT * 4)})`; ctx.fillRect(0, 0, cv.width, cv.height); }
 }
 
+function drawSkillHud() {
+  if (state !== 'play') return;
+  speedLines.forEach(l => { ctx.strokeStyle = `rgba(255,255,255,${(l.l * 2.4).toFixed(2)})`; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.moveTo(hero.x - 40, l.y); ctx.lineTo(hero.x - 120 - l.l * 200, l.y); ctx.stroke(); });
+  ctx.save(); ctx.textBaseline = 'middle'; ctx.textAlign = 'left'; ctx.font = '700 13px Oswald, Mont, sans-serif';
+  if (nearMult > 1) { const a = Math.min(1, nearT * 2), x = 14, y = 100; ctx.globalAlpha = a; ctx.fillStyle = 'rgba(10,20,40,.6)'; ctx.beginPath(); ctx.roundRect(x, y - 11, 86, 22, 11); ctx.fill();
+    ctx.fillStyle = '#7fe3ff'; ctx.fillText('CLOSE x' + nearMult, x + 10, y); ctx.fillStyle = 'rgba(127,227,255,.35)'; ctx.fillRect(x + 8, y + 7, 70, 2); ctx.fillStyle = '#7fe3ff'; ctx.fillRect(x + 8, y + 7, 70 * Math.max(0, nearT / 3), 2); ctx.globalAlpha = 1; }
+  ctx.restore();
+}
+function drawHeat() {   // cooker temperature gauge beside him: green -> amber -> red, flashes before it overheats
+  if (veh || boost || hero.dead || state !== 'play' || (hero.heat < .05 && hero.oh <= 0)) return;
+  const x = hero.x - 30, y1 = hero.y - 58, h = 34, k = hero.heat, fl = (k > .8 || hero.oh > 0) && Math.floor(t * 10) % 2;
+  ctx.save(); ctx.fillStyle = 'rgba(10,12,20,.55)'; ctx.beginPath(); ctx.roundRect(x - 3.5, y1 - 2, 7, h + 4, 3.5); ctx.fill();
+  const col = hero.oh > 0 ? '#ff3a2a' : k < .5 ? '#5be37a' : k < .8 ? '#ffc23a' : '#ff5a3a'; ctx.fillStyle = fl ? '#ffffff' : col;
+  ctx.beginPath(); ctx.roundRect(x - 2, y1 + h * (1 - k), 4, h * k, 2); ctx.fill(); ctx.restore(); }
 function drawHero() {
   if (!heroImg.complete || state === 'menu') return;
+  drawHeat();
   if (boost) { drawBoost(); if (!boost.out) return; }
   if (veh) { drawVehicle(); return; }
   if (inv > 0 && Math.floor(t * 14) % 2) return;
@@ -1484,7 +1631,7 @@ function drawZap(o) {   // owner 22 Nov: JJ-style electric beam: no casing or da
 function drawRocket(o) {   // white missile (longer than Barry's), red tip band, fins, roaring flame, long trail of smoke puffs
   if (o.warn > 0 || o.lock > 0) return;
   (o.tr || []).forEach(p => { const k = p.a / 1.1; ctx.fillStyle = `rgba(${150 - k * 40},${120 - k * 30},${100 - k * 20},${(.55 * (1 - k)).toFixed(3)})`; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 7); ctx.fill(); });
-  ctx.save(); ctx.translate(o.x, o.y);
+  ctx.save(); ctx.translate(o.x, o.y); if (o.rot) ctx.rotate(o.rot);
   const fl = 10 + Math.random() * 8; let gr = ctx.createLinearGradient(16, 0, 16 + fl, 0); gr.addColorStop(0, '#ffffff'); gr.addColorStop(.3, '#ffe07a'); gr.addColorStop(.7, '#ff8a2a'); gr.addColorStop(1, 'rgba(255,80,20,0)');
   ctx.fillStyle = gr; ctx.beginPath(); ctx.moveTo(15, -4); ctx.quadraticCurveTo(16 + fl, -1, 16 + fl * 1.15, 0); ctx.quadraticCurveTo(16 + fl, 1, 15, 4); ctx.fill();
   ctx.save(); ctx.globalCompositeOperation = 'lighter'; const gl = ctx.createRadialGradient(17, 0, 0, 17, 0, 14); gl.addColorStop(0, 'rgba(255,190,90,.7)'); gl.addColorStop(1, 'rgba(255,120,40,0)'); ctx.fillStyle = gl; ctx.fillRect(3, -14, 28, 28); ctx.restore();
@@ -1559,6 +1706,14 @@ const nearBtn = e => { const x = e.clientX, y = e.clientY, M = 24;
 tap('home', e => { if (e.target.closest('.tile,.credit') || nearBtn(e)) return; start(); });
 tap('bSmr', () => $('smrInfo').classList.remove('hide')); tap('smrClose', () => $('smrInfo').classList.add('hide'));
 $('smrOpen').addEventListener('pointerdown', e => e.stopPropagation());
+$('bShield').addEventListener('pointerdown', e => { e.preventDefault(); e.stopPropagation(); shHold = true; shPid = e.pointerId; try { $('bShield').setPointerCapture(e.pointerId); } catch (x) {} });
+['pointerup', 'pointercancel', 'lostpointercapture'].forEach(ev => $('bShield').addEventListener(ev, e => { if (e.pointerId === shPid) { shHold = false; shPid = null; } }));
+$('bShield').addEventListener('touchstart', e => { e.preventDefault(); e.stopPropagation(); }, { passive: false });
+/* DASH button (owner 23 Nov: the swipe gets eaten by some phones/apps), bottom-left; the swipe still works too */
+$('bDash').addEventListener('pointerdown', e => { e.preventDefault(); e.stopPropagation(); steamDash(); });
+$('bDash').addEventListener('touchstart', e => { e.preventDefault(); e.stopPropagation(); }, { passive: false });
+function dashBtn() { const b = $('bDash'); const on = state === 'play' && !veh && !boost && !hero.dead; b.classList.toggle('hide', !on); if (!on) return; b.style.setProperty('--cd', ((1 - dashCD / DASH_CD) * 100).toFixed(1) + '%'); b.classList.toggle('ready', dashCD <= 0); b.classList.toggle('act', hero.dashT > 0); }
+window.addEventListener('keydown', e => { if (e.code === 'KeyS') shHold = true; if (e.code === 'KeyD' || e.code === 'ArrowRight') steamDash(); }); window.addEventListener('keyup', e => { if (e.code === 'KeyS') shHold = false; });
 tap('bSet', openSettings); tap('setClose', () => $('setBox').classList.add('hide')); $('setBox').addEventListener('pointerdown', e => { e.stopPropagation(); if (e.target.id === 'setBox') $('setBox').classList.add('hide'); });
 [...$('setSnd').children].forEach(b => b.addEventListener('pointerdown', e => { e.stopPropagation(); setSound(b.dataset.v === '1'); }));
 [...$('setShk').children].forEach(b => b.addEventListener('pointerdown', e => { e.stopPropagation(); SHAKE = b.dataset.v === '1'; try { localStorage.setItem('jd_shake', SHAKE ? '1' : '0'); } catch (x) {} syncSet(); }));
@@ -1581,14 +1736,14 @@ const ITEMS = {
     { id: 'chappal', name: "AMMI'S CHAPPAL", desc: 'Heavier on the way down, like you just heard it coming. Sharper control.', price: 400 },
     { id: 'dates', name: 'LUCKY DATES', desc: 'Gift boxes turn up twice as often, so more rides.', price: 1200 },
     { id: 'envelope', name: 'EIDI POUCH', desc: 'Eidi envelopes turn up twice as often.', price: 900 },
-    { id: 'misbaha', name: 'GOLDEN MISBAHA', desc: 'Start every run on a random ride: tuk-tuk, carpet, Flappy Kabootar or the sandals.', price: 2500 },
+    { id: 'misbaha', name: 'GOLDEN MISBAHA', desc: 'Start every run on a random ride: tuk-tuk, carpet, Flappy Kabootar, the sandals or the Hoover Mech.', price: 2500 },
   ],
   outfit: [
     { id: 'classic', name: 'CLASSIC THOBE', desc: 'Fresh white thobe. Ironed this morning. Probably.', price: 0 },
-    { id: 'puffer', name: 'PUFFER JACKET', desc: 'Black puffer over the thobe. Luton in November.', price: 1000 },
-    { id: 'eid', name: 'EID THOBE', desc: 'Cream with gold embroidery and brown leather sandals.', price: 1500 },
+    { id: 'puffer', name: 'PUFFER JACKET', desc: 'Navy quilted puffer coat. Luton in November.', price: 1000 },
+    { id: 'eid', name: 'EID THOBE', desc: 'Cream thobe with gold embroidery for Eid day.', price: 1500 },
     { id: 'luton', name: 'LUTON TOWN KIT', desc: 'Orange and navy, Hatters through and through.', price: 2000 },
-    { id: 'moroccan', name: 'MOROCCAN DJELLABA', desc: 'Striped djellaba, pointed hood, yellow babouche slippers.', price: 2500 },
+    { id: 'moroccan', name: 'MOROCCAN DJELLABA', desc: 'Striped wool djellaba with a pointed hood.', price: 2500 },
   ],
 };
 let shopTab = 'util';
@@ -1687,11 +1842,20 @@ tap('again', start); tap('ovHome', goHome);
 tap('eidiGo', () => { if ($('eidiGo').dataset.life) revive(); else { $('eidiBox').classList.add('hide'); eidi = 0; showOver(); } });
 tap('ovShare', () => share(`I flew ${Math.floor(dist / 10)}m and grabbed £${coins} trying to get to Jummah 😂 Beat that on Jummah Dash:`));
 tap('snd', () => setSound(!sndOn));
-const noHold = el => el && el.closest && el.closest('.btn,#home,.sheet,#over,#eidiBox,#pz,#rot');
-window.addEventListener('pointerdown', e => { if (noHold(e.target)) return; holding = true; audio(); });
-window.addEventListener('touchstart', e => { if (noHold(e.target)) return; e.preventDefault(); holding = true; audio(); }, { passive: false });
-window.addEventListener('touchend', e => { if (!e.touches.length) holding = false; }); window.addEventListener('touchcancel', () => holding = false);
-window.addEventListener('pointerup', () => holding = false); window.addEventListener('pointercancel', () => holding = false);
+const noHold = el => el && el.closest && el.closest('.btn,#home,.sheet,#over,#eidiBox,#pz,#rot,#bShield,#bDash');
+window.addEventListener('pointerdown', e => { if (noHold(e.target)) return; holding = true; audio(); swipe = { x: e.clientX, y: e.clientY, t: performance.now(), id: e.pointerId, done: 0 }; });
+let swipe = null;   // swipe right = steam dash
+window.addEventListener('pointermove', e => { if (e.pointerType === 'touch' || !swipe || swipe.done || e.pointerId !== swipe.id) return; const dx = e.clientX - swipe.x, dy = e.clientY - swipe.y, dt2 = performance.now() - swipe.t;
+  if (dt2 < 350 && dx > 40 && Math.abs(dx) > Math.abs(dy) * 1.3) { swipe.done = 1; steamDash(); } else if (dt2 >= 350) swipe = null; });
+window.addEventListener('touchstart', e => { if (noHold(e.target)) return; e.preventDefault(); holding = true; audio(); for (const tc of e.changedTouches) tSwipe[tc.identifier] = { x: tc.clientX, y: tc.clientY, t: performance.now() }; }, { passive: false });
+/* steam dash on phones (owner 23 Nov: swipe wasn't firing): touch events, because the page's touch-action lets the browser cancel pointer moves sideways.
+   A quick flick right of 28px+ dashes, from any finger, even while another finger holds to fly. */
+const tSwipe = {};
+window.addEventListener('touchmove', e => { for (const tc of e.changedTouches) { const s0 = tSwipe[tc.identifier]; if (!s0 || s0.done) continue; const dx = tc.clientX - s0.x, dy = tc.clientY - s0.y, el = performance.now() - s0.t;
+  if (dx > 28 && dx > Math.abs(dy) * .9 && el < 450) { s0.done = 1; steamDash(); } else if (el >= 450) { s0.x = tc.clientX; s0.y = tc.clientY; s0.t = performance.now(); } } }, { passive: true });
+window.addEventListener('touchend', e => { for (const tc of e.changedTouches) delete tSwipe[tc.identifier]; });
+window.addEventListener('touchend', e => { holding = [...e.touches].some(t => !noHold(t.target)); }); window.addEventListener('touchcancel', () => holding = false);
+window.addEventListener('pointerup', e => { if (e.pointerType === 'touch') return; holding = false; }); window.addEventListener('pointercancel', () => holding = false);
 window.addEventListener('keydown', e => { if (e.code === 'Space' || e.code === 'ArrowUp') { e.preventDefault(); if (state === 'menu') start(); else if (state === 'dead' && !$('over').classList.contains('hide')) start(); else holding = true; } });
 window.addEventListener('keyup', e => { if (e.code === 'Space' || e.code === 'ArrowUp') holding = false; });
 document.addEventListener('gesturestart', e => e.preventDefault());
@@ -1876,7 +2040,8 @@ const FMS = (() => { const tmp = document.createElement('canvas'), tg = tmp.getC
   return { enter, step, frame, preload: frame0 };
 })();
 let last = performance.now();
-function frame(now) { const dt = Math.min(.05, (now - last) / 1000); last = now; if (FM) { if (!paused) { FMS.step(dt); if (FM && FM.ph === 'out' && FM.back) update(dt); } FMS.frame(); requestAnimationFrame(frame); return; } if (!paused) update(dt); else holding = false; draw(); if (bakeQ.length) bakeOne(); requestAnimationFrame(frame); }
+let SLOW = 1;   // slow motion while the Hoover Mech suits up
+function frame(now) { const dt = Math.min(.05, (now - last) / 1000); last = now; shieldBtn(); dashBtn(); SLOW = veh && veh.k === 'mech' && veh.su < 1.05 ? .12 : Math.min(1, SLOW + dt * 3); if (FM) { if (!paused) { FMS.step(dt); if (FM && FM.ph === 'out' && FM.back) update(dt); } FMS.frame(); requestAnimationFrame(frame); return; } if (!paused) update(dt * SLOW); else holding = false; draw(); if (bakeQ.length) bakeOne(); requestAnimationFrame(frame); }
 requestAnimationFrame(frame);
 window.__jd = { get fm() { return FM; }, get speed() { return speed; }, get coinList() { return coinList; }, get W() { return W; }, get gifts() { return gifts; }, get runT() { return runT; }, veh: k => startVehicle(k), laser: () => [CEIL + 40, (CEIL + FLOOR) / 2].forEach((y, i) => obs.push({ type: 'laser', x: W / 2, y, ph: 'in', pt: 0, slide: 0, d: i * .12 })), eidi: n => { eidi = n; }, kill: w => die(w), gift: (k, r, x, y) => gifts.push({ k, ride: r, x: x || W * .6, y: y || 200, b: 0 }), get state() { return state; }, start, hero, get obs() { return obs; }, spawnRocket: () => obs.push({ type: "rocket", x: W + 40, y: hero.y - 30, warn: 1.5, lock: 0, v: 0 }), setHold: v => holding = v, get dist() { return dist; }, mis: (s, c) => { RUN.steamed = s; coins = c; }, get npcs() { return npcs; }, boost: m => startBoost(m), get SHOP() { return SHOP; }, bc: (k, kd) => buildingCanvas(kd || "lm", k), carSprite: (k, ci, f) => carSprite(k, ci, f), queue: k => deck.unshift([k]), street: () => street, npc: x => spawnNpc(x), car: (x, k, l) => spawnCar(x, k, false, l), get STREET() { return STREET; } };
 })();

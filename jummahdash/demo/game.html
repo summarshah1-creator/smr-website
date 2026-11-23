@@ -299,6 +299,24 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .cright{display:flex;flex-direction:column}.cright .cbtns{margin-top:auto;padding-top:6px}.cright .cbtns .go{width:100%}
 #recX{display:none!important}#recBox .rmsg:empty{display:none}#recBox .rmsg{margin:4px 0 0}#recBox .rbt .go{min-width:60%}
 @media (max-height:430px){.csteps li{margin:0}.chint{display:none}#recBox .rbt{margin-top:8px!important}#recBox label{margin:5px 0 3px!important}#recBox .box>div>p{font-size:10.5px!important;margin-bottom:2px!important}}
+#bShield{position:absolute;left:calc(var(--sl,0px) + 22px);bottom:22px;width:92px;height:92px;border-radius:50%;border:2px solid rgba(255,150,140,.75);background:radial-gradient(circle at 50% 35%,rgba(255,110,100,.32),rgba(120,10,20,.28) 70%);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;z-index:4;box-shadow:0 0 18px rgba(255,60,50,.45),inset 0 0 14px rgba(255,120,110,.35);touch-action:none;transition:opacity .3s,transform .3s,visibility .3s;pointer-events:auto;cursor:pointer;-webkit-tap-highlight-color:transparent}
+#bShield b{font:700 12px Oswald,Mont,sans-serif;letter-spacing:1.5px;text-shadow:0 0 6px rgba(255,80,70,.9)}
+#bShield .ring{position:absolute;inset:-6px;border-radius:50%;background:conic-gradient(rgba(255,120,110,.95) var(--cd,100%),rgba(255,255,255,.12) 0);-webkit-mask:radial-gradient(circle,transparent 58%,#000 59%,#000 66%,transparent 67%);mask:radial-gradient(circle,transparent 58%,#000 59%,#000 66%,transparent 67%)}
+#bShield:not(.ready):not(.act){opacity:.7}
+#bShield.low .ring{background:conic-gradient(rgba(255,200,80,.95) var(--cd,100%),rgba(255,255,255,.12) 0)}
+#bShield.ready{animation:shPulse 1.4s ease-in-out infinite}
+#bShield.act{background:radial-gradient(circle at 50% 35%,rgba(255,150,140,.6),rgba(200,30,30,.45) 70%);box-shadow:0 0 30px rgba(255,70,60,.85),inset 0 0 18px rgba(255,200,190,.5);transform:scale(.94)}
+#bShield:active{transform:scale(.9)}
+#bShield.hide{opacity:0;visibility:hidden;transform:scale(.6);pointer-events:none}
+#bDash{position:absolute;left:calc(var(--sl,0px) + 22px);bottom:22px;width:84px;height:84px;border-radius:50%;border:2px solid rgba(170,220,255,.75);background:radial-gradient(circle at 50% 35%,rgba(120,190,255,.3),rgba(20,40,90,.3) 70%);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;z-index:4;box-shadow:0 0 16px rgba(90,170,255,.45),inset 0 0 12px rgba(150,210,255,.3);touch-action:none;transition:opacity .3s,transform .2s,visibility .3s;cursor:pointer;pointer-events:auto;-webkit-tap-highlight-color:transparent}
+#bDash b{font:700 12px Oswald,Mont,sans-serif;letter-spacing:1.5px;text-shadow:0 0 6px rgba(90,170,255,.9)}
+#bDash .ring{position:absolute;inset:-6px;border-radius:50%;background:conic-gradient(rgba(160,215,255,.95) var(--cd,100%),rgba(255,255,255,.12) 0);-webkit-mask:radial-gradient(circle,transparent 58%,#000 59%,#000 66%,transparent 67%);mask:radial-gradient(circle,transparent 58%,#000 59%,#000 66%,transparent 67%)}
+#bDash:not(.ready){opacity:.6}
+#bDash.act{transform:scale(.9);box-shadow:0 0 30px rgba(120,200,255,.9)}
+#bDash.hide{opacity:0;visibility:hidden;transform:scale(.6);pointer-events:none}
+@media (max-height:430px){#bDash{width:72px;height:72px;bottom:16px}}
+@keyframes shPulse{0%,100%{box-shadow:0 0 14px rgba(255,60,50,.4),inset 0 0 12px rgba(255,120,110,.3)}50%{box-shadow:0 0 30px rgba(255,80,60,.8),inset 0 0 18px rgba(255,160,150,.5)}}
+@media (max-height:430px){#bShield{width:76px;height:76px;bottom:16px}}
 </style>
 </head>
 <body>
@@ -306,6 +324,8 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 <canvas id="cv"></canvas>
 <div id="ui">
   <div class="hud" id="hud"><div id="dist">0m</div><div class="c"><span class="coin">£</span><span id="coins">£0</span></div></div>
+  <button id="bDash" class="hide" aria-label="Dash"><span class="ring"></span><svg viewBox="0 0 40 40" width="28" height="28"><path d="M6 14h14M3 20h17M6 26h14" stroke="#cfeaff" stroke-width="2.6" stroke-linecap="round"/><path d="M22 10l12 10-12 10z" fill="#ffffff"/></svg><b>DASH</b></button>
+  <button id="bShield" class="hide" aria-label="Shield"><span class="ring"></span><svg viewBox="0 0 40 40" width="30" height="30"><path d="M20 3l14 5v10c0 9-6 15.5-14 19C12 33.5 6 27 6 18V8z" fill="rgba(255,90,80,.35)" stroke="#ffd0c8" stroke-width="2.4" stroke-linejoin="round"/><path d="M20 9v23M12 15l8 4 8-4M12 23l8 4 8-4" stroke="#ffb0a6" stroke-width="1.4" fill="none" opacity=".8"/></svg><b>SHIELD</b></button>
   <div id="pz" class="hide"><b>PAUSED</b><span>TAP TO CARRY ON</span></div>
   <div class="top-r"><button class="btn" id="bSet" aria-label="Settings"><svg viewBox="0 0 24 24" width="17" height="17"><path fill="#fff" d="M19.4 13c.04-.33.06-.66.06-1s-.02-.67-.06-1l2.1-1.65c.2-.15.24-.42.12-.64l-2-3.46a.5.5 0 0 0-.6-.22l-2.5 1a7.3 7.3 0 0 0-1.7-1l-.38-2.65A.49.49 0 0 0 14 2h-4c-.25 0-.46.18-.5.42L9.13 5.07c-.62.25-1.18.6-1.7 1l-2.5-1a.5.5 0 0 0-.6.22l-2 3.46c-.13.22-.07.49.12.64L4.56 11c-.04.33-.06.67-.06 1s.02.67.06 1l-2.1 1.65c-.2.15-.24.42-.12.64l2 3.46c.12.22.38.3.6.22l2.5-1c.52.4 1.08.74 1.7 1l.37 2.65c.04.24.25.42.5.42h4c.25 0 .46-.18.5-.42l.37-2.65c.62-.26 1.18-.6 1.7-1l2.5 1c.22.08.48 0 .6-.22l2-3.46a.5.5 0 0 0-.12-.64zM12 15.5A3.5 3.5 0 1 1 12 8.5a3.5 3.5 0 0 1 0 7z"/></svg></button><button class="btn" id="snd" aria-label="Sound"><svg class="spk" viewBox="0 0 24 24" width="20" height="20"><path fill="#fff" d="M3 9.5h3.6L11.5 5v14l-4.9-4.5H3z"/><path class="w1" d="M14.6 9.2a4 4 0 0 1 0 5.6" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path class="w2" d="M17.3 6.6a7.6 7.6 0 0 1 0 10.8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path class="x" d="M3.5 3.5l17 17" stroke="#ff4a4a" stroke-width="2.6" stroke-linecap="round"/></svg></button></div>
 
@@ -506,7 +526,8 @@ var t=setInterval(function(){var lt=document.getElementById('loadTxt');if(!q&&lt
 <script src="vehicles.js?h=32fdac20ce"></script>
 <script src="hd/cars_v3.js?h=b2c54b648f"></script>
 <script src="hd/landmarks_hd.js?h=9e40888703"></script>
-<script src="game.js?h=e10a9f500f"></script>
+<script src="hd/mech.js?h=42910a38da"></script>
+<script src="game.js?h=c1e69a9b1e"></script>
 <script src="jd-extra.js?h=5f6a2675de"></script>
 <script src="/flappy/carreq.js?v=1"></script>
 </body>
