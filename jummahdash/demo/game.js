@@ -1429,7 +1429,7 @@ function drawBoost() {
   if (!boost.out) {   // hero crouched on the roof, holding on
     for (let i = 0; i < 4; i++) { ctx.strokeStyle = `rgba(255,255,255,${.25 + i * .1})`; ctx.lineWidth = 1.5; const yy = FLOOR - 20 - i * 14 - Math.random() * 8; ctx.beginPath(); ctx.moveTo(x - 90 - Math.random() * 60, yy); ctx.lineTo(x - 140 - Math.random() * 120, yy); ctx.stroke(); }
     ctx.save(); ctx.translate(hero.x - 6, FLOOR + (boost.jy || 0) - 47 + Math.sin(hero.run * 2) * .8); ctx.imageSmoothingEnabled = true; ctx.drawImage(heroImg, FR('land0_effort') * HW * HX4, 0, HW * HX4, HH0 * HX4, -HW * HSR / 2, -HHR, HW * HSR, HHR); ctx.restore(); }
-  if (!boost.out && boost.jy) { ctx.fillStyle = 'rgba(20,10,30,.25)'; ctx.beginPath(); ctx.ellipse(x, FLOOR + 3, 70, 4, 0, 0, 7); ctx.fill(); }
+
   drawCorolla(ctx, x, FLOOR + 2 + (boost.out ? 0 : boost.jy || 0), 1.05, true);
 }
 /* owner 23 Nov, from his Jetpack Joyride 2 recording: grab the token -> white flash -> the game freezes under a big title card
@@ -1798,7 +1798,6 @@ function heroSplit(f) { const key = (heroImg.src || '') + ':' + f; if (LMC[key])
   return LMC[key] = { body: mk('destination-out'), cook: mk('destination-in') }; }
 const FP = () => window.__fT != null ? window.__fT : veh.flipT !== undefined ? Math.min(1, veh.flipT / (veh.flipD || .45)) : null;   // flip progress (window.__fT freezes it for checks)
 function drawLogVeh() { const x = hero.x, y = hero.y, m = veh.morph || 0, onG = y >= FLOOR - .5 && window.__fT == null, st = { ph: veh.ph, air: onG ? 0 : 1, face: veh.face, t, spin: veh.spin || 0, flip: FP() != null ? (k => k * k * (3 - 2 * k))(FP()) * Math.PI * 2 * (veh.flipN || 1) : 0, tuck: FP() != null ? (k => Math.max(0, Math.min(1, k / .15, (1 - k) / .18)))(FP()) : 0, bat: (veh.batHP || 0) > 0, swing: FP() != null ? null : batAngle(), swingE: 0, skin: veh.gold ? 'gold' : '', batK: veh.gold ? 'gold' : ({ bat_tape: 'tape', bat_alu: 'alu', bat_gold: 'gold' }[SHOP.bat] || ''), squash: veh.sq || 0 };
-  ctx.fillStyle = 'rgba(30,10,30,.25)'; ctx.beginPath(); ctx.ellipse(x, FLOOR + 1, 16, 3, 0, 0, 7); ctx.fill();
   if (m >= 1) { if (veh.gold) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; const gl = ctx.createRadialGradient(x, y - 40, 4, x, y - 40, 60); gl.addColorStop(0, 'rgba(255,215,90,.35)'); gl.addColorStop(1, 'rgba(255,200,60,0)'); ctx.fillStyle = gl; ctx.fillRect(x - 60, y - 100, 120, 110); ctx.restore(); if (Math.random() < .5) POL.fx.push({ k: 'star', x: x - 10 + (Math.random() - .5) * 20, y: y - Math.random() * 70, vx: -speed * .3 - 20, vy: -10 - Math.random() * 30, t: 0, l: .7, r: 1.4 + Math.random(), col: Math.random() < .5 ? '#ffd75a' : '#fff6c0' }); }
     drawLogman(ctx, x, y, LMS, st); return; }
   // ---- the mutation (owner 23 Nov, redone: a real Hulk-style transformation, one body the whole way through) ----
@@ -2032,7 +2031,6 @@ function drawVehicle() {
     if (onG && Math.floor(t * 20) % 3 === 0) { ctx.strokeStyle = 'rgba(255,255,255,.35)'; ctx.lineWidth = 1; for (let i = 0; i < 3; i++) { ctx.beginPath(); ctx.moveTo(-60 - i * 6, -50 + i * 12); ctx.lineTo(-72 - i * 6, -50 + i * 12); ctx.stroke(); } }   // speed lines
   } else {   // magic carpet: a real cloth ripple running nose to tail, shaded folds, border + medallion, swinging tassels
     const W2 = 50, n = 24;
-    ctx.fillStyle = 'rgba(30,10,30,.18)'; ctx.beginPath(); ctx.ellipse(0, (FLOOR - y), 38, 3, 0, 0, 7); ctx.fill();
     const wave = i => carpetWave(i / n);
     const pts = []; for (let i = 0; i <= n; i++) pts.push([-W2 + i * (W2 * 2 / n), wave(i)]);
     const mid = Math.floor(n * .55);
@@ -2376,7 +2374,7 @@ function drawHero0() {
 }
 const tintCv = document.createElement('canvas');
 // owner 23 Nov: everything in the air casts a soft shadow on the pavement (smaller and fainter the higher it is)
-function gshadow(x, y, w, k = 1) { const gap = FLOOR - y; if (gap < 3 || x < -80 || x > W + 80) return; const f = Math.max(.12, 1 - gap / 380), rx = w * (.45 + .55 * f);
+function gshadow(x, y, w, k = 1, always) { const gap = Math.max(0, FLOOR - y); if ((gap < 3 && !always) || x < -80 || x > W + 80) return; const f = Math.max(.12, 1 - gap / 380), rx = w * (.45 + .55 * f);
   ctx.globalAlpha = .26 * f * k; ctx.beginPath(); ctx.ellipse(x, FLOOR + 2, rx, Math.max(1.5, rx * .17), 0, 0, 7); ctx.fill(); }
 function drawShadows() { if (state !== 'play' && state !== 'intro' && state !== 'dead') return; ctx.save(); ctx.fillStyle = '#1e0a1e';
   obs.forEach(o => { if (o.type === 'rocket' && o.v) gshadow(o.x, o.y, 22 * 1.35); else if (o.type === 'zap') { const ca = Math.cos(o.ang || 0), sa = Math.sin(o.ang || 0), hl = (o.len || 100) / 2; gshadow(o.x + ca * hl, o.y + sa * hl, 12); gshadow(o.x - ca * hl, o.y - sa * hl, 12); gshadow(o.x, Math.max(o.y + sa * hl, o.y - sa * hl), Math.abs(ca) * hl + 8, .6); } });
@@ -2385,7 +2383,9 @@ function drawShadows() { if (state !== 'play' && state !== 'intro' && state !== 
   wrecks.forEach(w => { if (w.k === 'zap') [w.A, w.B].forEach(b => b && gshadow(b.x, b.y, 12, .8)); else if (w.k !== 'puff' && w.k !== 'laser' && w.x != null && w.y != null) gshadow(w.x, w.y, 12, .8); });
   logBits.forEach(b => gshadow(b.x, b.y, 14, .8)); if (deadCook) gshadow(deadCook.x, deadCook.y, 14);
   if (BOXR && !veh && !hero.dead) gshadow(hero.x, hero.y + 8, HH * .62 * Math.min(1, boxAlpha() + .2));   // the warp box
-  if (veh && veh.k === 'mech') gshadow(hero.x + 6, hero.y, 46); if (veh && veh.k === 'sandals' && veh.s > 0) gshadow(hero.x, hero.y, 18);
+  if (veh && veh.k === 'mech') gshadow(hero.x + 6, hero.y, 46, 1, 1); if (veh && veh.k === 'sandals' && veh.s > 0) gshadow(hero.x, hero.y, 18, 1, 1);
+  if (veh && veh.k === 'logman') gshadow(hero.x + 4, hero.y, 30, 1, 1); if (veh && veh.k === 'carpet') gshadow(hero.x, hero.y, 46, 1, 1);
+  if (boost && !boost.out) gshadow(hero.x, FLOOR - (boost.jy || 0), 72, 1, 1);
   if (CAT.on && CAT.air) gshadow(CAT.x, CAT.y, 14);
   ctx.restore(); }
 function drawNpc(p) { if (p.wp && BOXR && BOXR.w) { const wv = warpVis(); if (wv <= .001) return; ctx.save(); ctx.globalAlpha = wv; const cx = p.x, cy = p.y - 30, sc = .5 + .5 * wv; ctx.translate(cx, cy); ctx.scale(sc, sc); ctx.rotate((1 - wv) * 1.5); ctx.translate(-cx, -cy); try { drawNpc0(p); } finally { ctx.restore(); } return; }
