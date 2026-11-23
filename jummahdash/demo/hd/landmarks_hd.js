@@ -1792,15 +1792,41 @@ HD.stockwood = (c, x, G) => {
 
 // Welcome to Luton: the grass bank by the airport road with WELCOME TO LUTON laid out in big white letters on dark tarmac (as seen
 // from the planes), mown edge, fence along the top
+// owner 23 Nov: as it really is: WELCOME TO LUTON painted on a dark tarmac slope set into a grass bank (a slanted surface, not a billboard),
+// seen from the front at street level, so the lettering is in perspective: squashed towards the top, wider at the bottom
+let WELC_TXT = null;
+function welcomeTex() { if (WELC_TXT) return WELC_TXT; const ready = !document.fonts || document.fonts.check('600 20px Oswald'); const S = 4, w = 240 * S, h = 100 * S, cv = document.createElement('canvas'); cv.width = w; cv.height = h; const g = cv.getContext('2d');
+  g.fillStyle = '#f2f2ee'; g.textAlign = 'center'; g.textBaseline = 'alphabetic';
+  const fit = (txt, size, y, maxW, sx) => { g.font = `600 ${size}px Oswald, Mont, sans-serif`; if ('letterSpacing' in g) g.letterSpacing = (size * .08) + 'px'; const mw = g.measureText(txt).width * sx, k = Math.min(1, maxW / mw); g.save(); g.translate(w / 2, y); g.scale(sx * k, 1); g.fillText(txt, 0, 0); g.restore(); };
+  fit('WELCOME TO', 25 * S, 28 * S, w * .62, 1.15);
+  fit('LUTON', 70 * S, 97 * S, w * .97, 1.6);
+  g.globalCompositeOperation = 'destination-out'; for (let k = 0; k < 900; k++) { g.fillStyle = `rgba(0,0,0,${.15 + (k % 5) * .08})`; g.fillRect((k * 97.3) % w, (k * 53.7) % h, 2 + (k % 3), 1 + (k % 2)); }
+  if (ready) WELC_TXT = cv; return cv; }
 HD.welcome = (c, x, G) => {
   c.save(); c.lineJoin = 'round';
-  c.fillStyle = lg(c, 0, G - 88, 0, G, [[0, '#78b85a'], [1, '#4f8a36']]); c.beginPath(); c.moveTo(x, G); c.lineTo(x + 34, G - 88); c.lineTo(x + 226, G - 88); c.lineTo(x + 260, G); c.fill();
-  for (let i = 0; i < 260; i++) { const gx = x + 10 + (i * 37.3) % 240, gy = G - 84 + (i * 23.7) % 82; if (gx < x + 34 - (gy - G + 88) * .39 + 34 && gx < x + 20) continue; line(c, i % 3 ? '#4f8a36' : '#8cc86a', .5, [[gx, gy + 1.6], [gx + .4, gy]]); }
-  c.fillStyle = lg(c, 0, G - 80, 0, G - 6, [[0, '#4a4e54'], [1, '#5e6268']]); c.beginPath(); c.moveTo(x + 20, G - 6); c.lineTo(x + 46, G - 80); c.lineTo(x + 214, G - 80); c.lineTo(x + 240, G - 6); c.fill();
-  for (let i = 0; i < 160; i++) rect(c, i % 2 ? '#3e4248' : '#6a6e74', x + 40 + (i * 31.7) % 180, G - 76 + (i * 17.3) % 68, .8, .5);
-  c.save(); c.font = '900 13px Mont, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.letterSpacing = '2px'; c.fillStyle = '#f4f4f0'; c.fillText('WELCOME TO', x + 130, G - 62); c.restore();
-  c.save(); c.translate(x + 130, G - 32); c.scale(1, 1.1); c.font = '900 40px Mont, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.letterSpacing = '3px'; c.fillStyle = 'rgba(0,0,0,.25)'; c.fillText('LUTON', 1, 1); c.fillStyle = '#f6f6f2'; c.fillText('LUTON', 0, 0); c.restore();
-  for (let i = 0; i < 10; i++) rect(c, '#3a3d44', x + 52 + i * 17, G - 96, 1, 8); rect(c, '#3a3d44', x + 52, G - 96, 154, 1); rect(c, '#3a3d44', x + 52, G - 92, 154, .6);
+  const TOP = G - 62, BOT = G - 12;   // the tarmac slope: narrow far (top) edge, wide near (bottom) edge
+  const tl = x + 44, tr = x + 228, bl = x + 18, br = x + 252;
+  // grass bank behind and round the slope
+  c.fillStyle = lg(c, 0, G - 78, 0, G, [[0, '#86bc62'], [.5, '#6aa448'], [1, '#4f8a36']]); c.beginPath(); c.moveTo(x - 4, G); c.lineTo(x - 2, G - 40); c.quadraticCurveTo(x + 30, G - 74, x + 70, G - 72); c.lineTo(x + 250, G - 70); c.quadraticCurveTo(x + 262, G - 60, x + 264, G - 40); c.lineTo(x + 264, G); c.closePath(); c.fill();
+  for (let i = 0; i < 420; i++) { const gx = x + (i * 37.3) % 264, gy = G - 70 + (i * 23.7) % 70; c.strokeStyle = i % 3 ? 'rgba(60,110,40,.8)' : 'rgba(150,205,110,.8)'; c.lineWidth = .45; c.beginPath(); c.moveTo(gx, gy + 1.8); c.lineTo(gx + (i % 2 ? .5 : -.4), gy); c.stroke(); }
+  // stakes and young trees along the top, lamp columns to the right
+  for (let i = 0; i < 14; i++) { const sx = x + 70 + i * 11.5, sy = G - 71 + Math.sin(i) * .6; rect(c, '#8a7a5a', sx, sy - 6, .9, 6); if (i % 3 === 1) { c.fillStyle = 'rgba(70,90,50,.7)'; c.beginPath(); c.arc(sx + .4, sy - 7, 1.6, 0, 7); c.fill(); } }
+  for (const lx of [x + 224, x + 246]) { c.fillStyle = lg(c, lx, 0, lx + 1.4, 0, [[0, '#8a929c'], [.5, '#d0d4d8'], [1, '#7a828c']]); c.fillRect(lx, G - 112, 1.4, 42); rect(c, '#9aa3ad', lx - 3, G - 113, 4.4, 1.2); }
+  // the tarmac surface with a soft top-to-bottom shade (tilted towards us at the bottom)
+  c.fillStyle = lg(c, 0, TOP, 0, BOT, [[0, '#54585e'], [1, '#3e4248']]); c.beginPath(); c.moveTo(bl, BOT); c.lineTo(tl, TOP); c.lineTo(tr, TOP); c.lineTo(br, BOT); c.closePath(); c.fill();
+  c.save(); c.beginPath(); c.moveTo(bl, BOT); c.lineTo(tl, TOP); c.lineTo(tr, TOP); c.lineTo(br, BOT); c.closePath(); c.clip();
+  for (let i = 0; i < 900; i++) { const yy = TOP + (i * 17.3) % (BOT - TOP), k = (yy - TOP) / (BOT - TOP), s2 = .4 + k * .5; rect(c, i % 2 ? '#34383e' : '#6a6e74', x + 18 + (i * 31.7) % 236, yy, s2, s2 * .6); }   // aggregate, finer towards the top
+  // the painted letters, warped onto the slope: each row placed and widened to fit the trapezoid, rows squashed towards the top
+  const tex = welcomeTex(), TW = tex.width, TH = tex.height, N = 120, pad = 6;
+  for (let r = 0; r < N; r++) { const t0 = r / N, t1 = (r + 1) / N, m = q => Math.pow(q, 1.35), y0 = TOP + 3 + (BOT - TOP - 6) * m(t0), y1 = TOP + 3 + (BOT - TOP - 6) * m(t1), kq = m((t0 + t1) / 2);
+    const xl = tl + (bl - tl) * ((y0 - TOP) / (BOT - TOP)) + pad + 4 * (1 - kq), xr = tr + (br - tr) * ((y0 - TOP) / (BOT - TOP)) - pad - 2 * (1 - kq);
+    c.drawImage(tex, 0, Math.floor(t0 * TH), TW, Math.max(1, Math.ceil((t1 - t0) * TH)), xl, y0, xr - xl, y1 - y0 + .15); }
+  c.restore();
+  // kerb edge round the tarmac and a lip where it meets the grass
+  c.strokeStyle = 'rgba(200,200,190,.65)'; c.lineWidth = .7; c.beginPath(); c.moveTo(bl, BOT); c.lineTo(tl, TOP); c.lineTo(tr, TOP); c.lineTo(br, BOT); c.stroke();
+  // grass in front of the bottom edge
+  c.fillStyle = lg(c, 0, BOT - 2, 0, G, [[0, '#6aa448'], [1, '#4c8434']]); c.beginPath(); c.moveTo(x - 4, G); c.lineTo(x - 4, BOT + 1); c.quadraticCurveTo(x + 130, BOT - 3, x + 264, BOT + 1); c.lineTo(x + 264, G); c.closePath(); c.fill();
+  for (let i = 0; i < 260; i++) { const gx = x + (i * 29.1) % 268 - 4, gy = BOT + 1 + (i * 13.7) % (G - BOT - 1); c.strokeStyle = i % 3 ? 'rgba(60,110,40,.9)' : 'rgba(160,210,120,.9)'; c.lineWidth = .5; c.beginPath(); c.moveTo(gx, gy + 2.4); c.lineTo(gx + (i % 2 ? .7 : -.6), gy); c.stroke(); }
   c.restore();
 };
 
