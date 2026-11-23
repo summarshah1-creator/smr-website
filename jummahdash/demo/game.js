@@ -877,6 +877,9 @@ const BOX_LIFE = 22;   // seconds the box lasts (owner: it runs out)
 const BXD = () => !!(BOXR && !veh && BOXR.t >= BOX_P * 3);   // inside the warp box (stuck on)
 const BOX_SOLID = () => BOXR && BOXR.t >= BOX_P * 3.7;
 const WARP_CD = 2.4, WO = .24, WG = .42, WI = .3;   // warp: fade out, gone (the street rushes past), fade back in further along
+function boxBreak() { const x = hero.x, y = hero.y; BOXR = null; inv = Math.max(inv, 1.8); shake = Math.max(shake, .35); flashT = .14; flashCol = '170,200,255'; SFX.boom && SFX.boom(); tone(240, .3, 'square', .06, .4, MIX && MIX.fx);
+  for (let i = 0; i < 30; i++) sparks.push({ x: x + (Math.random() - .5) * 50, y: y - Math.random() * HH * 1.5, vx: (Math.random() - .5) * 420, vy: -Math.random() * 360, l: .8 + Math.random() * .4, c: ['#1c3f8a', '#2a56b0', '#0d1b3d', '#fff3b0'][i % 4] });
+  pops.push({ x: x + 20, y: y - HH * 2, txt: 'BOX SMASHED!', col: '#9fc4ff', t: 0 }); }
 function boxWarp(auto) { if (!BOX_SOLID() || BOXR.w || (!auto && (BOXR.cd || 0) > 0) || state !== 'play' || hero.dead) return false;
   BOXR.w = { t: 0, n: 0, auto: !!auto };
   if (hero.y > FLOOR - 80) npcs.filter(p => !p.esc && !(p.fall > 0) && Math.abs(p.x - hero.x) < 70).slice(0, 2).forEach(p => { p.wp = { dx: p.x - hero.x }; });   // owner 23 Nov: people standing too close get taken along BOXR.cd = WARP_CD; RUN.warps = (RUN.warps || 0) + 1; tone(300, .35, 'sine', .06, .35, MIX && MIX.fx); tone(900, .3, 'sine', .03, .3, MIX && MIX.fx);
@@ -910,7 +913,7 @@ function die(why) {
   if (boost && !boost.out) return;
   if (veh && veh.k === 'mech' && veh.su < 1.05) return;   // can't be hit while the suit is building round him
   if (hero.dashT > 0 && !veh) { hero.threaded = 1; return; }   // a steam dash goes straight through
-  if (BOX_SOLID() && !veh) { if (why === 'laser') return; if (BOXR.w) return; if ((why === 'zap' || why === 'rocket') && boxWarp(true)) return; }
+  if (BOX_SOLID() && !veh) { if (why === 'laser') return; if (BOXR.w) return; boxBreak(); return; }   // owner 23 Nov: no automatic warping - hit a rocket or zapper and the box is smashed (he carries on with the cooker)
   if (hero.dead || inv > 0) return; if (window.__god) { window.__hits = (window.__hits || 0) + 1; window.__hitW = why; return; }
   if (veh && veh.k === 'tuktuk' && veh.nb > .4) { inv = .35; shake = .2; flashT = .08; flashCol = '255,220,120'; SFX.boom(); pops.push({ x: hero.x + 20, y: hero.y - 90, txt: 'SMASH!', col: '#ffd21f', t: 0 }); for (let i = 0; i < 18; i++) sparks.push({ x: hero.x + 30, y: hero.y - 30, vx: Math.random() * 260, vy: (Math.random() - .5) * 260, l: .5, c: ['#ffd75a', '#ffffff', '#ff9a2a'][i % 3] }); return; }
   if (veh && veh.k === 'logman' && veh.morph >= 1 && veh.swT >= 0 && veh.swT < .4 && (veh.batHP || 0) > 0 && (why === 'laser' || why === 'rocket' || why === 'zap')) return;   // mid-swing: the bat deals with it
@@ -1443,7 +1446,7 @@ function drawBoost() {
 /* owner 23 Nov, from his Jetpack Joyride 2 recording: grab the token -> white flash -> the game freezes under a big title card
    (teal energy band, the ride's picture, its name, an arrow streak; ~1.6 s) -> the band wipes off -> the ride's parts fly in
    from off screen with white streaks and lock onto him one by one -> a final white flash and off he goes. */
-let REVEAL = null; const CARD = {}; ['mech', 'carpet', 'sandals', 'kabootar', 'tuktuk', 'logman', 'box'].forEach(k => { CARD[k] = img('art/card/' + k + '.webp?v=' + (k === 'logman' ? 2 : 1)); });
+let REVEAL = null; const CARD = {}; ['mech', 'carpet', 'sandals', 'kabootar', 'tuktuk', 'logman', 'box'].forEach(k => { CARD[k] = img('art/card/' + k + '.webp?v=' + (k === 'logman' ? 2 : k === 'box' ? 3 : 1)); });
 function quickRide(k) {   // owner 23 Nov: repeat pickups skip the title card: a flash, a quick snap-together and straight back into play
   flashT = .18; flashCol = '255,255,255'; inv = Math.max(inv, 1.2); tone(880, .06, 'square', .05); setTimeout(() => tone(1320, .1, 'square', .05), 60);
   startVehicle(k, true); if (!veh) return; if (k === 'mech') veh.su = Math.max(veh.su || 0, .72); else if (k === 'logman') veh.morph = .2; else { veh.asm = .5; veh.fast = 1; } POL.fx.push({ k: 'ring', x: hero.x, y: hero.y - 30, t: 0, l: .4, col: '255,255,255' }); }
