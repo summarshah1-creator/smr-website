@@ -37,9 +37,11 @@ button{cursor:pointer;background:none;border:0}
 .logo{display:flex;align-items:center;gap:6px;margin-right:auto}
 .logo svg{height:15px;width:auto}
 .logo span{font-family:Poppins,sans-serif;font-weight:300;font-size:16px;line-height:1.25;padding-bottom:.15em;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.logo img.wm{height:24px;width:auto;display:block;margin-left:-4px}.auth .logo img.wm{height:34px;margin:0 auto}
 .logo b{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-left:6px;font-weight:700}
 .glist{display:grid;gap:10px}.gcard{display:flex;align-items:center;gap:14px;padding:14px;border-radius:18px;background:rgba(255,255,255,.04);border:1px solid var(--line);color:inherit;text-decoration:none;transition:transform .15s,background .2s}.gcard:active{transform:scale(.98)}.gcard:hover{background:rgba(255,255,255,.07)}
 .gcard img{width:58px;height:58px;border-radius:14px;flex:none;box-shadow:0 4px 14px rgba(0,0,0,.35)}.gcard div{flex:1;min-width:0}.gcard b{display:block;font-size:17px}.gcard .gl{display:block;color:var(--muted);font-size:13px;margin-top:3px}.gcard .gl.new{color:#ff9bc4;font-weight:700}
+.hubic{width:58px;height:58px;border-radius:14px;flex:none;display:grid;place-items:center;background:linear-gradient(135deg,#0f766e,#14b8a6);color:#fff}.hubic svg{width:30px;height:30px}.hubsoon{margin-top:14px;padding:16px;border-radius:18px;border:1px dashed var(--line);background:rgba(255,255,255,.03)}.hubsoon b{display:block;font-size:16px}.hubsoon span{display:block;color:var(--muted);font-size:13.5px;margin-top:2px}.hubsoon ul{margin:10px 0 0;padding-left:18px;font-size:14px;line-height:1.6}
 .gcard .gb{font-style:normal;background:#ff3b7f;color:#fff;border-radius:99px;font-size:12px;font-weight:800;padding:2px 8px}.gcard .gb:empty{display:none}.gcard .gch{width:20px;height:20px;color:var(--muted);flex:none}
 .bar.gbar{display:flex;align-items:center;justify-content:flex-start;gap:10px;flex-wrap:nowrap}.gbar img{width:34px;height:34px;border-radius:9px}.gbar h1{margin:0;font-size:20px}.gback{display:inline-flex;align-items:center;gap:2px;color:var(--muted);text-decoration:none;font-weight:700;font-size:14px;padding:6px 8px 6px 2px;margin-right:4px}.gback svg{width:20px;height:20px}
 .tabs{display:flex;gap:4px;padding:4px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid var(--line)}
@@ -306,7 +308,7 @@ html.cpopen,body.cpopen{overscroll-behavior:none}
 <?php if ($mode !== 'app'): ?>
 <div class="auth">
   <form class="panel" id="auth" autocomplete="off">
-    <div class="logo"><?= $mark ?><span>Digital</span></div>
+    <div class="logo"><img class="wm" src="/assets/brand/smr-admin.svg?v=1" alt="SMR Admin"></div>
     <h1 style="text-align:center">Admin</h1>
     <p class="sub" style="text-align:center">Enter your PIN</p>
     <div class="pindots" id="dots" aria-live="polite"><i></i><i></i><i></i><i></i></div>
@@ -336,7 +338,7 @@ document.addEventListener('keydown',function(e){if(/^\d$/.test(e.key))press(e.ke
 <div class="wrap">
   <div class="top">
     <button class="btn sm icon" id="navbtn" aria-label="Open menu" aria-controls="drawer" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg><i class="ndot"></i></button>
-    <div class="logo"><?= $mark ?><span>Digital</span><b>Admin</b></div>
+    <div class="logo"><img class="wm" src="/assets/brand/smr-admin.svg?v=1" alt="SMR Admin"></div>
     <button class="btn sm icon" id="themebtn" aria-label="Light or dark mode" title="Light / dark"><svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></svg><svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg></button>
     <button class="btn sm icon" id="refresh" aria-label="Refresh" title="Refresh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg></button>
     <button class="btn sm icon" id="acct" aria-label="Settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></button>
@@ -351,13 +353,14 @@ document.addEventListener('keydown',function(e){if(/^\d$/.test(e.key))press(e.ke
 
   <div class="dscrim" id="dscrim"></div>
   <aside class="drawer" id="drawer" aria-label="Menu">
-    <div class="dhd"><div class="logo"><?= $mark ?><span>Digital</span><b>Admin</b></div><button class="btn sm icon" id="navx" aria-label="Close menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <div class="dhd"><div class="logo"><img class="wm" src="/assets/brand/smr-admin.svg?v=1" alt="SMR Admin"></div><button class="btn sm icon" id="navx" aria-label="Close menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
     <nav class="tabs dnav" role="tablist">
       <button data-grp="today" role="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg><span class="lb">Today</span><span class="cnt bad" id="plcnt"></span></button>
       <button data-grp="jobs" role="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M12 12v3M10.5 13.5h3"/></svg><span class="lb">Jobs &amp; payments</span><span class="cnt bad" id="jbcnt"></span></button>
       <button data-grp="proofs" role="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/><path d="M8.5 15l2.2 2.2L15.5 12"/></svg><span class="lb">Proofs</span><span class="cnt bad" id="pfcnt"></span></button>
       <button data-grp="clients" role="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"/><path d="M16 4.5a3.3 3.3 0 0 1 0 6.4M18.5 14.8c1.6.8 2.6 2.5 3 5.2"/></svg><span class="lb">Clients</span><span class="cnt bad" id="clcnt"></span></button>
       <button data-grp="leads" role="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h18l-7 8.5V19l-4 2v-8.5z"/></svg><span class="lb">Leads</span><span class="cnt bad" id="ldcnt"></span></button>
+      <button data-grp="hub" role="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V10l7-5 7 5v11"/><path d="M9 21v-5h6v5"/><path d="M12 10.5h.01"/></svg><span class="lb">Community Hub</span></button>
       <button data-grp="mail" role="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg><span class="lb">Email</span><span class="cnt" id="mailcnt"></span></button>
       <button data-grp="games" role="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="11" rx="5"/><path d="M7 11v4M5 13h4"/><circle cx="15.5" cy="12" r="1" fill="currentColor"/><circle cx="18" cy="14" r="1" fill="currentColor"/></svg><span class="lb">Games</span><span class="cnt" id="fkcnt"></span></button>
       <button data-grp="music" role="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg><span class="lb">Player</span></button>
@@ -442,6 +445,14 @@ document.addEventListener('keydown',function(e){if(/^\d$/.test(e.key))press(e.ke
   </section>
 
   <!-- GAMES: one card per game; each opens that game's own page (stats, inbox, settings) in an iframe -->
+  <section id="tab-hub" class="tab hidden">
+    <div class="bar"><div><h1>Community Hub</h1><p class="sub">Luton Community Hub by SMR Digital: free support and a Luton directory for schools, charities and mosques.</p></div></div>
+    <div class="glist">
+      <a class="gcard" href="https://claude.ai/artifact/6SirpP1EejaLWmjeKERZuv" target="_blank" rel="noopener"><span class="hubic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V10l7-5 7 5v11"/><path d="M9 21v-5h6v5"/><path d="M12 10.5h.01"/></svg></span><div><b>Open the hub</b><span class="gl">The current preview of hub.smrdigital.co.uk</span></div><svg class="gch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></a>
+    </div>
+    <div class="hubsoon"><b>Coming to this page</b><span>Once the hub goes live, you'll run it from here:</span>
+      <ul><li>Approvals: new listings, events, offers and updates</li><li>Accounts &amp; verification for charities, schools and mosques</li><li>Jummah times: who's confirmed and who needs a call</li><li>Free audits, design jobs &amp; proofs</li><li>Luton This Week, promotions and hub analytics</li></ul></div>
+  </section>
   <section id="tab-games" class="tab hidden">
     <div class="bar"><div><h1>Games</h1><p class="sub">Stats, places people recommend and settings for each game. Your own phones are never counted.</p></div></div>
     <div class="glist">
@@ -589,8 +600,8 @@ var ICON={dots:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="
 
 /* ---------- tabs (hash) ---------- */
 var lastDemoTab='demos';
-var showTab=function(t){if(['today','jobs','proofs','clients','leads','demos','send','live','designs','games','flappy','jummah','mail','music','stats'].indexOf(t)<0)t='today';if(window.SMRPlanner){if(t==='today')SMRPlanner.show();else SMRPlanner.hide()}if(window.SMRJobs){if(t==='jobs')SMRJobs.show();else SMRJobs.hide()}if(window.SMRProofs){if(t==='proofs')SMRProofs.show();else SMRProofs.hide()}if(window.SMRClients){if(t==='clients')SMRClients.show();if(t==='leads')SMRClients.showLeads()}if(t==='games')gamesCards();if(t==='jummah'){var jf=document.getElementById('jdframe');if(jf&&!jf.src)jf.src='/jummahdash/admin.php'}if(t==='stats'){var sf=document.getElementById('stframe');if(sf&&!sf.src)sf.src='/music/stats.php'}if(t==='music'){var mf=document.getElementById('muframe');if(mf&&!mf.src)mf.src='/music/index.php?manage=1'}if(t==='flappy'){var ff=document.getElementById('fkframe');if(ff&&!ff.src)ff.src='/flappy/admin.php'}
-  var grp=(t==='today'||t==='jobs'||t==='proofs'||t==='clients'||t==='leads'||t==='mail'||t==='music'||t==='stats')?t:(t==='games'||t==='flappy'||t==='jummah')?'games':'demos';if(grp==='demos')lastDemoTab=t;
+var showTab=function(t){if(['today','jobs','proofs','clients','leads','hub','demos','send','live','designs','games','flappy','jummah','mail','music','stats'].indexOf(t)<0)t='today';if(window.SMRPlanner){if(t==='today')SMRPlanner.show();else SMRPlanner.hide()}if(window.SMRJobs){if(t==='jobs')SMRJobs.show();else SMRJobs.hide()}if(window.SMRProofs){if(t==='proofs')SMRProofs.show();else SMRProofs.hide()}if(window.SMRClients){if(t==='clients')SMRClients.show();if(t==='leads')SMRClients.showLeads()}if(t==='games')gamesCards();if(t==='jummah'){var jf=document.getElementById('jdframe');if(jf&&!jf.src)jf.src='/jummahdash/admin.php'}if(t==='stats'){var sf=document.getElementById('stframe');if(sf&&!sf.src)sf.src='/music/stats.php'}if(t==='music'){var mf=document.getElementById('muframe');if(mf&&!mf.src)mf.src='/music/index.php?manage=1'}if(t==='flappy'){var ff=document.getElementById('fkframe');if(ff&&!ff.src)ff.src='/flappy/admin.php'}
+  var grp=(t==='today'||t==='jobs'||t==='proofs'||t==='clients'||t==='leads'||t==='hub'||t==='mail'||t==='music'||t==='stats')?t:(t==='games'||t==='flappy'||t==='jummah')?'games':'demos';if(grp==='demos')lastDemoTab=t;
   document.querySelectorAll('[data-tab]').forEach(function(b){b.classList.toggle('on',b.dataset.tab===t)});document.querySelectorAll('[data-grp]').forEach(function(b){b.classList.toggle('on',b.dataset.grp===grp)});document.getElementById('subtabs').classList.toggle('hidden',grp!=='demos');
   document.querySelectorAll('.tab').forEach(function(s){s.classList.toggle('hidden',s.id!=='tab-'+t)});window.scrollTo(0,0);if(t==='live'&&typeof load==='function'&&D.length)load();if(t!=='send'&&$('created').dataset.used&&typeof resetSend==='function')resetSend();if(t==='mail'&&typeof mailOpen==='function')mailOpen();if(t==='designs'&&typeof dLoad==='function')dLoad()};
 document.querySelectorAll('[data-tab]').forEach(function(b){b.addEventListener('click',function(){if(location.hash!=='#'+b.dataset.tab)history.replaceState(null,'','#'+b.dataset.tab);showTab(b.dataset.tab)})});

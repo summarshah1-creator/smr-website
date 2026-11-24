@@ -1,4 +1,4 @@
-// SMR_WIDGET_V4 · SMR Studio widget for Scriptable (Home Screen small / medium / large, Lock Screen rectangle / inline / circle).
+// SMR_WIDGET_V4 · SMR Admin widget for Scriptable (Home Screen small / medium / large, Lock Screen rectangle / inline / circle).
 // Downloaded by the small loader script on the phone every time the widget refreshes, so changes here reach the phone by themselves.
 // Widget parameter (long-press → Edit Widget → Parameter): today (default) · money · leads · care. Stack several and swipe between them.
 // Owner 24 Nov: it must be nice to look at, not "coding": one big friendly headline, soft cards, icons, few words, nothing cramped.
@@ -20,9 +20,9 @@ module.exports = async function (FEED, VIEW) {
     return null;
   }
   async function getLogo() {
-    const path = fm.joinPath(fm.cacheDirectory(), "smr-studio-logo.png");
+    const path = fm.joinPath(fm.cacheDirectory(), "smr-admin-logo.png");
     if (fm.fileExists(path) && (Date.now() - fm.modificationDate(path).getTime()) < 7 * 864e5) return fm.readImage(path);
-    try { const img = await new Request(ADMIN + "widget-logo.png?v=1").loadImage(); fm.writeImage(path, img); return img; } catch (e) {}
+    try { const img = await new Request(ADMIN + "widget-logo.png?v=2").loadImage(); fm.writeImage(path, img); return img; } catch (e) {}
     return fm.fileExists(path) ? fm.readImage(path) : null;
   }
 
@@ -78,11 +78,11 @@ module.exports = async function (FEED, VIEW) {
       care: { url: "clients", sym: "globe", big: String(careN), small: "sites", line: careN ? careN + (careN === 1 ? " site needs you" : " sites need you") : "All sites fine",
               sub: careN ? (cl.care_list[0].client + ": " + cl.care_list[0].title) : "Up-time, padlocks and renewals OK", inline: careN ? careN + " client sites need you" : "All client sites fine" },
       leads: { url: "leads", sym: "person.2", big: String(cl.leads || 0), small: "leads", line: cl.leads ? cl.leads + " leads to chase" : "No leads to chase",
-               sub: cl.pipeline ? money(cl.pipeline) + " up for grabs" : "Add one in SMR Studio", inline: cl.leads ? cl.leads + " leads to chase today" : "No leads to chase" }
+               sub: cl.pipeline ? money(cl.pipeline) + " up for grabs" : "Add one in SMR Admin", inline: cl.leads ? cl.leads + " leads to chase today" : "No leads to chase" }
     }[view] || null;
-    const v = L || { url: "today", sym: "checklist", big: String(todo), small: "to do", line: "SMR Studio", sub: "", inline: "SMR Studio" };
+    const v = L || { url: "today", sym: "checklist", big: String(todo), small: "to do", line: "SMR Admin", sub: "", inline: "SMR Admin" };
     const w = new ListWidget(); w.url = ADMIN + "#" + v.url; w.refreshAfterDate = new Date(Date.now() + 10 * 60 * 1000);
-    if (!d) { w.addText("SMR Studio"); return Script.setWidget(w); }
+    if (!d) { w.addText("SMR Admin"); return Script.setWidget(w); }
     if (fam === "accessoryInline") { w.addText(v.inline); return Script.setWidget(w); }
     w.addAccessoryWidgetBackground = true;
     if (fam === "accessoryCircular") {
@@ -95,7 +95,7 @@ module.exports = async function (FEED, VIEW) {
     // accessoryRectangular
     const top = w.addStack(); top.centerAlignContent();
     const ic = SFSymbol.named(v.sym); if (ic) { const im = top.addImage(ic.image); im.imageSize = new Size(11, 11); top.addSpacer(4); }
-    const t0 = top.addText("SMR STUDIO"); t0.font = Font.semiboldRoundedSystemFont(10); t0.textOpacity = 0.75;
+    const t0 = top.addText("SMR ADMIN"); t0.font = Font.semiboldRoundedSystemFont(10); t0.textOpacity = 0.75;
     const a = w.addText(v.line); a.font = Font.boldRoundedSystemFont(14); a.lineLimit = 2; a.minimumScaleFactor = 0.8;
     if (v.sub) { const b = w.addText(v.sub); b.font = Font.mediumRoundedSystemFont(11.5); b.lineLimit = 1; b.textOpacity = 0.85; }
     return Script.setWidget(w);
@@ -112,12 +112,12 @@ module.exports = async function (FEED, VIEW) {
   // header: logo left, small label right
   const head = w.addStack(); head.centerAlignContent();
   const logo = await getLogo();
-  if (logo) { const im = head.addImage(logo); im.imageSize = new Size(fam === "small" ? 72 : 88, fam === "small" ? 12 : 14.6); }
+  if (logo) { const im = head.addImage(logo); im.imageSize = new Size(fam === "small" ? 80 : 104, fam === "small" ? 9.8 : 12.8); }
   head.addSpacer();
   if (fam !== "small") txt(head, d && d.stale ? "Offline" : new Date().toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" }), 11, C.mute, "s");
   w.addSpacer(fam === "small" ? 8 : 10);
 
-  if (!d) { txt(w, "Can't reach SMR Studio right now", 15, C.ink, "s", 2); w.addSpacer(); return Script.setWidget(w); }
+  if (!d) { txt(w, "Can't reach SMR Admin right now", 15, C.ink, "s", 2); w.addSpacer(); return Script.setWidget(w); }
 
   const owedTotal = (cl.job_overdue || 0) + (cl.bills || []).reduce((a, b) => a + b.amount, 0);
   const debtors = [].concat((cl.bills || []).map(b => ({ name: b.client, amt: b.amount, sub: "Monthly plan" })), Object.keys(cl.debtors || {}).map(k => ({ name: k, amt: cl.debtors[k], sub: "Job" }))).sort((a, b) => b.amt - a.amt);
@@ -164,7 +164,7 @@ module.exports = async function (FEED, VIEW) {
       if (cl.pipeline) { const m = box(top, 0, 0, tint(C.pink, 0.15), 14, 8); m.layoutVertically(); txt(m, money(cl.pipeline), 17, C.ink, "b"); txt(m, "up for grabs", 11, C.soft, "m"); }
       w.addSpacer(10);
       const rows = fam === "large" ? 5 : 1;
-      if (!leads.length) { const ok = box(w, W, 0, C.card, 14, 10); txt(ok, "Add a lead in SMR Studio and it shows here", 13, C.soft, "m", 2); }
+      if (!leads.length) { const ok = box(w, W, 0, C.card, 14, 10); txt(ok, "Add a lead in SMR Admin and it shows here", 13, C.soft, "m", 2); }
       leads.slice(0, rows).forEach((x, i) => { if (i) w.addSpacer(6); const when = dayName(x.next); personRow(w, W, x.name, x.what || x.next_what || "", when, when === "Overdue" || when === "Today" ? C.pink : C.purple, "leads"); });
     }
   } else if (view === "care") {

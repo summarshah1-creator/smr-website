@@ -288,7 +288,7 @@
   /* The script the owner pastes into Scriptable once. It fetches the latest widget design (widget.js) on every refresh,
      so widget changes reach the phone by themselves. */
   var LOADER = [
-    '// SMR Studio widget for Scriptable. Paste this once; it fetches the latest design every time it refreshes.',
+    '// SMR Admin widget for Scriptable. Paste this once; it fetches the latest design every time it refreshes.',
     '// Your private link is below: don\'t share this script.',
     'const FEED = "__FEED__";',
     'const VIEW = "__VIEW__";   // today, money, leads or care',
