@@ -1802,4 +1802,24 @@ L.after.push(r => { const w = $('#main > .wrap'); if (!w) return;
   if (['planner', 'brief'].includes(r.v) && !$('.evlink', w)) { const h = $('h1', w); h?.insertAdjacentHTML('afterend', `<a class="fklink evlink" href="#evpromo">${tic('evpromo', 'ti sm')}<span><b>Promote your event</b><small>A posting plan counting back from the date</small></span>${si('chev')}</a>`); }
   $$('h2,h3', w).forEach(h => { if (/run an event/i.test(h.textContent) && !h.parentElement.querySelector('.evrun')) h.insertAdjacentHTML('afterend', `<div class="row evrun" style="margin:6px 0 10px"><a class="btn p sm" href="#evplan">Plan your event</a><a class="btn s sm" href="#evpromo">Promote your event</a></div>`); }); });
 
+
+/* =====================================================================
+   LANGUAGES (owner 24 Nov): no page translator. Instead the design request and the campaign brief ask
+   "Which languages?", and the guides offer to design it in two languages.
+   ===================================================================== */
+const LSET = [['en', 'English only'], ['ur', 'English + Urdu'], ['bn', 'English + Bengali'], ['ar', 'English + Arabic'], ['pl', 'English + Polish'], ['ro', 'English + Romanian']];
+const langStep = (pre = 'en') => `<fieldset class="lstep"><legend>Languages</legend><b>Which languages?</b><div class="ltwtiles lsets seg radios" role="radiogroup">${LSET.map(([k, t]) => `<label class="ltwtile lset${k === pre ? ' on' : ''}"><input type="radio" name="langs" value="${esc(t)}" ${k === pre ? 'checked' : ''}><b>${esc(t)}</b><i class="tk">${si('check')}</i></label>`).join('')}</div>
+  <label class="f lother">Another language? (optional)<small>We design each language properly, with the right fonts and right-to-left layout. You approve the proof before anything is printed or posted.</small><input class="in" name="langother" placeholder="e.g. Punjabi, Gujarati, Somali"></label></fieldset>`;
+const takePre = () => { const v = store.get('langpre', null); if (v) store.set('langpre', null); return v || 'en'; };
+document.addEventListener('change', e => { const r = e.target.closest('.lstep input[name="langs"]'); if (!r) return; const fs = r.closest('.lstep'); $$('.lset', fs).forEach(l => l.classList.toggle('on', l.contains(r) ? r.checked : false)); });
+L.after.push(r => { if (r.v !== 'brief') return; const f = $('#qForm'); if (!f || $('.lstep', f)) return; const fs = $$('fieldset', f).find(x => /Languages/.test(x.querySelector('legend')?.textContent || '')); const html = langStep(takePre());
+  if (fs) { const b = $$('b', fs).find(x => /Languages besides English/.test(x.textContent)); if (b) { const c = b.nextElementSibling; c?.classList.contains('checks') && c.remove(); b.outerHTML = html; } else fs.insertAdjacentHTML('afterbegin', html); } else $('button.btn.p', f)?.insertAdjacentHTML('beforebegin', html); });
+document.addEventListener('click', e => { if (!e.target.closest('[data-design]')) return; setTimeout(() => { const f = $('#mbox form'); if (!f || $('.lstep', f)) return; ($('button.btn.p', f) || $('button', f))?.insertAdjacentHTML('beforebegin', langStep(takePre())); }, 60); });
+document.addEventListener('click', e => { const a = e.target.closest('[data-langbrief]'); if (a) store.set('langpre', a.dataset.langbrief); });
+const LTIP = { seasonal: 'ur', appeals: 'ur', appeal: 'ur', calendar: 'ur', events: 'ur', campaigns: 'ur', templates: 'ur', evpromo: 'ur', prayer: 'ar', planner: 'ur' };
+L.after.push(r => { if (!(r.v in LTIP)) return; const w = $('#main > .wrap'); if (!w || $('.langtip', w)) return; const h = $('.passon', w) || $('.lede', w) || $('h1', w);
+  h?.insertAdjacentHTML('afterend', `<a class="fklink langtip" href="#brief" data-langbrief="${LTIP[r.v]}">${si('globe')}<span><b>Reaching families who read other languages?</b><small>We can design it in two languages, with the right fonts and right-to-left layout.</small></span>${si('chev')}</a>`); });
+/* the old page translator is switched off: undo any language someone picked before */
+if (store.get('lang', 'en') !== 'en') { store.set('lang', 'en'); document.cookie = 'googtrans=; path=/; max-age=0'; document.documentElement.dir = 'ltr'; document.documentElement.lang = 'en-GB'; }
+
 });
