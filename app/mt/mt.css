@@ -1,12 +1,12 @@
 /* MySirat: brand layer over the toolkit engine. Designed & built by SMR Digital. */
-:root{--mt-deep:#0b3b3a;--mt-deep2:#072826;--mt-em:#12806b;--mt-em2:#17936a;--mt-gold:#d9a441;--mt-gold2:#f2c35b}
+:root{--mt-deep:#1a2c2b;--mt-deep2:#121d1d;--mt-em:#355d55;--mt-em2:#3f6b5d;--mt-gold:#a89572;--mt-gold2:#c1b18c}
 /* nothing from the radio station */
 #intro,.player,#player,.inst,.np,.npchip,.rfeed,#ahOA,
 [data-page=home]>.hero,[data-page=home] .sec:has(#podRail),[data-page=home] .reel-sec,[data-page=home] .adv-sec,[data-page=home] .nlp-wrap,
 #fbPrompt,#fbDisc,a[href="#listen"]:not(.mid),[data-play],.oa-play,.npbar{display:none!important}
 body{padding-bottom:0}
 /* tasbih widget in the On air slot */
-.mt-tas{position:relative;aspect-ratio:1/1;border-radius:22px;overflow:hidden;color:#fff;display:flex;flex-direction:column;justify-content:space-between;padding:14px;box-shadow:0 10px 24px rgba(0,0,0,.25);isolation:isolate;background:linear-gradient(160deg,#4a4844,#141413);border:0;font:inherit;text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.mt-tas{position:relative;aspect-ratio:1/1;border-radius:22px;overflow:hidden;color:#fff;display:flex;flex-direction:column;justify-content:space-between;padding:14px;box-shadow:0 10px 24px rgba(0,0,0,.25);isolation:isolate;background:linear-gradient(160deg,#484746,#141413);border:0;font:inherit;text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .mt-tas small{font-size:.66rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
 .mt-tas .ar{display:block;font-family:var(--ar,serif);font-size:1.05rem;line-height:1.3}
 .mt-tas .big{font-family:var(--display);font-weight:700;font-size:2.5rem;line-height:1}
@@ -22,7 +22,7 @@ html.dark .mt-wm b{color:#fff}
 a[href="#advertise"]{display:none!important}
 
 /* MySirat brand */
-:root{--sir-black:#0b0b0c;--sir-char:#1a1918;--sir-stone:#a8a49d;--sir-stone2:#7f7b75;--sir-paper:#f6f5f2}
+:root{--sir-black:#0b0b0c;--sir-char:#1a1918;--sir-stone:#a4a3a1;--sir-stone2:#7c7a78;--sir-paper:#f6f5f2}
 html:not(.dark) body{background:var(--sir-paper)}
 html:not(.dark) .ah{background:#ecebe7!important;color:#0b0b0c}
 footer .flogo{background:#0b0b0c}

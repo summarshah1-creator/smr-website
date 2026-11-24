@@ -35,7 +35,7 @@ function ics(title) {
   const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([body], { type: 'text/calendar' })); a.download = 'inspire-fm-event.ics'; document.body.appendChild(a); a.click(); a.remove(); toast('Opening your calendar');
 }
 
-window.IFM_TOOL_IC = Object.assign(window.IFM_TOOL_IC || {}, { events: ['calendar', '#7c3aed'], kids2: ['smile', '#e8590c'], deals: ['card', '#d04aa3'] });
+window.IFM_TOOL_IC = Object.assign(window.IFM_TOOL_IC || {}, { events: ['calendar', '#8b73b4'], kids2: ['smile', '#9f6f55'], deals: ['card', '#a57595'] });
 
 /* ---------- Halal events coming up ---------- */
 TOOLS.events = ['Halal events coming up', null, node => {

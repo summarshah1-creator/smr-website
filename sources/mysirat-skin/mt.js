@@ -5,16 +5,16 @@ const X = window.IFMX; if (!X) return;
 const { $, $$, esc, store, dkey } = X;
 
 /* ---------- one brand in every word ---------- */
-const SW = [[/Inspire FM 105\.1/g, 'MySirat'], [/Inspire FM/g, 'MySirat'], [/Islamic Toolbox/g, 'MySirat'], [/Sunnah Toolbox/g, 'MySirat'], [/the Islamic toolbox/gi, 'the toolkit'], [/Inspire team/g, 'MySirat team'], [/Inspire's/g, 'our'], [/^Our partner$/, 'Local support'], [/^Toolbox$/, 'Toolkit'], [/Inspire Eid/g, 'Eid festival'], [/MySirat MySirat/g, 'MySirat'], [/^The MySirat, on your phone/, 'MySirat, on your phone'], [/Inspire green/g, 'Emerald'], [/On air & across Luton/g, 'Across Luton']];
+const SW = [[/Inspire FM 105\.1/g, 'My Sirat'], [/Inspire FM/g, 'My Sirat'], [/Islamic Toolbox/g, 'My Sirat'], [/Sunnah Toolbox/g, 'My Sirat'], [/the Islamic toolbox/gi, 'the toolkit'], [/Inspire team/g, 'My Sirat team'], [/Inspire's/g, 'our'], [/^Our partner$/, 'Local support'], [/^Toolbox$/, 'Toolkit'], [/Inspire Eid/g, 'Eid festival'], [/My Sirat My Sirat/g, 'My Sirat'], [/^The My Sirat, on your phone/, 'My Sirat, on your phone'], [/Inspire green/g, 'Emerald'], [/On air & across Luton/g, 'Across Luton']];
 const fixT = n => { let t = n.nodeValue, o = t; SW.forEach(([a, b]) => t = t.replace(a, b)); if (t !== o) n.nodeValue = t; };
 const fix = root => { if (!root) return; if (root.nodeType === 3) return fixT(root); const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT); let n; while ((n = w.nextNode())) fixT(n);
   (root.querySelectorAll ? root : document).querySelectorAll('input[placeholder]').forEach(i => { if (/toolbox|inspire/i.test(i.placeholder)) i.placeholder = 'Search the toolkit'; });
-  (root.querySelectorAll ? root : document).querySelectorAll('img[src*="icons/icon"],img[src*="icons/apple"],img[src*="logo-inspire"],img[src*="inspire-logo"]').forEach(i => { i.src = 'mt/icon-192.png'; i.alt = 'MySirat'; });
-  (root.querySelectorAll ? root : document).querySelectorAll('[aria-label*="Inspire"]').forEach(e => e.setAttribute('aria-label', e.getAttribute('aria-label').replace(/Inspire FM( 105\.1)?/g, 'MySirat')));
+  (root.querySelectorAll ? root : document).querySelectorAll('img[src*="icons/icon"],img[src*="icons/apple"],img[src*="logo-inspire"],img[src*="inspire-logo"]').forEach(i => { i.src = 'mt/icon-192.png'; i.alt = 'My Sirat'; });
+  (root.querySelectorAll ? root : document).querySelectorAll('[aria-label*="Inspire"]').forEach(e => e.setAttribute('aria-label', e.getAttribute('aria-label').replace(/Inspire FM( 105\.1)?/g, 'My Sirat')));
 };
 fix(document.body);
 new MutationObserver(ms => ms.forEach(m => m.addedNodes.forEach(x => (x.nodeType === 1 || x.nodeType === 3) && fix(x)))).observe(document.body, { childList: true, subtree: true });
-const setTitle = () => { const t = document.title.replace(/Inspire FM 105\.1|Inspire FM/g, 'MySirat').replace(/Islamic Toolbox/g, 'MySirat').replace(/ · Radio, Faith & Community · Luton/, ''); if (t !== document.title) document.title = t; };
+const setTitle = () => { const t = document.title.replace(/Inspire FM 105\.1|Inspire FM/g, 'My Sirat').replace(/Islamic Toolbox/g, 'My Sirat').replace(/ · Radio, Faith & Community · Luton/, ''); if (t !== document.title) document.title = t; };
 new MutationObserver(setTitle).observe(document.querySelector('title') || document.head, { childList: true, subtree: true, characterData: true }); setTitle();
 try { localStorage.setItem('ifm_introSeen', '1'); } catch (e) {}
 const intro = $('#intro'); if (intro) intro.remove();

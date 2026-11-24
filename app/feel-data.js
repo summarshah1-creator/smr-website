@@ -74,14 +74,14 @@ const SRC = {
 };
 /* q: [ayah key or range, meaning, why it helps]  d: dua refs (h = Hisn al-Muslim id, q = Qur'anic dua)  h: [hadith, ref, grade note] */
 const F = [
-{ id: 'crisis', n: 'I want to die / end it', e: 'lifebuoy', c: '#b91c1c', crisis: 2, g: 'urgent',
+{ id: 'crisis', n: 'I want to die / end it', e: 'lifebuoy', c: '#874e4e', crisis: 2, g: 'urgent',
   say: ['I want to die', "I don't want to be here anymore", 'I want to end it all', "I'm thinking of hurting myself", 'I feel suicidal'],
   tags: 'suicide suicidal sucidal suicdal kill myself end it all end my life want to die wanna die dont want to live no reason to live better off dead not be here anymore disappear forever self harm selfharm hurt myself cutting harm myself overdose cant go on can not go on give up on life',
   hi: 'Thank you for telling us. You matter, and you don\'t have to carry this alone or wait until it gets worse. Please talk to someone right now.',
   q: [['39:53', 'Say: O My servants who have wronged themselves, do not lose hope in the mercy of Allah.', 'Whatever you are carrying, the door is open.'], ['93:3', 'Your Lord has not left you, and He is not displeased with you.', '']],
   d: ['h123'], help: ['e999', 'nhs111', 'sam', 'shout', 'lounge', 'calm', 'papyrus', 'childline', 'myh'], src: ['crisis', 'lutonmh'] },
 
-{ id: 'unsafe', n: 'Unsafe at home', e: 'shield', c: '#9f1239', crisis: 1, g: 'urgent', exit: 1,
+{ id: 'unsafe', n: 'Unsafe at home', e: 'shield', c: '#723f4d', crisis: 1, g: 'urgent', exit: 1,
   say: ['I feel unsafe at home', 'Someone is hurting me', 'My husband controls me', "I'm scared of my family", 'Being forced to marry'],
   tags: 'abuse abused abusive domestic violence dv hit hits me beaten beat me hurting me hurts me controlling coercive control threatens threatened unsafe scared at home scared of my husband scared of my wife scared of my dad forced marriage honour honor family pressure locked in money taken shouted at every day emotional abuse',
   hi: 'Nobody has the right to hurt, threaten or control you, and it is not your fault. Islam forbids oppression completely. You can get help in confidence, in your own language.',
@@ -91,7 +91,7 @@ const F = [
   psy: [['Plan for safety', 'Keep your phone charged, know which rooms have a way out, and keep important documents and some money with someone you trust.'], ['Talk privately', 'Helplines can talk at a time that is safe for you and won\'t judge you. They can help you plan, even if you\'re not ready to leave.'], ['Children', 'If children are at risk, or you are under 18, call Childline or 999.']],
   help: ['e999', 'da', 'wail', 'lawc', 'mwn', 'mal', 'karma', 'childline'], src: ['lutonda', 'sunnah'] },
 
-{ id: 'anxious', n: 'Anxious', e: 'tangle', c: '#0e8a90', g: 'restless', try: 'breathe',
+{ id: 'anxious', n: 'Anxious', e: 'tangle', c: '#386466', g: 'restless', try: 'breathe',
   say: ['I feel anxious', "I can't stop worrying", "I'm overthinking everything", 'My chest feels tight', "I'm worried about the future", 'I feel on edge'],
   tags: 'anxious anxiety anxiaty anxios anxius anxiouse anxity nervous nervus worried worry worrying wory worryed overthinking over thinking overthink on edge edgy uneasy restless tense tension tight chest heart racing butterflies dread what if future uncertain uncertainty cant relax mind racing racing thoughts hamm stressed out',
   hi: 'Anxiety is your body trying to protect you from a danger it can\'t see clearly. The Prophet ﷺ himself sought refuge from hamm, worry about what might come. You are not weak for feeling this.',
@@ -103,7 +103,7 @@ const F = [
   both: [['Name it in dua: the Prophet ﷺ named hamm (worry about the future) and huzn (sorrow about the past) out loud to Allah.', 'Psychologists call this "affect labelling": putting a feeling into words calms the brain\'s alarm system.', 'Say the hamm wal-huzn dua slowly, naming exactly what you\'re worried about.'], ['"Tie your camel, then trust": do your part, leave the result to Allah.', 'CBT\'s worry tree: act on what you can control, let go of what you can\'t.', 'Write the worry down. Circle what you can do today. Hand the rest to Allah in dua.'], ['Dhikr and salah are set times of calm remembrance.', 'Slow breathing and mindfulness lower anxiety.', 'Breathe out slowly on "SubhanAllah". Try the breathing tool below.']],
   help: ['twl', 'mind', 'myh', 'mch', 'inspirited', 'kooth', 'gp', 'sam'], src: ['yq_dua', 'yq_mh', 'worry', 'ground', 'malaysia', 'meta16', 'sunnah'] },
 
-{ id: 'panic', n: 'Panicking', e: 'pulse', c: '#0891b2', g: 'restless', try: 'breathe', top: 1,
+{ id: 'panic', n: 'Panicking', e: 'pulse', c: '#416e79', g: 'restless', try: 'breathe', top: 1,
   say: ["I'm having a panic attack", "I can't breathe", 'My heart is pounding', 'I feel like something bad is about to happen', 'I feel like I am going to faint'],
   tags: 'panic attack panick panik panicking paniking cant breathe can not breathe breathless short of breath hyperventilating heart pounding palpitations shaking trembling dizzy faint going to die losing control freaking out',
   hi: 'A panic attack feels terrifying, but it is not dangerous and it will pass. Most panic attacks last between 5 and 20 minutes. Stay where you are and breathe with us.',
@@ -114,7 +114,7 @@ const F = [
   both: [['The Prophet ﷺ told us to change position, sit or lie down, when a strong emotion takes hold.', 'Changing body position and slowing the breath lowers the body\'s alarm response.', 'Sit, put one hand on your chest, and breathe out slowly with dhikr.']],
   help: ['nhs111', 'twl', 'gp', 'shout', 'sam'], src: ['panic', 'ground', 'sunnah'] },
 
-{ id: 'scared', n: 'Scared', e: 'lantern', c: '#1d4ed8', g: 'restless',
+{ id: 'scared', n: 'Scared', e: 'lantern', c: '#596a9c', g: 'restless',
   say: ["I'm scared", "I'm afraid something bad will happen", "I'm scared of the dark", 'I had a nightmare', 'I feel unsafe outside'],
   tags: 'scared scard skared afraid afriad frightened fear fearful terrified nightmare bad dream scary dark jinn evil protection unsafe outside threatened worried about safety phobia',
   hi: 'Fear is natural. Even Musa felt fear, and Allah answered: "Do not fear, I am with you both, hearing and seeing."',
@@ -125,7 +125,7 @@ const F = [
   both: [['Adhkar of protection are a promise of safety you can repeat.', 'A set routine that makes you feel safe calms the body\'s threat response.', 'Make the protection adhkar your morning and bedtime routine.']],
   help: ['twl', 'gp', 'myh', 'childline', 'e999'], src: ['emm', 'sunnah'] },
 
-{ id: 'stressed', n: 'Stressed', e: 'gauge', c: '#ea580c', g: 'restless', try: 'breathe',
+{ id: 'stressed', n: 'Stressed', e: 'gauge', c: '#a06f56', g: 'restless', try: 'breathe',
   say: ["I'm so stressed", 'I have too much on', "I'm burnt out", "I'm exhausted all the time", 'Work is too much', "I can't cope"],
   tags: 'stress stressed stresed streesed stressd overwhelmed overwhelm overwelmed too much on too much to do pressure pressured burnt out burned out burnout exhausted tired drained no energy busy deadline workload work stress juggling cant cope can not cope breaking point frazzled',
   hi: 'When everything piles up, your mind treats it all as urgent. Islam teaches balance: your body has a right over you, and Allah does not ask more of you than you can carry.',
@@ -137,7 +137,7 @@ const F = [
   both: [['"Your body has a right over you" and "take a middle way".', 'Burnout research: rest and boundaries are part of the work, not a reward after it.', 'Plan your day around the five prayers. Each is a short reset.']],
   help: ['twl', 'mind', 'emm', 'gp', 'sam'], src: ['emm', 'sunnah', 'yq_mh'] },
 
-{ id: 'exam', n: 'Exam stress', e: 'book', c: '#7c3aed', g: 'restless', try: 'breathe',
+{ id: 'exam', n: 'Exam stress', e: 'book', c: '#8b73b4', g: 'restless', try: 'breathe',
   say: ['I have exams and I am stressed', "I'm scared I will fail", "I can't focus on revision", 'Results day is coming', 'Job interview tomorrow'],
   tags: 'exam exams exsam gcse gcses a level a levels alevels sats test tests revision revising study studying uni university assignment deadline dissertation results day fail failing grades focus concentrate concentration interview job interview driving test presentation',
   hi: 'Exam nerves mean you care. Do your best, then leave the result with Allah, who knows what is best for you.',
@@ -149,7 +149,7 @@ const F = [
   both: [['Small, consistent deeds are most loved by Allah.', 'Spaced practice (little and often) is one of the best-proven study methods.', 'Make a revision timetable around the prayer times.']],
   help: ['chathealth', 'kooth', 'childline', 'myh', 'twl'], src: ['emm', 'sunnah'] },
 
-{ id: 'sad', n: 'Sad', e: 'drop', c: '#2563eb', g: 'heavy',
+{ id: 'sad', n: 'Sad', e: 'drop', c: '#647bac', g: 'heavy',
   say: ['I feel sad', 'I keep crying', 'I feel down', 'Today was a bad day', 'I feel hurt'],
   tags: 'sad sadd sadness unhappy down feeling down low upset crying cry keep crying tears teary heavy heart hurt hurting bad day blue miserable gloomy huzn hazan',
   hi: 'Sadness is not a lack of faith. The Prophet ﷺ cried, and Yaqub grieved for years and said: "I only complain of my sorrow to Allah."',
@@ -161,7 +161,7 @@ const F = [
   both: [['Yaqub complained of his grief to Allah, openly and honestly.', 'Expressing emotion, rather than bottling it up, protects mental health.', 'Write or say exactly what hurts, then make the Ibn Mas\'ud dua.']],
   help: ['sam', 'twl', 'myh', 'mch', 'mwn', 'kooth', 'gp'], src: ['yq_mh', 'yq_spirit', 'sunnah'] },
 
-{ id: 'empty', n: 'Low / depressed', e: 'circledash', c: '#475569', g: 'heavy',
+{ id: 'empty', n: 'Low / depressed', e: 'circledash', c: '#52575e', g: 'heavy',
   say: ['I feel empty', 'I feel numb', "I can't be bothered with anything", 'Nothing makes me happy anymore', "I can't get out of bed", 'I think I might be depressed'],
   tags: 'depressed depresed depresssed depression depresion empty numb nothing matters no motivation unmotivated cant be bothered can not be bothered no interest lost interest hopeless low mood cant get out of bed can not get out of bed stay in bed all day pointless flat grey dark cloud no energy',
   hi: 'Depression is an illness, not a sign of weak iman. Scholars like Abu Zayd al-Balkhi wrote about it over a thousand years ago and treated it with both medicine and faith. Getting help is part of your faith, not against it.',
@@ -173,7 +173,7 @@ const F = [
   both: [['"Seek Allah\'s help and do not feel helpless."', 'Behavioural activation: do small valued actions before the motivation comes. A version adapted for Muslims (BA-M) has been tested in Bradford, Lahore and Istanbul.', 'Pick one small act for after each prayer: a walk, a call, a chore.'], ['The Prophet ﷺ said every disease has a cure.', 'Depression is treatable with therapy and, where needed, medicine.', 'Book a GP appointment or refer yourself to Total Wellbeing Luton.']],
   help: ['twl', 'gp', 'mind', 'sam', 'myh', 'inspirited', 'mch', 'shout'], src: ['bam', 'yq_mind', 'yq_mh', 'khalil', 'emm', 'sunnah'] },
 
-{ id: 'hopeless', n: 'Hopeless', e: 'cloudrain', c: '#334155', g: 'heavy', crisis: 1,
+{ id: 'hopeless', n: 'Hopeless', e: 'cloudrain', c: '#3e434a', g: 'heavy', crisis: 1,
   say: ['I feel hopeless', "Nothing will ever get better", "What's the point", "I've given up", "I'm a burden to everyone"],
   tags: 'hopeless hopless no hope helpless whats the point what is the point no point pointless given up giving up give up nothing will change never get better burden useless worthless trapped stuck forever despair despairing',
   hi: 'When everything feels dark, the mind tells you it will always be like this. That is the feeling talking, not the truth. Allah says to never despair of His mercy. If you have thoughts of ending your life, please call Samaritans or 111 option 2 now.',
@@ -183,7 +183,7 @@ const F = [
   both: [['Despair of Allah\'s mercy is warned against because hope is always justified.', 'CBT challenges "all or nothing" thinking: "never" and "always" are rarely true.', 'Write down one thing that was hard before and did change.']],
   help: ['sam', 'nhs111', 'shout', 'lounge', 'twl', 'myh', 'gp'], src: ['crisis', 'yq_mh', 'sunnah'] },
 
-{ id: 'grief', n: 'Grieving', e: 'dove', c: '#7c3aed', g: 'heavy',
+{ id: 'grief', n: 'Grieving', e: 'dove', c: '#8b73b4', g: 'heavy',
   say: ['Someone I love has died', 'I miss my mum', 'I lost my dad', 'My baby died', 'I keep thinking about them', 'I can\'t accept they are gone'],
   tags: 'grief grieving greif greiving griefing bereaved bereavement death died passed away passed lost someone loss loved one funeral janazah miss them missing my mum dad mother father brother sister child baby miscarriage stillbirth grandparent nan nani dadi friend died anniversary of death inna lillahi',
   hi: 'Grief is love with nowhere to go. When his son Ibrahim died, the Prophet ﷺ wept and said: "The eyes shed tears and the heart grieves, but we only say what pleases our Lord." Your tears are not a lack of patience.',
@@ -195,7 +195,7 @@ const F = [
   both: [['Dua, sadaqah jariyah and honouring their good deeds keep your bond with them alive.', 'Grief research finds a healthy ongoing bond with the person who died helps recovery.', 'Set up a small sadaqah jariyah in their name and make dua for them after every salah.'], ['The Prophet ﷺ wept openly.', 'Allowing grief, rather than hiding it, leads to healthier mourning.', 'Let yourself cry. Patience is in what you say, not in hiding tears.']],
   help: ['cruse', 'janazah', 'imam', 'chums', 'sam', 'gp'], src: ['yq_grief', 'sunnah'] },
 
-{ id: 'lonely', n: 'Lonely', e: 'person', c: '#0d9488', g: 'heavy',
+{ id: 'lonely', n: 'Lonely', e: 'person', c: '#386964', g: 'heavy',
   say: ['I feel lonely', 'I have no friends', 'Nobody understands me', 'I feel alone even around people', "I'm new to Luton and don't know anyone", 'I miss home'],
   tags: 'lonely lonley lonly loneliness alone by myself on my own isolated isolation no friends no one to talk to nobody cares nobody understands left out excluded ignored homesick miss home new to luton new country refugee new muslim revert convert single',
   hi: 'Feeling lonely doesn\'t mean something is wrong with you. Musa, alone in a new land, said: "My Lord, I am in need of whatever good You send me." And Allah says He is near.',
@@ -207,7 +207,7 @@ const F = [
   both: [['Congregation, salam and helping others are built into the Sunnah.', 'Research links regular social contact and volunteering to less loneliness and better health.', 'Pick one jama\'ah prayer a day and one volunteering slot a week.']],
   help: ['community', 'volunteer', 'imam', 'mind', 'myh', 'mch', 'sam'], src: ['emm', 'sunnah'] },
 
-{ id: 'heartbreak', n: 'Heartbroken', e: 'heartbreak', c: '#db2777', g: 'heavy',
+{ id: 'heartbreak', n: 'Heartbroken', e: 'heartbreak', c: '#a1617d', g: 'heavy',
   say: ['My engagement broke off', 'They rejected me', 'I got divorced', 'I miss my ex', 'My rishta fell through', 'My best friend dropped me'],
   tags: 'heartbroken heart broken heartbreak hartbroken break up breakup broke up split up dumped rejected rejection ex boyfriend girlfriend divorce divorced talaq engagement broken off rishta proposal rejected marriage ended unrequited miss my ex friendship ended betrayed cheated',
   hi: 'A broken heart really hurts. Allah may hold back something you wanted because He is keeping something better for you.',
@@ -218,7 +218,7 @@ const F = [
   both: [['"It may be that you dislike something while it is good for you."', 'Reframing: finding meaning or a lesson in a loss helps recovery.', 'Write three things this taught you about what you want next.']],
   help: ['myh', 'mch', 'mwn', 'kooth', 'twl', 'sam'], src: ['emm', 'sunnah'] },
 
-{ id: 'family', n: 'Family problems', e: 'home', c: '#b45309', g: 'hurting',
+{ id: 'family', n: 'Family problems', e: 'home', c: '#7b5b42', g: 'hurting',
   say: ['My parents don\'t understand me', 'Arguments at home all the time', 'Problems in my marriage', 'My in-laws are difficult', 'I fell out with my brother'],
   tags: 'family problems arguments argue fighting fights at home parents mum dad strict parents dont understand me marriage problems husband wife spouse in laws inlaws mother in law sisters brother siblings fell out falling out divorce talk relatives family drama toxic family',
   hi: 'Family conflict is one of the hardest tests, because we love the people involved. Islam values family ties and kindness, and it never asks you to accept abuse. If you are being hurt or controlled, see "Unsafe at home".',
@@ -230,7 +230,7 @@ const F = [
   both: [['The Qur\'an recommends a mediator from each side (4:35).', 'Family therapy and mediation are proven ways to resolve conflict.', 'Ask your imam, or a counsellor, to help you both talk.'], ['"Respond with what is better" (41:34).', 'De-escalation: a calm response lowers the other person\'s anger too.', 'Next time, try lowering your voice instead of raising it.']],
   help: ['imam', 'mch', 'mwn', 'myh', 'childline', 'twl', 'wail'], src: ['yq_anger', 'sunnah'] },
 
-{ id: 'angry', n: 'Angry', e: 'flame', c: '#dc2626', g: 'hurting', try: 'breathe',
+{ id: 'angry', n: 'Angry', e: 'flame', c: '#a26060', g: 'hurting', try: 'breathe',
   say: ["I'm so angry", 'I lose my temper', 'I want to shout at someone', "I'm annoyed with everyone", 'I said something I regret in anger'],
   tags: 'angry angery angy anger mad furious fuming rage raging annoyed irritated irritable pissed off frustrated frustration lose my temper short tempered snapping snap shout shouting want to hit fed up resentment resentful',
   hi: 'Anger itself isn\'t sinful. It\'s what we do with it. The Prophet ﷺ gave very practical steps, and they line up with modern anger management.',
@@ -242,7 +242,7 @@ const F = [
   both: [['Seek refuge, be silent, sit down, lie down.', 'Anger management: recognise the signs, take a time-out, change your body\'s state, then problem-solve.', 'The Sunnah is a ready-made anger plan: refuge, silence, sit, walk away, water.'], ['Forgiving is "great resolve" (42:43).', 'Holding a grudge keeps stress high. Forgiving lowers it.', 'When you\'re ready, make dua for the person who angered you.']],
   help: ['twl', 'mind', 'myh', 'imam', 'gp'], src: ['yq_anger', 'sunnah'] },
 
-{ id: 'guilty', n: 'Guilty', e: 'hands', c: '#15803d', g: 'hurting',
+{ id: 'guilty', n: 'Guilty', e: 'hands', c: '#375e46', g: 'hurting',
   say: ['I feel guilty', "I've sinned and I feel terrible", "I can't forgive myself", 'I keep making the same mistake', 'Will Allah forgive me?'],
   tags: 'guilty guilt gilty guity regret regretful sin sinned sins sinner bad person mistake messed up ashamed shame cant forgive myself can not forgive myself will allah forgive me tawbah tauba repent repentance relapse same sin again haram',
   hi: 'Guilt that brings you back to Allah is a gift. Allah loves those who turn back to Him, again and again. No sin is bigger than His mercy.',
@@ -254,7 +254,7 @@ const F = [
   both: [['Tawbah: stop, regret, resolve, and put right what you can.', 'Psychology: healthy guilt leads to repair. Self-forgiveness after repair improves wellbeing.', 'Do the three steps today, then write down the trigger you\'ll avoid.'], ['Allah turns bad deeds into good for those who repent.', 'Seeing yourself as able to change ("growth mindset") makes change more likely.', 'Read 39:53 every time Shaytan says you\'re too far gone.']],
   help: ['imam', 'myh', 'mch', 'twl'], src: ['yq_mh', 'sunnah'] },
 
-{ id: 'worthless', n: 'Not good enough', e: 'mirror', c: '#a855f7', g: 'hurting',
+{ id: 'worthless', n: 'Not good enough', e: 'mirror', c: '#a78bc1', g: 'hurting',
   say: ["I'm not good enough", 'I hate how I look', 'Everyone is better than me', "I'm a failure", 'I have no confidence'],
   tags: 'not good enough worthless useless failure loser ugly hate myself hate how i look body image insecure insecurity low self esteem self-esteem confidence no confidence comparing compare everyone better than me imposter syndrome stupid',
   hi: 'Your worth isn\'t your grades, looks, money or followers. Allah created you in the best form, honoured you, and looks at your heart and your deeds.',
@@ -266,7 +266,7 @@ const F = [
   both: [['"Look at those below you, not above you."', 'Upward social comparison lowers self-esteem; gratitude raises it.', 'Swap 10 minutes of scrolling for writing three things you\'re grateful for.']],
   help: ['twl', 'kooth', 'myh', 'chathealth', 'gp'], src: ['emm', 'sunnah'] },
 
-{ id: 'jealous', n: 'Jealous', e: 'eye', c: '#65a30d', g: 'hurting',
+{ id: 'jealous', n: 'Jealous', e: 'eye', c: '#5d723e', g: 'hurting',
   say: ['I feel jealous of my friend', 'Why does everyone else have it easier', "I'm envious of people online", 'My sibling gets everything'],
   tags: 'jealous jelous jealousy envy envious hasad hassad why not me unfair everyone else has it easier comparing compare instagram tiktok social media rich friends sibling favouritism evil eye nazar',
   hi: 'Feeling jealous sometimes is human. Islam turns it into something good: pray for the person, and ask Allah for the same for yourself.',
@@ -278,7 +278,7 @@ const F = [
   both: [['Pray for the person you envy; the angel prays the same for you.', 'Turning envy into goodwill and a goal reduces resentment.', 'Make one secret dua for them today.']],
   help: ['myh', 'kooth', 'twl'], src: ['sunnah', 'emm'] },
 
-{ id: 'waswasa', n: 'Doubts & intrusive thoughts', e: 'loop', c: '#6d28d9', g: 'faith',
+{ id: 'waswasa', n: 'Doubts & intrusive thoughts', e: 'loop', c: '#7961a0', g: 'faith',
   say: ['I keep repeating my wudu', 'Bad thoughts about Allah keep coming', 'Is my prayer valid?', 'I have doubts about Islam', 'I think I have religious OCD'],
   tags: 'waswasa waswas wasawis whispers whispering intrusive thoughts bad thoughts blasphemous thoughts kufr thoughts doubt doubts doubting faith repeating wudu repeat wudu repeat salah prayer valid did i break my wudu religious ocd scrupulosity obsessive compulsive ocd checking najis impure clean shaytan',
   hi: 'Unwanted bad thoughts that upset you are not your beliefs, and you are not sinful for them. When companions complained of terrible thoughts, the Prophet ﷺ said that hating them is "clear faith". If you repeat wudu or prayer again and again, this may be religious OCD, which is very treatable.',
@@ -290,7 +290,7 @@ const F = [
   both: [['Scholars said "certainty is not removed by doubt" and ignore waswasa.', 'ERP, the gold-standard OCD treatment, also means not acting on the doubt.', 'Next doubt: say "a\'udhu billah", don\'t repeat, and carry on. The anxiety will fade.'], ['Hating the thought is "clear faith" (Muslim 132).', 'In OCD, the thoughts upset you precisely because they go against your values.', 'Treat the thought as noise, not as a message about you.']],
   help: ['twl', 'gp', 'imam', 'ocduk', 'inspirited', 'myh'], src: ['ocd', 'khalil', 'sunnah'] },
 
-{ id: 'faith', n: 'Spiritually low', e: 'crescent', c: '#55524e', g: 'faith',
+{ id: 'faith', n: 'Spiritually low', e: 'crescent', c: '#535250', g: 'faith',
   say: ['My iman feels low', "I've stopped praying", 'I feel far from Allah', "I don't feel anything in salah", 'I want to get closer to Allah'],
   tags: 'iman eman imaan low iman weak iman faith low far from allah distant from allah not praying stopped praying missed prayers no khushu no feeling in salah lazy in deen spiritually low spiritual dry relapse want to change get closer to allah practising practicing',
   hi: 'Iman rises and falls. The Prophet ﷺ said it wears out like clothes wear out, so ask Allah to renew it. That you want to feel closer is itself a sign of iman.',
@@ -302,7 +302,7 @@ const F = [
   both: [['"The most loved deeds are regular ones, even if small."', 'Habit research: small, consistent actions linked to cues stick best.', 'Pick one act (one prayer on time, or one page) and tie it to something you already do.']],
   help: ['imam', 'quran', 'duas', 'community', 'myh'], src: ['yq_mh', 'yq_mind', 'sunnah'] },
 
-{ id: 'unmotivated', n: 'Unmotivated', e: 'battery', c: '#a16207', g: 'heavy',
+{ id: 'unmotivated', n: 'Unmotivated', e: 'battery', c: '#6d593b', g: 'heavy',
   say: ["I can't be bothered", "I keep procrastinating", "I'm so lazy", "I have no motivation to do anything"],
   tags: 'unmotivated no motivation lazy laziness procrastinating procrastination procrastinate putting things off cant be bothered can not be bothered bored boring stuck wasting time scrolling all day kasal ajz',
   hi: 'The Prophet ﷺ sought refuge from \'ajz (feeling unable) and kasal (laziness) every day. Low motivation is something to work on, not something to be ashamed of.',
@@ -314,7 +314,7 @@ const F = [
   both: [['"Do not feel helpless" and morning barakah.', 'Behavioural science: action creates motivation, not the other way round.', 'After Fajr, do two minutes of the task you\'re avoiding.']],
   help: ['twl', 'emm', 'kooth'], src: ['emm', 'sunnah'] },
 
-{ id: 'sleep', n: "Can't sleep", e: 'moon', c: '#4f46e5', g: 'restless', try: 'breathe',
+{ id: 'sleep', n: "Can't sleep", e: 'moon', c: '#7c79b2', g: 'restless', try: 'breathe',
   say: ["I can't sleep", 'I keep waking up at night', 'My mind races at bedtime', "I'm awake at 3am"],
   tags: 'cant sleep can not sleep insomnia insomina no sleep sleepless awake at night up all night wake up at night waking 3am 4am racing mind bedtime nightmares tired but wired restless night sleeping problems',
   hi: 'Not sleeping makes everything feel harder. The Sunnah bedtime routine is a ready-made wind-down plan.',
@@ -326,7 +326,7 @@ const F = [
   both: [['Wudu, adhkar, right side, early night after Isha.', 'Sleep therapy (CBT-I) uses a calming pre-sleep routine and a fixed wake time.', 'Follow the Sunnah routine every night at the same time, and get up for Fajr.']],
   help: ['emm', 'twl', 'gp'], src: ['sleep', 'sunnah'] },
 
-{ id: 'ill', n: 'Ill or in pain', e: 'thermo', c: '#0369a1', g: 'hurting',
+{ id: 'ill', n: 'Ill or in pain', e: 'thermo', c: '#39596b', g: 'hurting',
   say: ["I'm ill", "I'm in pain", 'Worried about my health', 'Waiting for test results', 'Someone I love is in hospital'],
   tags: 'ill sick sickness unwell poorly pain hurt hurts chronic pain headache migraine cancer diabetes long covid hospital operation surgery diagnosis test results waiting health anxiety worried about my health disability tired all the time someone in hospital',
   hi: 'Being ill is exhausting and can feel lonely. Allah rewards you for every bit of it, and your usual good deeds are written for you while you can\'t do them.',
@@ -338,7 +338,7 @@ const F = [
   both: [['Seek treatment and make dua; both are Sunnah.', 'Combining medical care with emotional and spiritual support improves coping with illness.', 'Book the appointment, then say the dua for pain with your hand on the spot.']],
   help: ['gp', 'nhs111', 'twl', 'imam'], src: ['quranrev', 'sunnah'] },
 
-{ id: 'money', n: 'Money worries', e: 'pound', c: '#047857', g: 'hurting',
+{ id: 'money', n: 'Money worries', e: 'pound', c: '#2b5146', g: 'hurting',
   say: ["I'm in debt", "I can't pay my bills", 'I lost my job', "I can't afford food", 'Money is keeping me up at night'],
   tags: 'money worries money problems debt debts dept owe owing bills cant pay rent cant afford food skint broke poor poverty lost my job unemployed redundant redundancy cost of living overdraft loan credit card bailiffs council tax arrears benefits universal credit rizq',
   hi: 'Money stress affects everything: sleep, mood and family. The Prophet ﷺ sought refuge from being overwhelmed by debt. There is free, confidential help, and no one will judge you.',
@@ -350,7 +350,7 @@ const F = [
   both: [['"Tie your camel": make dua, and take the practical steps.', 'Problem-solving therapy: break a big worry into small actions, one at a time.', 'Say the debt dua, then call Citizens Advice or StepChange today.']],
   help: ['cab', 'step', 'ndl', 'findhelp', 'gamcare'], src: ['emm', 'sunnah'] },
 
-{ id: 'bullied', n: 'Bullied or treated unfairly', e: 'hand', c: '#be185d', g: 'hurting',
+{ id: 'bullied', n: 'Bullied or treated unfairly', e: 'hand', c: '#894d66', g: 'hurting',
   say: ["I'm being bullied", 'People are racist to me', 'Someone abused me for wearing hijab', "I'm treated unfairly at work", 'Online trolls'],
   tags: 'bullied bully bullying bulied picked on teased mocked laughed at racist racism islamophobia islamophobic anti muslim hate crime abuse for hijab beard discrimination discriminated unfair treatment work harassment harassed online trolls cyberbullying',
   hi: 'Being targeted for who you are is wrong, and it\'s not your fault. Allah sees what is done to you, and you can report it and get support.',
@@ -362,7 +362,7 @@ const F = [
   both: [['Allah tells the Prophet ﷺ He knows how hurtful words feel, then gives him prayer and dhikr to cope.', 'Talking about it and getting support protects against the effects of bullying.', 'Report it, then lean on dua and people who care.']],
   help: ['tellmama', 'childline', 'myh', 'mwn', 'e999'], src: ['sunnah'] },
 
-{ id: 'habit', n: 'Struggling with a habit', e: 'chain', c: '#57534e', g: 'faith',
+{ id: 'habit', n: 'Struggling with a habit', e: 'chain', c: '#545351', g: 'faith',
   say: ["I can't stop gambling", 'I keep watching things I shouldn\'t', "I'm addicted to my phone", 'I want to stop smoking or vaping', 'Drinking or drugs'],
   tags: 'addiction addicted addict habit bad habit cant stop can not stop relapse gambling betting bets casino slots porn pornography masturbation phone addiction screen time gaming addiction smoking vaping vape weed drugs alcohol drinking',
   hi: 'Wanting to stop is the first and most important step. Every time you fall and turn back to Allah, He accepts you. Many people break free, and help works.',
@@ -374,7 +374,7 @@ const F = [
   both: [['Keep repenting; never despair.', 'Relapse prevention: slips are part of recovery, not the end of it.', 'After a slip: tawbah, note the trigger, change one thing.']],
   help: ['gamcare', 'na', 'aa', 'gp', 'imam', 'myh'], src: ['emm', 'sunnah'] },
 
-{ id: 'confused', n: 'Confused about a decision', e: 'compass', c: '#0f766e', g: 'faith',
+{ id: 'confused', n: 'Confused about a decision', e: 'compass', c: '#305552', g: 'faith',
   say: ['I don\'t know what to do', 'Should I take this job?', "I can't decide about marriage", 'Which uni should I choose?', 'I feel lost in life'],
   tags: 'confused confusion dont know what to do decision decide choice choose should i which option marriage proposal rishta job offer university uni course move house lost in life direction purpose istikhara istikhara guidance stuck',
   hi: 'When you can\'t decide, Islam gives you two tools: istikhara (asking Allah) and shura (asking wise people). Then decide and trust Allah.',
@@ -386,7 +386,7 @@ const F = [
   both: [['Istikhara plus shura, then tawakkul.', 'Good decisions combine your values, others\' advice and a clear commitment.', 'Pray istikhara, talk to one wise person, then decide by a set day.']],
   help: ['imam', 'myh', 'cab'], src: ['sunnah'] },
 
-{ id: 'grateful', n: 'Grateful & happy', e: 'sun', c: '#16a34a', g: 'good',
+{ id: 'grateful', n: 'Grateful & happy', e: 'sun', c: '#437656', g: 'good',
   say: ["I'm happy", 'Alhamdulillah, good news', 'I feel grateful', 'I got the job', "I'm getting married", 'We had a baby'],
   tags: 'happy happi grateful greatful thankful blessed alhamdulillah alhamdulilah good news great day excited content peaceful calm relieved passed exam got the job engaged getting married wedding new baby pregnant',
   hi: 'Alhamdulillah! Gratitude keeps blessings growing. Allah says: "If you are grateful, I will give you more."',

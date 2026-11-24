@@ -48,7 +48,7 @@ const ZONES = { hair: [['head', 0, 80]], neck: [['neck', 40, 80]], shoulders: [[
   knees: [['legs', 322, 344]], shins: [['legs', 344, 400]], feet: [['legs', 400, 430]] };
 const ZN = { hair: 'Head & hair', face: 'Face', neck: 'Neck', shoulders: 'Shoulders', chest: 'Chest & upper back', upperArm: 'Upper arms', forearm: 'Forearms', hands: 'Hands', belly: 'Stomach & lower back', hips: 'Navel to top of thighs', thighs: 'Thighs', knees: 'Knees', shins: 'Lower legs', feet: 'Feet' };
 const ZORDER = ['hair', 'face', 'neck', 'shoulders', 'chest', 'upperArm', 'forearm', 'hands', 'belly', 'hips', 'thighs', 'knees', 'shins', 'feet'];
-const COL = { c: '#e5534b', s: '#7cc243', d: '#f2b531' };
+const COL = { c: '#b47f7c', s: '#80996c', d: '#b29e71' };
 
 /* the coverage figure: a smooth, faceless mannequin with each body area coloured by its ruling */
 function bodyFig(sex, st, opt = {}) {
@@ -57,27 +57,27 @@ function bodyFig(sex, st, opt = {}) {
   const zone = z => (ZONES[z] || []).map(([p, a, b]) => { const y1 = a === 'N' ? N : a, y2 = b === 'N' ? N : b; const s = st[z] || 's'; return `<rect x="0" y="${y1}" width="200" height="${y2 - y1}" clip-path="url(#${id}${p})" fill="${s === 'd' ? `url(#${id}h)` : COL[s]}" opacity="${s === 's' ? .5 : .82}"/>`; }).join('');
   const base = `url(#${id}b)`;
   return `<svg class="dfig" viewBox="0 0 200 440" role="img" aria-label="${esc(opt.label || 'Body coverage diagram')}"><defs>
-    <linearGradient id="${id}b" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#efe5da"/><stop offset="1" stop-color="#cdbcaa"/></linearGradient>
+    <linearGradient id="${id}b" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#e8e5e1"/><stop offset="1" stop-color="#c2bcb5"/></linearGradient>
     <linearGradient id="${id}sh" x1="0" x2="1"><stop offset="0" stop-color="#000" stop-opacity=".18"/><stop offset=".45" stop-color="#000" stop-opacity="0"/><stop offset=".8" stop-color="#fff" stop-opacity=".12"/><stop offset="1" stop-color="#000" stop-opacity=".12"/></linearGradient>
     <pattern id="${id}h" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="8" height="8" fill="${COL.d}"/><rect width="3.2" height="8" fill="#fff" opacity=".45"/></pattern>
     ${['head', 'neck', 'torso', 'arms', 'legs'].map(clip).join('')}
     <clipPath id="${id}all">${P.head}${P.neck}${P.torso}${P.arms}${P.legs}<path d="${g.hair}"/></clipPath></defs>
     <ellipse cx="100" cy="426" rx="54" ry="7" fill="#000" opacity=".12"/>
     <g fill="${base}">${P.legs}${P.torso}${P.neck}${P.arms}${P.head}</g>
-    <path d="${g.hair}" fill="#5b4636"/>
+    <path d="${g.hair}" fill="#4f4842"/>
     ${ZORDER.filter(z => z !== 'face').map(zone).join('')}
-    <ellipse cx="${g.face[0]}" cy="${g.face[1]}" rx="${g.face[2]}" ry="${g.face[3]}" fill="#f3e9df"/>
+    <ellipse cx="${g.face[0]}" cy="${g.face[1]}" rx="${g.face[2]}" ry="${g.face[3]}" fill="#ede9e5"/>
     <ellipse cx="${g.face[0]}" cy="${g.face[1]}" rx="${g.face[2]}" ry="${g.face[3]}" fill="${(st.face || 's') === 'd' ? `url(#${id}h)` : COL[st.face || 's']}" opacity="${(st.face || 's') === 's' ? .45 : .82}"/>
     <rect x="0" y="0" width="200" height="440" fill="url(#${id}sh)" clip-path="url(#${id}all)"/>
-    <g fill="none" stroke="#3a2f27" stroke-opacity=".35" stroke-width="1">${P.legs}${P.torso}${P.neck}${P.arms}${P.head}</g>
-    ${opt.marks !== false ? `<g stroke="#2b2420" stroke-width="1" stroke-dasharray="3 3" opacity=".55"><line x1="58" x2="142" y1="${N}" y2="${N}"/><line x1="70" x2="130" y1="322" y2="322"/><line x1="70" x2="130" y1="344" y2="344"/></g>
-    <circle cx="100" cy="${N}" r="2.2" fill="#2b2420" opacity=".6"/>
-    <g font-family="DM Sans,system-ui" font-size="9" fill="#5a524b" font-weight="700"><text x="146" y="${N + 3}">navel</text><text x="134" y="336">knee</text></g>` : ''}
+    <g fill="none" stroke="#34302d" stroke-opacity=".35" stroke-width="1">${P.legs}${P.torso}${P.neck}${P.arms}${P.head}</g>
+    ${opt.marks !== false ? `<g stroke="#272524" stroke-width="1" stroke-dasharray="3 3" opacity=".55"><line x1="58" x2="142" y1="${N}" y2="${N}"/><line x1="70" x2="130" y1="322" y2="322"/><line x1="70" x2="130" y1="344" y2="344"/></g>
+    <circle cx="100" cy="${N}" r="2.2" fill="#272524" opacity=".6"/>
+    <g font-family="DM Sans,system-ui" font-size="9" fill="#555250" font-weight="700"><text x="146" y="${N + 3}">navel</text><text x="134" y="336">knee</text></g>` : ''}
   </svg>`;
 }
 
 /* outfit illustrations: a faceless figure dressed in the garment being described */
-const SKIN = '#d9b693';
+const SKIN = '#c3b6a9';
 function outfitFig(sex, look, opt = {}) {
   const g = G[sex], P = parts(g), id = 'do' + (++uid);
   const gr = (k, c) => `<linearGradient id="${id}${k}" x1="0" x2="1" y1="0" y2=".6"><stop offset="0" stop-color="${shade(c, .28)}"/><stop offset=".55" stop-color="${c}"/><stop offset="1" stop-color="${shade(c, -.32)}"/></linearGradient>`;
@@ -91,12 +91,12 @@ function outfitFig(sex, look, opt = {}) {
   const C = look.c || {};
   /* lower garments */
   if (look.trousers) { const f = fill('tr', look.trousers); const half = [[73, 222], [71, 258], [73, 300], [75, 352], [75, 404], [96, 404], [97, 352], [99, 300], [100, 250]]; add(both(half), f); add(rp([[73, 212], [127, 212], [128, 240], [100, 258], [72, 240]]), f); fold('M84 280L86 400M116 280L114 400'); }
-  if (look.izar) { const f = fill('iz', '#f7f5ef'); add(rp([[66, 184], [134, 184], [140, 260], [138, 362], [62, 362], [60, 260]]), f); fold('M80 200L76 356M100 196L100 358M120 200L124 356'); fold('M64 220Q100 232 136 220', 1); }
+  if (look.izar) { const f = fill('iz', '#f4f4f2'); add(rp([[66, 184], [134, 184], [140, 260], [138, 362], [62, 362], [60, 260]]), f); fold('M80 200L76 356M100 196L100 358M120 200L124 356'); fold('M64 220Q100 232 136 220', 1); }
   if (look.skirt) { const f = fill('sk2', look.skirt); add(rp([[74, 190], [126, 190], [140, 300], [150, 412], [50, 412], [60, 300]]), f); fold('M84 230L72 408M100 230L100 410M116 230L128 408'); }
   /* shoes */
-  const shoes = look.shoes || '#3b3530';
+  const shoes = look.shoes || '#373534';
   if (!look.barefeet) { const f = fill('sh', shoes); add(both([[76, 402], [94, 402], [96, 412], [93, 421], [68, 421], [67, 412]]), f); }
-  if (look.sandals) { L.push(`<g stroke="#7a5a3a" stroke-width="2.4" fill="none">${[0, 1].map(s => { const x = s ? 200 - 86 : 86; return `<path d="M${x - 9} 410Q${x} 404 ${x + 9} 410"/><path d="M${x - 11} 420H${x + 9}"/>`; }).join('')}</g>`); }
+  if (look.sandals) { L.push(`<g stroke="#665a4e" stroke-width="2.4" fill="none">${[0, 1].map(s => { const x = s ? 200 - 86 : 86; return `<path d="M${x - 9} 410Q${x} 404 ${x + 9} 410"/><path d="M${x - 11} 420H${x + 9}"/>`; }).join('')}</g>`); }
   /* upper garments */
   if (look.robe) { const r = look.robe, f = fill('rb', r.c), hem = r.hem || 404, w = r.wide || 0;
     const tight = r.sleeve === 'short', side = (tight ? [[66, 86], [67, 120], [70, 170], [71, 250]] : [[56 - w * .2, 110], [60 - w * .3, 170], [58 - w * .6, 250], [56 - w, 330]]).filter(p => p[1] < hem - 6);
@@ -112,7 +112,7 @@ function outfitFig(sex, look, opt = {}) {
     if (sl === 'short') add(both([[60, 80], [50, 92], [47, 128], [66, 128], [72, 96]]), sf);
     if (sl === 'long' || sl === 'wide') fold('M50 150L48 226M150 150L152 226');
   }
-  if (look.rida) { const f = fill('rd', '#fbfaf5'); add(rp([[116, 70], [142, 80], [154, 112], [152, 158], [146, 206], [64, 206], [62, 160], [74, 128], [96, 100]]), f); fold('M80 186L132 98M96 200L144 116M70 170L116 92'); }
+  if (look.rida) { const f = fill('rd', '#f9f9f7'); add(rp([[116, 70], [142, 80], [154, 112], [152, 158], [146, 206], [64, 206], [62, 160], [74, 128], [96, 100]]), f); fold('M80 186L132 98M96 200L144 116M70 170L116 92'); }
   if (look.vest) { add(rp(sym([[90, 66], [74, 72], [64, 84], [66, 130], [70, 190], [72, 226], [100, 228]])), fill('vs', look.vest)); fold('M100 70L100 226', 1.6); }
   /* head */
   if (look.kufi) add('M83 25Q84 10 100 9Q116 10 117 25Q100 20 83 25Z', fill('ku', look.kufi));
@@ -126,7 +126,7 @@ function outfitFig(sex, look, opt = {}) {
   /* everything drawn in body order */
   const show = look.hands !== false;
   const body = `<g fill="${skinF}">${P.legs}${P.neck}${P.torso}${show ? P.arms : ''}${P.head}</g>`;
-  const hair = look.hijab || look.jilbab || look.turban ? '' : `<path d="${g.hair}" fill="#3c2c22"/>`;
+  const hair = look.hijab || look.jilbab || look.turban ? '' : `<path d="${g.hair}" fill="#342e2a"/>`;
   const faceEl = face() + (look.niqab ? `<path d="M${g.face[0] - g.face[2] - 1} ${g.face[1] - 2}Q100 ${g.face[1] - 6} ${g.face[0] + g.face[2] + 1} ${g.face[1] - 2}L${g.face[0] + g.face[2] + 4} ${g.face[1] + 26}Q100 ${g.face[1] + 34} ${g.face[0] - g.face[2] - 4} ${g.face[1] + 26}Z" fill="url(#${id}hj)" stroke="#000" stroke-opacity=".2"/>` : '') +
     (look.hijab || look.jilbab ? `<ellipse cx="${g.face[0]}" cy="${g.face[1]}" rx="${g.face[2] + 1.5}" ry="${g.face[3] + 1.5}" fill="none" stroke="#000" stroke-opacity=".22" stroke-width="1.6"/>` : '');
   const hands = show ? `<path d="${both(g.hand)}" fill="${skinF}" stroke="#000" stroke-opacity=".15"/>` : '';
@@ -134,23 +134,23 @@ function outfitFig(sex, look, opt = {}) {
     <ellipse cx="100" cy="426" rx="58" ry="7" fill="#000" opacity=".13"/>${body}${hair}${L.join('')}${faceEl}${hands}</svg>`;
 }
 const LOOKS = {
-  thobe: ['m', { robe: { c: '#f4f1ea', placket: 1, collar: 1 }, kufi: '#ffffff', sandals: 1, barefeet: 1 }],
-  thobeDark: ['m', { robe: { c: '#3a4a5c', placket: 1, collar: 1 }, kufi: '#f2efe8' }],
-  kameez: ['m', { trousers: '#e9e2d3', robe: { c: '#7d8f6a', hem: 330, slit: 1, placket: 1, collar: 1 }, kufi: '#ffffff' }],
-  casualM: ['m', { trousers: '#2f3c52', robe: { c: '#a8a49d', hem: 236, sleeve: 'short' }, shoes: '#e9e9e9' }],
+  thobe: ['m', { robe: { c: '#f1f0ed', placket: 1, collar: 1 }, kufi: '#ffffff', sandals: 1, barefeet: 1 }],
+  thobeDark: ['m', { robe: { c: '#454b51', placket: 1, collar: 1 }, kufi: '#efeeeb' }],
+  kameez: ['m', { trousers: '#e2dfda', robe: { c: '#7d8376', hem: 330, slit: 1, placket: 1, collar: 1 }, kufi: '#ffffff' }],
+  casualM: ['m', { trousers: '#3a3f47', robe: { c: '#a4a3a1', hem: 236, sleeve: 'short' }, shoes: '#e9e9e9' }],
   ihramM: ['m', { izar: 1, rida: 1, sandals: 1, barefeet: 1 }],
-  sportM: ['m', { trousers: '#20262d', robe: { c: '#2f7d32', hem: 236, sleeve: 'short' }, shoes: '#f4f4f4' }],
-  workM: ['m', { trousers: '#3b4252', robe: { c: '#e9eef5', hem: 236, collar: 1, placket: 1 }, shoes: '#2a221c' }],
-  hijab: ['f', { skirt: '#4f6d8a', robe: { c: '#c98b6b', hem: 262 }, hijab: '#ead9c6' }],
-  abaya: ['f', { robe: { c: '#1d1f24', hem: 414, wide: 8, sleeve: 'wide' }, hijab: '#2a2c33' }],
-  jilbab: ['f', { jilbab: '#4a5a4a', hands: true }],
+  sportM: ['m', { trousers: '#242629', robe: { c: '#486449', hem: 236, sleeve: 'short' }, shoes: '#f4f4f4' }],
+  workM: ['m', { trousers: '#42454b', robe: { c: '#edeff1', hem: 236, collar: 1, placket: 1 }, shoes: '#262320' }],
+  hijab: ['f', { skirt: '#626d77', robe: { c: '#ab9589', hem: 262 }, hijab: '#ded8d2' }],
+  abaya: ['f', { robe: { c: '#1f2022', hem: 414, wide: 8, sleeve: 'wide' }, hijab: '#2d2e30' }],
+  jilbab: ['f', { jilbab: '#4f554f', hands: true }],
   niqab: ['f', { robe: { c: '#15161a', hem: 414, wide: 8, sleeve: 'wide' }, hijab: '#15161a', hijabLong: 1, niqab: 1 }],
-  prayerW: ['f', { jilbab: '#efe9df' }],
-  ihramW: ['f', { robe: { c: '#f2efe9', hem: 414, wide: 6, sleeve: 'wide' }, hijab: '#f7f5f0', shoes: '#c9b9a5' }],
-  sportW: ['f', { trousers: '#22262c', robe: { c: '#2f7d32', hem: 300, slit: 1 }, hijab: '#22262c', shoes: '#f4f4f4' }],
-  workW: ['f', { trousers: '#3b4252', robe: { c: '#a9b8c9', hem: 300, slit: 1, collar: 1 }, hijab: '#3b4252', shoes: '#2a221c' }],
-  eidM: ['m', { trousers: '#efe7d6', robe: { c: '#0f3b2e', hem: 340, slit: 1, placket: 1, collar: 1 }, vest: '#a07a2c', shoes: '#6b4a2b' }],
-  eidW: ['f', { robe: { c: '#7a2e4d', hem: 414, wide: 10, sleeve: 'wide' }, hijab: '#e8c9a8', shoes: '#c9a46a' }]
+  prayerW: ['f', { jilbab: '#eae8e4' }],
+  ihramW: ['f', { robe: { c: '#efeeec', hem: 414, wide: 6, sleeve: 'wide' }, hijab: '#f5f4f2', shoes: '#bdb8b1' }],
+  sportW: ['f', { trousers: '#252729', robe: { c: '#486449', hem: 300, slit: 1 }, hijab: '#252729', shoes: '#f4f4f4' }],
+  workW: ['f', { trousers: '#42454b', robe: { c: '#b3b9bf', hem: 300, slit: 1, collar: 1 }, hijab: '#42454b', shoes: '#262320' }],
+  eidM: ['m', { trousers: '#e7e4de', robe: { c: '#1d2d28', hem: 340, slit: 1, placket: 1, collar: 1 }, vest: '#7b6d51', shoes: '#574b3f' }],
+  eidW: ['f', { robe: { c: '#624651', hem: 414, wide: 10, sleeve: 'wide' }, hijab: '#d4c8bc', shoes: '#ab9d88' }]
 };
 const look = (k, label) => outfitFig(LOOKS[k][0], LOOKS[k][1], { label });
 

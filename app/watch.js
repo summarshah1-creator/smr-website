@@ -7,29 +7,29 @@ const { $, $$, esc, I, store, toast, copy, today, hm, hijri, greg, dur, D } = X;
 
 /* Channels: official YouTube channels, embedded with YouTube's own player (uploads playlist = "UU" + channel id). */
 const CH = [
-  { k: 'eternity', n: 'Towards Eternity', by: 'Towards Eternity', c: 'dawah', yt: '', handle: '@TowardsEternity', age: 'Teens & adults', d: 'Revert stories and Islam explained clearly, in more than 10 languages.', g: ['#38bdf8', '#0c4a6e'], m: 'moon',
+  { k: 'eternity', n: 'Towards Eternity', by: 'Towards Eternity', c: 'dawah', yt: '', handle: '@TowardsEternity', age: 'Teens & adults', d: 'Revert stories and Islam explained clearly, in more than 10 languages.', g: ['#79a4b7', '#2b424f'], m: 'moon',
     v: [['XCN6O7QibMM', 'Portuguese church student becomes Muslim'], ['3W0973c6Z_s', '"I cried when the adhan was called": a revert story']] },
-  { k: 'yqrem', n: 'Daily Reminders', by: 'Yaqeen Institute', c: 'dawah', yt: '', handle: '@YaqeenInstitute', age: 'Teens & adults', d: 'Short, sincere reminders and lectures on faith, worship and doubt.', g: ['#fcd34d', '#78350f'], m: 'heart',
+  { k: 'yqrem', n: 'Daily Reminders', by: 'Yaqeen Institute', c: 'dawah', yt: '', handle: '@YaqeenInstitute', age: 'Teens & adults', d: 'Short, sincere reminders and lectures on faith, worship and doubt.', g: ['#c0b389', '#563e31'], m: 'heart',
     v: [['dXyKSnpzz8E', 'The Days of Allah'], ['d-jT7hkoHtM', 'Loving the world too much'], ['JH-9I4aiDgk', 'Allah provides for you'], ['fObB8rOAKN0', 'The scholar who pretended he could not hear'], ['aet-5Qurdog', 'To kill or be killed by a prophet'], ['_C5ox2zZl0U', 'Atheism: doubting your doubts'], ['5OpWnUeYTy4', 'Freeing yourself from other than Allah'], ['Tn0cK99H50Y', 'Khatm al-Quran du\'a 2026']] },
   { k: 'hijab', n: 'Mohammed Hijab', by: 'Mohammed Hijab', c: 'dawah', yt: '', handle: '@MohammedHijab', age: 'Adults', d: 'Debates and talks making the case for Islam.', g: ['#a3a3a3', '#171717'], m: 'mic',
     v: [['3k6MBedWTww', 'Full debate: Tawheed vs Trinity']] },
-  { k: 'omarhana', n: 'Omar & Hana', by: 'Digital Durian', c: 'kids', yt: 'UC178EmfQAV3OT-UpuO6WUMg', age: 'Ages 2–8', d: 'Two young siblings learn manners, prayer and family values through short stories and catchy songs.', g: ['#fbbf24', '#ea580c'], m: 'song',
+  { k: 'omarhana', n: 'Omar & Hana', by: 'Digital Durian', c: 'kids', yt: 'UC178EmfQAV3OT-UpuO6WUMg', age: 'Ages 2–8', d: 'Two young siblings learn manners, prayer and family values through short stories and catchy songs.', g: ['#b19e6e', '#a06f56'], m: 'song',
     v: [['XBCQK9dTGRI', '60-minute compilation'], ['-mzf85eISp8', 'Fasting in Ramadan'], ['v7jwUpVxo04', 'Picking up litter (Season 2, Ep 1)'], ['DHVPFNWrLwE', 'Omar & Hana story'], ['pXgICSXhu7I', '30-minute compilation'], ['Y1eZ_JydvZE', 'Learning about Islam'], ['JxN5C0_3384', 'Play nicely together']] },
-  { k: 'zaky', n: 'Zaky & Friends', by: 'One4Kids', c: 'kids', yt: 'UC5vfWTTPnKdFp-8s0KbqJhw', age: 'Ages 2–10', d: 'Zaky the bear and friends teach duas, salah and good manners.', g: ['#a78bfa', '#5b21b6'], m: 'star',
+  { k: 'zaky', n: 'Zaky & Friends', by: 'One4Kids', c: 'kids', yt: 'UC5vfWTTPnKdFp-8s0KbqJhw', age: 'Ages 2–10', d: 'Zaky the bear and friends teach duas, salah and good manners.', g: ['#bab0d5', '#665186'], m: 'star',
     v: [['0HVH-KWSC8c', 'Zaky & Friends 40-minute compilation'], ['65Ea4kZSOjw', 'Zaky\'s Football Match'], ['br4tKFjTcLk', 'Learn Surah Al-Ma\'un with Zaky'], ['Et_qrn15zFo', 'A Day with Zaky & Friends: 5 episodes'], ['llz1efYNTxs', 'Being dutiful and kind to our parents'], ['nwj-s6CjtO4', 'Remembering Allah with Zaky & Friends'], ['-yrKea2ZtOw', 'Guess the Animal: a Zaky game']] },
-  { k: 'iqra', n: 'IQRA Cartoon', by: 'IQRA Cartoon', c: 'quran', yt: 'UCSL4Dn-FQlvHZiSKipQZMqw', age: 'Ages 4–12', d: 'A non-profit studio animating the stories of the prophets from the Qur\'an and hadith, made simple for children.', g: ['#34d399', '#065f46'], m: 'book',
+  { k: 'iqra', n: 'IQRA Cartoon', by: 'IQRA Cartoon', c: 'quran', yt: 'UCSL4Dn-FQlvHZiSKipQZMqw', age: 'Ages 4–12', d: 'A non-profit studio animating the stories of the prophets from the Qur\'an and hadith, made simple for children.', g: ['#67a08b', '#234239'], m: 'book',
     v: [['W45DrRGECQE', 'Prophet Ibrahim (AS)'], ['_RUNc_lZBVA', 'Prophet Salih (AS)'], ['o4tcfC9LArs', 'Prophet Hud (AS)'], ['lNP_QsSQkoA', 'Prophet Muhammad ﷺ: Childhood'], ['cKAjkIkvwqI', 'After the Prophet\'s last battle (Ep 52)'], ['iGVnSOXG4cI', 'Final episode: Last Breath']] },
-  { k: 'sotp', n: 'Stories of the Prophets', by: 'Quran Stories', c: 'quran', yt: 'UCvWyP-vFhlS1-XENpD6w68A', age: 'All ages', d: 'Animated stories of the prophets from the Qur\'an, in English.', g: ['#60a5fa', '#1e3a8a'], m: 'moon',
+  { k: 'sotp', n: 'Stories of the Prophets', by: 'Quran Stories', c: 'quran', yt: 'UCvWyP-vFhlS1-XENpD6w68A', age: 'All ages', d: 'Animated stories of the prophets from the Qur\'an, in English.', g: ['#94aac6', '#414b67'], m: 'moon',
     v: [['XyMVBBH2-Oc', 'Prophet stories in English']] },
-  { k: 'heroes', n: 'Muslim Heroes & Inventors', by: 'IQRA Cartoon', c: 'learn', yt: 'UCg9GieceMt5qeEJ6QLR3rFQ', age: 'Ages 7+', d: 'Animated history of the Muslim scholars and inventors who shaped our world.', g: ['#2dd4bf', '#134e4a'], m: 'bulb',
+  { k: 'heroes', n: 'Muslim Heroes & Inventors', by: 'IQRA Cartoon', c: 'learn', yt: 'UCg9GieceMt5qeEJ6QLR3rFQ', age: 'Ages 7+', d: 'Animated history of the Muslim scholars and inventors who shaped our world.', g: ['#629f97', '#263b3a'], m: 'bulb',
     v: [['-fD_sIUUaV0', 'The first university: Fatima al-Fihri'], ['wNPRIMoRBqA', 'The father of chemistry: Jabir ibn Hayyan'], ['gnVvp8V32ts', 'Camera obscura'], ['PBXzJ9WDuDk', 'The first galaxy: al-Sufi'], ['Lgb8k4S9txI', 'The first person to fly'], ['fFezw1fx8Hk', 'The soap bar: al-Razi'], ['ueQBoijrOEs', 'Ice cream cones'], ['RPelA5dJWfM', 'The fountain pen']] },
-  { k: 'kalam', n: 'Kalam Kids', by: 'Ms. Abrar & Ms. Rinad', c: 'kids', yt: 'UCdr_45nR1o2P4ycckLh1xOQ', age: 'Toddlers', d: 'Gentle sing-along videos that teach Arabic and Islam to babies and toddlers.', g: ['#f9a8d4', '#be185d'], m: 'abc',
+  { k: 'kalam', n: 'Kalam Kids', by: 'Ms. Abrar & Ms. Rinad', c: 'kids', yt: 'UCdr_45nR1o2P4ycckLh1xOQ', age: 'Toddlers', d: 'Gentle sing-along videos that teach Arabic and Islam to babies and toddlers.', g: ['#dec3d2', '#894d66'], m: 'abc',
     v: [['KTQq_cGLnek', 'Manners in Islam (in Arabic)'], ['84bYbtb9YC4', 'Ramadan learning for kids']] },
-  { k: 'yaqeen', n: 'The Firsts', by: 'Yaqeen Institute · Dr. Omar Suleiman', c: 'talks', yt: 'UC3vHW2h22WE-pNi5WJtRIjg', age: 'Teens & adults', d: 'The lives of the Companions of the Prophet ﷺ, one episode each.', g: ['#94a3b8', '#0f172a'], m: 'mic',
+  { k: 'yaqeen', n: 'The Firsts', by: 'Yaqeen Institute · Dr. Omar Suleiman', c: 'talks', yt: 'UC3vHW2h22WE-pNi5WJtRIjg', age: 'Teens & adults', d: 'The lives of the Companions of the Prophet ﷺ, one episode each.', g: ['#a0a5ac', '#181b21'], m: 'mic',
     v: [['ywfl3oZ5WWU', 'Mu\'adh ibn Jabal (ra): Most knowledgeable & beloved'], ['JuMj14TSrdU', 'Abdullah ibn Salam (ra): The righteous rabbi'], ['QrrIdK5AjgI', 'Umm Ayman (ra): The woman who never stopped caring'], ['gVobZS1AR_k', 'Julaybib (ra): The most beautiful story'], ['_UkePBl_LEw', 'Safina (ra): He spoke to a lion'], ['-rHYYdac6Ks', 'Umm Mahjan (ra): The woman who cleaned the masjid'], ['Uk8xOtLBPwc', 'Juwayriya bint al-Harith (ra)']] },
-  { k: 'bilal', n: 'Bilal Assad', by: 'Ustadh Bilal Assad', c: 'talks', yt: '', handle: '@BilalAssad', age: 'Teens & adults', d: 'Heartfelt talks on faith, family and character.', g: ['#fca5a5', '#7f1d1d'], m: 'mic',
+  { k: 'bilal', n: 'Bilal Assad', by: 'Ustadh Bilal Assad', c: 'talks', yt: '', handle: '@BilalAssad', age: 'Teens & adults', d: 'Heartfelt talks on faith, family and character.', g: ['#dec3c3', '#603c3c'], m: 'mic',
     v: [['rjmwmbDSZEs', 'Don\'t waste your life'], ['bdowOe-05J4', 'Save your family from the Fire'], ['4X3iTKnMpXU', 'How to find barakah'], ['ikkKRnBGab4', 'Who Allah loves'], ['E3ivH2P1_6w', 'Do you really love Allah and the Prophet ﷺ?'], ['QiKYLEcpgu8', 'Two of the seven in His shade']] },
-  { k: 'menk', n: 'Mufti Menk', by: 'Mufti Menk', c: 'talks', yt: 'UCNB_OaI4524fASt8h0IL8dw', age: 'Teens & adults', d: 'Short, uplifting reminders for everyday life.', g: ['#4ade80', '#14532d'], m: 'heart',
+  { k: 'menk', n: 'Mufti Menk', by: 'Mufti Menk', c: 'talks', yt: 'UCNB_OaI4524fASt8h0IL8dw', age: 'Teens & adults', d: 'Short, uplifting reminders for everyday life.', g: ['#79af8d', '#283f31'], m: 'heart',
     v: [['vPJvf9-RklY', 'Don\'t yell at people'], ['ReGOQI8bHDg', 'Friday reminder: full lecture'], ['wZujzTbbv_I', 'Let it come from the heart'], ['ICLSEes1pBA', 'Light Upon Light conference, London'], ['F1ZX4OP0JzQ', 'Relax... Allah hasn\'t forgotten you'], ['vC5zTQ4xgL8', 'How to make Allah happy with you'], ['sXAUmKu5JaU', 'Silent strength: let Allah defend you']] },
 ];
 const VID = CH.flatMap(c => c.v.map(([id, t]) => ({ id, t, c })));
@@ -57,11 +57,11 @@ const pick = c => c === 'all' ? CH : c.startsWith('ch:') ? CH.filter(x => x.k ==
 const savedV = () => store.get('wvSavedV', []).map(id => VID.find(v => v.id === id)).filter(Boolean);
 /* demo playlists: hand-picked mixes from the library, shown under the categories */
 const PL = [
-  { n: 'Jummah reminders', s: 'Short talks for Friday', ic: 'heart', g: ['#0f766e', '#134e4a'], f: v => v.c.k === 'menk' || v.c.k === 'bilal', max: 10 },
-  { n: 'Bedtime stories', s: 'Prophets’ stories for kids', ic: 'book', g: ['#1e3a8a', '#312e81'], f: v => v.c.c === 'quran', max: 10 },
-  { n: 'Learn with the kids', s: 'Songs, letters and duas', ic: 'song', g: ['#ea580c', '#9a3412'], f: v => v.c.c === 'kids', max: 12 },
-  { n: 'Muslim heroes', s: 'Scholars, inventors, Companions', ic: 'bulb', g: ['#0d9488', '#115e59'], f: v => v.c.c === 'learn' || /Companion|Firsts/i.test(v.c.n), max: 12 },
-  { n: 'On the go', s: 'Quick reminders under 10 minutes', ic: 'star', g: ['#7c3aed', '#4c1d95'], f: (v, i) => v.c.c === 'talks' && i % 2 === 0, max: 8 }];
+  { n: 'Jummah reminders', s: 'Short talks for Friday', ic: 'heart', g: ['#305552', '#263b3a'], f: v => v.c.k === 'menk' || v.c.k === 'bilal', max: 10 },
+  { n: 'Bedtime stories', s: 'Prophets’ stories for kids', ic: 'book', g: ['#414b67', '#4a4966'], f: v => v.c.c === 'quran', max: 10 },
+  { n: 'Learn with the kids', s: 'Songs, letters and duas', ic: 'song', g: ['#a06f56', '#6e4a3e'], f: v => v.c.c === 'kids', max: 12 },
+  { n: 'Muslim heroes', s: 'Scholars, inventors, Companions', ic: 'bulb', g: ['#386964', '#2a4544'], f: v => v.c.c === 'learn' || /Companion|Firsts/i.test(v.c.n), max: 12 },
+  { n: 'On the go', s: 'Quick reminders under 10 minutes', ic: 'star', g: ['#8b73b4', '#54436f'], f: (v, i) => v.c.c === 'talks' && i % 2 === 0, max: 8 }];
 const plVids = p => VID.filter(p.f).slice(0, p.max || 20);
 function openPL(i) { const p = PL[i], L = plVids(p);
   window.IFMX.modal(`<div class="wv-plm" style="--a:${p.g[0]};--b:${p.g[1]}"><div class="wv-plh"><span>Playlist</span><h3>${esc(p.n)}</h3><p>${esc(p.s)} · ${L.length} videos</p><button type="button" class="btn g sm" id="plPlay">${I('play')}Play all</button></div><div class="wv-pll">${L.map((x, j) => `<button class="vp-ep" type="button" data-vid="${x.id}"><span class="wv-th">${art(x.c)}<img src="${thumb(x.id)}" alt="" decoding="async" onerror="this.remove()"></span><span><b>${j + 1}. ${esc(x.t)}</b><small>${esc(x.c.n)}</small></span></button>`).join('')}</div></div>`);
@@ -83,7 +83,7 @@ function mountLibrary() {
     if (c !== 'all') { const cs = pick(c); B.innerHTML = cs.map(ch => `<div class="wv-row">${cs.length > 1 ? `<h3>${esc(ch.n)}<small>${esc(ch.age)}</small></h3>` : ''}${grid(ch.v.map(([id, tt]) => ({ id, t: tt, c: ch })))}</div>`).join(''); return; }
     const feat = VID.find(v => v.c.k === 'inspire') || VID.find(v => v.c.k === 'menk') || VID[0];
     const recent = store.get('wvRecent2', []).map(id => VID.find(v => v.id === id)).filter(Boolean), sv = savedV();
-    let h = `<div class="wv-row wv-plr"><h3><span>Playlists<small>Put together by the MySirat team</small></span></h3><div class="wv-rail">${PL.map((p, i) => { const L = plVids(p); return `<button type="button" class="wv-plc" data-pl="${i}" style="--a:${p.g[0]};--b:${p.g[1]}"><span class="wv-plt">${L.slice(0, 3).map(x => `<img src="${thumb(x.id)}" alt="" decoding="async" onerror="this.remove()">`).join('')}<i>${MOT[p.ic] ? `<svg viewBox="0 0 64 64">${MOT[p.ic]}</svg>` : ''}</i><em>${L.length} videos</em></span><b>${esc(p.n)}</b><small>${esc(p.s)}</small></button>`; }).join('')}</div></div>`;
+    let h = `<div class="wv-row wv-plr"><h3><span>Playlists<small>Put together by the My Sirat team</small></span></h3><div class="wv-rail">${PL.map((p, i) => { const L = plVids(p); return `<button type="button" class="wv-plc" data-pl="${i}" style="--a:${p.g[0]};--b:${p.g[1]}"><span class="wv-plt">${L.slice(0, 3).map(x => `<img src="${thumb(x.id)}" alt="" decoding="async" onerror="this.remove()">`).join('')}<i>${MOT[p.ic] ? `<svg viewBox="0 0 64 64">${MOT[p.ic]}</svg>` : ''}</i><em>${L.length} videos</em></span><b>${esc(p.n)}</b><small>${esc(p.s)}</small></button>`; }).join('')}</div></div>`;
     /* no big featured banner: the Inspire FM row comes straight after the playlists */
     if (recent.length) h += `<div class="wv-row"><h3>Continue watching</h3>${rail(recent)}</div>`;
     if (sv.length) h += `<div class="wv-row"><h3>Saved</h3>${rail(sv)}</div>`;
@@ -124,7 +124,7 @@ function openVP(k, vid) {
 }
 function closeVP() { vp.classList.remove('on'); document.body.classList.remove('lock', 'vp-open'); setTimeout(() => { if (!vp.classList.contains('on')) { vp.hidden = true; $('#vpFrame').innerHTML = ''; } }, 420); }
 $('#vpX').onclick = closeVP;
-$('#vpSh').onclick = () => { if (!vpCur) return; const txt = `Watch “${$('#vpT').textContent}” on MySirat`, url = location.origin + location.pathname + '#watch'; (window.IFMX.share)({ title: txt, text: txt, url }); };
+$('#vpSh').onclick = () => { if (!vpCur) return; const txt = `Watch “${$('#vpT').textContent}” on My Sirat`, url = location.origin + location.pathname + '#watch'; (window.IFMX.share)({ title: txt, text: txt, url }); };
 $('#vpSave').onclick = () => { if (!vpVid) return; let S = store.get('wvSavedV', []); const on = !S.includes(vpVid); S = on ? [vpVid].concat(S) : S.filter(x => x !== vpVid); store.set('wvSavedV', S); svUI(); toast(on ? 'Saved' : 'Removed from saved'); dispatchEvent(new Event('wv-saved')); };
 addEventListener('keydown', e => { if (e.key === 'Escape' && !vp.hidden) closeVP(); });
 document.addEventListener('click', e => { const v = e.target.closest('[data-vid]'); if (v) { e.preventDefault(); const x = VID.find(y => y.id === v.dataset.vid); if (x) openVP(x.c.k, x.id); return; } const b = e.target.closest('[data-wv]'); if (b) { e.preventDefault(); openVP(b.dataset.wv); } });

@@ -27,7 +27,8 @@ It prints a warning line (`!! not found in …`) for any replacement that no lon
 
 ## Owner decisions so far
 
-- Name **MySirat**; grey-on-black ribbon logo; sleek look.
+- Name **My Sirat** (two words in everything the user sees; renamed 24 Nov 2026); the owner's grey ribbon logo with the graduate figure (`sources/brand/mysirat-logo.png`; `python3 build/make_icons.py` makes every app icon from it on black); sleek look.
+- Theme (24 Nov 2026): black and grey. Dark mode is the default, and the build mutes every colour in the app (same hue, much softer: `SAT_K` / `SAT_MAX` at the end of `build/build_app.py`), so each tool keeps a subtle tint of its own colour (red, green, blue…) without anything bright.
 - **No radio.** Watch shows **only Islam / dawah videos**.
 - Features: prayer times with adhan alerts and qibla (no ads), local masjid jamaat times and Jummah finder, Ayah a day, duas, Hajj & Umrah guide, zakat and inheritance calculators, Islamic entertainment, Luton news and resources, halal directory, NGS Pathfinder + Skills & Training Finder.
 - Plan: release as a web app on his own server for people to trial, then try it as an iPhone app through TestFlight.

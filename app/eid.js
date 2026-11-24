@@ -25,7 +25,7 @@ function render(node) {
   const M = (window.IFM_MOSQUES || []).filter(m => m.n).sort((a, b) => a.n < b.n ? -1 : 1);
   const e = E.find(x => x.k === sel), prepN = PREP[sel].filter((_, i) => done[sel + i]).length;
   node.innerHTML = `<div class="eid">
-  <div class="eid-hero"><svg class="eid-art" viewBox="0 0 160 120" aria-hidden="true"><g stroke="#f2c35b" stroke-width="1.4" opacity=".85"><path d="M40 0v30M78 0v18M128 0v26"/></g><g fill="#f2c35b"><path d="M33 30h14l-2 14h-10z"/><path d="M71 18h14l-2 14h-10z"/><path d="M121 26h14l-2 14h-10z"/></g><g fill="#fff3c4" opacity=".9"><rect x="37" y="34" width="6" height="7" rx="1.5"/><rect x="75" y="22" width="6" height="7" rx="1.5"/><rect x="125" y="30" width="6" height="7" rx="1.5"/></g><path d="M118 62a26 26 0 1 0 28 30 21 21 0 1 1-28-30z" fill="#fff8e6"/></svg>
+  <div class="eid-hero"><svg class="eid-art" viewBox="0 0 160 120" aria-hidden="true"><g stroke="#c1b18c" stroke-width="1.4" opacity=".85"><path d="M40 0v30M78 0v18M128 0v26"/></g><g fill="#c1b18c"><path d="M33 30h14l-2 14h-10z"/><path d="M71 18h14l-2 14h-10z"/><path d="M121 26h14l-2 14h-10z"/></g><g fill="#eae7d9" opacity=".9"><rect x="37" y="34" width="6" height="7" rx="1.5"/><rect x="75" y="22" width="6" height="7" rx="1.5"/><rect x="125" y="30" width="6" height="7" rx="1.5"/></g><path d="M118 62a26 26 0 1 0 28 30 21 21 0 1 1-28-30z" fill="#f6f4ef"/></svg>
     <div class="eid-sw">${E.map(x => `<button type="button" data-eid="${x.k}" aria-pressed="${x.k === sel}">${x.n}</button>`).join('')}</div>
     <div class="eid-n"><b>${e.days}</b><span>${e.days === 1 ? 'day' : 'days'} to go</span></div>
     <p class="eid-d">${esc(e.n)} ${e.y} is expected around <b>${fmt(e.date)}</b>.</p>
@@ -73,50 +73,50 @@ function render(node) {
   const sg = $('[data-share-eid]', node); if (sg) sg.onclick = () => (X.share || (o => X.copy(o.text)))({ title: 'Eid Mubarak', text: 'Eid Mubarak! Taqabbal Allahu minna wa minkum: may Allah accept from us and from you.', url: X.siteUrl ? X.siteUrl('tb-eid') : location.href });
 }
 X.TOOLS.eid = ['Eid', null, render];
-if (window.IFM_THEMES) window.IFM_THEMES.eid = { a: '#484641', a2: '#d9a441', bg: '#f7f3ea' };
+if (window.IFM_THEMES) window.IFM_THEMES.eid = { a: '#464543', a2: '#a89572', bg: '#f3f1ee' };
 const css = document.createElement('style'); css.textContent = `
 .eid{display:grid;gap:0;padding-bottom:12px}
-.eid-hero{position:relative;overflow:hidden;border-radius:24px;padding:18px;color:#fff;background:radial-gradient(120% 90% at 100% 0%,#8a6a1f 0%,transparent 55%),linear-gradient(160deg,#1f4a12,#0f2414);box-shadow:0 18px 34px -22px rgba(15,36,20,.9)}
+.eid-hero{position:relative;overflow:hidden;border-radius:24px;padding:18px;color:#fff;background:radial-gradient(120% 90% at 100% 0%,#685c41 0%,transparent 55%),linear-gradient(160deg,#293824,#161d18);box-shadow:0 18px 34px -22px rgba(22,29,24,.9)}
 .eid-art{position:absolute;right:-6px;top:-4px;width:150px;opacity:.95}
 .eid-sw{position:relative;display:flex;gap:8px;margin-bottom:14px;max-width:72%}
 .eid-sw button{flex:1;border:1.5px solid rgba(255,255,255,.3);background:rgba(0,0,0,.12);color:#fff;border-radius:999px;padding:8px 6px;font:inherit;font-weight:600;font-size:.8rem}
-.eid-sw button[aria-pressed=true]{background:#f2c35b;border-color:#f2c35b;color:#2a1d05}
-.eid-n{position:relative;display:flex;align-items:baseline;gap:8px}.eid-n b{font-family:var(--display);font-size:3.6rem;line-height:1;letter-spacing:-.03em}.eid-n span{font-weight:600;color:#f2c35b}
-.eid-d{position:relative;margin:8px 0 4px;font-size:.92rem;color:#dfe9d6}.eid-d b{color:#fff}
-.eid-note{position:relative;margin:0;font-size:.78rem;color:#b9cdab}
-.eid-pg{position:relative;margin-top:14px;display:flex;align-items:center;gap:10px}.eid-pg i{flex:1;height:7px;border-radius:9px;background:rgba(255,255,255,.15);position:relative;overflow:hidden}.eid-pg i::after{content:"";position:absolute;inset:0 auto 0 0;width:var(--p);background:linear-gradient(90deg,#a8a49d,#f2c35b);border-radius:9px;transition:width .4s}.eid-pg span{font-size:.76rem;font-weight:600;color:#f2c35b}
-.eid-ie{display:grid;gap:3px;margin-top:12px;text-decoration:none;color:#2a1d05;background:linear-gradient(120deg,#f2c35b,#d9a441);border-radius:20px;padding:14px 16px;box-shadow:0 12px 24px -18px rgba(122,79,8,.9)}
+.eid-sw button[aria-pressed=true]{background:#c1b18c;border-color:#c1b18c;color:#1e1911}
+.eid-n{position:relative;display:flex;align-items:baseline;gap:8px}.eid-n b{font-family:var(--display);font-size:3.6rem;line-height:1;letter-spacing:-.03em}.eid-n span{font-weight:600;color:#c1b18c}
+.eid-d{position:relative;margin:8px 0 4px;font-size:.92rem;color:#dfe3dc}.eid-d b{color:#fff}
+.eid-note{position:relative;margin:0;font-size:.78rem;color:#bbc2b6}
+.eid-pg{position:relative;margin-top:14px;display:flex;align-items:center;gap:10px}.eid-pg i{flex:1;height:7px;border-radius:9px;background:rgba(255,255,255,.15);position:relative;overflow:hidden}.eid-pg i::after{content:"";position:absolute;inset:0 auto 0 0;width:var(--p);background:linear-gradient(90deg,#a4a3a1,#c1b18c);border-radius:9px;transition:width .4s}.eid-pg span{font-size:.76rem;font-weight:600;color:#c1b18c}
+.eid-ie{display:grid;gap:3px;margin-top:12px;text-decoration:none;color:#1e1911;background:linear-gradient(120deg,#c1b18c,#a89572);border-radius:20px;padding:14px 16px;box-shadow:0 12px 24px -18px rgba(84,70,45,.9)}
 .eid-ie small{font-size:.66rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;opacity:.75}.eid-ie b{font-family:var(--display);font-size:1.08rem;line-height:1.2}.eid-ie span{font-size:.82rem;opacity:.85}.eid-ie em{font-style:normal;font-weight:600;font-size:.82rem;margin-top:4px}
-.eid-h{font-family:var(--display);font-size:1.08rem;color:#1f4a12;margin:22px 2px 8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}html.dark .eid-h{color:#e9f1ec}
-.eid-rv{font-family:inherit;font-size:.66rem;font-weight:600;background:#fdf1d6;color:#7a5410;border-radius:999px;padding:2px 8px}
-.eid-p{margin:0 2px 8px;font-size:.86rem;color:var(--mut);line-height:1.45}.eid-p a{color:#2f7d32;font-weight:600}
+.eid-h{font-family:var(--display);font-size:1.08rem;color:#293824;margin:22px 2px 8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}html.dark .eid-h{color:#eceeed}
+.eid-rv{font-family:inherit;font-size:.66rem;font-weight:600;background:#f0ece3;color:#584a32;border-radius:999px;padding:2px 8px}
+.eid-p{margin:0 2px 8px;font-size:.86rem;color:var(--mut);line-height:1.45}.eid-p a{color:#486449;font-weight:600}
 .eid-card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px 16px;margin-bottom:10px}
 .eid-card p{margin:0 0 8px;font-size:.9rem;line-height:1.5}.eid-card p:last-child{margin:0}
-.eid-ar small{display:block;font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#2f7d32;margin-bottom:6px}
+.eid-ar small{display:block;font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#486449;margin-bottom:6px}
 .eid-ar .ar{font-family:var(--ar,serif);font-size:1.45rem;line-height:1.8;text-align:right}.eid-ar .eid-tr{font-style:italic;color:var(--char)}.eid-ar .eid-mn{color:var(--mut);font-size:.84rem}
 .eid-say{margin-top:4px;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:7px 14px;font:inherit;font-weight:600;font-size:.8rem}
 .eid-mq{display:flex;flex-direction:column;gap:6px;max-height:300px;overflow:auto;padding-right:2px}
 .tk .eid-mqr{display:flex!important;flex-direction:row!important;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 12px}
 .eid-mqr span{flex:1;min-width:0}.eid-mqr b{display:block;font-size:.88rem}.eid-mqr small{display:block;font-size:.74rem;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.eid-mqr input,.eid-ck input{width:22px;height:22px;accent-color:#2f7d32;flex:none}
+.eid-mqr input,.eid-ck input{width:22px;height:22px;accent-color:#486449;flex:none}
 .eid-ck{display:flex;flex-direction:column;gap:6px}
 .tk .eid-ck label{display:flex!important;flex-direction:row!important;gap:10px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:11px 12px;font-size:.9rem}
 .eid-ck input:checked+span{text-decoration:line-through;color:var(--mut)}
 .eid-sun{display:grid;grid-template-columns:1fr 1fr;gap:8px}.eid-sun div{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px}
-.eid-sun b{display:block;font-family:var(--display);font-size:.92rem;color:#2f7d32}html.dark .eid-sun b{color:#bdbbb6}.eid-sun p{margin:4px 0 0;font-size:.8rem;line-height:1.4;color:var(--char)}
+.eid-sun b{display:block;font-family:var(--display);font-size:.92rem;color:#486449}html.dark .eid-sun b{color:#bbbab8}.eid-sun p{margin:4px 0 0;font-size:.8rem;line-height:1.4;color:var(--char)}
 .eid-ul{margin:0;padding:0 0 0 2px;list-style:none;display:flex;flex-direction:column;gap:6px}.eid-ul li{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 12px;font-size:.88rem}
-.eid-ch{display:flex;flex-direction:column;gap:8px}.eid-ch a{display:block;text-decoration:none;color:#fff;background:linear-gradient(160deg,#3f8f3a,#1f4a12);border-radius:18px;padding:14px 16px}
-.eid-ch b{font-family:var(--display);font-size:1rem}.eid-ch p{margin:4px 0 6px;font-size:.84rem;color:#dcefd2}.eid-ch em{font-style:normal;font-weight:600;color:#f2c35b;font-size:.82rem}
-.eid-ev{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:6px}.eid-ev div{background:var(--card);border:1px dashed #d4c49c;border-radius:16px;padding:12px}
-.eid-ev b{display:block;font-size:.9rem}.eid-ev p{margin:4px 0 6px;font-size:.78rem;color:var(--mut)}.eid-ev span{font-size:.66rem;font-weight:600;background:#efe7d4;color:#6b5a33;border-radius:999px;padding:2px 8px}
-.ah-eid{display:flex;align-items:center;gap:12px;margin:0 0 12px;padding:12px 14px;border-radius:20px;background:linear-gradient(120deg,#f2c35b,#d9a441);color:#2a1d05;text-decoration:none;box-shadow:0 10px 22px -16px rgba(122,79,8,.8)}
+.eid-ch{display:flex;flex-direction:column;gap:8px}.eid-ch a{display:block;text-decoration:none;color:#fff;background:linear-gradient(160deg,#577455,#293824);border-radius:18px;padding:14px 16px}
+.eid-ch b{font-family:var(--display);font-size:1rem}.eid-ch p{margin:4px 0 6px;font-size:.84rem;color:#dfe6db}.eid-ch em{font-style:normal;font-weight:600;color:#c1b18c;font-size:.82rem}
+.eid-ev{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:6px}.eid-ev div{background:var(--card);border:1px dashed #c2bcae;border-radius:16px;padding:12px}
+.eid-ev b{display:block;font-size:.9rem}.eid-ev p{margin:4px 0 6px;font-size:.78rem;color:var(--mut)}.eid-ev span{font-size:.66rem;font-weight:600;background:#e6e3dd;color:#595345;border-radius:999px;padding:2px 8px}
+.ah-eid{display:flex;align-items:center;gap:12px;margin:0 0 12px;padding:12px 14px;border-radius:20px;background:linear-gradient(120deg,#c1b18c,#a89572);color:#1e1911;text-decoration:none;box-shadow:0 10px 22px -16px rgba(84,70,45,.8)}
 .ah-eid i{width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.45);display:grid;place-items:center}.ah-eid i svg{width:22px;height:22px}
 .ah-eid span{flex:1}.ah-eid small{display:block;font-size:.68rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;opacity:.75}.ah-eid b{font-family:var(--display);font-size:1.1rem}.ah-eid em{font-style:normal;font-weight:600;font-size:.8rem}`;
 document.head.appendChild(css);
 /* Toolbox tile in the Calendar group, after Ramadan */
 const ram = $('[data-page=toolbox] .tbt[href="#tb-ramadan"]');
 if (ram && !$('[data-page=toolbox] .tbt[href="#tb-eid"]')) { const E = EIDS()[0];
-  ram.insertAdjacentHTML('afterend', `<a class="tbt" href="#tb-eid" data-kw="eid fitr adha takbir moon sighting eidi qurbani zakat al-fitr"><span class="ai"><svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="geid" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f2c35b"/><stop offset="1" stop-color="#3f6f1a"/></linearGradient></defs><rect width="64" height="64" rx="15" fill="url(#geid)"/><path d="M38 14a16 16 0 1 0 12 26 13 13 0 1 1-12-26z" fill="#fff8e6"/><path d="M22 20v6M19 23h6M46 14v4M44 16h4" stroke="#fff8e6" stroke-width="2.4" stroke-linecap="round"/></svg></span><b>Eid</b><small>${E ? E.days + ' days to go' : 'Countdown'}</small></a>`); }
+  ram.insertAdjacentHTML('afterend', `<a class="tbt" href="#tb-eid" data-kw="eid fitr adha takbir moon sighting eidi qurbani zakat al-fitr"><span class="ai"><svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="geid" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c1b18c"/><stop offset="1" stop-color="#435435"/></linearGradient></defs><rect width="64" height="64" rx="15" fill="url(#geid)"/><path d="M38 14a16 16 0 1 0 12 26 13 13 0 1 1-12-26z" fill="#f6f4ef"/><path d="M22 20v6M19 23h6M46 14v4M44 16h4" stroke="#f6f4ef" stroke-width="2.4" stroke-linecap="round"/></svg></span><b>Eid</b><small>${E ? E.days + ' days to go' : 'Countdown'}</small></a>`); }
 /* home: an Eid countdown card moves near the top in the 30 days before Eid (the seasonal home page) */
 const homeTop = document.querySelector('.page[data-page=home] .ah-top'), E0 = EIDS()[0];
 if (homeTop && E0 && E0.days <= 30 && !document.querySelector('.ah-eid')) homeTop.insertAdjacentHTML('afterend', `<a class="ah-eid" href="#tb-eid"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4a8 8 0 1 0 6 13 6.5 6.5 0 1 1-6-13z"/></svg></i><span><small>${esc(E0.n)}, roughly</small><b>${E0.days} days to go</b></span><em>Get ready →</em></a>`);

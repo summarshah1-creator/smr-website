@@ -1,4 +1,4 @@
-"""MySirat build v2: latest Inspire FM engine (inspire2) minus radio and Inspire branding,
+"""My Sirat build v2: latest Inspire FM engine (inspire2) minus radio and Inspire branding,
 plus the NGS Pathfinder and Skills & Training Finder. Run: python3 build/build_app.py"""
 import shutil, os, re
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -12,7 +12,8 @@ os.makedirs(OUT + '/ngs', exist_ok=True)
 for f in ('pathfinder.js', 'skills.js', 'skills.css'): shutil.copy(f'{NGS}/{f}', f'{OUT}/ngs/{f}')
 shutil.move(OUT + '/mt/manifest.webmanifest', OUT + '/manifest.webmanifest')
 for n in ('icon-192.png', 'apple-touch-icon.png', 'badge-96.png'): shutil.copy(MT + '/icon-192.png', f'{OUT}/icons/{n}')
-for n in ('icon-512.png', 'maskable-512.png'): shutil.copy(MT + '/icon-512.png', f'{OUT}/icons/{n}')
+shutil.copy(MT + '/icon-512.png', f'{OUT}/icons/icon-512.png'); shutil.copy(MT + '/maskable-512.png', f'{OUT}/icons/maskable-512.png')
+shutil.copy(MT + '/icon-180.png', f'{OUT}/icons/apple-touch-icon.png')
 
 def sub(path, pairs, rx=()):
     p = f'{OUT}/{path}'; s = open(p, encoding='utf-8').read(); o = s
@@ -33,21 +34,21 @@ PF_TILE = '''      <a class="tbt" href="#tb-pathfinder" data-kw="pathfinder care
 FOOT = '''<footer>
   <div class="wrap">
     <div class="fgrid">
-      <div><img class="flogo" src="mt/icon-192.png" alt="MySirat" style="width:56px;height:56px;border-radius:15px"><p style="color:#9da59a;font-size:.9rem;max-width:34ch">MySirat: prayer, Quran, your masjid and your town in one app. No adverts. No data sold.</p></div>
+      <div><img class="flogo" src="mt/icon-192.png" alt="My Sirat" style="width:56px;height:56px;border-radius:15px"><p style="color:#9da59a;font-size:.9rem;max-width:34ch">My Sirat: prayer, Quran, your masjid and your town in one app. No adverts. No data sold.</p></div>
       <div><h5>Faith</h5><a href="#prayer">Prayer times</a><a href="#toolbox">The toolkit</a><a href="#jummah">Jummah finder</a><a href="#duas">Duas</a><a href="#quran">Quran</a><a href="#seasons">Seasons</a></div>
       <div><h5>Local</h5><a href="#local">Discover</a><a href="#community">Events</a><a href="#news">News</a><a href="#help">Find help</a><a href="#give">Give</a></div>
       <div><h5>Watch</h5><a href="#watch">Watch free</a><a href="#tb-pathfinder">Pathfinder</a><a href="#tb-skills">Skills &amp; training</a><a href="#privacy">Privacy</a></div>
     </div>
     <div class="ftools"><button type="button" id="darkBtn"><svg><use href="#i-moon"/></svg><span>Dark mode</span></button><button type="button" id="ttsBtn" class="tts"><svg><use href="#i-speak"/></svg><span>Listen to this page</span></button>'''
 p = f'{OUT}/index.html'; h = open(p, encoding='utf-8').read()
-h = re.sub(r'<title>.*?</title>', '<title>MySirat</title>', h, 1, flags=re.S)
-h = re.sub(r'<meta name="description" content="[^"]*">', '<meta name="description" content="MySirat: prayer times, local jamaat, qibla, tasbih, duas, Quran, zakat, careers and more in one ad-free app. Designed & built by SMR Digital.">', h, 1)
-h = re.sub(r'<meta name="theme-color" content="[^"]*">', '<meta name="theme-color" content="#0b3b3a">', h)
+h = re.sub(r'<title>.*?</title>', '<title>My Sirat</title>', h, 1, flags=re.S)
+h = re.sub(r'<meta name="description" content="[^"]*">', '<meta name="description" content="My Sirat: prayer times, local jamaat, qibla, tasbih, duas, Quran, zakat, careers and more in one ad-free app. Designed & built by SMR Digital.">', h, 1)
+h = re.sub(r'<meta name="theme-color" content="[^"]*">', '<meta name="theme-color" content="#0b0b0c">', h)
 h = re.sub(r'<link rel="icon" href="[^"]*">', '<link rel="icon" href="mt/icon-192.png">', h, 1)
-h = h.replace('content="Inspire FM"', 'content="MySirat"')
+h = h.replace('content="Inspire FM"', 'content="My Sirat"')
 h = re.sub(r'<a href="#listen" data-t="listen" class="mid".*?</a>', TAB_PRAYER, h, 1, flags=re.S)
 h = re.sub(r'<footer>.*?<div class="ftools">.*?(<select id="langSel")', lambda m: FOOT + m.group(1), h, 1, flags=re.S)
-h = re.sub(r'<span>© <span id="yr">2026</span> Inspire FM[^<]*</span>', '<span>© <span id="yr">2026</span> MySirat</span>', h, 1)
+h = re.sub(r'<span>© <span id="yr">2026</span> Inspire FM[^<]*</span>', '<span>© <span id="yr">2026</span> My Sirat</span>', h, 1)
 h = re.sub(r'navigator\.serviceWorker\.register\([^)]*\)', 'Promise.resolve()', h)
 # toolkit tiles: Pathfinder + Skills after the Learn tiles
 k = h.find('<h3 class="tb-sec">Learn</h3>'); k2 = h.find('</div>', h.find('<div class="tb-grid">', k))
@@ -61,7 +62,7 @@ open(p, 'w', encoding='utf-8').write(h)
 print('index ok', 'pthRoot' in h, 'tb-pathfinder' in h, 'data-t="prayer"' in h)
 
 # ---------- desktop header: MySirat mark, no Listen menu, no Advertise ----------
-h = re.sub(r'<img class="lt" src="img/logo\.webp"[^>]*><img class="dkl"[^>]*>', '<span class="mt-wm"><img src="mt/icon-192.png" alt="" width="40" height="40"><b>MySirat</b></span>', h, count=1)
+h = re.sub(r'<img class="lt" src="img/logo\.webp"[^>]*><img class="dkl"[^>]*>', '<span class="mt-wm"><img src="mt/icon-192.png" alt="" width="40" height="40"><b>My Sirat</b></span>', h, count=1)
 h = re.sub(r'<div class="dd"><button type="button" aria-expanded="false">Listen<svg>.*?</div>\s*</div>', '', h, count=1, flags=re.S)
 h = h.replace('<a href="#advertise">Advertise</a>', '', 1)
 # ---------- desktop: same app home as phones, in a centred column ----------
@@ -98,8 +99,8 @@ print('desk rules', len(blk))
 sub('watch.js', [
   ("['inspire', 'Inspire FM podcast'], ", "['dawah', 'Dawah'], "),
   ("['inspire', 'Inspire FM podcast', 'Shows, interviews & appeals'], ", ''),
-  ("Put together by the Inspire FM team", 'Put together by the MySirat team'),
-  ("on the Inspire FM app", 'on MySirat'),
+  ("Put together by the Inspire FM team", 'Put together by the My Sirat team'),
+  ("on the Inspire FM app", 'on My Sirat'),
   ("['kids', 'Kids learning', 'Cartoons, songs and stories'],", "['dawah', 'Dawah & good watches', 'Islam explained, revert stories, reminders'], ['kids', 'Kids learning', 'Cartoons, songs and stories'],"),
 ], rx=[
   (r"\n  \{ k: 'inspire'.*?(?=\n  \{ k: 'omarhana')", ''),
@@ -122,7 +123,7 @@ sub('desk.js', [("['learn', 'Learn', '#1d4ed8', '#93c5fd', ['salah', 'dress', 'k
                  "['learn', 'Learn', '#1d4ed8', '#93c5fd', ['salah', 'dress', 'kids', 'watch']], ['future', 'Future and careers', '#12324f', '#f8c62b', ['pathfinder', 'skills']],"),
                 ("'Masjid and Luton'", "'Masjid and local'")])
 # ---------- Pathfinder share line ----------
-sub('ngs/pathfinder.js', [("<small><b>NGS</b> Student</small>", "<small>Student</small>"), ('<h1 class="pth-vh">NGS Student Pathfinder</h1>', '<h1 class="pth-vh">Student Pathfinder</h1>'), ("Made with Pathfinder on the NGS app: https://nextgenerationscheme.co.uk/pathfinder", 'Made with Pathfinder on MySirat')])
+sub('ngs/pathfinder.js', [("<small><b>NGS</b> Student</small>", "<small>Student</small>"), ('<h1 class="pth-vh">NGS Student Pathfinder</h1>', '<h1 class="pth-vh">Student Pathfinder</h1>'), ("Made with Pathfinder on the NGS app: https://nextgenerationscheme.co.uk/pathfinder", 'Made with Pathfinder on My Sirat')])
 # ---------- service worker off everywhere ----------
 for f in os.listdir(OUT):
     if f.endswith('.js'):
@@ -151,3 +152,37 @@ for root, _, fs in os.walk(OUT):
         t = re.sub(r'font:\s*(700|800|900) ', 'font:600 ', t)
         if t != o: open(q, 'w', encoding='utf-8').write(t)
 print('done')
+# ---------- My Sirat look: every colour muted (same hue, much softer) so tools keep a subtle tint on black and grey ----------
+import colorsys
+SAT_K, SAT_MAX = .36, .30
+def _mute(r, g, b):
+    h, l, s = colorsys.rgb_to_hls(r / 255, g / 255, b / 255)
+    s = min(s * SAT_K, SAT_MAX)
+    return tuple(round(v * 255) for v in colorsys.hls_to_rgb(h, l, s))
+def _hex(m):
+    pre, x = m.group(1), m.group(2)
+    if len(x) == 3: rgb = [int(c * 2, 16) for c in x]; a = ''
+    else: rgb = [int(x[i:i + 2], 16) for i in (0, 2, 4)]; a = x[6:]
+    if max(rgb) - min(rgb) < 6: return m.group(0)
+    r, g, b = _mute(*rgb)
+    return f'{pre}{r:02x}{g:02x}{b:02x}{a}'
+def _rgb(m):
+    r, g, b = (int(float(v)) for v in (m.group(2), m.group(3), m.group(4)))
+    if max(r, g, b) > 255 or max(r, g, b) - min(r, g, b) < 6: return m.group(0)
+    r, g, b = _mute(r, g, b)
+    return f'{m.group(1)}{r},{g},{b}{m.group(5)}'
+HEX = re.compile(r'(#|%23)([0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{3})(?![0-9a-zA-Z_-])')
+RGB = re.compile(r'(rgba?\(\s*)(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})(\s*[,)])')
+RGBQ = re.compile(r"(['\"])(\d{1,3}),\s?(\d{1,3}),\s?(\d{1,3})(['\"])")
+nm = 0
+for root, _, fs in os.walk(OUT):
+    for f in fs:
+        if not f.endswith(('.js', '.html', '.css', '.svg')): continue
+        q = os.path.join(root, f); t = open(q, encoding='utf-8').read(); o = t
+        t = HEX.sub(_hex, t); t = RGB.sub(_rgb, t)
+        t = RGBQ.sub(lambda m: m.group(1) + '{},{},{}'.format(*_mute(*(min(255, int(m.group(i))) for i in (2, 3, 4)))) + m.group(5), t)
+        if t != o: open(q, 'w', encoding='utf-8').write(t); nm += 1
+print('muted colours in', nm, 'files')
+# ---------- dark (black) by default ----------
+sub('settings.js', [("const DEF = { theme: 'light'", "const DEF = { theme: 'dark'"), ("m.content = d ? '#0f1113'", "m.content = d ? '#0b0b0c'"), ("if (S.theme === 'auto') S.theme = 'light';", "if (S.theme === 'auto') S.theme = 'dark';")])
+sub('app.js', [("setDark(store.get('dark', false))", "setDark(store.get('dark', true))")])

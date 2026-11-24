@@ -7587,27 +7587,27 @@ D.listings.forEach(function(l){if(when[l.id]&&!l.when)l.when=when[l.id];});
 
   /* Sector colour (card gradient) and the jobs each field leads to */
   var SEC = {
-    "starting-out": ["#5b6b8c", "Any entry-level job; next steps into training"],
-    aviation: ["#1f6fb2", "Cabin crew, ramp agent, airport security, aircraft engineer"],
-    security: ["#34495e", "Security officer, door supervisor, CCTV operator, custody officer"],
-    care: ["#c0567a", "Care assistant, support worker, senior carer"],
-    health: ["#0a8f87", "Healthcare assistant, support worker, nursing associate, NHS admin"],
-    construction: ["#c9741d", "Site labourer, groundworker, trades apprentice, plant operator"],
-    logistics: ["#6d5a2e", "HGV, bus or van driver, forklift operator, warehouse operative"],
-    digital: ["#5a4fcf", "IT support, data, cloud, cyber, developer"],
-    childcare: ["#e08a3c", "Nursery practitioner, childminder, teaching assistant"],
-    education: ["#3d7a3f", "Teaching assistant, tutor, teacher"],
-    "first-aid": ["#b23a3a", "Workplace first aider (add-on for many jobs)"],
-    business: ["#8a6d1a", "Self-employed, sole trader, business owner"],
-    sport: ["#2e8b57", "Sports coach, lifeguard, swim teacher, fitness instructor"],
-    trades: ["#a35a2a", "Electrician, plumber, gas engineer, maintenance technician"],
-    engineering: ["#2f5d8a", "Engineering technician, rail, water and energy engineer"],
-    public: ["#1d3d6b", "Police officer, PCSO, firefighter, prison officer, civil servant"],
-    office: ["#56677a", "Administrator, HR assistant, accounts assistant"],
-    customer: ["#7a4f9a", "Retail assistant, store manager, customer service advisor"],
-    hospitality: ["#b5562f", "Chef, kitchen team, front of house, hotel staff"],
-    creative: ["#a03c7a", "Production assistant, runner, barber, creative freelancer"],
-    language: ["#3b7f9a", "Better English for work, training and daily life"]
+    "starting-out": ["#6b707c", "Any entry-level job; next steps into training"],
+    aviation: ["#4e6b83", "Cabin crew, ramp agent, airport security, aircraft engineer"],
+    security: ["#414951", "Security officer, door supervisor, CCTV operator, custody officer"],
+    care: ["#9e7885", "Care assistant, support worker, senior carer"],
+    health: ["#366361", "Healthcare assistant, support worker, nursing associate, NHS admin"],
+    construction: ["#927354", "Site labourer, groundworker, trades apprentice, plant operator"],
+    logistics: ["#595242", "HGV, bus or van driver, forklift operator, warehouse operative"],
+    digital: ["#7c78a6", "IT support, data, cloud, cyber, developer"],
+    childcare: ["#ac8d70", "Nursery practitioner, childminder, teaching assistant"],
+    education: ["#516651", "Teaching assistant, tutor, teacher"],
+    "first-aid": ["#8c6060", "Workplace first aider (add-on for many jobs)"],
+    business: ["#665c3e", "Self-employed, sole trader, business owner"],
+    sport: ["#4c6d5b", "Sports coach, lifeguard, swim teacher, fitness instructor"],
+    trades: ["#7c6251", "Electrician, plumber, gas engineer, maintenance technician"],
+    engineering: ["#4c5d6d", "Engineering technician, rail, water and energy engineer"],
+    public: ["#364152", "Police officer, PCSO, firefighter, prison officer, civil servant"],
+    office: ["#62686e", "Administrator, HR assistant, accounts assistant"],
+    customer: ["#766782", "Retail assistant, store manager, customer service advisor"],
+    hospitality: ["#8a685a", "Chef, kitchen team, front of house, hotel staff"],
+    creative: ["#805c72", "Production assistant, runner, barber, creative freelancer"],
+    language: ["#59727c", "Better English for work, training and daily life"]
   };
   var ADDON = { "firstaid-activeluton": 1, "firstaid-sja": 1, "lal-mhfa": 1, "efaw-farley": 1, "food-hygiene": 1, "sja-free-online": 1, "sja-volunteer": 1, "tsn-safeguardingpreventandbr": 1 };
   function isAddon(l) { return !!(l.addon || ADDON[l.id] || l.sector === "first-aid"); }
@@ -7754,7 +7754,7 @@ D.listings.forEach(function(l){if(when[l.id]&&!l.when)l.when=when[l.id];});
   function shortDur(d) { d = String(d || "").split(/[;(]/)[0].trim(); return d.length > 26 ? d.slice(0, 24).replace(/[ ,.]+\S*$/, "") + "…" : d; }
   function shortWhen(w) { w = String(w || "").split(/(?<=\.)\s/)[0]; return w.length > 70 ? w.slice(0, 68).replace(/[ ,.]+\S*$/, "") + "…" : w; }
   function card(r, i) {
-    var l = r.l, meta = SEC[l.sector] || ["#33415c", ""], sec = D.sectors[l.sector] || {};
+    var l = r.l, meta = SEC[l.sector] || ["#40454f", ""], sec = D.sectors[l.sector] || {};
     var needs = needsOf(l), nd = needs[0] === "none" ? "No qualifications needed" : "Needs " + NEEDS[needs[0]].replace(/^Some /, "").toLowerCase().replace("gcses", "GCSEs").replace("english", "English") + (needs.length > 1 ? " +" + (needs.length - 1) : "");
     var dist = distText(l), dl = l.mode !== "online" ? dirLink(l) : "";
     var whenTxt = l.when || WHENFB[l.live] || "";
@@ -8045,7 +8045,7 @@ D.listings.forEach(function(l){if(when[l.id]&&!l.when)l.when=when[l.id];});
       '<section class="sk-filters" aria-label="Filters">' +
       '<label class="sk-search">' + ic("filter") + '<input type="search" data-f="q" placeholder="Search: forklift, care, cabin crew, first aid..." aria-label="Search"></label>' +
       '<div class="sk-board"><div class="sk-board-h"><h3>What are you into?</h3><span class="sk-tiles-n"></span></div><div class="sk-tiles">' +
-        secOpts.map(function (o) { var m = SEC[o[0]] || ["#33415c"]; return '<button type="button" class="sk-tile" data-tile="' + o[0] + '" style="--sc:' + m[0] + '" aria-pressed="false">' + ic(o[0]) + '<span>' + esc(SHORT[o[0]] || o[1]) + '</span><em data-cnt="' + o[0] + '"></em></button>'; }).join("") +
+        secOpts.map(function (o) { var m = SEC[o[0]] || ["#40454f"]; return '<button type="button" class="sk-tile" data-tile="' + o[0] + '" style="--sc:' + m[0] + '" aria-pressed="false">' + ic(o[0]) + '<span>' + esc(SHORT[o[0]] || o[1]) + '</span><em data-cnt="' + o[0] + '"></em></button>'; }).join("") +
       '</div></div>' +
       '<div class="sk-board sk-narrow"><div class="sk-board-h"><h3>Narrow it down</h3><span>Pick a topic</span></div><div class="sk-tabs" role="tablist">' +
         [["kind", "Looking for"], ["cost", "Cost"], ["outcome", "What happens after"], ["where", "Where"], ["needs", "Entry needs"], ["you", "About you"]].map(function (t, i) { return '<button type="button" class="sk-tab" data-tab="' + t[0] + '" data-title="' + esc(t[1]) + '" aria-haspopup="dialog">' + esc(t[1]) + '<em></em>' + ic("arrow", "sk-tab-go") + '</button>'; }).join("") +

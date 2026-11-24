@@ -6,7 +6,7 @@
   const D=window.NGSHELP,PC=window.NGSPC;
   const I=k=>`<svg class="ico" aria-hidden="true"><use href="#i-${k}"></use></svg>`;
   const NEEDS=[['food','bowl','Food & meals'],['clothes','shirt','Clothes & essentials'],['baby','bottle','Baby & kids'],['money','pound','Money & bills'],['refugee','globe','Asylum & refugee'],['housing','home','Housing & homelessness'],['talk','chat','Someone to talk to'],['skills','book','English, jobs & skills']];
-  const COL={food:'#e0662f',clothes:'#7a3ee0',baby:'#e0457b',money:'#1f8a4c',refugee:'#c28a00',housing:'#1d72c2',talk:'#0e8a90',skills:'#5a4a8a'};
+  const COL={food:'#a77b68',clothes:'#8772ac',baby:'#ae778a',money:'#416851',refugee:'#7e6d44',housing:'#52708d',talk:'#386466',skills:'#645e76'};
   const COST={all:['✓ Free for everyone','all'],elig:['✓ Free if you\'re eligible','elig'],contact:['Free, check with them first','contact'],part:['Free for some, others pay','part'],low:['Low cost','low']};
   const ACC={walk:['walk','Walk in'],book:['calendar','Book first'],phone:['phone','Phone'],online:['globe','Apply online'],email:['mail','Email'],referral:['clipboard','Needs a referral'],contact:['chat','Ask first']};
   const DAY=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],now=new Date().getDay();
@@ -43,7 +43,7 @@
     const dest=loc?encodeURIComponent(loc[0]+' '+loc[1]):'';
     const dir=loc?(me?`https://www.google.com/maps/dir/?api=1&origin=${me[0]},${me[1]}&destination=${dest}&travelmode=walking`:`https://www.google.com/maps/search/?api=1&query=${dest}`):'';
     const bc=s.logo&&(window.NGSHLC||{})[s.logo];
-    return `<article class="hx${bc?' hx-br':''}" id="hf-${esc(s.id)}" style="--c:${bc||COL[s.cat[0]]||'#12324f'}">
+    return `<article class="hx${bc?' hx-br':''}" id="hf-${esc(s.id)}" style="--c:${bc||COL[s.cat[0]]||'#26313b'}">
       <div class="hx-h">${loc?`<span class="hx-n">${i+1}</span>`:`<span class="hx-n rm" aria-hidden="true">${I(s.acc.includes('phone')?'phone':'globe')}</span>`}<div class="hx-t"><h4>${esc(s.n)}</h4>${s.org&&s.org!==s.n?`<small>${esc(s.org)}</small>`:''}</div>${n?`<span class="hx-d">${fmtMi(n.m)}</span>`:(!s.locs.length?'<span class="hx-d rm">Phone / online</span>':'')}</div>${s.logo&&(window.NGSHL||{})[s.logo]?`<div class="hx-lg"><img src="${(window.NGSHL||{})[s.logo]||''}" alt="${esc(s.org||s.n)} logo" loading="lazy"></div>`:''}
       <div class="hx-b"><span class="cost ${c[1]}">${c[0]}</span>${s.acc.filter(a=>ACC[a]).map(a=>`<span class="acc">${I(ACC[a][0])} ${ACC[a][1]}</span>`).join('')}</div>
       <p class="hx-help">${esc(s.help)}</p>

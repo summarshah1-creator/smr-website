@@ -8,10 +8,10 @@ const X = window.IFMX; if (!X) return;
 const { $, $$, esc, D } = X;
 const G = k => (window.IFM_GFX ? window.IFM_GFX(k) : '');
 const TYPES = {
-  ann: ['Announcement', '#c0392b'],
-  event: ['Event', '#7c3aed'],
-  comm: ['Community', '#0e7490'],
-  ifm: ['Inspire FM', '#6f6d68']
+  ann: ['Announcement', '#90605b'],
+  event: ['Event', '#8b73b4'],
+  comm: ['Community', '#385c66'],
+  ifm: ['Inspire FM', '#6d6c6a']
 };
 const M = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const today = new Date().toISOString().slice(0, 10);
@@ -192,9 +192,9 @@ function iamPage() {
   <a class="iam-sos" href="tel:999"><b>In danger right now?</b><span>Call 999</span></a>
   <h3 class="iam-h">Report it</h3>
   <div class="iam-grid">
-    <a href="tel:101"><img src="img/org/beds-police.webp" alt=""><b>Bedfordshire Police</b><small>Call 101 any time if it is not an emergency, or report online through True Vision, the police's hate crime site.</small><em>Call 101</em></a><a href="https://www.report-it.org.uk/" target="_blank" rel="noopener"><span class="iam-ic" style="--c:#1d4f7a">${(window.IFM_IC || (() => ''))('shield')}</span><b>True Vision</b><small>The official police website for reporting hate crime online, in any part of England.</small><em>Report online</em></a>
-    <a href="https://www.stophateuk.org/report-here/" target="_blank" rel="noopener"><span class="iam-ic" style="--c:#e0457b">${(window.IFM_IC || (() => ''))('chat')}</span><b>Stop Hate UK</b><small>Bedfordshire's independent hate reporting service. Confidential support, 24 hours.</small><em>Report to Stop Hate UK</em></a>
-    <a href="https://tellmamauk.org/" target="_blank" rel="noopener"><span class="iam-ic" style="--c:#7a2e8e">${(window.IFM_IC || (() => ''))('heart')}</span><b>Tell MAMA</b><small>Records anti-Muslim hate and supports victims. Free helpline 0800 456 1226, WhatsApp 0734 184 6086.</small><em>Report to Tell MAMA</em></a>
+    <a href="tel:101"><img src="img/org/beds-police.webp" alt=""><b>Bedfordshire Police</b><small>Call 101 any time if it is not an emergency, or report online through True Vision, the police's hate crime site.</small><em>Call 101</em></a><a href="https://www.report-it.org.uk/" target="_blank" rel="noopener"><span class="iam-ic" style="--c:#3b4d5c">${(window.IFM_IC || (() => ''))('shield')}</span><b>True Vision</b><small>The official police website for reporting hate crime online, in any part of England.</small><em>Report online</em></a>
+    <a href="https://www.stophateuk.org/report-here/" target="_blank" rel="noopener"><span class="iam-ic" style="--c:#ae778a">${(window.IFM_IC || (() => ''))('chat')}</span><b>Stop Hate UK</b><small>Bedfordshire's independent hate reporting service. Confidential support, 24 hours.</small><em>Report to Stop Hate UK</em></a>
+    <a href="https://tellmamauk.org/" target="_blank" rel="noopener"><span class="iam-ic" style="--c:#684d6f">${(window.IFM_IC || (() => ''))('heart')}</span><b>Tell MAMA</b><small>Records anti-Muslim hate and supports victims. Free helpline 0800 456 1226, WhatsApp 0734 184 6086.</small><em>Report to Tell MAMA</em></a>
     <a href="mailto:communitysafety@luton.gov.uk?subject=Reporting%20a%20hate%20incident"><img src="img/org/luton-council.webp" alt=""><b>Luton Council</b><small>Community Safety team: communitysafety@luton.gov.uk</small><em>Email the council</em></a>
   </div>
   <h3 class="iam-h">What to do</h3>

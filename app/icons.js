@@ -55,7 +55,7 @@ const P = {
   clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/>',
   card: '<rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="M3 10h18M7 15h4"/>',
   bag: '<path d="M5 8h14l-1 12.5H6z"/><path d="M9 10V6.5a3 3 0 0 1 6 0V10"/>',
-  kaaba: '<path d="m4 7.5 8-3.5 8 3.5v10L12 21l-8-3.5z"/><path d="m4 7.5 8 3.5 8-3.5M12 11v10"/><path d="m4 10.5 8 3.5 8-3.5" stroke-width="2.6" stroke="#d4a72c"/>',
+  kaaba: '<path d="m4 7.5 8-3.5 8 3.5v10L12 21l-8-3.5z"/><path d="m4 7.5 8 3.5 8-3.5M12 11v10"/><path d="m4 10.5 8 3.5 8-3.5" stroke-width="2.6" stroke="#9e8e62"/>',
   mosque: '<path d="M7 20.5v-6.5a5 5 0 0 1 10 0v6.5"/><path d="M12 4.5v4M10.8 5.8h2.4"/><path d="M3.5 20.5V10M3.5 10l.9-2.5.9 2.5M20.5 20.5V10M19.6 10l.9-2.5.9 2.5"/><path d="M2.5 20.5h19M10.5 20.5v-3a1.5 1.5 0 0 1 3 0v3"/>',
   gate: '<path d="M4 21V9a8 8 0 0 1 16 0v12"/><path d="M8 21v-9a4 4 0 0 1 8 0v9M3 21h18"/>',
   pin: '<path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4"/>',

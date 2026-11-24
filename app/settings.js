@@ -5,14 +5,14 @@
 const X = window.IFMX; if (!X) return;
 const { $, $$, store, toast } = X;
 const H = document.documentElement;
-const DEF = { theme: 'light', still: false, lite: false, size: 100, easy: false, space: false, links: false, bold: false, hc: false, grey: false, tint: '', dys: false, hear: false, ruler: false };
+const DEF = { theme: 'dark', still: false, lite: false, size: 100, easy: false, space: false, links: false, bold: false, hc: false, grey: false, tint: '', dys: false, hear: false, ruler: false };
 let S = Object.assign({}, DEF, store.get('settings', {}));
 if (store.get('settings', null) === null && store.get('dark', null) === true) S.theme = 'dark';
-if (S.theme === 'auto') S.theme = 'light';
+if (S.theme === 'auto') S.theme = 'dark';
 
 /* ---------- apply ---------- */
 const mq = matchMedia('(prefers-color-scheme: dark)');
-function applyTheme() { const d = S.theme === 'dark'; H.classList.toggle('dark', d); const m = document.querySelector('meta[name=theme-color]'); if (m) m.content = d ? '#0f1113' : '#f6f8f2'; const b = $('#darkBtn span'); if (b) b.textContent = d ? 'Light mode' : 'Dark mode'; }
+function applyTheme() { const d = S.theme === 'dark'; H.classList.toggle('dark', d); const m = document.querySelector('meta[name=theme-color]'); if (m) m.content = d ? '#0b0b0c' : '#f5f6f4'; const b = $('#darkBtn span'); if (b) b.textContent = d ? 'Light mode' : 'Dark mode'; }
 mq.addEventListener && mq.addEventListener('change', () => { if (S.theme === 'auto') applyTheme(); });
 function apply() {
   applyTheme();
@@ -33,8 +33,8 @@ html.ax-dys{--body:"OpenDyslexic",sans-serif!important;--display:"OpenDyslexic",
 html.ax-dys body,html.ax-dys input,html.ax-dys button,html.ax-dys select,html.ax-dys textarea{font-family:"OpenDyslexic",sans-serif!important}
 html.ax-dys [lang=ar],html.ax-dys .ar,html.ax-dys .ur-t{font-family:"Amiri","Noto Nastaliq Urdu",serif!important}
 html.ax-hear p,html.ax-hear h1,html.ax-hear h2,html.ax-hear h3,html.ax-hear h4{cursor:pointer}
-.ax-reading{background:rgba(168,164,157,.28)!important;border-radius:6px;box-shadow:0 0 0 4px rgba(168,164,157,.28)}
-.ax-rul{position:fixed;left:0;right:0;height:52px;z-index:9998;pointer-events:none;display:none;background:rgba(255,224,102,.22);box-shadow:0 0 0 100vmax rgba(0,0,0,.28);border-top:2px solid rgba(255,200,0,.6);border-bottom:2px solid rgba(255,200,0,.6)}
+.ax-reading{background:rgba(164,163,161,.28)!important;border-radius:6px;box-shadow:0 0 0 4px rgba(164,163,161,.28)}
+.ax-rul{position:fixed;left:0;right:0;height:52px;z-index:9998;pointer-events:none;display:none;background:rgba(201,192,156,.22);box-shadow:0 0 0 100vmax rgba(0,0,0,.28);border-top:2px solid rgba(166,149,89,.6);border-bottom:2px solid rgba(166,149,89,.6)}
 html.ax-ruler .ax-rul{display:block}`; document.head.appendChild(axCss);
 const save = () => { store.set('settings', S); store.set('dark', H.classList.contains('dark')); apply(); };
 apply();
@@ -78,7 +78,7 @@ function body() {
   <section class="st-sec"><h3>${ic('colour')}Colours</h3>
     ${sw('hc', 'Stronger contrast')}
     ${sw('grey', 'Greyscale')}
-    <div class="st-row st-col"><div><b>Colour overlay</b><small>A soft tint over the screen can make reading easier</small></div><div class="st-tints">${[['', 'None', '#fff'], ['#fff3c4', 'Cream'], ['#d9ecff', 'Blue'], ['#dff5df', 'Green'], ['#ffe0ec', 'Pink']].map(([v, n, c]) => `<button type="button" data-tint="${v}" aria-pressed="${S.tint === v}" style="background:${c || v}">${n}</button>`).join('')}</div></div></section>
+    <div class="st-row st-col"><div><b>Colour overlay</b><small>A soft tint over the screen can make reading easier</small></div><div class="st-tints">${[['', 'None', '#fff'], ['#eae7d9', 'Cream'], ['#e6ecf2', 'Blue'], ['#e6eee6', 'Green'], ['#f4ebee', 'Pink']].map(([v, n, c]) => `<button type="button" data-tint="${v}" aria-pressed="${S.tint === v}" style="background:${c || v}">${n}</button>`).join('')}</div></div></section>
   <section class="st-sec"><h3>${ic('globe')}Language</h3>
     <div class="st-row"><div><b>App language</b><small>Translated automatically on the live site</small></div><select id="stLang" aria-label="App language">${langs.map(([v, n]) => `<option value="${v}" ${v === curL ? 'selected' : ''}>${n}</option>`).join('')}</select></div></section>
   <section class="st-sec"><h3>${ic('info')}About</h3>

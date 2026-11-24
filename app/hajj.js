@@ -3,124 +3,124 @@
 'use strict';
 const X = window.IFMX; if (!X) return;
 const { $, $$, esc, I, store, toast, copy, TOOLS } = X;
-const sk = '#c98e63', skD = '#a86f48', wht = '#fbfaf6', fold = '#d9dbd2';
+const sk = '#a89384', skD = '#897567', wht = '#fbfaf6', fold = '#d7d8d5';
 
 /* ---------- illustrations ---------- */
 const ILL = {};
 ILL.kaaba = `<svg viewBox="0 0 360 220" class="hj-ill" role="img" aria-label="Illustration of the Kaaba at night with pilgrims doing tawaf"><defs>
-<linearGradient id="hkSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b1f3a"/><stop offset=".7" stop-color="#1d3b5c"/><stop offset="1" stop-color="#3a5a6e"/></linearGradient>
+<linearGradient id="hkSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a212b"/><stop offset=".7" stop-color="#313c48"/><stop offset="1" stop-color="#4b565d"/></linearGradient>
 <linearGradient id="hkSide" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#161616"/><stop offset="1" stop-color="#2a2a2a"/></linearGradient>
-<linearGradient id="hkGold" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#9c7a2b"/><stop offset=".5" stop-color="#f3d27a"/><stop offset="1" stop-color="#9c7a2b"/></linearGradient>
-<radialGradient id="hkFloor" cx=".5" cy=".55" r=".6"><stop offset="0" stop-color="#f4f1ea"/><stop offset="1" stop-color="#cfd2cc"/></radialGradient></defs>
+<linearGradient id="hkGold" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#786c4f"/><stop offset=".5" stop-color="#ccc0a1"/><stop offset="1" stop-color="#786c4f"/></linearGradient>
+<radialGradient id="hkFloor" cx=".5" cy=".55" r=".6"><stop offset="0" stop-color="#f1f0ed"/><stop offset="1" stop-color="#cfd0ce"/></radialGradient></defs>
 <rect width="360" height="220" fill="url(#hkSky)"/>
 <g fill="#fff" opacity=".8"><circle cx="40" cy="22" r="1"/><circle cx="90" cy="40" r=".8"/><circle cx="300" cy="18" r="1.2"/><circle cx="250" cy="44" r=".7"/><circle cx="330" cy="60" r=".9"/><circle cx="150" cy="16" r=".7"/></g>
-<path d="M300 30a14 14 0 1 0 9 24 11 11 0 1 1-9-24z" fill="#f6e7b0"/>
-<g fill="#24384c"><rect x="14" y="60" width="10" height="90"/><path d="M12 60h14l-7-20z"/><rect x="330" y="56" width="10" height="94"/><path d="M328 56h14l-7-20z"/><rect x="272" y="40" width="22" height="110"/><rect x="276" y="22" width="14" height="20"/><path d="M276 22h14l-7-14z"/><circle cx="283" cy="56" r="7" fill="#f3d27a" opacity=".85"/></g>
-<rect x="0" y="120" width="360" height="22" fill="#2e4656"/><g fill="#f3d27a" opacity=".55"><rect x="20" y="126" width="3" height="3"/><rect x="60" y="126" width="3" height="3"/><rect x="100" y="126" width="3" height="3"/><rect x="250" y="126" width="3" height="3"/><rect x="300" y="126" width="3" height="3"/></g>
+<path d="M300 30a14 14 0 1 0 9 24 11 11 0 1 1-9-24z" fill="#e0dac6"/>
+<g fill="#31383f"><rect x="14" y="60" width="10" height="90"/><path d="M12 60h14l-7-20z"/><rect x="330" y="56" width="10" height="94"/><path d="M328 56h14l-7-20z"/><rect x="272" y="40" width="22" height="110"/><rect x="276" y="22" width="14" height="20"/><path d="M276 22h14l-7-14z"/><circle cx="283" cy="56" r="7" fill="#ccc0a1" opacity=".85"/></g>
+<rect x="0" y="120" width="360" height="22" fill="#3b4349"/><g fill="#ccc0a1" opacity=".55"><rect x="20" y="126" width="3" height="3"/><rect x="60" y="126" width="3" height="3"/><rect x="100" y="126" width="3" height="3"/><rect x="250" y="126" width="3" height="3"/><rect x="300" y="126" width="3" height="3"/></g>
 <ellipse cx="180" cy="190" rx="200" ry="56" fill="url(#hkFloor)"/>
-<g fill="none" stroke="#d8d4c8" stroke-width="1"><ellipse cx="180" cy="186" rx="150" ry="36"/><ellipse cx="180" cy="186" rx="118" ry="28"/><ellipse cx="180" cy="186" rx="86" ry="20"/></g>
+<g fill="none" stroke="#d3d1cd" stroke-width="1"><ellipse cx="180" cy="186" rx="150" ry="36"/><ellipse cx="180" cy="186" rx="118" ry="28"/><ellipse cx="180" cy="186" rx="86" ry="20"/></g>
 <path d="M140 92l40-10 40 10v86l-40 10-40-10z" fill="#111"/><path d="M180 82l40 10v86l-40 10z" fill="url(#hkSide)"/>
 <path d="M140 104l40 10 40-10v9l-40 10-40-10z" fill="url(#hkGold)"/>
 <g stroke="#000" stroke-width=".5" opacity=".5"><path d="M150 100v70M160 103v70M200 103v70M210 100v70"/></g>
 <rect x="190" y="132" width="13" height="28" rx="1" fill="url(#hkGold)" transform="skewY(-14) translate(0 49)"/>
 <path d="M140 92l40-10 40 10-40 10z" fill="#2b2b2b"/>
-<path d="M150 170q-26 6-30 16M226 170q24 6 26 16" stroke="#e8e4da" stroke-width="2" fill="none"/>
-<path d="M118 186a46 18 0 0 0 30 14" stroke="#cfc9b6" stroke-width="2" fill="none"/>
-${Array.from({ length: 70 }, (_, i) => { const a = i / 70 * Math.PI * 2, r = 98 + (i % 3) * 18; const x = 180 + Math.cos(a) * r * 1.35, y = 188 + Math.sin(a) * r * .3; if (y < 170 && x > 130 && x < 230) return ''; return `<g transform="translate(${x.toFixed(1)} ${y.toFixed(1)})"><rect x="-1.6" y="-6" width="3.2" height="6" rx="1.2" fill="${i % 4 ? '#fbfaf6' : '#1d1d1d'}"/><circle cy="-7.3" r="1.4" fill="${i % 5 ? '#b77d55' : '#7a5236'}"/></g>`; }).join('')}
-<path d="M70 196q110 30 220 0" stroke="#a8a49d" stroke-width="2.4" fill="none" stroke-dasharray="1 7" stroke-linecap="round"/><path d="M78 190l-8 6 10 2" fill="none" stroke="#a8a49d" stroke-width="2.4" stroke-linecap="round"/>
+<path d="M150 170q-26 6-30 16M226 170q24 6 26 16" stroke="#e4e2de" stroke-width="2" fill="none"/>
+<path d="M118 186a46 18 0 0 0 30 14" stroke="#c7c5be" stroke-width="2" fill="none"/>
+${Array.from({ length: 70 }, (_, i) => { const a = i / 70 * Math.PI * 2, r = 98 + (i % 3) * 18; const x = 180 + Math.cos(a) * r * 1.35, y = 188 + Math.sin(a) * r * .3; if (y < 170 && x > 130 && x < 230) return ''; return `<g transform="translate(${x.toFixed(1)} ${y.toFixed(1)})"><rect x="-1.6" y="-6" width="3.2" height="6" rx="1.2" fill="${i % 4 ? '#fbfaf6' : '#1d1d1d'}"/><circle cy="-7.3" r="1.4" fill="${i % 5 ? '#988374' : '#64564c'}"/></g>`; }).join('')}
+<path d="M70 196q110 30 220 0" stroke="#a4a3a1" stroke-width="2.4" fill="none" stroke-dasharray="1 7" stroke-linecap="round"/><path d="M78 190l-8 6 10 2" fill="none" stroke="#a4a3a1" stroke-width="2.4" stroke-linecap="round"/>
 </svg>`;
 
-const callout = (x1, y1, x2, y2, t, anchor) => `<path d="M${x1} ${y1}L${x2} ${y2}" stroke="#7a8a80" stroke-width="1"/><circle cx="${x1}" cy="${y1}" r="2.6" fill="#a8a49d" stroke="#fff"/><text x="${x2 + (anchor === 'end' ? -4 : 4)}" y="${y2 + 4}" text-anchor="${anchor || 'start'}" font-size="10.5" font-weight="700" fill="#24302a" font-family="system-ui,sans-serif">${t}</text>`;
+const callout = (x1, y1, x2, y2, t, anchor) => `<path d="M${x1} ${y1}L${x2} ${y2}" stroke="#7f8581" stroke-width="1"/><circle cx="${x1}" cy="${y1}" r="2.6" fill="#a4a3a1" stroke="#fff"/><text x="${x2 + (anchor === 'end' ? -4 : 4)}" y="${y2 + 4}" text-anchor="${anchor || 'start'}" font-size="10.5" font-weight="700" fill="#282c2a" font-family="system-ui,sans-serif">${t}</text>`;
 
 ILL.man = `<svg viewBox="-70 0 460 300" class="hj-ill hj-ill-l" role="img" aria-label="Illustration of a man in ihram with labels"><defs>
-<linearGradient id="hmBg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef4e6"/><stop offset="1" stop-color="#dfe9d3"/></linearGradient>
-<linearGradient id="hmCl" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#e9e8e1"/><stop offset=".45" stop-color="${wht}"/><stop offset="1" stop-color="#dcdcd3"/></linearGradient>
+<linearGradient id="hmBg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#edf0ea"/><stop offset="1" stop-color="#dee2da"/></linearGradient>
+<linearGradient id="hmCl" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#e6e6e4"/><stop offset=".45" stop-color="${wht}"/><stop offset="1" stop-color="#d9d9d6"/></linearGradient>
 <linearGradient id="hmSk" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${skD}"/><stop offset=".5" stop-color="${sk}"/><stop offset="1" stop-color="${skD}"/></linearGradient></defs>
 <rect x="-70" width="460" height="300" rx="18" fill="url(#hmBg)"/><ellipse cx="160" cy="284" rx="70" ry="8" fill="#000" opacity=".08"/>
 <rect x="146" y="58" width="18" height="16" fill="${skD}"/>
-<ellipse cx="155" cy="44" rx="20" ry="23" fill="url(#hmSk)"/><path d="M135 46q2 22 20 24 18-2 20-24-4 10-20 12-16-2-20-12z" fill="#3b2a20"/><path d="M137 34q4-18 18-18t18 18q-6-8-18-8t-18 8z" fill="#2b1d15"/>
-<circle cx="148" cy="42" r="1.6" fill="#2b1d15"/><circle cx="162" cy="42" r="1.6" fill="#2b1d15"/>
+<ellipse cx="155" cy="44" rx="20" ry="23" fill="url(#hmSk)"/><path d="M135 46q2 22 20 24 18-2 20-24-4 10-20 12-16-2-20-12z" fill="#322c29"/><path d="M137 34q4-18 18-18t18 18q-6-8-18-8t-18 8z" fill="#241f1c"/>
+<circle cx="148" cy="42" r="1.6" fill="#241f1c"/><circle cx="162" cy="42" r="1.6" fill="#241f1c"/>
 <path d="M118 82q37-14 76 0l10 70-96 0z" fill="url(#hmSk)"/>
 <path d="M160 74q-30 4-44 14l-4 64 30 0 6-40 16-4 12 6q-2-30-16-40z" fill="url(#hmCl)" stroke="${fold}"/>
 <path d="M126 92q10 20 4 54M142 84q8 26 2 64" stroke="${fold}" stroke-width="1.4" fill="none"/>
 <path d="M182 82q22 4 26 16l4 50-10 2-6-40" fill="url(#hmSk)"/><path d="M110 92l-6 64 12 2 6-50" fill="url(#hmCl)" stroke="${fold}"/>
-<rect x="114" y="150" width="96" height="14" rx="5" fill="#2f5d3a"/><rect x="152" y="150" width="20" height="14" rx="3" fill="#24492d"/><circle cx="162" cy="157" r="2.5" fill="#c9a53c"/>
+<rect x="114" y="150" width="96" height="14" rx="5" fill="#3e4e42"/><rect x="152" y="150" width="20" height="14" rx="3" fill="#303d33"/><circle cx="162" cy="157" r="2.5" fill="#9c8f69"/>
 <path d="M116 162l96 0 6 92-108 0z" fill="url(#hmCl)" stroke="${fold}"/><path d="M134 166l-6 86M160 166v88M188 166l8 86" stroke="${fold}" stroke-width="1.4"/><path d="M172 166q-8 40 6 88" stroke="${fold}" stroke-width="1.2" fill="none"/>
-<path d="M126 254h22v12h-22zM172 254h22v12h-22z" fill="url(#hmSk)"/><path d="M118 266h34l4 8h-40zM166 266h34l4 8h-40z" fill="#6b4a33"/><path d="M128 266l10-6 10 6M176 266l10-6 10 6" stroke="#4a3322" stroke-width="2.4" fill="none"/>
+<path d="M126 254h22v12h-22zM172 254h22v12h-22z" fill="url(#hmSk)"/><path d="M118 266h34l4 8h-40zM166 266h34l4 8h-40z" fill="#594d45"/><path d="M128 266l10-6 10 6M176 266l10-6 10 6" stroke="#3d352f" stroke-width="2.4" fill="none"/>
 <path d="M102 156q-4 10 2 14M216 150q6 8 0 16" fill="url(#hmSk)"/>
 ${callout(155, 26, 236, 24, 'Head uncovered')}${callout(194, 92, 236, 70, 'Right shoulder bare')}${callout(236, 84, 236, 84, '(in the first tawaf)')}${callout(130, 104, 60, 92, "Rida' (upper sheet)", 'end')}${callout(162, 157, 236, 150, 'Ihram belt for valuables')}${callout(150, 214, 60, 206, 'Izar (lower sheet)', 'end')}${callout(186, 268, 236, 250, 'Sandals: ankle and')}${callout(236, 264, 236, 264, 'top of foot bare')}
 </svg>`.replace(/<path d="M236 84L236 84"[^>]*\/><circle cx="236" cy="84"[^>]*\/>/, '').replace(/<path d="M236 264L236 264"[^>]*\/><circle cx="236" cy="264"[^>]*\/>/, '');
 
 ILL.woman = `<svg viewBox="-80 0 470 300" class="hj-ill hj-ill-l" role="img" aria-label="Illustration of a woman's dress for ihram with labels"><defs>
-<linearGradient id="hwBg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4ecf6"/><stop offset="1" stop-color="#e8dcef"/></linearGradient>
-<linearGradient id="hwAb" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2d3a4f"/><stop offset=".5" stop-color="#46587a"/><stop offset="1" stop-color="#2a364a"/></linearGradient>
-<linearGradient id="hwHj" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#d9d2c4"/><stop offset=".5" stop-color="#f1ece2"/><stop offset="1" stop-color="#cfc7b7"/></linearGradient>
+<linearGradient id="hwBg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f2eff3"/><stop offset="1" stop-color="#e6e2e9"/></linearGradient>
+<linearGradient id="hwAb" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#383d44"/><stop offset=".5" stop-color="#575d69"/><stop offset="1" stop-color="#343940"/></linearGradient>
+<linearGradient id="hwHj" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#d2d0cb"/><stop offset=".5" stop-color="#eceae7"/><stop offset="1" stop-color="#c7c4bf"/></linearGradient>
 <linearGradient id="hwSk" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${skD}"/><stop offset=".5" stop-color="${sk}"/><stop offset="1" stop-color="${skD}"/></linearGradient></defs>
 <rect x="-80" width="470" height="300" rx="18" fill="url(#hwBg)"/><ellipse cx="160" cy="284" rx="72" ry="8" fill="#000" opacity=".08"/>
 <path d="M128 46q0-34 32-34t32 34q2 30-10 44l-44 0q-12-14-10-44z" fill="url(#hwHj)"/>
-<ellipse cx="160" cy="48" rx="16" ry="20" fill="url(#hwSk)"/><circle cx="154" cy="46" r="1.5" fill="#2b1d15"/><circle cx="166" cy="46" r="1.5" fill="#2b1d15"/><path d="M155 58q5 3 10 0" stroke="#7a4a32" stroke-width="1.4" fill="none"/>
-<path d="M144 30q16-12 32 0" stroke="#bfb6a4" stroke-width="2" fill="none"/>
+<ellipse cx="160" cy="48" rx="16" ry="20" fill="url(#hwSk)"/><circle cx="154" cy="46" r="1.5" fill="#241f1c"/><circle cx="166" cy="46" r="1.5" fill="#241f1c"/><path d="M155 58q5 3 10 0" stroke="#635249" stroke-width="1.4" fill="none"/>
+<path d="M144 30q16-12 32 0" stroke="#b6b3ad" stroke-width="2" fill="none"/>
 <path d="M118 92q42-22 84 0l-2 10 -80 0z" fill="url(#hwHj)"/>
-<path d="M120 98q40-12 80 0l26 170q-66 14-132 0z" fill="url(#hwAb)"/><path d="M146 104l-14 160M174 104l16 160M160 104v164" stroke="#20293a" stroke-width="1.4"/>
+<path d="M120 98q40-12 80 0l26 170q-66 14-132 0z" fill="url(#hwAb)"/><path d="M146 104l-14 160M174 104l16 160M160 104v164" stroke="#282c32" stroke-width="1.4"/>
 <path d="M120 100q-18 40-20 92l14 2 14-74" fill="url(#hwAb)"/><path d="M200 100q18 40 20 92l-14 2-14-74" fill="url(#hwAb)"/>
 <ellipse cx="106" cy="198" rx="7" ry="9" fill="url(#hwSk)"/><ellipse cx="214" cy="198" rx="7" ry="9" fill="url(#hwSk)"/>
-<path d="M126 266h28l2 10h-32zM166 266h28l2 10h-32z" fill="#3a2c22"/>
+<path d="M126 266h28l2 10h-32zM166 266h28l2 10h-32z" fill="#322d2a"/>
 ${callout(166, 48, 236, 30, 'Face uncovered')}${callout(150, 24, 70, 22, 'Hijab covering the hair', 'end')}${callout(214, 198, 236, 176, 'Hands uncovered')}${callout(176, 160, 236, 132, 'Loose, modest clothes,')}${callout(236, 146, 236, 146, 'any colour')}${callout(140, 270, 70, 252, 'Comfortable closed', 'end')}${callout(70, 266, 70, 266, 'shoes and socks', 'end')}
 </svg>`.replace(/<path d="M236 146L236 146"[^>]*\/><circle cx="236" cy="146"[^>]*\/>/, '').replace(/<path d="M70 266L70 266"[^>]*\/><circle cx="70" cy="266"[^>]*\/>/, '');
 
 ILL.map = `<svg viewBox="0 0 360 300" class="hj-ill hj-ill-l" role="img" aria-label="Simplified map of Masjid al-Haram: the Kaaba, mataf, Maqam Ibrahim and the Mas'a between Safa and Marwah"><defs>
-<radialGradient id="hpM" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e7e5dd"/></radialGradient></defs>
-<rect width="360" height="300" rx="18" fill="#e9eee6"/>
-<rect x="18" y="18" width="250" height="264" rx="16" fill="#d6dacf"/><text x="30" y="36" font-size="10" font-weight="800" fill="#5c6b61" font-family="system-ui">MASJID AL-HARAM · SIMPLIFIED, NOT TO SCALE</text>
-<circle cx="143" cy="150" r="96" fill="url(#hpM)" stroke="#c9c6ba"/><circle cx="143" cy="150" r="70" fill="none" stroke="#dcd8cc" stroke-dasharray="3 5"/><circle cx="143" cy="150" r="46" fill="none" stroke="#dcd8cc" stroke-dasharray="3 5"/>
-<g transform="rotate(-12 143 150)"><rect x="126" y="133" width="34" height="34" fill="#121212"/><rect x="126" y="140" width="34" height="4" fill="#d4a93b"/><rect x="152" y="152" width="5" height="10" fill="#d4a93b"/>
-<path d="M126 133a26 26 0 0 0-22 17" fill="none" stroke="#9aa39c" stroke-width="3"/><circle cx="160" cy="167" r="4" fill="#3a3a3a" stroke="#d4a93b" stroke-width="1.5"/></g>
-<path d="M168 168L224 246" stroke="#16a34a" stroke-width="2.2" stroke-dasharray="5 4"/>
-<rect x="176" y="182" width="10" height="12" rx="3" fill="#c9a53c"/>
-<path d="M76 92a92 92 0 0 1 120-14" fill="none" stroke="#a8a49d" stroke-width="4" stroke-linecap="round"/><path d="M196 78l-14 0 7 9z" fill="#a8a49d"/>
-<path d="M200 220a92 92 0 0 1-110 16" fill="none" stroke="#a8a49d" stroke-width="4" stroke-linecap="round"/><path d="M90 236l12-6-2 11z" fill="#a8a49d"/>
-<rect x="282" y="30" width="62" height="250" rx="14" fill="#f3f1ea" stroke="#c9c6ba"/><text x="313" y="50" text-anchor="middle" font-size="10" font-weight="800" fill="#5c6b61" font-family="system-ui">MAS'A</text>
-<rect x="292" y="58" width="42" height="26" rx="8" fill="#b9a98d"/><text x="313" y="75" text-anchor="middle" font-size="11" font-weight="800" fill="#fff" font-family="system-ui">Safa</text>
-<rect x="292" y="244" width="42" height="26" rx="8" fill="#b9a98d"/><text x="313" y="261" text-anchor="middle" font-size="11" font-weight="800" fill="#fff" font-family="system-ui">Marwah</text>
-<rect x="290" y="140" width="46" height="4" fill="#22c55e"/><rect x="290" y="178" width="46" height="4" fill="#22c55e"/><text x="313" y="164" text-anchor="middle" font-size="8.5" font-weight="700" fill="#15803d" font-family="system-ui">green lights</text>
-<path d="M300 92v144M326 236V92" stroke="#a8a49d" stroke-width="2.4" stroke-dasharray="2 6" stroke-linecap="round"/>
+<radialGradient id="hpM" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e4e3e0"/></radialGradient></defs>
+<rect width="360" height="300" rx="18" fill="#eaebe9"/>
+<rect x="18" y="18" width="250" height="264" rx="16" fill="#d5d6d3"/><text x="30" y="36" font-size="10" font-weight="800" fill="#616663" font-family="system-ui">MASJID AL-HARAM · SIMPLIFIED, NOT TO SCALE</text>
+<circle cx="143" cy="150" r="96" fill="url(#hpM)" stroke="#c4c3bf"/><circle cx="143" cy="150" r="70" fill="none" stroke="#d7d5d1" stroke-dasharray="3 5"/><circle cx="143" cy="150" r="46" fill="none" stroke="#d7d5d1" stroke-dasharray="3 5"/>
+<g transform="rotate(-12 143 150)"><rect x="126" y="133" width="34" height="34" fill="#121212"/><rect x="126" y="140" width="34" height="4" fill="#a3946c"/><rect x="152" y="152" width="5" height="10" fill="#a3946c"/>
+<path d="M126 133a26 26 0 0 0-22 17" fill="none" stroke="#9da09e" stroke-width="3"/><circle cx="160" cy="167" r="4" fill="#3a3a3a" stroke="#a3946c" stroke-width="1.5"/></g>
+<path d="M168 168L224 246" stroke="#437656" stroke-width="2.2" stroke-dasharray="5 4"/>
+<rect x="176" y="182" width="10" height="12" rx="3" fill="#9c8f69"/>
+<path d="M76 92a92 92 0 0 1 120-14" fill="none" stroke="#a4a3a1" stroke-width="4" stroke-linecap="round"/><path d="M196 78l-14 0 7 9z" fill="#a4a3a1"/>
+<path d="M200 220a92 92 0 0 1-110 16" fill="none" stroke="#a4a3a1" stroke-width="4" stroke-linecap="round"/><path d="M90 236l12-6-2 11z" fill="#a4a3a1"/>
+<rect x="282" y="30" width="62" height="250" rx="14" fill="#f0efed" stroke="#c4c3bf"/><text x="313" y="50" text-anchor="middle" font-size="10" font-weight="800" fill="#616663" font-family="system-ui">MAS'A</text>
+<rect x="292" y="58" width="42" height="26" rx="8" fill="#aba59b"/><text x="313" y="75" text-anchor="middle" font-size="11" font-weight="800" fill="#fff" font-family="system-ui">Safa</text>
+<rect x="292" y="244" width="42" height="26" rx="8" fill="#aba59b"/><text x="313" y="261" text-anchor="middle" font-size="11" font-weight="800" fill="#fff" font-family="system-ui">Marwah</text>
+<rect x="290" y="140" width="46" height="4" fill="#56916c"/><rect x="290" y="178" width="46" height="4" fill="#56916c"/><text x="313" y="164" text-anchor="middle" font-size="8.5" font-weight="700" fill="#375e46" font-family="system-ui">green lights</text>
+<path d="M300 92v144M326 236V92" stroke="#a4a3a1" stroke-width="2.4" stroke-dasharray="2 6" stroke-linecap="round"/>
 ${callout(150, 150, 120, 262, 'Kaaba', 'end')}${callout(160, 168, 236, 268, 'Black Stone corner: start here')}${callout(108, 138, 40, 60, 'Hijr Isma\'il', 'start')}${callout(181, 188, 236, 210, 'Maqam Ibrahim')}${callout(196, 78, 230, 52, 'Walk anticlockwise')}
 </svg>`;
 
-ILL.sai = `<svg viewBox="0 0 360 150" class="hj-ill" role="img" aria-label="Sa'i: seven laps between Safa and Marwah"><rect width="360" height="150" rx="16" fill="#f1f3ec"/>
-<rect x="16" y="40" width="58" height="70" rx="12" fill="#b9a98d"/><text x="45" y="80" text-anchor="middle" font-size="13" font-weight="800" fill="#fff" font-family="system-ui">Safa</text>
-<rect x="286" y="40" width="58" height="70" rx="12" fill="#b9a98d"/><text x="315" y="80" text-anchor="middle" font-size="13" font-weight="800" fill="#fff" font-family="system-ui">Marwah</text>
-<rect x="150" y="30" width="60" height="90" fill="#22c55e" opacity=".14"/><text x="180" y="138" text-anchor="middle" font-size="10" font-weight="700" fill="#15803d" font-family="system-ui">Men jog lightly between the green lights</text>
-${[1, 2, 3, 4, 5, 6, 7].map((n, i) => { const y = 36 + i * 11, r = i % 2 === 0; return `<path d="M${r ? 80 : 280} ${y}H${r ? 274 : 86}" stroke="${i === 6 ? '#16a34a' : '#a8a49d'}" stroke-width="2.6"/><path d="${r ? `M274 ${y}l-7-4v8z` : `M86 ${y}l7-4v8z`}" fill="${i === 6 ? '#16a34a' : '#a8a49d'}"/><text x="${r ? 96 : 264}" y="${y - 2}" font-size="8" font-weight="800" fill="#3f6212" font-family="system-ui" text-anchor="middle">${n}</text>`; }).join('')}
+ILL.sai = `<svg viewBox="0 0 360 150" class="hj-ill" role="img" aria-label="Sa'i: seven laps between Safa and Marwah"><rect width="360" height="150" rx="16" fill="#f0f1ee"/>
+<rect x="16" y="40" width="58" height="70" rx="12" fill="#aba59b"/><text x="45" y="80" text-anchor="middle" font-size="13" font-weight="800" fill="#fff" font-family="system-ui">Safa</text>
+<rect x="286" y="40" width="58" height="70" rx="12" fill="#aba59b"/><text x="315" y="80" text-anchor="middle" font-size="13" font-weight="800" fill="#fff" font-family="system-ui">Marwah</text>
+<rect x="150" y="30" width="60" height="90" fill="#56916c" opacity=".14"/><text x="180" y="138" text-anchor="middle" font-size="10" font-weight="700" fill="#375e46" font-family="system-ui">Men jog lightly between the green lights</text>
+${[1, 2, 3, 4, 5, 6, 7].map((n, i) => { const y = 36 + i * 11, r = i % 2 === 0; return `<path d="M${r ? 80 : 280} ${y}H${r ? 274 : 86}" stroke="${i === 6 ? '#437656' : '#a4a3a1'}" stroke-width="2.6"/><path d="${r ? `M274 ${y}l-7-4v8z` : `M86 ${y}l7-4v8z`}" fill="${i === 6 ? '#437656' : '#a4a3a1'}"/><text x="${r ? 96 : 264}" y="${y - 2}" font-size="8" font-weight="800" fill="#3c482c" font-family="system-ui" text-anchor="middle">${n}</text>`; }).join('')}
 </svg>`;
 
-ILL.hair = `<svg viewBox="0 0 360 140" class="hj-ill" role="img" aria-label="Men shave or shorten the hair; women cut a fingertip's length"><rect width="360" height="140" rx="16" fill="#f1f3ec"/>
-<g transform="translate(70 70)"><ellipse rx="34" ry="38" fill="${sk}"/><path d="M-34 -6q0-34 34-34t34 34q-14-12-34-12t-34 12z" fill="#e6d3c3"/><g stroke="#b99a83" stroke-width="1"><path d="M-20 -30l2 3M-8 -34l1 3M6 -34l0 3M18 -30l-1 3"/></g><path d="M-30 12q4 26 30 28 26-2 30-28-8 10-30 12-22-2-30-12z" fill="#3b2a20"/></g>
-<text x="70" y="128" text-anchor="middle" font-size="11" font-weight="800" fill="#24302a" font-family="system-ui">Men: shave (best) or shorten</text>
-<g transform="translate(250 64)"><path d="M-30 -10q0-34 30-34t30 34v40h-60z" fill="#3a2a22"/><path d="M-10 30v24M0 30v26M10 30v24" stroke="#3a2a22" stroke-width="6" stroke-linecap="round"/><path d="M-18 56h36" stroke="#e11d48" stroke-width="2" stroke-dasharray="3 3"/><path d="M26 50l12 -6M26 62l12 6" stroke="#64748b" stroke-width="3" stroke-linecap="round"/><circle cx="24" cy="56" r="4" fill="none" stroke="#64748b" stroke-width="2.4"/></g>
-<text x="250" y="128" text-anchor="middle" font-size="11" font-weight="800" fill="#24302a" font-family="system-ui">Women: cut a fingertip's length</text>
+ILL.hair = `<svg viewBox="0 0 360 140" class="hj-ill" role="img" aria-label="Men shave or shorten the hair; women cut a fingertip's length"><rect width="360" height="140" rx="16" fill="#f0f1ee"/>
+<g transform="translate(70 70)"><ellipse rx="34" ry="38" fill="${sk}"/><path d="M-34 -6q0-34 34-34t34 34q-14-12-34-12t-34 12z" fill="#dbd4ce"/><g stroke="#a89d94" stroke-width="1"><path d="M-20 -30l2 3M-8 -34l1 3M6 -34l0 3M18 -30l-1 3"/></g><path d="M-30 12q4 26 30 28 26-2 30-28-8 10-30 12-22-2-30-12z" fill="#322c29"/></g>
+<text x="70" y="128" text-anchor="middle" font-size="11" font-weight="800" fill="#282c2a" font-family="system-ui">Men: shave (best) or shorten</text>
+<g transform="translate(250 64)"><path d="M-30 -10q0-34 30-34t30 34v40h-60z" fill="#322d2a"/><path d="M-10 30v24M0 30v26M10 30v24" stroke="#322d2a" stroke-width="6" stroke-linecap="round"/><path d="M-18 56h36" stroke="#a25c6b" stroke-width="2" stroke-dasharray="3 3"/><path d="M26 50l12 -6M26 62l12 6" stroke="#70767f" stroke-width="3" stroke-linecap="round"/><circle cx="24" cy="56" r="4" fill="none" stroke="#70767f" stroke-width="2.4"/></g>
+<text x="250" y="128" text-anchor="middle" font-size="11" font-weight="800" fill="#282c2a" font-family="system-ui">Women: cut a fingertip's length</text>
 </svg>`;
 
 /* section icons (no emoji) */
 const ic = (p, a, b) => `<svg viewBox="0 0 48 48" class="hj-si"><defs><linearGradient id="hs${a.slice(1)}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient></defs><rect width="48" height="48" rx="14" fill="url(#hs${a.slice(1)})"/>${p}</svg>`;
 const SIC = {
-  cost: ic('<rect x="11" y="15" width="26" height="18" rx="4" fill="#fff"/><circle cx="24" cy="24" r="5" fill="#16a34a"/><path d="M11 20h26" stroke="#d1d5db" stroke-width="1.6"/>', '#bbf7d0', '#15803d'),
-  book: ic('<path d="M10 28l26-12-6 18-6-5-5 5v-7z" fill="#fff"/><path d="M19 29l17-13" stroke="#1d4ed8" stroke-width="1.8"/>', '#bfdbfe', '#1e40af'),
-  trouble: ic('<path d="M24 11l14 25H10z" fill="#fff"/><path d="M24 20v8" stroke="#b45309" stroke-width="3" stroke-linecap="round"/><circle cx="24" cy="32" r="1.8" fill="#b45309"/>', '#fde68a', '#d97706'),
-  places: ic('<path d="M24 37s-9-9-9-16a9 9 0 0 1 18 0c0 7-9 16-9 16z" fill="#fff"/><circle cx="24" cy="21" r="3.5" fill="#0e7490"/>', '#a5f3fc', '#0e7490'),
-  reward: ic('<path d="M24 12l3.5 7.5 8 1-6 5.5 1.6 8-7.1-4-7.1 4 1.6-8-6-5.5 8-1z" fill="#fff"/>', '#fef08a', '#ca8a04'),
-  extras: ic('<path d="M9 34h30" stroke="#fff" stroke-width="3" stroke-linecap="round"/><path d="M12 34l8-13 5 7 4-5 7 11z" fill="#fff"/><circle cx="33" cy="15" r="3" fill="#fde68a"/>', '#fed7aa', '#c2410c'),
-  community: ic('<circle cx="18" cy="20" r="5" fill="#fff"/><circle cx="31" cy="21" r="4" fill="#fff"/><path d="M9 35a9 9 0 0 1 18 0zM25 35a7 7 0 0 1 14 0z" fill="#fff"/>', '#f5d0fe', '#a21caf'),
-  umrah: ic('<path d="M14 18l10-5 10 5v14l-10 5-10-5z" fill="#111"/><path d="M14 22l10 5 10-5" stroke="#e7c35a" stroke-width="2.4" fill="none"/>', '#fde68a', '#b45309'),
-  plan: ic('<rect x="12" y="13" width="24" height="24" rx="4" fill="#fff"/><rect x="12" y="13" width="24" height="7" rx="3" fill="#1e3a8a"/><path d="M17 27l4 4 8-8" stroke="#16a34a" stroke-width="3" fill="none" stroke-linecap="round"/>', '#93c5fd', '#1d4ed8'),
-  map: ic('<circle cx="24" cy="24" r="12" fill="#fff"/><rect x="20" y="20" width="8" height="8" fill="#111" transform="rotate(-12 24 24)"/><path d="M12 20a13 13 0 0 1 20-6" stroke="#a8a49d" stroke-width="2.6" fill="none"/>', '#86efac', '#15803d'),
-  makkah: ic('<path d="M15 36V20h18v16" fill="#fff"/><path d="M24 10l3 6h-6z" fill="#fde68a"/><rect x="21" y="16" width="6" height="20" fill="#e5e7eb"/><circle cx="24" cy="22" r="2.5" fill="#d4a93b"/>', '#fca5a5', '#b91c1c'),
-  madinah: ic('<path d="M16 34V24a8 8 0 0 1 16 0v10z" fill="#16a34a"/><rect x="13" y="34" width="22" height="3" fill="#fff"/><path d="M33 14v20" stroke="#fff" stroke-width="3"/><circle cx="33" cy="13" r="2" fill="#fde68a"/>', '#6ee7b7', '#065f46'),
-  wear: ic('<path d="M17 14l7 3 7-3 4 8-4 2v12H17V24l-4-2z" fill="#fff"/><path d="M24 17v19" stroke="#d1d5db" stroke-width="1.6"/>', '#c4b5fd', '#6d28d9'),
-  pack: ic('<rect x="13" y="16" width="22" height="20" rx="4" fill="#fff"/><path d="M20 16v-3h8v3" stroke="#fff" stroke-width="3" fill="none"/><path d="M18 26l4 4 8-8" stroke="#16a34a" stroke-width="3" fill="none" stroke-linecap="round"/>', '#fdba74', '#c2410c'),
-  shops: ic('<path d="M12 20h24l-2-6H14z" fill="#fff"/><rect x="14" y="20" width="20" height="16" fill="#fff"/><rect x="21" y="26" width="6" height="10" fill="#be185d"/>', '#f9a8d4', '#be185d'),
-  hajj: ic('<path d="M10 34l8-14 6 8 5-6 9 12z" fill="#fff"/><circle cx="33" cy="15" r="3.5" fill="#fde68a"/>', '#fcd34d', '#92400e'),
-  safe: ic('<path d="M24 10l12 5v8c0 8-5 13-12 15-7-2-12-7-12-15v-8z" fill="#fff"/><path d="M19 24l4 4 7-7" stroke="#0f766e" stroke-width="3" fill="none" stroke-linecap="round"/>', '#5eead4', '#0f766e')
+  cost: ic('<rect x="11" y="15" width="26" height="18" rx="4" fill="#fff"/><circle cx="24" cy="24" r="5" fill="#437656"/><path d="M11 20h26" stroke="#d4d6d8" stroke-width="1.6"/>', '#cee4d6', '#375e46'),
+  book: ic('<path d="M10 28l26-12-6 18-6-5-5 5v-7z" fill="#fff"/><path d="M19 29l17-13" stroke="#596a9c" stroke-width="1.8"/>', '#d5dde8', '#4c5981'),
+  trouble: ic('<path d="M24 11l14 25H10z" fill="#fff"/><path d="M24 20v8" stroke="#7b5b42" stroke-width="3" stroke-linecap="round"/><circle cx="24" cy="32" r="1.8" fill="#7b5b42"/>', '#d5ceb2', '#91724e'),
+  places: ic('<path d="M24 37s-9-9-9-16a9 9 0 0 1 18 0c0 7-9 16-9 16z" fill="#fff"/><circle cx="24" cy="21" r="3.5" fill="#385c66"/>', '#c3dcde', '#385c66'),
+  reward: ic('<path d="M24 12l3.5 7.5 8 1-6 5.5 1.6 8-7.1-4-7.1 4 1.6-8-6-5.5 8-1z" fill="#fff"/>', '#d6d1b2', '#867248'),
+  extras: ic('<path d="M9 34h30" stroke="#fff" stroke-width="3" stroke-linecap="round"/><path d="M12 34l8-13 5 7 4-5 7 11z" fill="#fff"/><circle cx="33" cy="15" r="3" fill="#d5ceb2"/>', '#e1d5c7', '#865a48'),
+  community: ic('<circle cx="18" cy="20" r="5" fill="#fff"/><circle cx="31" cy="21" r="4" fill="#fff"/><path d="M9 35a9 9 0 0 1 18 0zM25 35a7 7 0 0 1 14 0z" fill="#fff"/>', '#ebe0ee', '#7b4b80'),
+  umrah: ic('<path d="M14 18l10-5 10 5v14l-10 5-10-5z" fill="#111"/><path d="M14 22l10 5 10-5" stroke="#baad87" stroke-width="2.4" fill="none"/>', '#d5ceb2', '#7b5b42'),
+  plan: ic('<rect x="12" y="13" width="24" height="24" rx="4" fill="#fff"/><rect x="12" y="13" width="24" height="7" rx="3" fill="#414b67"/><path d="M17 27l4 4 8-8" stroke="#437656" stroke-width="3" fill="none" stroke-linecap="round"/>', '#b8c7d8', '#596a9c'),
+  map: ic('<circle cx="24" cy="24" r="12" fill="#fff"/><rect x="20" y="20" width="8" height="8" fill="#111" transform="rotate(-12 24 24)"/><path d="M12 20a13 13 0 0 1 20-6" stroke="#a4a3a1" stroke-width="2.6" fill="none"/>', '#a8cdb5', '#375e46'),
+  makkah: ic('<path d="M15 36V20h18v16" fill="#fff"/><path d="M24 10l3 6h-6z" fill="#d5ceb2"/><rect x="21" y="16" width="6" height="20" fill="#e7e8e9"/><circle cx="24" cy="22" r="2.5" fill="#a3946c"/>', '#dec3c3', '#874e4e'),
+  madinah: ic('<path d="M16 34V24a8 8 0 0 1 16 0v10z" fill="#437656"/><rect x="13" y="34" width="22" height="3" fill="#fff"/><path d="M33 14v20" stroke="#fff" stroke-width="3"/><circle cx="33" cy="13" r="2" fill="#d5ceb2"/>', '#95c0af', '#234239'),
+  wear: ic('<path d="M17 14l7 3 7-3 4 8-4 2v12H17V24l-4-2z" fill="#fff"/><path d="M24 17v19" stroke="#d4d6d8" stroke-width="1.6"/>', '#d2cee4', '#7961a0'),
+  pack: ic('<rect x="13" y="16" width="22" height="20" rx="4" fill="#fff"/><path d="M20 16v-3h8v3" stroke="#fff" stroke-width="3" fill="none"/><path d="M18 26l4 4 8-8" stroke="#437656" stroke-width="3" fill="none" stroke-linecap="round"/>', '#ceb9a3', '#865a48'),
+  shops: ic('<path d="M12 20h24l-2-6H14z" fill="#fff"/><rect x="14" y="20" width="20" height="16" fill="#fff"/><rect x="21" y="26" width="6" height="10" fill="#894d66"/>', '#dec3d2', '#894d66'),
+  hajj: ic('<path d="M10 34l8-14 6 8 5-6 9 12z" fill="#fff"/><circle cx="33" cy="15" r="3.5" fill="#d5ceb2"/>', '#c0b389', '#684a38'),
+  safe: ic('<path d="M24 10l12 5v8c0 8-5 13-12 15-7-2-12-7-12-15v-8z" fill="#fff"/><path d="M19 24l4 4 7-7" stroke="#305552" stroke-width="3" fill="none" stroke-linecap="round"/>', '#8bbdb5', '#305552')
 };
 
 /* ---------- content ---------- */
@@ -318,13 +318,13 @@ TOOLS.hajj = ['Hajj & Umrah guide', null, node => {
   draw();
 }];
 })();
-(function(){const c=document.createElement('style');c.textContent=`.hj-jp{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:12px 14px;display:grid;gap:8px}.hj-jp div{display:flex;justify-content:space-between}.hj-jp b{font-family:var(--display)}.hj-jp span{font-size:.78rem;color:var(--mut);font-weight:600}.hj-jp i{display:block;height:8px;border-radius:9px;background:linear-gradient(90deg,var(--tk-a,#1f6f3a) var(--p),var(--line) var(--p))}
-.hj-cont{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:0;border-radius:20px;padding:14px 16px;color:#fff;background:linear-gradient(135deg,var(--tk-a,#1f6f3a),color-mix(in srgb,var(--tk-a,#1f6f3a) 55%,#000));font:inherit}.hj-cont svg{width:34px;height:34px;flex:none}.hj-cont span{flex:1}.hj-cont small{display:block;font-size:.66rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;opacity:.8}.hj-cont b{font-family:var(--display);font-size:1.08rem}.hj-cont>i{font-style:normal;font-size:1.3rem;animation:lfNudge2 1.6s ease-in-out infinite}@keyframes lfNudge2{50%{transform:translateX(5px)}}
-.hj-stg{display:grid;gap:8px}.hj-stgh{display:flex;align-items:center;gap:8px;margin-top:6px}.hj-stgh em{font-style:normal;width:24px;height:24px;border-radius:50%;background:var(--tk-a,#1f6f3a);color:#fff;font-weight:600;font-size:.76rem;display:grid;place-items:center}.hj-stgh b{flex:1;font-family:var(--display);font-size:1.02rem}.hj-stgh span{font-size:.74rem;font-weight:600;color:var(--mut)}
-.hj-tile{position:relative}.hj-tile.seen{border-color:color-mix(in srgb,var(--tk-a,#1f6f3a) 40%,transparent)}.hj-tk{position:absolute;right:8px;top:8px;width:20px;height:20px;border-radius:50%;background:var(--tk-a,#1f6f3a);color:#fff;font-style:normal;font-size:.68rem;display:grid;place-items:center}
-.hj-nx{display:grid;gap:10px;margin-top:16px}.hj-up{position:relative;display:grid;grid-template-columns:auto 1fr;grid-template-areas:"s s" "i b" "i e";gap:2px 12px;text-align:left;border:0;border-radius:22px;padding:16px 46px 16px 16px;color:#fff;background:linear-gradient(135deg,var(--tk-a,#1f6f3a),color-mix(in srgb,var(--tk-a,#1f6f3a) 55%,#000));font:inherit}.hj-up small{grid-area:s;font-size:.66rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;opacity:.8;margin-bottom:6px}.hj-up>span{grid-area:i;width:46px;height:46px;border-radius:15px;background:rgba(255,255,255,.18);display:grid;place-items:center}.hj-up>span svg{width:28px;height:28px}.hj-up b{grid-area:b;font-family:var(--display);font-size:1.1rem}.hj-up em{grid-area:e;font-style:normal;font-size:.8rem;opacity:.85}.hj-up>i{position:absolute;right:16px;top:50%;transform:translateY(-50%);font-style:normal;font-size:1.4rem}.hj-up.done{display:block;padding:16px}.hj-up.done b,.hj-up.done em{display:block}
+(function(){const c=document.createElement('style');c.textContent=`.hj-jp{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:12px 14px;display:grid;gap:8px}.hj-jp div{display:flex;justify-content:space-between}.hj-jp b{font-family:var(--display)}.hj-jp span{font-size:.78rem;color:var(--mut);font-weight:600}.hj-jp i{display:block;height:8px;border-radius:9px;background:linear-gradient(90deg,var(--tk-a,#395542) var(--p),var(--line) var(--p))}
+.hj-cont{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:0;border-radius:20px;padding:14px 16px;color:#fff;background:linear-gradient(135deg,var(--tk-a,#395542),color-mix(in srgb,var(--tk-a,#395542) 55%,#000));font:inherit}.hj-cont svg{width:34px;height:34px;flex:none}.hj-cont span{flex:1}.hj-cont small{display:block;font-size:.66rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;opacity:.8}.hj-cont b{font-family:var(--display);font-size:1.08rem}.hj-cont>i{font-style:normal;font-size:1.3rem;animation:lfNudge2 1.6s ease-in-out infinite}@keyframes lfNudge2{50%{transform:translateX(5px)}}
+.hj-stg{display:grid;gap:8px}.hj-stgh{display:flex;align-items:center;gap:8px;margin-top:6px}.hj-stgh em{font-style:normal;width:24px;height:24px;border-radius:50%;background:var(--tk-a,#395542);color:#fff;font-weight:600;font-size:.76rem;display:grid;place-items:center}.hj-stgh b{flex:1;font-family:var(--display);font-size:1.02rem}.hj-stgh span{font-size:.74rem;font-weight:600;color:var(--mut)}
+.hj-tile{position:relative}.hj-tile.seen{border-color:color-mix(in srgb,var(--tk-a,#395542) 40%,transparent)}.hj-tk{position:absolute;right:8px;top:8px;width:20px;height:20px;border-radius:50%;background:var(--tk-a,#395542);color:#fff;font-style:normal;font-size:.68rem;display:grid;place-items:center}
+.hj-nx{display:grid;gap:10px;margin-top:16px}.hj-up{position:relative;display:grid;grid-template-columns:auto 1fr;grid-template-areas:"s s" "i b" "i e";gap:2px 12px;text-align:left;border:0;border-radius:22px;padding:16px 46px 16px 16px;color:#fff;background:linear-gradient(135deg,var(--tk-a,#395542),color-mix(in srgb,var(--tk-a,#395542) 55%,#000));font:inherit}.hj-up small{grid-area:s;font-size:.66rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;opacity:.8;margin-bottom:6px}.hj-up>span{grid-area:i;width:46px;height:46px;border-radius:15px;background:rgba(255,255,255,.18);display:grid;place-items:center}.hj-up>span svg{width:28px;height:28px}.hj-up b{grid-area:b;font-family:var(--display);font-size:1.1rem}.hj-up em{grid-area:e;font-style:normal;font-size:.8rem;opacity:.85}.hj-up>i{position:absolute;right:16px;top:50%;transform:translateY(-50%);font-style:normal;font-size:1.4rem}.hj-up.done{display:block;padding:16px}.hj-up.done b,.hj-up.done em{display:block}
 .hj-nxr{display:flex;justify-content:space-between;gap:8px}.hj-nxr button{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:8px 13px;font:inherit;font-weight:600;font-size:.78rem;max-width:60%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.hj-ct{background:var(--card);border:1px solid var(--line);border-radius:18px;margin-bottom:8px;overflow:hidden}.hj-ct summary{list-style:none;display:flex;align-items:center;gap:10px;padding:13px 14px;cursor:pointer}.hj-ct summary::-webkit-details-marker{display:none}.hj-ct summary em{font-style:normal;width:26px;height:26px;flex:none;border-radius:9px;background:var(--tk-a,#1f6f3a);color:#fff;font-weight:600;font-size:.8rem;display:grid;place-items:center}.hj-ct summary b{flex:1;font-family:var(--display);font-size:.98rem}.hj-ct summary span{font-size:.68rem;font-weight:600;color:var(--mut);white-space:nowrap}
-.hj-ctb{padding:0 14px 14px;display:grid;gap:8px}.hj-ctb>p{margin:0;font-size:.9rem;line-height:1.5}.hj-ca{border-left:3px solid #be185d;padding:2px 0 2px 10px}.hj-ca.q{border-color:#1f6f3a}.hj-ca.h{border-color:#2563eb}.hj-ca small{font-size:.64rem;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--mut)}.hj-ca p{margin:2px 0;font-size:.86rem}.hj-ca a{font-size:.74rem;font-weight:600;color:var(--tk-a,#1f6f3a)}
+.hj-ct{background:var(--card);border:1px solid var(--line);border-radius:18px;margin-bottom:8px;overflow:hidden}.hj-ct summary{list-style:none;display:flex;align-items:center;gap:10px;padding:13px 14px;cursor:pointer}.hj-ct summary::-webkit-details-marker{display:none}.hj-ct summary em{font-style:normal;width:26px;height:26px;flex:none;border-radius:9px;background:var(--tk-a,#395542);color:#fff;font-weight:600;font-size:.8rem;display:grid;place-items:center}.hj-ct summary b{flex:1;font-family:var(--display);font-size:.98rem}.hj-ct summary span{font-size:.68rem;font-weight:600;color:var(--mut);white-space:nowrap}
+.hj-ctb{padding:0 14px 14px;display:grid;gap:8px}.hj-ctb>p{margin:0;font-size:.9rem;line-height:1.5}.hj-ca{border-left:3px solid #894d66;padding:2px 0 2px 10px}.hj-ca.q{border-color:#395542}.hj-ca.h{border-color:#647bac}.hj-ca small{font-size:.64rem;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--mut)}.hj-ca p{margin:2px 0;font-size:.86rem}.hj-ca a{font-size:.74rem;font-weight:600;color:var(--tk-a,#395542)}
 .hj-cs{background:var(--paper,#f6f6f6);border-radius:12px;padding:9px 11px;display:grid;gap:3px}.hj-cs small{font-size:.64rem;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--mut)}.hj-cs a{font-size:.8rem;font-weight:600;color:var(--ink)}
 `;document.head.appendChild(c);})();

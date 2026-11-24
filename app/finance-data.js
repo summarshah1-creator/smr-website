@@ -4,7 +4,7 @@
    Nest. UK product details checked November 2026; they change, so always check the provider. Guidance, not a fatwa or financial advice. */
 window.IFM_FIN = (function () {
 /* verdicts: h = halal, c = halal with conditions, d = scholars differ, a = avoid */
-const V = { h: ['Halal', '#15803d'], c: ['With conditions', '#b45309'], d: ['Scholars differ', '#6d28d9'], a: ['Avoid', '#b91c1c'] };
+const V = { h: ['Halal', '#375e46'], c: ['With conditions', '#7b5b42'], d: ['Scholars differ', '#7961a0'], a: ['Avoid', '#874e4e'] };
 
 const PRINCIPLES = [
   ['No riba (interest)', 'Any extra paid or received on a loan, fixed in advance, is riba. It is one of the most serious sins in finance.', '"Allah has permitted trade and forbidden riba" (2:275). The Prophet ﷺ cursed the one who consumes riba, the one who pays it, the one who writes it down and its two witnesses, and said "they are all the same" (Muslim 1598).', 'pound'],

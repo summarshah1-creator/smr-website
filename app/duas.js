@@ -160,7 +160,7 @@ function mount(node) {
     if (view.k === 'home') {
       const sv = saved().map(r => BY[r]).filter(Boolean), rc = store.get('duaRc2', []).map(r => BY[r]).filter(Boolean).filter(d => !saved().includes(d.ref)).slice(0, 6);
       body.innerHTML = `
-        <a class="dk-feel" href="#tb-feel">${IFM_TILE('chat', '#0e7490', 'sm')}<div><b>How are you feeling?</b><small>Tell us in your own words and get duas, ayat and local support</small></div>${ic.go}</a>
+        <a class="dk-feel" href="#tb-feel">${IFM_TILE('chat', '#385c66', 'sm')}<div><b>How are you feeling?</b><small>Tell us in your own words and get duas, ayat and local support</small></div>${ic.go}</a>
         <h3 class="tb-sec">Browse</h3>
         <div class="dk-cats">${H.cats.map(c => { const n = c[0] === 'quran' ? QD.length : ALL.filter(d => d.cat === c[0]).length; return `<button type="button" class="dk-cat-t" data-cat="${c[0]}" style="--c:${c[2]}"><b>${esc(c[1])}</b><small>${n} duas</small></button>`; }).join('')}</div>
         ${sv.length ? `<h3 class="tb-sec">Saved</h3><div class="dk-list">${sv.map(d => card(d)).join('')}</div>` : ''}
