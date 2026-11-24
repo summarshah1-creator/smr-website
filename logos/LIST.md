@@ -312,6 +312,7 @@
 - Luton Sixth Form College
 - Mehria Primary School
 - Norton Road Primary School
+- The Education Centre by EAE (redrawn)
 - Oakwood Primary School
 - Putteridge High School
 - Queen Elizabeth School (QES)

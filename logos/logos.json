@@ -33532,6 +33532,116 @@
      "made": true
     }
    ]
+  },
+  {
+   "slug": "the-education-centre",
+   "name": "The Education Centre by EAE",
+   "aliases": [
+    "EAE",
+    "EAE Centre",
+    "The Education Centre",
+    "Education Centre"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/the-education-centre/",
+   "styles": [
+    "logo",
+    "icon"
+   ],
+   "original_vector": false,
+   "quality": "redrawn",
+   "details": {},
+   "signed_off": true,
+   "files": [
+    {
+     "file": "the-education-centre-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "the-education-centre-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 2000,
+     "h": 2000
+    },
+    {
+     "file": "the-education-centre-icon.svg",
+     "variant": "icon",
+     "style": "icon",
+     "vector": true
+    },
+    {
+     "file": "the-education-centre-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 2000,
+     "h": 2000
+    },
+    {
+     "file": "the-education-centre-logo-mono-white.svg",
+     "variant": "mono-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "the-education-centre-logo-mono-white.png",
+     "variant": "mono-white",
+     "style": "logo",
+     "w": 2000,
+     "h": 2000,
+     "made": true
+    },
+    {
+     "file": "the-education-centre-logo-mono-black.svg",
+     "variant": "mono-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "the-education-centre-logo-mono-black.png",
+     "variant": "mono-black",
+     "style": "logo",
+     "w": 2000,
+     "h": 2000,
+     "made": true
+    },
+    {
+     "file": "the-education-centre-icon-mono-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "the-education-centre-icon-mono-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 2000,
+     "h": 2000,
+     "made": true
+    },
+    {
+     "file": "the-education-centre-icon-mono-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "the-education-centre-icon-mono-black.png",
+     "variant": "icon-black",
+     "style": "icon",
+     "w": 2000,
+     "h": 2000,
+     "made": true
+    }
+   ],
+   "note": "Clean vector redraw by Claude (24 Nov 2026) traced from the owner's JPEG; owner approved. Text Open Sans SemiBold, 'by' Caveat, 'EAE' Caveat Brush."
   }
  ]
 }

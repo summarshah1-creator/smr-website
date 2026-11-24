@@ -442,3 +442,5 @@ M['orphans-in-need'][3][:]=[x for x in M['orphans-in-need'][3] if x[1] not in ['
 M['luton-rights'][3][:]=[x for x in M['luton-rights'][3] if x[1] not in ['logo', 'logo-white', 'logo-black']]+[('hand/luton-rights-logo.svg','logo'), ('hand/luton-rights-logo-white.svg','logo-white'), ('hand/luton-rights-logo-black.svg','logo-black')]
 M['suez'][3][:]=[x for x in M['suez'][3] if x[1] not in ['logo', 'logo-white', 'logo-black']]+[('hand/suez-logo.svg','logo'), ('hand/suez-logo-white.svg','logo-white'), ('hand/suez-logo-black.svg','logo-black')]
 M['tops-pizza'][3][:]=[x for x in M['tops-pizza'][3] if x[1] not in ['logo', 'logo-white', 'logo-black']]+[('hand/tops-pizza-logo.svg','logo'), ('hand/tops-pizza-logo-white.svg','logo-white'), ('hand/tops-pizza-logo-black.svg','logo-black')]
+
+M['the-education-centre']=('schools','The Education Centre by EAE',['EAE','EAE Centre','The Education Centre','Education Centre'],[('hand/the-education-centre-logo.svg','logo'),('hand/the-education-centre-icon.svg','icon')])  # Claude's clean redraw, 24 Nov 2026 (owner approved)
