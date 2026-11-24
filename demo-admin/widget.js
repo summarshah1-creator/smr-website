@@ -1,156 +1,227 @@
-// SMR_WIDGET_V2 · SMR Studio widget for Scriptable (Home Screen small / medium / large, Lock Screen rectangle / inline / circle).
-// This file is downloaded by the small loader script on the phone every time the widget refreshes,
-// so changes here reach the phone by themselves. Widget parameter (long-press the widget → Edit Widget → Parameter):
-//   today (default) · money · leads · care · all      Put several in a Smart Stack and swipe between them.
+// SMR_WIDGET_V3 · SMR Studio widget for Scriptable (Home Screen small / medium / large, Lock Screen rectangle / inline / circle).
+// Downloaded by the small loader script on the phone every time the widget refreshes, so changes here reach the phone by themselves.
+// Widget parameter (long-press → Edit Widget → Parameter): today (default) · money · leads · care. Stack several and swipe between them.
+// Owner 24 Nov: it must be nice to look at, not "coding": one big friendly headline, soft cards, icons, few words, nothing cramped.
 module.exports = async function (FEED) {
-  const ADMIN = FEED.replace(/\/demo-admin\/feed\.php.*$/, "/demo-admin/");
-  const LOGO = FEED.replace(/\/demo-admin\/feed\.php.*$/, "/demo-admin/widget-logo.png");
-  const C = { bg1: new Color("#17132e"), bg2: new Color("#08080f"), ink: Color.white(), mute: new Color("#a3a3bd"),
-    pink: new Color("#e9a6ff"), red: new Color("#ff6b84"), amber: new Color("#ffc061"), green: new Color("#7ff0bd"), blue: new Color("#a9b4ff") };
+  const ROOT = FEED.replace(/\/demo-admin\/feed\.php.*$/, "");
+  const ADMIN = ROOT + "/demo-admin/";
   const fm = FileManager.local();
+  const C = {
+    bg1: new Color("#221a4d"), bg2: new Color("#0e0c20"), card: new Color("#ffffff", 0.08), card2: new Color("#ffffff", 0.13),
+    ink: Color.white(), soft: new Color("#ffffff", 0.72), mute: new Color("#ffffff", 0.5),
+    pink: new Color("#ff9ad5"), purple: new Color("#a99bff"), green: new Color("#72e8b8"), red: new Color("#ff8094"), amber: new Color("#ffc870"), blue: new Color("#8fd0ff")
+  };
+  const tint = (c, a) => new Color(c.hex, a);
 
   async function getData() {
     const path = fm.joinPath(fm.cacheDirectory(), "smr-today.json");
-    try {
-      const r = new Request(FEED); r.timeoutInterval = 12;
-      const j = await r.loadJSON();
-      if (j && j.now) { fm.writeString(path, JSON.stringify(j)); return j; }
-    } catch (e) {}
+    try { const r = new Request(FEED); r.timeoutInterval = 12; const j = await r.loadJSON(); if (j && j.now) { fm.writeString(path, JSON.stringify(j)); return j; } } catch (e) {}
     if (fm.fileExists(path)) { const j = JSON.parse(fm.readString(path)); j.stale = true; return j; }
     return null;
   }
   async function getLogo() {
     const path = fm.joinPath(fm.cacheDirectory(), "smr-studio-logo.png");
     if (fm.fileExists(path) && (Date.now() - fm.modificationDate(path).getTime()) < 7 * 864e5) return fm.readImage(path);
-    try { const img = await new Request(LOGO + "?v=1").loadImage(); fm.writeImage(path, img); return img; } catch (e) {}
+    try { const img = await new Request(ADMIN + "widget-logo.png?v=1").loadImage(); fm.writeImage(path, img); return img; } catch (e) {}
     return fm.fileExists(path) ? fm.readImage(path) : null;
   }
-  const money = p => "£" + (Math.round((p || 0) / 100)).toLocaleString("en-GB");
+
+  /* ---------- little building blocks ---------- */
+  const F = { r: s => Font.regularRoundedSystemFont(s), m: s => Font.mediumRoundedSystemFont(s), s: s => Font.semiboldRoundedSystemFont(s), b: s => Font.boldRoundedSystemFont(s), h: s => Font.heavyRoundedSystemFont(s) };
+  function txt(st, s, size, col, w, lines) { const t = st.addText(String(s)); t.font = F[w || "m"](size); t.textColor = col || C.ink; t.lineLimit = lines || 1; t.minimumScaleFactor = 0.8; return t; }
+  function icon(st, name, size, col) { const sym = SFSymbol.named(name); if (!sym) return; sym.applyFont(Font.semiboldSystemFont(size)); const im = st.addImage(sym.image); im.imageSize = new Size(size, size); im.tintColor = col; return im; }
+  function box(st, w, h, bg, r, pad) { const b = st.addStack(); if (w || h) b.size = new Size(w || 0, h || 0); if (bg) b.backgroundColor = bg; b.cornerRadius = r == null ? 16 : r; const p = pad == null ? 10 : pad; b.setPadding(p, p + 2, p, p + 2); return b; }
+  function go(st, hash) { st.url = ADMIN + "#" + hash; }
+  const money = p => "£" + Math.round((p || 0) / 100).toLocaleString("en-GB");
   const hm = t => { const d = new Date(t * 1000); return String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0"); };
-  const when = t => { const d0 = new Date(); d0.setHours(0, 0, 0, 0); const d = Math.floor((t * 1000 - d0) / 864e5); return d < 0 ? "overdue" : d === 0 ? "today" : d === 1 ? "tomorrow" : new Date(t * 1000).toLocaleDateString("en-GB", { weekday: "short" }); };
-  const whyCol = w => /^Overdue/.test(w || "") ? C.red : /^Due today/.test(w || "") ? C.amber : C.mute;
-  function txt(st, s, size, col, weight, lines) {
-    const t = st.addText(String(s)); t.textColor = col || C.ink; t.font = weight === "b" ? Font.boldSystemFont(size) : weight === "h" ? Font.heavySystemFont(size) : Font.mediumSystemFont(size);
-    if (lines) t.lineLimit = lines; return t;
+  const dayName = t => { const d0 = new Date(); d0.setHours(0, 0, 0, 0); const d = Math.floor((t * 1000 - d0) / 864e5); return d < 0 ? "Overdue" : d === 0 ? "Today" : d === 1 ? "Tomorrow" : new Date(t * 1000).toLocaleDateString("en-GB", { weekday: "long" }); };
+  const hello = () => { const h = new Date().getHours(); return h < 12 ? "Morning, Summar" : h < 18 ? "Afternoon, Summar" : "Evening, Summar"; };
+  const initials = n => String(n || "?").replace(/[^A-Za-z0-9 ]/g, "").split(/\s+/).filter(Boolean).slice(0, 2).map(w => w[0]).join("").toUpperCase() || "?";
+  const plainWhy = w => String(w || "").replace(/^Overdue.*$/, "Overdue").replace(/^Due today.*$/, "Due today");
+  // small round chip with text, e.g. [Today]
+  function chip(st, s, col) { const c = st.addStack(); c.backgroundColor = tint(col, 0.18); c.cornerRadius = 9; c.setPadding(3, 8, 3, 8); txt(c, s, 11, col, "s"); return c; }
+  // coloured circle with initials
+  function avatar(st, name, col, size) { const a = st.addStack(); a.size = new Size(size, size); a.cornerRadius = size / 2; a.backgroundColor = tint(col, 0.22); a.centerAlignContent(); txt(a, initials(name), size * 0.4, col, "b"); return a; }
+  // number tile: icon, big number, label
+  function tile(st, w, h, sym, num, label, col, hash) {
+    const t = box(st, w, h, C.card, 16, 10); t.layoutVertically(); if (hash) go(t, hash);
+    const top = t.addStack(); top.centerAlignContent(); icon(top, sym, 13, col); top.addSpacer();
+    t.addSpacer(); txt(t, num, 22, C.ink, "b"); txt(t, label, 11, C.soft, "m");
+    return t;
   }
-  // a tappable row: tapping it opens that part of SMR Studio (medium + large widgets)
-  function row(w, hash, build) { const r = w.addStack(); r.centerAlignContent(); r.url = ADMIN + "#" + hash; build(r); return r; }
+  // list row: avatar · name + small line · chip on the right
+  function personRow(st, w, name, sub, right, col, hash) {
+    const r = box(st, w, 0, C.card, 14, 8); r.centerAlignContent(); if (hash) go(r, hash);
+    avatar(r, name, col, 28); r.addSpacer(9);
+    const tx = r.addStack(); tx.layoutVertically(); txt(tx, name, 13.5, C.ink, "s"); if (sub) txt(tx, sub, 11.5, C.mute, "m");
+    r.addSpacer(); if (right) chip(r, right, col);
+    return r;
+  }
 
   const fam = config.widgetFamily || "large";
   const view = String(args.widgetParameter || "today").trim().toLowerCase();
   const d = await getData();
   const cl = (d && d.cl) || {};
 
-  /* ---------- Lock Screen ---------- */
+  /* ---------- Lock Screen (system style, kept simple) ---------- */
   if (fam === "accessoryInline") {
     const w = new ListWidget(); w.url = ADMIN + "#today";
-    const m = d && d.today && d.today[0];
-    w.addText(d ? (d.next ? "▶ " + d.next.title : "All clear") + (m ? " · " + (m.all_day ? "" : hm(m.start) + " ") + m.title : "") : "SMR: no connection");
+    w.addText(d ? (d.next ? "Next: " + d.next.title : "All clear") : "SMR Studio");
     return Script.setWidget(w);
   }
   if (fam === "accessoryCircular") {
     const w = new ListWidget(); w.url = ADMIN + "#today"; w.addAccessoryWidgetBackground = true;
-    const n = d ? d.overdue + d.due_today : 0;
     const s = w.addStack(); s.layoutVertically(); s.centerAlignContent();
-    const a = s.addText(String(n)); a.font = Font.heavySystemFont(20); a.centerAlignText();
-    const b = s.addText("to do"); b.font = Font.mediumSystemFont(9); b.centerAlignText();
+    const a = s.addText(String(d ? d.overdue + d.due_today : 0)); a.font = Font.heavyRoundedSystemFont(22); a.centerAlignText();
+    const b = s.addText("to do"); b.font = Font.mediumRoundedSystemFont(10); b.centerAlignText();
     return Script.setWidget(w);
   }
   if (fam === "accessoryRectangular") {
     const w = new ListWidget(); w.url = ADMIN + "#today"; w.addAccessoryWidgetBackground = true;
-    if (!d) { w.addText("SMR Studio: no connection"); return Script.setWidget(w); }
-    const a = w.addText(d.next ? "▶ " + d.next.title : "Nothing waiting on you"); a.font = Font.boldSystemFont(13); a.lineLimit = 2;
-    const extra = [d.overdue ? d.overdue + " overdue" : "", cl.unpaid ? cl.unpaid + " unpaid" : "", cl.leads ? cl.leads + " to chase" : ""].filter(Boolean).join(" · ");
-    const b = w.addText(extra || (d.today && d.today[0] ? (d.today[0].all_day ? "" : hm(d.today[0].start) + " ") + d.today[0].title : "")); b.font = Font.mediumSystemFont(11); b.lineLimit = 1;
+    if (!d) { w.addText("SMR Studio"); return Script.setWidget(w); }
+    const a = w.addText(d.next ? d.next.title : "Nothing waiting on you"); a.font = Font.boldRoundedSystemFont(14); a.lineLimit = 2;
+    const bits = [d.overdue ? d.overdue + " overdue" : "", cl.leads ? cl.leads + " to chase" : ""].filter(Boolean).join("  ·  ");
+    const b = w.addText(bits || "You're on top of it"); b.font = Font.mediumRoundedSystemFont(12); b.lineLimit = 1;
     return Script.setWidget(w);
   }
 
   /* ---------- Home Screen ---------- */
+  const W = fam === "small" ? 146 : 334;   // usable width inside the padding
   const w = new ListWidget();
   const g = new LinearGradient(); g.colors = [C.bg1, C.bg2]; g.locations = [0, 1]; w.backgroundGradient = g;
-  w.setPadding(fam === "small" ? 12 : 14, 14, 12, 14);
+  w.setPadding(14, 14, 14, 14);
   w.refreshAfterDate = new Date(Date.now() + 10 * 60 * 1000);
-  const page = { today: "today", money: "clients", leads: "leads", care: "clients", all: "today" }[view] || "today";
-  w.url = ADMIN + "#" + page;
+  w.url = ADMIN + "#" + ({ money: "clients", leads: "leads", care: "clients" }[view] || "today");
 
-  // header: SMR Studio logo + what this widget shows
+  // header: logo left, small label right
   const head = w.addStack(); head.centerAlignContent();
   const logo = await getLogo();
-  if (logo) { const im = head.addImage(logo); im.imageSize = new Size(fam === "small" ? 78 : 96, fam === "small" ? 13 : 16); }
-  else txt(head, "SMR Studio", 12, C.pink, "h");
+  if (logo) { const im = head.addImage(logo); im.imageSize = new Size(fam === "small" ? 72 : 88, fam === "small" ? 12 : 14.6); }
   head.addSpacer();
-  const label = { today: new Date().toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" }), money: "MONEY", leads: "LEADS", care: "CARE", all: "OVERVIEW" }[view] || "";
-  if (fam !== "small" || view !== "today") txt(head, label, 10, C.mute, "b");
-  w.addSpacer(fam === "small" ? 6 : 8);
+  if (fam !== "small") txt(head, d && d.stale ? "Offline" : new Date().toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" }), 11, C.mute, "s");
+  w.addSpacer(fam === "small" ? 8 : 10);
 
-  if (!d) { txt(w, "Couldn't reach SMR Studio. Check your connection.", 12, C.mute); return Script.setWidget(w); }
+  if (!d) { txt(w, "Can't reach SMR Studio right now", 15, C.ink, "s", 2); w.addSpacer(); return Script.setWidget(w); }
 
-  const max = fam === "large" ? 6 : fam === "medium" ? 2 : 0;
-  const sec = (t) => { txt(w, t, 9.5, C.mute, "h"); w.addSpacer(3); };
-  const counts = (items) => { // row of small numbers, each tappable
-    const r = w.addStack(); r.spacing = fam === "small" ? 8 : 12;
-    items.filter(Boolean).forEach(([n, l, col, hash]) => { const s = r.addStack(); s.layoutVertically(); s.url = ADMIN + "#" + hash; txt(s, n, fam === "small" ? 15 : 17, col, "h"); txt(s, l, 9, C.mute, "b"); });
-  };
+  const owedTotal = (cl.job_overdue || 0) + (cl.bills || []).reduce((a, b) => a + b.amount, 0);
+  const debtors = [].concat((cl.bills || []).map(b => ({ name: b.client, amt: b.amount, sub: "Monthly plan" })), Object.keys(cl.debtors || {}).map(k => ({ name: k, amt: cl.debtors[k], sub: "Job" }))).sort((a, b) => b.amt - a.amt);
+  const leads = cl.lead_list || [];
+  const care = (cl.care_list || []).map(k => Object.assign({}, k, { title: k.bad && /up/i.test(k.title) && /Website/i.test(k.title) ? "Website is down" : k.bad && /SSL/i.test(k.title) ? "Padlock certificate problem" : k.title }));
 
   if (view === "money") {
-    const owed = (cl.job_overdue || 0);
     if (fam === "small") {
-      txt(w, money(cl.monthly) + "/mo", 18, C.ink, "h"); txt(w, "monthly plans", 10, C.mute, "b"); w.addSpacer(6);
-      txt(w, (cl.unpaid || 0) + " unpaid · " + money(owed) + " overdue", 11, (cl.unpaid || owed) ? C.red : C.green, "b", 2);
+      txt(w, owedTotal ? "Owed to you" : "Nobody owes you", 12, C.soft, "s"); w.addSpacer(2);
+      txt(w, owedTotal ? money(owedTotal) : "All paid", 30, owedTotal ? C.amber : C.green, "h");
+      w.addSpacer();
+      const r = w.addStack(); r.centerAlignContent(); icon(r, "arrow.triangle.2.circlepath", 12, C.purple); r.addSpacer(5); txt(r, money(cl.monthly) + " a month", 12, C.soft, "s");
     } else {
-      counts([[money(cl.monthly), "a month", C.blue, "clients"], [money(owed), "overdue", owed ? C.red : C.green, "jobs"], [String(cl.unpaid || 0), "unpaid months", cl.unpaid ? C.red : C.green, "clients"], [String(cl.inv || 0), "invoices to send", cl.inv ? C.amber : C.mute, "clients"]]);
-      w.addSpacer(8);
-      const list = [].concat((cl.bills || []).map(b => [b.client + " · monthly", money(b.amount), b.state === "grace" ? C.red : C.amber, "clients"]),
-        Object.keys(cl.debtors || {}).map(k => [k + " · job", money(cl.debtors[k]), C.red, "jobs"]));
-      if (!list.length) txt(w, "Nobody owes you anything right now 🎉", 12, C.green, "b");
-      list.slice(0, max).forEach(x => row(w, x[3], r => { txt(r, x[0], 12, C.ink, "m", 1); r.addSpacer(); txt(r, x[1], 12, x[2], "b"); }));
-      if (fam === "large" && cl.reminders) { w.addSpacer(6); txt(w, cl.reminders + " payment reminder" + (cl.reminders > 1 ? "s" : "") + " written and ready to send", 11, C.amber, "b", 2); }
+      const top = w.addStack(); top.centerAlignContent();
+      const l = top.addStack(); l.layoutVertically();
+      txt(l, owedTotal ? "Owed to you" : "Nobody owes you anything", 13, C.soft, "s"); txt(l, owedTotal ? money(owedTotal) : "All paid up", 30, owedTotal ? C.amber : C.green, "h");
+      top.addSpacer();
+      const m = box(top, 0, 0, tint(C.purple, 0.16), 14, 8); m.layoutVertically(); go(m, "clients");
+      txt(m, money(cl.monthly), 17, C.ink, "b"); txt(m, "a month", 11, C.soft, "m");
+      w.addSpacer(10);
+      const n = fam === "large" ? 3 : 1;
+      if (!debtors.length) { const ok = box(w, W, 0, C.card, 14, 10); ok.centerAlignContent(); icon(ok, "checkmark.circle.fill", 16, C.green); ok.addSpacer(8); txt(ok, "Everyone's paid. Nice.", 13.5, C.ink, "s"); }
+      debtors.slice(0, n).forEach((x, i) => { if (i) w.addSpacer(6); personRow(w, W, x.name, x.sub, money(x.amt), C.amber, x.sub === "Job" ? "jobs" : "clients"); });
+      if (fam === "large") {
+        w.addSpacer(10);
+        const tr = w.addStack(); tr.spacing = 8;
+        tile(tr, 106, 74, "doc.text.fill", String(cl.inv || 0), "Invoices", C.blue, "clients");
+        tile(tr, 106, 74, "bell.fill", String(cl.reminders || 0), "Reminders", C.pink, "jobs");
+        tile(tr, 106, 74, "hand.thumbsup.fill", String(cl.to_agree || 0), "Quotes out", C.purple, "jobs");
+      }
     }
   } else if (view === "leads") {
-    const L = cl.lead_list || [];
+    const n = cl.leads || 0;
     if (fam === "small") {
-      txt(w, String(cl.leads || 0), 26, cl.leads ? C.amber : C.green, "h"); txt(w, "leads to chase", 10, C.mute, "b"); w.addSpacer(4);
-      if (L[0]) txt(w, L[0].name + " · " + when(L[0].next), 11, C.ink, "b", 2);
+      txt(w, n ? "Chase today" : "No one to chase", 12, C.soft, "s"); w.addSpacer(2);
+      txt(w, String(n), 34, n ? C.pink : C.green, "h");
+      w.addSpacer();
+      if (leads[0]) txt(w, leads[0].name, 13, C.ink, "s");
     } else {
-      counts([[String(cl.leads || 0), "to chase", cl.leads ? C.amber : C.green, "leads"], [String(cl.open_leads || 0), "open", C.blue, "leads"], [money(cl.pipeline), "if they all came in", C.pink, "leads"]]);
-      w.addSpacer(8);
-      if (!L.length) txt(w, "No follow-ups booked. Add a lead in SMR Studio.", 12, C.mute, "m", 2);
-      L.slice(0, max).forEach(l => row(w, "leads", r => { txt(r, (l.next * 1000 < Date.now() + 3600e3 ? "● " : "○ "), 10, l.next * 1000 < Date.now() + 3600e3 ? C.amber : C.mute, "b"); txt(r, l.name + (l.what ? " · " + l.what : ""), 12, C.ink, "m", 1); r.addSpacer(4); txt(r, when(l.next), 10, C.mute, "b"); }));
+      const top = w.addStack(); top.centerAlignContent();
+      const l = top.addStack(); l.layoutVertically();
+      txt(l, n ? "Chase today" : "No one to chase today", 13, C.soft, "s"); txt(l, n ? String(n) + (n === 1 ? " lead" : " leads") : "All caught up", 28, n ? C.pink : C.green, "h");
+      top.addSpacer();
+      if (cl.pipeline) { const m = box(top, 0, 0, tint(C.pink, 0.15), 14, 8); m.layoutVertically(); txt(m, money(cl.pipeline), 17, C.ink, "b"); txt(m, "up for grabs", 11, C.soft, "m"); }
+      w.addSpacer(10);
+      const rows = fam === "large" ? 5 : 1;
+      if (!leads.length) { const ok = box(w, W, 0, C.card, 14, 10); txt(ok, "Add a lead in SMR Studio and it shows here", 13, C.soft, "m", 2); }
+      leads.slice(0, rows).forEach((x, i) => { if (i) w.addSpacer(6); const when = dayName(x.next); personRow(w, W, x.name, x.what || x.next_what || "", when, when === "Overdue" || when === "Today" ? C.pink : C.purple, "leads"); });
     }
   } else if (view === "care") {
-    const K = cl.care_list || [];
-    txt(w, K.length ? K.length + " check" + (K.length > 1 ? "s" : "") + " due" : "All client sites look fine", fam === "small" ? 14 : 15, K.length ? C.amber : C.green, "b", 2);
-    w.addSpacer(6);
-    K.slice(0, fam === "small" ? 2 : max).forEach(k => row(w, "clients", r => { txt(r, (k.bad ? "⚠︎ " : "• "), 11, k.bad ? C.red : C.amber, "b"); txt(r, k.client + " · " + k.title, 12, C.ink, "m", 1); }));
+    const bad = care.filter(k => k.bad).length;
+    const head2 = care.length ? (bad ? bad + (bad === 1 ? " site needs you" : " sites need you") : care.length + " check" + (care.length === 1 ? "" : "s") + " due") : "All sites look good";
+    if (fam === "small") {
+      icon(w, care.length ? (bad ? "exclamationmark.triangle.fill" : "wrench.and.screwdriver.fill") : "checkmark.shield.fill", 26, care.length ? (bad ? C.red : C.amber) : C.green);
+      w.addSpacer(8); txt(w, head2, 16, C.ink, "b", 2); w.addSpacer();
+      if (care[0]) txt(w, care[0].client, 12, C.soft, "s");
+    } else {
+      const top = w.addStack(); top.centerAlignContent();
+      icon(top, care.length ? (bad ? "exclamationmark.triangle.fill" : "wrench.and.screwdriver.fill") : "checkmark.shield.fill", 24, care.length ? (bad ? C.red : C.amber) : C.green);
+      top.addSpacer(10); txt(top, head2, 20, C.ink, "b");
+      w.addSpacer(10);
+      care.slice(0, fam === "large" ? 5 : 1).forEach((k, i) => { if (i) w.addSpacer(6); personRow(w, W, k.client, k.title, k.bad ? "Fix it" : "Due", k.bad ? C.red : C.amber, "clients"); });
+    }
   } else {
-    // today (and "all" = today + a money/leads line)
-    if (d.next) {
-      const n = row(w, "today", r => { const s = r.addStack(); s.layoutVertically(); txt(s, "DO THIS NEXT", 9.5, C.pink, "h"); s.addSpacer(2); txt(s, d.next.title, fam === "small" ? 14 : 16, C.ink, "b", fam === "small" ? 3 : 2); s.addSpacer(1); txt(s, (d.next.person ? d.next.person + " · " : "") + d.next.why, 11, whyCol(d.next.why), "b", 1); });
-    } else txt(w, "Nothing waiting on you. Chase a lead?", 14, C.ink, "b", 3);
-    if (fam !== "small") {
-      w.addSpacer(8);
-      const evs = d.today && d.today.length ? d.today : (d.tomorrow || []);
-      sec(d.today && d.today.length ? "TODAY" : "TOMORROW");
-      if (!evs.length) txt(w, "No meetings today or tomorrow", 12, C.mute, "m", 1);
-      evs.slice(0, fam === "large" ? 3 : 1).forEach(e => row(w, "today", r => { txt(r, e.all_day ? "All day " : hm(e.start) + "  ", 12, C.pink, "b"); txt(r, e.title + (e.prep ? "  · " + e.prep + " prep" : ""), 12, C.ink, "m", 1); }));
-      if (fam === "large") {
-        w.addSpacer(8); sec("UP NEXT");
-        (d.top || []).slice(1, 5).forEach(t => row(w, "today", r => { txt(r, (t.pri === 1 ? "● " : "○ "), 11, t.pri === 1 ? C.red : C.mute, "b"); txt(r, t.title, 12, C.ink, "m", 1); r.addSpacer(4); txt(r, t.why, 10, whyCol(t.why), "b", 1); }));
+    /* today */
+    if (fam === "small") {
+      txt(w, "Next up", 12, C.pink, "s"); w.addSpacer(3);
+      txt(w, d.next ? d.next.title : "Nothing waiting on you", 15, C.ink, "b", 4);
+      w.addSpacer();
+      const r = w.addStack(); r.centerAlignContent();
+      if (d.overdue) { icon(r, "exclamationmark.circle.fill", 12, C.red); r.addSpacer(4); txt(r, d.overdue + " overdue", 12, C.red, "s"); }
+      else { icon(r, "checkmark.circle.fill", 12, C.green); r.addSpacer(4); txt(r, "On track", 12, C.green, "s"); }
+    } else {
+      if (fam === "large") { txt(w, hello(), 22, C.ink, "b"); w.addSpacer(10); }
+      const row = w.addStack(); row.spacing = 8;
+      const nx = box(row, fam === "large" ? W : 218, fam === "large" ? 96 : 112, C.card2, 18, 12); nx.layoutVertically(); go(nx, "today");
+      const lab = nx.addStack(); lab.centerAlignContent(); icon(lab, "sparkles", 12, C.pink); lab.addSpacer(5); txt(lab, "Next up", 12, C.pink, "s");
+      nx.addSpacer(5); txt(nx, d.next ? d.next.title : "Nothing waiting on you. Chase a lead?", fam === "large" ? 16 : 15, C.ink, "b", 2);
+      nx.addSpacer();
+      if (d.next) txt(nx, [d.next.person, plainWhy(d.next.why)].filter(Boolean).join("  ·  "), 12, /Overdue/.test(d.next.why) ? C.red : C.soft, "s");
+      const ev = (d.today && d.today[0]) || (d.tomorrow && d.tomorrow[0]);
+      const evTxt = ev ? (ev.all_day ? (d.today && d.today[0] ? "Today" : "Tomorrow") : hm(ev.start)) : "Free";
+      const evLab = ev ? ev.title : "No meetings";
+      if (fam === "medium") {
+        const col = row.addStack(); col.layoutVertically(); col.spacing = 8;
+        const t1 = box(col, 108, 52, C.card, 14, 8); t1.layoutVertically(); go(t1, "today");
+        const a = t1.addStack(); a.centerAlignContent(); icon(a, "calendar", 11, C.blue); a.addSpacer(4); txt(a, evTxt, 13, C.ink, "b"); txt(t1, evLab, 11, C.soft, "m");
+        const t2 = box(col, 108, 52, d.overdue ? tint(C.red, 0.16) : C.card, 14, 8); t2.layoutVertically(); go(t2, "today");
+        txt(t2, String(d.overdue || 0), 18, d.overdue ? C.red : C.green, "b"); txt(t2, "overdue", 11, C.soft, "m");
+      } else {
+        w.addSpacer(8);
+        const tr = w.addStack(); tr.spacing = 8;
+        const t1 = box(tr, 163, 64, C.card, 16, 10); t1.layoutVertically(); go(t1, "today");
+        const a = t1.addStack(); a.centerAlignContent(); icon(a, "calendar", 12, C.blue); a.addSpacer(5); txt(a, ev ? (d.today && d.today[0] ? "Today " : "Tomorrow ") + evTxt : "No meetings", 12, C.blue, "s");
+        t1.addSpacer(); txt(t1, ev ? evLab : "A clear diary", 14, C.ink, "s");
+        const t2 = box(tr, 163, 64, d.overdue ? tint(C.red, 0.16) : C.card, 16, 10); t2.layoutVertically(); go(t2, "today");
+        const b = t2.addStack(); b.centerAlignContent(); icon(b, d.overdue ? "exclamationmark.circle.fill" : "checkmark.circle.fill", 12, d.overdue ? C.red : C.green); b.addSpacer(5); txt(b, d.overdue ? "Running late" : "On track", 12, d.overdue ? C.red : C.green, "s");
+        t2.addSpacer(); txt(t2, d.overdue ? d.overdue + " overdue" : "Nothing overdue", 14, C.ink, "s");
+        w.addSpacer(10);
+        txt(w, "Also on your list", 12, C.mute, "s"); w.addSpacer(5);
+        (d.top || []).slice(1, 4).forEach((t, i) => {
+          if (i) w.addSpacer(5);
+          const r = w.addStack(); r.centerAlignContent(); go(r, "today");
+          const dot = r.addStack(); dot.size = new Size(7, 7); dot.cornerRadius = 4; dot.backgroundColor = /Overdue/.test(t.why) ? C.red : /Due today/.test(t.why) ? C.amber : C.purple;
+          r.addSpacer(9); txt(r, t.title, 13.5, C.ink, "m"); r.addSpacer();
+        });
       }
     }
   }
 
-  // footer: the numbers that matter, each one opens its page
-  w.addSpacer();
-  const f = w.addStack(); f.centerAlignContent(); f.spacing = 8;
-  const chip = (s, col, hash) => { const c = f.addStack(); c.url = ADMIN + "#" + hash; txt(c, s, 10.5, col, "b"); };
-  if (d.overdue) chip("⚠︎ " + d.overdue + " overdue", C.red, "today");
-  if (view !== "money" && (cl.unpaid || cl.job_overdue)) chip("£ " + ((cl.unpaid || 0) + Object.keys(cl.debtors || {}).length) + " owe", C.amber, "clients");
-  if (view !== "leads" && cl.leads && fam !== "small") chip("☎︎ " + cl.leads + " to chase", C.pink, "leads");
-  if (d.done_today && fam !== "small") chip("✓ " + d.done_today, C.green, "today");
-  f.addSpacer();
-  if (d.stale) txt(f, "offline", 9.5, C.mute);
-  else if (fam !== "small") txt(f, "updated " + hm(d.now), 9.5, C.mute);
+  // footer on the big widget only: three calm counts
+  if (fam === "large") {
+    w.addSpacer();
+    const f = w.addStack(); f.centerAlignContent(); f.spacing = 14;
+    const pill = (sym, s, col, hash) => { const p = f.addStack(); p.centerAlignContent(); go(p, hash); icon(p, sym, 11, col); p.addSpacer(4); txt(p, s, 12, col, "s"); };
+    if (owedTotal && view !== "money") pill("sterlingsign.circle.fill", money(owedTotal) + " owed", C.amber, "clients");
+    if (cl.leads && view !== "leads") pill("person.2.fill", cl.leads + " to chase", C.pink, "leads");
+    if (d.done_today) pill("checkmark.circle.fill", d.done_today + " done", C.green, "today");
+  } else w.addSpacer();
+
   Script.setWidget(w);
   if (!config.runsInWidget) { fam === "small" ? await w.presentSmall() : fam === "medium" ? await w.presentMedium() : await w.presentLarge(); }
 };
