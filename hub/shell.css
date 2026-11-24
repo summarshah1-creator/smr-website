@@ -253,3 +253,8 @@ a.wzl.xl .wzl-m{color:var(--blue);font-weight:600}
 html{font-size:106.25%}
 @supports (font: -apple-system-body){html{font:-apple-system-body}body{font-family:var(--bd)}}
 nav.tabs a{font-size:min(0.706rem,13px) !important}
+
+/* live copy: nothing may be wider than the phone (iOS zooms the whole page out if it is) */
+.hscr{min-width:0;max-width:100%}.wrap,.wrap>*,.band>*{min-width:0}
+html,body{overflow-x:clip}
+.landing.lp>*{max-width:100%;min-width:0}.landing.lp>.band{width:100%}
