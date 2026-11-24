@@ -108,6 +108,26 @@ const plan0 = V.evplan; if (plan0) V.evplan = id => plan0(id).replace(/<\/div>\s
 const bid0 = V.bidcheck; if (bid0) V.bidcheck = id => { const s = store.get('evbud-bid', null); const card = s ? `<section class="dlbox bgbid"><b>Your event budget: ${esc(s.name)}</b><p>Total costs <b>${money(s.all)}</b> · confirmed income <b>${money(s.conf)}</b> · amount to raise <b>${money(s.raise)}</b>. ${s.raise ? 'Ask the funder for no more than the amount to raise, and show your other income in the bid.' : 'Your confirmed income already covers the costs, so a funder may ask why you need the grant. Explain what extra it would pay for.'}</p><div class="msg" id="bgbidtxt" hidden>${esc(s.text)}</div><div class="row"><button class="btn s sm" data-copy="#bgbidtxt">Copy the budget</button><a class="btn s sm" href="#evplan">Edit in the Event planner</a></div></section>` : `<p class="note bgbidn">Planning an event? Build the budget in the <a href="#evplan">Event planner</a> and it will appear here, ready for your bid.</p>`;
   return bid0(id).replace(/(<div class="sec-h">[\s\S]*?<\/div><\/div>)/, '$1' + card); };
 
+
+/* ---------- joined up: "Next in your plan" on each planning tool ----------
+   Like Canva's and Notion's "next step" prompts: each tool points to the ones that naturally follow it. */
+const FLOW = {
+  evplan: [['riskbuild', 'Risk assessment', 'Write it for this event'], ['volrole', 'Volunteer roles', 'Describe the helpers you need'], ['dbshelp', 'DBS checks', 'Which helpers need one'], ['planner', 'Social media calendar', 'Fit your posts round the year'], ['bidcheck', 'Funding bid checklist', 'Your budget carries across']],
+  dbshelp: [['volrole', 'Volunteer role builder', 'Put the check into the role description'], ['policies', 'Safeguarding policy', 'Templates and what you need'], ['riskbuild', 'Risk assessment', 'For the activity itself']],
+  volrole: [['dbshelp', 'DBS level helper', 'Check which DBS level the role needs'], ['volunteering', 'Post the role', 'List it on Volunteering Opportunities'], ['policies', 'Volunteer policy', 'Templates and what you need']],
+  riskbuild: [['evplan', 'Event planner', 'Every step and date, plus the budget'], ['dbshelp', 'DBS level helper', 'For anyone working with children'], ['policies', 'Health & safety policy', 'Templates and what you need']],
+  bidcheck: [['toc', 'Theory of change', 'Problem to impact on one page'], ['numbers', 'Luton in numbers', 'Official figures for your bid'], ['evplan', 'Event budget', 'Costs, income and amount to raise'], ['impact', 'Impact report', 'What the funder wants afterwards']],
+  toc: [['bidcheck', 'Funding bid checklist', 'Use it in your next bid'], ['impact', 'Impact report', 'Show the change you made'], ['numbers', 'Luton in numbers', 'Evidence the need']],
+  appealkit: [['giftaid', 'Gift Aid calculator', 'Add 25% to eligible gifts'], ['donate', 'Quick donate button', 'A button, QR and message'], ['planner', 'Social media calendar', 'Plan the appeal posts']],
+  giftaid: [['appealkit', 'Appeal kit builder', 'Every message for your appeal'], ['donate', 'Quick donate button', 'A button, QR and message']],
+  dpcheck: [['policies', 'Data protection policy', 'Templates and what you need'], ['forms', 'Forms & feedback', 'Collect only what you need']],
+  planner: [['evpromo', 'Promote your event', 'Posts counted back from the date'], ['writer', 'Writing helper', 'Captions and wording'], ['freepost', 'Free social media audit', 'An audit plus 5 posts from us']],
+  careers: [['training', 'Training & development', 'Free and low-cost courses'], ['volunteering', 'Volunteering', 'Experience for a CV']],
+  funding: [['bidcheck', 'Funding bid checklist', 'Check every detail before you send'], ['toc', 'Theory of change', 'Problem to impact on one page'], ['numbers', 'Luton in numbers', 'Evidence the need']],
+};
+const flowHTML = k => { const f = FLOW[k]; if (!f) return ''; return `<nav class="nxflow noprint" aria-label="Next in your plan"><h2>Next in your plan</h2><div class="nxgrid">${f.map(([r, t, d]) => `<a href="#${r}" class="nxc">${L.TOOL?.[r.split('-')[0]] && L.tic ? L.tic(r.split('-')[0], 'ti sm') : ''}<span><b>${esc(t)}</b><small>${esc(d)}</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></a>`).join('')}</div></nav>`; };
+Object.keys(FLOW).forEach(k => { const f0 = V[k]; if (!f0) return; V[k] = id => { const h = f0(id); return typeof h === 'string' && !id ? h.replace(/<\/div>\s*$/, flowHTML(k) + '</div>') : h; }; });
+
 /* ---------- styles ---------- */
 const css = document.createElement('style'); css.textContent = `
 .bgsec{margin-top:18px}.bghd h2{display:flex;align-items:center;gap:8px;margin:0}.bghd .note{margin:6px 0 10px}
@@ -129,6 +149,9 @@ const css = document.createElement('style'); css.textContent = `
 .bgbtns{margin-top:12px}.bgbid{margin:0 0 14px}.bgbid p{margin:6px 0 10px}.bgbidn{margin:0 0 12px}
 @media(max-width:620px){.bgsum{top:56px;gap:6px;padding:6px 0;background:var(--bg,#F6F5F1)}.bgsum>div{padding:8px}.bgsum b{font-size:15.5px}.bgsum small+b+small,.bgsum b+small{display:none}.bgsum small{font-size:11px}
  .bgl{grid-template-columns:1fr auto;grid-template-areas:"m x" "a c"}.bgl-m{grid-area:m}.bgl-x{grid-area:x}.bgl-a,.bgl-q{grid-area:a;width:auto}.bgl-c{grid-area:c}.bgl[data-g="cost"] .bgl-a{grid-column:1/-1}}
+.nxflow{margin:22px 0 4px}.nxflow h2{font-size:18px;margin:0 0 10px}.nxgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:8px}
+.nxc{display:flex;align-items:center;gap:10px;padding:12px;border-radius:14px;background:#fff;border:1.5px solid var(--line,#D9D8E6);color:inherit;text-decoration:none;min-width:0}.nxc:hover{border-color:#4545D6}
+.nxc span{display:flex;flex-direction:column;min-width:0;flex:1}.nxc small{font-size:12.5px;opacity:.72}.nxc>svg:last-child{width:18px;height:18px;flex:none;color:#4545D6}
 @media print{.bgsum{position:static}}`;
 document.head.appendChild(css);
 
