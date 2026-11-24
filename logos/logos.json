@@ -2058,7 +2058,8 @@
      "h": 344,
      "made": true
     }
-   ]
+   ],
+   "notes": "MASJID centred under LEAGRAVE HALL (owner, Nov 2026)."
   },
   {
    "slug": "lewsey-cc",
@@ -3675,8 +3676,8 @@
     "logo",
     "icon"
    ],
-   "original_vector": true,
-   "quality": "vector",
+   "original_vector": false,
+   "quality": "redrawn",
    "details": {
     "address": "1 St. Ethelberts Avenue, Luton",
     "postcode": "LU3 1QH",
@@ -3689,24 +3690,25 @@
    "signed_off": false,
    "files": [
     {
-     "file": "saints-area-logo.svg",
-     "variant": "logo",
-     "style": "logo",
-     "vector": true
+     "file": "saints-area-icon.svg",
+     "variant": "icon",
+     "style": "icon",
+     "vector": true,
+     "redrawn": true
     },
     {
      "file": "saints-area-logo.png",
      "variant": "logo",
      "style": "logo",
      "w": 989,
-     "h": 272
+     "h": 250
     },
     {
      "file": "saints-area-icon.png",
      "variant": "icon",
      "style": "icon",
-     "w": 218,
-     "h": 272,
+     "w": 182,
+     "h": 250,
      "made": true
     },
     {
@@ -3714,7 +3716,7 @@
      "variant": "logo-black",
      "style": "logo",
      "w": 989,
-     "h": 272,
+     "h": 250,
      "made": true
     },
     {
@@ -3722,21 +3724,7 @@
      "variant": "logo-white",
      "style": "logo",
      "w": 989,
-     "h": 272,
-     "made": true
-    },
-    {
-     "file": "saints-area-logo-black.svg",
-     "variant": "logo-black",
-     "style": "logo",
-     "vector": true,
-     "made": true
-    },
-    {
-     "file": "saints-area-logo-white.svg",
-     "variant": "logo-white",
-     "style": "logo",
-     "vector": true,
+     "h": 250,
      "made": true
     },
     {
@@ -3744,23 +3732,23 @@
      "variant": "logo-brand-colour",
      "style": "logo",
      "w": 989,
-     "h": 272,
+     "h": 250,
      "made": true
     },
     {
      "file": "saints-area-icon-black.png",
      "variant": "icon-black",
      "style": "icon",
-     "w": 218,
-     "h": 272,
+     "w": 182,
+     "h": 250,
      "made": true
     },
     {
      "file": "saints-area-icon-white.png",
      "variant": "icon-white",
      "style": "icon",
-     "w": 218,
-     "h": 272,
+     "w": 182,
+     "h": 250,
      "made": true
     },
     {
@@ -3768,24 +3756,27 @@
      "variant": "icon-black",
      "style": "icon",
      "vector": true,
-     "made": true
+     "made": true,
+     "redrawn": true
     },
     {
      "file": "saints-area-icon-white.svg",
      "variant": "icon-white",
      "style": "icon",
      "vector": true,
-     "made": true
+     "made": true,
+     "redrawn": true
     },
     {
      "file": "saints-area-icon-brand-colour.png",
      "variant": "icon-brand-colour",
      "style": "icon",
-     "w": 218,
-     "h": 272,
+     "w": 182,
+     "h": 250,
      "made": true
     }
-   ]
+   ],
+   "notes": "Redrawn Nov 2026 (owner approved): new dome with white ribs, 4 arched windows, slanted crescent; SAINTS AREA in thin gold, MASJID bold green, soft gradients. Icon is vector; full logo is PNG only."
   },
   {
    "slug": "shah-jalal",
