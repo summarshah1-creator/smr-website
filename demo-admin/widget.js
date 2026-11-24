@@ -31,6 +31,8 @@ function footer(w, d) {
   const f = w.addStack(); f.centerAlignContent();
   if (d.overdue) { txt(f, "⚠︎ " + d.overdue + " overdue", 11, C.red, "b"); f.addSpacer(8); }
   if (d.owing && d.owing.length) { txt(f, "£ " + d.owing.length + " owe you", 11, C.red, "b"); f.addSpacer(8); }
+  if (d.cl && d.cl.unpaid) { txt(f, "£ " + d.cl.unpaid + " unpaid", 11, C.amber, "b"); f.addSpacer(8); }
+  if (d.cl && d.cl.leads) { txt(f, "☎︎ " + d.cl.leads + " lead" + (d.cl.leads > 1 ? "s" : ""), 11, C.pink, "b"); f.addSpacer(8); }
   if (d.done_today) txt(f, "✓ " + d.done_today, 11, C.green, "b");
   f.addSpacer();
   if (d.stale) txt(f, "offline", 10, C.mute);

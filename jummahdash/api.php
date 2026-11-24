@@ -185,13 +185,13 @@ try {
         if ($a === 'since') json_out(gs_since($p, 'jd', max(0, (int) ($_GET['t'] ?? 0)), 'jd_recs'));
         if ($a === 'stats') json_out(jd_stats(max(0, min(400, (int) ($_GET['days'] ?? 7)))) + ['settings' => jd_settings()]);
         if ($a === 'devices') json_out(['devices' => gs_devices($p, 'jd')]);
+        if ($a === 'lb') json_out(['week' => jd_top($p, jd_wk(), 30), 'all' => jd_top($p, 'all', 30)]);
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') json_out(['error' => 'POST only'], 405);
         if ($a === 'owner') { gs_set_owner($p, 'jd', (string) ($in['vid'] ?? ''), !empty($in['on'])); json_out(['ok' => true, 'devices' => gs_devices($p, 'jd')]); }
         if ($a === 'settings_save') { $new = ['show_recommend' => !empty($in['show_recommend']), 'lakri' => !empty($in['lakri'])];
             $p->prepare('INSERT INTO jd_meta (k, v) VALUES (?, ?) ON CONFLICT(k) DO UPDATE SET v = excluded.v')->execute(['settings', json_encode($new)]); json_out(['ok' => true, 'settings' => $new]); }
         $id = (int) ($in['id'] ?? 0);
         if ($a === 'rec_done') { $p->prepare('UPDATE jd_recs SET done = ? WHERE id = ?')->execute([empty($in['undo']) ? 1 : 0, $id]); json_out(['ok' => true]); }
-        if ($a === 'lb') json_out(['week' => jd_top($p, jd_wk(), 30), 'all' => jd_top($p, 'all', 30)]);
         if ($a === 'lb_del') { $p->prepare('DELETE FROM jd_scores WHERE pid = ?')->execute([jd_pid((string) ($in['pid'] ?? ''))]); json_out(['ok' => true]); }
         if ($a === 'rec_del') { $p->prepare('DELETE FROM jd_recs WHERE id = ?')->execute([$id]); json_out(['ok' => true]); }
     }

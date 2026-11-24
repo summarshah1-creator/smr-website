@@ -32,5 +32,6 @@ json_out_then([
     'today' => $S['today'], 'tomorrow' => $S['tomorrow'], 'soon' => array_slice($S['soon'], 0, 4),
     'overdue' => $S['overdue'], 'due_today' => $S['due_today'], 'open' => $S['open'], 'done_today' => $S['done_today'],
     'owing' => array_keys($S['owing']),
+    'cl' => (function () use ($now) { try { require_once dirname(__DIR__) . '/demo-lib/clients.php'; $c = clients_summary($now); return ['leads' => $c['leads_due'], 'unpaid' => count($c['bills']), 'care' => $c['care_due'] + $c['care_bad']]; } catch (Throwable $e) { return null; } })(),
     'open_url' => '/demo-admin/#today',
 ], function () { pl_tick(); });
