@@ -264,6 +264,7 @@ function job_mark_paid(int $payId, string $method): void {
     if (!$j) return;
     job_ev((int) $j['id'], money((int) $p['amount']) . ' paid (' . ($method === 'card' ? 'card' : $method) . '): ' . $p['label']);
     if ($method === 'card') job_push('💷 Paid: ' . money((int) $p['amount']), $j['client'] . ' · ' . $j['title'] . ' · ' . $p['label'], 'job-paid-' . $payId);
+    try { require_once __DIR__ . '/clients.php'; inv_from_job_pay($payId); } catch (Throwable $e) {}   // invoice ready for the owner to send
 }
 
 /* ---------- reminders (called from pl_tick, so at most every 4 min) ---------- */
@@ -302,6 +303,7 @@ function jobs_tick(): array {
             $log[] = 'rem ' . $p['id'] . ':' . $want;
         }
     }
+    try { require_once __DIR__ . '/clients.php'; $log = array_merge($log, clients_tick()); } catch (Throwable $e) { $log[] = 'clients: ' . $e->getMessage(); }
     return $log;
 }
 function pl_day0_j(int $t): int { return (int) strtotime(date('Y-m-d 00:00:00', $t)); }

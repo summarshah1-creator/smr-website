@@ -1,0 +1,23 @@
+name: Add a lead
+# From any Claude chat: gh api -X POST repos/summarshah1-creator/smr-website/actions/workflows/add-lead.yml/dispatches -f ref=main -f "inputs[text]=Bilal from Spice Hut wants an ordering app, 07123 456789, chase Friday"
+on:
+  workflow_dispatch:
+    inputs:
+      text:
+        description: The lead in plain words (who, business, number, what they want, where it stands, when to chase)
+        required: true
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add it through the admin API
+        env:
+          PIN: ${{ secrets.ADMIN_PIN || '1275' }}
+          TEXT: ${{ inputs.text }}
+        run: |
+          H=https://smrgraphics.co.uk; A=$H/demo-admin/api.php
+          CSRF=$(curl -sf -c c.txt -b c.txt -H "Origin: $H" -H 'Content-Type: application/json' -d "{\"pin\":\"$PIN\"}" "$A?a=login" | jq -r .csrf)
+          jq -n --arg t "$TEXT" '{text:$t}' > body.json
+          curl -s -b c.txt -H "Origin: $H" -H "X-CSRF: $CSRF" -H "Content-Type: application/json" -d @body.json "$A?a=cl_lead_add_text" | tee out.json
+          jq -e .ok out.json
+          echo "### Lead added" >> $GITHUB_STEP_SUMMARY; jq -r '.fields | to_entries[] | select(.key != "notes") | "- \(.key): \(.value)"' out.json >> $GITHUB_STEP_SUMMARY

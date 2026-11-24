@@ -298,7 +298,7 @@
   window.SMRJobs = {
     show: function () { fab.classList.remove('hidden'); if (!loaded) load(); else { render(); load(); } api('j_check').then(render).catch(function () {}); },
     hide: function () { fab.classList.add('hidden'); },
-    todayHtml: todayHtml, load: load, needProof: function () { return J.sum ? needProof() : []; },
+    todayHtml: todayHtml, load: load, newJob: function (preset) { edit(0, preset); }, needProof: function () { return J.sum ? needProof() : []; },
     repaint: function () { var t = $('tab-jobs'); if (loaded && t && !t.classList.contains('hidden')) render(); if (window.SMRPlanner && SMRPlanner.repaint) SMRPlanner.repaint(); }
   };
   var tj = $('tab-jobs'); if (tj && !tj.classList.contains('hidden')) window.SMRJobs.show(); else load();

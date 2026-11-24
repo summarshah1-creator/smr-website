@@ -32,6 +32,8 @@ DirectoryIndex index.html
   RewriteRule ^j/([A-Za-z0-9_-]{12,40})/?$ jobs/index.php?k=$1 [L,QSA]
   # Proof for a client to check and sign off: /p/<token>
   RewriteRule ^p/([A-Za-z0-9_-]{12,40})/?$ proofs/index.php?k=$1 [L,QSA]
+  RewriteRule ^i/([A-Za-z0-9_-]{12,40})/?$ invoices/index.php?k=$1 [L,QSA]
+  RewriteRule ^c/([A-Za-z0-9_-]{12,40})/?$ plans/index.php?k=$1 [L,QSA]
 </IfModule>
 
 # smrgraphics.co.uk/plates opens the Plates page

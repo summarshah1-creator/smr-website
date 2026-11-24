@@ -59,6 +59,7 @@
     html += '<div class="plstat"><button class="r" data-f="over"><b>' + S.overdue + '</b><span>Overdue</span></button><button class="a" data-f="today"><b>' + S.due_today + '</b><span>Due today</span></button>'
       + '<button class="r" data-f="money"><b>' + Object.keys(S.owing).length + '</b><span>Owe you</span></button><button class="g" data-f="done"><b>' + S.done_today + '</b><span>Cleared</span></button></div>';
     if (window.SMRJobs) html += SMRJobs.todayHtml();
+    if (window.SMRClients) html += SMRClients.todayHtml();
     var n = S.next;
     if (n) {
       html += '<div class="plnext"><div class="k">DO THIS NEXT</div><h2>' + esc(n.title) + '</h2><div class="who">' + esc(n.person || '') + (n.platform ? ' · ' + esc(n.platform) : '') + '<span class="why ' + whyCls(n) + '">' + esc(n.why) + '</span>' + oweTag(n) + '</div>'

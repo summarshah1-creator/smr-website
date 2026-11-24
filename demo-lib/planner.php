@@ -152,7 +152,11 @@ function pl_tick(bool $force = false): array {
         if ($S['owing']) $bits[] = count($S['owing']) . ' owe you money';
         if (is_file(__DIR__ . '/jobs.php')) { try { require_once __DIR__ . '/jobs.php'; $JS = jobs_summary(array_map(function ($j) use ($now) { return job_row($j, $now); }, jobs_db()->query("SELECT * FROM jobs WHERE status IN ('sent','agreed','delivered')")->fetchAll()));
             if ($JS['overdue']) $bits[] = money($JS['overdue']) . ' overdue from jobs (' . implode(', ', array_keys($JS['debtors'])) . ')';
-            if ($JS['agree']) $bits[] = $JS['agree'] . ' quote' . ($JS['agree'] > 1 ? 's' : '') . ' not agreed yet'; } catch (Throwable $e) {} }
+            if ($JS['agree']) $bits[] = $JS['agree'] . ' quote' . ($JS['agree'] > 1 ? 's' : '') . ' not agreed yet';
+            require_once __DIR__ . '/clients.php'; $CS = clients_summary($now);
+            if ($CS['bills']) $bits[] = count($CS['bills']) . ' monthly payment' . (count($CS['bills']) > 1 ? 's' : '') . ' unpaid';
+            if ($CS['leads_due']) $bits[] = $CS['leads_due'] . ' lead' . ($CS['leads_due'] > 1 ? 's' : '') . ' to follow up';
+            if ($CS['care_due'] + $CS['care_bad']) $bits[] = ($CS['care_due'] + $CS['care_bad']) . ' care check' . ($CS['care_due'] + $CS['care_bad'] > 1 ? 's' : '') . ' due'; } catch (Throwable $e) {} }
         $body = ($S['next'] ? 'Start with: ' . $first($S['next']) . '. ' : '') . ($bits ? implode(' · ', $bits) : 'Nothing urgent. Good time to chase leads.');
         pl_push('Good morning, here is your day', $body, 'pl-brief');
         $log[] = 'brief';

@@ -236,6 +236,38 @@ html.lt .pfchk.warn{color:#db8506}
 html.lt .pfpre{background:#fbf9f4;color:#1d1b26}
 html.lt .pfnudge{background:#fcf0dc;color:#1d1b26}
 html.lt .pfnudge span{color:#db8f06}
+html.lt .clsrch{background:#fbf9f4}
+html.lt .clc{background:#fbf9f4;color:#1d1b26}
+html.lt .clc .av{color:#fff;background:linear-gradient(135deg,#5b5bff,#d63bff)}
+html.lt .clc em{color:#5206db}
+html.lt .clc .dots .r{background:#fcc7cc;color:#db062f}
+html.lt .clc .dots .a{background:#fce7c5;color:#db8506}
+html.lt .clc .dots .g{background:#cef2de;color:#1cc478}
+html.lt .clbox{background:#fbf9f4;color:#1d1b26}
+html.lt .clbox.red{background:linear-gradient(160deg,#fcd2d5,#fbecde);color:#1d1b26}
+html.lt .clbox.red h3{color:#db0629}
+html.lt .clbox.amb{background:#fbf1df;color:#1d1b26}
+html.lt .clbox.amb h3{color:#db8f06}
+html.lt .clbox.grn{background:#e8f6eb;color:#1d1b26}
+html.lt .clr.bad span{color:#db062f}
+html.lt .clr.due span{color:#db8506}
+html.lt .clr.ok span{color:#1cc478}
+html.lt .clhd .av{color:#fff;background:linear-gradient(135deg,#5b5bff,#d63bff)}
+html.lt .clstat div{background:#fbf9f4;color:#1d1b26}
+html.lt .clidea:before{color:#8006db}
+html.lt .clsoon{background:rgba(40,32,70,0.090)}
+html.lt .ldadd{background:linear-gradient(140deg,#cfcef7,#f3d2f6);color:#1d1b26}
+html.lt .ldadd textarea{background:#f8f5ef}
+html.lt .ldadd .k{color:#6e06db}
+html.lt .ldc{background:#fbf9f4;color:#1d1b26}
+html.lt .ldc .l1 em{color:#5206db}
+html.lt .ldc.due .nx{color:#db8506}
+html.lt .st.new{background:#dac9f8;color:#5306db}
+html.lt .st.talking{background:#bae0f7;color:#0684db}
+html.lt .st.quoted{background:#fce7c5;color:#db8506}
+html.lt .st.won{background:#c7f1db;color:#1cc478}
+html.lt .ldq{background:#fcf0dc;color:#1d1b26}
+html.lt .ldq b{color:#db8f06}
 html.lt body{background:#12111f;color:#f2f2fa}
 html.lt a{color:#6a3fd0}
 html.lt .top,html.lt .drawer,html.lt .subtabs{--ink:#f2f2fa;--muted:#a3a3bd;--line:rgba(255,255,255,.1);color:#f2f2fa}

@@ -369,6 +369,218 @@ if (strpos($a, 'pf_') === 0) {
     json_out(['error' => 'Unknown action'], 400);
 }
 
+/* ---------- clients, monthly plans, invoices, care, leads (demo-lib/clients.php) ---------- */
+if (strpos($a, 'cl_') === 0) {
+    require_once dirname(__DIR__) . '/demo-lib/clients.php';
+    require_once dirname(__DIR__) . '/demo-lib/proofs.php';
+    require_once dirname(__DIR__) . '/demo-lib/ai.php';
+    $pdo = cl_db(); $now = now();
+    $str = function ($k, $max = 300) use (&$in) { return mb_substr(trim((string) ($in[$k] ?? '')), 0, $max); };
+    $pence = function ($k) use (&$in) { return max(0, (int) round(((float) ($in[$k] ?? 0)) * 100)); };
+    $client = function () use (&$in) { $c = cl_get((int) ($in['cid'] ?? $in['id'] ?? 0)); if (!$c) json_out(['error' => 'Client not found.'], 404); return $c; };
+    $plan = function () use (&$in) { $p = cl_plan((int) ($in['plan'] ?? 0)); if (!$p) json_out(['error' => 'Plan not found.'], 404); return $p; };
+    $bill = function () use (&$in, $pdo) { $st = $pdo->prepare('SELECT * FROM cl_bills WHERE id = ?'); $st->execute([(int) ($in['bill'] ?? 0)]); $b = $st->fetch(); if (!$b) json_out(['error' => 'Payment not found.'], 404); return $b; };
+    $care = function () use (&$in, $pdo) { $st = $pdo->prepare('SELECT * FROM cl_care WHERE id = ?'); $st->execute([(int) ($in['care'] ?? 0)]); $k = $st->fetch(); if (!$k) json_out(['error' => 'Check not found.'], 404); return $k; };
+    $lead = function () use (&$in, $pdo) { $st = $pdo->prepare('SELECT * FROM leads WHERE id = ?'); $st->execute([(int) ($in['lead'] ?? 0)]); $l = $st->fetch(); if (!$l) json_out(['error' => 'Lead not found.'], 404); return $l; };
+    $out = function (array $extra = []) use ($pdo, $now, &$in) {
+        static $synced = false;
+        if (!$synced) { $synced = true; cl_sync();
+            // any paid job payment without an invoice yet gets one (e.g. paid before invoices existed)
+            foreach (jobs_db()->query("SELECT p.id FROM job_pays p LEFT JOIN invoices i ON i.src = 'job' AND i.src_id = p.id WHERE p.status = 'paid' AND i.id IS NULL")->fetchAll() as $r) inv_from_job_pay((int) $r['id']);
+        }
+        $plans = array_map(function ($p) use ($now) { return cl_plan_row($p, $now); }, $pdo->query("SELECT * FROM cl_plans WHERE status != 'ended' OR updated > " . ($now - 60 * 86400) . ' ORDER BY created DESC')->fetchAll());
+        $care = array_map(function ($k) use ($now) { return care_row($k, $now); }, $pdo->query('SELECT * FROM cl_care ORDER BY due')->fetchAll());
+        $clients = array_map(function ($c) use ($plans, $care, $now) { return cl_summary_row($c, $plans, $care, $now); }, $pdo->query("SELECT * FROM clients ORDER BY status = 'archived', updated DESC")->fetchAll());
+        $invs = array_map('inv_row', $pdo->query('SELECT * FROM invoices ORDER BY created DESC LIMIT 120')->fetchAll());
+        $leads = array_map(function ($l) use ($now) { return lead_row($l, $now); }, $pdo->query("SELECT * FROM leads WHERE status NOT IN ('won','lost') OR updated > " . ($now - 90 * 86400) . ' ORDER BY next_at = 0, next_at, updated DESC')->fetchAll());
+        $data = $extra + ['ok' => true, 'clients' => $clients, 'plans' => $plans, 'care' => $care, 'invoices' => $invs, 'leads' => $leads, 'sum' => clients_summary($now),
+            'cfg' => cl_cfg() + ['stripe' => jobs_stripe_key() !== '', 'mail' => (bool) mail_cfg()], 'ai' => ai_public(), 'types' => CL_TYPES, 'lstatus' => LEAD_STATUS, 'lsources' => LEAD_SOURCES,
+            'areas' => JOB_AREAS, 'care_tpl' => array_map(function ($t) { return ['kind' => $t[0], 'title' => $t[1], 'every' => $t[2], 'tip' => $t[3]]; }, CARE_TPL)];
+        if (!empty($in['cid'])) { $c = cl_get((int) $in['cid']); if ($c) $data['page'] = cl_page($c, $now); }
+        json_out($data);
+    };
+    switch ($a) {
+    case 'cl_list': $out();
+    case 'cl_save':
+        $f = ['name' => $str('name', 120), 'person' => $str('person', 120), 'phone' => preg_replace('/[^0-9+ ]/', '', $str('phone', 30)), 'email' => strtolower($str('email', 160)),
+            'type' => isset(CL_TYPES[$in['type'] ?? '']) ? $in['type'] : 'other', 'address' => $str('address', 400), 'website' => $str('website', 200), 'instagram' => ltrim($str('instagram', 80), '@'),
+            'notes' => $str('notes', 4000), 'updated' => $now];
+        if ($f['name'] === '') json_out(['error' => 'Give the client a name.'], 400);
+        if ($f['email'] !== '' && !filter_var($f['email'], FILTER_VALIDATE_EMAIL)) json_out(['error' => 'That email address doesn\'t look right.'], 400);
+        $f['keyp'] = cl_kp($f['phone']); $f['keyn'] = cl_kn($f['name']);
+        $id = (int) ($in['id'] ?? 0);
+        if ($id) { $client(); $s = implode(', ', array_map(function ($k) { return "$k = ?"; }, array_keys($f))); $pdo->prepare("UPDATE clients SET $s WHERE id = ?")->execute(array_merge(array_values($f), [$id])); }
+        else {
+            if ($dup = cl_find($f['phone'], $f['name'])) json_out(['error' => 'You already have ' . $dup['name'] . ' (same name or number).', 'cid' => (int) $dup['id']], 400);
+            $f += ['created' => $now, 'source' => 'admin', 'status' => 'active'];
+            $pdo->prepare('INSERT INTO clients (' . implode(', ', array_keys($f)) . ') VALUES (' . implode(',', array_fill(0, count($f), '?')) . ')')->execute(array_values($f));
+            $id = (int) $pdo->lastInsertId(); cl_log($id, 'Client added');
+        }
+        $in['cid'] = $id; $out(['id' => $id]);
+    case 'cl_status':   // active / past / archived
+        $c = $client(); $st = in_array($in['status'] ?? '', ['active', 'past', 'archived'], true) ? $in['status'] : 'active';
+        $pdo->prepare('UPDATE clients SET status = ?, updated = ? WHERE id = ?')->execute([$st, $now, (int) $c['id']]); $in['cid'] = (int) $c['id']; $out();
+    case 'cl_delete':
+        $c = $client();
+        foreach (['cl_plans', 'cl_bills', 'cl_care', 'cl_log'] as $t) $pdo->prepare("DELETE FROM $t WHERE client_id = ?")->execute([(int) $c['id']]);
+        $pdo->prepare('UPDATE leads SET client_id = 0 WHERE client_id = ?')->execute([(int) $c['id']]);
+        $pdo->prepare('DELETE FROM clients WHERE id = ?')->execute([(int) $c['id']]); unset($in['cid']); $out();
+    case 'cl_cfg':
+        $c = cl_cfg();
+        foreach (['biz' => 80, 'addr' => 300, 'email' => 120, 'phone' => 40, 'web' => 80, 'vat' => 30, 'footer' => 300] as $k => $m) if (isset($in[$k])) $c[$k] = $str($k, $m);
+        if (isset($in['grace'])) $c['grace'] = max(3, min(60, (int) $in['grace']));
+        if (isset($in['next_no']) && (int) $in['next_no'] > 0) $c['next_no'] = (int) $in['next_no'];
+        $c['email'] = strtolower($c['email']);
+        job_kv_set('cl_cfg', json_encode($c)); $out();
+
+    /* monthly plans */
+    case 'cl_plan_save':
+        $c = $client();
+        $f = ['title' => $str('title', 120), 'incl' => $str('incl', 2000), 'amount' => $pence('amount'), 'day' => max(1, min(28, (int) ($in['day'] ?? 1))), 'method' => ($in['method'] ?? '') === 'cash' ? 'cash' : 'card',
+            'grace' => max(3, min(60, (int) ($in['grace'] ?? cl_cfg()['grace']))), 'notes' => $str('notes', 2000), 'updated' => $now];
+        if ($f['title'] === '') json_out(['error' => 'Name the plan, e.g. "Ordering app · hosting, updates & support".'], 400);
+        if ($f['amount'] < 100) json_out(['error' => 'Put in the monthly price.'], 400);
+        if (($in['kind'] ?? 'monthly') !== 'monthly') json_out(['error' => 'Commission deals are coming soon. Track them separately for now.'], 400);
+        $pid = (int) ($in['plan'] ?? 0);
+        if ($pid) {
+            $p = $plan();
+            if ($p['stripe_sub'] !== '' && (int) $p['amount'] !== $f['amount']) json_out(['error' => 'This plan is already paying by card. To change the price, end it and set up a new one (so they agree to the new amount).'], 400);
+            $s = implode(', ', array_map(function ($k) { return "$k = ?"; }, array_keys($f))); $pdo->prepare("UPDATE cl_plans SET $s WHERE id = ?")->execute(array_merge(array_values($f), [$pid]));
+        } else {
+            do { $tok = rand_token(12); } while (cl_plan_by_token($tok));
+            $f += ['client_id' => (int) $c['id'], 'token' => $tok, 'kind' => 'monthly', 'status' => $f['method'] === 'cash' ? 'active' : 'draft', 'start' => $f['method'] === 'cash' ? $now : 0, 'created' => $now];
+            $pdo->prepare('INSERT INTO cl_plans (' . implode(', ', array_keys($f)) . ') VALUES (' . implode(',', array_fill(0, count($f), '?')) . ')')->execute(array_values($f));
+            cl_log((int) $c['id'], 'Monthly plan added: ' . $f['title'] . ' · ' . money($f['amount']) . '/month (' . $f['method'] . ')');
+        }
+        $in['cid'] = (int) $c['id']; $out();
+    case 'cl_plan_sent':
+        $p = $plan(); if ($p['status'] === 'draft') $pdo->prepare("UPDATE cl_plans SET status = 'sent', updated = ? WHERE id = ?")->execute([$now, (int) $p['id']]);
+        cl_log((int) $p['client_id'], 'Payment set-up link sent'); $in['cid'] = (int) $p['client_id']; $out();
+    case 'cl_plan_status':   // pause / resume / end
+        $p = $plan(); $to = $in['to'] ?? '';
+        if ($to === 'paused') { $pdo->prepare("UPDATE cl_plans SET status = 'paused', paused_at = ?, updated = ? WHERE id = ?")->execute([$now, $now, (int) $p['id']]); cl_log((int) $p['client_id'], 'Service paused (unpaid)'); }
+        elseif ($to === 'active') { $pdo->prepare("UPDATE cl_plans SET status = 'active', paused_at = 0, updated = ? WHERE id = ?")->execute([$now, (int) $p['id']]); cl_log((int) $p['client_id'], 'Plan active again'); }
+        elseif ($to === 'ended') {
+            if ($p['stripe_sub'] !== '') { try { stripe_call('DELETE', 'subscriptions/' . rawurlencode($p['stripe_sub'])); } catch (Throwable $e) { json_out(['error' => 'Stripe didn\'t cancel it: ' . $e->getMessage()], 400); } }
+            $pdo->prepare("UPDATE cl_plans SET status = 'ended', updated = ? WHERE id = ?")->execute([$now, (int) $p['id']]); cl_log((int) $p['client_id'], 'Plan ended: ' . $p['title']);
+        }
+        $in['cid'] = (int) $p['client_id']; $out();
+    case 'cl_plan_sync': $p = $plan(); cl_plan_sync($p); $in['cid'] = (int) $p['client_id']; $out();
+    case 'cl_bill_paid': $b = $bill(); cl_bill_paid((int) $b['id'], in_array($in['method'] ?? '', ['cash', 'card', 'other'], true) ? $in['method'] : 'cash'); $in['cid'] = (int) $b['client_id']; $out();
+    case 'cl_bill_more': $b = $bill(); $pdo->prepare('UPDATE cl_bills SET extra_days = extra_days + ?, stage = MIN(stage, 3) WHERE id = ?')->execute([max(1, min(30, (int) ($in['days'] ?? 7))), (int) $b['id']]);
+        cl_log((int) $b['client_id'], 'Gave them ' . (int) ($in['days'] ?? 7) . ' more days to pay'); $in['cid'] = (int) $b['client_id']; $out();
+    case 'cl_bill_void': $b = $bill(); $pdo->prepare("UPDATE cl_bills SET status = 'void', wa_due = 0 WHERE id = ?")->execute([(int) $b['id']]); cl_log((int) $b['client_id'], 'Wrote off ' . money((int) $b['amount'])); $in['cid'] = (int) $b['client_id']; $out();
+    case 'cl_bill_reminded': $b = $bill(); $pdo->prepare('UPDATE cl_bills SET wa_due = 0 WHERE id = ?')->execute([(int) $b['id']]); cl_log((int) $b['client_id'], 'Payment reminder sent on WhatsApp'); $in['cid'] = (int) $b['client_id']; $out();
+    case 'cl_bill_add':   // cash plan: add this month's bill by hand
+        $p = $plan(); $per = preg_match('/^\d{4}-\d{2}$/', (string) ($in['period'] ?? '')) ? $in['period'] : date('Y-m');
+        $pdo->prepare('INSERT OR IGNORE INTO cl_bills (plan_id, client_id, period, amount, due, created) VALUES (?,?,?,?,?,?)')->execute([(int) $p['id'], (int) $p['client_id'], $per, (int) $p['amount'], $now, $now]);
+        $in['cid'] = (int) $p['client_id']; $out();
+
+    /* invoices */
+    case 'cl_inv_sent':
+        $i = inv_get((int) ($in['inv'] ?? 0)); if (!$i) json_out(['error' => 'Invoice not found.'], 404);
+        $via = in_array($in['via'] ?? '', ['whatsapp', 'email', 'copy'], true) ? $in['via'] : 'copy';
+        if ($via === 'email') {
+            if (!filter_var((string) $i['email'], FILTER_VALIDATE_EMAIL)) json_out(['error' => 'No email address for them. Add one on their client page.'], 400);
+            $cfg = mail_cfg(); if (!$cfg) json_out(['error' => 'Set up the Email tab first.'], 400);
+            try { [$msg] = mail_build($cfg, [$i['email']], [], 'Invoice ' . inv_no($i) . ' from ' . cl_cfg()['biz'], inv_msg($i)); smtp_send($cfg, [$i['email']], $msg); }
+            catch (Throwable $e) { json_out(['error' => 'The email didn\'t send: ' . $e->getMessage()], 400); }
+        }
+        $pdo->prepare('UPDATE invoices SET sent_at = ?, sent_via = ? WHERE id = ?')->execute([$now, $via, (int) $i['id']]);
+        if ((int) $i['client_id']) cl_log((int) $i['client_id'], 'Invoice ' . inv_no($i) . ' sent (' . $via . ')');
+        $out();
+    case 'cl_inv_new':   // a manual invoice (e.g. cash work done outside Jobs)
+        $c = $client(); $items = job_items_clean($in['items'] ?? []);
+        if (!$items) json_out(['error' => 'Add at least one line.'], 400);
+        $paid = !empty($in['paid']);
+        $id = inv_make(['client_id' => (int) $c['id'], 'client' => $c['name'], 'person' => $c['person'], 'phone' => $c['phone'], 'email' => $c['email'], 'address' => $c['address'], 'title' => $str('title', 160),
+            'items' => $items, 'total' => job_total($items), 'paid' => (int) $paid, 'paid_at' => $paid ? $now : 0, 'method' => $paid ? (in_array($in['method'] ?? '', ['cash', 'card', 'other'], true) ? $in['method'] : 'cash') : '', 'src' => 'manual', 'note' => $str('note', 600)]);
+        $in['cid'] = (int) $c['id']; $out(['inv' => $id]);
+    case 'cl_inv_skip':   // don't need to send this one
+        $i = inv_get((int) ($in['inv'] ?? 0)); if (!$i) json_out(['error' => 'Invoice not found.'], 404);
+        $pdo->prepare("UPDATE invoices SET sent_at = ?, sent_via = 'skipped' WHERE id = ?")->execute([$now, (int) $i['id']]); $out();
+
+    /* care & renewals */
+    case 'cl_care_add':   // several templates at once
+        $c = $client(); $target = $str('target', 200);
+        if ($target !== '' && $c['website'] === '') $pdo->prepare('UPDATE clients SET website = ? WHERE id = ?')->execute([$target, (int) $c['id']]);
+        $n = 0;
+        foreach ((array) ($in['items'] ?? []) as $it) {
+            $tpl = (string) ($it['tpl'] ?? ''); $T = CARE_TPL[$tpl] ?? null;
+            $title = mb_substr(trim((string) ($it['title'] ?? ($T[1] ?? ''))), 0, 120); if ($title === '') continue;
+            $kind = $T[0] ?? (in_array($it['kind'] ?? '', ['renew', 'check'], true) ? $it['kind'] : 'check');
+            $every = isset(CARE_EVERY[$it['every'] ?? '']) ? $it['every'] : ($T[2] ?? 'month');
+            $due = (int) ($it['due'] ?? 0) ?: ($kind === 'check' ? $now + 7 * 86400 : 0);
+            $pdo->prepare('INSERT INTO cl_care (client_id, tpl, kind, title, target, every, due, client_pays, price, notes, created, updated) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)')
+                ->execute([(int) $c['id'], $tpl, $kind, $title, $target, $every, $due, (int) !empty($it['client_pays']), max(0, (int) round(((float) ($it['price'] ?? 0)) * 100)), mb_substr((string) ($it['notes'] ?? ''), 0, 600), $now, $now]);
+            $n++;
+        }
+        cl_log((int) $c['id'], $n . ' care check' . ($n === 1 ? '' : 's') . ' added');
+        $in['cid'] = (int) $c['id']; $out(['added' => $n]);
+    case 'cl_care_save':
+        $k = $care();
+        $pdo->prepare('UPDATE cl_care SET title = ?, target = ?, every = ?, due = ?, client_pays = ?, price = ?, notes = ?, status = ?, updated = ? WHERE id = ?')
+            ->execute([$str('title', 120) ?: $k['title'], $str('target', 200), isset(CARE_EVERY[$in['every'] ?? '']) ? $in['every'] : $k['every'], max(0, (int) ($in['due'] ?? 0)), (int) !empty($in['client_pays']), $pence('price'), $str('notes', 600), ($in['status'] ?? 'on') === 'off' ? 'off' : 'on', $now, (int) $k['id']]);
+        $in['cid'] = (int) $k['client_id']; $out();
+    case 'cl_care_done':   // ticked off: log it, set the next date
+        $k = $care(); $note = $str('note', 600); $ok = ($in['ok'] ?? 1) ? 1 : 0;
+        $from = $k['kind'] === 'renew' && (int) $k['due'] > 0 ? (int) $k['due'] : $now;
+        $next = care_next($k['every'], $from); if ($k['kind'] === 'renew' && isset($in['next']) && (int) $in['next'] > 0) $next = (int) $in['next'];
+        $pdo->prepare('UPDATE cl_care SET last_done = ?, last_ok = ?, last_result = ?, due = ?, updated = ? WHERE id = ?')->execute([$now, $ok, $note !== '' ? $note : ($k['kind'] === 'renew' ? 'Renewed' : 'Done'), $next, $now, (int) $k['id']]);
+        $pdo->prepare('INSERT INTO cl_care_log (care_id, at, ok, text) VALUES (?,?,?,?)')->execute([(int) $k['id'], $now, $ok, $note !== '' ? $note : ($k['kind'] === 'renew' ? 'Renewed' : 'Done')]);
+        cl_log((int) $k['client_id'], $k['title'] . ': ' . ($k['kind'] === 'renew' ? 'renewed' : 'done') . ($note !== '' ? ' (' . $note . ')' : ''));
+        $in['cid'] = (int) ($in['cid'] ?? 0) ?: 0; $out();
+    case 'cl_care_snooze': $k = $care(); $pdo->prepare('UPDATE cl_care SET due = ?, updated = ? WHERE id = ?')->execute([$now + max(1, min(60, (int) ($in['days'] ?? 3))) * 86400, $now, (int) $k['id']]); $out();
+    case 'cl_care_run':
+        $k = $care(); [$ok, $txt, $due] = care_run($k);
+        $pdo->prepare('UPDATE cl_care SET last_run = ?, last_ok = ?, last_result = ?, due = ?, fails = ?, updated = ? WHERE id = ?')->execute([$now, (int) $ok, $txt, $due ?: (int) $k['due'], $ok ? 0 : (int) $k['fails'] + 1, $now, (int) $k['id']]);
+        $pdo->prepare('INSERT INTO cl_care_log (care_id, at, ok, text) VALUES (?,?,?,?)')->execute([(int) $k['id'], $now, (int) $ok, $txt]);
+        $in['cid'] = (int) ($in['cid'] ?? 0); $out(['result' => $txt, 'good' => $ok]);
+    case 'cl_care_del': $k = $care(); $pdo->prepare('DELETE FROM cl_care WHERE id = ?')->execute([(int) $k['id']]); $pdo->prepare('DELETE FROM cl_care_log WHERE care_id = ?')->execute([(int) $k['id']]); $out();
+
+    /* leads */
+    case 'cl_lead_parse':   // "tell me about the lead" → fields (AI if the key is set)
+        $t = $str('text', 3000); if ($t === '') json_out(['error' => 'Write a line or two about the lead.'], 400);
+        json_out(['ok' => true, 'fields' => lead_parse($t), 'ai' => ai_key() !== '']);
+    case 'cl_lead_save':
+        $f = ['name' => $str('name', 120), 'business' => $str('business', 120), 'phone' => preg_replace('/[^0-9+ ]/', '', $str('phone', 30)), 'email' => strtolower($str('email', 160)),
+            'area' => isset(JOB_AREAS[$in['area'] ?? '']) ? $in['area'] : '', 'what' => $str('what', 300), 'value' => $pence('value'), 'source' => isset(LEAD_SOURCES[$in['source'] ?? '']) ? $in['source'] : '',
+            'status' => isset(LEAD_STATUS[$in['status'] ?? '']) ? $in['status'] : 'new', 'next_at' => max(0, (int) ($in['next_at'] ?? 0)), 'next_what' => $str('next_what', 160), 'notes' => $str('notes', 4000),
+            'lost_why' => $str('lost_why', 300), 'updated' => $now];
+        if ($f['name'] === '' && $f['business'] === '') json_out(['error' => 'Who is it? A name or a business.'], 400);
+        $lid = (int) ($in['lead'] ?? 0);
+        if ($lid) { $lead(); $s = implode(', ', array_map(function ($k) { return "$k = ?"; }, array_keys($f))); $pdo->prepare("UPDATE leads SET $s WHERE id = ?")->execute(array_merge(array_values($f), [$lid])); }
+        else { $f += ['via' => $str('via', 20) ?: 'admin', 'created' => $now]; $pdo->prepare('INSERT INTO leads (' . implode(', ', array_keys($f)) . ') VALUES (' . implode(',', array_fill(0, count($f), '?')) . ')')->execute(array_values($f)); $lid = (int) $pdo->lastInsertId(); }
+        $out(['lead' => $lid]);
+    case 'cl_lead_add_text':   // from other Claude chats (workflow "Add a lead"): free text in, parsed, saved
+        $t = $str('text', 3000); if ($t === '') json_out(['error' => 'Empty.'], 400);
+        $f = lead_parse($t);
+        $pdo->prepare('INSERT INTO leads (name, business, phone, email, area, what, value, source, status, next_at, next_what, notes, via, created, updated) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)')
+            ->execute([$f['name'] ?? '', $f['business'] ?? '', $f['phone'] ?? '', $f['email'] ?? '', $f['area'] ?? '', $f['what'] ?? '', (int) ($f['value'] ?? 0), $f['source'] ?? '', $f['status'] ?? 'new',
+                (int) ($f['next_at'] ?? strtotime('tomorrow 10:00')), $f['next_what'] ?? '', $t, 'claude', $now, $now]);
+        $lid = (int) $pdo->lastInsertId();
+        try { push_all('New lead added', trim(($f['business'] ?? '') . ' ' . ($f['name'] ?? '')) . ($f['what'] ?? '' ? ': ' . $f['what'] : ''), '/demo-admin/#leads', 'lead-' . $lid); } catch (Throwable $e) {}
+        json_out(['ok' => true, 'lead' => $lid, 'fields' => $f]);
+    case 'cl_lead_move':   // status / follow-up quick changes
+        $l = $lead(); $f = ['updated' => $now];
+        if (isset($in['status']) && isset(LEAD_STATUS[$in['status']])) $f['status'] = $in['status'];
+        if (isset($in['next_at'])) $f['next_at'] = max(0, (int) $in['next_at']);
+        if (isset($in['next_what'])) $f['next_what'] = $str('next_what', 160);
+        if (isset($in['lost_why'])) $f['lost_why'] = $str('lost_why', 300);
+        if (isset($in['add_note']) && trim((string) $in['add_note']) !== '') $f['notes'] = trim($l['notes'] . "\n" . date('j M') . ': ' . $str('add_note', 600));
+        $s = implode(', ', array_map(function ($k) { return "$k = ?"; }, array_keys($f))); $pdo->prepare("UPDATE leads SET $s WHERE id = ?")->execute(array_merge(array_values($f), [(int) $l['id']]));
+        $out();
+    case 'cl_lead_win':   // won: becomes a client
+        $l = $lead();
+        $cid = cl_upsert(['name' => $l['business'] !== '' ? $l['business'] : $l['name'], 'person' => $l['business'] !== '' ? $l['name'] : '', 'phone' => $l['phone'], 'email' => $l['email']], 'lead');
+        $pdo->prepare("UPDATE leads SET status = 'won', client_id = ?, next_at = 0, updated = ? WHERE id = ?")->execute([$cid, $now, (int) $l['id']]);
+        cl_log($cid, 'Won from a lead' . ($l['what'] !== '' ? ': ' . $l['what'] : ''));
+        $in['cid'] = $cid; $out(['cid' => $cid]);
+    case 'cl_lead_del': $l = $lead(); $pdo->prepare('DELETE FROM leads WHERE id = ?')->execute([(int) $l['id']]); $out();
+    }
+    json_out(['error' => 'Unknown action'], 400);
+}
+
 /* ---------- jobs & payments (demo-lib/jobs.php) ---------- */
 if (strpos($a, 'j_') === 0) {
     require_once dirname(__DIR__) . '/demo-lib/jobs.php';

@@ -16,7 +16,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)
 # (sources, output). The admin pages shown inside SMR Admin (games, analytics) follow the same switch
 # (localStorage smr_theme, shared on the site, plus a postMessage when it's flipped).
 TARGETS = [
-    (['demo-admin/index.php', 'demo-admin/planner.js', 'demo-admin/jobs.js', 'demo-admin/proofs.js'], 'demo-admin/light.css', True),
+    (['demo-admin/index.php', 'demo-admin/planner.js', 'demo-admin/jobs.js', 'demo-admin/proofs.js', 'demo-admin/clients.js'], 'demo-admin/light.css', True),
     (['flappy/admin.php'], 'flappy/admin-light.css', False),
     (['jummahdash/admin.php'], 'jummahdash/admin-light.css', False),
     (['music/stats.php'], 'music/stats-light.css', False),
