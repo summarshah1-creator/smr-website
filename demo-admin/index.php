@@ -276,6 +276,27 @@ html.cpopen,body.cpopen{overscroll-behavior:none}
 .ev i{width:8px;height:8px;border-radius:50%;background:#cfc4ff;flex:none}.ev.opened i{background:#3ddc97}.ev.low i{background:var(--warn)}.ev.ended i{background:var(--bad)}
 .ev span{flex:1;min-width:0}.ev small{color:var(--muted);font-size:12px;white-space:nowrap}
 @media(max-width:600px){.logo b{display:none}}
+
+/* side menu (owner 24 Nov) */
+#navbtn{position:relative;margin-right:2px}#navbtn .ndot{position:absolute;top:6px;right:6px;width:9px;height:9px;border-radius:50%;background:#ff5470;box-shadow:0 0 0 2px #08080f;transform:scale(0);transition:transform .25s cubic-bezier(.3,1.6,.5,1)}#navbtn.has .ndot{transform:scale(1)}
+.dscrim{position:fixed;inset:0;z-index:84;background:rgba(3,3,10,.55);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .34s ease}
+.dscrim.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;z-index:85;top:0;bottom:0;left:0;width:min(290px,82vw);display:flex;flex-direction:column;background:linear-gradient(180deg,#141327,#0b0b15);border-right:1px solid var(--line);padding:calc(12px + env(safe-area-inset-top)) 12px calc(16px + env(safe-area-inset-bottom));transform:translate3d(-104%,0,0);transition:transform .38s cubic-bezier(.22,.9,.24,1),box-shadow .38s;will-change:transform;touch-action:pan-y}
+.drawer.on{transform:translate3d(0,0,0);box-shadow:24px 0 60px -20px rgba(0,0,0,.8)}
+.drawer.drag{transition:none}
+.dhd{display:flex;align-items:center;gap:10px;padding:2px 4px 16px;border-bottom:1px solid var(--line);margin-bottom:12px}
+.drawer .tabs.dnav{flex-direction:column;background:none;border:0;padding:0;gap:4px;border-radius:0}
+.drawer .tabs.dnav button{display:flex;align-items:center;gap:13px;width:100%;padding:13px 14px;border-radius:14px;font-size:15.5px;font-weight:700;color:#d9d9ea;text-align:left;opacity:0;transform:translateX(-14px);transition:opacity .3s,transform .38s cubic-bezier(.22,.9,.24,1),background .2s,color .2s}
+.drawer.on .tabs.dnav button{opacity:1;transform:none}
+.drawer.on .tabs.dnav button:nth-child(1){transition-delay:.05s,.05s,0s,0s}.drawer.on .tabs.dnav button:nth-child(2){transition-delay:.08s,.08s,0s,0s}.drawer.on .tabs.dnav button:nth-child(3){transition-delay:.11s,.11s,0s,0s}.drawer.on .tabs.dnav button:nth-child(4){transition-delay:.14s,.14s,0s,0s}.drawer.on .tabs.dnav button:nth-child(5){transition-delay:.17s,.17s,0s,0s}.drawer.on .tabs.dnav button:nth-child(6){transition-delay:.2s,.2s,0s,0s}
+.drawer .tabs.dnav button svg{width:21px;height:21px;flex:none;color:#a99bff}
+.drawer .tabs.dnav button .lb{flex:1}
+.drawer .tabs.dnav button:active{background:rgba(255,255,255,.06)}
+.drawer .tabs.dnav button.on{background:linear-gradient(110deg,rgba(91,91,255,.28),rgba(214,59,255,.22));color:#fff;box-shadow:inset 0 0 0 1px rgba(214,59,255,.45)}
+.drawer .tabs.dnav button.on svg{color:#fff}
+.drawer .cnt{margin-left:auto}
+.dft{margin-top:auto;padding:12px 6px 0;font-size:11.5px;color:var(--muted);opacity:.7}
+@media(min-width:1100px){.drawer{transform:none;box-shadow:none;width:250px}.drawer .tabs.dnav button{opacity:1;transform:none}.dscrim,#navbtn,#navx,.dft,.top>.logo{display:none}.top{justify-content:flex-end}body:has(#drawer){padding-left:250px}}
 </style>
 </head>
 <body>
@@ -311,17 +332,11 @@ document.addEventListener('keydown',function(e){if(/^\d$/.test(e.key))press(e.ke
 <?php else: ?>
 <div class="wrap">
   <div class="top">
+    <button class="btn sm icon" id="navbtn" aria-label="Open menu" aria-controls="drawer" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg><i class="ndot"></i></button>
     <div class="logo"><?= $mark ?><span>Digital</span><b>Admin</b></div>
     <button class="btn sm icon" id="refresh" aria-label="Refresh" title="Refresh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg></button>
     <button class="btn sm icon" id="acct" aria-label="Settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></button>
-    <nav class="tabs" role="tablist">
-      <button data-grp="today" role="tab">Today<span class="cnt bad" id="plcnt"></span></button>
-      <button data-grp="mail" role="tab">Email<span class="cnt" id="mailcnt"></span></button>
-      <button data-grp="games" role="tab">Games<span class="cnt" id="fkcnt"></span></button>
-      <button data-grp="music" role="tab">Music</button>
-      <button data-grp="stats" role="tab">Stats</button>
-      <button data-grp="demos" role="tab">Demos</button>
-    </nav>
+
     <nav class="subtabs" id="subtabs" role="tablist">
       <button data-tab="demos" role="tab">My demos</button>
       <button data-tab="send" role="tab">Send</button>
@@ -329,6 +344,20 @@ document.addEventListener('keydown',function(e){if(/^\d$/.test(e.key))press(e.ke
       <button data-tab="designs" role="tab">Designs</button>
     </nav>
   </div>
+
+  <div class="dscrim" id="dscrim"></div>
+  <aside class="drawer" id="drawer" aria-label="Menu">
+    <div class="dhd"><div class="logo"><?= $mark ?><span>Digital</span><b>Admin</b></div><button class="btn sm icon" id="navx" aria-label="Close menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <nav class="tabs dnav" role="tablist">
+      <button data-grp="today" role="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg><span class="lb">Today</span><span class="cnt bad" id="plcnt"></span></button>
+      <button data-grp="mail" role="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg><span class="lb">Email</span><span class="cnt" id="mailcnt"></span></button>
+      <button data-grp="games" role="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="11" rx="5"/><path d="M7 11v4M5 13h4"/><circle cx="15.5" cy="12" r="1" fill="currentColor"/><circle cx="18" cy="14" r="1" fill="currentColor"/></svg><span class="lb">Games</span><span class="cnt" id="fkcnt"></span></button>
+      <button data-grp="music" role="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg><span class="lb">Music</span></button>
+      <button data-grp="stats" role="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><span class="lb">Analytics</span></button>
+      <button data-grp="demos" role="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/></svg><span class="lb">Demos</span><span class="cnt" id="dmcnt" title="Live links"></span></button>
+    </nav>
+    <div class="dft">Swipe from the left edge to open</div>
+  </aside>
 
   <!-- TODAY (planner.js) -->
   <section id="tab-today" class="tab hidden"><div id="pl"><div class="empty">Loading…</div></div></section>
@@ -1167,6 +1196,29 @@ if(/[?&]r=\d/.test(location.search))history.replaceState(null,'',location.pathna
 var hiddenAt=0;
 document.addEventListener('visibilitychange',function(){if(document.hidden){hiddenAt=Date.now();return}
   if(hiddenAt&&Date.now()-hiddenAt>10*60*1000&&!cpOpen){location.reload();return}load()});
+
+/* ---------- side menu: button, swipe from the left edge, swipe to close ---------- */
+(function(){var dr=$('drawer'),sc=$('dscrim'),nb=$('navbtn');if(!dr)return;
+var wide=function(){return matchMedia('(min-width:1100px)').matches};
+var isOpen=false,W=function(){return dr.offsetWidth||290};
+var set=function(o){isOpen=o;dr.classList.remove('drag');dr.style.transform='';sc.style.opacity='';dr.classList.toggle('on',o);sc.classList.toggle('on',o);nb.setAttribute('aria-expanded',o?'true':'false')};
+nb.addEventListener('click',function(){set(true)});$('navx').addEventListener('click',function(){set(false)});sc.addEventListener('click',function(){set(false)});
+dr.addEventListener('click',function(e){if(e.target.closest('[data-grp]')&&!wide())setTimeout(function(){set(false)},60)});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&isOpen)set(false)});
+var sx=0,sy=0,dx=0,mode='',t0=0;
+var blocked=function(){return document.querySelector('.sheet.on,.ov.on')||(typeof cpOpen!=='undefined'&&cpOpen)};
+document.addEventListener('touchstart',function(e){if(wide()||e.touches.length>1)return;var t=e.touches[0];sx=t.clientX;sy=t.clientY;dx=0;mode='';t0=Date.now();
+  if(!isOpen&&sx<26&&!blocked())mode='open?';else if(isOpen)mode='close?'},{passive:true});
+document.addEventListener('touchmove',function(e){if(!mode)return;var t=e.touches[0],mx=t.clientX-sx,my=t.clientY-sy;
+  if(mode==='open?'||mode==='close?'){if(Math.abs(mx)<8&&Math.abs(my)<8)return;if(Math.abs(my)>Math.abs(mx)){mode='';return}mode=mode==='open?'?'open':'close';dr.classList.add('drag');sc.classList.add('on')}
+  var w=W(),p=mode==='open'?Math.max(0,Math.min(1,mx/w)):Math.max(0,Math.min(1,1+mx/w));dx=mx;
+  dr.style.transform='translate3d('+((p-1)*104)+'%,0,0)';sc.style.opacity=p;e.preventDefault()},{passive:false});
+document.addEventListener('touchend',function(){if(mode!=='open'&&mode!=='close'){mode='';return}var w=W(),v=dx/Math.max(1,Date.now()-t0);
+  var open=mode==='open'?(dx>w*.33||v>.45):!(dx<-w*.33||v<-.45);mode='';requestAnimationFrame(function(){set(open)})});
+// red dot on the menu button when anything has a count
+var dm=$('dmcnt'),lc=$('livecnt');var dot=function(){if(dm&&lc&&dm.textContent!==lc.textContent)dm.textContent=lc.textContent;var any=[].some.call(dr.querySelectorAll('.cnt:not(#dmcnt)'),function(c){return c.textContent.trim()!==''});if(nb.classList.contains('has')!==any)nb.classList.toggle('has',any)};
+var dq=0;new MutationObserver(function(){if(!dq)dq=requestAnimationFrame(function(){dq=0;dot()})}).observe(document.querySelector('.wrap'),{subtree:true,childList:true,characterData:true});dot();
+})();
 window.SMRA={api:api,openSheet:openSheet,closeSheet:closeSheet,toast:toast,esc:esc,copy:copy,waUrl:waUrl,enablePush:enablePush};
 })();
 </script>
