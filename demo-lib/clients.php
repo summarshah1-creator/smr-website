@@ -98,6 +98,50 @@ function cl_sync(): void {
     foreach ($pdo->query("SELECT client, person, phone, email FROM jobs WHERE status != 'cancelled'")->fetchAll() as $j) cl_upsert(['name' => $j['client'], 'person' => $j['person'], 'phone' => $j['phone'], 'email' => $j['email']], 'jobs');
     try { foreach ($pdo->query('SELECT client, person, phone, email FROM proof_sets')->fetchAll() as $s) cl_upsert(['name' => $s['client'], 'person' => $s['person'], 'phone' => $s['phone'], 'email' => $s['email']], 'proofs'); } catch (Throwable $e) {}
     try { foreach ($pdo->query("SELECT client, phone FROM design_sets WHERE client != ''")->fetchAll() as $s) cl_upsert(['name' => $s['client'], 'phone' => $s['phone']], 'designs'); } catch (Throwable $e) {}
+    cl_seed_once($pdo);
+}
+/* Once (owner 24 Nov): everyone on the Today list becomes a current client, and the brands SMR has worked with become past clients.
+   Runs one time only (job_kv cl_seed1), so a client he deletes stays deleted. */
+const CL_PAST = [
+    ['Kaya Lounge', 'food', 'active'], ['Smash N Wings Bedford', 'food', 'active'], ['Toro’s Steakhouse', 'food', 'past'], ['Grand Royale', 'other', 'past'],
+    ['Beef King', 'food', 'past'], ['Krispy Lemon Chicken', 'food', 'past'], ['Round Green Chippy', 'food', 'past'], ['Chai Express', 'cafe', 'past'],
+    ['One Ummah', 'charity', 'past'], ['Mane Men', 'beauty', 'past'], ['The Engine', 'other', 'past'], ['Alloy Engineers', 'trade', 'past'],
+    ['FRP Security & Printing', 'trade', 'past'], ['TutorBook', 'school', 'past'], ['Amee Jee', 'food', 'past'], ['Allure Club', 'cafe', 'past'],
+    ['The Courtney Foundation', 'charity', 'past'], ['NGS Youth & Community', 'charity', 'past'],
+    ['Let\'s Eat Together', 'charity', 'past'], ['Nurify Skin', 'beauty', 'past'], ['Lala Jee', 'food', 'past'],
+];
+function cl_guess_type(string $n): string {
+    $n = strtolower($n);
+    foreach (['food' => 'peri|pizza|chicken|grill|smash|wings|chippy|kebab|burger|junglees|flamez|flava|crave|chunk|steak|curry|lounge|mr chicken|phillyz|bombay|crispy',
+              'cafe' => 'tim & ed|cafe|caf\x{e9}|chai|kahwa|coffee|brew|choccos|dessert|mikael', 'beauty' => 'barber|fade|valor|salon|skin|beauty',
+              'charity' => 'foundation|charity|foodbank|mission|masjid|mosque|centre|inspire|empowering|ummah', 'school' => 'school|college|academy|tutor',
+              'pro' => 'law|solicitor|accountant', 'shop' => 'supplement|clothing|rouh|shop|store',
+              'trade' => 'tyres|auto|wash|av\b|pulse|packaging|archery|jewell|uniform|amped|print'] as $t => $re)
+        if (preg_match('/' . $re . '/u', $n)) return $t;
+    return 'other';
+}
+function cl_seed_once(PDO $pdo): void {
+    if (job_kv('cl_seed1') !== '') return;
+    if (function_exists('pl_db')) { try { pl_db(); } catch (Throwable $e) {} }
+    job_kv_set('cl_seed1', (string) now());
+    try {
+        $rows = $pdo->query("SELECT person, phone FROM pl_items WHERE person != '' AND area != 'personal' ORDER BY id")->fetchAll();
+    } catch (Throwable $e) { $rows = []; }
+    $skip = ['smr admin', 'car', 'family'];
+    foreach ($rows as $r) {
+        $p = trim($r['person']); if (in_array(strtolower($p), $skip, true)) continue;
+        $person = ''; $name = $p;
+        if (preg_match('/^(.+?)\s*\((.+)\)$/', $p, $m)) { $person = trim($m[1]); $name = trim($m[2]);
+            if (preg_match("/'s (friend|mate|brother|sister|cousin)$/i", $name)) { $name = $person; $person = ''; } }
+        $id = cl_upsert(['name' => $name, 'person' => $person, 'phone' => $r['phone'] ?? ''], 'todo');
+        if ($id) $pdo->prepare("UPDATE clients SET type = ? WHERE id = ? AND type = 'other'")->execute([cl_guess_type($name), $id]);
+    }
+    foreach (CL_PAST as [$name, $type, $status]) {
+        $old = cl_find('', $name);
+        if ($old) continue;   // already a current client from the list above
+        $id = cl_upsert(['name' => $name, 'type' => $type], 'brands');
+        if ($id) $pdo->prepare('UPDATE clients SET status = ? WHERE id = ?')->execute([$status, $id]);
+    }
 }
 function cl_same(array $c, string $phone, string $name): bool {
     $kp = cl_kp($phone);
