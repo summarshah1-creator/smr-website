@@ -460,7 +460,7 @@ function cl_logo(array $c): string {
     $id = (int) $c['id'];
     if (!empty($c['logo'])) return '/demo-admin/clogo.php?id=' . $id . '&v=' . (int) $c['logo'];
     $kn = cl_kn((string) $c['name']);
-    if (isset(CL_LOGOS[$kn])) return '/demo-admin/clogo/' . CL_LOGOS[$kn] . '.webp?v=' . (CL_LOGOS[$kn] === 'eae' ? 3 : 1);
+    if (isset(CL_LOGOS[$kn])) return '/demo-admin/clogo/' . CL_LOGOS[$kn] . '.webp?v=' . (CL_LOGOS[$kn] === 'eae' ? 4 : 1);
     foreach (CL_LOGOS as $k => $f) if (strlen($k) >= 5 && strpos($kn, $k) === 0) return '/demo-admin/clogo/' . $f . '.webp?v=1';
     return '';
 }
