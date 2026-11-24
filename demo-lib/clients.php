@@ -103,6 +103,11 @@ function cl_sync(): void {
 }
 /* Once (owner 24 Nov): everyone on the Today list becomes a current client, and the brands SMR has worked with become past clients.
    Runs one time only (job_kv cl_seed1), so a client he deletes stays deleted. */
+const CL_SITE = [   // the website's "Trusted by businesses & charities" carousel (CLIENTS in index.html)
+    ['Smash N Wings Bedford', 'food'], ['Kaya Lounge', 'food'], ['Inspire FM', 'charity'], ['Toro’s Steakhouse', 'food'], ['Grand Royale', 'other'], ['Beef King', 'food'],
+    ['Krispy Lemon Chicken', 'food'], ['Round Green Chippy', 'food'], ['Chai Express', 'cafe'], ['One Ummah', 'charity'], ['Mane Men', 'beauty'], ['Chaiikhana', 'cafe'],
+    ['The Engine', 'other'], ['Alloy Engineers', 'trade'], ['FRP Security & Printing', 'trade'], ['TutorBook', 'school'], ['Amee Jee', 'food'],
+];
 const CL_PAST = [
     ['Kaya Lounge', 'food', 'active'], ['Smash N Wings Bedford', 'food', 'active'], ['Toro’s Steakhouse', 'food', 'past'], ['Grand Royale', 'other', 'past'],
     ['Beef King', 'food', 'past'], ['Krispy Lemon Chicken', 'food', 'past'], ['Round Green Chippy', 'food', 'past'], ['Chai Express', 'cafe', 'past'],
@@ -122,6 +127,15 @@ function cl_guess_type(string $n): string {
     return 'other';
 }
 function cl_seed_once(PDO $pdo): void {
+    /* Owner 24 Nov: every company in the website's "Trusted by" carousel is a regular client, so they're current, not past. Once. */
+    if (job_kv('cl_fix_site') === '') {
+        job_kv_set('cl_fix_site', (string) now());
+        foreach (CL_SITE as [$name, $type]) {
+            $c = cl_find('', $name);
+            if ($c) { if ($c['status'] === 'past') $pdo->prepare("UPDATE clients SET status = 'active', updated = ? WHERE id = ?")->execute([now(), (int) $c['id']]); }
+            else { $id = cl_upsert(['name' => $name, 'type' => $type], 'website'); if ($id) cl_log($id, 'Added from the website client list'); }
+        }
+    }
     if (job_kv('cl_fix_eae') === '') { job_kv_set('cl_fix_eae', '1'); $pdo->exec("UPDATE clients SET type = 'school' WHERE keyn = 'eaecentre' AND type = 'charity'"); }
     if (job_kv('cl_seed1') !== '') return;
     if (function_exists('pl_db')) { try { pl_db(); } catch (Throwable $e) {} }
