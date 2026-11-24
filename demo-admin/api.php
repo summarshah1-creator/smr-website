@@ -214,7 +214,7 @@ if (strpos($a, 'mail_') === 0) {
             json_out(['uid' => $uid, 'folder' => $f,
                 'from' => mail_addr_list($hh['from'] ?? '')[0] ?? ['name' => '', 'email' => ''],
                 'reply_to' => mail_addr_list($hh['reply-to'] ?? '')[0]['email'] ?? '',
-                'to' => mail_addr_list($hh['to'] ?? ''), 'cc' => mail_addr_list($hh['cc'] ?? ''),
+                'to' => mail_addr_list($hh['to'] ?? ''), 'cc' => mail_addr_list($hh['cc'] ?? ''), 'bcc' => mail_addr_list($hh['bcc'] ?? ''),
                 'subject' => mail_hdr_decode($hh['subject'] ?? ''), 'date' => strtotime($hh['date'] ?? '') ?: 0,
                 'message_id' => trim($hh['message-id'] ?? ''), 'references' => trim($hh['references'] ?? ''),
                 'text' => mb_substr(preg_replace("/\n{3,}/", "\n\n", $text), 0, 20000),
@@ -258,7 +258,7 @@ if (strpos($a, 'mail_') === 0) {
             $id = (string) ($in['draft'] ?? '');
             mail_att_dir($id); // checks the id
             $keepStr = function ($v, $n) { return mb_substr((string) $v, 0, $n); };
-            $d = ['to' => $keepStr($in['to'] ?? '', 2000), 'cc' => $keepStr($in['cc'] ?? '', 2000), 'subject' => $keepStr($in['subject'] ?? '', 300),
+            $d = ['to' => $keepStr($in['to'] ?? '', 2000), 'cc' => $keepStr($in['cc'] ?? '', 2000), 'bcc' => $keepStr($in['bcc'] ?? '', 2000), 'subject' => $keepStr($in['subject'] ?? '', 300),
                 'html' => mail_clean_html((string) ($in['html'] ?? '')), 'text' => $keepStr($in['text'] ?? '', 100000), 'quote' => $keepStr($in['quote'] ?? '', 100000),
                 'in_reply_to' => $keepStr($in['in_reply_to'] ?? '', 500), 'references' => $keepStr($in['references'] ?? '', 4000), 'uid' => (int) ($in['uid'] ?? 0),
                 'reply' => !empty($in['reply']), 'fwd' => array_slice(array_values(array_filter((array) ($in['fwd'] ?? []), 'is_array')), 0, 40)];
@@ -291,7 +291,7 @@ if (strpos($a, 'mail_') === 0) {
             json_out(['ok' => true]);
         case 'mail_send':
             $cfg = $need();
-            $to = $addrs($in['to'] ?? ''); $cc = $addrs($in['cc'] ?? '');
+            $to = $addrs($in['to'] ?? ''); $cc = $addrs($in['cc'] ?? ''); $bcc = $addrs($in['bcc'] ?? '');
             if (!$to) json_out(['error' => 'Who is it to? Add an email address.'], 400);
             $subject = trim(str_replace(["\r", "\n"], ' ', (string) ($in['subject'] ?? '')));
             $body = (string) ($in['body'] ?? '');
@@ -329,10 +329,12 @@ if (strpos($a, 'mail_') === 0) {
             if ($size > MAIL_ATT_MAX) json_out(['error' => 'The attachments come to ' . round($size / 1048576, 1) . ' MB. The most Gmail and Outlook accept is 25 MB, so remove some or send them as a link.'], 400);
             [$msg] = mail_build($cfg, $to, $cc, $subject, $body, $irt, $irt ? $refs : '', $ownHtml, $atts);
             unset($atts);
-            smtp_send($cfg, array_merge($to, $cc), $msg);
-            try { mail_contacts_add(array_map(function ($e) { return ['email' => $e, 'name' => '']; }, array_merge($to, $cc)), 3); } catch (Throwable $e) {}
+            smtp_send($cfg, array_values(array_unique(array_merge($to, $cc, $bcc))), $msg);   // Bcc people get it but aren't in the headers
+            try { mail_contacts_add(array_map(function ($e) { return ['email' => $e, 'name' => '']; }, array_merge($to, $cc, $bcc)), 3); } catch (Throwable $e) {}
             $saved = true;
-            try { $m = new SmrImap($cfg); $s = $m->special('sent'); if ($s) $m->append($s, $msg); else $saved = false; } catch (Throwable $e) { $saved = false; }
+            $copy = $bcc ? 'Bcc: ' . implode(', ', $bcc) . "\r\n" . $msg : $msg;   // your Sent copy remembers who was Bcc'd (like Gmail/Outlook)
+            unset($msg);
+            try { $m = new SmrImap($cfg); $s = $m->special('sent'); if ($s) $m->append($s, $copy); else $saved = false; } catch (Throwable $e) { $saved = false; }
             if (!empty($in['draft'])) { try { mail_draft_del((string) $in['draft']); } catch (Throwable $e) {} }
             if ($draftDir) rrmdir_any($draftDir);
             if ($irt && !empty($in['uid'])) { try { $m = $m ?? new SmrImap($cfg); $m->select('INBOX', false); $m->flag((int) $in['uid'], '\\Answered'); } catch (Throwable $e) {} }
