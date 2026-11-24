@@ -132,6 +132,97 @@ function extract_build(string $zipPath, string $dest): array {
     return ['files' => $count, 'skipped' => count($skipped)];
 }
 
+/* ---------- planner: tasks, meetings, prep, reminders (demo-lib/planner.php) ---------- */
+if (strpos($a, 'pl_') === 0) {
+    require_once dirname(__DIR__) . '/demo-lib/planner.php';
+    $pdo = pl_db(); $now = now();
+    $out = function (array $extra = []) use ($now) {
+        $rows = array_map(function ($r) use ($now) { return pl_row($r, $now); }, pl_all(true));
+        $host = preg_replace('/[^A-Za-z0-9.:-]/', '', (string) ($_SERVER['HTTP_HOST'] ?? 'smrgraphics.co.uk'));
+        $base = (preg_match('/^(127\.|localhost)/', $host) ? 'http' : 'https') . '://' . $host . '/demo-admin/feed.php?k=' . pl_key();
+        json_out_then($extra + ['ok' => true, 'items' => $rows, 'sum' => pl_summary($now), 'cfg' => pl_cfg(), 'feed' => $base, 'what' => PL_WHAT, 'areas' => PL_AREAS], function () { pl_tick(); });
+    };
+    $str = function ($k, $max = 300) use (&$in) { return mb_substr(trim((string) ($in[$k] ?? '')), 0, $max); };
+    $getRow = function ($id) use ($pdo) { $st = $pdo->prepare('SELECT * FROM pl_items WHERE id = ?'); $st->execute([(int) $id]); $r = $st->fetch(); if (!$r) json_out(['error' => 'Not found.'], 404); return $r; };
+    switch ($a) {
+    case 'pl_list': $out();
+    case 'pl_save':
+        $kind = ($in['kind'] ?? 'task') === 'event' ? 'event' : 'task';
+        $title = $str('title', 200);
+        if ($title === '') json_out(['error' => 'Give it a title.'], 400);
+        $f = ['kind' => $kind, 'title' => $title, 'person' => $str('person', 120), 'phone' => preg_replace('/[^0-9+ ]/', '', $str('phone', 30)), 'platform' => $str('platform', 60),
+            'area' => isset(PL_AREAS[$in['area'] ?? '']) ? $in['area'] : 'digital', 'wait' => in_array($in['wait'] ?? '', ['me', 'them', 'none'], true) ? $in['wait'] : 'me',
+            'what' => isset(PL_WHAT[$in['what'] ?? '']) ? $in['what'] : 'other', 'pri' => max(1, min(3, (int) ($in['pri'] ?? 2))),
+            'due' => max(0, (int) ($in['due'] ?? 0)), 'due_t' => (int) !empty($in['due_t']), 'start' => max(0, (int) ($in['start'] ?? 0)), 'end' => max(0, (int) ($in['end'] ?? 0)),
+            'all_day' => (int) !empty($in['all_day']), 'location' => $str('location', 160), 'notes' => $str('notes', 4000), 'owes' => (int) !empty($in['owes']), 'owes_amt' => $str('owes_amt', 30),
+            'grp' => $str('grp', 60), 'event_id' => max(0, (int) ($in['event_id'] ?? 0)), 'updated' => $now];
+        if ($kind === 'event' && !$f['start']) json_out(['error' => 'Pick a day for the meeting.'], 400);
+        if ($kind === 'event' && $f['end'] < $f['start']) $f['end'] = $f['start'] + 3600;
+        $id = (int) ($in['id'] ?? 0); $askPrep = false;
+        if ($id) {
+            $old = $getRow($id);
+            $reset = ((int) $old['due'] !== $f['due'] || (int) $old['start'] !== $f['start']) ? ', n_due = 0, n_over = 0, n_overc = 0, n_day = 0, n_soon = 0, snooze = 0' : '';
+            $sets = implode(', ', array_map(function ($k) { return $k . ' = ?'; }, array_keys($f)));
+            $pdo->prepare("UPDATE pl_items SET $sets$reset WHERE id = ?")->execute(array_merge(array_values($f), [$id]));
+            $askPrep = $kind === 'event' && !(int) $old['prep_asked'];
+        } else {
+            $f['created'] = $now;
+            $pdo->prepare('INSERT INTO pl_items (' . implode(', ', array_keys($f)) . ') VALUES (' . implode(',', array_fill(0, count($f), '?')) . ')')->execute(array_values($f));
+            $id = (int) $pdo->lastInsertId(); $askPrep = $kind === 'event';
+        }
+        $out(['id' => $id, 'ask_prep' => $askPrep]);
+    case 'pl_done':
+        $r = $getRow($in['id'] ?? 0);
+        $undo = !empty($in['undo']);
+        $pdo->prepare('UPDATE pl_items SET status = ?, done_at = ?, updated = ? WHERE id = ?')->execute([$undo ? 'open' : 'done', $undo ? 0 : $now, $now, (int) $r['id']]);
+        // Ticking off "waiting on me" with a follow-up date set creates the chase
+        if (!$undo && !empty($in['chase']) && (int) $in['chase'] > $now) {
+            $pdo->prepare('INSERT INTO pl_items (kind, title, person, phone, platform, area, wait, what, pri, due, notes, grp, created, updated) VALUES (\'task\',?,?,?,?,?,\'them\',?,?,?,?,?,?,?)')
+                ->execute(['Chase: ' . preg_replace('/^Chase: /', '', $r['title']), $r['person'], $r['phone'], $r['platform'], $r['area'], 'reply', (int) $r['pri'], (int) $in['chase'], 'Sent ' . date('j M', $now) . '. ' . $r['notes'], $r['grp'], $now, $now]);
+        }
+        $out();
+    case 'pl_snooze':
+        $r = $getRow($in['id'] ?? 0);
+        $until = max($now + 600, (int) ($in['until'] ?? 0));
+        $pdo->prepare('UPDATE pl_items SET snooze = ?, n_due = 0, n_over = 0, n_overc = 0, updated = ? WHERE id = ?')->execute([$until, $now, (int) $r['id']]);
+        $out();
+    case 'pl_del':
+        $r = $getRow($in['id'] ?? 0);
+        $pdo->prepare('DELETE FROM pl_items WHERE id = ?')->execute([(int) $r['id']]);
+        if ($r['kind'] === 'event') $pdo->prepare('UPDATE pl_items SET event_id = 0 WHERE event_id = ?')->execute([(int) $r['id']]);
+        $out();
+    case 'pl_prep':
+        $e = $getRow($in['event_id'] ?? 0);
+        if ($e['kind'] !== 'event') json_out(['error' => 'Not a meeting.'], 400);
+        $pdo->prepare('UPDATE pl_items SET prep_asked = 1 WHERE id = ?')->execute([(int) $e['id']]);
+        $s = (int) $e['start'];
+        // Prep is due at midday the day before; if that has passed, two hours from now (but before the meeting)
+        $due = pl_day0($s) - 12 * 3600;
+        if ($due < $now + 1800) $due = min($now + 7200, max($now + 600, $s - 3600));
+        $ins = $pdo->prepare('INSERT INTO pl_items (kind, title, person, phone, area, wait, what, pri, due, due_t, notes, grp, event_id, created, updated) VALUES (\'task\',?,?,?,?,\'me\',?,1,?,1,?,?,?,?,?)');
+        $n = 0;
+        foreach ((array) ($in['items'] ?? []) as $it) {
+            $t = mb_substr(trim((string) ($it['title'] ?? '')), 0, 160); if ($t === '') continue;
+            $w = isset(PL_WHAT[$it['what'] ?? '']) ? $it['what'] : 'other';
+            $ins->execute([$t, $e['person'], $e['phone'], $e['area'], $w, $due, 'Prep for: ' . $e['title'] . ' (' . ((int) $e['all_day'] ? date('D j M', $s) : date('D j M H:i', $s)) . ')', $e['grp'], (int) $e['id'], $now, $now]);
+            $n++;
+        }
+        $out(['prep_added' => $n]);
+    case 'pl_cfg':
+        $c = pl_cfg();
+        foreach (['brief', 'evening', 'quiet_from', 'quiet_to'] as $k) if (isset($in[$k]) && preg_match('/^\d{1,2}:\d{2}$/', (string) $in[$k])) $c[$k] = (string) $in[$k];
+        foreach (['push', 'sunday'] as $k) if (isset($in[$k])) $c[$k] = (int) !empty($in[$k]);
+        pl_set('cfg', json_encode($c));
+        $out();
+    case 'pl_newkey':
+        pl_set('feed_key', rand_token(18));
+        $out();
+    case 'pl_tick':
+        json_out(['ok' => true, 'log' => pl_tick(true)]);
+    }
+    json_out(['error' => 'Unknown action'], 400);
+}
+
 /* ---------- email ---------- */
 if (strpos($a, 'mail_') === 0) {
     require_once dirname(__DIR__) . '/demo-lib/mail.php';

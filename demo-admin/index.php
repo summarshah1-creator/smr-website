@@ -233,7 +233,7 @@ html.cpopen,body.cpopen{overscroll-behavior:none}
 .top{flex-wrap:wrap}
 .top .tabs{order:3;width:100%}.top .tabs button{flex:1;position:relative}
 .subtabs{order:4;width:100%;display:flex;gap:4px;margin-top:2px}.subtabs.hidden{display:none}.subtabs button{flex:1;position:relative;padding:7px 4px;border-radius:9px;font-weight:700;font-size:12.5px;color:var(--muted);border:1px solid var(--line);background:rgba(255,255,255,.02);white-space:nowrap}.subtabs button.on{color:#fff;border-color:rgba(214,59,255,.55);background:rgba(214,59,255,.14)}
-.cnt{display:inline-grid;place-items:center;min-width:18px;height:18px;padding:0 5px;margin-left:6px;border-radius:9px;background:#3ddc97;color:#062b14;font-size:11px;font-weight:800;vertical-align:1px}.cnt:empty{display:none}
+.cnt{display:inline-grid;place-items:center;min-width:18px;height:18px;padding:0 5px;margin-left:6px;border-radius:9px;background:#3ddc97;color:#062b14;font-size:11px;font-weight:800;vertical-align:1px}.cnt:empty{display:none}.cnt.bad{background:#ff5470;color:#fff}
 .rows{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:18px;overflow:hidden;background:rgba(255,255,255,.02)}
 .rw{display:flex;align-items:center;gap:6px;padding:0 6px 0 0;border-top:1px solid var(--line)}
 .rw:first-child{border-top:0}
@@ -315,10 +315,11 @@ document.addEventListener('keydown',function(e){if(/^\d$/.test(e.key))press(e.ke
     <button class="btn sm icon" id="refresh" aria-label="Refresh" title="Refresh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg></button>
     <button class="btn sm icon" id="acct" aria-label="Settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></button>
     <nav class="tabs" role="tablist">
+      <button data-grp="today" role="tab">Today<span class="cnt bad" id="plcnt"></span></button>
       <button data-grp="mail" role="tab">Email<span class="cnt" id="mailcnt"></span></button>
       <button data-grp="games" role="tab">Games<span class="cnt" id="fkcnt"></span></button>
       <button data-grp="music" role="tab">Music</button>
-      <button data-grp="stats" role="tab">Analytics</button>
+      <button data-grp="stats" role="tab">Stats</button>
       <button data-grp="demos" role="tab">Demos</button>
     </nav>
     <nav class="subtabs" id="subtabs" role="tablist">
@@ -328,6 +329,9 @@ document.addEventListener('keydown',function(e){if(/^\d$/.test(e.key))press(e.ke
       <button data-tab="designs" role="tab">Designs</button>
     </nav>
   </div>
+
+  <!-- TODAY (planner.js) -->
+  <section id="tab-today" class="tab hidden"><div id="pl"><div class="empty">Loading…</div></div></section>
 
   <!-- MY DEMOS -->
   <section id="tab-demos" class="tab">
@@ -540,8 +544,8 @@ var ICON={dots:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="
 
 /* ---------- tabs (hash) ---------- */
 var lastDemoTab='demos';
-var showTab=function(t){if(['demos','send','live','designs','games','flappy','jummah','mail','music','stats'].indexOf(t)<0)t='demos';if(t==='games')gamesCards();if(t==='jummah'){var jf=document.getElementById('jdframe');if(jf&&!jf.src)jf.src='/jummahdash/admin.php'}if(t==='stats'){var sf=document.getElementById('stframe');if(sf&&!sf.src)sf.src='/music/stats.php'}if(t==='music'){var mf=document.getElementById('muframe');if(mf&&!mf.src)mf.src='/music/?manage=1'}if(t==='flappy'){var ff=document.getElementById('fkframe');if(ff&&!ff.src)ff.src='/flappy/admin.php'}
-  var grp=(t==='mail'||t==='music'||t==='stats')?t:(t==='games'||t==='flappy'||t==='jummah')?'games':'demos';if(grp==='demos')lastDemoTab=t;
+var showTab=function(t){if(['today','demos','send','live','designs','games','flappy','jummah','mail','music','stats'].indexOf(t)<0)t='today';if(window.SMRPlanner){if(t==='today')SMRPlanner.show();else SMRPlanner.hide()}if(t==='games')gamesCards();if(t==='jummah'){var jf=document.getElementById('jdframe');if(jf&&!jf.src)jf.src='/jummahdash/admin.php'}if(t==='stats'){var sf=document.getElementById('stframe');if(sf&&!sf.src)sf.src='/music/stats.php'}if(t==='music'){var mf=document.getElementById('muframe');if(mf&&!mf.src)mf.src='/music/?manage=1'}if(t==='flappy'){var ff=document.getElementById('fkframe');if(ff&&!ff.src)ff.src='/flappy/admin.php'}
+  var grp=(t==='today'||t==='mail'||t==='music'||t==='stats')?t:(t==='games'||t==='flappy'||t==='jummah')?'games':'demos';if(grp==='demos')lastDemoTab=t;
   document.querySelectorAll('[data-tab]').forEach(function(b){b.classList.toggle('on',b.dataset.tab===t)});document.querySelectorAll('[data-grp]').forEach(function(b){b.classList.toggle('on',b.dataset.grp===grp)});document.getElementById('subtabs').classList.toggle('hidden',grp!=='demos');
   document.querySelectorAll('.tab').forEach(function(s){s.classList.toggle('hidden',s.id!=='tab-'+t)});window.scrollTo(0,0);if(t==='live'&&typeof load==='function'&&D.length)load();if(t!=='send'&&$('created').dataset.used&&typeof resetSend==='function')resetSend();if(t==='mail'&&typeof mailOpen==='function')mailOpen();if(t==='designs'&&typeof dLoad==='function')dLoad()};
 document.querySelectorAll('[data-tab]').forEach(function(b){b.addEventListener('click',function(){if(location.hash!=='#'+b.dataset.tab)history.replaceState(null,'','#'+b.dataset.tab);showTab(b.dataset.tab)})});
@@ -1163,8 +1167,10 @@ if(/[?&]r=\d/.test(location.search))history.replaceState(null,'',location.pathna
 var hiddenAt=0;
 document.addEventListener('visibilitychange',function(){if(document.hidden){hiddenAt=Date.now();return}
   if(hiddenAt&&Date.now()-hiddenAt>10*60*1000&&!cpOpen){location.reload();return}load()});
+window.SMRA={api:api,openSheet:openSheet,closeSheet:closeSheet,toast:toast,esc:esc,copy:copy,waUrl:waUrl,enablePush:enablePush};
 })();
 </script>
+<script src="planner.js?v=<?= @filemtime(__DIR__ . '/planner.js') ?>"></script>
 <?php endif; ?>
 <script>/* app feel: no pinch or double-tap zoom */(function(){document.addEventListener('gesturestart',function(e){e.preventDefault()},{passive:false});document.addEventListener('gesturechange',function(e){e.preventDefault()},{passive:false});document.addEventListener('touchmove',function(e){if(e.touches&&e.touches.length>1)e.preventDefault()},{passive:false});})();</script>
 </body>
