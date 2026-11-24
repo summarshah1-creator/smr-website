@@ -23,6 +23,7 @@
     '.plnext .bt{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:14px}.plnext .bt .btn{height:44px}.plnext .bt .done{background:#3ddc97;color:#062b14;border:0}',
     '.why{display:inline-block;font-size:11.5px;font-weight:800;padding:3px 8px;border-radius:999px;background:rgba(255,255,255,.08);color:#d9d9ea;margin-left:6px;vertical-align:1px}.why.r{background:rgba(255,84,112,.18);color:#ff9db0}.why.a{background:rgba(255,181,71,.16);color:#ffd08a}',
     '.owe{display:inline-block;font-size:11px;font-weight:800;padding:3px 8px;border-radius:999px;background:#ff5470;color:#fff;margin-left:6px;vertical-align:1px}',
+    '.plwg{display:flex;gap:12px;align-items:flex-start;padding:12px;border:1px solid var(--line);border-radius:18px;margin-top:10px;background:rgba(255,255,255,.03)}.plwg img{width:112px;flex:none;border-radius:16px;box-shadow:0 8px 20px -10px rgba(0,0,0,.6)}.plwg .tx{flex:1;min-width:0}.plwg b{display:block;font-size:15px}.plwg span{display:block;font-size:13px;color:var(--muted);margin-top:2px}.plwg small{display:block;font-size:12px;color:var(--muted);margin:6px 0 8px}.plwg small b{display:inline;font-size:12px}',
     '.plsec{font:700 13px Manrope,sans-serif;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin:18px 2px 8px;display:flex;align-items:center;gap:8px}.plsec i{flex:1;height:1px;background:var(--line)}',
     '.plev{display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.03);margin-bottom:8px;width:100%;text-align:left}.plev .tm{width:52px;flex:none;font:800 15px Sora,sans-serif;color:#cfc4ff}.plev .tm small{display:block;font:700 11px Manrope,sans-serif;color:var(--muted)}.plev .tx{flex:1;min-width:0}.plev b{display:block;font-size:15px}.plev span{font-size:12.5px;color:var(--muted)}',
     '.prep{display:inline-block;margin-top:4px;font-size:11.5px;font-weight:800;padding:3px 8px;border-radius:999px}.prep.todo{background:rgba(255,181,71,.16);color:#ffd08a}.prep.ok{background:rgba(61,220,151,.14);color:#7ff0bd}',
@@ -55,7 +56,7 @@
     var S = P.sum, el = $('pl'); if (!S) return;
     var d = new Date(), h = d.getHours();
     var html = '<div class="plh"><h1>' + (h < 12 ? 'Morning' : h < 18 ? 'Afternoon' : 'Evening') + ', Summar<small>' + d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' }) + '</small></h1>'
-      + '<button class="btn sm icon" data-pl="cfg" aria-label="Today settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button></div>';
+      + '<button class="btn sm" data-pl="wid" style="margin-right:6px">Widgets</button><button class="btn sm icon" data-pl="cfg" aria-label="Today settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button></div>';
     html += '<div class="plstat"><button class="r" data-f="over"><b>' + S.overdue + '</b><span>Overdue</span></button><button class="a" data-f="today"><b>' + S.due_today + '</b><span>Due today</span></button>'
       + '<button class="r" data-f="money"><b>' + Object.keys(S.owing).length + '</b><span>Owe you</span></button><button class="g" data-f="done"><b>' + S.done_today + '</b><span>Cleared</span></button></div>';
     if (window.SMRJobs) html += SMRJobs.todayHtml();
@@ -288,16 +289,36 @@
      so widget changes reach the phone by themselves. */
   var LOADER = [
     '// SMR Studio widget for Scriptable. Paste this once; it fetches the latest design every time it refreshes.',
-    '// Your private link is below: don\'t share this script. Parameter (Edit Widget): today, money, leads, care or all.',
+    '// Your private link is below: don\'t share this script.',
     'const FEED = "__FEED__";',
+    'const VIEW = "__VIEW__";   // today, money, leads or care',
     'const fm = FileManager.local(), path = fm.joinPath(fm.cacheDirectory(), "smr-studio-widget.js");',
     'let code = null;',
     'try { const r = new Request(FEED + "&f=js"); r.timeoutInterval = 10; const c = await r.loadString(); if (c.indexOf("SMR_WIDGET_V") >= 0) { code = c; fm.writeString(path, c); } } catch (e) {}',
     'if (!code && fm.fileExists(path)) code = fm.readString(path);',
     'if (!code) { const w = new ListWidget(); w.addText("SMR Studio: no connection yet"); Script.setWidget(w); }',
-    'else { const m = { exports: null }; new Function("module", code)(m); await m.exports(FEED); }',
+    'else { const m = { exports: null }; new Function("module", code)(m); await m.exports(FEED, VIEW); }',
     'Script.complete();'
   ].join('\n');
+  /* ---------- phone widgets: three ready-made, each with its own copy button (owner 24 Nov) ---------- */
+  var WIDGETS = [
+    { v: 'today', name: 'SMR Today', size: 'Large', title: 'Your day', sub: 'Next job, your next meeting, what\'s overdue and what else is on your list.' },
+    { v: 'money', name: 'SMR Money', size: 'Large or Medium', title: 'Owed to you', sub: 'Who owes you and how much, your monthly income, invoices to send.' },
+    { v: 'care', name: 'SMR Sites', size: 'Large or Medium', title: 'Client sites', sub: 'Any client website that\'s down, a padlock running out, renewals due.' }
+  ];
+  var widgets = function () {
+    A.openSheet('<div class="plf"><h2>Phone widgets</h2><p class="sub">Three ready-made widgets for your iPhone. Each one updates itself; you only set it up once.</p>'
+      + WIDGETS.map(function (w) { return '<div class="plwg"><img src="wprev/' + w.v + '.png?v=2" alt=""><div class="tx"><b>' + w.title + '</b><span>' + w.sub + '</span><small>' + w.size + ' widget · name it <b>' + w.name + '</b></small><button class="btn pri sm" type="button" data-wcopy="' + w.v + '">Copy ' + w.name + ' script</button></div></div>'; }).join('')
+      + '<div class="plsec">How to add one<i></i></div><ol class="plsteps"><li>Install <b>Scriptable</b> (free) from the App Store.</li><li>Tap <b>Copy</b> on the widget you want above.</li><li>Open Scriptable, tap <b>+</b>, paste, tap the title at the top and call it the name shown (e.g. <b>SMR Today</b>), then <b>Done</b>.</li>'
+      + '<li>On your Home Screen: hold an empty spot → <b>Edit</b> (top left) → <b>Add Widget</b> → Scriptable → swipe to the size shown → <b>Add Widget</b>.</li><li>Tap the new widget while it wiggles → <b>Script</b> → pick the one you named. Done.</li><li>Want them in one spot? Drag one widget on top of another of the same size and swipe up and down between them.</li></ol>'
+      + '<p class="sub" style="margin-top:8px">The scripts carry your private link. Keep them to yourself; if one gets shared, use New secret link in ⚙ and copy them again.</p></div>', function (box) {
+      box.querySelectorAll('[data-wcopy]').forEach(function (b) { b.addEventListener('click', function () {
+        var w = WIDGETS.filter(function (x) { return x.v === b.dataset.wcopy; })[0];
+        A.copy(LOADER.replace('__FEED__', P.feed).replace('__VIEW__', w.v), w.name + ' script copied. Now paste it in Scriptable.');
+        b.textContent = '✓ Copied'; setTimeout(function () { b.textContent = 'Copy ' + w.name + ' script'; }, 2500);
+      }); });
+    });
+  };
   /* ---------- settings: notification times, calendar, widget ---------- */
   var settings = function () {
     var c = P.cfg, ics = P.feed + '&f=ics', web = ics.replace(/^https?:/, 'webcal:');
@@ -313,13 +334,13 @@
       + '<div class="row" style="margin-top:10px"><a class="btn pri" href="' + esc(web) + '">Add to iPhone Calendar</a><button class="btn" type="button" id="plics">Copy link</button></div>'
       + '<div class="plsec">Home Screen &amp; Lock Screen widget<i></i></div><ol class="plsteps"><li>Install <b>Scriptable</b> (free) from the App Store.</li><li>Tap <b>Copy widget script</b> below.</li><li>Open Scriptable, tap <b>+</b>, paste, and name it <b>SMR Studio</b>. Tap ▶ once to preview. You only do this once: it picks up new designs by itself.</li>'
       + '<li>Home Screen: hold an empty spot → <b>Edit → Add Widget</b> → Scriptable → pick a size → tap the widget → Script: <b>SMR Studio</b>, Parameter: <b>today</b>, <b>money</b>, <b>leads</b>, <b>care</b> or leave it empty. Add a few and drag them on top of each other to make a stack you can swipe through.</li><li>Lock Screen: hold the Lock Screen → <b>Customise</b> → Lock Screen → tap the widget row → Scriptable → tap it → Script: <b>SMR Studio</b>.</li></ol>'
-      + '<div class="row" style="margin-top:10px"><button class="btn pri" type="button" id="plwid">Copy widget script</button><button class="btn sm bad" type="button" id="plkey">New secret link</button></div>'
+      + '<div class="row" style="margin-top:10px"><button class="btn pri" type="button" id="plwid">Phone widgets</button><button class="btn sm bad" type="button" id="plkey">New secret link</button></div>'
       + '<p class="sub" style="margin-top:8px">The calendar link and widget use a private key. If you ever share it by mistake, tap New secret link, then re-copy both.</p>', function (box) {
       var f = $('plcfg');
       f.addEventListener('submit', function (e) { e.preventDefault(); api('pl_cfg', { brief: f.brief.value, evening: f.evening.value, quiet_from: f.quiet_from.value, quiet_to: f.quiet_to.value, sunday: f.sunday.checked ? 1 : 0, push: f.push.checked ? 1 : 0 }).then(function () { A.toast('Saved'); A.closeSheet(); }); });
       $('plpush').addEventListener('click', function () { A.enablePush && A.enablePush(); });
       $('plics').addEventListener('click', function () { A.copy(ics, 'Calendar link copied'); });
-      $('plwid').addEventListener('click', function () { A.copy(LOADER.replace('__FEED__', P.feed), 'Widget script copied'); });
+      $('plwid').addEventListener('click', function () { widgets(); });
       $('plkey').addEventListener('click', function () { if (!confirm('Make a new secret link? The old calendar link and widget stop working until you add the new ones.')) return; api('pl_newkey').then(function () { A.closeSheet(); A.toast('New link made. Re-add the calendar and widget.'); }); });
     });
   };
@@ -339,6 +360,7 @@
     if ((b = e.target.closest('[data-day]'))) { calSel = +b.dataset.day; render(); return; }
     if ((b = e.target.closest('[data-addev]'))) return edit(0, { kind: 'event', day: +b.dataset.addev });
     if ((b = e.target.closest('[data-pl="cfg"]'))) return settings();
+    if (e.target.closest('[data-pl="wid"]')) return widgets();
   });
   var fab = document.createElement('button'); fab.className = 'plfab hidden'; fab.id = 'plfab'; fab.setAttribute('aria-label', 'Add'); fab.textContent = '+';
   fab.addEventListener('click', function () { edit(0, view === 'cal' && calSel ? { kind: 'task' } : null); });

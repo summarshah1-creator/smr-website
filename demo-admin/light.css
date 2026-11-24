@@ -153,6 +153,8 @@ html.lt .why{background:rgba(40,32,70,0.072);color:#4a4a82}
 html.lt .why.r{background:#fcc7cc;color:#db062f}
 html.lt .why.a{background:#fce7c5;color:#db8506}
 html.lt .owe{color:#fff}
+html.lt .plwg{background:#fbf9f4;color:#1d1b26}
+html.lt .plwg img{box-shadow:0 8px 20px -10px rgba(40,30,70,0.21)}
 html.lt .plev{background:#fbf9f4;color:#1d1b26}
 html.lt .plev .tm{color:#2d06db}
 html.lt .prep.todo{background:#fce7c5;color:#db8506}

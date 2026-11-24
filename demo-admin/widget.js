@@ -2,7 +2,7 @@
 // Downloaded by the small loader script on the phone every time the widget refreshes, so changes here reach the phone by themselves.
 // Widget parameter (long-press → Edit Widget → Parameter): today (default) · money · leads · care. Stack several and swipe between them.
 // Owner 24 Nov: it must be nice to look at, not "coding": one big friendly headline, soft cards, icons, few words, nothing cramped.
-module.exports = async function (FEED) {
+module.exports = async function (FEED, VIEW) {
   const ROOT = FEED.replace(/\/demo-admin\/feed\.php.*$/, "");
   const ADMIN = ROOT + "/demo-admin/";
   const fm = FileManager.local();
@@ -59,7 +59,7 @@ module.exports = async function (FEED) {
   }
 
   const fam = config.widgetFamily || "large";
-  const view = String(args.widgetParameter || "today").trim().toLowerCase();
+  const view = String(args.widgetParameter || VIEW || "today").trim().toLowerCase();
   const d = await getData();
   const cl = (d && d.cl) || {};
 
