@@ -1,7 +1,9 @@
 /* Luton Community Hub, live copy: stands in for the Claude artifact capabilities (db, user, sample, downloads)
    so app.js runs unchanged on smrgraphics.co.uk. Talks to /hub/api.php. Loaded before the app scripts. */
 (function () {
-  window.HUB_TEST = true;   // testing with a few people: everything open, no sign-up / log-in anywhere (testing.js)
+  window.HUB_TEST = true;
+  window.HUB_SHORTLINKS = false;   // short links with tap counts: built, shown as Coming soon until the short domain is ready
+  window.HUB_SHORT_BASE = 'https://smrgraphics.co.uk/hub/s.php?c=';   // one value to change when the short domain is set up (e.g. https://lu.tn/)   // testing with a few people: everything open, no sign-up / log-in anywhere (testing.js)
   var API = '/hub/api.php';
   function q(a, p) { var s = API + '?a=' + a; for (var k in (p || {})) s += '&' + k + '=' + encodeURIComponent(p[k]); return s; }
   function getJ(a, p) { return fetch(q(a, p), { credentials: 'same-origin', cache: 'no-store' }).then(function (r) { return r.json().then(function (j) { if (!r.ok) { var e = new Error(j.error || 'failed'); e.code = j.error; throw e; } return j; }); }); }
@@ -36,9 +38,10 @@
     db: { collection: collection },
     user: { id: function () { return whoami().then(function (w) { return w.me; }); }, isOwner: function () { return whoami().then(function (w) { return !!w.owner; }); } },
     sample: function (prompt, opts) {
-      return postJ('ai', {}, { prompt: String(prompt || '') }).then(function (j) {
+      var org = ''; try { var pr = JSON.parse(localStorage.getItem('lch-profile') || 'null'); org = (pr && (pr.orgId || pr.org)) || ''; } catch (e) {}
+      return postJ('ai', {}, { prompt: String(prompt || ''), tool: (opts && opts.tool) || '', org: String(org).toLowerCase().replace(/[^a-z0-9-]+/g, '-').slice(0, 60), max: (opts && opts.max) || 900 }).then(function (j) {
         if (opts && opts.onText) try { opts.onText({ text: j.text }); } catch (e) {}
-        return { text: j.text };
+        return { text: j.text, left: j.left, cap: j.cap };
       });
     },
     downloads: {

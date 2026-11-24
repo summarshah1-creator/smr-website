@@ -44,6 +44,8 @@ html.lt .gcard img{box-shadow:0 4px 14px rgba(40,30,70,0.12)}
 html.lt .gcard .gl.new{color:#db065d}
 html.lt .hubic{background:linear-gradient(135deg,#0f766e,#14b8a6);color:#fff}
 html.lt .hubsoon{background:#fbf9f4;color:#1d1b26}
+html.lt .hubai{background:#fbf9f4;color:#1d1b26}
+html.lt .hubai button{background:linear-gradient(135deg,#0f766e,#14b8a6);color:#fff}
 html.lt .gcard .gb{color:#fff}
 html.lt .tabs{background:#fbf9f4;color:#1d1b26}
 html.lt .tabs button.on{background:var(--grad);color:#fff}

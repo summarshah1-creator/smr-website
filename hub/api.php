@@ -26,6 +26,8 @@ function hub_me(): string {
     if (!preg_match('/^[A-Za-z0-9_-]{20,40}$/', $v)) { $v = rand_token(18); set_cookie('hub_vid', $v, now() + 2 * 365 * 86400, '/', 'Lax'); $_COOKIE['hub_vid'] = $v; }
     return $v;
 }
+function hub_kv(string $k): string { $st = hub_db()->prepare('SELECT v FROM hub_kv WHERE k = ?'); $st->execute([$k]); $v = $st->fetchColumn(); return $v === false ? '' : (string) $v; }
+function hub_kv_set(string $k, string $v): void { hub_db()->prepare('INSERT OR REPLACE INTO hub_kv (k, v) VALUES (?, ?)')->execute([$k, $v]); }
 function hub_owner(): bool { return (bool) admin_token(); }
 /* Can this visitor read / write collection $col (and doc $id)? */
 function hub_can(string $col, string $id, bool $write): bool {
@@ -91,9 +93,45 @@ if ($a === 'ai') {   // the hub's writing helper (claude.use('sample'))
     $in = json_decode((string) file_get_contents('php://input'), true) ?: [];
     $prompt = mb_substr(trim((string) ($in['prompt'] ?? '')), 0, 6000);
     if ($prompt === '') json_out(['error' => 'empty'], 400);
+    /* Fair use per organisation (owner 24 Nov): a monthly number of generations for each organisation (or visitor,
+       while accounts are off), set in SMR Admin → Community Hub. The owner is never counted. */
+    $who = preg_replace('/[^a-z0-9-]/', '', strtolower((string) ($in['org'] ?? ''))) ?: hub_me();
+    $ukey = 'aiorg-' . date('Y-m') . '-' . substr(hash('sha256', $who), 0, 24);
+    $cap = (int) (hub_kv('ai_org_cap') ?: 60);
+    $used = (int) hub_kv($ukey);
+    if (!hub_owner() && $used >= $cap) json_out(['error' => 'org_cap', 'cap' => $cap], 429);
     require_once dirname(__DIR__) . '/demo-lib/ai.php';
-    try { $t = ai_call([['type' => 'text', 'text' => $prompt]], 900); json_out(['text' => $t]); }
+    $max = min(1600, max(300, (int) ($in['max'] ?? 900)));
+    try { $t = ai_call([['type' => 'text', 'text' => $prompt]], $max); if (!hub_owner()) hub_kv_set($ukey, (string) ($used + 1)); json_out(['text' => $t, 'left' => hub_owner() ? null : max(0, $cap - $used - 1), 'cap' => $cap]); }
     catch (Throwable $e) { json_out(['error' => 'unavailable', 'msg' => $e->getMessage()], 503); }
+}
+if ($a === 'ai_cfg') {   // SMR Admin → Community Hub: fair-use cap per organisation per month
+    if (!hub_owner()) json_out(['error' => 'owner only'], 403);
+    if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') { if (!same_origin()) json_out(['error' => 'bad origin'], 403); $in = json_decode((string) file_get_contents('php://input'), true) ?: []; $c = max(0, min(10000, (int) ($in['cap'] ?? 60))); hub_kv_set('ai_org_cap', (string) $c); }
+    $ym = date('Y-m'); $st = hub_db()->prepare("SELECT COUNT(*), COALESCE(SUM(CAST(v AS INTEGER)),0) FROM hub_kv WHERE k LIKE ?"); $st->execute(['aiorg-' . $ym . '-%']); [$orgs, $uses] = $st->fetch(PDO::FETCH_NUM);
+    json_out(['cap' => (int) (hub_kv('ai_org_cap') ?: 60), 'orgs' => (int) $orgs, 'uses' => (int) $uses]);
+}
+/* ---------- short links with tap counts (built, switched off: window.HUB_SHORTLINKS in server.js) ----------
+   Table hub_links (slug, url, owner = visitor/org id, title, taps, at). Taps are counted by hub/s.php, the redirect
+   handler to put on the short domain (see CLAUDE.md). */
+function sl_db(): PDO { $p = hub_db(); static $ok = false; if (!$ok) { $p->exec("CREATE TABLE IF NOT EXISTS hub_links (slug TEXT PRIMARY KEY, url TEXT NOT NULL, owner TEXT NOT NULL, title TEXT DEFAULT '', taps INTEGER DEFAULT 0, at INTEGER NOT NULL)"); $p->exec("CREATE TABLE IF NOT EXISTS hub_taps (slug TEXT, day TEXT, src TEXT, n INTEGER DEFAULT 0, PRIMARY KEY (slug, day, src))"); $ok = true; } return $p; }
+if (in_array($a, ['sl_list', 'sl_make', 'sl_del', 'sl_stats'], true)) {
+    $me = hub_me(); $own = hub_owner(); $p = sl_db();
+    if ($a === 'sl_list') { $st = $own && !empty($_GET['all']) ? $p->query('SELECT * FROM hub_links ORDER BY at DESC LIMIT 500') : $p->prepare('SELECT * FROM hub_links WHERE owner = ? ORDER BY at DESC'); if (!($own && !empty($_GET['all']))) $st->execute([$me]); json_out(['links' => $st->fetchAll(PDO::FETCH_ASSOC)]); }
+    if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST' || !same_origin()) json_out(['error' => 'POST only'], 405);
+    $in = json_decode((string) file_get_contents('php://input'), true) ?: [];
+    if ($a === 'sl_make') {
+        if (!$own && too_many('hubsl:' . $ip, 30, 3600)) json_out(['error' => 'rate_limited'], 429); note_fail('hubsl:' . $ip);
+        $url = trim((string) ($in['url'] ?? '')); if (!preg_match('#^https?://[^\s<>"]{3,1900}$#i', $url)) json_out(['error' => 'bad_url'], 400);
+        $slug = strtolower(trim((string) ($in['slug'] ?? ''))); if ($slug === '') $slug = strtolower(substr(rand_token(6), 0, 6));
+        if (!preg_match('/^[a-z0-9][a-z0-9-]{1,39}$/', $slug) || in_array($slug, ['admin', 'api', 'hub', 's', 'www'], true)) json_out(['error' => 'bad_slug'], 400);
+        try { $p->prepare('INSERT INTO hub_links (slug, url, owner, title, taps, at) VALUES (?, ?, ?, ?, 0, ?)')->execute([$slug, $url, $me, mb_substr((string) ($in['title'] ?? ''), 0, 80), now()]); } catch (Throwable $e) { json_out(['error' => 'taken'], 409); }
+        json_out(['ok' => true, 'slug' => $slug]);
+    }
+    $slug = strtolower((string) ($in['slug'] ?? '')); $st = $p->prepare('SELECT owner FROM hub_links WHERE slug = ?'); $st->execute([$slug]); $o = $st->fetchColumn();
+    if ($o === false) json_out(['error' => 'not_found'], 404); if ($o !== $me && !$own) json_out(['error' => 'not yours'], 403);
+    if ($a === 'sl_del') { $p->prepare('DELETE FROM hub_links WHERE slug = ?')->execute([$slug]); $p->prepare('DELETE FROM hub_taps WHERE slug = ?')->execute([$slug]); json_out(['ok' => true]); }
+    $st = $p->prepare('SELECT day, src, n FROM hub_taps WHERE slug = ? ORDER BY day DESC LIMIT 400'); $st->execute([$slug]); json_out(['taps' => $st->fetchAll(PDO::FETCH_ASSOC)]);
 }
 if ($a === 'summary') {   // SMR Admin → Community Hub: what's waiting
     if (!hub_owner()) json_out(['error' => 'owner only'], 403);

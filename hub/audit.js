@@ -119,26 +119,6 @@ document.addEventListener('submit', e => { const f = e.target; const h = f.query
   const a = f.querySelector('[name=dates_from]').value, b = f.querySelector('[name=dates_to]').value; h.value = a ? (b && b !== a ? fmt(a) + ' to ' + fmt(b) : fmt(a)) : ''; }, true);
 
 
-/* ---------- your work, kept on the server too ----------
-   Tool answers, plans, checklists, reminders and saved items were only kept in this browser. They are now copied
-   to the hub server (your own private space: data/users/<you>, only you can read it) a moment after each change,
-   and brought back when you open the hub on another visit or after clearing the browser. Newest copy wins. */
-const WORK = /^lch-(tool-|t3|ra-|ap-|reminders$|soccal|evticks$|dpticks$|bidck$|vrind$|savedTools$|saved$|statpick$|spquiz$|sponsorck$|polprog$|pitch$|kit$|clash$|hourslog$|legalticks$|fundAns$|gatab$|budget|evbud|minutes|caps-)/;
-let wdb = null, wme = null, wTimer = 0, wBusy = false;
-const wGather = () => { const o = {}; for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (WORK.test(k)) o[k] = localStorage.getItem(k); } return o; };
-const wPush = () => { clearTimeout(wTimer); wTimer = setTimeout(async () => { if (!wdb || !wme || wBusy) return; const keys = wGather(), at = Date.now();
-  try { const raw = JSON.stringify(keys); if (raw.length > 190000) return; await wdb.collection('data/users/' + wme).doc('work').set({ keys, at }); localStorage.setItem('lch-__workat', String(at)); } catch (e) { } }, 1500); };
-const origSet = Storage.prototype.setItem, origDel = Storage.prototype.removeItem;
-Storage.prototype.setItem = function (k, v) { origSet.call(this, k, v); if (this === localStorage && WORK.test(k) && !wBusy) wPush(); };
-Storage.prototype.removeItem = function (k) { origDel.call(this, k); if (this === localStorage && WORK.test(k) && !wBusy) wPush(); };
-(async () => { try { if (!window.claude) return; wdb = await claude.use('db'); const u = await claude.use('user'); wme = await u.id(); if (!wdb || !wme) return;
-  const d = await wdb.collection('data/users/' + wme).doc('work').get(); const local = +(localStorage.getItem('lch-__workat') || 0);
-  if (d && d.exists) { const v = d.data() || {}; if ((v.at || 0) > local && v.keys) { wBusy = true; let n = 0;
-      Object.entries(v.keys).forEach(([k, val]) => { if (WORK.test(k) && localStorage.getItem(k) !== val) { origSet.call(localStorage, k, val); n++; } });
-      origSet.call(localStorage, 'lch-__workat', String(v.at)); wBusy = false; if (n) window.dispatchEvent(new HashChangeEvent('hashchange')); }
-    else if (local > (v.at || 0)) wPush(); }
-  else if (Object.keys(wGather()).length) wPush(); } catch (e) { wBusy = false; } })();
-
 /* ---------- styles ---------- */
 const css = document.createElement('style');
 css.textContent = `.hsrc{display:flex;gap:10px;align-items:flex-start;margin:22px 0 6px;padding:12px 14px;border-radius:14px;background:var(--soft,#EEEDF8);font-size:13px;line-height:1.5;color:inherit}
