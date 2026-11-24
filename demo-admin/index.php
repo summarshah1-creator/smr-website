@@ -352,7 +352,7 @@ document.addEventListener('keydown',function(e){if(/^\d$/.test(e.key))press(e.ke
       <button data-grp="today" role="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg><span class="lb">Today</span><span class="cnt bad" id="plcnt"></span></button>
       <button data-grp="mail" role="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg><span class="lb">Email</span><span class="cnt" id="mailcnt"></span></button>
       <button data-grp="games" role="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="11" rx="5"/><path d="M7 11v4M5 13h4"/><circle cx="15.5" cy="12" r="1" fill="currentColor"/><circle cx="18" cy="14" r="1" fill="currentColor"/></svg><span class="lb">Games</span><span class="cnt" id="fkcnt"></span></button>
-      <button data-grp="music" role="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg><span class="lb">Music</span></button>
+      <button data-grp="music" role="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg><span class="lb">Player</span></button>
       <button data-grp="stats" role="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><span class="lb">Analytics</span></button>
       <button data-grp="demos" role="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/></svg><span class="lb">Demos</span><span class="cnt" id="dmcnt" title="Live links"></span></button>
     </nav>
@@ -443,9 +443,10 @@ document.addEventListener('keydown',function(e){if(/^\d$/.test(e.key))press(e.ke
     <iframe id="jdframe" title="Jummah Dash" style="width:100%;height:calc(100vh - 190px);min-height:480px;border:0;background:transparent" loading="lazy"></iframe>
   </section>
 
-  <!-- MUSIC: SMR Player tracks (upload, edit, private/public) = /music/?manage=1 -->
+  <!-- PLAYER: SMR Player tracks (upload, edit, private/public) = /music/index.php?manage=1 (/music/ alone has no index.html, so SiteGround says no access) -->
   <section id="tab-music" class="tab hidden">
-    <div class="bar"><div><h1>Music</h1><p class="sub">Upload and manage tracks on SMR Player. Visitors never see these tools. <a href="/player" target="_blank" rel="noopener" style="color:inherit">Open the player</a></p></div></div>
+    <div class="bar"><div style="flex:1"><h1>Player</h1><p class="sub">Your tracks on SMR Player: upload, lyrics, downloads, private or public. Visitors never see these tools.</p>
+      <div class="row" style="gap:8px;margin-top:10px;flex-wrap:wrap"><a class="btn sm pri" href="/player" target="_blank" rel="noopener">Open player (what people see)</a><a class="btn sm" href="#stats">Analytics</a></div></div></div>
     <iframe id="muframe" title="SMR Player tracks" allow="autoplay" style="width:100%;height:calc(100vh - 210px);min-height:480px;border:0;background:transparent;border-radius:14px" loading="lazy"></iframe>
   </section>
 
@@ -573,7 +574,7 @@ var ICON={dots:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="
 
 /* ---------- tabs (hash) ---------- */
 var lastDemoTab='demos';
-var showTab=function(t){if(['today','demos','send','live','designs','games','flappy','jummah','mail','music','stats'].indexOf(t)<0)t='today';if(window.SMRPlanner){if(t==='today')SMRPlanner.show();else SMRPlanner.hide()}if(t==='games')gamesCards();if(t==='jummah'){var jf=document.getElementById('jdframe');if(jf&&!jf.src)jf.src='/jummahdash/admin.php'}if(t==='stats'){var sf=document.getElementById('stframe');if(sf&&!sf.src)sf.src='/music/stats.php'}if(t==='music'){var mf=document.getElementById('muframe');if(mf&&!mf.src)mf.src='/music/?manage=1'}if(t==='flappy'){var ff=document.getElementById('fkframe');if(ff&&!ff.src)ff.src='/flappy/admin.php'}
+var showTab=function(t){if(['today','demos','send','live','designs','games','flappy','jummah','mail','music','stats'].indexOf(t)<0)t='today';if(window.SMRPlanner){if(t==='today')SMRPlanner.show();else SMRPlanner.hide()}if(t==='games')gamesCards();if(t==='jummah'){var jf=document.getElementById('jdframe');if(jf&&!jf.src)jf.src='/jummahdash/admin.php'}if(t==='stats'){var sf=document.getElementById('stframe');if(sf&&!sf.src)sf.src='/music/stats.php'}if(t==='music'){var mf=document.getElementById('muframe');if(mf&&!mf.src)mf.src='/music/index.php?manage=1'}if(t==='flappy'){var ff=document.getElementById('fkframe');if(ff&&!ff.src)ff.src='/flappy/admin.php'}
   var grp=(t==='today'||t==='mail'||t==='music'||t==='stats')?t:(t==='games'||t==='flappy'||t==='jummah')?'games':'demos';if(grp==='demos')lastDemoTab=t;
   document.querySelectorAll('[data-tab]').forEach(function(b){b.classList.toggle('on',b.dataset.tab===t)});document.querySelectorAll('[data-grp]').forEach(function(b){b.classList.toggle('on',b.dataset.grp===grp)});document.getElementById('subtabs').classList.toggle('hidden',grp!=='demos');
   document.querySelectorAll('.tab').forEach(function(s){s.classList.toggle('hidden',s.id!=='tab-'+t)});window.scrollTo(0,0);if(t==='live'&&typeof load==='function'&&D.length)load();if(t!=='send'&&$('created').dataset.used&&typeof resetSend==='function')resetSend();if(t==='mail'&&typeof mailOpen==='function')mailOpen();if(t==='designs'&&typeof dLoad==='function')dLoad()};
