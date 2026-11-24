@@ -1512,7 +1512,8 @@ document.addEventListener('change', e => { if (e.target.closest('[data-lppol]'))
 const lockPop = () => modal(`<div class="mhead"><h3>Sign in to use this</h3>${closeX}</div><p>The hub is for staff, trustees and volunteers of Luton organisations. Sign up your organisation, or log in if you’ve been invited.</p><div class="row"><button class="btn p" data-join>Sign up your organisation</button><button class="btn s" data-join>Log in</button></div><p class="note"><button class="linkbtn" data-eligible>Is my organisation eligible?</button></p>`);
 document.addEventListener('click', e => { if (!e.target.closest('[data-eligible]')) return; e.preventDefault();
   modal(`<div class="mhead"><h3>Is my organisation eligible?</h3>${closeX}</div><p>The hub is free for organisations that work in or near Luton and serve the community:</p><ul class="ticks"><li>Schools, academies and colleges</li><li>Mosques, churches, gurdwaras, temples and other places of faith</li><li>Registered charities, CIOs and CICs</li><li>Community, youth and voluntary groups, including unregistered groups</li></ul><p>Accounts are for staff, trustees and volunteers aged 18 or over. We check every organisation before giving access. <button class="linkbtn" data-howverify>How we verify</button></p><p class="note">Businesses can’t join as organisations, but can offer discounts or skills through a member organisation.</p><div class="row"><button class="btn p" data-join>Sign up your organisation</button></div>`); });
-Object.keys(V).forEach(k => { const fn = V[k]; V[k] = id => { if (allowed(k, id)) return fn(id); if (k !== 'home') setTimeout(() => { if (!allowed(k, id)) lockPop(); }, 60); return landing(); }; });
+const gate = k => { const fn = V[k]; if (!fn || fn.__g) return; V[k] = id => { if (allowed(k, id)) return fn(id); if (k !== 'home') setTimeout(() => { if (!allowed(k, id)) lockPop(); }, 60); return landing(); }; V[k].__g = 1; };
+Object.keys(V).forEach(gate);
 const _home = V.home; V.home = id => (approvedAcct() || L.isOwner || volLinked()) ? _home(id) : landing();
 /* solo views (item, page) for people outside the hub: no navigation */
 L.after.push(r => { const pub = !approvedAcct() && !L.isOwner; document.body.classList.toggle('solo', (r.v === 'item' && PEOPLE.includes(r.id.split('-')[0])) || (pub && ['item', 'page'].includes(r.v)));
@@ -1843,5 +1844,5 @@ if (store.get('lang', 'en') !== 'en') { store.set('lang', 'en'); document.cookie
 
 
 /* shared with tools3.js */
-L.T3 = { regTool, TL, q1, tCard, tOut, tAns, tKey, tForm, si, gi, addNav, LIVE_BASE, LIVE, ex, closeX, copyBtn, sub, listItems, fmtDate, tPlain, SECTION_TOOLS, prof, $, $$, evSteps, evList, evDate, evTicks, fmtD, minus, capFor, PROMO, rems, bellBtn, remindModal, BIDCK, SEASONS, langStep, LSET, lnk };
+L.T3 = { gate, allowed, regTool, TL, q1, tCard, tOut, tAns, tKey, tForm, si, gi, addNav, LIVE_BASE, LIVE, ex, closeX, copyBtn, sub, listItems, fmtDate, tPlain, SECTION_TOOLS, prof, $, $$, evSteps, evList, evDate, evTicks, fmtD, minus, capFor, PROMO, rems, bellBtn, remindModal, BIDCK, SEASONS, langStep, LSET, lnk };
 });
