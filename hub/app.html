@@ -1,6 +1,14 @@
 <!DOCTYPE html>
-<html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="robots" content="noindex"><title>Luton Community Hub</title><meta name="description" content="Free help, funding, volunteers, training and tools for Luton schools, mosques, charities and community groups, with design, print and marketing at community rates. By SMR Digital.">
+<link rel="manifest" href="manifest.webmanifest"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Community Hub"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="format-detection" content="telephone=no">
+<style>html,body{overscroll-behavior:none;-webkit-text-size-adjust:100%;text-size-adjust:100%}*{touch-action:manipulation}</style>
+<script>/* no zoom on phones (owner rule): pinch, double-tap, ctrl+wheel, ctrl +/- */
+(function(){var d=document;['gesturestart','gesturechange','gestureend'].forEach(function(e){d.addEventListener(e,function(ev){ev.preventDefault()},{passive:false})});
+d.addEventListener('touchmove',function(e){if(e.touches&&e.touches.length>1)e.preventDefault()},{passive:false});
+var last=0;d.addEventListener('touchend',function(e){var n=Date.now();if(n-last<320&&!(e.target.closest&&e.target.closest('input,textarea,select,[contenteditable]')))e.preventDefault();last=n},{passive:false});
+addEventListener('wheel',function(e){if(e.ctrlKey)e.preventDefault()},{passive:false});
+addEventListener('keydown',function(e){if((e.ctrlKey||e.metaKey)&&/^(=|\+|-|_|0)$/.test(e.key))e.preventDefault()});})();</script>
 <meta name="theme-color" content="#4545D6">
 <link rel="icon" href="brand/favicon.svg" type="image/svg+xml"><link rel="icon" href="brand/favicon-32.png" sizes="32x32" type="image/png"><link rel="apple-touch-icon" href="brand/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

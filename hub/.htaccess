@@ -9,3 +9,6 @@ DirectoryIndex index.php
   RewriteEngine On
   RewriteRule ^(index|app)\.html$ index.php [L]
 </IfModule>
+<IfModule mod_mime.c>
+  AddType application/manifest+json .webmanifest
+</IfModule>

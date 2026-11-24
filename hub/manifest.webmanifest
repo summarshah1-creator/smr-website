@@ -1,0 +1,16 @@
+{
+  "name": "Luton Community Hub",
+  "short_name": "Community Hub",
+  "description": "Free help, funding, volunteers and tools for Luton schools, mosques, charities and community groups.",
+  "start_url": "/hub/?s=homescreen",
+  "scope": "/hub/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f6f4f0",
+  "theme_color": "#4545D6",
+  "icons": [
+    { "src": "brand/hub-icon-256.png", "sizes": "256x256", "type": "image/png" },
+    { "src": "brand/hub-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "brand/hub-icon-1024.png", "sizes": "1024x1024", "type": "image/png" }
+  ]
+}
