@@ -304,16 +304,18 @@
   var WIDGETS = [
     { v: 'today', name: 'SMR Today', size: 'Large', title: 'Your day', sub: 'Next job, your next meeting, what\'s overdue and what else is on your list.' },
     { v: 'money', name: 'SMR Money', size: 'Large or Medium', title: 'Owed to you', sub: 'Who owes you and how much, your monthly income, invoices to send.' },
-    { v: 'care', name: 'SMR Sites', size: 'Large or Medium', title: 'Client sites', sub: 'Any client website that\'s down, a padlock running out, renewals due.' }
+    { v: 'care', name: 'SMR Sites', size: 'Large or Medium', title: 'Client sites', sub: 'Any client website that\'s down, a padlock running out, renewals due.' },
+    { v: 'today', id: 'lock', img: 'lock', name: 'SMR Lock', size: 'Lock Screen · Rectangular (the wide one)', title: 'Lock Screen', sub: 'Your next job and what\'s overdue, right on the Lock Screen. Also works as the small round one (number of things to do) or the line above the clock.' }
   ];
   var widgets = function () {
-    A.openSheet('<div class="plf"><h2>Phone widgets</h2><p class="sub">Three ready-made widgets for your iPhone. Each one updates itself; you only set it up once.</p>'
-      + WIDGETS.map(function (w) { return '<div class="plwg"><img src="wprev/' + w.v + '.png?v=2" alt=""><div class="tx"><b>' + w.title + '</b><span>' + w.sub + '</span><small>' + w.size + ' widget · name it <b>' + w.name + '</b></small><button class="btn pri sm" type="button" data-wcopy="' + w.v + '">Copy ' + w.name + ' script</button></div></div>'; }).join('')
+    A.openSheet('<div class="plf"><h2>Phone widgets</h2><p class="sub">Ready-made widgets for your iPhone Home Screen and Lock Screen. Each one updates itself; you only set it up once.</p>'
+      + WIDGETS.map(function (w) { return '<div class="plwg"><img src="wprev/' + (w.img || w.v) + '.png?v=2" alt=""><div class="tx"><b>' + w.title + '</b><span>' + w.sub + '</span><small>' + w.size + ' widget · name it <b>' + w.name + '</b></small><button class="btn pri sm" type="button" data-wcopy="' + (w.id || w.v) + '">Copy ' + w.name + ' script</button></div></div>'; }).join('')
       + '<div class="plsec">How to add one<i></i></div><ol class="plsteps"><li>Install <b>Scriptable</b> (free) from the App Store.</li><li>Tap <b>Copy</b> on the widget you want above.</li><li>Open Scriptable, tap <b>+</b>, paste, tap the title at the top and call it the name shown (e.g. <b>SMR Today</b>), then <b>Done</b>.</li>'
       + '<li>On your Home Screen: hold an empty spot → <b>Edit</b> (top left) → <b>Add Widget</b> → Scriptable → swipe to the size shown → <b>Add Widget</b>.</li><li>Tap the new widget while it wiggles → <b>Script</b> → pick the one you named. Done.</li><li>Want them in one spot? Drag one widget on top of another of the same size and swipe up and down between them.</li></ol>'
+      + '<div class="plsec">Lock Screen<i></i></div><ol class="plsteps"><li>Copy <b>SMR Lock</b> above and paste it into Scriptable the same way, named <b>SMR Lock</b>.</li><li>Lock your phone, then hold the Lock Screen → <b>Customize</b> → <b>Lock Screen</b>.</li><li>Tap the widget row under the clock → scroll to <b>Scriptable</b> → tap the <b>wide one</b> (it takes 2 of the 4 spaces).</li><li>Tap the new widget → <b>Script</b> → <b>SMR Lock</b>. Tap outside, then <b>Done</b>.</li><li>Room left? Add the small round one next to it the same way (number of things to do). Want money instead? In <b>Parameter</b> type <b>money</b> (or <b>care</b> for client sites).</li></ol>'
       + '<p class="sub" style="margin-top:8px">The scripts carry your private link. Keep them to yourself; if one gets shared, use New secret link in ⚙ and copy them again.</p></div>', function (box) {
       box.querySelectorAll('[data-wcopy]').forEach(function (b) { b.addEventListener('click', function () {
-        var w = WIDGETS.filter(function (x) { return x.v === b.dataset.wcopy; })[0];
+        var w = WIDGETS.filter(function (x) { return (x.id || x.v) === b.dataset.wcopy; })[0];
         A.copy(LOADER.replace('__FEED__', P.feed).replace('__VIEW__', w.v), w.name + ' script copied. Now paste it in Scriptable.');
         b.textContent = '✓ Copied'; setTimeout(function () { b.textContent = 'Copy ' + w.name + ' script'; }, 2500);
       }); });

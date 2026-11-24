@@ -1,4 +1,4 @@
-// SMR_WIDGET_V3 · SMR Studio widget for Scriptable (Home Screen small / medium / large, Lock Screen rectangle / inline / circle).
+// SMR_WIDGET_V4 · SMR Studio widget for Scriptable (Home Screen small / medium / large, Lock Screen rectangle / inline / circle).
 // Downloaded by the small loader script on the phone every time the widget refreshes, so changes here reach the phone by themselves.
 // Widget parameter (long-press → Edit Widget → Parameter): today (default) · money · leads · care. Stack several and swipe between them.
 // Owner 24 Nov: it must be nice to look at, not "coding": one big friendly headline, soft cards, icons, few words, nothing cramped.
@@ -63,25 +63,41 @@ module.exports = async function (FEED, VIEW) {
   const d = await getData();
   const cl = (d && d.cl) || {};
 
-  /* ---------- Lock Screen (system style, kept simple) ---------- */
-  if (fam === "accessoryInline") {
-    const w = new ListWidget(); w.url = ADMIN + "#today";
-    w.addText(d ? (d.next ? "Next: " + d.next.title : "All clear") : "SMR Studio");
-    return Script.setWidget(w);
-  }
-  if (fam === "accessoryCircular") {
-    const w = new ListWidget(); w.url = ADMIN + "#today"; w.addAccessoryWidgetBackground = true;
-    const s = w.addStack(); s.layoutVertically(); s.centerAlignContent();
-    const a = s.addText(String(d ? d.overdue + d.due_today : 0)); a.font = Font.heavyRoundedSystemFont(22); a.centerAlignText();
-    const b = s.addText("to do"); b.font = Font.mediumRoundedSystemFont(10); b.centerAlignText();
-    return Script.setWidget(w);
-  }
-  if (fam === "accessoryRectangular") {
-    const w = new ListWidget(); w.url = ADMIN + "#today"; w.addAccessoryWidgetBackground = true;
+  /* ---------- Lock Screen (iOS styles it in your clock colour; parameter today / money / care / leads picks what it shows) ---------- */
+  if (fam.indexOf("accessory") === 0) {
+    const owedL = (cl.job_overdue || 0) + (cl.bills || []).reduce((x, y) => x + y.amount, 0);
+    const careN = (cl.care_list || []).length;
+    const todo = d ? (d.overdue || 0) + (d.due_today || 0) : 0;
+    const L = {
+      today: { url: "today", sym: "checklist", big: String(todo), small: "to do", line: d && d.next ? d.next.title : "Nothing waiting on you",
+               sub: [d && d.overdue ? d.overdue + " overdue" : "", d && d.due_today ? d.due_today + " today" : "", cl.leads ? cl.leads + " to chase" : ""].filter(Boolean).join(" · ") || "You're on top of it",
+               inline: d && d.next ? "Next: " + d.next.title : "All clear today" },
+      money: { url: "clients", sym: "sterlingsign.circle", big: owedL ? "£" + (owedL >= 100000 ? Math.round(owedL / 100000) + "k" : Math.round(owedL / 100)) : "0", small: "owed",
+               line: owedL ? money(owedL) + " owed to you" : "Nobody owes you", sub: money(cl.monthly) + " a month" + (cl.inv ? " · " + cl.inv + " invoices to send" : ""),
+               inline: owedL ? money(owedL) + " owed to you" : "All paid up" },
+      care: { url: "clients", sym: "globe", big: String(careN), small: "sites", line: careN ? careN + (careN === 1 ? " site needs you" : " sites need you") : "All sites fine",
+              sub: careN ? (cl.care_list[0].client + ": " + cl.care_list[0].title) : "Up-time, padlocks and renewals OK", inline: careN ? careN + " client sites need you" : "All client sites fine" },
+      leads: { url: "leads", sym: "person.2", big: String(cl.leads || 0), small: "leads", line: cl.leads ? cl.leads + " leads to chase" : "No leads to chase",
+               sub: cl.pipeline ? money(cl.pipeline) + " up for grabs" : "Add one in SMR Studio", inline: cl.leads ? cl.leads + " leads to chase today" : "No leads to chase" }
+    }[view] || null;
+    const v = L || { url: "today", sym: "checklist", big: String(todo), small: "to do", line: "SMR Studio", sub: "", inline: "SMR Studio" };
+    const w = new ListWidget(); w.url = ADMIN + "#" + v.url; w.refreshAfterDate = new Date(Date.now() + 10 * 60 * 1000);
     if (!d) { w.addText("SMR Studio"); return Script.setWidget(w); }
-    const a = w.addText(d.next ? d.next.title : "Nothing waiting on you"); a.font = Font.boldRoundedSystemFont(14); a.lineLimit = 2;
-    const bits = [d.overdue ? d.overdue + " overdue" : "", cl.leads ? cl.leads + " to chase" : ""].filter(Boolean).join("  ·  ");
-    const b = w.addText(bits || "You're on top of it"); b.font = Font.mediumRoundedSystemFont(12); b.lineLimit = 1;
+    if (fam === "accessoryInline") { w.addText(v.inline); return Script.setWidget(w); }
+    w.addAccessoryWidgetBackground = true;
+    if (fam === "accessoryCircular") {
+      const s2 = w.addStack(); s2.layoutVertically(); s2.centerAlignContent();
+      const ic = SFSymbol.named(v.sym); if (ic) { const im = s2.addImage(ic.image); im.imageSize = new Size(12, 12); im.centerAlignImage(); }
+      const a = s2.addText(v.big); a.font = Font.heavyRoundedSystemFont(v.big.length > 3 ? 15 : 20); a.centerAlignText(); a.minimumScaleFactor = 0.6;
+      const b = s2.addText(v.small); b.font = Font.mediumRoundedSystemFont(9); b.centerAlignText();
+      return Script.setWidget(w);
+    }
+    // accessoryRectangular
+    const top = w.addStack(); top.centerAlignContent();
+    const ic = SFSymbol.named(v.sym); if (ic) { const im = top.addImage(ic.image); im.imageSize = new Size(11, 11); top.addSpacer(4); }
+    const t0 = top.addText("SMR STUDIO"); t0.font = Font.semiboldRoundedSystemFont(10); t0.textOpacity = 0.75;
+    const a = w.addText(v.line); a.font = Font.boldRoundedSystemFont(14); a.lineLimit = 2; a.minimumScaleFactor = 0.8;
+    if (v.sub) { const b = w.addText(v.sub); b.font = Font.mediumRoundedSystemFont(11.5); b.lineLimit = 1; b.textOpacity = 0.85; }
     return Script.setWidget(w);
   }
 
