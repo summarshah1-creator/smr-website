@@ -32,7 +32,13 @@ function ai_call(array $content, int $maxOut = 900, string $system = ''): string
         CURLOPT_HTTPHEADER => ['x-api-key: ' . $key, 'anthropic-version: 2023-06-01', 'content-type: application/json']]);
     $res = curl_exec($c); $code = (int) curl_getinfo($c, CURLINFO_HTTP_CODE); curl_close($c);
     $j = json_decode((string) $res, true) ?: [];
-    if ($code !== 200) throw new RuntimeException('AI: ' . ($j['error']['message'] ?? 'no answer (' . $code . ')'));
+    if ($code !== 200) {
+        $m = (string) ($j['error']['message'] ?? 'no answer (' . $code . ')');
+        if (stripos($m, 'workspace') !== false) $m = 'This key isn\'t tied to a workspace. In the Claude Console make a new key and pick a workspace (e.g. Default) when you create it, then paste that one in.';
+        elseif ($code === 401) $m = 'That key wasn\'t accepted. It may be deleted or mistyped: make a new one in the Claude Console and paste it in.';
+        elseif (stripos($m, 'credit') !== false) $m = 'Your Claude Console has no credit left. Add some under Settings → Billing.';
+        throw new RuntimeException('AI: ' . $m);
+    }
     $u = $j['usage'] ?? [];
     $cost = ((int) ($u['input_tokens'] ?? 0) * AI_PRICE_IN + (int) ($u['output_tokens'] ?? 0) * AI_PRICE_OUT) / 1e6;
     ai_kv_set('spent-' . date('Y-m'), (string) (ai_spent() + $cost));
