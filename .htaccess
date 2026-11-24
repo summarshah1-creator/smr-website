@@ -17,6 +17,11 @@ DirectoryIndex index.html
   RewriteRule ^app-demo/[a-z0-9-]+/([A-Za-z0-9_-]{16,64})/?$ demo/index.php?k=$1 [L,QSA]
   # Shared mock-ups (view only): /m/<id>
   RewriteRule ^m/([A-Za-z0-9]{10})/?$ share/index.php?id=$1 [L,QSA]
+  # Luton Community Hub: hub.smrgraphics.co.uk (if it shares this folder) and /hub → /hub/
+  RewriteCond %{HTTP_HOST} ^hub\.smrgraphics\.co\.uk$ [NC]
+  RewriteRule ^(.*)$ https://smrgraphics.co.uk/hub/$1 [R=302,L]
+  RewriteRule ^hub$ /hub/ [R=301,L]
+  RewriteRule ^(community-?hub)/?$ /hub/ [R=302,L,NC]
   # Kaya Matchday Studio: /kayafootball → /kayafootball/
   RewriteRule ^kayafootball$ /kayafootball/ [R=301,L]
   # Flappy Kabootar game: /flappykabootar (and /flappy-kabootar) → /flappy/
