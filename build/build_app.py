@@ -177,7 +177,8 @@ RGBQ = re.compile(r"(['\"])(\d{1,3}),\s?(\d{1,3}),\s?(\d{1,3})(['\"])")
 nm = 0
 for root, _, fs in os.walk(OUT):
     for f in fs:
-        if not f.endswith(('.js', '.html', '.css', '.svg')): continue
+        # other organisations' logos keep their real colours
+        if not f.endswith(('.js', '.html', '.css')) or f == 'help-logos.js': continue
         q = os.path.join(root, f); t = open(q, encoding='utf-8').read(); o = t
         t = HEX.sub(_hex, t); t = RGB.sub(_rgb, t)
         t = RGBQ.sub(lambda m: m.group(1) + '{},{},{}'.format(*_mute(*(min(255, int(m.group(i))) for i in (2, 3, 4)))) + m.group(5), t)
