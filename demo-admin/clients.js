@@ -30,6 +30,7 @@
     '#cl .jbh,#ld .jbh{display:flex;align-items:center;gap:10px;margin-bottom:14px}#cl .jbh h1,#ld .jbh h1{flex:1;margin:0}#cl .jbh small,#ld .jbh small{display:block;color:var(--muted);font:600 13px Manrope,sans-serif;margin-top:2px}',
     '.clsrch{width:100%;height:44px;border-radius:13px;border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--ink);padding:0 14px;font-size:15px;outline:0;margin-bottom:10px}',
     '.clc{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:13px 14px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.03);margin-bottom:8px}',
+    '.av.img{background:#fff!important;overflow:hidden;padding:0}.av.img img{width:100%;height:100%;object-fit:cover;display:block}.clhd .av{cursor:pointer;position:relative}.clhd .av .cam{position:absolute;right:-2px;bottom:-2px;width:20px;height:20px;border-radius:50%;background:#1d1a2b;color:#fff;display:grid;place-items:center;font-size:11px;box-shadow:0 0 0 2px #fff}',
     '.clc .av{width:40px;height:40px;border-radius:12px;flex:none;display:grid;place-items:center;font:800 16px Sora,sans-serif;color:#fff;background:linear-gradient(135deg,#5b5bff,#d63bff)}',
     '.clc .tx{flex:1;min-width:0}.clc b{display:block;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.clc span{font-size:12.5px;color:var(--muted)}.clc em{font-style:normal;font:800 14px Sora,sans-serif;color:#cfb4ff;white-space:nowrap}',
     '.clc .dots{display:flex;gap:4px;margin-top:4px;flex-wrap:wrap}.clc .dots i{font-style:normal;font-size:10.5px;font-weight:800;padding:2px 7px;border-radius:999px}.clc .dots .r{background:rgba(255,84,112,.18);color:#ff9db0}.clc .dots .a{background:rgba(255,181,71,.16);color:#ffd08a}.clc .dots .g{background:rgba(61,220,151,.14);color:#7ff0bd}',
@@ -61,6 +62,32 @@
     var l = $('ldcnt'); if (l) l.textContent = S.leads_due || '';
   };
   var byId = function (arr, id) { for (var i = 0; i < arr.length; i++) if (arr[i].id === id) return arr[i]; };
+  var logoUrl = function (c) { return c.logo_url || (typeof c.logo === 'string' ? c.logo : ''); };
+  var avatar = function (c, attrs) { var u = logoUrl(c); return '<div class="av' + (u ? ' img' : '') + '"' + (attrs || '') + '>' + (u ? '<img src="' + esc(u) + '" alt="" loading="lazy">' : esc(initials(c.name))) + (attrs ? '<span class="cam">\u270e</span>' : '') + '</div>'; };
+  /* Any picture → 256px square PNG (logo fitted with a little space; dark background if the logo is mostly white). */
+  var logoPng = function (file) {
+    return new Promise(function (ok, no) {
+      var u = URL.createObjectURL(file), im = new Image();
+      im.onload = function () {
+        var N = 256, cv = document.createElement('canvas'); cv.width = cv.height = N; var g = cv.getContext('2d');
+        var t = document.createElement('canvas'); t.width = 64; t.height = 64; var tg = t.getContext('2d'); tg.drawImage(im, 0, 0, 64, 64);
+        var d = tg.getImageData(0, 0, 64, 64).data, L = 0, n = 0, op = 0;
+        for (var i = 0; i < d.length; i += 4) { if (d[i + 3] > 200) { L += .3 * d[i] + .59 * d[i + 1] + .11 * d[i + 2]; n++; } if (d[i + 3] > 250) op++; }
+        var full = op > 64 * 64 * .97 && Math.abs(im.width - im.height) < im.width * .06;
+        g.fillStyle = n && L / n > 205 && !full ? '#16131f' : '#fff'; g.fillRect(0, 0, N, N);
+        var pad = full ? 0 : N * .12, s = Math.min((N - 2 * pad) / im.width, (N - 2 * pad) / im.height), w = im.width * s, h = im.height * s;
+        if (full) { s = Math.max(N / im.width, N / im.height); w = im.width * s; h = im.height * s; }
+        g.imageSmoothingQuality = 'high'; g.drawImage(im, (N - w) / 2, (N - h) / 2, w, h); URL.revokeObjectURL(u); ok(cv.toDataURL('image/png'));
+      };
+      im.onerror = function () { no(new Error('That picture couldn\'t be opened.')); }; im.src = u;
+    });
+  };
+  var pickLogo = function (c) {
+    var inp = document.createElement('input'); inp.type = 'file'; inp.accept = 'image/*';
+    inp.onchange = function () { if (!inp.files[0]) return; logoPng(inp.files[0]).then(function (png) { return api('cl_logo', { id: c.id, png: png }); })
+      .then(function () { A.toast('Logo added'); render(); page(c.id); }).catch(function (er) { A.toast(er.message, true); }); };
+    inp.click();
+  };
   var initials = function (n) { return String(n || '?').replace(/[^A-Za-z0-9 ]/g, '').split(/\s+/).filter(Boolean).slice(0, 2).map(function (w) { return w[0]; }).join('').toUpperCase() || '?'; };
   var chips = function (name, opts, val) { return '<div class="chips" data-chips="' + name + '">' + Object.keys(opts).map(function (k) { return '<button type="button" data-v="' + esc(k) + '" class="' + (String(val) === String(k) ? 'on' : '') + '">' + esc(opts[k]) + '</button>'; }).join('') + '</div>'; };
   var bindChips = function (box, val) { box.querySelectorAll('[data-chips]').forEach(function (g) { g.addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; g.querySelectorAll('button').forEach(function (x) { x.classList.toggle('on', x === b); }); val[g.dataset.chips] = b.dataset.v; if (val._on) val._on(g.dataset.chips); }); }); };
@@ -125,7 +152,7 @@
     });
     h += list.length ? list.map(function (c) {
       var dots = (c.problem ? '<i class="r">£ unpaid</i>' : '') + (c.care_due ? '<i class="a">' + c.care_due + ' care due</i>' : '') + (c.monthly ? '<i class="g">monthly</i>' : '');
-      return '<button class="clc" data-cl="' + c.id + '"><div class="av">' + esc(initials(c.name)) + '</div><div class="tx"><b>' + esc(c.name) + '</b><span>' + esc([c.person, C.types[c.type] && c.type !== 'other' ? C.types[c.type] : ''].filter(Boolean).join(' · ') || c.phone || 'No details yet') + '</span>' + (dots ? '<div class="dots">' + dots + '</div>' : '') + '</div>' + (c.monthly ? '<em>' + money(c.monthly) + '/mo</em>' : '') + '</button>';
+      return '<button class="clc" data-cl="' + c.id + '">' + avatar(c) + '<div class="tx"><b>' + esc(c.name) + '</b><span>' + esc([c.person, C.types[c.type] && c.type !== 'other' ? C.types[c.type] : ''].filter(Boolean).join(' · ') || c.phone || 'No details yet') + '</span>' + (dots ? '<div class="dots">' + dots + '</div>' : '') + '</div>' + (c.monthly ? '<em>' + money(c.monthly) + '/mo</em>' : '') + '</button>';
     }).join('') : '<div class="plempty">' + (q ? 'No client matches "' + esc(q) + '".' : 'Nobody here yet.') + '</div>';
     h += '<p class="sub" style="text-align:center;margin:14px 0 80px">Everyone from Jobs, Proofs and Designs is added here by themselves.</p>';
     el.innerHTML = h;
@@ -139,7 +166,7 @@
   };
   var showPage = function (P) {
     var c = P.client, s = P.stats, t = now();
-    var h = '<div class="clp"><div class="clhd"><div class="av">' + esc(initials(c.name)) + '</div><div style="flex:1;min-width:0"><h2>' + esc(c.name) + '</h2><div class="who">' + esc([c.person, C.types[c.type] && c.type !== 'other' ? C.types[c.type] : '', c.status !== 'active' ? (c.status === 'past' ? 'Past client' : 'Archived') : ''].filter(Boolean).join(' · ')) + '</div></div><button class="btn sm" data-cedit>Edit</button></div>';
+    var h = '<div class="clp"><div class="clhd">' + avatar(c, ' data-clogo title="Change logo"') + '<div style="flex:1;min-width:0"><h2>' + esc(c.name) + '</h2><div class="who">' + esc([c.person, C.types[c.type] && c.type !== 'other' ? C.types[c.type] : '', c.status !== 'active' ? (c.status === 'past' ? 'Past client' : 'Archived') : ''].filter(Boolean).join(' · ')) + '</div></div><button class="btn sm" data-cedit>Edit</button></div>';
     h += '<div class="clact">' + (c.phone ? '<button class="btn sm wa" data-cwa>' + ICO.wa + 'WhatsApp</button><a class="btn sm" href="tel:' + esc(c.phone.replace(/\s/g, '')) + '">' + ICO.phone + 'Call</a>' : '<button class="btn sm" data-cedit>+ Add their number</button>')
       + (c.email ? '<a class="btn sm" href="mailto:' + esc(c.email) + '">' + ICO.mail + 'Email</a>' : '') + (c.website ? '<a class="btn sm" href="' + esc(/^https?:/.test(c.website) ? c.website : 'https://' + c.website) + '" target="_blank" rel="noopener">' + ICO.globe + 'Site</a>' : '') + '</div>';
     h += '<div class="clstat"><div><b>' + money(s.spent) + '</b><span>Paid you</span></div><div><b style="' + (s.owed ? 'color:#ff9db0' : '') + '">' + money(s.owed) + '</b><span>Owes</span></div><div><b>' + (s.monthly ? money(s.monthly) : '–') + '</b><span>A month</span></div>'
@@ -197,9 +224,12 @@
       + '<label class="f">Instagram</label><input type="text" name="instagram" value="' + esc(c.instagram) + '" placeholder="@…" autocomplete="off">'
       + '<label class="f">Address (shows on invoices)</label><textarea name="address" placeholder="optional">' + esc(c.address) + '</textarea>'
       + '<label class="f">Notes (only you)</label><textarea name="notes">' + esc(c.notes) + '</textarea>'
+      + (c.id ? '<label class="f">Logo</label><div class="row" style="gap:8px;align-items:center">' + avatar(c).replace('class="av', 'style="width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-weight:800;color:#fff;background:linear-gradient(135deg,#5b5bff,#d63bff)" class="av') + '<button class="btn sm" type="button" data-lgup>' + (logoUrl(c) ? 'Change logo' : 'Add logo') + '</button>' + (c.logo && typeof c.logo !== 'string' && +c.logo ? '<button class="btn sm" type="button" data-lgdel>Remove</button>' : '') + '</div>' : '')
       + '<div class="row" style="margin-top:16px"><button class="btn pri" style="flex:1" type="submit">Save</button></div></form>', function (box) {
       bindChips(box, val);
       var f = box.querySelector('form');
+      var lu = box.querySelector('[data-lgup]'); if (lu) lu.onclick = function () { pickLogo(c); };
+      var ld = box.querySelector('[data-lgdel]'); if (ld) ld.onclick = function () { api('cl_logo', { id: c.id, png: '' }).then(function () { A.toast('Logo removed'); render(); page(c.id); }); };
       f.addEventListener('submit', function (e) { e.preventDefault();
         var b = { id: c.id || 0, name: f.name.value, person: f.person.value, phone: f.phone.value, email: f.email.value, type: val.type, website: f.website.value, instagram: f.instagram.value, address: f.address.value, notes: f.notes.value };
         api('cl_save', b).then(function (j) { A.toast('Saved'); render(); page(j.id); }).catch(function (er) { A.toast(er.message, true); });
@@ -404,6 +434,7 @@
     // client page
     if (PAGE && t.closest('#sheetin .clp')) {
       var c = PAGE.client;
+      if (t.closest('[data-clogo]')) return pickLogo(c);
       if (t.closest('[data-cedit]')) return editClient(c);
       if (t.closest('[data-cwa]')) return wa('Hi ' + first(c.person || c.name) + ', ', c.phone);
       if (t.closest('[data-padd]')) return editPlan(c.id);

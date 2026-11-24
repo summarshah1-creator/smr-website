@@ -40,6 +40,7 @@ function cl_db(): PDO {
     $pdo->exec("CREATE TABLE IF NOT EXISTS clients (id INTEGER PRIMARY KEY, name TEXT NOT NULL, person TEXT DEFAULT '', phone TEXT DEFAULT '', email TEXT DEFAULT '',
         type TEXT DEFAULT 'other', address TEXT DEFAULT '', website TEXT DEFAULT '', instagram TEXT DEFAULT '', notes TEXT DEFAULT '', status TEXT DEFAULT 'active',
         source TEXT DEFAULT '', keyp TEXT DEFAULT '', keyn TEXT DEFAULT '', created INTEGER, updated INTEGER)");
+    try { $pdo->exec("ALTER TABLE clients ADD COLUMN logo INTEGER DEFAULT 0"); } catch (Throwable $e) {}
     $pdo->exec("CREATE TABLE IF NOT EXISTS cl_plans (id INTEGER PRIMARY KEY, client_id INTEGER NOT NULL, token TEXT UNIQUE NOT NULL, kind TEXT DEFAULT 'monthly', title TEXT NOT NULL,
         incl TEXT DEFAULT '', amount INTEGER DEFAULT 0, day INTEGER DEFAULT 1, start INTEGER DEFAULT 0, status TEXT DEFAULT 'draft', method TEXT DEFAULT 'card', grace INTEGER DEFAULT 14,
         stripe_sess TEXT DEFAULT '', stripe_sub TEXT DEFAULT '', stripe_cust TEXT DEFAULT '', sub_status TEXT DEFAULT '', last_sync INTEGER DEFAULT 0, paused_at INTEGER DEFAULT 0,
@@ -114,13 +115,14 @@ function cl_guess_type(string $n): string {
     $n = strtolower($n);
     foreach (['food' => 'peri|pizza|chicken|grill|smash|wings|chippy|kebab|burger|junglees|flamez|flava|crave|chunk|steak|curry|lounge|mr chicken|phillyz|bombay|crispy',
               'cafe' => 'tim & ed|cafe|caf\x{e9}|chai|kahwa|coffee|brew|choccos|dessert|mikael', 'beauty' => 'barber|fade|valor|salon|skin|beauty',
-              'charity' => 'foundation|charity|foodbank|mission|masjid|mosque|centre|inspire|empowering|ummah', 'school' => 'school|college|academy|tutor',
+              'school' => 'school|college|academy|tutor|eae', 'charity' => 'foundation|charity|foodbank|mission|masjid|mosque|centre|inspire|empowering|ummah',
               'pro' => 'law|solicitor|accountant', 'shop' => 'supplement|clothing|rouh|shop|store',
               'trade' => 'tyres|auto|wash|av\b|pulse|packaging|archery|jewell|uniform|amped|print'] as $t => $re)
         if (preg_match('/' . $re . '/u', $n)) return $t;
     return 'other';
 }
 function cl_seed_once(PDO $pdo): void {
+    if (job_kv('cl_fix_eae') === '') { job_kv_set('cl_fix_eae', '1'); $pdo->exec("UPDATE clients SET type = 'school' WHERE keyn = 'eaecentre' AND type = 'charity'"); }
     if (job_kv('cl_seed1') !== '') return;
     if (function_exists('pl_db')) { try { pl_db(); } catch (Throwable $e) {} }
     job_kv_set('cl_seed1', (string) now());
@@ -438,12 +440,37 @@ function lead_parse(string $text): array {
 }
 
 /* ---------- the client page ---------- */
+/* Client logos (owner 24 Nov): uploaded one (private_dir()/clogo/<id>.png, served by demo-admin/clogo.php) or a ready-made one
+   from demo-admin/clogo/<file>.webp matched on the name (CL_LOGOS keys = cl_kn of the name, or the start of it). */
+const CL_LOGOS = [
+    'eaecentre' => 'eae', 'theeducationcentre' => 'eae', 'educationcentre' => 'eae', 'inspirefm' => 'inspire-fm', 'pulseav' => 'pulse-av', 'empoweringeducation' => 'empowering',
+    'goldenarrowarchery' => 'golden-arrow', 'foodbank' => 'foodbank', 'lutonfoodbank' => 'foodbank', 'activeluton' => 'active-luton', 'lutonsixthformcollege' => 'luton-sixth-form',
+    'nortonroadschool' => 'norton-road', 'nortonroadprimaryschool' => 'norton-road', 'grandroyale' => 'grand-royale', 'oneummah' => 'one-ummah', 'tutorbook' => 'tutorbook',
+    'ameejee' => 'amee-jee', 'courtneyfoundation' => 'courtney', 'ngsyouthcommunity' => 'ngs', 'ngs' => 'ngs', 'letseattogether' => 'lets-eat-together',
+    'smashnwings' => 'smash-n-wings', 'smashnwingsbedford' => 'smash-n-wings', 'smashnwingsluton' => 'smash-n-wings', 'kayalounge' => 'kaya', 'torossteakhouse' => 'toros', 'toros' => 'toros',
+    'beefking' => 'beef-king', 'krispylemonchicken' => 'krispy', 'krispy' => 'krispy', 'roundgreenchippy' => 'round-green-chippy', 'chaiexpress' => 'chai-express', 'manemen' => 'mane-men',
+    'chaiikhana' => 'chaiikhana', 'engine' => 'the-engine', 'alloyengineers' => 'alloy-engineers', 'frpsecurityprinting' => 'frp', 'frp' => 'frp',
+    'allureclub' => 'allure', 'bombaypizza' => 'bombay', 'cafegrill' => 'cafegrill', 'choccos' => 'choccos', 'chunkcookies' => 'chunk', 'chunk' => 'chunk', 'cravecorner' => 'crave',
+    'fadedistrictluton' => 'fade-district', 'fadedistrict' => 'fade-district', 'flamezluton' => 'flamez', 'flamez' => 'flamez', 'flavabox' => 'flava', 'forkysdesserts' => 'forkys', 'forkys' => 'forkys',
+    'goldwashmirpurjewellers' => 'goldwash', 'goldwash' => 'goldwash', 'junglees' => 'junglees', 'kahwacafe' => 'kahwa', 'mikaelcafe' => 'mikael', 'nurifyskin' => 'nurify',
+    'phillyzsmash' => 'phillyz', 'rouh' => 'rouh', 'sunnasupplements' => 'sunna', 'sunnahsupplements' => 'sunna', 'timeds' => 'timeds', 'valorbarbers' => 'valor', 'frpackaging' => 'frpack',
+    'gatsbylaw' => 'gatsby',
+];
+function cl_logo(array $c): string {
+    $id = (int) $c['id'];
+    if (!empty($c['logo'])) return '/demo-admin/clogo.php?id=' . $id . '&v=' . (int) $c['logo'];
+    $kn = cl_kn((string) $c['name']);
+    if (isset(CL_LOGOS[$kn])) return '/demo-admin/clogo/' . CL_LOGOS[$kn] . '.webp?v=1';
+    foreach (CL_LOGOS as $k => $f) if (strlen($k) >= 5 && strpos($kn, $k) === 0) return '/demo-admin/clogo/' . $f . '.webp?v=1';
+    return '';
+}
+function cl_logo_path(int $id): string { return private_dir() . '/clogo/' . $id . '.png'; }
 function cl_summary_row(array $c, array $plans, array $care, int $now): array {
     $monthly = 0; $problem = 0;
     foreach ($plans as $p) { if ($p['client_id'] !== (int) $c['id']) continue; if ($p['status'] === 'active') $monthly += $p['amount']; foreach ($p['bills'] as $b) if (in_array($b['state'], ['late', 'grace'], true)) $problem++; }
     $cdue = 0; foreach ($care as $k) if ($k['client_id'] === (int) $c['id'] && in_array($k['state'], ['due', 'bad'], true)) $cdue++;
     return ['id' => (int) $c['id'], 'name' => $c['name'], 'person' => $c['person'], 'phone' => $c['phone'], 'email' => $c['email'], 'type' => $c['type'], 'status' => $c['status'], 'website' => $c['website'],
-        'monthly' => $monthly, 'problem' => $problem, 'care_due' => $cdue, 'updated' => (int) $c['updated'], 'created' => (int) $c['created']];
+        'monthly' => $monthly, 'problem' => $problem, 'care_due' => $cdue, 'updated' => (int) $c['updated'], 'created' => (int) $c['created'], 'logo' => cl_logo($c)];
 }
 function cl_page(array $c, int $now): array {
     $pdo = cl_db();
@@ -491,7 +518,7 @@ function cl_page(array $c, int $now): array {
     if (isset($areas['digital']) && !$monthly) $ideas[] = ['k' => 'plan', 't' => 'Move them onto a monthly plan (hosting, updates, support)'];
     if ($last && $now - $last > 120 * 86400) $ideas[] = ['k' => 'checkin', 't' => 'No new job for ' . (int) floor(($now - $last) / 2592000) . ' months: send a friendly check-in with an idea'];
     if ($spent >= 30000 && $owed === 0) $ideas[] = ['k' => 'refer', 't' => 'Happy, paying client: ask for a referral (£50 refer-a-business)'];
-    return ['client' => $c + ['id' => (int) $c['id']], 'jobs' => $jobs, 'proofs' => $proofs, 'designs' => $designs, 'demos' => array_slice($demos, 0, 12), 'plans' => $plans, 'care' => $care,
+    return ['client' => ['logo_url' => cl_logo($c)] + $c + ['id' => (int) $c['id']], 'jobs' => $jobs, 'proofs' => $proofs, 'designs' => $designs, 'demos' => array_slice($demos, 0, 12), 'plans' => $plans, 'care' => $care,
         'invoices' => $invs, 'leads' => $leads, 'log' => $log, 'stats' => $stats, 'ideas' => $ideas, 'areas' => array_keys($areas)];
 }
 

@@ -240,6 +240,8 @@ html.lt .pfnudge{background:#fcf0dc;color:#1d1b26}
 html.lt .pfnudge span{color:#db8f06}
 html.lt .clsrch{background:#fbf9f4}
 html.lt .clc{background:#fbf9f4;color:#1d1b26}
+html.lt .av.img{background:rgba(40,32,70,0.140)!important}
+html.lt .clhd .av .cam{background:#fbf9f4;color:#1d1b26}
 html.lt .clc .av{color:#fff;background:linear-gradient(135deg,#5b5bff,#d63bff)}
 html.lt .clc em{color:#5206db}
 html.lt .clc .dots .r{background:#fcc7cc;color:#db062f}

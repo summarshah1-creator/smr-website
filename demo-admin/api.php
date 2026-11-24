@@ -417,6 +417,16 @@ if (strpos($a, 'cl_') === 0) {
             $id = (int) $pdo->lastInsertId(); cl_log($id, 'Client added');
         }
         $in['cid'] = $id; $out(['id' => $id]);
+    case 'cl_logo':   // {id, png: data URL (square PNG made in the browser) | ''} = upload or remove the client's logo
+        $c = $client(); $file = cl_logo_path((int) $c['id']);
+        $d = (string) ($in['png'] ?? '');
+        if ($d === '') { @unlink($file); $pdo->prepare('UPDATE clients SET logo = 0, updated = ? WHERE id = ?')->execute([$now, (int) $c['id']]); $in['cid'] = (int) $c['id']; $out(); }
+        if (!preg_match('#^data:image/png;base64,#', $d)) json_out(['error' => 'That picture didn\'t come through. Try another one.'], 400);
+        $bin = base64_decode(substr($d, 22), true);
+        if ($bin === false || strlen($bin) > 600000 || substr($bin, 0, 8) !== "\x89PNG\r\n\x1a\n") json_out(['error' => 'That picture is too big or not a picture.'], 400);
+        @mkdir(dirname($file), 0700, true); file_put_contents($file, $bin);
+        $pdo->prepare('UPDATE clients SET logo = ?, updated = ? WHERE id = ?')->execute([$now, $now, (int) $c['id']]); cl_log((int) $c['id'], 'Logo added');
+        $in['cid'] = (int) $c['id']; $out();
     case 'cl_status':   // active / past / archived
         $c = $client(); $st = in_array($in['status'] ?? '', ['active', 'past', 'archived'], true) ? $in['status'] : 'active';
         $pdo->prepare('UPDATE clients SET status = ?, updated = ? WHERE id = ?')->execute([$st, $now, (int) $c['id']]); $in['cid'] = (int) $c['id']; $out();
