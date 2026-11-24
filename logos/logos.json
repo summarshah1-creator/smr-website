@@ -100,7 +100,7 @@
     "logo"
    ],
    "original_vector": false,
-   "quality": "hd",
+   "quality": "redrawn",
    "details": {
     "address": "Leagrave, Luton"
    },
@@ -110,23 +110,23 @@
      "file": "al-falah-logo.png",
      "variant": "logo",
      "style": "logo",
-     "w": 843,
-     "h": 908
+     "w": 1489,
+     "h": 1600
     },
     {
      "file": "al-falah-logo-black.png",
      "variant": "logo-black",
      "style": "logo",
-     "w": 843,
-     "h": 908,
+     "w": 1489,
+     "h": 1600,
      "made": true
     },
     {
      "file": "al-falah-logo-white.png",
      "variant": "logo-white",
      "style": "logo",
-     "w": 843,
-     "h": 908,
+     "w": 1489,
+     "h": 1600,
      "made": true
     },
     {
@@ -147,11 +147,18 @@
      "file": "al-falah-logo-brand-colour.png",
      "variant": "logo-brand-colour",
      "style": "logo",
-     "w": 843,
-     "h": 908,
+     "w": 1489,
+     "h": 1600,
      "made": true
+    },
+    {
+     "file": "al-falah-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
     }
-   ]
+   ],
+   "notes": "Redrawn 24 Nov 2026 (owner approved)."
   },
   {
    "slug": "al-bilal",
@@ -164,7 +171,7 @@
     "logo"
    ],
    "original_vector": true,
-   "quality": "vector",
+   "quality": "redrawn",
    "details": {
     "address": "4 Sarum Rd, Luton",
     "postcode": "LU3 2RA",
@@ -187,23 +194,23 @@
      "file": "al-bilal-logo.png",
      "variant": "logo",
      "style": "logo",
-     "w": 974,
-     "h": 549
+     "w": 1600,
+     "h": 898
     },
     {
      "file": "al-bilal-logo-black.png",
      "variant": "logo-black",
      "style": "logo",
-     "w": 974,
-     "h": 549,
+     "w": 1600,
+     "h": 898,
      "made": true
     },
     {
      "file": "al-bilal-logo-white.png",
      "variant": "logo-white",
      "style": "logo",
-     "w": 974,
-     "h": 549,
+     "w": 1600,
+     "h": 898,
      "made": true
     },
     {
@@ -224,11 +231,12 @@
      "file": "al-bilal-logo-brand-colour.png",
      "variant": "logo-brand-colour",
      "style": "logo",
-     "w": 974,
-     "h": 549,
+     "w": 1600,
+     "h": 898,
      "made": true
     }
-   ]
+   ],
+   "notes": "Redrawn 24 Nov 2026 (owner approved)."
   },
   {
    "slug": "al-furqan",
@@ -2309,7 +2317,7 @@
     "logo"
    ],
    "original_vector": false,
-   "quality": "hd",
+   "quality": "redrawn",
    "details": {},
    "signed_off": false,
    "files": [
@@ -2317,23 +2325,23 @@
      "file": "lcm-logo.png",
      "variant": "logo",
      "style": "logo",
-     "w": 1639,
-     "h": 640
+     "w": 1626,
+     "h": 629
     },
     {
      "file": "lcm-logo-black.png",
      "variant": "logo-black",
      "style": "logo",
-     "w": 1639,
-     "h": 640,
+     "w": 1626,
+     "h": 629,
      "made": true
     },
     {
      "file": "lcm-logo-white.png",
      "variant": "logo-white",
      "style": "logo",
-     "w": 1639,
-     "h": 640,
+     "w": 1626,
+     "h": 629,
      "made": true
     },
     {
@@ -2354,11 +2362,18 @@
      "file": "lcm-logo-brand-colour.png",
      "variant": "logo-brand-colour",
      "style": "logo",
-     "w": 1639,
-     "h": 640,
+     "w": 1626,
+     "h": 629,
      "made": true
+    },
+    {
+     "file": "lcm-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
     }
-   ]
+   ],
+   "notes": "Redrawn 24 Nov 2026 (owner approved)."
   },
   {
    "slug": "luton-islamic-centre",
@@ -2372,7 +2387,7 @@
     "icon"
    ],
    "original_vector": true,
-   "quality": "vector",
+   "quality": "redrawn",
    "details": {
     "address": "116 Bury Park Rd, Luton",
     "postcode": "LU1 1HE",
@@ -2394,8 +2409,8 @@
      "file": "luton-islamic-centre-logo.png",
      "variant": "logo",
      "style": "logo",
-     "w": 990,
-     "h": 322
+     "w": 1600,
+     "h": 513
     },
     {
      "file": "luton-islamic-centre-icon.png",
@@ -2409,16 +2424,16 @@
      "file": "luton-islamic-centre-logo-black.png",
      "variant": "logo-black",
      "style": "logo",
-     "w": 990,
-     "h": 322,
+     "w": 1600,
+     "h": 513,
      "made": true
     },
     {
      "file": "luton-islamic-centre-logo-white.png",
      "variant": "logo-white",
      "style": "logo",
-     "w": 990,
-     "h": 322,
+     "w": 1600,
+     "h": 513,
      "made": true
     },
     {
@@ -2439,8 +2454,8 @@
      "file": "luton-islamic-centre-logo-brand-colour.png",
      "variant": "logo-brand-colour",
      "style": "logo",
-     "w": 990,
-     "h": 322,
+     "w": 1600,
+     "h": 513,
      "made": true
     },
     {
@@ -2481,7 +2496,8 @@
      "h": 322,
      "made": true
     }
-   ]
+   ],
+   "notes": "Redrawn 24 Nov 2026 (owner approved)."
   },
   {
    "slug": "lscm",
@@ -2792,7 +2808,7 @@
    "original_vector": false,
    "quality": "hd",
    "details": {
-    "address": "126\u2013130 Oak Road, Luton",
+    "address": "126–130 Oak Road, Luton",
     "postcode": "LU4 8AD",
     "note": "UKIM logo is national; the lockups add the local name"
    },
@@ -2974,7 +2990,7 @@
     "app-icon"
    ],
    "original_vector": true,
-   "quality": "vector",
+   "quality": "redrawn",
    "details": {
     "address": "Crescent Hall, 50 Dunstable Rd, Luton",
     "postcode": "LU1 1EF",
@@ -2995,8 +3011,8 @@
      "file": "madinah-logo.png",
      "variant": "logo",
      "style": "logo",
-     "w": 984,
-     "h": 665
+     "w": 1600,
+     "h": 1078
     },
     {
      "file": "madinah-icon.svg",
@@ -3051,16 +3067,16 @@
      "file": "madinah-logo-black.png",
      "variant": "logo-black",
      "style": "logo",
-     "w": 984,
-     "h": 665,
+     "w": 1600,
+     "h": 1078,
      "made": true
     },
     {
      "file": "madinah-logo-white.png",
      "variant": "logo-white",
      "style": "logo",
-     "w": 984,
-     "h": 665,
+     "w": 1600,
+     "h": 1078,
      "made": true
     },
     {
@@ -3081,8 +3097,8 @@
      "file": "madinah-logo-on-dark.png",
      "variant": "logo-on-dark",
      "style": "logo",
-     "w": 984,
-     "h": 665,
+     "w": 1600,
+     "h": 1078,
      "made": true
     },
     {
@@ -3160,8 +3176,16 @@
      "w": 1596,
      "h": 1082,
      "made": true
+    },
+    {
+     "file": "madinah-logo-brand-colour.png",
+     "variant": "logo-brand-colour",
+     "style": "logo",
+     "w": 1600,
+     "h": 1078
     }
-   ]
+   ],
+   "notes": "Redrawn 24 Nov 2026 (owner approved)."
   },
   {
    "slug": "al-madani",
@@ -3180,7 +3204,7 @@
    "original_vector": false,
    "quality": "hd",
    "details": {
-    "address": "12\u201316 Portland Road, Luton",
+    "address": "12–16 Portland Road, Luton",
     "postcode": "LU4 8AX"
    },
    "signed_off": false,
@@ -8015,7 +8039,7 @@
    "original_vector": false,
    "quality": "hd",
    "details": {
-    "address": "12\u201316 Portland Road, Luton",
+    "address": "12–16 Portland Road, Luton",
     "postcode": "LU4 8AX",
     "note": "Covers Rabia Girls' School, Rabia Boys' School and Madrasa Islamia Primary"
    },
@@ -9581,7 +9605,7 @@
     "logo"
    ],
    "original_vector": false,
-   "quality": "hd",
+   "quality": "redrawn",
    "details": {},
    "signed_off": false,
    "files": [
@@ -9596,24 +9620,24 @@
      "file": "al-khair-logo.png",
      "variant": "logo",
      "style": "logo",
-     "w": 893,
-     "h": 799,
+     "w": 1600,
+     "h": 1440,
      "made": true
     },
     {
      "file": "al-khair-logo-black.png",
      "variant": "logo-black",
      "style": "logo",
-     "w": 893,
-     "h": 799,
+     "w": 1600,
+     "h": 1440,
      "made": true
     },
     {
      "file": "al-khair-logo-white.png",
      "variant": "logo-white",
      "style": "logo",
-     "w": 893,
-     "h": 799,
+     "w": 1600,
+     "h": 1440,
      "made": true
     },
     {
@@ -9634,11 +9658,18 @@
      "file": "al-khair-logo-brand-colour.png",
      "variant": "logo-brand-colour",
      "style": "logo",
-     "w": 893,
-     "h": 799,
+     "w": 1600,
+     "h": 1440,
      "made": true
+    },
+    {
+     "file": "al-khair-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
     }
-   ]
+   ],
+   "notes": "Redrawn 24 Nov 2026 (owner approved)."
   },
   {
    "slug": "amanah",
@@ -10357,23 +10388,23 @@
      "file": "ctp-logo.png",
      "variant": "logo",
      "style": "logo",
-     "w": 1592,
-     "h": 871
+     "w": 1587,
+     "h": 865
     },
     {
      "file": "ctp-logo-black.png",
      "variant": "logo-black",
      "style": "logo",
-     "w": 1592,
-     "h": 871,
+     "w": 1587,
+     "h": 865,
      "made": true
     },
     {
      "file": "ctp-logo-white.png",
      "variant": "logo-white",
      "style": "logo",
-     "w": 1592,
-     "h": 871,
+     "w": 1587,
+     "h": 865,
      "made": true
     },
     {
@@ -10394,11 +10425,12 @@
      "file": "ctp-logo-brand-colour.png",
      "variant": "logo-brand-colour",
      "style": "logo",
-     "w": 1592,
-     "h": 871,
+     "w": 1587,
+     "h": 865,
      "made": true
     }
-   ]
+   ],
+   "notes": "Redrawn 24 Nov 2026 (owner approved)."
   },
   {
    "slug": "discover-islam",
@@ -10797,7 +10829,7 @@
     "logo"
    ],
    "original_vector": false,
-   "quality": "hd",
+   "quality": "redrawn",
    "details": {},
    "signed_off": false,
    "files": [
@@ -10805,31 +10837,31 @@
      "file": "ethar-relief-logo-tile.png",
      "variant": "logo-tile",
      "style": "logo-tile",
-     "w": 1330,
-     "h": 1115
+     "w": 2208,
+     "h": 1254
     },
     {
      "file": "ethar-relief-logo.png",
      "variant": "logo",
      "style": "logo",
-     "w": 1031,
-     "h": 554,
+     "w": 1600,
+     "h": 856,
      "made": true
     },
     {
      "file": "ethar-relief-logo-black.png",
      "variant": "logo-black",
      "style": "logo",
-     "w": 1031,
-     "h": 554,
+     "w": 1600,
+     "h": 856,
      "made": true
     },
     {
      "file": "ethar-relief-logo-white.png",
      "variant": "logo-white",
      "style": "logo",
-     "w": 1031,
-     "h": 554,
+     "w": 1600,
+     "h": 856,
      "made": true
     },
     {
@@ -10850,11 +10882,24 @@
      "file": "ethar-relief-logo-brand-colour.png",
      "variant": "logo-brand-colour",
      "style": "logo",
-     "w": 1031,
-     "h": 554,
+     "w": 1600,
+     "h": 856,
      "made": true
+    },
+    {
+     "file": "ethar-relief-logo-tile.svg",
+     "variant": "logo-tile",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "ethar-relief-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
     }
-   ]
+   ],
+   "notes": "Redrawn 24 Nov 2026 (owner approved)."
   },
   {
    "slug": "faces",
@@ -11613,7 +11658,7 @@
     "logo"
    ],
    "original_vector": false,
-   "quality": "low-res",
+   "quality": "redrawn",
    "details": {},
    "signed_off": false,
    "files": [
@@ -11628,24 +11673,24 @@
      "file": "grassroots-logo.png",
      "variant": "logo",
      "style": "logo",
-     "w": 281,
-     "h": 72,
+     "w": 1600,
+     "h": 426,
      "made": true
     },
     {
      "file": "grassroots-logo-black.png",
      "variant": "logo-black",
      "style": "logo",
-     "w": 281,
-     "h": 72,
+     "w": 1600,
+     "h": 426,
      "made": true
     },
     {
      "file": "grassroots-logo-white.png",
      "variant": "logo-white",
      "style": "logo",
-     "w": 281,
-     "h": 72,
+     "w": 1600,
+     "h": 426,
      "made": true
     },
     {
@@ -11666,11 +11711,18 @@
      "file": "grassroots-logo-brand-colour.png",
      "variant": "logo-brand-colour",
      "style": "logo",
-     "w": 281,
-     "h": 72,
+     "w": 1600,
+     "h": 426,
      "made": true
+    },
+    {
+     "file": "grassroots-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
     }
-   ]
+   ],
+   "notes": "Redrawn 24 Nov 2026 (owner approved)."
   },
   {
    "slug": "groundwork",
@@ -12389,8 +12441,8 @@
      "file": "islamic-help-logo.png",
      "variant": "logo",
      "style": "logo",
-     "w": 1594,
-     "h": 1365
+     "w": 1600,
+     "h": 609
     },
     {
      "file": "islamic-help-logo-stacked-tile.png",
@@ -12411,24 +12463,24 @@
      "file": "islamic-help-icon.png",
      "variant": "icon",
      "style": "icon",
-     "w": 991,
-     "h": 898,
+     "w": 1247,
+     "h": 1121,
      "made": true
     },
     {
      "file": "islamic-help-logo-black.png",
      "variant": "logo-black",
      "style": "logo",
-     "w": 1594,
-     "h": 1365,
+     "w": 1600,
+     "h": 609,
      "made": true
     },
     {
      "file": "islamic-help-logo-white.png",
      "variant": "logo-white",
      "style": "logo",
-     "w": 1594,
-     "h": 1365,
+     "w": 1600,
+     "h": 609,
      "made": true
     },
     {
@@ -12449,16 +12501,16 @@
      "file": "islamic-help-logo-on-dark.png",
      "variant": "logo-on-dark",
      "style": "logo",
-     "w": 1594,
-     "h": 1365,
+     "w": 1600,
+     "h": 609,
      "made": true
     },
     {
      "file": "islamic-help-logo-brand-colour.png",
      "variant": "logo-brand-colour",
      "style": "logo",
-     "w": 1594,
-     "h": 1365,
+     "w": 1600,
+     "h": 609,
      "made": true
     },
     {
@@ -12536,8 +12588,15 @@
      "w": 991,
      "h": 898,
      "made": true
+    },
+    {
+     "file": "islamic-help-icon.svg",
+     "variant": "icon",
+     "style": "icon",
+     "vector": true
     }
-   ]
+   ],
+   "notes": "Redrawn 24 Nov 2026 (owner approved)."
   },
   {
    "slug": "islamic-relief",
@@ -12939,7 +12998,7 @@
   },
   {
    "slug": "lantern",
-   "name": "Lantern \u00b7 Muslim Women's Voices",
+   "name": "Lantern · Muslim Women's Voices",
    "aliases": [
     "Lantern"
    ],
@@ -12959,8 +13018,8 @@
      "file": "lantern-logo.png",
      "variant": "logo",
      "style": "logo",
-     "w": 704,
-     "h": 558
+     "w": 1600,
+     "h": 1285
     },
     {
      "file": "lantern-icon.svg",
@@ -12980,16 +13039,16 @@
      "file": "lantern-logo-black.png",
      "variant": "logo-black",
      "style": "logo",
-     "w": 704,
-     "h": 558,
+     "w": 1600,
+     "h": 1285,
      "made": true
     },
     {
      "file": "lantern-logo-white.png",
      "variant": "logo-white",
      "style": "logo",
-     "w": 704,
-     "h": 558,
+     "w": 1600,
+     "h": 1285,
      "made": true
     },
     {
@@ -13010,8 +13069,8 @@
      "file": "lantern-logo-brand-colour.png",
      "variant": "logo-brand-colour",
      "style": "logo",
-     "w": 704,
-     "h": 558,
+     "w": 1600,
+     "h": 1285,
      "made": true
     },
     {
@@ -13059,8 +13118,15 @@
      "w": 518,
      "h": 1589,
      "made": true
+    },
+    {
+     "file": "lantern-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
     }
-   ]
+   ],
+   "notes": "Redrawn 24 Nov 2026 (owner approved)."
   },
   {
    "slug": "lets-hub",
@@ -13292,7 +13358,7 @@
     "gold"
    ],
    "original_vector": true,
-   "quality": "vector",
+   "quality": "redrawn",
    "details": {
     "website": "https://lutonfoodbank.org.uk",
     "note": "Parcels from collection points across Luton, given after assessment; no public walk-in address"
@@ -13309,8 +13375,8 @@
      "file": "luton-foodbank-logo.png",
      "variant": "logo",
      "style": "logo",
-     "w": 1336,
-     "h": 505
+     "w": 1600,
+     "h": 621
     },
     {
      "file": "luton-foodbank-logo-white.svg",
@@ -13322,8 +13388,8 @@
      "file": "luton-foodbank-logo-white.png",
      "variant": "logo-white",
      "style": "logo-white",
-     "w": 828,
-     "h": 312
+     "w": 1600,
+     "h": 618
     },
     {
      "file": "luton-foodbank-logo-tagline.svg",
@@ -13350,16 +13416,16 @@
      "file": "luton-foodbank-logo-black.png",
      "variant": "logo-black",
      "style": "logo",
-     "w": 1336,
-     "h": 505,
+     "w": 1600,
+     "h": 618,
      "made": true
     },
     {
      "file": "luton-foodbank-logo-white.png",
      "variant": "logo-white",
      "style": "logo",
-     "w": 1336,
-     "h": 505,
+     "w": 1600,
+     "h": 618,
      "made": true
     },
     {
@@ -13380,8 +13446,8 @@
      "file": "luton-foodbank-logo-brand-colour.png",
      "variant": "logo-brand-colour",
      "style": "logo",
-     "w": 1336,
-     "h": 505,
+     "w": 1600,
+     "h": 621,
      "made": true
     },
     {
@@ -13430,7 +13496,8 @@
      "h": 737,
      "made": true
     }
-   ]
+   ],
+   "notes": "Redrawn 24 Nov 2026 (owner approved)."
   },
   {
    "slug": "luton-point",
@@ -14959,7 +15026,7 @@
     "logo"
    ],
    "original_vector": false,
-   "quality": "low-res",
+   "quality": "redrawn",
    "details": {},
    "signed_off": false,
    "files": [
@@ -14974,24 +15041,24 @@
      "file": "one-ummah-logo.png",
      "variant": "logo",
      "style": "logo",
-     "w": 402,
-     "h": 366,
+     "w": 1600,
+     "h": 1278,
      "made": true
     },
     {
      "file": "one-ummah-logo-black.png",
      "variant": "logo-black",
      "style": "logo",
-     "w": 402,
-     "h": 366,
+     "w": 1600,
+     "h": 1278,
      "made": true
     },
     {
      "file": "one-ummah-logo-white.png",
      "variant": "logo-white",
      "style": "logo",
-     "w": 402,
-     "h": 366,
+     "w": 1600,
+     "h": 1278,
      "made": true
     },
     {
@@ -15012,11 +15079,18 @@
      "file": "one-ummah-logo-brand-colour.png",
      "variant": "logo-brand-colour",
      "style": "logo",
-     "w": 402,
-     "h": 366,
+     "w": 1600,
+     "h": 1278,
      "made": true
+    },
+    {
+     "file": "one-ummah-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
     }
-   ]
+   ],
+   "notes": "Redrawn 24 Nov 2026 (owner approved)."
   },
   {
    "slug": "orphans-in-need",
@@ -15032,7 +15106,7 @@
     "logo"
    ],
    "original_vector": false,
-   "quality": "hd",
+   "quality": "redrawn",
    "details": {},
    "signed_off": false,
    "files": [
@@ -15040,31 +15114,31 @@
      "file": "orphans-in-need-logo-tile.png",
      "variant": "logo-tile",
      "style": "logo-tile",
-     "w": 1200,
-     "h": 1200
+     "w": 2316,
+     "h": 614
     },
     {
      "file": "orphans-in-need-logo.png",
      "variant": "logo",
      "style": "logo",
-     "w": 1072,
-     "h": 220,
+     "w": 1600,
+     "h": 323,
      "made": true
     },
     {
      "file": "orphans-in-need-logo-black.png",
      "variant": "logo-black",
      "style": "logo",
-     "w": 1072,
-     "h": 220,
+     "w": 1600,
+     "h": 323,
      "made": true
     },
     {
      "file": "orphans-in-need-logo-white.png",
      "variant": "logo-white",
      "style": "logo",
-     "w": 1072,
-     "h": 220,
+     "w": 1600,
+     "h": 323,
      "made": true
     },
     {
@@ -15085,11 +15159,24 @@
      "file": "orphans-in-need-logo-brand-colour.png",
      "variant": "logo-brand-colour",
      "style": "logo",
-     "w": 1072,
-     "h": 220,
+     "w": 1600,
+     "h": 323,
      "made": true
+    },
+    {
+     "file": "orphans-in-need-logo-tile.svg",
+     "variant": "logo-tile",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "orphans-in-need-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
     }
-   ]
+   ],
+   "notes": "Redrawn 24 Nov 2026 (owner approved)."
   },
   {
    "slug": "penny-appeal",
@@ -17547,7 +17634,7 @@
     "logo"
    ],
    "original_vector": false,
-   "quality": "hd",
+   "quality": "redrawn",
    "details": {},
    "signed_off": false,
    "files": [
@@ -17555,23 +17642,23 @@
      "file": "luton-rights-logo.png",
      "variant": "logo",
      "style": "logo",
-     "w": 1111,
-     "h": 229
+     "w": 1600,
+     "h": 335
     },
     {
      "file": "luton-rights-logo-black.png",
      "variant": "logo-black",
      "style": "logo",
-     "w": 1111,
-     "h": 229,
+     "w": 1600,
+     "h": 335,
      "made": true
     },
     {
      "file": "luton-rights-logo-white.png",
      "variant": "logo-white",
      "style": "logo",
-     "w": 1111,
-     "h": 229,
+     "w": 1600,
+     "h": 335,
      "made": true
     },
     {
@@ -17587,8 +17674,22 @@
      "style": "logo",
      "vector": true,
      "made": true
+    },
+    {
+     "file": "luton-rights-logo-brand-colour.png",
+     "variant": "logo-brand-colour",
+     "style": "logo",
+     "w": 1600,
+     "h": 335
+    },
+    {
+     "file": "luton-rights-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
     }
-   ]
+   ],
+   "notes": "Redrawn 24 Nov 2026 (owner approved)."
   },
   {
    "slug": "luton-clothing-bank",
@@ -19486,7 +19587,7 @@
   },
   {
    "slug": "girlguiding",
-   "name": "Girlguiding (Bedfordshire \u00b7 Luton South)",
+   "name": "Girlguiding (Bedfordshire · Luton South)",
    "aliases": [
     "Girlguiding Luton"
    ],
@@ -22209,7 +22310,7 @@
    "original_vector": true,
    "quality": "redrawn",
    "details": {
-    "address": "The Hat Factory Arts Centre, 65\u201367 Bute Street, Luton",
+    "address": "The Hat Factory Arts Centre, 65–67 Bute Street, Luton",
     "postcode": "LU1 2EY",
     "website": "https://ngyt.co.uk"
    },
@@ -23136,23 +23237,23 @@
      "file": "suez-logo.png",
      "variant": "logo",
      "style": "logo",
-     "w": 1594,
-     "h": 421
+     "w": 1570,
+     "h": 392
     },
     {
      "file": "suez-logo-black.png",
      "variant": "logo-black",
      "style": "logo",
-     "w": 1594,
-     "h": 421,
+     "w": 1570,
+     "h": 392,
      "made": true
     },
     {
      "file": "suez-logo-white.png",
      "variant": "logo-white",
      "style": "logo",
-     "w": 1594,
-     "h": 421,
+     "w": 1570,
+     "h": 392,
      "made": true
     },
     {
@@ -23173,11 +23274,12 @@
      "file": "suez-logo-brand-colour.png",
      "variant": "logo-brand-colour",
      "style": "logo",
-     "w": 1594,
-     "h": 421,
+     "w": 1570,
+     "h": 392,
      "made": true
     }
-   ]
+   ],
+   "notes": "Redrawn 24 Nov 2026 (owner approved)."
   },
   {
    "slug": "sunnah-archery-club",
@@ -26712,7 +26814,7 @@
    "original_vector": true,
    "quality": "vector",
    "details": {
-    "address": "Bennett\u2019s Recreation Ground, Dunstable",
+    "address": "Bennett’s Recreation Ground, Dunstable",
     "postcode": "LU6 1PJ",
     "website": "https://www.dunstable.gov.uk"
    },
@@ -28324,7 +28426,7 @@
    "original_vector": true,
    "quality": "vector",
    "details": {
-    "last_event_at": "Luton Library Theatre, St George\u2019s Square LU1 2NG"
+    "last_event_at": "Luton Library Theatre, St George’s Square LU1 2NG"
    },
    "signed_off": false,
    "files": [
@@ -32401,7 +32503,7 @@
     "logo"
    ],
    "original_vector": false,
-   "quality": "hd",
+   "quality": "redrawn",
    "details": {
     "website": "https://topspizza.co.uk/luton"
    },
@@ -32411,23 +32513,23 @@
      "file": "tops-pizza-logo.png",
      "variant": "logo",
      "style": "logo",
-     "w": 1590,
-     "h": 1310
+     "w": 1600,
+     "h": 1379
     },
     {
      "file": "tops-pizza-logo-black.png",
      "variant": "logo-black",
      "style": "logo",
-     "w": 1590,
-     "h": 1310,
+     "w": 1600,
+     "h": 1379,
      "made": true
     },
     {
      "file": "tops-pizza-logo-white.png",
      "variant": "logo-white",
      "style": "logo",
-     "w": 1590,
-     "h": 1310,
+     "w": 1600,
+     "h": 1379,
      "made": true
     },
     {
@@ -32448,19 +32550,26 @@
      "file": "tops-pizza-logo-on-dark.png",
      "variant": "logo-on-dark",
      "style": "logo",
-     "w": 1590,
-     "h": 1310,
+     "w": 1600,
+     "h": 1379,
      "made": true
     },
     {
      "file": "tops-pizza-logo-brand-colour.png",
      "variant": "logo-brand-colour",
      "style": "logo",
-     "w": 1590,
-     "h": 1310,
+     "w": 1600,
+     "h": 1379,
      "made": true
+    },
+    {
+     "file": "tops-pizza-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
     }
-   ]
+   ],
+   "notes": "Redrawn 24 Nov 2026 (owner approved)."
   },
   {
    "slug": "tutorbook",
