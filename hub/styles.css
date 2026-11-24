@@ -875,3 +875,40 @@ body.solo .hdr .brand{pointer-events:none}
   .lpchip .ti.sm{width:26px;height:26px}
   .lppromise{font-size:.9rem;margin-top:8px}
 }
+
+/* Pass it on (owner 24 Nov) */
+.passon{display:flex;gap:8px;align-items:flex-start;margin:4px 0 10px;font-size:.9412rem;font-weight:600;line-height:1.4;color:var(--ink);max-width:44em}
+.passon .si{width:18px;height:18px;flex:none;margin-top:2px;color:var(--blue)}
+.btn.pio{background:color-mix(in srgb,var(--blue) 11%,var(--sheet));color:var(--blue);border-color:color-mix(in srgb,var(--blue) 32%,transparent)}
+.btn.pio .si{width:16px;height:16px}
+.btn.pio:hover{background:color-mix(in srgb,var(--blue) 18%,var(--sheet))}
+.addbar .addit{color:var(--blue);white-space:nowrap}
+/* Luton This Week flow */
+.ltwstep{margin:18px 0}.ltwn{display:flex;align-items:center;gap:8px;font-weight:800;margin:0 0 8px}.ltwn b{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--blue);color:#fff;font-size:.85rem}
+.ltwex{display:grid;gap:12px}@media(min-width:760px){.ltwex{grid-template-columns:1.2fr 1fr}}
+.ltwpts{list-style:none;margin:0;padding:0;display:grid;gap:8px}.ltwpts li{display:flex;gap:8px;align-items:flex-start}.ltwpts .si{width:18px;height:18px;color:var(--blue);flex:none;margin-top:2px}
+.ltwmini{background:linear-gradient(160deg,#2b2a6b,#4545d6);color:#fff;border-radius:16px;padding:14px}.ltwmini h3{margin:2px 0 8px;color:#fff}.ltwmini .mk{color:#d9d9ff;font-size:12px;font-weight:700;margin:0}.ltwmini ul{list-style:none;margin:0 0 10px;padding:0;display:grid;gap:8px}.ltwmini li{background:rgba(255,255,255,.1);border-radius:10px;padding:8px 10px;display:grid}.ltwmini li .mk{font-size:11px}.ltwmini li small{opacity:.8}
+.ltwtiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.ltwtile{position:relative;display:grid;gap:4px;justify-items:start;text-align:left;padding:12px;border-radius:14px;border:1.5px solid var(--line);background:var(--sheet);font:inherit;color:var(--ink);cursor:pointer;min-height:44px}
+.ltwtile small{color:var(--mut,var(--mute));font-size:.8rem;line-height:1.3}.ltwtile .tk{position:absolute;top:8px;right:8px;width:22px;height:22px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center}.ltwtile .tk .si{width:14px;height:14px;opacity:0}
+.ltwtile.on{border-color:var(--blue);background:color-mix(in srgb,var(--blue) 8%,var(--sheet))}.ltwtile.on .tk{background:var(--blue);border-color:var(--blue);color:#fff}.ltwtile.on .tk .si{opacity:1}
+.ltwrow{display:grid;gap:10px}@media(min-width:640px){.ltwrow{grid-template-columns:1fr 1fr}}
+.tgl{display:flex;align-items:center;gap:10px;margin:10px 0;cursor:pointer;font-weight:600}.tgl input{position:absolute;opacity:0;width:1px;height:1px}.tgl .sw{width:44px;height:26px;border-radius:13px;background:var(--line);position:relative;flex:none;transition:background .2s}.tgl .sw::after{content:'';position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .2s}.tgl input:checked+.sw{background:var(--blue)}.tgl input:checked+.sw::after{transform:translateX(18px)}.tgl input:focus-visible+.sw{outline:2px solid var(--blue);outline-offset:2px}
+.ltwhome{margin-top:14px;margin-bottom:6px}
+/* Careers & Learning, Free Kit & Software */
+.ocard .och{display:flex;gap:10px;align-items:center;margin-bottom:6px}.ocard h3{margin:0}.ocard .ot{margin:2px 0 0;color:var(--mut,var(--mute));font-size:.88rem}
+.omono{width:44px;height:44px;border-radius:12px;flex:none;display:grid;place-items:center;font-weight:800;font-size:.85rem;color:var(--lc,var(--blue));background:color-mix(in srgb,var(--lc,var(--blue)) 12%,var(--sheet));border:1px solid color-mix(in srgb,var(--lc,var(--blue)) 30%,transparent)}
+.olist{list-style:none;margin:6px 0 10px;padding:0;display:grid;gap:6px}.olist li{display:flex;gap:8px;align-items:flex-start;font-size:.94rem}.olist .si{width:16px;height:16px;color:var(--lc,var(--blue));flex:none;margin-top:3px}
+.ocard .soon{display:inline-block;margin-top:6px}.lchk{font-size:.85rem;color:var(--mut,var(--mute));margin:12px 0 0}
+.cfgrid{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}.cf{border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--sheet)}.cf p{margin:6px 0;font-size:.92rem}.cf dl{margin:0;font-size:.85rem;display:grid;grid-template-columns:auto 1fr;gap:2px 8px}.cf dt{font-weight:700}.cf dd{margin:0}
+.fklink{display:flex;align-items:center;gap:10px;padding:12px;border-radius:14px;border:1px solid var(--line);background:var(--sheet);color:var(--ink);text-decoration:none;margin:6px 0 14px}.fklink span{display:grid;flex:1}.fklink small{color:var(--mut,var(--mute))}.fklink>.si{width:18px;height:18px}
+/* Listen: voice + speed */
+.lp-set{padding:8px 12px 12px;display:grid;gap:8px;border-top:1px solid var(--line)}.lp-sl{display:grid;grid-template-columns:56px 1fr;align-items:center;gap:8px;font-size:.88rem;font-weight:700}.lp-sl select{min-height:40px;border-radius:10px;border:1px solid var(--line);background:var(--sheet);color:var(--ink);font:inherit;padding:0 8px;max-width:100%}
+.lp-rates{display:flex;gap:6px}.lp-rates button{flex:1;min-height:38px;border-radius:10px;border:1px solid var(--line);background:var(--sheet);color:var(--ink);font:inherit;font-weight:700}.lp-rates button.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+/* Logo tiles: a white base with a slight tinge of the logo's main colour, faint edge (owner 24 Nov) */
+.ltint{--lc:var(--blue);background:color-mix(in srgb,var(--lc) 7%,var(--sheet,#fff));border-color:color-mix(in srgb,var(--lc) 22%,var(--line,#e5e4ee))}
+.ltint .lgbox{background:transparent!important;box-shadow:none}
+.ltint.ln-white{--lc:#454459}.ltint .lgbox.lg-white{background:#3a3946!important;border-radius:12px}
+.ltint.ln-black{background:var(--sheet,#fff);border-color:var(--line)}.ltint .lgbox.lg-black{background:#fff!important;border-radius:12px}
+:root[data-theme="dark"] .ltint,.dark .ltint{background:color-mix(in srgb,var(--lc) 10%,var(--sheet));border-color:color-mix(in srgb,var(--lc) 30%,var(--line))}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .ltint{background:color-mix(in srgb,var(--lc) 10%,var(--sheet));border-color:color-mix(in srgb,var(--lc) 30%,var(--line))}}

@@ -49,5 +49,27 @@
       }
     }
   };
+
+  /* Saving to your account (owner 24 Nov): everything the hub keeps on the phone under "lch-" (topics, saved items,
+     reminders, checklist ticks, tool answers) is also kept on the server in data/users/<you>, so it survives a cleared
+     browser. The phone copy stays as the offline copy; the newest copy wins. */
+  var SKIP = /^lch-(logocol|magpos-|ltw-seen|theme|ttsrate|ttsvname|ux-)/;
+  function snap() { var o = {}; for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); if (k && k.indexOf('lch-') === 0 && !SKIP.test(k)) { var v = localStorage.getItem(k); if (v && v.length < 60000) o[k] = v; } } return o; }
+  var pushT = null, syncing = false, myCol = null;
+  function push(keep) { if (!myCol || syncing) return; var body = JSON.stringify({ at: Date.now(), keys: snap() }); if (body.length > 190000) return;
+    try { localStorage.setItem('hubsync-at', String(Date.now())); } catch (e) {}
+    fetch(q('set', { c: myCol, id: 'local' }), { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: body, keepalive: !!keep }).catch(function () {}); }
+  function later() { clearTimeout(pushT); pushT = setTimeout(push, 2500); }
+  var _set = Storage.prototype.setItem, _rem = Storage.prototype.removeItem;
+  Storage.prototype.setItem = function (k, v) { _set.call(this, k, v); if (this === window.localStorage && !syncing && String(k).indexOf('lch-') === 0 && !SKIP.test(k)) later(); };
+  Storage.prototype.removeItem = function (k) { _rem.call(this, k); if (this === window.localStorage && !syncing && String(k).indexOf('lch-') === 0) later(); };
+  addEventListener('pagehide', function () { if (pushT) { clearTimeout(pushT); push(true); } });
+  whoami().then(function (w) { if (!w.me) return; myCol = 'data/users/' + w.me;
+    return getJ('get', { c: myCol, id: 'local' }).then(function (j) { var mine = +(localStorage.getItem('hubsync-at') || 0);
+      if (!j.exists || !j.data || !j.data.keys) { if (snap() && Object.keys(snap()).length) push(); return; }
+      if ((j.data.at || 0) <= mine) return; syncing = true;
+      try { Object.keys(j.data.keys).forEach(function (k) { _set.call(localStorage, k, j.data.keys[k]); }); _set.call(localStorage, 'hubsync-at', String(j.data.at)); } finally { syncing = false; }
+      var r = function () { if (window.LCH && window.LCH.render) window.LCH.render(); }; document.readyState === 'complete' ? r() : addEventListener('load', r); });
+  }).catch(function () {});
   window.claude = { use: function (name) { return Promise.resolve(caps[name] || null); } };
 })();

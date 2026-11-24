@@ -1,7 +1,7 @@
 /* Luton Community Hub: engagement layer
    1) Questionnaires open as a step-by-step pop-up (one question per screen, progress, tiles, auto-advance).
    2) Few options = tiles, many options = searchable dropdown, across forms and page filters.
-   3) Listen: Azure neural voice on the live site, the device's own voice as a fallback, with a mini player
+   3) Listen: the device's own voice (best British voice it has, picker + speed), with a mini player
       that stays on screen while you browse. */
 (() => {
 'use strict';
@@ -284,66 +284,74 @@ document.addEventListener('keydown', e => { if (!WZ || $('#wz').hidden) return;
 addEventListener('hashchange', () => { if (WZ && !WZ.reopen) closeWizard(true); });
 
 /* =========================================================================
-   Listen: Azure on the live site, device voice as the fallback, mini player
+   Listen: the phone or computer's own voice (best British voice it has), with a mini player
    ========================================================================= */
-const LIVE = /(^|\.)smrdigital\.co\.uk$/.test(location.hostname);
-const TTS_API = '/api/tts.php';
-const L = { segs: [], i: 0, title: '', key: '', playing: false, rate: st.get('ttsrate', 1), engine: null, chunk: 0, chunks: [], audio: null, onSeg: null, gen: 0 };
-const month = () => new Date().toISOString().slice(0, 7);
-const countChars = n => { const k = 'ttschars-' + month(); st.set(k, st.get(k, 0) + n); };
+const L = { segs: [], i: 0, title: '', key: '', playing: false, rate: st.get('ttsrate', 1), engine: null, chunk: 0, chunks: [], onSeg: null, gen: 0, pause: null };
 const splitChunks = t => { const out = []; let cur = ''; (t.match(/[^.!?]+[.!?]*\s*/g) || [t]).forEach(s => { if ((cur + s).length > 220 && cur) { out.push(cur.trim()); cur = ''; } cur += s; }); if (cur.trim()) out.push(cur.trim()); return out; };
 let voice = null;
-const pickVoice = () => new Promise(res => { const ss = window.speechSynthesis; if (!ss) return res(null);
-  const choose = () => { const vs = ss.getVoices(); if (!vs.length) return null; const gb = vs.filter(v => /en[-_]GB/i.test(v.lang));
-    return gb.find(v => /sonia|libby|ryan|natural|neural/i.test(v.name)) || gb.find(v => /google uk english female/i.test(v.name)) || gb.find(v => /serena|kate|daniel|martha|arthur/i.test(v.name)) || gb[0] || vs.find(v => /^en/i.test(v.lang)) || vs[0]; };
-  const v = choose(); if (v) return res(v); let done = false; const fin = () => { if (done) return; done = true; res(choose()); }; ss.addEventListener?.('voiceschanged', fin, { once: true }); setTimeout(fin, 900); });
-async function azureUrl(text) { try { const r = await fetch(TTS_API, { method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'same-origin', body: JSON.stringify({ text, voice: st.get('ttsvoice', 'en-GB-SoniaNeural') }) }); if (!r.ok) return null; const j = await r.json(); return j.url || null; } catch (e) { return null; } }
-async function chooseEngine() { if (LIVE) { const u = await azureUrl('Luton Community Hub.'); if (u) return 'azure'; } if (window.speechSynthesis && window.SpeechSynthesisUtterance) { voice = await pickVoice(); if (voice) return 'device'; }
+/* natural British voices first (Google UK, Apple Serena/Daniel/Kate/Arthur, Microsoft Sonia/Ryan online), then any en-GB, then any English */
+const VPREF = [/sonia.*natural|sonia online/i, /ryan.*natural|ryan online/i, /libby|maisie|thomas.*natural|natural/i, /google uk english female/i, /google uk english male/i, /serena/i, /daniel/i, /kate/i, /arthur/i, /martha|stephanie|oliver/i];
+const allVoices = () => { try { return window.speechSynthesis ? speechSynthesis.getVoices() : []; } catch (e) { return []; } };
+const englishVoices = () => { const vs = allVoices().filter(v => /^en/i.test(v.lang)); const gb = v => /en[-_]GB/i.test(v.lang) ? 0 : 1, rank = v => { const i = VPREF.findIndex(r => r.test(v.name)); return i < 0 ? 99 : i; };
+  return vs.sort((a, b) => gb(a) - gb(b) || rank(a) - rank(b) || a.name.localeCompare(b.name)); };
+const bestVoice = () => { const vs = englishVoices(), saved = st.get('ttsvname', ''); return (saved && vs.find(v => v.name === saved)) || vs[0] || allVoices()[0] || null; };
+const pickVoice = () => new Promise(res => { if (!window.speechSynthesis) return res(null); const v = bestVoice(); if (v) return res(v);
+  let done = false; const fin = () => { if (done) return; done = true; res(bestVoice()); }; speechSynthesis.addEventListener?.('voiceschanged', fin, { once: true }); setTimeout(fin, 1200); });
+const vLabel = v => v.name.replace(/^(Microsoft|Google)\s+/i, '').replace(/\s*-\s*English.*$/i, '').replace(/\s*\(.*?\)\s*/g, ' ').trim() + (/natural|online|google|serena|daniel|kate|arthur/i.test(v.name) ? ' · natural' : '') + (/en[-_]GB/i.test(v.lang) ? '' : ' (' + v.lang + ')');
+async function chooseEngine() { if (window.speechSynthesis && window.SpeechSynthesisUtterance) { voice = await pickVoice(); if (voice) return 'device'; }
   try { if (window.claude) { L.cl = await claude.use('tts'); if (L.cl) return 'app'; } } catch (e) { } return null; }
-function stopAll() { L.gen++; try { speechSynthesis.cancel(); } catch (e) { } if (L.audio) { L.audio.pause(); L.audio.src = ''; } try { L.cl?.stop(); } catch (e) { } }
+function stopAll() { L.gen++; clearTimeout(L.pause); try { speechSynthesis.cancel(); } catch (e) { } try { L.cl?.stop(); } catch (e) { } }
+/* lock screen / headphone buttons where the browser allows it */
+function mediaSession() { const ms = navigator.mediaSession; if (!ms) return; try { ms.metadata = new MediaMetadata({ title: L.segs[L.i]?.label || L.title, artist: L.title, album: 'Luton Community Hub', artwork: [{ src: 'brand/hub-icon-256.png', sizes: '256x256', type: 'image/png' }] });
+  ms.playbackState = L.playing ? 'playing' : 'paused'; ms.setActionHandler('play', () => { if (!L.playing) LCHListen.toggle(); }); ms.setActionHandler('pause', () => { if (L.playing) LCHListen.toggle(); }); ms.setActionHandler('previoustrack', () => LCHListen.skip(-1)); ms.setActionHandler('nexttrack', () => LCHListen.skip(1)); } catch (e) { } }
 async function speakSeg() {
   const g = ++L.gen, seg = L.segs[L.i]; if (!seg) { L.playing = false; paintPlayer(); return; }
-  L.onSeg?.(L.i); paintPlayer();
-  if (L.engine === 'azure') { const u = await azureUrl(seg.text); if (g !== L.gen) return; if (!u) { L.engine = 'device'; voice = voice || await pickVoice(); return speakSeg(); }
-    L.audio = L.audio || new Audio(); L.audio.src = u; L.audio.playbackRate = L.rate; L.audio.onended = () => { if (g === L.gen) nextSeg(); }; L.audio.play().catch(() => { }); if (L.segs[L.i + 1]) azureUrl(L.segs[L.i + 1].text); return; }
+  L.onSeg?.(L.i); paintPlayer(); mediaSession();
   if (L.engine === 'app') { try { await L.cl.speak([{ text: seg.text, id: String(L.i) }], { rate: L.rate }); } catch (e) { } if (g === L.gen && L.playing) nextSeg(); return; }
-  L.chunks = splitChunks(seg.text); countChars(0); const run = () => { if (g !== L.gen) return; if (L.chunk >= L.chunks.length) { L.chunk = 0; return nextSeg(); }
+  L.chunks = splitChunks(seg.text); const run = () => { if (g !== L.gen) return; if (L.chunk >= L.chunks.length) { L.chunk = 0; return nextSeg(); }
     const u = new SpeechSynthesisUtterance(L.chunks[L.chunk]); if (voice) { u.voice = voice; u.lang = voice.lang; } else u.lang = 'en-GB'; u.rate = L.rate;
     u.onend = () => { if (g !== L.gen) return; L.chunk++; run(); }; u.onerror = ev => { if (g !== L.gen || ev.error === 'interrupted' || ev.error === 'canceled') return; L.chunk++; run(); };
-    speechSynthesis.speak(u); };
+    try { speechSynthesis.resume(); } catch (e) { } speechSynthesis.speak(u); };
   run();
 }
-function nextSeg() { if (L.i < L.segs.length - 1) { L.i++; L.chunk = 0; speakSeg(); } else { L.playing = false; L.gen++; paintPlayer(true); } }
+/* a short pause between sections, so it sounds like someone reading it, not a list */
+function nextSeg() { if (L.i < L.segs.length - 1) { const g = L.gen; L.pause = setTimeout(() => { if (g !== L.gen || !L.playing) return; L.i++; L.chunk = 0; speakSeg(); }, 650); } else { L.playing = false; L.gen++; paintPlayer(true); mediaSession(); } }
 const LCHListen = window.LCHListen = {
   async play({ title, segments, start = 0, key = '', onSegment = null }) {
     stopAll(); Object.assign(L, { segs: segments.filter(s => s.text && s.text.trim()), i: start, title, key, onSeg: onSegment, chunk: 0 });
     if (!L.segs.length) return; showPlayer(); $('#lpSt').textContent = 'Getting ready…';
     if (!L.engine) L.engine = await chooseEngine();
     if (!L.engine) { hidePlayer(); readInstead(); return; }
-    const chars = L.segs.slice(start).reduce((a, s) => a + s.text.length, 0); if (!LIVE) countChars(chars);
-    window.LCH_TRACK?.('listen_start', { key, engine: L.engine }); L.playing = true; speakSeg(); },
-  toggle() { if (!L.segs.length) return; if (L.playing) { L.playing = false; L.gen++; try { speechSynthesis.cancel(); } catch (e) { } L.audio?.pause(); try { L.cl?.pause(); } catch (e) { } paintPlayer(); }
-    else { L.playing = true; if (L.engine === 'azure' && L.audio?.src && !L.audio.ended) { L.gen++; const g = L.gen; L.audio.onended = () => { if (g === L.gen) nextSeg(); }; L.audio.play(); paintPlayer(); } else if (L.engine === 'app') { try { L.cl.resume(); } catch (e) { speakSeg(); } paintPlayer(); } else speakSeg(); } },
+    window.LCH_TRACK?.('listen_start', { key, voice: voice?.name || L.engine }); L.playing = true; speakSeg(); },
+  toggle() { if (!L.segs.length) return; if (L.playing) { L.playing = false; L.gen++; clearTimeout(L.pause); try { speechSynthesis.cancel(); } catch (e) { } try { L.cl?.pause(); } catch (e) { } paintPlayer(); mediaSession(); }
+    else { L.playing = true; if (L.engine === 'app') { try { L.cl.resume(); } catch (e) { speakSeg(); } paintPlayer(); } else speakSeg(); } },
   skip(d) { if (!L.segs.length) return; const j = Math.max(0, Math.min(L.segs.length - 1, L.i + d)); stopAll(); L.i = j; L.chunk = 0; L.playing = true; speakSeg(); },
-  rate(r) { L.rate = r; st.set('ttsrate', r); if (L.audio) L.audio.playbackRate = r; try { L.cl?.setRate(r); } catch (e) { } if (L.playing && L.engine === 'device') { stopAll(); speakSeg(); } paintPlayer(); },
+  rate(r) { L.rate = r; st.set('ttsrate', r); try { L.cl?.setRate(r); } catch (e) { } if (L.playing && L.engine === 'device') { stopAll(); speakSeg(); } paintPlayer(); },
+  voice(name) { const v = englishVoices().find(x => x.name === name) || allVoices().find(x => x.name === name); if (!v) return; voice = v; st.set('ttsvname', v.name); if (L.playing && L.engine === 'device') { stopAll(); speakSeg(); } },
   stop() { stopAll(); L.playing = false; L.segs = []; hidePlayer(); },
-  state: () => ({ playing: L.playing, i: L.i, n: L.segs.length, key: L.key, engine: L.engine })
+  state: () => ({ playing: L.playing, i: L.i, n: L.segs.length, key: L.key, engine: L.engine, voice: voice?.name || '' })
 };
-function readInstead() { const box = $('#mbox'); if (!box) return; box.innerHTML = `<div class="mhead"><h3>Read instead</h3><button class="ib" data-close aria-label="Close">${svg('x')}</button></div><p>This browser can’t read aloud. Here it is to read:</p><div class="msg">${esc(L.segs.map(s => s.text).join('\n\n'))}</div>`; $('#modal').classList.add('open'); }
+function readInstead() { const box = $('#mbox'); if (!box) return; box.innerHTML = `<div class="mhead"><h3>Read instead</h3><button class="ib" data-close aria-label="Close">${svg('x')}</button></div><p>This phone or browser doesn’t have a voice that can read aloud. On iPhone you can add one in Settings → Accessibility → Spoken Content → Voices; on Android in Settings → Text-to-speech. Here it is to read for now:</p><div class="msg">${esc(L.segs.map(s => s.text).join('\n\n'))}</div>`; $('#modal').classList.add('open'); }
 function showPlayer() { let p = $('#lplay'); if (!p) { document.body.insertAdjacentHTML('beforeend', `<div class="lplay" id="lplay" role="region" aria-label="Audio player"><div class="lp-prog"><i id="lpBar"></i></div>
   <div class="lp-in"><span class="lp-ic">${svg('listen')}</span><div class="lp-t"><b id="lpT"></b><span id="lpSt" aria-live="polite"></span></div>
-  <div class="lp-c"><button type="button" class="lpb" data-lp="prev" aria-label="Previous part">${svg('prev')}</button><button type="button" class="lpb main" data-lp="pp" aria-label="Pause">${svg('pause')}</button><button type="button" class="lpb" data-lp="next" aria-label="Next part">${svg('next')}</button><button type="button" class="lpr" data-lp="rate" aria-label="Speed"></button><button type="button" class="lpb x" data-lp="x" aria-label="Stop and close">${svg('x')}</button></div></div></div>`); p = $('#lplay'); }
+  <div class="lp-c"><button type="button" class="lpb" data-lp="prev" aria-label="Previous part">${svg('prev')}</button><button type="button" class="lpb main" data-lp="pp" aria-label="Pause">${svg('pause')}</button><button type="button" class="lpb" data-lp="next" aria-label="Next part">${svg('next')}</button><button type="button" class="lpr" data-lp="set" aria-label="Voice and speed"></button><button type="button" class="lpb x" data-lp="x" aria-label="Stop and close">${svg('x')}</button></div></div>
+  <div class="lp-set" id="lpSet" hidden><label class="lp-sl"><span>Voice</span><select id="lpVoice" aria-label="Voice"></select></label><div class="lp-sl"><span>Speed</span><div class="lp-rates" role="group" aria-label="Speed">${[0.8, 1, 1.2, 1.5].map(r => `<button type="button" data-lprate="${r}">${(r + '').replace(/^(\d)$/, '$1.0')}×</button>`).join('')}</div></div><p class="note" style="margin:0">Uses your phone or computer’s own voices. Your choice is remembered on this device.</p></div></div>`); p = $('#lplay'); }
   p.hidden = false; requestAnimationFrame(() => p.classList.add('in')); document.body.classList.add('lp-on'); paintPlayer(); }
-function hidePlayer() { const p = $('#lplay'); if (!p) return; p.classList.remove('in'); document.body.classList.remove('lp-on'); setTimeout(() => { if (!L.segs.length) p.hidden = true; }, 250); }
+function fillVoices() { const s = $('#lpVoice'); if (!s) return; const vs = englishVoices(); s.innerHTML = vs.length ? vs.map(v => `<option value="${esc(v.name)}" ${voice && v.name === voice.name ? 'selected' : ''}>${esc(vLabel(v))}</option>`).join('') : '<option>No voices on this device</option>'; s.disabled = !vs.length; }
+function hidePlayer() { const p = $('#lplay'); if (!p) return; p.classList.remove('in'); document.body.classList.remove('lp-on'); $('#lpSet') && ($('#lpSet').hidden = true); setTimeout(() => { if (!L.segs.length) p.hidden = true; }, 250); }
 function paintPlayer(ended) { const p = $('#lplay'); if (!p) return; const s = L.segs[L.i];
-  $('#lpT').textContent = L.title; $('#lpSt').textContent = ended ? 'Finished. Tap play to hear it again.' : s ? `${L.i + 1} of ${L.segs.length}${s.label ? ' · ' + s.label : ''}${L.engine === 'device' ? '' : ''}` : '';
+  $('#lpT').textContent = L.title; $('#lpSt').textContent = ended ? 'Finished. Tap play to hear it again.' : s ? `${L.i + 1} of ${L.segs.length}${s.label ? ' · ' + s.label : ''}` : '';
   const pp = $('[data-lp="pp"]', p); pp.innerHTML = svg(L.playing ? 'pause' : 'play'); pp.setAttribute('aria-label', L.playing ? 'Pause' : 'Play');
-  $('[data-lp="rate"]', p).textContent = (L.rate + '').replace(/^(\d)$/, '$1.0') + '×'; $('#lpBar').style.width = (L.segs.length ? (L.i + (ended ? 1 : 0.5)) / L.segs.length * 100 : 0) + '%';
+  $('[data-lp="set"]', p).textContent = (L.rate + '').replace(/^(\d)$/, '$1.0') + '×'; $$('[data-lprate]', p).forEach(b => b.classList.toggle('on', +b.dataset.lprate === L.rate)); $('#lpBar').style.width = (L.segs.length ? (L.i + (ended ? 1 : 0.5)) / L.segs.length * 100 : 0) + '%';
   $$('[data-pglisten]').forEach(b => b.classList.toggle('on', L.playing && L.key === b.dataset.pglisten)); }
-document.addEventListener('click', e => { const b = e.target.closest('[data-lp]'); if (!b) return; const a = b.dataset.lp;
-  if (a === 'pp') { if (!L.playing && L.i >= L.segs.length - 1 && !(L.audio && L.audio.src && !L.audio.ended) && $('#lpSt').textContent.startsWith('Finished')) { L.i = 0; L.chunk = 0; L.playing = true; speakSeg(); } else LCHListen.toggle(); }
+document.addEventListener('click', e => { const r = e.target.closest('[data-lprate]'); if (r) return LCHListen.rate(+r.dataset.lprate); const b = e.target.closest('[data-lp]'); if (!b) return; const a = b.dataset.lp;
+  if (a === 'pp') { if (!L.playing && L.i >= L.segs.length - 1 && $('#lpSt').textContent.startsWith('Finished')) { L.i = 0; L.chunk = 0; L.playing = true; speakSeg(); } else LCHListen.toggle(); }
   if (a === 'prev') LCHListen.skip(-1); if (a === 'next') LCHListen.skip(1); if (a === 'x') LCHListen.stop();
-  if (a === 'rate') { const R = [0.8, 1, 1.2, 1.5], i = R.indexOf(L.rate); LCHListen.rate(R[(i + 1) % R.length]); } });
+  if (a === 'set') { const s = $('#lpSet'); s.hidden = !s.hidden; if (!s.hidden) fillVoices(); } });
+document.addEventListener('change', e => { if (e.target.id === 'lpVoice') LCHListen.voice(e.target.value); });
+try { speechSynthesis.addEventListener?.('voiceschanged', () => { if (!voice) voice = bestVoice(); fillVoices(); }); } catch (e) { }
+/* some phones stop reading after ~15 s in the background: give it a nudge when you come back */
+document.addEventListener('visibilitychange', () => { if (!document.hidden && L.playing && L.engine === 'device') { try { if (!speechSynthesis.speaking) speakSeg(); else speechSynthesis.resume(); } catch (e) { } } });
 
 /* Listen to this page */
 function pageSegments() { const m = $('#main'); if (!m) return []; const segs = []; let cur = { label: '', text: '' };
@@ -359,20 +367,12 @@ document.addEventListener('click', e => { const b = e.target.closest('[data-pgli
   const h1 = textOf($('#main h1')); LCHListen.play({ title: h1 || 'This page', segments: pageSegments(), key: b.dataset.pglisten }); });
 document.addEventListener('click', e => { const b = e.target.closest('[data-footlisten]'); if (!b) return; e.preventDefault(); const h1 = textOf($('#main h1')); LCHListen.play({ title: h1 || 'This page', segments: pageSegments(), key: 'page-' + (location.hash || '#home') }); });
 
-/* SMR Studio preview: Listen audio card (owner pages) */
+/* owner page: Listen card (the device's own voice; nothing to pay for) */
 function adminListenCard() { const h = location.hash; if (!/^#(magadmin)$/.test(h)) return; const host = $('#main .wrap'); if (!host || $('#ttsCard', host)) return; if (!/Monday drafts/.test(textOf($('h1', host)))) return;
-  const used = st.get('ttschars-' + month(), 0), cap = 450000, pct = Math.min(100, used / cap * 100), v = st.get('ttsvoice', 'en-GB-SoniaNeural');
-  host.insertAdjacentHTML('beforeend', `<section class="dlbox ttscard" id="ttsCard" style="margin-top:14px"><div class="tts-h"><span class="lp-ic">${svg('listen')}</span><div><h3 style="margin:0">Listen audio</h3><p class="note" style="margin:0">Microsoft Azure neural voice, free allowance. Audio is made once per issue and reused.</p></div></div>
-  <div class="tts-g"><div><b>${used.toLocaleString('en-GB')}</b><span>characters this month${LIVE ? '' : ' (this preview)'}</span></div><div><b>450,000</b><span>safety limit (free allowance is 500,000)</span></div><div><b>${LIVE ? 'Azure' : 'Device voice'}</b><span>${LIVE ? 'Falls back to the device voice at the limit' : 'Azure switches on with the live site'}</span></div></div>
-  <div class="tts-m" role="meter" aria-valuemin="0" aria-valuemax="${cap}" aria-valuenow="${used}" aria-label="Characters used this month"><i style="width:${pct}%"></i></div>
-  <div class="row" style="margin-top:12px;align-items:center"><span class="note">Voice</span><div id="ttsVoice"></div><button type="button" class="btn p sm" data-ttsregen>Regenerate audio</button><button type="button" class="btn s sm" data-ttstry>Play a sample</button></div>
-  <p class="note" style="margin-top:8px">Luton This Week audio is made every Monday at 6:30am for each version (about 3,000 characters each). “Listen to this page” audio is made the first time someone presses Listen, then kept.</p></section>`);
-  const VO = [{ label: 'Sonia (female, British)', value: 'en-GB-SoniaNeural' }, { label: 'Ryan (male, British)', value: 'en-GB-RyanNeural' }];
-  $('#ttsVoice').append(tiles({ options: VO, compact: true, isOn: o => st.get('ttsvoice', 'en-GB-SoniaNeural') === o.value, onPick: o => st.set('ttsvoice', o.value), label: 'Voice' })); }
-document.addEventListener('click', async e => { const b = e.target.closest('[data-ttsregen],[data-ttstry]'); if (!b) return;
-  if ('ttstry' in b.dataset) return LCHListen.play({ title: 'Voice sample', segments: [{ label: 'Sample', text: 'Hello, and welcome to Luton This Week, from the Luton Community Hub. Here’s what matters for your organisation this week.' }], key: 'sample' });
-  if (LIVE) { b.disabled = true; try { const r = await fetch(TTS_API + '?a=regenerate', { method: 'POST', credentials: 'same-origin' }); toast(r.ok ? 'This week’s audio is being remade' : 'Couldn’t start. Try again.'); } catch (er) { toast('Couldn’t start. Try again.'); } b.disabled = false; }
-  else toast('In the live set-up this remakes this week’s audio for every version.'); });
+  host.insertAdjacentHTML('beforeend', `<section class="dlbox ttscard" id="ttsCard" style="margin-top:14px"><div class="tts-h"><span class="lp-ic">${svg('listen')}</span><div><h3 style="margin:0">Listen</h3><p class="note" style="margin:0">Read aloud with each reader’s own phone or computer voice. It picks the most natural British voice they have, and they can change the voice and speed in the player.</p></div></div>
+  <div class="row" style="margin-top:12px"><button type="button" class="btn s sm" data-ttstry>Play a sample</button></div></section>`); }
+document.addEventListener('click', e => { const b = e.target.closest('[data-ttstry]'); if (!b) return;
+  LCHListen.play({ title: 'Voice sample', segments: [{ label: 'Sample', text: 'Hello, and welcome to Luton This Week, from the Luton Community Hub. Here’s what matters for your organisation this week.' }], key: 'sample' }); });
 
 /* ---------- boot ---------- */
 let busy = false, qd = false;
