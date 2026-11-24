@@ -625,8 +625,8 @@ document.addEventListener('click', e => { const b = e.target.closest('[data-remi
 /* =====================================================================
    COMING SOON tiles (greyed, name and icon only) at the bottom of the menu and All tools
    ===================================================================== */
-Object.assign(TOOL, { cs_lgw: ['burst', 'm', 'y', 'heart'], cs_surplus: ['square', 'g', 'y', 'gift'], cs_passon: ['circle', 'o', 'y', 'cycle'] });
-const SOON_TILES = [['cs_lgw', 'Luton Gives Week'], ['cs_surplus', 'Surplus Share'], ['cs_passon', 'Pass It On']];
+Object.assign(TOOL, { cs_lgw: ['burst', 'm', 'y', 'heart'], cs_surplus: ['square', 'g', 'y', 'gift'], cs_passon: ['circle', 'o', 'y', 'cycle'], cs_case: ['square', 'b', 'y', 'i_books'] });
+const SOON_TILES = [['cs_case', 'Case studies'], ['cs_lgw', 'Luton Gives Week'], ['cs_surplus', 'Surplus Share'], ['cs_passon', 'Pass It On']];
 const soonTile = ([k, t]) => `<button type="button" class="app soonapp" data-soontile aria-label="${t}, coming soon">${tic(k, 'ti lg')}<b>${t}</b><small>Coming soon</small></button>`;
 document.addEventListener('click', e => { const b = e.target.closest('[data-soontile]'); if (!b) return; e.preventDefault(); toast('Coming soon'); });
 L.after.push(r => { if (r.v === 'alltools') $$('#main .appgrp:not(.soongrp)').filter(g => /coming soon/i.test(g.querySelector('h2')?.textContent || '')).forEach(g => g.remove()); if (r.v === 'alltools' && !$('.soongrp')) { const last = $$('#main .appgrp').pop(); (last || $('#main h1'))?.insertAdjacentHTML('afterend', `<section class="appgrp soongrp"><h2>Coming soon</h2><div class="apps">${SOON_TILES.map(soonTile).join('')}</div></section>`); } });
