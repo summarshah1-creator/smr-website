@@ -1,0 +1,345 @@
+{
+ "about": "Community Hub tested registry. Retest only features whose files changed (sha256) or that are marked fail: python3 .github/tools/hub_tested.py",
+ "features": [
+  {
+   "id": "sources-footer",
+   "name": "Sources footer + disclaimers on fact pages",
+   "route": "all fact pages",
+   "files": [
+    "audit.js"
+   ],
+   "sha256": "37c4e8141aba51abefb948722b4dcf50ae9da49a3eab5008186776bbcbbe6100",
+   "tested": "2026-11-24",
+   "result": "pass",
+   "notes": "Checked on 40+ routes at 390 and 1280; pages with their own source box get the disclaimer only."
+  },
+  {
+   "id": "a11y-tidy",
+   "name": "Accessible names for icon buttons and fields",
+   "route": "all",
+   "files": [
+    "audit.js"
+   ],
+   "sha256": "37c4e8141aba51abefb948722b4dcf50ae9da49a3eab5008186776bbcbbe6100",
+   "tested": "2026-11-24",
+   "result": "pass",
+   "notes": "Unlabelled buttons/fields from the crawl now get names; ux.js hidden native selects skipped."
+  },
+  {
+   "id": "date-pickers",
+   "name": "Date pickers instead of typed dates (brief, review)",
+   "route": "#brief, #review",
+   "files": [
+    "audit.js",
+    "app.js"
+   ],
+   "sha256": "76a62f3f0cafc375b63bb9a1b3897f97b2b258e752e8934ff1183970a59cc539",
+   "tested": "2026-11-24",
+   "result": "pass",
+   "notes": "From/To pickers inside the step-by-step pop-up; joined into one line on send."
+  },
+  {
+   "id": "proof-notice",
+   "name": "One proof notice per page",
+   "route": "#brief, #studio, #systems",
+   "files": [
+    "audit.js",
+    "app.js"
+   ],
+   "sha256": "76a62f3f0cafc375b63bb9a1b3897f97b2b258e752e8934ff1183970a59cc539",
+   "tested": "2026-11-24",
+   "result": "pass",
+   "notes": ""
+  },
+  {
+   "id": "career-finder",
+   "name": "Career finder (pay, hours, subjects, area advice, next 3 steps, courses)",
+   "route": "#careers",
+   "files": [
+    "f2.js",
+    "careers-data.js",
+    "tools6.js",
+    "skills-data.js"
+   ],
+   "sha256": "d18dbf0d656344bfea23d4f67745b37c52b972735dfb159c262961e1b6f584b5",
+   "tested": "2026-11-24",
+   "result": "pass",
+   "notes": "92 careers; NCS pay for 75; 17 link to Explore careers (no NCS profile found)."
+  },
+  {
+   "id": "careers-tabs",
+   "name": "Careers & Learning extra tabs: Course finder, GCSE options, Money at 16 to 18",
+   "route": "#careers",
+   "files": [
+    "tools6.js",
+    "careers-data.js",
+    "f2.js"
+   ],
+   "sha256": "7a5e454b6e39b13c19f78b83e9d9e7d528b633ef3300c916d73349c8b4b65895",
+   "tested": "2026-11-24",
+   "result": "pass",
+   "notes": "GCSE options 32 cards; money checker 7 questions."
+  },
+  {
+   "id": "course-finder",
+   "name": "Course & training finder",
+   "route": "#courses",
+   "files": [
+    "tools6.js",
+    "skills-data.js"
+   ],
+   "sha256": "2a866174ec98fbcc303389dc718a6c66ef2408944a49126a6d7e38702af7d24c",
+   "tested": "2026-11-24",
+   "result": "pass",
+   "notes": "198 listings; search, sector, postcode distance, age, cost, where, how, outcome, save, pass it on, warnings."
+  },
+  {
+   "id": "training-link",
+   "name": "Training page link to the course finder",
+   "route": "#training",
+   "files": [
+    "tools6.js",
+    "app.js"
+   ],
+   "sha256": "2ef2e939edb88b36e0da5fe7a5a20381de31210a5f5025e44536aec1090759e8",
+   "tested": "2026-11-24",
+   "result": "pass",
+   "notes": ""
+  },
+  {
+   "id": "event-planner",
+   "name": "Event planner (renamed from Event countdown planner)",
+   "route": "#evplan",
+   "files": [
+    "tools3.js",
+    "tools4.js"
+   ],
+   "sha256": "ee9fd1f2dac70112344dd11810ee30d3fcc8c88dee359c5053990df7da29af9c",
+   "tested": "2026-11-24",
+   "result": "pass",
+   "notes": ""
+  },
+  {
+   "id": "event-budget",
+   "name": "Event budget inside the Event planner",
+   "route": "#evplan",
+   "files": [
+    "tools4.js"
+   ],
+   "sha256": "02ed64c45c29ca6d375a81b517c05764424f276b59fea56c98f512becceea7ed",
+   "tested": "2026-11-24",
+   "result": "pass",
+   "notes": "Typical lines per type, confirmed/expected income, contingency, Gift Aid estimate, amount to raise, print, copy, sticky totals."
+  },
+  {
+   "id": "bid-budget",
+   "name": "Budget carried into the Funding bid checklist",
+   "route": "#bidcheck",
+   "files": [
+    "tools4.js",
+    "tools3.js"
+   ],
+   "sha256": "ee9fd1f2dac70112344dd11810ee30d3fcc8c88dee359c5053990df7da29af9c",
+   "tested": "2026-11-24",
+   "result": "pass",
+   "notes": ""
+  },
+  {
+   "id": "next-in-plan",
+   "name": "Next in your plan links between tools",
+   "route": "#evplan #dbshelp #volrole #riskbuild #bidcheck #toc #appealkit #giftaid #dpcheck #planner #careers #funding",
+   "files": [
+    "tools4.js"
+   ],
+   "sha256": "02ed64c45c29ca6d375a81b517c05764424f276b59fea56c98f512becceea7ed",
+   "tested": "2026-11-24",
+   "result": "pass",
+   "notes": ""
+  },
+  {
+   "id": "gate-later-pages",
+   "name": "Sign-in gate covers pages added after f2.js",
+   "route": "all",
+   "files": [
+    "f2.js",
+    "tools4.js"
+   ],
+   "sha256": "15e9123087ebe560fae1dbb13d626b6bf5765bc1765fda96aa2e7a9ff1dd6e51",
+   "tested": "2026-11-24",
+   "result": "pass with notes",
+   "notes": "Testing mode is on, so the gate is open to all; checked that pages still render."
+  },
+  {
+   "id": "captions",
+   "name": "Caption & post writer",
+   "route": "#captions",
+   "files": [
+    "tools5.js",
+    "server.js",
+    "api.php"
+   ],
+   "sha256": "c139ffb6cce407fe822cbd405211824637417e2010f3b70129777911db9858e1",
+   "tested": "2026-11-24",
+   "result": "pass with notes",
+   "notes": "Tested with a stand-in writer (no writing service key in the test server): 3 versions, character counts, proofread hand-off, allowance line."
+  },
+  {
+   "id": "proofread",
+   "name": "Proofreader & rewriter",
+   "route": "#proofread",
+   "files": [
+    "tools5.js",
+    "server.js",
+    "api.php"
+   ],
+   "sha256": "c139ffb6cce407fe822cbd405211824637417e2010f3b70129777911db9858e1",
+   "tested": "2026-11-24",
+   "result": "pass with notes",
+   "notes": "Tested with a stand-in writer: changes highlighted (3 added, 3 removed), clean copy, use this, reading age."
+  },
+  {
+   "id": "minutes",
+   "name": "Meeting minutes from notes",
+   "route": "#minutes",
+   "files": [
+    "tools5.js",
+    "server.js",
+    "api.php"
+   ],
+   "sha256": "c139ffb6cce407fe822cbd405211824637417e2010f3b70129777911db9858e1",
+   "tested": "2026-11-24",
+   "result": "pass with notes",
+   "notes": "Tested with a stand-in writer: minutes layout, edit, print, copy, actions with dates added to My reminders."
+  },
+  {
+   "id": "ai-fair-use",
+   "name": "Fair use per organisation + SMR Admin setting",
+   "route": "api.php ai/ai_cfg, SMR Admin → Community Hub",
+   "files": [
+    "api.php",
+    "server.js"
+   ],
+   "sha256": "1c441f369fbad2f1e6f6602cff64dc8dd1b65b0e9f9a35358e31d9029d374f91",
+   "tested": "2026-11-24",
+   "result": "pass with notes",
+   "notes": "PHP lint passes; cap checked server-side; not run against the real key here."
+  },
+  {
+   "id": "qr-maker",
+   "name": "QR code maker",
+   "route": "#qr",
+   "files": [
+    "tools5.js",
+    "qr.js"
+   ],
+   "sha256": "946831a475be9c3530d559653ac04b9983eef80c9afca84c536bb9258c4929fa",
+   "tested": "2026-11-24",
+   "result": "pass",
+   "notes": "Link, Wi-Fi etc.; PNG and SVG download; codes decoded with OpenCV incl. one with a logo (error correction H); contrast warning."
+  },
+  {
+   "id": "shortlinks",
+   "name": "Short links (built, Coming soon)",
+   "route": "#shortlinks, hub/s.php",
+   "files": [
+    "tools5.js",
+    "api.php",
+    "s.php"
+   ],
+   "sha256": "acc9efe6ed510351d69569a208eaeb2b5c7a858b32a0bab3ac2ec23317eb42f6",
+   "tested": "2026-11-24",
+   "result": "pass with notes",
+   "notes": "Coming soon tile and page checked; the live flow is behind window.HUB_SHORTLINKS=false and has not been run end to end."
+  },
+  {
+   "id": "logo-service",
+   "name": "Logo vectorise & refresh service",
+   "route": "#logoservice, #brand, #setup, #org-*",
+   "files": [
+    "tools5.js",
+    "app.js"
+   ],
+   "sha256": "98d645ffa87c0396e536648003368b3ba1ccc2fcb4a3093158148515436201d3",
+   "tested": "2026-11-24",
+   "result": "pass",
+   "notes": "Upload with preview, both options, request lands in the approval queue (subs) with the right thank-you text."
+  },
+  {
+   "id": "cert-upgrade",
+   "name": "Certificate upgrade box",
+   "route": "#templates",
+   "files": [
+    "tools5.js",
+    "f2.js"
+   ],
+   "sha256": "dff3528721d90aabb9774dc53d2cf43ee449a715bf2403572792dbf767fb65b1",
+   "tested": "2026-11-24",
+   "result": "pass",
+   "notes": ""
+  },
+  {
+   "id": "soon-pages",
+   "name": "Surplus Share and Pass It On coming-soon pages",
+   "route": "#soon-surplus, #soon-passon, #alltools",
+   "files": [
+    "app.js",
+    "f2.js"
+   ],
+   "sha256": "532f1dd9a81dfcc6ec1235aca0cd37b513cf0e5832cacd64d49da701adfa1302",
+   "tested": "2026-11-24",
+   "result": "pass",
+   "notes": ""
+  },
+  {
+   "id": "help-ngs",
+   "name": "Find help: two NGS listings added",
+   "route": "#help",
+   "files": [
+    "help-data.js"
+   ],
+   "sha256": "9f17d5fcb8d5fbe38351057265b235ac6f7f0e4f3d2fa391ab9ada5fcbafbfe1",
+   "tested": "2026-11-24",
+   "result": "pass",
+   "notes": "53 → 55."
+  },
+  {
+   "id": "pdf-sign",
+   "name": "Sign & fill a PDF",
+   "route": "#pdfsign",
+   "files": [
+    "pdfsign.js",
+    "vendor/pdf-lib.min.js",
+    "vendor/pdf.min.js",
+    "vendor/pdf.worker.min.js"
+   ],
+   "sha256": "0f951472c6a3d6e334a020d65b0309232170c12d32eac527636b3c6ea65fea23",
+   "tested": "2026-11-24",
+   "result": "pass",
+   "notes": "Fillable test form: text, date, tick, radio, dropdown, multi-line all written into the PDF. Flat test form: text/date snap to lines, tick snaps into the box, drawn signature placed on the line, undo, zoom, 2 pages, download. 390 and 1280."
+  },
+  {
+   "id": "full-crawl",
+   "name": "Every route at 390 and 1280: no JS errors, no sideways scroll",
+   "route": "all routes",
+   "files": [
+    "app.js",
+    "f2.js",
+    "ux.js",
+    "styles.css",
+    "shell.css",
+    "audit.js",
+    "tools3.js",
+    "tools4.js",
+    "tools5.js",
+    "tools6.js",
+    "pdfsign.js",
+    "guides.js",
+    "legal.js"
+   ],
+   "sha256": "477e4a3250c8814ec67646ceec88acf22ca2e9c89265e608c970dcd9d60364a1",
+   "tested": "2026-11-24",
+   "result": "pass",
+   "notes": "See the crawl numbers in the report."
+  }
+ ]
+}
