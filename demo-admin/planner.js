@@ -58,6 +58,7 @@
       + '<button class="btn sm icon" data-pl="cfg" aria-label="Today settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button></div>';
     html += '<div class="plstat"><button class="r" data-f="over"><b>' + S.overdue + '</b><span>Overdue</span></button><button class="a" data-f="today"><b>' + S.due_today + '</b><span>Due today</span></button>'
       + '<button class="r" data-f="money"><b>' + Object.keys(S.owing).length + '</b><span>Owe you</span></button><button class="g" data-f="done"><b>' + S.done_today + '</b><span>Cleared</span></button></div>';
+    if (window.SMRJobs) html += SMRJobs.todayHtml();
     var n = S.next;
     if (n) {
       html += '<div class="plnext"><div class="k">DO THIS NEXT</div><h2>' + esc(n.title) + '</h2><div class="who">' + esc(n.person || '') + (n.platform ? ' · ' + esc(n.platform) : '') + '<span class="why ' + whyCls(n) + '">' + esc(n.why) + '</span>' + oweTag(n) + '</div>'
@@ -331,6 +332,7 @@
   window.SMRPlanner = {
     show: function () { fab.classList.remove('hidden'); if (!loaded) load(); else { render(); load(); } },
     hide: function () { fab.classList.add('hidden'); },
+    repaint: function () { var t = $('tab-today'); if (loaded && t && !t.classList.contains('hidden')) render(); },
     load: load
   };
   // Keep the Today badge fresh even on other tabs

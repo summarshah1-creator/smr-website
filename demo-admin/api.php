@@ -223,6 +223,121 @@ if (strpos($a, 'pl_') === 0) {
     json_out(['error' => 'Unknown action'], 400);
 }
 
+/* ---------- jobs & payments (demo-lib/jobs.php) ---------- */
+if (strpos($a, 'j_') === 0) {
+    require_once dirname(__DIR__) . '/demo-lib/jobs.php';
+    $pdo = jobs_db(); $now = now();
+    $out = function (array $extra = []) use ($pdo, $now) {
+        $rows = array_map(function ($j) use ($now) { return job_row($j, $now); }, $pdo->query("SELECT * FROM jobs WHERE status != 'cancelled' OR cancelled_at > " . ($now - 30 * 86400) . ' ORDER BY updated DESC')->fetchAll());
+        json_out($extra + ['ok' => true, 'jobs' => $rows, 'sum' => jobs_summary($rows), 'cfg' => jobs_cfg_public(), 'terms' => JOB_TERMS, 'handover' => JOB_HANDOVER, 'areas' => JOB_AREAS, 'extras' => JOB_EXTRAS, 'audit' => JOB_AUDIT]);
+    };
+    $str = function ($k, $max = 300) use (&$in) { return mb_substr(trim((string) ($in[$k] ?? '')), 0, $max); };
+    $job = function () use ($in) { $j = job_by_id((int) ($in['id'] ?? 0)); if (!$j) json_out(['error' => 'Job not found.'], 404); return $j; };
+    switch ($a) {
+    case 'j_list': $out();
+    case 'j_save':
+        $items = job_items_clean($in['items'] ?? []);
+        $f = ['client' => $str('client', 120), 'person' => $str('person', 120), 'phone' => preg_replace('/[^0-9+ ]/', '', $str('phone', 30)), 'email' => strtolower($str('email', 160)),
+            'area' => isset(JOB_AREAS[$in['area'] ?? '']) ? $in['area'] : 'graphics', 'title' => $str('title', 160), 'items' => json_encode($items), 'total' => job_total($items),
+            'deadline' => max(0, (int) ($in['deadline'] ?? 0)), 'handover' => isset(JOB_HANDOVER[$in['handover'] ?? '']) ? $in['handover'] : 'collection',
+            'terms' => isset(JOB_TERMS[$in['terms'] ?? '']) ? $in['terms'] : 'deposit', 'deposit_pct' => max(10, min(90, (int) ($in['deposit_pct'] ?? 50))), 'pay_by' => max(0, (int) ($in['pay_by'] ?? 0)),
+            'card_ok' => (int) !empty($in['card_ok']), 'cash_ok' => (int) !empty($in['cash_ok']), 'auto_email' => (int) !empty($in['auto_email']),
+            'extra' => $str('extra', 600), 'notes' => $str('notes', 4000), 'public_note' => $str('public_note', 1500), 'updated' => $now];
+        if ($f['client'] === '') json_out(['error' => 'Who is the job for?'], 400);
+        if ($f['title'] === '') json_out(['error' => 'Give the job a short name, e.g. "Roller banner + 500 leaflets".'], 400);
+        if ($f['email'] !== '' && !filter_var($f['email'], FILTER_VALIDATE_EMAIL)) json_out(['error' => 'That email address doesn\'t look right.'], 400);
+        if ($f['terms'] === 'bydate' && !$f['pay_by']) json_out(['error' => 'Pick the date they need to pay by.'], 400);
+        if (!$f['card_ok'] && !$f['cash_ok']) $f['card_ok'] = 1;
+        $id = (int) ($in['id'] ?? 0);
+        if ($id) {
+            $old = $job();
+            // Price, what's included, deadline or payment terms changed after they agreed: they must agree again
+            $big = $old['items'] !== $f['items'] || (int) $old['total'] !== $f['total'] || (int) $old['deadline'] !== $f['deadline'] || $old['terms'] !== $f['terms']
+                || (int) $old['deposit_pct'] !== $f['deposit_pct'] || (int) $old['pay_by'] !== $f['pay_by'] || $old['handover'] !== $f['handover'];
+            if ($big && (int) $old['agreed_at'] && $old['status'] !== 'delivered') { $f['agreed_at'] = 0; $f['changed_at'] = $now; $f['status'] = 'sent'; job_ev($id, 'Quote changed after agreement: they need to agree again'); }
+            $sets = implode(', ', array_map(function ($k) { return $k . ' = ?'; }, array_keys($f)));
+            $pdo->prepare("UPDATE jobs SET $sets WHERE id = ?")->execute(array_merge(array_values($f), [$id]));
+        } else {
+            $f += ['token' => job_token(), 'status' => 'draft', 'created' => $now];
+            $pdo->prepare('INSERT INTO jobs (' . implode(', ', array_keys($f)) . ') VALUES (' . implode(',', array_fill(0, count($f), '?')) . ')')->execute(array_values($f));
+            $id = (int) $pdo->lastInsertId();
+            job_ev($id, 'Job created');
+        }
+        job_sync_pays(job_by_id($id));
+        $out(['id' => $id]);
+    case 'j_sent':   // the owner sent (or copied) the agreement link
+        $j = $job();
+        if ($j['status'] === 'draft') { $pdo->prepare("UPDATE jobs SET status = 'sent', sent_at = ?, updated = ? WHERE id = ?")->execute([$now, $now, (int) $j['id']]); job_ev((int) $j['id'], 'Quote link sent'); }
+        elseif (!(int) $j['sent_at']) $pdo->prepare('UPDATE jobs SET sent_at = ? WHERE id = ?')->execute([$now, (int) $j['id']]);
+        if (!empty($in['email']) && filter_var((string) $j['email'], FILTER_VALIDATE_EMAIL)) {
+            if (!job_email($j, 'Your quote from SMR: ' . $j['title'], job_msg_send($j))) json_out(['error' => 'The email could not be sent. Check your email is set up in the Email tab.'], 400);
+            job_ev((int) $j['id'], 'Quote emailed to ' . $j['email']);
+        }
+        $out();
+    case 'j_paid':   // cash (or other) marked by the owner
+        $j = $job();
+        $st = $pdo->prepare('SELECT * FROM job_pays WHERE id = ? AND job_id = ?'); $st->execute([(int) ($in['pay'] ?? 0), (int) $j['id']]); $p = $st->fetch();
+        if (!$p) json_out(['error' => 'Payment not found.'], 404);
+        if (!empty($in['undo'])) { $pdo->prepare("UPDATE job_pays SET status = 'due', method = '', paid_at = 0 WHERE id = ?")->execute([(int) $p['id']]); job_ev((int) $j['id'], 'Payment un-ticked: ' . $p['label']); }
+        else job_mark_paid((int) $p['id'], in_array($in['method'] ?? '', ['cash', 'card', 'other'], true) ? $in['method'] : 'cash');
+        $pdo->prepare('UPDATE jobs SET updated = ? WHERE id = ?')->execute([$now, (int) $j['id']]);
+        $out();
+    case 'j_reminded':   // the owner sent the WhatsApp reminder
+        $j = $job();
+        $pdo->prepare('UPDATE job_pays SET wa_due = 0 WHERE id = ? AND job_id = ?')->execute([(int) ($in['pay'] ?? 0), (int) $j['id']]);
+        job_ev((int) $j['id'], 'WhatsApp reminder sent');
+        $out();
+    case 'j_agreed':   // agreed in person / on WhatsApp: the owner records it
+        $j = $job();
+        $pdo->prepare("UPDATE jobs SET status = 'agreed', agreed_at = ?, agreed_name = ?, agreed_ip = 'owner', changed_at = 0, sent_at = MAX(sent_at, ?), updated = ? WHERE id = ?")
+            ->execute([$now, mb_substr('Recorded by Summar: ' . $str('how', 100), 0, 140), $now, $now, (int) $j['id']]);
+        job_sync_pays(job_by_id((int) $j['id']));
+        job_ev((int) $j['id'], 'Agreement recorded by you (' . $str('how', 100) . ')');
+        $out();
+    case 'j_deliver':
+        $j = $job(); $pays = job_pays((int) $j['id']);
+        if (!empty($in['undo'])) { $pdo->prepare("UPDATE jobs SET status = 'agreed', delivered_at = 0, override = 0, updated = ? WHERE id = ?")->execute([$now, (int) $j['id']]); job_ev((int) $j['id'], 'Hand-over undone'); $out(); }
+        if (!(int) $j['agreed_at']) json_out(['error' => 'They haven\'t agreed to the quote yet.'], 400);
+        $lock = job_lock($j, $pays);
+        if ($lock > 0 && empty($in['override'])) json_out(['error' => 'Locked: ' . money($lock) . ' must be paid before hand-over.', 'locked' => $lock], 409);
+        $pdo->prepare("UPDATE jobs SET status = 'delivered', delivered_at = ?, override = ?, updated = ? WHERE id = ?")->execute([$now, $lock > 0 ? 1 : 0, $now, (int) $j['id']]);
+        job_ev((int) $j['id'], $lock > 0 ? 'Handed over WITHOUT full payment (' . money($lock) . ' unpaid)' : 'Handed over');
+        $out();
+    case 'j_cancel':
+        $j = $job();
+        $undo = !empty($in['undo']);
+        $pdo->prepare('UPDATE jobs SET status = ?, cancelled_at = ?, updated = ? WHERE id = ?')->execute([$undo ? ((int) $j['agreed_at'] ? 'agreed' : ((int) $j['sent_at'] ? 'sent' : 'draft')) : 'cancelled', $undo ? 0 : $now, $now, (int) $j['id']]);
+        job_ev((int) $j['id'], $undo ? 'Brought back' : 'Cancelled');
+        $out();
+    case 'j_delete':
+        $j = $job();
+        $pdo->prepare('DELETE FROM job_pays WHERE job_id = ?')->execute([(int) $j['id']]);
+        $pdo->prepare('DELETE FROM job_events WHERE job_id = ?')->execute([(int) $j['id']]);
+        $pdo->prepare('DELETE FROM jobs WHERE id = ?')->execute([(int) $j['id']]);
+        $out();
+    case 'j_check':   // look up card payments that may have gone through
+        foreach ($pdo->query("SELECT * FROM job_pays WHERE status != 'paid' AND session != ''")->fetchAll() as $p) job_check_session($p);
+        $out();
+    case 'j_cfg':
+        $c = jobs_cfg();
+        if (isset($in['terms'])) $c['terms'] = mb_substr(trim((string) $in['terms']), 0, 3000) ?: JOB_DEFAULT_TERMS;
+        if (isset($in['push'])) $c['push'] = (int) !empty($in['push']);
+        if (isset($in['stripe'])) {
+            $k = trim((string) $in['stripe']);
+            if ($k === '') $c['stripe'] = '';
+            else {
+                if (!preg_match('/^(sk|rk)_(live|test)_[A-Za-z0-9]{20,}$/', $k)) json_out(['error' => 'That doesn\'t look like a Stripe secret key. It starts with sk_live_ (or rk_live_ for a restricted key).'], 400);
+                $c['stripe'] = mail_encrypt($k);
+                job_kv_set('cfg', json_encode($c));
+                try { stripe_call('GET', 'balance'); } catch (Throwable $e) { $c['stripe'] = ''; job_kv_set('cfg', json_encode($c)); json_out(['error' => 'Stripe didn\'t accept that key: ' . $e->getMessage()], 400); }
+            }
+        }
+        job_kv_set('cfg', json_encode($c));
+        $out();
+    }
+    json_out(['error' => 'Unknown action'], 400);
+}
+
 /* ---------- email ---------- */
 if (strpos($a, 'mail_') === 0) {
     require_once dirname(__DIR__) . '/demo-lib/mail.php';

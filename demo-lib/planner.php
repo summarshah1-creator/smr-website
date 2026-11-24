@@ -150,6 +150,9 @@ function pl_tick(bool $force = false): array {
         $n = $S['overdue'] + $S['due_today'];
         if ($n) $bits[] = $n . ' to do today' . ($S['overdue'] ? ', ' . $S['overdue'] . ' overdue' : '');
         if ($S['owing']) $bits[] = count($S['owing']) . ' owe you money';
+        if (is_file(__DIR__ . '/jobs.php')) { try { require_once __DIR__ . '/jobs.php'; $JS = jobs_summary(array_map(function ($j) use ($now) { return job_row($j, $now); }, jobs_db()->query("SELECT * FROM jobs WHERE status IN ('sent','agreed','delivered')")->fetchAll()));
+            if ($JS['overdue']) $bits[] = money($JS['overdue']) . ' overdue from jobs (' . implode(', ', array_keys($JS['debtors'])) . ')';
+            if ($JS['agree']) $bits[] = $JS['agree'] . ' quote' . ($JS['agree'] > 1 ? 's' : '') . ' not agreed yet'; } catch (Throwable $e) {} }
         $body = ($S['next'] ? 'Start with: ' . $first($S['next']) . '. ' : '') . ($bits ? implode(' · ', $bits) : 'Nothing urgent. Good time to chase leads.');
         pl_push('Good morning, here is your day', $body, 'pl-brief');
         $log[] = 'brief';
@@ -210,6 +213,8 @@ function pl_tick(bool $force = false): array {
     }
     // New day: overdue items get one fresh round of nags
     if (pl_get('nag_day') !== $day) { pl_set('nag_day', $day); $db->exec('UPDATE pl_items SET n_overc = 0'); }
+    // Jobs & payments: client reminders, card payments that went through, unagreed quotes
+    if (is_file(__DIR__ . '/jobs.php')) { try { require_once __DIR__ . '/jobs.php'; $log = array_merge($log, jobs_tick()); } catch (Throwable $e) { $log[] = 'jobs: ' . $e->getMessage(); } }
     return $log;
 }
 

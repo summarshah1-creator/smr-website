@@ -28,6 +28,8 @@ DirectoryIndex index.html
   RewriteRule ^player/([A-Za-z0-9-]{1,80})/?$ music/index.php?t=$1 [L,QSA]
   # Finished designs for a client: /d/<token> (works 14 days)
   RewriteRule ^d/([A-Za-z0-9_-]{12,40})/?$ designs/index.php?k=$1 [L,QSA]
+  # Job quote / agreement / payment page for a client: /j/<token>
+  RewriteRule ^j/([A-Za-z0-9_-]{12,40})/?$ jobs/index.php?k=$1 [L,QSA]
 </IfModule>
 
 # smrgraphics.co.uk/plates opens the Plates page

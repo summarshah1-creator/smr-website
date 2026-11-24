@@ -297,7 +297,10 @@ html.cpopen,body.cpopen{overscroll-behavior:none}
 .drawer .cnt{margin-left:auto}
 .dft{margin-top:auto;padding:12px 6px 0;font-size:11.5px;color:var(--muted);opacity:.7}
 @media(min-width:1100px){.drawer{transform:none;box-shadow:none;width:250px}.drawer .tabs.dnav button{opacity:1;transform:none}.dscrim,#navbtn,#navx,.dft,.top>.logo{display:none}.top{justify-content:flex-end}body:has(#drawer){padding-left:250px}}
+#themebtn .sun{display:none}html.lt #themebtn .sun{display:block}html.lt #themebtn .moon{display:none}
 </style>
+<link rel="stylesheet" href="light.css?v=<?= @filemtime(__DIR__ . '/light.css') ?>">
+<script>/* light / dark mode: off-white by default, remembered on this device */(function(){var t;try{t=localStorage.getItem('smr_theme')}catch(e){}if(t!=='dark')document.documentElement.classList.add('lt');var m=document.querySelector('meta[name=theme-color]');if(m&&t!=='dark')m.setAttribute('content','#f3f0e9')})();</script>
 </head>
 <body>
 <?php if ($mode !== 'app'): ?>
@@ -334,6 +337,7 @@ document.addEventListener('keydown',function(e){if(/^\d$/.test(e.key))press(e.ke
   <div class="top">
     <button class="btn sm icon" id="navbtn" aria-label="Open menu" aria-controls="drawer" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg><i class="ndot"></i></button>
     <div class="logo"><?= $mark ?><span>Digital</span><b>Admin</b></div>
+    <button class="btn sm icon" id="themebtn" aria-label="Light or dark mode" title="Light / dark"><svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></svg><svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg></button>
     <button class="btn sm icon" id="refresh" aria-label="Refresh" title="Refresh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg></button>
     <button class="btn sm icon" id="acct" aria-label="Settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></button>
 
@@ -350,6 +354,7 @@ document.addEventListener('keydown',function(e){if(/^\d$/.test(e.key))press(e.ke
     <div class="dhd"><div class="logo"><?= $mark ?><span>Digital</span><b>Admin</b></div><button class="btn sm icon" id="navx" aria-label="Close menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
     <nav class="tabs dnav" role="tablist">
       <button data-grp="today" role="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg><span class="lb">Today</span><span class="cnt bad" id="plcnt"></span></button>
+      <button data-grp="jobs" role="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M12 12v3M10.5 13.5h3"/></svg><span class="lb">Jobs &amp; payments</span><span class="cnt bad" id="jbcnt"></span></button>
       <button data-grp="mail" role="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg><span class="lb">Email</span><span class="cnt" id="mailcnt"></span></button>
       <button data-grp="games" role="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="11" rx="5"/><path d="M7 11v4M5 13h4"/><circle cx="15.5" cy="12" r="1" fill="currentColor"/><circle cx="18" cy="14" r="1" fill="currentColor"/></svg><span class="lb">Games</span><span class="cnt" id="fkcnt"></span></button>
       <button data-grp="music" role="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg><span class="lb">Player</span></button>
@@ -359,6 +364,8 @@ document.addEventListener('keydown',function(e){if(/^\d$/.test(e.key))press(e.ke
     <div class="dft">Swipe from the left edge to open</div>
   </aside>
 
+  <!-- JOBS & PAYMENTS (jobs.js) -->
+  <section id="tab-jobs" class="tab hidden"><div id="jb"><div class="empty">Loading…</div></div></section>
   <!-- TODAY (planner.js) -->
   <section id="tab-today" class="tab hidden"><div id="pl"><div class="empty">Loading…</div></div></section>
 
@@ -574,8 +581,8 @@ var ICON={dots:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="
 
 /* ---------- tabs (hash) ---------- */
 var lastDemoTab='demos';
-var showTab=function(t){if(['today','demos','send','live','designs','games','flappy','jummah','mail','music','stats'].indexOf(t)<0)t='today';if(window.SMRPlanner){if(t==='today')SMRPlanner.show();else SMRPlanner.hide()}if(t==='games')gamesCards();if(t==='jummah'){var jf=document.getElementById('jdframe');if(jf&&!jf.src)jf.src='/jummahdash/admin.php'}if(t==='stats'){var sf=document.getElementById('stframe');if(sf&&!sf.src)sf.src='/music/stats.php'}if(t==='music'){var mf=document.getElementById('muframe');if(mf&&!mf.src)mf.src='/music/index.php?manage=1'}if(t==='flappy'){var ff=document.getElementById('fkframe');if(ff&&!ff.src)ff.src='/flappy/admin.php'}
-  var grp=(t==='today'||t==='mail'||t==='music'||t==='stats')?t:(t==='games'||t==='flappy'||t==='jummah')?'games':'demos';if(grp==='demos')lastDemoTab=t;
+var showTab=function(t){if(['today','jobs','demos','send','live','designs','games','flappy','jummah','mail','music','stats'].indexOf(t)<0)t='today';if(window.SMRPlanner){if(t==='today')SMRPlanner.show();else SMRPlanner.hide()}if(window.SMRJobs){if(t==='jobs')SMRJobs.show();else SMRJobs.hide()}if(t==='games')gamesCards();if(t==='jummah'){var jf=document.getElementById('jdframe');if(jf&&!jf.src)jf.src='/jummahdash/admin.php'}if(t==='stats'){var sf=document.getElementById('stframe');if(sf&&!sf.src)sf.src='/music/stats.php'}if(t==='music'){var mf=document.getElementById('muframe');if(mf&&!mf.src)mf.src='/music/index.php?manage=1'}if(t==='flappy'){var ff=document.getElementById('fkframe');if(ff&&!ff.src)ff.src='/flappy/admin.php'}
+  var grp=(t==='today'||t==='jobs'||t==='mail'||t==='music'||t==='stats')?t:(t==='games'||t==='flappy'||t==='jummah')?'games':'demos';if(grp==='demos')lastDemoTab=t;
   document.querySelectorAll('[data-tab]').forEach(function(b){b.classList.toggle('on',b.dataset.tab===t)});document.querySelectorAll('[data-grp]').forEach(function(b){b.classList.toggle('on',b.dataset.grp===grp)});document.getElementById('subtabs').classList.toggle('hidden',grp!=='demos');
   document.querySelectorAll('.tab').forEach(function(s){s.classList.toggle('hidden',s.id!=='tab-'+t)});window.scrollTo(0,0);if(t==='live'&&typeof load==='function'&&D.length)load();if(t!=='send'&&$('created').dataset.used&&typeof resetSend==='function')resetSend();if(t==='mail'&&typeof mailOpen==='function')mailOpen();if(t==='designs'&&typeof dLoad==='function')dLoad()};
 document.querySelectorAll('[data-tab]').forEach(function(b){b.addEventListener('click',function(){if(location.hash!=='#'+b.dataset.tab)history.replaceState(null,'','#'+b.dataset.tab);showTab(b.dataset.tab)})});
@@ -1220,9 +1227,12 @@ document.addEventListener('touchend',function(){if(mode!=='open'&&mode!=='close'
 var dm=$('dmcnt'),lc=$('livecnt');var dot=function(){if(dm&&lc&&dm.textContent!==lc.textContent)dm.textContent=lc.textContent;var any=[].some.call(dr.querySelectorAll('.cnt:not(#dmcnt)'),function(c){return c.textContent.trim()!==''});if(nb.classList.contains('has')!==any)nb.classList.toggle('has',any)};
 var dq=0;new MutationObserver(function(){if(!dq)dq=requestAnimationFrame(function(){dq=0;dot()})}).observe(document.querySelector('.wrap'),{subtree:true,childList:true,characterData:true});dot();
 })();
+document.getElementById('themebtn').addEventListener('click',function(){var lt=document.documentElement.classList.toggle('lt');try{localStorage.setItem('smr_theme',lt?'light':'dark')}catch(e){}var m=document.querySelector('meta[name=theme-color]');if(m)m.setAttribute('content',lt?'#f3f0e9':'#08080f');
+  document.querySelectorAll('iframe').forEach(function(f){try{f.contentWindow.postMessage({smrTheme:lt?'light':'dark'},location.origin)}catch(e){}})});
 window.SMRA={api:api,openSheet:openSheet,closeSheet:closeSheet,toast:toast,esc:esc,copy:copy,waUrl:waUrl,enablePush:enablePush};
 })();
 </script>
+<script src="jobs.js?v=<?= @filemtime(__DIR__ . '/jobs.js') ?>"></script>
 <script src="planner.js?v=<?= @filemtime(__DIR__ . '/planner.js') ?>"></script>
 <?php endif; ?>
 <script>/* app feel: no pinch or double-tap zoom */(function(){document.addEventListener('gesturestart',function(e){e.preventDefault()},{passive:false});document.addEventListener('gesturechange',function(e){e.preventDefault()},{passive:false});document.addEventListener('touchmove',function(e){if(e.touches&&e.touches.length>1)e.preventDefault()},{passive:false});})();</script>

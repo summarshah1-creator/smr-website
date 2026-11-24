@@ -28,7 +28,7 @@ h3{font:700 14px Sora,Manrope,sans-serif;margin:16px 0 8px}
 .tip{background:#12121e;border:1px dashed rgba(255,255,255,.18);border-radius:12px;padding:10px 12px;font-size:12.5px;color:#c9c9e0;margin-top:12px}.tip code{color:#d9b3ff}
 .empty{color:#a3a3bd;text-align:center;padding:22px 10px}
 iframe{width:100%;height:calc(100vh - 110px);min-height:480px;border:0;background:transparent}
-</style></head><body>
+</style><link rel="stylesheet" href="stats-light.css?v=<?= @filemtime(__DIR__ . '/stats-light.css') ?>"><script>(function(){var d=document.documentElement,t;try{t=localStorage.getItem('smr_theme')}catch(e){}if(t!=='dark')d.classList.add('lt');addEventListener('message',function(e){if(e.origin===location.origin&&e.data&&e.data.smrTheme)d.classList.toggle('lt',e.data.smrTheme!=='dark')})})();</script></head><body>
 <div class="pick"><label for="proj">Project</label><select id="proj"><option value="music:">SMR Player · all tracks</option></select></div>
 <div id="v"></div>
 <script>

@@ -40,7 +40,7 @@ h3{font:700 14px Sora,Manrope,sans-serif;margin:14px 0 8px}
 .rng{position:sticky;top:0;z-index:2;background:#08080f;padding:6px 0;margin:0 0 10px}
 .dv{display:flex;align-items:center;gap:10px;background:#12121e;border:1px solid rgba(255,255,255,.09);border-radius:12px;padding:10px 12px;margin-bottom:8px}.dv .i{flex:1;min-width:0}.dv b{font-size:14px}.dv small{display:block;color:#a3a3bd;font-size:12px}.dv button{flex:none;background:#1b1b2b;color:#f2f2fa;border:1px solid rgba(255,255,255,.15);border-radius:99px;padding:7px 12px;font:700 12px Manrope,sans-serif}.dv.me{border-color:#3ddc97}.dv.me button{background:#3ddc97;color:#06210f;border-color:transparent}
 textarea#sBt{width:100%;box-sizing:border-box;background:#0d0d16;color:#fff;border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:10px;font:inherit;resize:vertical}
-</style></head><body>
+</style><link rel="stylesheet" href="admin-light.css?v=<?= @filemtime(__DIR__ . '/admin-light.css') ?>"><script>(function(){var d=document.documentElement,t;try{t=localStorage.getItem('smr_theme')}catch(e){}if(t!=='dark')d.classList.add('lt');addEventListener('message',function(e){if(e.origin===location.origin&&e.data&&e.data.smrTheme)d.classList.toggle('lt',e.data.smrTheme!=='dark')})})();</script></head><body>
 
 </head><body>
 <div class="seg"><button data-v="stats" class="on">Stats</button><button data-v="inbox">Inbox<span id="nb"></span></button><button data-v="set">Settings</button></div>
