@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-21",
+ "updated": "2026-11-24",
  "categories": {
   "mosques": "Mosques & Islamic centres",
   "schools": "Schools & colleges",
@@ -2792,7 +2792,7 @@
    "original_vector": false,
    "quality": "hd",
    "details": {
-    "address": "126–130 Oak Road, Luton",
+    "address": "126\u2013130 Oak Road, Luton",
     "postcode": "LU4 8AD",
     "note": "UKIM logo is national; the lockups add the local name"
    },
@@ -3180,7 +3180,7 @@
    "original_vector": false,
    "quality": "hd",
    "details": {
-    "address": "12–16 Portland Road, Luton",
+    "address": "12\u201316 Portland Road, Luton",
     "postcode": "LU4 8AX"
    },
    "signed_off": false,
@@ -5575,8 +5575,8 @@
      "h": 1024
     },
     {
-     "file": "chantry-icon-black.png",
-     "variant": "icon-black",
+     "file": "chantry-icon-brand-colour.png",
+     "variant": "icon-brand-colour",
      "style": "icon",
      "w": 866,
      "h": 1024,
@@ -5586,16 +5586,9 @@
      "file": "chantry-icon-white.png",
      "variant": "icon-white",
      "style": "icon",
-     "w": 866,
-     "h": 1024,
-     "made": true
-    },
-    {
-     "file": "chantry-icon-black.svg",
-     "variant": "icon-black",
-     "style": "icon",
-     "vector": true,
-     "made": true
+     "w": 1106,
+     "h": 1267,
+     "hand": true
     },
     {
      "file": "chantry-icon-white.svg",
@@ -5605,11 +5598,18 @@
      "made": true
     },
     {
-     "file": "chantry-icon-brand-colour.png",
-     "variant": "icon-brand-colour",
+     "file": "chantry-icon-black.png",
+     "variant": "icon-black",
      "style": "icon",
-     "w": 866,
-     "h": 1024,
+     "w": 1106,
+     "h": 1267,
+     "hand": true
+    },
+    {
+     "file": "chantry-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
+     "vector": true,
      "made": true
     }
    ]
@@ -6326,8 +6326,8 @@
      "made": true
     },
     {
-     "file": "downside-lockup-stacked-black.png",
-     "variant": "lockup-stacked-black",
+     "file": "downside-lockup-stacked-brand-colour.png",
+     "variant": "lockup-stacked-brand-colour",
      "style": "lockup-stacked",
      "w": 1656,
      "h": 1800,
@@ -6337,16 +6337,9 @@
      "file": "downside-lockup-stacked-white.png",
      "variant": "lockup-stacked-white",
      "style": "lockup-stacked",
-     "w": 1656,
-     "h": 1800,
-     "made": true
-    },
-    {
-     "file": "downside-lockup-stacked-black.svg",
-     "variant": "lockup-stacked-black",
-     "style": "lockup-stacked",
-     "vector": true,
-     "made": true
+     "w": 1186,
+     "h": 1126,
+     "hand": true
     },
     {
      "file": "downside-lockup-stacked-white.svg",
@@ -6356,11 +6349,18 @@
      "made": true
     },
     {
-     "file": "downside-lockup-stacked-brand-colour.png",
-     "variant": "lockup-stacked-brand-colour",
+     "file": "downside-lockup-stacked-black.png",
+     "variant": "lockup-stacked-black",
      "style": "lockup-stacked",
-     "w": 1656,
-     "h": 1800,
+     "w": 1186,
+     "h": 1126,
+     "hand": true
+    },
+    {
+     "file": "downside-lockup-stacked-black.svg",
+     "variant": "lockup-stacked-black",
+     "style": "lockup-stacked",
+     "vector": true,
      "made": true
     }
    ]
@@ -8015,7 +8015,7 @@
    "original_vector": false,
    "quality": "hd",
    "details": {
-    "address": "12–16 Portland Road, Luton",
+    "address": "12\u201316 Portland Road, Luton",
     "postcode": "LU4 8AX",
     "note": "Covers Rabia Girls' School, Rabia Boys' School and Madrasa Islamia Primary"
    },
@@ -9146,36 +9146,6 @@
      "made": true
     },
     {
-     "file": "someries-infant-logo-black.png",
-     "variant": "logo-black",
-     "style": "logo",
-     "w": 1598,
-     "h": 1365,
-     "made": true
-    },
-    {
-     "file": "someries-infant-logo-white.png",
-     "variant": "logo-white",
-     "style": "logo",
-     "w": 1598,
-     "h": 1365,
-     "made": true
-    },
-    {
-     "file": "someries-infant-logo-black.svg",
-     "variant": "logo-black",
-     "style": "logo",
-     "vector": true,
-     "made": true
-    },
-    {
-     "file": "someries-infant-logo-white.svg",
-     "variant": "logo-white",
-     "style": "logo",
-     "vector": true,
-     "made": true
-    },
-    {
      "file": "someries-infant-icon-black.png",
      "variant": "icon-black",
      "style": "icon",
@@ -9219,6 +9189,36 @@
      "style": "icon",
      "w": 761,
      "h": 968,
+     "made": true
+    },
+    {
+     "file": "someries-infant-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1352,
+     "h": 1144,
+     "hand": true
+    },
+    {
+     "file": "someries-infant-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "someries-infant-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1352,
+     "h": 1144,
+     "hand": true
+    },
+    {
+     "file": "someries-infant-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
      "made": true
     }
    ]
@@ -12939,7 +12939,7 @@
   },
   {
    "slug": "lantern",
-   "name": "Lantern · Muslim Women's Voices",
+   "name": "Lantern \u00b7 Muslim Women's Voices",
    "aliases": [
     "Lantern"
    ],
@@ -19486,7 +19486,7 @@
   },
   {
    "slug": "girlguiding",
-   "name": "Girlguiding (Bedfordshire · Luton South)",
+   "name": "Girlguiding (Bedfordshire \u00b7 Luton South)",
    "aliases": [
     "Girlguiding Luton"
    ],
@@ -20630,42 +20630,30 @@
      "h": 484
     },
     {
-     "file": "luton-council-of-faiths-logo-white.png",
-     "variant": "logo-white",
-     "style": "logo-white",
-     "w": 846,
-     "h": 272
-    },
-    {
      "file": "luton-council-of-faiths-logo.png",
      "variant": "logo",
      "style": "logo",
-     "w": 847,
-     "h": 271,
-     "made": true
+     "w": 1800,
+     "h": 576,
+     "made": true,
+     "hand": true
     },
     {
-     "file": "luton-council-of-faiths-logo-black.png",
-     "variant": "logo-black",
+     "file": "luton-council-of-faiths-logo-brand-colour.png",
+     "variant": "logo-brand-colour",
      "style": "logo",
-     "w": 847,
-     "h": 271,
-     "made": true
+     "w": 1800,
+     "h": 576,
+     "made": true,
+     "hand": true
     },
     {
      "file": "luton-council-of-faiths-logo-white.png",
      "variant": "logo-white",
      "style": "logo",
-     "w": 847,
-     "h": 271,
-     "made": true
-    },
-    {
-     "file": "luton-council-of-faiths-logo-black.svg",
-     "variant": "logo-black",
-     "style": "logo",
-     "vector": true,
-     "made": true
+     "w": 1800,
+     "h": 576,
+     "hand": true
     },
     {
      "file": "luton-council-of-faiths-logo-white.svg",
@@ -20675,11 +20663,18 @@
      "made": true
     },
     {
-     "file": "luton-council-of-faiths-logo-brand-colour.png",
-     "variant": "logo-brand-colour",
+     "file": "luton-council-of-faiths-logo-black.png",
+     "variant": "logo-black",
      "style": "logo",
-     "w": 847,
-     "h": 271,
+     "w": 1800,
+     "h": 576,
+     "hand": true
+    },
+    {
+     "file": "luton-council-of-faiths-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
      "made": true
     }
    ]
@@ -22214,7 +22209,7 @@
    "original_vector": true,
    "quality": "redrawn",
    "details": {
-    "address": "The Hat Factory Arts Centre, 65–67 Bute Street, Luton",
+    "address": "The Hat Factory Arts Centre, 65\u201367 Bute Street, Luton",
     "postcode": "LU1 2EY",
     "website": "https://ngyt.co.uk"
    },
@@ -26717,7 +26712,7 @@
    "original_vector": true,
    "quality": "vector",
    "details": {
-    "address": "Bennett’s Recreation Ground, Dunstable",
+    "address": "Bennett\u2019s Recreation Ground, Dunstable",
     "postcode": "LU6 1PJ",
     "website": "https://www.dunstable.gov.uk"
    },
@@ -28329,7 +28324,7 @@
    "original_vector": true,
    "quality": "vector",
    "details": {
-    "last_event_at": "Luton Library Theatre, St George’s Square LU1 2NG"
+    "last_event_at": "Luton Library Theatre, St George\u2019s Square LU1 2NG"
    },
    "signed_off": false,
    "files": [

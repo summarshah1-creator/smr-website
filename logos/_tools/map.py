@@ -417,3 +417,9 @@ M['harpur-trust']=('charities','Harpur Trust',['The Harpur Trust'],[('hand/harpu
 
 M['empowering'][3].extend([('hand/empowering-two-tone-on-dark.svg','two-tone-on-dark'),('hand/empowering-icon.svg','icon'),('hand/empowering-icon-white.svg','icon-white'),('hand/empowering-icon-pink.svg','icon-brand-colour'),('hand/empowering-icon-square.svg','icon-square')])  # HD vector redraws from the Empowering Education site remake
 M['empowering'][3].extend([('hand/empowering-logo-on-pink.svg','logo-on-pink'),('hand/empowering-icon-on-pink.svg','icon-on-pink')])  # owner rule: on pink backgrounds the icon is a white circle with the pink graphic
+# ---------- owner's hand-made one-colour versions (24 Nov) ----------
+M['chantry'][3].extend([('hand/chantry-icon-white.png','icon-white'),('hand/chantry-icon-black.png','icon-black')])
+M['downside'][3].extend([('hand/downside-lockup-stacked-white.png','lockup-stacked-white'),('hand/downside-lockup-stacked-black.png','lockup-stacked-black')])
+M['someries-infant'][3].extend([('hand/someries-infant-logo-white.png','logo-white'),('hand/someries-infant-logo-black.png','logo-black')])
+M['luton-council-of-faiths'][3][:]=[x for x in M['luton-council-of-faiths'][3] if x[1]!='logo-white']+[('hand/luton-council-of-faiths-logo-white.png','logo-white'),('hand/luton-council-of-faiths-logo-black.png','logo-black')]
+M['luton-council-of-faiths'][3][:]=[x for x in M['luton-council-of-faiths'][3] if x[1]!='logo']+[('hand/luton-council-of-faiths-logo.png','logo')]  # colour = owner's white version in the tile's green (old one had filled letters, no dove)
