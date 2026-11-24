@@ -284,6 +284,20 @@
     });
   };
 
+  /* The script the owner pastes into Scriptable once. It fetches the latest widget design (widget.js) on every refresh,
+     so widget changes reach the phone by themselves. */
+  var LOADER = [
+    '// SMR Studio widget for Scriptable. Paste this once; it fetches the latest design every time it refreshes.',
+    '// Your private link is below: don\'t share this script. Parameter (Edit Widget): today, money, leads, care or all.',
+    'const FEED = "__FEED__";',
+    'const fm = FileManager.local(), path = fm.joinPath(fm.cacheDirectory(), "smr-studio-widget.js");',
+    'let code = null;',
+    'try { const r = new Request(FEED + "&f=js"); r.timeoutInterval = 10; const c = await r.loadString(); if (c.indexOf("SMR_WIDGET_V") >= 0) { code = c; fm.writeString(path, c); } } catch (e) {}',
+    'if (!code && fm.fileExists(path)) code = fm.readString(path);',
+    'if (!code) { const w = new ListWidget(); w.addText("SMR Studio: no connection yet"); Script.setWidget(w); }',
+    'else { const m = { exports: null }; new Function("module", code)(m); await m.exports(FEED); }',
+    'Script.complete();'
+  ].join('\n');
   /* ---------- settings: notification times, calendar, widget ---------- */
   var settings = function () {
     var c = P.cfg, ics = P.feed + '&f=ics', web = ics.replace(/^https?:/, 'webcal:');
@@ -297,15 +311,15 @@
       + '<button class="btn pri" type="submit" style="width:100%;margin-top:14px">Save times</button></form>'
       + '<div class="plsec">iPhone Calendar<i></i></div><p class="sub">Meetings and hard deadlines show in your phone\'s Calendar and its widgets, and update by themselves.</p>'
       + '<div class="row" style="margin-top:10px"><a class="btn pri" href="' + esc(web) + '">Add to iPhone Calendar</a><button class="btn" type="button" id="plics">Copy link</button></div>'
-      + '<div class="plsec">Home Screen &amp; Lock Screen widget<i></i></div><ol class="plsteps"><li>Install <b>Scriptable</b> (free) from the App Store.</li><li>Tap <b>Copy widget script</b> below.</li><li>Open Scriptable, tap <b>+</b>, paste, and name it <b>SMR Today</b>. Tap ▶ once to preview.</li>'
-      + '<li>Home Screen: hold an empty spot → <b>Edit → Add Widget</b> → Scriptable → pick a size → tap the widget → Script: <b>SMR Today</b>.</li><li>Lock Screen: hold the Lock Screen → <b>Customise</b> → Lock Screen → tap the widget row → Scriptable → tap it → Script: <b>SMR Today</b>.</li></ol>'
+      + '<div class="plsec">Home Screen &amp; Lock Screen widget<i></i></div><ol class="plsteps"><li>Install <b>Scriptable</b> (free) from the App Store.</li><li>Tap <b>Copy widget script</b> below.</li><li>Open Scriptable, tap <b>+</b>, paste, and name it <b>SMR Studio</b>. Tap ▶ once to preview. You only do this once: it picks up new designs by itself.</li>'
+      + '<li>Home Screen: hold an empty spot → <b>Edit → Add Widget</b> → Scriptable → pick a size → tap the widget → Script: <b>SMR Studio</b>, Parameter: <b>today</b>, <b>money</b>, <b>leads</b>, <b>care</b> or leave it empty. Add a few and drag them on top of each other to make a stack you can swipe through.</li><li>Lock Screen: hold the Lock Screen → <b>Customise</b> → Lock Screen → tap the widget row → Scriptable → tap it → Script: <b>SMR Studio</b>.</li></ol>'
       + '<div class="row" style="margin-top:10px"><button class="btn pri" type="button" id="plwid">Copy widget script</button><button class="btn sm bad" type="button" id="plkey">New secret link</button></div>'
       + '<p class="sub" style="margin-top:8px">The calendar link and widget use a private key. If you ever share it by mistake, tap New secret link, then re-copy both.</p>', function (box) {
       var f = $('plcfg');
       f.addEventListener('submit', function (e) { e.preventDefault(); api('pl_cfg', { brief: f.brief.value, evening: f.evening.value, quiet_from: f.quiet_from.value, quiet_to: f.quiet_to.value, sunday: f.sunday.checked ? 1 : 0, push: f.push.checked ? 1 : 0 }).then(function () { A.toast('Saved'); A.closeSheet(); }); });
       $('plpush').addEventListener('click', function () { A.enablePush && A.enablePush(); });
       $('plics').addEventListener('click', function () { A.copy(ics, 'Calendar link copied'); });
-      $('plwid').addEventListener('click', function () { fetch('widget.js', { cache: 'no-store' }).then(function (r) { return r.text(); }).then(function (s) { A.copy(s.replace('__FEED__', P.feed), 'Widget script copied'); }); });
+      $('plwid').addEventListener('click', function () { A.copy(LOADER.replace('__FEED__', P.feed), 'Widget script copied'); });
       $('plkey').addEventListener('click', function () { if (!confirm('Make a new secret link? The old calendar link and widget stop working until you add the new ones.')) return; api('pl_newkey').then(function () { A.closeSheet(); A.toast('New link made. Re-add the calendar and widget.'); }); });
     });
   };
