@@ -297,10 +297,10 @@
    "files": [
     "help-data.js"
    ],
-   "sha256": "9f17d5fcb8d5fbe38351057265b235ac6f7f0e4f3d2fa391ab9ada5fcbafbfe1",
+   "sha256": "136919f8719107da65b8a6f40deec3dc95888676b2d10b3937a2704571d1bc9e",
    "tested": "2026-11-24",
    "result": "pass",
-   "notes": "53 → 55."
+   "notes": "Courtney Foundation listings kept (provider's own). Luton Boot Bank (NGS) added 24 Nov: shows in search 'boots', clothes category, phone 390 checked."
   },
   {
    "id": "pdf-sign",
@@ -312,10 +312,10 @@
     "vendor/pdf.min.js",
     "vendor/pdf.worker.min.js"
    ],
-   "sha256": "0f951472c6a3d6e334a020d65b0309232170c12d32eac527636b3c6ea65fea23",
+   "sha256": "3e5144b2351e4df47f0837751135246f6f79a407be92167553737b67fa277c22",
    "tested": "2026-11-24",
    "result": "pass",
-   "notes": "Fillable test form: text, date, tick, radio, dropdown, multi-line all written into the PDF. Flat test form: text/date snap to lines, tick snaps into the box, drawn signature placed on the line, undo, zoom, 2 pages, download. 390 and 1280."
+   "notes": "Phones: typing into small PDF text opens a big 17px box above the keyboard (flat text items and fillable text fields); text still goes on the PDF at real size. Tested 390 touch + 1360 desktop (desktop types in place)."
   },
   {
    "id": "full-crawl",

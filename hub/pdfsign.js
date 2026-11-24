@@ -266,5 +266,30 @@ const css = document.createElement('style'); css.textContent = `
 .sgfonts{display:grid;gap:8px}.sgf{padding:12px 16px;border-radius:14px;border:1.5px solid var(--line,#D9D8E6);background:#fff;font-size:34px;line-height:1.2;text-align:left;cursor:pointer;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.sgf.on{border-color:#4545D6;background:#F6F6FF}
 .sgprev img{max-width:100%;max-height:120px;margin-top:8px;background:repeating-conic-gradient(#F1F0F6 0 25%,#fff 0 50%) 0 0/16px 16px;border-radius:8px}`;
 document.head.appendChild(css);
+/* Big typing box on phones: PDF text is drawn at its real size (often ~11pt, too small to read while typing on a phone),
+   so when you start typing into small text, a large box opens above the keyboard. What you type goes straight into the
+   PDF at its real size; tap Done (or outside) to close it. */
+const TS = document.createElement('style'); TS.textContent = `.pdfs-type{position:fixed;left:0;right:0;bottom:0;z-index:60;padding:10px 12px calc(10px + env(safe-area-inset-bottom,0));background:#1E1D2A;box-shadow:0 -10px 30px rgba(0,0,0,.3);border-radius:18px 18px 0 0;display:flex;flex-direction:column;gap:8px;transform:translateY(110%);transition:transform .22s ease}.pdfs-type.on{transform:none}.pdfs-type .r{display:flex;align-items:center;gap:8px;color:#fff;font-size:13px}.pdfs-type .r .c{flex:1;min-width:0;display:flex;flex-direction:column}.pdfs-type .r b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.pdfs-type small{opacity:.7}.pdfs-type textarea{width:100%;min-height:64px;max-height:34vh;border:0;border-radius:12px;padding:12px;font:17px/1.4 Helvetica,Arial,sans-serif;color:#111;background:#fff;resize:none}body:has(#pdfsType.on) #toast{opacity:0!important}.pdfs-type button{border:0;border-radius:999px;padding:9px 16px;background:#16865F;color:#fff;font:inherit;font-weight:800;font-size:14px;cursor:pointer}`;
+document.head.appendChild(TS);
+const small = () => matchMedia('(pointer:coarse)').matches || innerWidth < 760;
+let TY = null; // { el, kind: 'item'|'field', id }
+const tyBox = () => { let b = $('#pdfsType'); if (!b) { b = document.createElement('div'); b.id = 'pdfsType'; b.className = 'pdfs-type'; b.setAttribute('role', 'dialog'); b.setAttribute('aria-label', 'Type your text');
+  b.innerHTML = '<div class="r"><span class="c"><b id="pdfsTyL">Typing</b><small>Goes on the PDF at its real size</small></span><button type="button" data-tydone>Done</button></div><textarea id="pdfsTyIn" rows="2" aria-label="Your text" autocapitalize="sentences"></textarea>'; document.body.append(b); } return b; };
+const shownPx = el => { const fs = parseFloat(getComputedStyle(el).fontSize) || 12; return fs * (S ? S.zoom : 1); };
+const tyOpen = (el, kind, id, label, multi) => { if (!S) return; const b = tyBox(), ta = $('#pdfsTyIn'); TY = { el, kind, id, multi };
+  $('#pdfsTyL').textContent = label; ta.value = kind === 'item' ? (findIt(id)?.t || '') : el.value; ta.rows = multi ? 3 : 2; b.classList.add('on');
+  el.blur(); setTimeout(() => { ta.focus(); ta.setSelectionRange(ta.value.length, ta.value.length); }, 30); place2(); };
+const tyClose = () => { const b = $('#pdfsType'); if (b) b.classList.remove('on'); const t = TY; TY = null; if (t && t.kind === 'item' && S) { const i = findIt(t.id); if (i) drawLayer(i.pi); } };
+const place2 = () => { const b = $('#pdfsType'), vv = window.visualViewport; if (!b || !vv) return; b.style.bottom = Math.max(0, innerHeight - vv.height - vv.offsetTop) + 'px'; };
+if (window.visualViewport) { visualViewport.addEventListener('resize', place2); visualViewport.addEventListener('scroll', place2); }
+document.addEventListener('focusin', e => { if (!S || !small() || e.target.id === 'pdfsTyIn') return;
+  const it = e.target.closest('[data-pit]'); if (it && shownPx(it) < 15) { const i = findIt(it.dataset.pit); tyOpen(it, 'item', it.dataset.pit, i && i.k === 'date' ? 'Date' : 'Your text', true); return; }
+  const f = e.target.closest('input[data-ff],textarea[data-ff]'); if (f && f.type !== 'date' && !f.readOnly && shownPx(f) < 15) { const q = S.fields.find(x => x.id === f.dataset.ff); tyOpen(f, 'field', f.dataset.ff, q ? q.name.replace(/[_.]+/g, ' ').trim() : 'Your answer', f.tagName === 'TEXTAREA'); } }, true);
+document.addEventListener('input', e => { if (e.target.id !== 'pdfsTyIn' || !TY || !S) return; let v = e.target.value; if (!TY.multi && TY.kind === 'field') v = v.replace(/\n/g, ' ');
+  if (TY.kind === 'item') { const i = findIt(TY.id); if (i) { i.t = v.replace(/\n+$/, ''); const el = $(`[data-pit="${TY.id}"]`); if (el) el.textContent = i.t; } }
+  else { const q = S.fields.find(x => x.id === TY.id); if (q) { S.vals[q.name] = v; const el = $(`[data-ff="${TY.id}"]`); if (el) el.value = v; } } });
+document.addEventListener('keydown', e => { if (e.target.id === 'pdfsTyIn' && e.key === 'Enter' && !(TY && TY.multi)) { e.preventDefault(); tyClose(); } });
+document.addEventListener('click', e => { if (e.target.closest('[data-tydone]')) { tyClose(); return; } if (TY && !e.target.closest('#pdfsType') && !e.target.closest('[data-pit],[data-ff]')) tyClose(); });
+addEventListener('hashchange', tyClose);
 if (T.gate) Object.keys(V).forEach(T.gate);
 });
