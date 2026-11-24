@@ -251,6 +251,7 @@ function pl_ics(): string {
 
 /* ---------- first load: the owner's brain dump of 24 Nov 2026 ---------- */
 function pl_seed(PDO $pdo): void {
+    pl_seed2($pdo);
     $have = $pdo->query("SELECT v FROM pl_kv WHERE k = 'seed1'")->fetchColumn();
     if ($have) return;
     $pdo->prepare('INSERT OR REPLACE INTO pl_kv (k, v) VALUES (?, ?)')->execute(['seed1', (string) time()]);
@@ -320,4 +321,16 @@ function pl_seed(PDO $pdo): void {
         $ev->execute([$e[0], $e[1], $e[2], $t($e[3]), $t($e[4]), $e[5], $e[6], $e[7], $e[1] === 'Cam (Pulse AV)' ? 'Foodbank' : '', $now, $now, 0, 0]);
         if ($e[1] === 'Cam (Pulse AV)') $pdo->prepare("UPDATE pl_items SET event_id = ? WHERE kind = 'task' AND person = 'Cam (Pulse AV)' AND what = 'demo'")->execute([(int) $pdo->lastInsertId()]);
     }
+}
+
+/* One-off tasks added from chat (24 Nov afternoon): setup jobs for the jobs/payments + email AI build. */
+function pl_seed2(PDO $pdo): void {
+    if ($pdo->query("SELECT v FROM pl_kv WHERE k = 'seed2'")->fetchColumn()) return;
+    $pdo->prepare('INSERT OR REPLACE INTO pl_kv (k, v) VALUES (?, ?)')->execute(['seed2', (string) time()]);
+    $now = time();
+    $ins = $pdo->prepare('INSERT INTO pl_items (kind, title, person, platform, area, wait, what, pri, due, due_t, notes, owes, grp, created, updated) VALUES (\'task\',?,?,?,?,?,?,?,?,?,?,0,?,?,?)');
+    foreach ([
+        ['Set up the Anthropic API key for the email AI', 'SMR Admin', 'platform.claude.com (web only, not the Claude app)', 'direct', 'me', 'work', 2, '2026-11-27 12:00', 1, "Safari or laptop: platform.claude.com, sign in, organisation SMR Digital. Billing: add card, buy \$5-10 credit, auto-reload OFF. Limits: monthly limit ~\$10. API Keys: Create Key 'SMR Admin', copy it (sk-ant-..., shown once). Paste it into SMR Admin > Email settings > AI assistant. Never send it in a chat. Cost ~£1/month.", 'SMR Admin setup'],
+        ['Set up Stripe for job payment links', 'SMR Admin', 'stripe.com', 'direct', 'me', 'work', 2, '2026-11-28 12:00', 1, 'Make a Stripe account (SMR Digital), add bank details for payouts, then paste the secret key into SMR Admin > Settings > Payments. Fees 1.5% + 20p per UK card, no monthly fee.', 'SMR Admin setup'],
+    ] as $i) $ins->execute([$i[0], $i[1], $i[2], $i[3], $i[4], $i[5], $i[6], (int) strtotime($i[7]), $i[8], $i[9], $i[10], $now, $now]);
 }
