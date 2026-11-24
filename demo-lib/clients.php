@@ -443,7 +443,7 @@ function lead_parse(string $text): array {
 /* Client logos (owner 24 Nov): uploaded one (private_dir()/clogo/<id>.png, served by demo-admin/clogo.php) or a ready-made one
    from demo-admin/clogo/<file>.webp matched on the name (CL_LOGOS keys = cl_kn of the name, or the start of it). */
 const CL_LOGOS = [
-    'eaecentre' => 'eae', 'theeducationcentre' => 'eae', 'educationcentre' => 'eae', 'inspirefm' => 'inspire-fm', 'pulseav' => 'pulse-av', 'empoweringeducation' => 'empowering',
+    'eaecentre' => 'eae', 'theeducationcentrebyeae' => 'eae', 'educationcentrebyeae' => 'eae', 'eae' => 'eae', 'theeducationcentre' => 'eae', 'educationcentre' => 'eae', 'inspirefm' => 'inspire-fm', 'pulseav' => 'pulse-av', 'empoweringeducation' => 'empowering',
     'goldenarrowarchery' => 'golden-arrow', 'foodbank' => 'foodbank', 'lutonfoodbank' => 'foodbank', 'activeluton' => 'active-luton', 'lutonsixthformcollege' => 'luton-sixth-form',
     'nortonroadschool' => 'norton-road', 'nortonroadprimaryschool' => 'norton-road', 'grandroyale' => 'grand-royale', 'oneummah' => 'one-ummah', 'tutorbook' => 'tutorbook',
     'ameejee' => 'amee-jee', 'courtneyfoundation' => 'courtney', 'ngsyouthcommunity' => 'ngs', 'ngs' => 'ngs', 'letseattogether' => 'lets-eat-together',
