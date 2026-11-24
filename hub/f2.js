@@ -1431,7 +1431,7 @@ const TRY3IDS = TRY3.map(x => x[0]);
 const PUBLIC = ['home', 'item', 'page', 'account', 'about', 'legal', 'privacy', 'children', 'cookies', 'terms', 'serviceterms', 'dataterms', 'security', 'volunteer'];
 const VOL_OK = [...PUBLIC, 'volunteering', 'role', 'hours', 'reminders'];
 const approvedAcct = () => !!(prof() && !prof().pending);
-const allowed = (v, id) => L.isOwner || approvedAcct() || PUBLIC.includes(v) || (v === 'tool' && TRY3IDS.includes(id)) || (volLinked() && VOL_OK.includes(v));
+const allowed = (v, id) => L.isOwner || window.HUB_TEST || approvedAcct() || PUBLIC.includes(v) || (v === 'tool' && TRY3IDS.includes(id)) || (volLinked() && VOL_OK.includes(v));
 const EX = (t, d, more = '') => `<div class="card excard"><span class="tag ex">Example</span><h3>${t}</h3><p>${d}</p>${more}</div>`;
 const landing = () => { const pend = prof()?.pending;
   const J = (t, c = 'p') => pend ? '' : `<button class="btn ${c}" data-join>${t}</button>`;

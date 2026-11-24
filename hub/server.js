@@ -1,6 +1,7 @@
 /* Luton Community Hub, live copy: stands in for the Claude artifact capabilities (db, user, sample, downloads)
    so app.js runs unchanged on smrgraphics.co.uk. Talks to /hub/api.php. Loaded before the app scripts. */
 (function () {
+  window.HUB_TEST = true;   // testing with a few people: everything open, no sign-up / log-in anywhere (testing.js)
   var API = '/hub/api.php';
   function q(a, p) { var s = API + '?a=' + a; for (var k in (p || {})) s += '&' + k + '=' + encodeURIComponent(p[k]); return s; }
   function getJ(a, p) { return fetch(q(a, p), { credentials: 'same-origin', cache: 'no-store' }).then(function (r) { return r.json().then(function (j) { if (!r.ok) { var e = new Error(j.error || 'failed'); e.code = j.error; throw e; } return j; }); }); }
