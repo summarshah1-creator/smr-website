@@ -3279,6 +3279,14 @@ var OOMPH = (() => { const O = {};
   return O; })();
 { const _pc = POL.coin; POL.coin = c => { _pc(c); OOMPH.coinGot(c); }; }
 window.__oomph = OOMPH;
+// owner 24 Nov: pop-ups always fit inside the screen with a margin, no scrolling: shrink a box (CSS zoom) when its content is taller/wider than the space
+function fitPop(sh) { if (!sh || sh.classList.contains('hide')) return; const bx = sh.id === 'over' ? sh.querySelector('.card') : sh.querySelector(':scope>.box'); if (!bx) return;
+  bx.style.zoom = ''; const H = sh.clientHeight, Wd = sh.clientWidth, mh = Math.max(22, H * .09);
+  const h = bx.offsetHeight, w = bx.offsetWidth, k = Math.min(1, (H - mh * 2) / h, (Wd - 24) / w); if (k < .995) bx.style.zoom = Math.max(.5, k).toFixed(3); }
+(() => { let q = new Set(), on = 0; const run = () => { on = 0; q.forEach(fitPop); q.clear(); }, ask = sh => { q.add(sh); if (!on) { on = 1; requestAnimationFrame(run); } };
+  const watch = sh => { if (sh.__fit) return; sh.__fit = 1; new MutationObserver(m => { if (m.some(x => x.type === 'attributes') && !sh.classList.contains('hide')) { ask(sh); setTimeout(() => ask(sh), 120); setTimeout(() => ask(sh), 450); } else ask(sh); }).observe(sh, { attributes: true, attributeFilter: ['class'], childList: true, subtree: true, characterData: true }); };
+  const scan = () => document.querySelectorAll('.sheet,#over').forEach(watch); scan(); new MutationObserver(scan).observe(document.body, { childList: true, subtree: true });
+  addEventListener('resize', () => document.querySelectorAll('.sheet,#over').forEach(ask)); window.__fitPop = fitPop; })();
 window.__pol = POL;
 function frame(now) { const dt = Math.min(.05, (now - last) / 1000); last = now; shieldBtn(); dashBtn(); hornBtn(); batBtn(); SLOW = veh && veh.k === 'mech' && veh.su < 1.05 ? .12 : Math.min(1, SLOW + dt * 3); if (FM) { if (!paused) { FMS.step(dt); if (FM && FM.ph === 'out' && FM.back) update(dt); } FMS.frame(); requestAnimationFrame(frame); return; } if (REVEAL && !paused) { revealTick(dt); holding = false; } else if (!paused) { let k = 1; if (HITT > 0) { HITT -= dt; k = 0; } else if (SMT > 0) { SMT -= dt; k = .35; } update(dt * SLOW * k); } else holding = false; draw(); if (bakeQ.length) bakeOne(); requestAnimationFrame(frame); }
 requestAnimationFrame(frame);
@@ -3305,7 +3313,7 @@ function saveName() { const n = $('nmIn').value.trim(); if (n.length < 2) { $('n
   apiPost('score', { pid: PID, name: n, score: LB.lastM, run: LB.rid }).then(j => { if (!j || !j.ok) { $('nmE').textContent = (j && j.err && j.err !== 'check') ? j.err : 'Try another name.'; return; }
     done(j.name || n); LB.board = j; const r = j.me && j.me.week ? j.me.week.rank : 0; showRank(r); homeInfo(); toast("You're " + lbRankText(r).toLowerCase() + '!'); }).catch(() => { $('nmE').textContent = 'No connection, try again.'; }); }
 function renderBoard() { const j = LB.board, L = $('lbList'); if (!j) { L.innerHTML = '<p class="lbmut">Loading…</p>'; return; }
-  const rows = j[LB.tab] || []; L.innerHTML = rows.length ? rows.map((r, i) => `<div class="lbr g${i + 1}${r.me ? ' me' : ''}"><span class="n">${i + 1}</span><span class="nm">${esc(r.name)}${r.me ? ' (YOU)' : ''}</span><span class="sc">${r.score.toLocaleString('en-GB')}m</span></div>`).join('') : '<p class="lbmut">No scores yet. Be the first!</p>';
+  const rows = (j[LB.tab] || []).slice(0, 10);   // top 10 so the box never needs scrolling L.innerHTML = rows.length ? rows.map((r, i) => `<div class="lbr g${i + 1}${r.me ? ' me' : ''}"><span class="n">${i + 1}</span><span class="nm">${esc(r.name)}${r.me ? ' (YOU)' : ''}</span><span class="sc">${r.score.toLocaleString('en-GB')}m</span></div>`).join('') : '<p class="lbmut">No scores yet. Be the first!</p>';
   [...$('lbSeg').children].forEach(b => b.classList.toggle('on', b.dataset.v === LB.tab));
   const me = j.me && j.me[LB.tab]; $('lbMe').innerHTML = me ? `Your best: <b>${me.score.toLocaleString('en-GB')}m</b> · #${me.rank}${LBNAME ? ` · <button id="lbRen">Change name</button>` : ''}` : 'Fly 20m or more to get on the board.';
   const rb = $('lbRen'); if (rb) rb.addEventListener('pointerdown', e => { e.stopPropagation(); $('lbBox').classList.add('hide'); openName(0, true); }); }

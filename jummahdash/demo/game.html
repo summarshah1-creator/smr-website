@@ -516,6 +516,13 @@ body.noflash .flashy{animation:none!important}
 #over.lock .ovBtns{pointer-events:none;opacity:.55;transition:opacity .2s}
 #over .ovRank[hidden]{display:none!important}
 #nameBox,#lbBox,#bonusBox{z-index:8!important}
+
+/* owner 24 Nov: every pop-up sits inside the screen with a clear margin top and bottom, never scrolls, pops in and out (fitPop() in game.js scales a box down to fit) */
+.sheet>.box,#over .card,#over .card.ovx{max-height:none!important;overflow:hidden!important;overscroll-behavior:none}
+.sheet .carbox{overflow:hidden!important}
+.lblist{max-height:none;overflow:visible}
+#shop .shopBox{inset:max(22px,8%) calc(var(--sr,0px) + 26px) max(22px,8%) calc(var(--sl,0px) + 26px);max-width:980px;margin:0 auto}
+.shopList{overscroll-behavior:contain}
 </style>
 </head>
 <body>
@@ -763,7 +770,7 @@ var t=setInterval(function(){var lt=document.getElementById('loadTxt');if(!q&&lt
 <script src="hd/mech.js?h=e8ac3de068"></script>
 <script src="hd/logman.js?h=3eebaa7c57"></script>
 <script src="hd/box.js?h=4d37ca66fa"></script>
-<script src="game.js?h=5e31769d69"></script>
+<script src="game.js?h=b530cf2a88"></script>
 <script src="hd/tins.js?h=aa419cd2f9"></script>
 <script src="jd-extra.js?h=755546ca23"></script>
 <script src="/flappy/carreq.js?v=1"></script>
