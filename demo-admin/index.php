@@ -355,6 +355,7 @@ document.addEventListener('keydown',function(e){if(/^\d$/.test(e.key))press(e.ke
     <nav class="tabs dnav" role="tablist">
       <button data-grp="today" role="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg><span class="lb">Today</span><span class="cnt bad" id="plcnt"></span></button>
       <button data-grp="jobs" role="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M12 12v3M10.5 13.5h3"/></svg><span class="lb">Jobs &amp; payments</span><span class="cnt bad" id="jbcnt"></span></button>
+      <button data-grp="proofs" role="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/><path d="M8.5 15l2.2 2.2L15.5 12"/></svg><span class="lb">Proofs</span><span class="cnt bad" id="pfcnt"></span></button>
       <button data-grp="mail" role="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg><span class="lb">Email</span><span class="cnt" id="mailcnt"></span></button>
       <button data-grp="games" role="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="11" rx="5"/><path d="M7 11v4M5 13h4"/><circle cx="15.5" cy="12" r="1" fill="currentColor"/><circle cx="18" cy="14" r="1" fill="currentColor"/></svg><span class="lb">Games</span><span class="cnt" id="fkcnt"></span></button>
       <button data-grp="music" role="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg><span class="lb">Player</span></button>
@@ -364,6 +365,8 @@ document.addEventListener('keydown',function(e){if(/^\d$/.test(e.key))press(e.ke
     <div class="dft">Swipe from the left edge to open</div>
   </aside>
 
+  <!-- PROOFS: client sign-off links (proofs.js) -->
+  <section id="tab-proofs" class="tab hidden"><div id="pf"><div class="empty">Loading…</div></div></section>
   <!-- JOBS & PAYMENTS (jobs.js) -->
   <section id="tab-jobs" class="tab hidden"><div id="jb"><div class="empty">Loading…</div></div></section>
   <!-- TODAY (planner.js) -->
@@ -581,8 +584,8 @@ var ICON={dots:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="
 
 /* ---------- tabs (hash) ---------- */
 var lastDemoTab='demos';
-var showTab=function(t){if(['today','jobs','demos','send','live','designs','games','flappy','jummah','mail','music','stats'].indexOf(t)<0)t='today';if(window.SMRPlanner){if(t==='today')SMRPlanner.show();else SMRPlanner.hide()}if(window.SMRJobs){if(t==='jobs')SMRJobs.show();else SMRJobs.hide()}if(t==='games')gamesCards();if(t==='jummah'){var jf=document.getElementById('jdframe');if(jf&&!jf.src)jf.src='/jummahdash/admin.php'}if(t==='stats'){var sf=document.getElementById('stframe');if(sf&&!sf.src)sf.src='/music/stats.php'}if(t==='music'){var mf=document.getElementById('muframe');if(mf&&!mf.src)mf.src='/music/index.php?manage=1'}if(t==='flappy'){var ff=document.getElementById('fkframe');if(ff&&!ff.src)ff.src='/flappy/admin.php'}
-  var grp=(t==='today'||t==='jobs'||t==='mail'||t==='music'||t==='stats')?t:(t==='games'||t==='flappy'||t==='jummah')?'games':'demos';if(grp==='demos')lastDemoTab=t;
+var showTab=function(t){if(['today','jobs','proofs','demos','send','live','designs','games','flappy','jummah','mail','music','stats'].indexOf(t)<0)t='today';if(window.SMRPlanner){if(t==='today')SMRPlanner.show();else SMRPlanner.hide()}if(window.SMRJobs){if(t==='jobs')SMRJobs.show();else SMRJobs.hide()}if(window.SMRProofs){if(t==='proofs')SMRProofs.show();else SMRProofs.hide()}if(t==='games')gamesCards();if(t==='jummah'){var jf=document.getElementById('jdframe');if(jf&&!jf.src)jf.src='/jummahdash/admin.php'}if(t==='stats'){var sf=document.getElementById('stframe');if(sf&&!sf.src)sf.src='/music/stats.php'}if(t==='music'){var mf=document.getElementById('muframe');if(mf&&!mf.src)mf.src='/music/index.php?manage=1'}if(t==='flappy'){var ff=document.getElementById('fkframe');if(ff&&!ff.src)ff.src='/flappy/admin.php'}
+  var grp=(t==='today'||t==='jobs'||t==='proofs'||t==='mail'||t==='music'||t==='stats')?t:(t==='games'||t==='flappy'||t==='jummah')?'games':'demos';if(grp==='demos')lastDemoTab=t;
   document.querySelectorAll('[data-tab]').forEach(function(b){b.classList.toggle('on',b.dataset.tab===t)});document.querySelectorAll('[data-grp]').forEach(function(b){b.classList.toggle('on',b.dataset.grp===grp)});document.getElementById('subtabs').classList.toggle('hidden',grp!=='demos');
   document.querySelectorAll('.tab').forEach(function(s){s.classList.toggle('hidden',s.id!=='tab-'+t)});window.scrollTo(0,0);if(t==='live'&&typeof load==='function'&&D.length)load();if(t!=='send'&&$('created').dataset.used&&typeof resetSend==='function')resetSend();if(t==='mail'&&typeof mailOpen==='function')mailOpen();if(t==='designs'&&typeof dLoad==='function')dLoad()};
 document.querySelectorAll('[data-tab]').forEach(function(b){b.addEventListener('click',function(){if(location.hash!=='#'+b.dataset.tab)history.replaceState(null,'','#'+b.dataset.tab);showTab(b.dataset.tab)})});
@@ -1229,9 +1232,10 @@ var dq=0;new MutationObserver(function(){if(!dq)dq=requestAnimationFrame(functio
 })();
 document.getElementById('themebtn').addEventListener('click',function(){var lt=document.documentElement.classList.toggle('lt');try{localStorage.setItem('smr_theme',lt?'light':'dark')}catch(e){}var m=document.querySelector('meta[name=theme-color]');if(m)m.setAttribute('content',lt?'#f3f0e9':'#08080f');
   document.querySelectorAll('iframe').forEach(function(f){try{f.contentWindow.postMessage({smrTheme:lt?'light':'dark'},location.origin)}catch(e){}})});
-window.SMRA={api:api,openSheet:openSheet,closeSheet:closeSheet,toast:toast,esc:esc,copy:copy,waUrl:waUrl,enablePush:enablePush};
+window.SMRA={loadPdf:loadPdf,api:api,openSheet:openSheet,closeSheet:closeSheet,toast:toast,esc:esc,copy:copy,waUrl:waUrl,enablePush:enablePush};
 })();
 </script>
+<script src="proofs.js?v=<?= @filemtime(__DIR__ . '/proofs.js') ?>"></script>
 <script src="jobs.js?v=<?= @filemtime(__DIR__ . '/jobs.js') ?>"></script>
 <script src="planner.js?v=<?= @filemtime(__DIR__ . '/planner.js') ?>"></script>
 <?php endif; ?>

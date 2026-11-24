@@ -12,8 +12,8 @@ html.lt .scrim,html.lt .dscrim{background:rgba(3,3,10,.6)!important;color:inheri
 html.lt .drawer .tabs button.on{background:rgba(214,59,255,.18)!important;color:#fff!important}
 html.lt .subtabs button{background:rgba(255,255,255,.04)!important;color:#a3a3bd!important;border-color:rgba(255,255,255,.12)!important}
 html.lt .subtabs button.on{background:rgba(214,59,255,.18)!important;color:#fff!important;border-color:rgba(214,59,255,.55)!important}
-html.lt .tab>.bar,html.lt .tab>.bar h1,html.lt .plh h1,html.lt .jbh h1,html.lt .gbar h1{color:#f6f4ff}
-html.lt .tab>.bar .sub,html.lt .plh small,html.lt .jbh small,html.lt .plsec,html.lt .gback{color:#b9b4cc!important}
+html.lt .tab>.bar,html.lt .tab>.bar h1,html.lt .plh h1,html.lt .jbh h1,html.lt .pfh h1,html.lt .gbar h1{color:#f6f4ff}
+html.lt .tab>.bar .sub,html.lt .plh small,html.lt .jbh small,html.lt .pfh small,html.lt .plsec,html.lt .gback{color:#b9b4cc!important}
 html.lt .plsec i{background:rgba(255,255,255,.12)}
 html.lt input,html.lt textarea,html.lt select{background:#f8f5ef;color:#1d1b26;border-color:rgba(40,32,70,.16)}
 html.lt input[type=date],html.lt input[type=time]{color-scheme:light}
@@ -211,6 +211,31 @@ html.lt .jbtoday{background:linear-gradient(160deg,#fcccd0,#f6dff5);color:#1d1b2
 html.lt .jbtoday span{color:#db062a}
 html.lt .jbtoday em{color:#db062f}
 html.lt .jbfab{background:var(--grad);color:#fff}
+html.lt .pfstat button{background:#fbf9f4;color:#1d1b26}
+html.lt .pfstat .r b{color:#db0629}
+html.lt .pfstat .a b{color:#db8606}
+html.lt .pfstat .p b{color:#5206db}
+html.lt .pfstat .g b{color:#1cc478}
+html.lt .pfseg{background:#fbf9f4;color:#1d1b26}
+html.lt .pfseg button.on{background:#f1c5f7;color:#1d1b26}
+html.lt .pfc{background:#fbf9f4;color:#1d1b26}
+html.lt .ps{background:rgba(40,32,70,0.072);color:#4a4a82}
+html.lt .ps.waiting,html.lt .ps.ready{background:#fce7c5;color:#db8506}
+html.lt .ps.changes{background:#fcc1c7;color:#db062f}
+html.lt .ps.done,html.lt .ps.approved{background:#c7f1db;color:#1cc478}
+html.lt .pfi .fb{background:#fcd7d9;color:#db0629}
+html.lt .pfbox{background:#fbf9f4;color:#1d1b26}
+html.lt .pfev b{color:#4a4a82}
+html.lt .pfev.ok b{color:#1cc478}
+html.lt .pfev.ch b{color:#db062f}
+html.lt .pfprog{background:rgba(40,32,70,0.090)}
+html.lt .pfprog i{background:var(--grad)}
+html.lt .pffab{background:var(--grad);color:#fff}
+html.lt .pfchk.ok{color:#1cc478}
+html.lt .pfchk.warn{color:#db8506}
+html.lt .pfpre{background:#fbf9f4;color:#1d1b26}
+html.lt .pfnudge{background:#fcf0dc;color:#1d1b26}
+html.lt .pfnudge span{color:#db8f06}
 html.lt body{background:#12111f;color:#f2f2fa}
 html.lt a{color:#6a3fd0}
 html.lt .top,html.lt .drawer,html.lt .subtabs{--ink:#f2f2fa;--muted:#a3a3bd;--line:rgba(255,255,255,.1);color:#f2f2fa}
@@ -223,8 +248,8 @@ html.lt .scrim,html.lt .dscrim{background:rgba(3,3,10,.6)!important;color:inheri
 html.lt .drawer .tabs button.on{background:rgba(214,59,255,.18)!important;color:#fff!important}
 html.lt .subtabs button{background:rgba(255,255,255,.04)!important;color:#a3a3bd!important;border-color:rgba(255,255,255,.12)!important}
 html.lt .subtabs button.on{background:rgba(214,59,255,.18)!important;color:#fff!important;border-color:rgba(214,59,255,.55)!important}
-html.lt .tab>.bar,html.lt .tab>.bar h1,html.lt .plh h1,html.lt .jbh h1,html.lt .gbar h1{color:#f6f4ff}
-html.lt .tab>.bar .sub,html.lt .plh small,html.lt .jbh small,html.lt .plsec,html.lt .gback{color:#b9b4cc!important}
+html.lt .tab>.bar,html.lt .tab>.bar h1,html.lt .plh h1,html.lt .jbh h1,html.lt .pfh h1,html.lt .gbar h1{color:#f6f4ff}
+html.lt .tab>.bar .sub,html.lt .plh small,html.lt .jbh small,html.lt .pfh small,html.lt .plsec,html.lt .gback{color:#b9b4cc!important}
 html.lt .plsec i{background:rgba(255,255,255,.12)}
 html.lt input,html.lt textarea,html.lt select{background:#f8f5ef;color:#1d1b26;border-color:rgba(40,32,70,.16)}
 html.lt input[type=date],html.lt input[type=time]{color-scheme:light}

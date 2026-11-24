@@ -116,8 +116,13 @@
       return '<div class="jbpay' + (p.status === 'paid' ? ' paid' : '') + (late ? ' late' : '') + '"><div class="tx"><b>' + esc(p.label) + '</b><span>' + payWhen(j, p) + '</span></div><span class="am">' + money(p.amount) + '</span>'
         + (p.status === 'paid' ? '<button class="btn sm" data-jundo="' + j.id + ':' + p.id + '">Undo</button>' : '<button class="btn sm" data-jcash="' + j.id + ':' + p.id + '">Paid</button>') + '</div>';
     }).join('') + '<div style="font-size:12px;color:var(--muted);margin-top:8px">' + esc(J.terms[j.terms] || '') + ' · ' + [j.card_ok ? 'card' : '', j.cash_ok ? 'cash' : ''].filter(Boolean).join(' or ') + (j.email && j.auto_email ? ' · email reminders on' : ' · no email reminders') + '</div></div>';
+    // Proof (graphics / marketing / plates work must be signed off before it's made or handed over)
+    var pf = window.SMRProofs ? SMRProofs.forJob(j.id) : [], needsPf = ['graphics', 'marketing', 'plates'].indexOf(j.area) >= 0;
+    if (pf.length) html += '<div class="jbbox"><h3>Proof</h3>' + pf.map(function (s) { return '<div class="jbpay"><div class="tx"><b>' + esc(s.title) + '</b><span>' + s.n.ok + ' of ' + s.n.total + ' signed off' + (s.state === 'changes' ? ' · changes asked' : s.sent_at ? '' : ' · not sent yet') + '</span></div><button class="btn sm" data-jproof="' + s.id + '">Open</button></div>'; }).join('') + '</div>';
+    else if (needsPf && j.agreed_at && !j.delivered_at) html += '<div class="jblock" style="background:rgba(255,181,71,.12);border-color:rgba(255,181,71,.45);color:#ffe0a8">' + ICON.lock + '<div>No proof yet. Send them a proof to sign off before you make it.</div></div><button class="btn sm pri" style="margin-top:8px" data-jnewproof="' + j.id + '">Start a proof</button>';
     // Hand-over
     if (j.stage === 'done' || j.delivered_at) html += '<div class="jbok">✓ Handed over ' + dShort(j.delivered_at) + (j.override ? ' (before full payment)' : '') + '</div><button class="btn sm" style="margin-top:8px" data-jundeliver="' + j.id + '">Undo hand-over</button>';
+    else if (j.agreed_at && !j.proof.done) html += '<div class="jblock">' + ICON.lock + '<div>Hand-over locked: the proof isn\'t signed off yet (' + j.proof.open + ' item' + (j.proof.open > 1 ? 's' : '') + ' left).</div></div><button class="btn sm" style="margin-top:8px;opacity:.7" data-joverride="' + j.id + '">Hand over anyway…</button>';
     else if (j.agreed_at && j.lock) html += '<div class="jblock">' + ICON.lock + '<div>Hand-over locked: ' + money(j.lock) + ' still to pay. Mark it paid first.</div></div><button class="btn sm" style="margin-top:8px;opacity:.7" data-joverride="' + j.id + '">Hand over anyway…</button>';
     else if (j.agreed_at) html += '<button class="btn pri big" data-jdeliver="' + j.id + '">Mark as handed over</button>';
     if (j.extra) html += '<div class="jbgift">' + ICON.gift + '<div><small>ON THE HOUSE</small>' + esc(j.extra) + '</div></div>';
@@ -259,10 +264,12 @@
         box.addEventListener('click', function (ev) { var m = ev.target.closest('[data-m]'); if (!m) return; api('j_paid', { id: y.j.id, pay: y.pay, method: m.dataset.m }).then(function () { render(); A.toast('Marked paid'); open(y.j.id); }); }); }); return; }
     if ((b = e.target.closest('[data-jundo]'))) { var z = pair(b.dataset.jundo); api('j_paid', { id: z.j.id, pay: z.pay, undo: 1 }).then(function () { render(); open(z.j.id); }); return; }
     if ((b = e.target.closest('[data-jdeliver]'))) { var id = +b.dataset.jdeliver; api('j_deliver', { id: id }).then(function () { render(); A.toast('Handed over ✓'); open(id); }).catch(function (er) { A.toast(er.message, true); }); return; }
-    if ((b = e.target.closest('[data-joverride]'))) { var jo = byId(+b.dataset.joverride); if (!confirm(first(jo) + ' still owes ' + money(jo.lock) + '. Are you sure you want to hand it over before you\'re paid? This is how people get away without paying.')) return;
+    if ((b = e.target.closest('[data-joverride]'))) { var jo = byId(+b.dataset.joverride); if (!confirm(jo.lock ? first(jo) + ' still owes ' + money(jo.lock) + '. Are you sure you want to hand it over before you\'re paid? This is how people get away without paying.' : 'The proof isn\'t signed off. If anything is wrong, they can say it\'s not what they approved. Hand over anyway?')) return;
       api('j_deliver', { id: jo.id, override: 1 }).then(function () { render(); open(jo.id); }); return; }
     if ((b = e.target.closest('[data-jundeliver]'))) { api('j_deliver', { id: +b.dataset.jundeliver, undo: 1 }).then(function () { render(); open(+b.dataset.jundeliver); }); return; }
     if ((b = e.target.closest('[data-jcancel]'))) { var jc = byId(+b.dataset.jcancel), back = jc.stage === 'cancelled'; if (!back && !confirm('Cancel this job? The client link will stop working.')) return; api('j_cancel', { id: jc.id, undo: back ? 1 : 0 }).then(function () { render(); open(jc.id); }); return; }
+    if ((b = e.target.closest('[data-jproof]'))) { A.closeSheet(); location.hash = '#proofs'; var pid = +b.dataset.jproof; setTimeout(function () { var x = document.querySelector('[data-pfo="' + pid + '"]'); if (x) x.click(); }, 500); return; }
+    if ((b = e.target.closest('[data-jnewproof]'))) { A.closeSheet(); if (window.SMRProofs) SMRProofs.newFor(+b.dataset.jnewproof); return; }
     if ((b = e.target.closest('[data-jdel]'))) { if (!confirm('Delete this job and its payment history for good?')) return; api('j_delete', { id: +b.dataset.jdel }).then(function () { A.closeSheet(); render(); }); return; }
   });
 
@@ -277,15 +284,22 @@
     if (S.overdue) bits.push(money(S.overdue) + ' overdue: ' + Object.keys(S.debtors).join(', '));
     if (n) bits.push(n + ' payment reminder' + (n > 1 ? 's' : '') + ' to send');
     if (S.agree) bits.push(S.agree + ' quote' + (S.agree > 1 ? 's' : '') + ' not agreed yet');
+    var PS = window.SMRProofs && SMRProofs.sum();
+    if (PS && PS.changes) bits.push(PS.changes + ' proof' + (PS.changes > 1 ? 's' : '') + ' with changes asked');
+    if (PS && PS.ready) bits.push(PS.ready + ' proof' + (PS.ready > 1 ? 's' : '') + ' to send');
+    if (PS && PS.waiting) bits.push(PS.waiting + ' proof' + (PS.waiting > 1 ? 's' : '') + ' waiting for sign-off');
+    var np = needProof(); if (np.length) bits.push(np.length + ' job' + (np.length > 1 ? 's' : '') + ' with no proof yet');
     if (!bits.length) return '';
     return '<button class="jbtoday" data-jtoday><div class="tx"><b>Money &amp; jobs</b><span>' + esc(bits.join(' · ')) + '</span></div><em>' + (S.overdue ? money(S.overdue) : '›') + '</em></button>';
   };
-  document.addEventListener('click', function (e) { if (e.target.closest('[data-jtoday]')) { location.hash = '#jobs'; } });
+  document.addEventListener('click', function (e) { if (e.target.closest('[data-jtoday]')) { var PS = window.SMRProofs && SMRProofs.sum(); location.hash = (!J.sum.overdue && !J.sum.remind && PS && (PS.changes || PS.ready)) ? '#proofs' : '#jobs'; } });
+  var needProof = function () { return J.jobs.filter(function (j) { return j.agreed_at && !j.delivered_at && j.stage !== 'cancelled' && ['graphics', 'marketing', 'plates'].indexOf(j.area) >= 0 && !j.proof.sets; }); };
 
   window.SMRJobs = {
     show: function () { fab.classList.remove('hidden'); if (!loaded) load(); else { render(); load(); } api('j_check').then(render).catch(function () {}); },
     hide: function () { fab.classList.add('hidden'); },
-    todayHtml: todayHtml, load: load
+    todayHtml: todayHtml, load: load, needProof: function () { return J.sum ? needProof() : []; },
+    repaint: function () { var t = $('tab-jobs'); if (loaded && t && !t.classList.contains('hidden')) render(); if (window.SMRPlanner && SMRPlanner.repaint) SMRPlanner.repaint(); }
   };
   var tj = $('tab-jobs'); if (tj && !tj.classList.contains('hidden')) window.SMRJobs.show(); else load();
   setInterval(function () { if (!document.hidden) load(); }, 120000);

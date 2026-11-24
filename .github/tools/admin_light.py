@@ -16,7 +16,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)
 # (sources, output). The admin pages shown inside SMR Admin (games, analytics) follow the same switch
 # (localStorage smr_theme, shared on the site, plus a postMessage when it's flipped).
 TARGETS = [
-    (['demo-admin/index.php', 'demo-admin/planner.js', 'demo-admin/jobs.js'], 'demo-admin/light.css', True),
+    (['demo-admin/index.php', 'demo-admin/planner.js', 'demo-admin/jobs.js', 'demo-admin/proofs.js'], 'demo-admin/light.css', True),
     (['flappy/admin.php'], 'flappy/admin-light.css', False),
     (['jummahdash/admin.php'], 'jummahdash/admin-light.css', False),
     (['music/stats.php'], 'music/stats-light.css', False),
@@ -43,8 +43,8 @@ html.lt .scrim,html.lt .dscrim{{background:rgba(3,3,10,.6)!important;color:inher
 html.lt .drawer .tabs button.on{{background:rgba(214,59,255,.18)!important;color:#fff!important}}
 html.lt .subtabs button{{background:rgba(255,255,255,.04)!important;color:#a3a3bd!important;border-color:rgba(255,255,255,.12)!important}}
 html.lt .subtabs button.on{{background:rgba(214,59,255,.18)!important;color:#fff!important;border-color:rgba(214,59,255,.55)!important}}
-html.lt .tab>.bar,html.lt .tab>.bar h1,html.lt .plh h1,html.lt .jbh h1,html.lt .gbar h1{{color:#f6f4ff}}
-html.lt .tab>.bar .sub,html.lt .plh small,html.lt .jbh small,html.lt .plsec,html.lt .gback{{color:#b9b4cc!important}}
+html.lt .tab>.bar,html.lt .tab>.bar h1,html.lt .plh h1,html.lt .jbh h1,html.lt .pfh h1,html.lt .gbar h1{{color:#f6f4ff}}
+html.lt .tab>.bar .sub,html.lt .plh small,html.lt .jbh small,html.lt .pfh small,html.lt .plsec,html.lt .gback{{color:#b9b4cc!important}}
 html.lt .plsec i{{background:rgba(255,255,255,.12)}}
 html.lt input,html.lt textarea,html.lt select{{background:{FIELD};color:{INK};border-color:rgba(40,32,70,.16)}}
 html.lt input[type=date],html.lt input[type=time]{{color-scheme:light}}

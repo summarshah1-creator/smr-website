@@ -425,7 +425,12 @@ function quote(){
 let lastScroll=0;
 function open(p){build();if(p&&P[p]&&st.p!==p){st.p=p;st.si=0;st.orient=null}lastScroll=scrollY;root.classList.add('on');document.documentElement.style.overflow='hidden';
   (document.fonts&&document.fonts.ready||Promise.resolve()).then(()=>{tex.ph=null;refresh()});refresh()}
-function close(){root.classList.remove('on');document.documentElement.style.overflow=''}
+function close(){if(st.back){location.href=st.back;return}root.classList.remove('on');document.documentElement.style.overflow=''}
 document.addEventListener('click',e=>{const t=e.target.closest('[data-mockup]');if(!t)return;e.preventDefault();e.stopPropagation();open(t.dataset.mockup)},true);
 window.SMRMockup={open,close};
+/* Opened from a client proof (/p/<token>): /?mockup=<product>&img=/proofs/f.php?...&back=<proof page>. Shows that design at true size; closing goes back to the proof. */
+(function(){const q=new URLSearchParams(location.search),p=q.get('mockup'),img=q.get('img')||'',back=q.get('back')||'';if(!p||!P[p])return;
+  try{const b=new URL(back,location.href);if(b.origin===location.origin&&/^\/p\//.test(b.pathname))st.back=b.href}catch(e){}
+  const go=()=>{open(p);root.classList.add('mk-proof');if(!document.getElementById('mkProofCss')){const c=document.createElement('style');c.id='mkProofCss';c.textContent='.mk-proof .mk-q,.mk-proof #mkUp,.mk-proof #mkPaste{display:none!important}';document.head.appendChild(c)}if(/^\/proofs\/f\.php\?/.test(img))fetch(img,{credentials:'same-origin'}).then(r=>r.ok?r.blob():Promise.reject()).then(b=>load(new File([b],'Your proof.'+((b.type.split('/')[1]||'jpg').replace('jpeg','jpg')),{type:b.type}))).catch(()=>{})};
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',go);else go()})();
 })();

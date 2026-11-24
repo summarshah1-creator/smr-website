@@ -9,6 +9,7 @@ if (!defined('SMR_DEMO')) { http_response_code(404); exit; }
 require_once __DIR__ . '/bootstrap.php';
 require_once __DIR__ . '/push.php';
 require_once __DIR__ . '/mail.php';
+require_once __DIR__ . '/proofs.php';
 
 const JOB_TERMS = [
     'upfront' => 'Full payment up front',
@@ -267,7 +268,7 @@ function job_mark_paid(int $payId, string $method): void {
 
 /* ---------- reminders (called from pl_tick, so at most every 4 min) ---------- */
 function jobs_tick(): array {
-    $now = now(); $log = [];
+    $now = now(); $log = proofs_tick();
     $pdo = jobs_db();
     $h = (int) date('G', $now) * 60 + (int) date('i', $now);
     $emailOk = $h >= 9 * 60 && $h < 19 * 60;   // clients only get emails in the day
@@ -322,7 +323,7 @@ function job_row(array $j, int $now): array {
         'stage' => $stage, 'label' => $label, 'owed' => job_owed($pays), 'overdue' => job_owed($pays, true, $now), 'lock' => job_lock($j, $pays), 'prev' => $prev,
         'pays' => array_map(function ($p) { return ['id' => (int) $p['id'], 'label' => $p['label'], 'amount' => (int) $p['amount'], 'due_type' => $p['due_type'], 'due' => (int) $p['due'],
             'status' => $p['status'], 'method' => $p['method'], 'paid_at' => (int) $p['paid_at'], 'stage' => (int) $p['stage']]; }, $pays),
-        'remind' => $rem, 'msg_send' => job_msg_send($j), 'events' => $ev->fetchAll()];
+        'remind' => $rem, 'msg_send' => job_msg_send($j), 'events' => $ev->fetchAll(), 'proof' => proof_for_job((int) $j['id'])];
 }
 function jobs_summary(array $rows): array {
     $s = ['owed' => 0, 'overdue' => 0, 'agree' => 0, 'active' => 0, 'remind' => 0, 'debtors' => []];

@@ -223,6 +223,152 @@ if (strpos($a, 'pl_') === 0) {
     json_out(['error' => 'Unknown action'], 400);
 }
 
+/* ---------- proofs: client sign-off links (demo-lib/proofs.php) ---------- */
+if (strpos($a, 'pf_') === 0) {
+    require_once dirname(__DIR__) . '/demo-lib/proofs.php';
+    require_once dirname(__DIR__) . '/demo-lib/jobs.php';
+    require_once dirname(__DIR__) . '/demo-lib/ai.php';
+    $pdo = proofs_db(); $now = now();
+    $str = function ($k, $max = 300) use (&$in) { return mb_substr(trim((string) ($in[$k] ?? '')), 0, $max); };
+    $set = function () use ($in) { $s = proof_set((int) ($in['id'] ?? 0)); if (!$s) json_out(['error' => 'Proof not found.'], 404); return $s; };
+    $msg = function (array $s): string {
+        return 'Hi ' . proof_first($s) . ', your proof for ' . $s['title'] . " is ready to check:\n" . proof_url($s)
+            . "\n\nPlease go through every item carefully (spelling, numbers, contact details, colours, layout). If it's all right, sign it off on the page; if anything needs changing, tap Request changes and tell me what. Nothing goes to print until it's signed off.\n\nSummar, SMR";
+    };
+    $row = function (array $s) use ($msg, $now) {
+        $p = proof_state($s); $pub = proof_public($s, true);
+        $thumb = '';
+        foreach ($pub['items'] as $it) if ($it['vers']) { $thumb = end($it['vers'])['pages'][0]['src'] ?? ''; break; }
+        $job = (int) $s['job_id'] ? job_by_id((int) $s['job_id']) : null;
+        $acts = proofs_db()->prepare('SELECT kind, name, text, at, item_id FROM proof_acts WHERE set_id = ? ORDER BY at DESC LIMIT 40'); $acts->execute([(int) $s['id']]);
+        return ['id' => (int) $s['id'], 'token' => $s['token'], 'url' => proof_url($s), 'client' => $s['client'], 'person' => $s['person'], 'phone' => $s['phone'], 'email' => $s['email'],
+            'area' => $s['area'], 'title' => $s['title'], 'note' => $s['note'], 'job_id' => (int) $s['job_id'], 'job' => $job ? $job['title'] : '', 'sent_at' => (int) $s['sent_at'],
+            'views' => (int) $s['views'], 'last_view' => (int) $s['last_view'], 'archived' => (int) $s['archived'], 'created' => (int) $s['created'], 'updated' => (int) $s['updated'],
+            'state' => $p['state'], 'n' => $p['n'], 'thumb' => $thumb, 'items' => $pub['items'], 'msg' => $msg($s), 'acts' => $acts->fetchAll()];
+    };
+    $out = function (array $extra = [], $after = null) use ($pdo, $row) {
+        $rows = array_map($row, $pdo->query('SELECT * FROM proof_sets ORDER BY archived, updated DESC LIMIT 200')->fetchAll());
+        $jobs = array_map(function ($j) { return ['id' => (int) $j['id'], 'title' => $j['title'], 'client' => $j['client'], 'person' => $j['person'], 'phone' => $j['phone'], 'email' => $j['email'], 'area' => $j['area']]; },
+            jobs_db()->query("SELECT * FROM jobs WHERE status IN ('draft','sent','agreed') ORDER BY updated DESC LIMIT 60")->fetchAll());
+        $sum = ['waiting' => 0, 'changes' => 0, 'ready' => 0, 'done' => 0];
+        foreach ($rows as $r) if (!$r['archived'] && isset($sum[$r['state']])) $sum[$r['state']]++;
+        $data = $extra + ['ok' => true, 'sets' => $rows, 'jobs' => $jobs, 'sum' => $sum, 'checks' => PROOF_CHECKS, 'mail' => (bool) mail_cfg(), 'ai' => ai_public()];
+        if ($after) json_out_then($data, $after); else json_out($data);
+    };
+    switch ($a) {
+    case 'pf_list': $out();
+    case 'pf_save':
+        $f = ['client' => $str('client', 120), 'person' => $str('person', 120), 'phone' => preg_replace('/[^0-9+ ]/', '', $str('phone', 30)), 'email' => strtolower($str('email', 160)),
+            'area' => in_array($in['area'] ?? '', ['graphics', 'digital', 'marketing', 'plates'], true) ? $in['area'] : 'graphics', 'title' => $str('title', 160), 'note' => $str('note', 1500),
+            'job_id' => max(0, (int) ($in['job_id'] ?? 0)), 'updated' => $now];
+        if ($f['client'] === '') json_out(['error' => 'Who is the proof for?'], 400);
+        if ($f['title'] === '') json_out(['error' => 'Give it a name, e.g. "Shop sign + menu boards".'], 400);
+        if ($f['email'] !== '' && !filter_var($f['email'], FILTER_VALIDATE_EMAIL)) json_out(['error' => 'That email address doesn\'t look right.'], 400);
+        $id = (int) ($in['id'] ?? 0);
+        if ($id) { $set(); $pdo->prepare('UPDATE proof_sets SET ' . implode(', ', array_map(function ($k) { return "$k = ?"; }, array_keys($f))) . ' WHERE id = ?')->execute(array_merge(array_values($f), [$id])); }
+        else {
+            do { $tok = rand_token(12); } while (proof_by_token($tok));
+            $f += ['token' => $tok, 'created' => $now];
+            $pdo->prepare('INSERT INTO proof_sets (' . implode(', ', array_keys($f)) . ') VALUES (' . implode(',', array_fill(0, count($f), '?')) . ')')->execute(array_values($f));
+            $id = (int) $pdo->lastInsertId();
+            proof_ev($id, 'note', 'Proof created');
+        }
+        $out(['id' => $id]);
+    case 'pf_item':   // add or rename an item
+        $s = $set(); $iid = (int) ($in['item'] ?? 0);
+        $name = $str('name', 120); if ($name === '') json_out(['error' => 'Name the item, e.g. "Roller banner".'], 400);
+        if ($iid) { $pdo->prepare('UPDATE proof_items SET name = ?, kind = ?, updated = ? WHERE id = ? AND set_id = ?')->execute([$name, $str('kind', 80), $now, $iid, (int) $s['id']]); }
+        else {
+            $n = (int) $pdo->query('SELECT COALESCE(MAX(n),0) FROM proof_items WHERE set_id = ' . (int) $s['id'])->fetchColumn() + 1;
+            $pdo->prepare('INSERT INTO proof_items (set_id, n, name, kind, created, updated) VALUES (?,?,?,?,?,?)')->execute([(int) $s['id'], $n, $name, $str('kind', 80), $now, $now]);
+            $iid = (int) $pdo->lastInsertId();
+        }
+        $pdo->prepare('UPDATE proof_sets SET updated = ? WHERE id = ?')->execute([$now, (int) $s['id']]);
+        $out(['item' => $iid]);
+    case 'pf_item_del':
+        $s = $set(); $it = proof_item((int) ($in['item'] ?? 0));
+        if (!$it || (int) $it['set_id'] !== (int) $s['id']) json_out(['error' => 'Not found.'], 404);
+        foreach ($pdo->query('SELECT * FROM proof_vers WHERE item_id = ' . (int) $it['id'])->fetchAll() as $v) foreach (json_decode($v['files'], true) ?: [] as $f) @unlink(proof_dir($s) . '/' . $f['f']);
+        $pdo->prepare('DELETE FROM proof_vers WHERE item_id = ?')->execute([(int) $it['id']]);
+        $pdo->prepare('DELETE FROM proof_items WHERE id = ?')->execute([(int) $it['id']]);
+        $out();
+    case 'pf_ver_start':
+        $s = $set(); $it = proof_item((int) ($in['item'] ?? 0));
+        if (!$it || (int) $it['set_id'] !== (int) $s['id']) json_out(['error' => 'Not found.'], 404);
+        $pdo->prepare('DELETE FROM proof_vers WHERE item_id = ? AND ready = 0')->execute([(int) $it['id']]);
+        $v = (int) $pdo->query('SELECT COALESCE(MAX(v),0) FROM proof_vers WHERE item_id = ' . (int) $it['id'])->fetchColumn() + 1;
+        $pdo->prepare('INSERT INTO proof_vers (item_id, v, note, created) VALUES (?,?,?,?)')->execute([(int) $it['id'], $v, $str('note', 600), $now]);
+        json_out(['ok' => true, 'ver' => (int) $pdo->lastInsertId(), 'v' => $v]);
+    case 'pf_ver_up':   // one page (multipart: file + ver + i + w + h)
+        $s = $set(); $v = proof_ver((int) ($_POST['ver'] ?? 0));
+        $it = $v ? proof_item((int) $v['item_id']) : null;
+        if (!$v || !$it || (int) $it['set_id'] !== (int) $s['id'] || (int) $v['ready']) json_out(['error' => 'Upload not found. Start again.'], 404);
+        $up = $_FILES['file'] ?? null;
+        if (!$up || $up['error'] !== UPLOAD_ERR_OK) json_out(['error' => 'The picture didn\'t upload. Try again.'], 400);
+        if ($up['size'] > PROOF_MAX_BYTES) json_out(['error' => 'That picture is over 25 MB.'], 400);
+        $mime = (string) (function_exists('mime_content_type') ? mime_content_type($up['tmp_name']) : '');
+        $ext = array_search($mime, PROOF_EXTS, true) ?: strtolower(pathinfo((string) $up['name'], PATHINFO_EXTENSION));
+        if (!isset(PROOF_EXTS[$ext])) json_out(['error' => 'Use JPG, PNG or WebP pictures (PDFs are turned into pictures for you).'], 400);
+        $i = max(0, min(60, (int) ($_POST['i'] ?? 0)));
+        $name = 'v' . $v['id'] . '-' . $i . '-' . bin2hex(random_bytes(4)) . '.' . ($ext === 'jpeg' ? 'jpg' : $ext);
+        if (!move_uploaded_file($up['tmp_name'], proof_dir($s) . '/' . $name)) json_out(['error' => 'Could not save the picture.'], 500);
+        $files = json_decode($v['files'], true) ?: [];
+        $files[$i] = ['f' => $name, 'w' => (int) ($_POST['w'] ?? 0), 'h' => (int) ($_POST['h'] ?? 0), 'sha' => hash_file('sha256', proof_dir($s) . '/' . $name)];
+        ksort($files);
+        $pdo->prepare('UPDATE proof_vers SET files = ? WHERE id = ?')->execute([json_encode(array_values($files)), (int) $v['id']]);
+        json_out(['ok' => true]);
+    case 'pf_ver_done':
+        $s = $set(); $v = proof_ver((int) ($in['ver'] ?? 0));
+        $it = $v ? proof_item((int) $v['item_id']) : null;
+        if (!$v || !$it || (int) $it['set_id'] !== (int) $s['id']) json_out(['error' => 'Upload not found.'], 404);
+        if (!json_decode($v['files'], true)) json_out(['error' => 'No pictures were uploaded.'], 400);
+        $auto = array_slice(array_values(array_filter((array) ($in['auto'] ?? []), 'is_string')), 0, 12);
+        $pdo->prepare('UPDATE proof_vers SET ready = 1, checks = ? WHERE id = ?')->execute([json_encode(['auto' => array_map(function ($x) { return mb_substr($x, 0, 200); }, $auto)]), (int) $v['id']]);
+        $pdo->prepare("UPDATE proof_items SET cur_ver = ?, status = 'waiting', updated = ? WHERE id = ?")->execute([(int) $v['id'], $now, (int) $it['id']]);
+        $pdo->prepare('UPDATE proof_sets SET updated = ? WHERE id = ?')->execute([$now, (int) $s['id']]);
+        proof_ev((int) $s['id'], 'note', 'Version ' . $v['v'] . ' of ' . $it['name'] . ' added' . ($it['status'] === 'approved' ? ' (was signed off: needs signing off again)' : ''), (int) $it['id'], (int) $v['id']);
+        $vNow = proof_ver((int) $v['id']);
+        $out(['checking' => ai_key() !== ''], function () use ($s, $it, $vNow) { proof_ai_check($s, $it, $vNow); });
+    case 'pf_check':   // run the AI proof-read again on an item's latest version
+        $s = $set(); $it = proof_item((int) ($in['item'] ?? 0));
+        if (!$it || (int) $it['set_id'] !== (int) $s['id'] || !(int) $it['cur_ver']) json_out(['error' => 'Nothing to check.'], 404);
+        proof_ai_check($s, $it, proof_ver((int) $it['cur_ver']));
+        $out();
+    case 'pf_ai':   // AI key + monthly limit
+        if (array_key_exists('key', $in)) {
+            $k = trim((string) $in['key']);
+            if ($k === '') ai_kv_set('key', '');
+            else {
+                if (!preg_match('/^sk-ant-[A-Za-z0-9_-]{20,}$/', $k)) json_out(['error' => 'That doesn\'t look like an Anthropic API key. It starts with sk-ant-.'], 400);
+                ai_kv_set('key', mail_encrypt($k));
+                try { ai_call([['type' => 'text', 'text' => 'Reply with OK.']], 5); } catch (Throwable $e) { ai_kv_set('key', ''); json_out(['error' => 'The key didn\'t work: ' . $e->getMessage()], 400); }
+            }
+        }
+        if (isset($in['cap'])) ai_kv_set('cap', (string) max(1, min(100, (float) $in['cap'])));
+        $out();
+    case 'pf_sent':
+        $s = $set();
+        $pdo->prepare('UPDATE proof_sets SET sent_at = ?, n_chase = 0, updated = ? WHERE id = ?')->execute([$now, $now, (int) $s['id']]);
+        if (!empty($in['email'])) {
+            if (!filter_var((string) $s['email'], FILTER_VALIDATE_EMAIL) || !($cfg = mail_cfg())) json_out(['error' => 'Add their email, and set up the Email tab first.'], 400);
+            try { [$m] = mail_build($cfg, [$s['email']], [], 'Your proof to check: ' . $s['title'], $msg($s)); smtp_send($cfg, [$s['email']], $m); }
+            catch (Throwable $e) { json_out(['error' => 'The email could not be sent: ' . $e->getMessage()], 400); }
+            proof_ev((int) $s['id'], 'note', 'Proof emailed to ' . $s['email']);
+        } else proof_ev((int) $s['id'], 'note', 'Proof link sent');
+        $out();
+    case 'pf_archive':
+        $s = $set(); $pdo->prepare('UPDATE proof_sets SET archived = ?, updated = ? WHERE id = ?')->execute([empty($in['undo']) ? 1 : 0, $now, (int) $s['id']]); $out();
+    case 'pf_delete':
+        $s = $set(); rrmdir_any(private_dir() . '/proofs/' . $s['token']);
+        foreach (proof_items((int) $s['id']) as $it) $pdo->prepare('DELETE FROM proof_vers WHERE item_id = ?')->execute([(int) $it['id']]);
+        $pdo->prepare('DELETE FROM proof_items WHERE set_id = ?')->execute([(int) $s['id']]);
+        $pdo->prepare('DELETE FROM proof_acts WHERE set_id = ?')->execute([(int) $s['id']]);
+        $pdo->prepare('DELETE FROM proof_sets WHERE id = ?')->execute([(int) $s['id']]);
+        $out();
+    }
+    json_out(['error' => 'Unknown action'], 400);
+}
+
 /* ---------- jobs & payments (demo-lib/jobs.php) ---------- */
 if (strpos($a, 'j_') === 0) {
     require_once dirname(__DIR__) . '/demo-lib/jobs.php';
@@ -298,10 +444,11 @@ if (strpos($a, 'j_') === 0) {
         $j = $job(); $pays = job_pays((int) $j['id']);
         if (!empty($in['undo'])) { $pdo->prepare("UPDATE jobs SET status = 'agreed', delivered_at = 0, override = 0, updated = ? WHERE id = ?")->execute([$now, (int) $j['id']]); job_ev((int) $j['id'], 'Hand-over undone'); $out(); }
         if (!(int) $j['agreed_at']) json_out(['error' => 'They haven\'t agreed to the quote yet.'], 400);
-        $lock = job_lock($j, $pays);
+        $lock = job_lock($j, $pays); $pf = proof_for_job((int) $j['id']);
         if ($lock > 0 && empty($in['override'])) json_out(['error' => 'Locked: ' . money($lock) . ' must be paid before hand-over.', 'locked' => $lock], 409);
+        if (!$pf['done'] && empty($in['override'])) json_out(['error' => 'Locked: the proof isn\'t signed off yet (' . $pf['open'] . ' item' . ($pf['open'] > 1 ? 's' : '') . ' left).'], 409);
         $pdo->prepare("UPDATE jobs SET status = 'delivered', delivered_at = ?, override = ?, updated = ? WHERE id = ?")->execute([$now, $lock > 0 ? 1 : 0, $now, (int) $j['id']]);
-        job_ev((int) $j['id'], $lock > 0 ? 'Handed over WITHOUT full payment (' . money($lock) . ' unpaid)' : 'Handed over');
+        job_ev((int) $j['id'], ($lock > 0 ? 'Handed over WITHOUT full payment (' . money($lock) . ' unpaid)' : 'Handed over') . (!$pf['done'] ? ' · proof NOT signed off' : ''));
         $out();
     case 'j_cancel':
         $j = $job();
