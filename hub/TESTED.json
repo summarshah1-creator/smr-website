@@ -394,6 +394,19 @@
    "tested": "2026-11-25",
    "result": "pass",
    "notes": "Phone 390 (touch) + desktop 1280, Playwright: 260 routes crawled, 0 native selects left on screen (57 compact pickers + tiles/searchable lists); picked values save and change handlers fire (course finder filter, captions language, planner org via keyboard, directory category, fund quiz + bid checklist wizard); phone back closes the sheet without leaving the page; no keyboard pops up by itself on touch; no JS errors."
+  },
+  {
+   "id": "activity-art",
+   "name": "Activities & clubs and Events cards: NGS-style band (drawn motif + organisation logo chip), banner at the top of #item-act-/#item-event- pages",
+   "route": "#activities, #events, #item-act-*, #item-event-*",
+   "files": [
+    "woart.js",
+    "app.html"
+   ],
+   "sha256": "facafba94d0b833e2430529e4e134bdba728705dccac55fb4a45dd49bacefdb0",
+   "tested": "2026-11-25",
+   "result": "pass",
+   "notes": "390 + 1280: 118/118 activity cards and 24/25 events with logos (1 event has no organisation), detail banner, 0 broken images, lazy-loaded, no JS errors"
   }
  ]
 }
