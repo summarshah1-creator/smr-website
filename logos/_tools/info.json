@@ -1155,5 +1155,135 @@
  "the-xc": {
   "address": "Hemel Hempstead",
   "website": "https://thexc.co.uk"
+ },
+ "holy-family-st-john-luton": {
+  "address": "24 Freshwater Close, Luton (Holy Family) and 296 Sundon Park Road, Luton (St John the Apostle)",
+  "postcode": "LU3 3TA",
+  "website": "https://www.holyfamilyandstjohns.org/",
+  "source": "owner (logo) 25 Nov 2026; vector redraw"
+ },
+ "st-margaret-of-scotland-luton": {
+  "address": "22a Bolingbroke Road, Luton",
+  "postcode": "LU1 5JD",
+  "website": "https://stmargaretsparishl.wixsite.com/home",
+  "source": "owner (crest, confirmed 25 Nov 2026)"
+ },
+ "sacred-heart-stopsley": {
+  "address": "148 Ashcroft Road, Luton",
+  "postcode": "LU2 9AY",
+  "website": "https://www.sacredheartluton.org/",
+  "source": "owner (logo); remade as vector on three lines 25 Nov 2026"
+ },
+ "st-martin-de-porres-luton": {
+  "address": "366 Leagrave High Street, Luton",
+  "postcode": "LU4 0NG",
+  "website": "https://stmartindeporreschurch.org.uk/",
+  "source": "owner (logo); redrawn as vector 25 Nov 2026"
+ },
+ "holy-ghost-luton": {
+  "address": "33 Westbourne Road, Luton",
+  "postcode": "LU4 8JD",
+  "website": "https://holyghostparish.co.uk/",
+  "source": "owner (logo); redrawn as vector 25 Nov 2026"
+ },
+ "learning-with-jesus-badge": {
+  "note": "Sent by the owner for a Luton Catholic church still without a logo (Our Lady Help of Christians or St Joseph's, Limbury). Not assigned until confirmed.",
+  "source": "owner 25 Nov 2026; redrawn as vector"
+ },
+ "st-pauls-luton": {
+  "address": "New Town Street, Luton",
+  "postcode": "LU1 3EB",
+  "website": "http://www.stpaulsluton.org.uk",
+  "source": "owner (logo); remade as vector 25 Nov 2026"
+ },
+ "all-saints-luton": {
+  "address": "Shaftesbury Road, Luton (All Saints) and Harefield Road, Luton (St Peter)",
+  "postcode": "LU4 8AH",
+  "website": "http://www.allsaintpeter.org.uk",
+  "source": "owner (logo); vector 25 Nov 2026"
+ },
+ "holy-trinity-biscot": {
+  "address": "Trinity Road, Biscot, Luton",
+  "postcode": "LU3 1PD",
+  "website": "https://www.staugustinewithholytrinity.co.uk/",
+  "source": "owner (logo); cleaned + vector 25 Nov 2026"
+ },
+ "st-francis-luton": {
+  "address": "Carteret Road, Luton",
+  "postcode": "LU2 9JZ",
+  "website": "https://stfrancisluton.org.uk",
+  "source": "owner (logo); vector 25 Nov 2026"
+ },
+ "st-hughs-lewsey": {
+  "address": "Leagrave High Street, Luton",
+  "postcode": "LU4 0ND",
+  "website": "http://www.sthughs.org.uk",
+  "source": "owner (cross); lockup with name made by SMR 25 Nov 2026"
+ },
+ "st-augustine-limbury": {
+  "address": "215 Icknield Way, Limbury, Luton",
+  "postcode": "LU3 2JR",
+  "website": "https://www.staugustinewithholytrinity.co.uk/",
+  "source": "owner (logo); remade from scratch as vector 25 Nov 2026"
+ },
+ "st-saviours-luton": {
+  "address": "St Saviour's Crescent, Luton",
+  "postcode": "LU1 5HG",
+  "made_by": "SMR",
+  "note": "Made by SMR Digital, not the church's official logo.",
+  "source": "SMR 25 Nov 2026"
+ },
+ "st-thomas-stopsley": {
+  "address": "585a Hitchin Road, Stopsley, Luton",
+  "postcode": "LU2 7UL",
+  "made_by": "SMR",
+  "note": "Made by SMR Digital, not the church's official logo.",
+  "source": "SMR 25 Nov 2026"
+ },
+ "st-johns-farley-hill": {
+  "address": "Rotheram Avenue, Farley Hill, Luton",
+  "postcode": "LU1 5PP",
+  "website": "http://www.stjohn-luton.co.uk/",
+  "source": "owner (logo); vector 25 Nov 2026"
+ },
+ "christchurch-bushmead": {
+  "address": "Hancock Drive, Bushmead, Luton",
+  "postcode": "LU2 7SF",
+  "website": "https://www.achurchnearyou.com/church/7754/",
+  "source": "owner (logo); vector 25 Nov 2026"
+ },
+ "high-town-methodist": {
+  "address": "47 Hightown Road, Luton",
+  "postcode": "LU2 0BW",
+  "website": "http://www.hightownmethodist.org",
+  "source": "owner (logo); remade as vector 25 Nov 2026"
+ },
+ "newland-church": {
+  "address": "Wigmore Church, Crawley Green Road, Luton",
+  "postcode": "LU2 9TE",
+  "website": "https://urclutonanddunstable.org/",
+  "source": "owner (logo); remade as vector 25 Nov 2026"
+ },
+ "st-johns-methodist-luton": {
+  "address": "Birdsfoot Lane, off Barton Road, Luton",
+  "postcode": "LU3 2DN",
+  "made_by": "SMR",
+  "note": "Lockup made by SMR Digital using the Methodist Church orb-and-cross symbol; not the church's own logo.",
+  "source": "SMR 25 Nov 2026"
+ },
+ "strathmore-avenue-methodist": {
+  "address": "43 Strathmore Avenue, Luton",
+  "postcode": "LU1 3NY",
+  "made_by": "SMR",
+  "note": "Lockup made by SMR Digital using the Methodist Church orb-and-cross symbol; not the church's own logo.",
+  "source": "SMR 25 Nov 2026",
+  "website": "https://www.southbedsmethodist.org.uk/strathmoreavenue.htm"
+ },
+ "farley-hill-methodist": {
+  "address": "North Drift Way, Farley Hill, Luton",
+  "postcode": "LU1 5JE",
+  "made_by": "SMR",
+  "note": "Lockup made by SMR Digital using the Methodist Church orb-and-cross symbol; not the church's own logo.",
+  "source": "SMR 25 Nov 2026"
  }
 }

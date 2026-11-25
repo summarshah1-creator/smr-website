@@ -1,6 +1,6 @@
 # SMR logo list
 
-353 organisations. Full details in logos.json and LIST.csv.
+375 organisations. Full details in logos.json and LIST.csv.
 
 ## businesses (38)
 - AA Carpets and Furniture
@@ -152,9 +152,10 @@
 - Wildlife Trust BCN
 - Woodland Trust
 
-## community (83)
+## community (104)
 - ABCD Luton
 - Active Luton
+- All Saints Church (Parish of All Saints with St Peter), Luton
 - Anne Gale School of Dance
 - Army Cadets (Beds & Herts ACF)
 - Baylands Equestrian Centre
@@ -165,18 +166,23 @@
 - Bedfordshire Police & Crime Commissioner
 - Calvary Church of God in Christ (COGIC UK)
 - Care homes (general)
+- Catholic badge: "Learning with Jesus in faith, hope and love" (church not confirmed yet)
+- Christchurch Bushmead
 - Dunstable Town Council
 - East London NHS Foundation Trust
 - East of England Community Health and Care NHS Trust
 - Edible High Town
 - Falkes (Luton) Scout District
+- Farley Hill Methodist Church (SMR-made lockup)
 - Flying Start
 - Girlguiding (Bedfordshire · Luton South)
 - Golden Arrow Archery
 - Gymfinity Kids Clubs
 - Hangout Luton
+- High Town Methodist Church
 - Higher Ground
 - Hockwell Ring Amateur Boxing Club
+- Holy Ghost Parish Luton
 - Hope Church Luton
 - Jobcentre Plus
 - Legends MMA & Fitness Centre
@@ -208,6 +214,7 @@
 - Muslim Undertaker
 - Mystics Trampoline & Gymnastics Club
 - Near Neighbours
+- Newland Church (URC / Methodist, Luton & Dunstable)
 - Next Generation Youth Theatre
 - NHS Healthy Start
 - NXT GEN Pathways
@@ -215,18 +222,32 @@
 - RAF Air Cadets
 - Ramridge Baptist Church
 - Rosebuds Luton Sisters
+- Sacred Heart of Jesus Parish, Stopsley, Luton
 - Sea Cadets (Luton Unit 226, TS Keyes)
 - SPA Gymnastics Academy
-- St Andrew & St Christopher's Church, Luton
+- St Anne with St Christopher, Luton
+- St Augustine's Church, Limbury
+- St Francis' Church, Luton
+- St Hugh's, Lewsey
+- St John's Methodist Church, Luton (SMR-made lockup)
+- St Johns Farley Hill (St John the Baptist)
 - St Joseph's RC Scouts, Icknield (Luton)
+- St Margaret of Scotland Catholic Church, Luton
+- St Martin de Porres Catholic Church, Luton
 - St Mary's Church Luton
 - St Marys Youth
+- St Paul's Luton
+- St Saviour's Church, Luton (SMR-made text logo)
+- St Thomas' Church, Stopsley (SMR-made text logo)
 - Stockwood Park RFC
 - Storm Gym
+- Strathmore Avenue Methodist Church (SMR-made lockup)
 - SUEZ
 - Sunnah Archery Club
 - Sunshine Riding School
+- The Catholic Parish of The Holy Family and St John the Apostle, Luton
 - The Culture Trust Luton
+- The Parish Church of Holy Trinity, Biscot
 - The Parish Church of The Holy Cross, Marsh Farm
 - Tina's School of Dance
 - Tokko Youth Hub
@@ -286,7 +307,7 @@
 - Zakariya Masjid
 - Zuhri Academy
 
-## schools (36)
+## schools (37)
 - Active Support Education Centre
 - Al-Hikmah (Bury Park Educational Institute)
 - Avenue Centre for Education
