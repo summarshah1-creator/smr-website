@@ -1,6 +1,6 @@
 # SMR logo list
 
-415 organisations. Full details in logos.json and LIST.csv.
+422 organisations. Full details in logos.json and LIST.csv.
 
 ## businesses (38)
 - AA Carpets and Furniture
@@ -152,7 +152,7 @@
 - Wildlife Trust BCN
 - Woodland Trust
 
-## community (110)
+## community (111)
 - ABCD Luton
 - ABCD Luton (ABCD-in-Luton)
 - Active Luton
@@ -185,6 +185,7 @@
 - High Town Methodist Church
 - Higher Ground
 - Hockwell Ring Amateur Boxing Club
+- Hockwell Ring Community Centre (SMR-made text logo)
 - Holy Ghost Parish Luton
 - Hope Church Luton
 - Jobcentre Plus
@@ -313,7 +314,7 @@
 - Zakariya Masjid
 - Zuhri Academy
 
-## schools (70)
+## schools (76)
 - Active Support Education Centre
 - Al-Hikmah (Bury Park Educational Institute)
 - Avenue Centre for Education
@@ -327,6 +328,7 @@
 - Challney High School for Boys
 - Challney High School for Girls
 - Chantry Primary Academy
+- Chapel Street Nursery School
 - Chiltern Academy
 - Chiltern Learning Trust
 - Crawley Green Infant School
@@ -337,6 +339,9 @@
 - Downside Primary School (DPS)
 - Farley Junior Academy
 - Foxdell Primary School
+- Gill Blowers Nursery School
+- Grasmere Nursery School
+- Hart Hill Nursery School
 - Hillborough Junior School
 - Icknield High School
 - Icknield Primary School
@@ -352,6 +357,7 @@
 - Norton Road Primary School
 - Oakwood Primary School
 - Parklea Primary School
+- Pastures Way Nursery School
 - Pirton Hill Primary School
 - Putteridge High School
 - Putteridge Primary School
@@ -360,6 +366,7 @@
 - Ramridge Primary School
 - Richmond Hill School
 - River Bank Primary School
+- Rothesay Nursery School
 - Sacred Heart Primary School
 - Someries Infant School
 - Southfield Primary Academy

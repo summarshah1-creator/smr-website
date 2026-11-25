@@ -2810,7 +2810,7 @@
    "original_vector": false,
    "quality": "hd",
    "details": {
-    "address": "126\u2013130 Oak Road, Luton",
+    "address": "126–130 Oak Road, Luton",
     "postcode": "LU4 8AD",
     "note": "UKIM logo is national; the lockups add the local name"
    },
@@ -3206,7 +3206,7 @@
    "original_vector": false,
    "quality": "hd",
    "details": {
-    "address": "12\u201316 Portland Road, Luton",
+    "address": "12–16 Portland Road, Luton",
     "postcode": "LU4 8AX"
    },
    "signed_off": false,
@@ -5956,6 +5956,68 @@
    ]
   },
   {
+   "slug": "chapel-street-nursery",
+   "name": "Chapel Street Nursery School",
+   "aliases": [
+    "Chapel Street Nursery School",
+    "Chapel Street Nursery"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/chapel-street-nursery/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {
+    "address": "Russell Street, Luton",
+    "postcode": "LU1 5EA",
+    "source": "owner 25 Nov 2026",
+    "note": "Round badge cut out of a website screenshot by SMR; edges cleaned."
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "chapel-street-nursery-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1773,
+     "h": 1773
+    },
+    {
+     "file": "chapel-street-nursery-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1773,
+     "h": 1773,
+     "made": true
+    },
+    {
+     "file": "chapel-street-nursery-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1773,
+     "h": 1773,
+     "made": true
+    },
+    {
+     "file": "chapel-street-nursery-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "chapel-street-nursery-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
    "slug": "chiltern-academy",
    "name": "Chiltern Academy",
    "aliases": [],
@@ -7199,6 +7261,248 @@
     },
     {
      "file": "foxdell-primary-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "gill-blowers-nursery",
+   "name": "Gill Blowers Nursery School",
+   "aliases": [
+    "Gill Blowers Nursery School",
+    "Gill Blowers Nursery",
+    "Gill Blowers Nursery (Leabank)",
+    "Gill Blowers Nursery (Mossdale)"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/gill-blowers-nursery/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {
+    "address": "1 Mossdale Court, Hockwell Ring, Luton / Leabank, Waulud's Bank Drive, Luton",
+    "postcode": "LU4 9JL / LU3 3LW",
+    "website": "https://www.gillblowersnursery.co.uk/",
+    "source": "owner 25 Nov 2026; sites from gillblowersnursery.co.uk",
+    "note": "Two sites: Mossdale and Leabank (RICCHER Federation of Nursery Schools)."
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "gill-blowers-nursery-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1800,
+     "h": 732
+    },
+    {
+     "file": "gill-blowers-nursery-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1800,
+     "h": 732,
+     "made": true
+    },
+    {
+     "file": "gill-blowers-nursery-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1800,
+     "h": 732,
+     "made": true
+    },
+    {
+     "file": "gill-blowers-nursery-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "gill-blowers-nursery-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "grasmere-nursery",
+   "name": "Grasmere Nursery School",
+   "aliases": [
+    "Grasmere Nursery School",
+    "Grasmere Nursery"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/grasmere-nursery/",
+   "styles": [
+    "logo",
+    "icon"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {
+    "address": "53 Icknield Way, Luton",
+    "postcode": "LU3 2BU",
+    "source": "owner 25 Nov 2026"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "grasmere-nursery-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1629,
+     "h": 1800
+    },
+    {
+     "file": "grasmere-nursery-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 1173,
+     "h": 1105,
+     "made": true
+    },
+    {
+     "file": "grasmere-nursery-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1629,
+     "h": 1800,
+     "made": true
+    },
+    {
+     "file": "grasmere-nursery-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1629,
+     "h": 1800,
+     "made": true
+    },
+    {
+     "file": "grasmere-nursery-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "grasmere-nursery-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "grasmere-nursery-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon",
+     "w": 1173,
+     "h": 1105,
+     "made": true
+    },
+    {
+     "file": "grasmere-nursery-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 1173,
+     "h": 1105,
+     "made": true
+    },
+    {
+     "file": "grasmere-nursery-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "grasmere-nursery-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "grasmere-nursery-icon-brand-colour.png",
+     "variant": "icon-brand-colour",
+     "style": "icon",
+     "w": 1173,
+     "h": 1105,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "hart-hill-nursery",
+   "name": "Hart Hill Nursery School",
+   "aliases": [
+    "Hart Hill Nursery School",
+    "Hart Hill Nursery"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/hart-hill-nursery/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": true,
+   "quality": "redrawn",
+   "details": {
+    "address": "Whitecroft Road, Luton",
+    "postcode": "LU2 0JS",
+    "source": "owner 25 Nov 2026",
+    "note": "Owner upload 25 Nov 2026 (small, enlarged 3x)."
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "hart-hill-nursery-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true
+    },
+    {
+     "file": "hart-hill-nursery-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1600,
+     "h": 1475
+    },
+    {
+     "file": "hart-hill-nursery-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1600,
+     "h": 1475,
+     "made": true
+    },
+    {
+     "file": "hart-hill-nursery-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1600,
+     "h": 1475,
+     "made": true
+    },
+    {
+     "file": "hart-hill-nursery-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "hart-hill-nursery-logo-white.svg",
      "variant": "logo-white",
      "style": "logo",
      "vector": true,
@@ -8750,6 +9054,69 @@
    ]
   },
   {
+   "slug": "pastures-way-nursery",
+   "name": "Pastures Way Nursery School",
+   "aliases": [
+    "Pastures Way Nursery School",
+    "Pastures Way Nursery",
+    "Pastures Way"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/pastures-way-nursery/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {
+    "address": "Pastures Way, Luton",
+    "postcode": "LU4 0PE",
+    "source": "owner 25 Nov 2026",
+    "note": "Owner upload 25 Nov 2026; trimmed."
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "pastures-way-nursery-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1422,
+     "h": 1057
+    },
+    {
+     "file": "pastures-way-nursery-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1422,
+     "h": 1057,
+     "made": true
+    },
+    {
+     "file": "pastures-way-nursery-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1422,
+     "h": 1057,
+     "made": true
+    },
+    {
+     "file": "pastures-way-nursery-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "pastures-way-nursery-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
    "slug": "pirton-hill-primary",
    "name": "Pirton Hill Primary School",
    "aliases": [
@@ -9267,7 +9634,7 @@
    "original_vector": false,
    "quality": "hd",
    "details": {
-    "address": "12\u201316 Portland Road, Luton",
+    "address": "12–16 Portland Road, Luton",
     "postcode": "LU4 8AX",
     "note": "Covers Rabia Girls' School, Rabia Boys' School and Madrasa Islamia Primary"
    },
@@ -9633,6 +10000,54 @@
      "style": "icon",
      "w": 1400,
      "h": 1220,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "rothesay-nursery",
+   "name": "Rothesay Nursery School",
+   "aliases": [
+    "Rothesay Nursery School",
+    "Rothesay Nursery"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/rothesay-nursery/",
+   "styles": [
+    "logo",
+    "logo-white"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {
+    "address": "59-61 Rothesay Road, Luton",
+    "postcode": "LU1 1RB",
+    "source": "owner 25 Nov 2026",
+    "note": "Owner upload was white line art; navy version made by SMR for light backgrounds, white kept."
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "rothesay-nursery-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1035,
+     "h": 1023
+    },
+    {
+     "file": "rothesay-nursery-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "w": 1035,
+     "h": 1023
+    },
+    {
+     "file": "rothesay-nursery-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1035,
+     "h": 1023,
      "made": true
     }
    ]
@@ -16087,7 +16502,7 @@
   },
   {
    "slug": "lantern",
-   "name": "Lantern \u00b7 Muslim Women's Voices",
+   "name": "Lantern · Muslim Women's Voices",
    "aliases": [
     "Lantern"
    ],
@@ -23298,7 +23713,7 @@
   },
   {
    "slug": "girlguiding",
-   "name": "Girlguiding (Bedfordshire \u00b7 Luton South)",
+   "name": "Girlguiding (Bedfordshire · Luton South)",
    "aliases": [
     "Girlguiding Luton"
    ],
@@ -23985,6 +24400,89 @@
      "w": 1583,
      "h": 1582,
      "made": true
+    }
+   ]
+  },
+  {
+   "slug": "hockwell-ring-community-centre",
+   "name": "Hockwell Ring Community Centre (SMR-made text logo)",
+   "aliases": [
+    "Hockwell Ring Community Centre",
+    "Hockwell Ring Centre",
+    "Hockwell Ring"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/hockwell-ring-community-centre/",
+   "styles": [
+    "logo",
+    "icon"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "address": "Hockwell Ring, Luton",
+    "made_by": "SMR",
+    "note": "Text logo made by SMR Digital (no official logo found); not an official logo.",
+    "source": "SMR 25 Nov 2026"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "hockwell-ring-community-centre-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "hockwell-ring-community-centre-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1986,
+     "h": 422
+    },
+    {
+     "file": "hockwell-ring-community-centre-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "hockwell-ring-community-centre-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1986,
+     "h": 422,
+     "made": true
+    },
+    {
+     "file": "hockwell-ring-community-centre-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "hockwell-ring-community-centre-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1986,
+     "h": 422,
+     "made": true
+    },
+    {
+     "file": "hockwell-ring-community-centre-icon.svg",
+     "variant": "icon",
+     "style": "icon",
+     "vector": true
+    },
+    {
+     "file": "hockwell-ring-community-centre-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 1497,
+     "h": 1555
     }
    ]
   },
@@ -26794,7 +27292,7 @@
    "original_vector": true,
    "quality": "redrawn",
    "details": {
-    "address": "The Hat Factory Arts Centre, 65\u201367 Bute Street, Luton",
+    "address": "The Hat Factory Arts Centre, 65–67 Bute Street, Luton",
     "postcode": "LU1 2EY",
     "website": "https://ngyt.co.uk"
    },
@@ -31926,7 +32424,7 @@
    "original_vector": true,
    "quality": "vector",
    "details": {
-    "address": "Bennett\u2019s Recreation Ground, Dunstable",
+    "address": "Bennett’s Recreation Ground, Dunstable",
     "postcode": "LU6 1PJ",
     "website": "https://www.dunstable.gov.uk"
    },
@@ -33858,7 +34356,7 @@
    "original_vector": true,
    "quality": "vector",
    "details": {
-    "last_event_at": "Luton Library Theatre, St George\u2019s Square LU1 2NG"
+    "last_event_at": "Luton Library Theatre, St George’s Square LU1 2NG"
    },
    "signed_off": false,
    "files": [

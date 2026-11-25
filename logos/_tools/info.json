@@ -1514,5 +1514,47 @@
   "address": "Luton",
   "note": "Owner upload 25 Nov 2026; white filled in behind the badge so the text reads on any background. Used for both the East and West sites.",
   "source": "owner 25 Nov 2026"
+ },
+ "pastures-way-nursery": {
+  "address": "Pastures Way, Luton",
+  "postcode": "LU4 0PE",
+  "source": "owner 25 Nov 2026",
+  "note": "Owner upload 25 Nov 2026; trimmed."
+ },
+ "rothesay-nursery": {
+  "address": "59-61 Rothesay Road, Luton",
+  "postcode": "LU1 1RB",
+  "source": "owner 25 Nov 2026",
+  "note": "Owner upload was white line art; navy version made by SMR for light backgrounds, white kept."
+ },
+ "hart-hill-nursery": {
+  "address": "Whitecroft Road, Luton",
+  "postcode": "LU2 0JS",
+  "source": "owner 25 Nov 2026",
+  "note": "Owner upload 25 Nov 2026 (small, enlarged 3x)."
+ },
+ "grasmere-nursery": {
+  "address": "53 Icknield Way, Luton",
+  "postcode": "LU3 2BU",
+  "source": "owner 25 Nov 2026"
+ },
+ "chapel-street-nursery": {
+  "address": "Russell Street, Luton",
+  "postcode": "LU1 5EA",
+  "source": "owner 25 Nov 2026",
+  "note": "Round badge cut out of a website screenshot by SMR; edges cleaned."
+ },
+ "gill-blowers-nursery": {
+  "address": "1 Mossdale Court, Hockwell Ring, Luton / Leabank, Waulud's Bank Drive, Luton",
+  "postcode": "LU4 9JL / LU3 3LW",
+  "website": "https://www.gillblowersnursery.co.uk/",
+  "source": "owner 25 Nov 2026; sites from gillblowersnursery.co.uk",
+  "note": "Two sites: Mossdale and Leabank (RICCHER Federation of Nursery Schools)."
+ },
+ "hockwell-ring-community-centre": {
+  "address": "Hockwell Ring, Luton",
+  "made_by": "SMR",
+  "note": "Text logo made by SMR Digital (no official logo found); not an official logo.",
+  "source": "SMR 25 Nov 2026"
  }
 }

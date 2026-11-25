@@ -515,3 +515,13 @@ M['wenlock-ce-academy']=('schools','Wenlock CE Academy',['Wenlock', 'Wenlock CE 
 M['waulud-primary']=('schools','Waulud Primary School and Nursery',['Waulud Primary School', 'Waulud', 'Waulud Primary'],[('hand/waulud-primary-logo.png', 'logo')])
 M['st-matthews-primary']=('schools',"St Matthew's Primary School",["St Matthew's Primary", 'St Matthews Primary School'],[('hand/st-matthews-primary-logo.png','logo')])
 M['richmond-hill-school']=('schools','Richmond Hill School',['Richmond Hill School East', 'Richmond Hill School West', 'Richmond Hill'],[('hand/richmond-hill-school-logo.png','logo')])
+# ---------- owner 25 Nov 2026 (late): nursery schools ----------
+M['pastures-way-nursery']=('schools','Pastures Way Nursery School',['Pastures Way Nursery School','Pastures Way Nursery','Pastures Way'],[('hand/pastures-way-nursery-logo.png', 'logo')])
+M['rothesay-nursery']=('schools','Rothesay Nursery School',['Rothesay Nursery School','Rothesay Nursery'],[('hand/rothesay-nursery-logo.png', 'logo'), ('hand/rothesay-nursery-logo-white.png', 'logo-white')])
+M['hart-hill-nursery']=('schools','Hart Hill Nursery School',['Hart Hill Nursery School','Hart Hill Nursery'],[('hand/hart-hill-nursery-logo.png', 'logo')])
+M['grasmere-nursery']=('schools','Grasmere Nursery School',['Grasmere Nursery School','Grasmere Nursery'],[('hand/grasmere-nursery-logo.png', 'logo')])
+M['chapel-street-nursery']=('schools','Chapel Street Nursery School',['Chapel Street Nursery School','Chapel Street Nursery'],[('hand/chapel-street-nursery-logo.png', 'logo')])
+M['gill-blowers-nursery']=('schools','Gill Blowers Nursery School',['Gill Blowers Nursery School','Gill Blowers Nursery','Gill Blowers Nursery (Leabank)','Gill Blowers Nursery (Mossdale)'],[('hand/gill-blowers-nursery-logo.png', 'logo')])
+
+# ---------- owner 25 Nov 2026 (later): CVS, Chaul End, ABCD, Bury Park ----------
+M['hockwell-ring-community-centre']=('community','Hockwell Ring Community Centre (SMR-made text logo)',['Hockwell Ring Community Centre', 'Hockwell Ring Centre', 'Hockwell Ring'],[('hand/hockwell-ring-community-centre-logo.svg', 'logo'), ('hand/hockwell-ring-community-centre-logo-white.svg', 'logo-white'), ('hand/hockwell-ring-community-centre-logo-black.svg', 'logo-black'), ('hand/hockwell-ring-community-centre-icon.svg', 'icon')])
