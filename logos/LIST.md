@@ -232,7 +232,7 @@
 - St John's Methodist Church, Luton (SMR-made lockup)
 - St Johns Farley Hill (St John the Baptist)
 - St Joseph's RC Scouts, Icknield (Luton)
-- St Margaret of Scotland Catholic Church, Luton
+- Our Lady Help of Christians, Luton
 - St Martin de Porres Catholic Church, Luton
 - St Mary's Church Luton
 - St Marys Youth

@@ -1162,12 +1162,6 @@
   "website": "https://www.holyfamilyandstjohns.org/",
   "source": "owner (logo) 25 Nov 2026; vector redraw"
  },
- "st-margaret-of-scotland-luton": {
-  "address": "22a Bolingbroke Road, Luton",
-  "postcode": "LU1 5JD",
-  "website": "https://stmargaretsparishl.wixsite.com/home",
-  "source": "owner (crest, confirmed 25 Nov 2026)"
- },
  "sacred-heart-stopsley": {
   "address": "148 Ashcroft Road, Luton",
   "postcode": "LU2 9AY",
@@ -1285,5 +1279,12 @@
   "made_by": "SMR",
   "note": "Lockup made by SMR Digital using the Methodist Church orb-and-cross symbol; not the church's own logo.",
   "source": "SMR 25 Nov 2026"
+ },
+ "our-lady-help-of-christians-luton": {
+  "address": "52 Castle Street, Luton",
+  "postcode": "LU1 3AG",
+  "website": "https://olhc.uk",
+  "tagline": "A Roman Catholic Parish Church in the Heart of Luton",
+  "source": "owner (crest; olhc.uk screenshot 25 Nov 2026)"
  }
 }
