@@ -350,10 +350,22 @@
     "faith-data.js",
     "logo-versions.js"
    ],
-   "sha256": "d25592992c4f815ca7a5d969e4c40c39a454619adec8f09d97397233fba02b23",
+   "sha256": "8e17ff760da484d38f32b2d26c20357e6faa2ba45987c41120e62f90a550c2cf",
    "tested": "2026-11-25",
    "result": "pass",
-   "notes": "126 listings with logos (DIR 69->119, places of worship 4->7) + Luton Foodbank now the new tagline logo. Checked at 390 and 1280: directory grids and org pages, no broken images, tint shows."
+   "notes": "126 listings with logos (DIR 69->119, places of worship 4->7) + new Foodbank tagline. Checked at 390/1280, no broken images, tint shows."
+  },
+  {
+   "id": "places-of-worship",
+   "name": "Places of worship listings (verified only) + owner's to-confirm list",
+   "route": "#directory (Places of worship), #org-pw-*, #faithconfirm",
+   "files": [
+    "faith-data.js"
+   ],
+   "sha256": "4bba7ee6b527cf2b07f886d161337f3a37987f855d0a7b66f1c182991d103b2f",
+   "tested": "2026-11-25",
+   "result": "pass",
+   "notes": "25 Nov: 6 more verified churches added (82 listings), to-confirm list 72 -> 60 (6 duplicates removed). Faith filter counts and new org page checked at 390/1280, no errors."
   }
  ]
 }
