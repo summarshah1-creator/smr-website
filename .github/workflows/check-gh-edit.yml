@@ -5,7 +5,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
+          set +e
           UA="Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Version/18.0 Mobile/15E148 Safari/604.1"
           for u in https://smrgraphics.co.uk/grillhouse/edit/ https://smrgraphics.co.uk/grillhouse/edit "https://smrgraphics.co.uk/grillhouse/edit/api.php?a=load" "https://smrgraphics.co.uk/grillhouse/edit/admin.php" https://smrgraphics.co.uk/grillhouse/; do
-            echo "== $u"; curl -s -A "$UA" -o /tmp/b -D - "$u" | grep -iE "^HTTP|^location|^content-type|x-proxy-cache"; grep -o "<title>[^<]*" /tmp/b; head -c 200 /tmp/b | grep -o '{"ok[^}]*' ; wc -c < /tmp/b
+            echo "== $u"; curl -s -A "$UA" -o /tmp/b -D - "$u" | grep -iE "^HTTP|^location|^content-type|x-proxy-cache"; grep -o "<title>[^<]*" /tmp/b || true; head -c 200 /tmp/b | grep -o "{.ok[^,]*" || true; wc -c < /tmp/b; true
           done
