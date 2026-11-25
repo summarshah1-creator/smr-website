@@ -18454,6 +18454,75 @@
    ]
   },
   {
+   "slug": "abcd-in-luton",
+   "name": "ABCD Luton (ABCD-in-Luton)",
+   "aliases": [
+    "ABCD-in-Luton",
+    "ABCD Luton",
+    "ABCD in Luton"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/abcd-in-luton/",
+   "styles": [
+    "logo",
+    "icon"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "website": "https://abcd-in-luton.org",
+    "tagline": "Showcasing Luton's Strengths",
+    "made_by": "SMR",
+    "note": "Remade by SMR Digital from a small round crop of their logo; fonts are close matches.",
+    "source": "owner (logo) 25 Nov 2026"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "abcd-in-luton-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "abcd-in-luton-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1788,
+     "h": 1788
+    },
+    {
+     "file": "abcd-in-luton-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "abcd-in-luton-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1788,
+     "h": 1788,
+     "made": true
+    },
+    {
+     "file": "abcd-in-luton-icon.svg",
+     "variant": "icon",
+     "style": "icon",
+     "vector": true
+    },
+    {
+     "file": "abcd-in-luton-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 1996,
+     "h": 1996
+    }
+   ]
+  },
+  {
    "slug": "active-luton",
    "name": "Active Luton",
    "aliases": [],
@@ -19591,6 +19660,89 @@
    ]
   },
   {
+   "slug": "bury-park-community-centre",
+   "name": "Bury Park Community Centre (SMR-made text logo from the sign)",
+   "aliases": [
+    "Bury Park Community Centre",
+    "Bury Park Centre"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/bury-park-community-centre/",
+   "styles": [
+    "logo",
+    "icon"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "address": "161-161b Dunstable Road, Luton",
+    "postcode": "LU1 1BW",
+    "made_by": "SMR",
+    "note": "Text logo made by SMR Digital to match the centre's fascia sign; not an official logo.",
+    "source": "owner (sign photo) 25 Nov 2026"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "bury-park-community-centre-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "bury-park-community-centre-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 2000,
+     "h": 241
+    },
+    {
+     "file": "bury-park-community-centre-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "bury-park-community-centre-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 2000,
+     "h": 241,
+     "made": true
+    },
+    {
+     "file": "bury-park-community-centre-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "bury-park-community-centre-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 2000,
+     "h": 241,
+     "made": true
+    },
+    {
+     "file": "bury-park-community-centre-icon.svg",
+     "variant": "icon",
+     "style": "icon",
+     "vector": true
+    },
+    {
+     "file": "bury-park-community-centre-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 2000,
+     "h": 2000
+    }
+   ]
+  },
+  {
    "slug": "cogic-calvary",
    "name": "Calvary Church of God in Christ (COGIC UK)",
    "aliases": [
@@ -19715,7 +19867,7 @@
   },
   {
    "slug": "learning-with-jesus-badge",
-   "name": "Catholic badge: \"Learning with Jesus in faith, hope and love\" (church not confirmed yet)",
+   "name": "Catholic school badge: \"Learning with Jesus in faith, hope and love\" (school not confirmed yet)",
    "aliases": [],
    "category": "community",
    "category_name": "Council, public & youth",
@@ -19726,7 +19878,7 @@
    "original_vector": true,
    "quality": "vector",
    "details": {
-    "note": "Sent by the owner for a Luton Catholic church still without a logo (Our Lady Help of Christians or St Joseph's, Limbury). Not assigned until confirmed.",
+    "note": "A Catholic primary school's badge (owner 25 Nov: it's a school, not a church). Which school not confirmed yet, so not assigned.",
     "source": "owner 25 Nov 2026; redrawn as vector"
    },
    "signed_off": false,
@@ -19773,6 +19925,75 @@
      "w": 1675,
      "h": 1981,
      "made": true
+    }
+   ]
+  },
+  {
+   "slug": "chaul-end-centre",
+   "name": "Chaul End Centre (SMR-made from their sign)",
+   "aliases": [
+    "Chaul End Community Centre",
+    "Chaul End Centre",
+    "Chaul End"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/chaul-end-centre/",
+   "styles": [
+    "logo",
+    "icon"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "address": "Delphine Close, Luton",
+    "postcode": "LU1 5QX",
+    "made_by": "SMR",
+    "note": "Remade by SMR Digital as a flat vector from a photo of the centre's sign; colours approximate.",
+    "source": "owner (sign photo) 25 Nov 2026"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "chaul-end-centre-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "chaul-end-centre-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1909,
+     "h": 647
+    },
+    {
+     "file": "chaul-end-centre-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "chaul-end-centre-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1909,
+     "h": 647,
+     "made": true
+    },
+    {
+     "file": "chaul-end-centre-icon.svg",
+     "variant": "icon",
+     "style": "icon",
+     "vector": true
+    },
+    {
+     "file": "chaul-end-centre-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 1755,
+     "h": 1891
     }
    ]
   },
@@ -19870,6 +20091,58 @@
      "style": "icon",
      "w": 945,
      "h": 969
+    }
+   ]
+  },
+  {
+   "slug": "cvs-bedfordshire",
+   "name": "CVS Bedfordshire",
+   "aliases": [
+    "CVS Bedfordshire",
+    "CVS Beds",
+    "CVS Luton",
+    "Community & Voluntary Service Bedfordshire"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/cvs-bedfordshire/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "source": "owner (logo) 25 Nov 2026; vector redraw"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "cvs-bedfordshire-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "cvs-bedfordshire-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 2000,
+     "h": 1424
+    },
+    {
+     "file": "cvs-bedfordshire-logo-on-dark.svg",
+     "variant": "logo-on-dark",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "cvs-bedfordshire-logo-on-dark.png",
+     "variant": "logo-on-dark",
+     "style": "logo",
+     "w": 2000,
+     "h": 1424,
+     "made": true
     }
    ]
   },
@@ -24163,6 +24436,42 @@
    ]
   },
   {
+   "slug": "our-lady-help-of-christians-luton",
+   "name": "Our Lady Help of Christians, Luton",
+   "aliases": [
+    "Our Lady Help of Christians",
+    "OLHC",
+    "olhc.uk",
+    "Our Lady Help of Christians Luton",
+    "Sub Tuum Praesidium"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/our-lady-help-of-christians-luton/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {
+    "address": "52 Castle Street, Luton",
+    "postcode": "LU1 3AG",
+    "website": "https://olhc.uk",
+    "tagline": "A Roman Catholic Parish Church in the Heart of Luton",
+    "source": "owner (crest; olhc.uk screenshot 25 Nov 2026)"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "our-lady-help-of-christians-luton-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1190,
+     "h": 918
+    }
+   ]
+  },
+  {
    "slug": "pqa",
    "name": "Pauline Quirke Academy (PQA Luton)",
    "aliases": [
@@ -25257,6 +25566,106 @@
    ]
   },
   {
+   "slug": "st-josephs-limbury",
+   "name": "St Joseph's Catholic Church, Limbury (St Josephs Parish Centre)",
+   "aliases": [
+    "St Joseph's Catholic Church",
+    "St Josephs Parish Centre",
+    "St Joseph's Parish Centre",
+    "St Joseph's Luton",
+    "St Joseph's RC Church Luton"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/st-josephs-limbury/",
+   "styles": [
+    "logo",
+    "icon"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "address": "68 Gardenia Avenue, Limbury, Luton",
+    "postcode": "LU3 2NS",
+    "website": "https://www.stjosephschurchluton.org.uk/",
+    "source": "owner (logo) 25 Nov 2026; vector redraw"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "st-josephs-limbury-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "st-josephs-limbury-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1963,
+     "h": 2000
+    },
+    {
+     "file": "st-josephs-limbury-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "st-josephs-limbury-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1963,
+     "h": 2000,
+     "made": true
+    },
+    {
+     "file": "st-josephs-limbury-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "st-josephs-limbury-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1963,
+     "h": 2000,
+     "made": true
+    },
+    {
+     "file": "st-josephs-limbury-icon.svg",
+     "variant": "icon",
+     "style": "icon",
+     "vector": true
+    },
+    {
+     "file": "st-josephs-limbury-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 1989,
+     "h": 2000
+    },
+    {
+     "file": "st-josephs-limbury-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "st-josephs-limbury-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 1989,
+     "h": 2000,
+     "made": true
+    }
+   ]
+  },
+  {
    "slug": "scouts-st-josephs",
    "name": "St Joseph's RC Scouts, Icknield (Luton)",
    "aliases": [
@@ -25343,38 +25752,228 @@
    ]
   },
   {
-   "slug": "our-lady-help-of-christians-luton",
-   "name": "Our Lady Help of Christians, Luton",
+   "slug": "st-lukes-leagrave",
+   "name": "St Luke's Leagrave",
    "aliases": [
-    "Our Lady Help of Christians",
-    "OLHC",
-    "olhc.uk",
-    "Our Lady Help of Christians Luton",
-    "Sub Tuum Praesidium"
+    "St Luke's, Leagrave",
+    "St Luke's Church Leagrave",
+    "St Lukes Leagrave"
    ],
    "category": "community",
    "category_name": "Council, public & youth",
-   "path": "community/our-lady-help-of-christians-luton/",
+   "path": "community/st-lukes-leagrave/",
    "styles": [
-    "logo"
+    "logo",
+    "logo-short",
+    "icon"
    ],
-   "original_vector": false,
-   "quality": "hd",
+   "original_vector": true,
+   "quality": "vector",
    "details": {
-    "address": "52 Castle Street, Luton",
-    "postcode": "LU1 3AG",
-    "website": "https://olhc.uk",
-    "tagline": "A Roman Catholic Parish Church in the Heart of Luton",
-    "source": "owner (crest; olhc.uk screenshot 25 Nov 2026)"
+    "address": "Leagrave High Street, Leagrave, Luton",
+    "website": "https://www.stlukesleagrave.org",
+    "tagline": "The Church that Cares, following the example of JESUS",
+    "source": "owner (logo) 25 Nov 2026; vector redraw"
    },
    "signed_off": false,
    "files": [
     {
-     "file": "our-lady-help-of-christians-luton-logo.png",
+     "file": "st-lukes-leagrave-logo.svg",
      "variant": "logo",
      "style": "logo",
-     "w": 1190,
-     "h": 918
+     "vector": true
+    },
+    {
+     "file": "st-lukes-leagrave-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1992,
+     "h": 1030
+    },
+    {
+     "file": "st-lukes-leagrave-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "st-lukes-leagrave-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1992,
+     "h": 1030,
+     "made": true
+    },
+    {
+     "file": "st-lukes-leagrave-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "st-lukes-leagrave-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1992,
+     "h": 1030,
+     "made": true
+    },
+    {
+     "file": "st-lukes-leagrave-logo-short.svg",
+     "variant": "logo-short",
+     "style": "logo-short",
+     "vector": true
+    },
+    {
+     "file": "st-lukes-leagrave-logo-short.png",
+     "variant": "logo-short",
+     "style": "logo-short",
+     "w": 1992,
+     "h": 905
+    },
+    {
+     "file": "st-lukes-leagrave-logo-short-white.svg",
+     "variant": "logo-short-white",
+     "style": "logo-short",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "st-lukes-leagrave-logo-short-white.png",
+     "variant": "logo-short-white",
+     "style": "logo-short",
+     "w": 1992,
+     "h": 905,
+     "made": true
+    },
+    {
+     "file": "st-lukes-leagrave-icon.svg",
+     "variant": "icon",
+     "style": "icon",
+     "vector": true
+    },
+    {
+     "file": "st-lukes-leagrave-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 1913,
+     "h": 1629
+    }
+   ]
+  },
+  {
+   "slug": "st-margaret-of-scotland-luton",
+   "name": "St Margaret of Scotland Catholic Church, Luton (SMR-made from their website header)",
+   "aliases": [
+    "St Margaret of Scotland",
+    "St Margaret of Scotland Catholic Church",
+    "St Margaret's Luton"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/st-margaret-of-scotland-luton/",
+   "styles": [
+    "logo",
+    "logo-stacked",
+    "icon"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {
+    "address": "22a Bolingbroke Road, Luton",
+    "postcode": "LU1 5JD",
+    "website": "https://stmargaretsparishl.wixsite.com/home",
+    "made_by": "SMR",
+    "note": "Made by SMR Digital from the parish website's header (title + round picture of the saint); not an official logo file. The portrait comes from a small image, so keep it under ~500px.",
+    "source": "SMR 25 Nov 2026"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "st-margaret-of-scotland-luton-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "st-margaret-of-scotland-luton-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1989,
+     "h": 632
+    },
+    {
+     "file": "st-margaret-of-scotland-luton-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "st-margaret-of-scotland-luton-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1989,
+     "h": 632,
+     "made": true
+    },
+    {
+     "file": "st-margaret-of-scotland-luton-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "st-margaret-of-scotland-luton-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1989,
+     "h": 632,
+     "made": true
+    },
+    {
+     "file": "st-margaret-of-scotland-luton-logo-stacked.svg",
+     "variant": "logo-stacked",
+     "style": "logo-stacked",
+     "vector": true
+    },
+    {
+     "file": "st-margaret-of-scotland-luton-logo-stacked.png",
+     "variant": "logo-stacked",
+     "style": "logo-stacked",
+     "w": 1942,
+     "h": 1707
+    },
+    {
+     "file": "st-margaret-of-scotland-luton-logo-stacked-white.svg",
+     "variant": "logo-stacked-white",
+     "style": "logo-stacked",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "st-margaret-of-scotland-luton-logo-stacked-white.png",
+     "variant": "logo-stacked-white",
+     "style": "logo-stacked",
+     "w": 1942,
+     "h": 1707,
+     "made": true
+    },
+    {
+     "file": "st-margaret-of-scotland-luton-icon.svg",
+     "variant": "icon",
+     "style": "icon",
+     "vector": true
+    },
+    {
+     "file": "st-margaret-of-scotland-luton-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 2000,
+     "h": 2000
     }
    ]
   },

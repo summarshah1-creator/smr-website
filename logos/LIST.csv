@@ -191,7 +191,7 @@ beds-police,Bedfordshire Police,community,,crest,,,,logos/community/beds-police/
 beds-pcc,Bedfordshire Police & Crime Commissioner,community,PCC,logo,,,,logos/community/beds-pcc/
 cogic-calvary,Calvary Church of God in Christ (COGIC UK),community,COGIC UK; Calvary Church; BACCA,logo,,,,logos/community/cogic-calvary/
 care-homes,Care homes (general),community,Care home; Nursing home; Residential care,"logo, logo-white, icon",,,,logos/community/care-homes/
-learning-with-jesus-badge,"Catholic badge: ""Learning with Jesus in faith, hope and love"" (church not confirmed yet)",community,,logo,,,,logos/community/learning-with-jesus-badge/
+learning-with-jesus-badge,"Catholic school badge: ""Learning with Jesus in faith, hope and love"" (school not confirmed yet)",community,,logo,,,,logos/community/learning-with-jesus-badge/
 christchurch-bushmead,Christchurch Bushmead,community,Christchurch Bushmead; Christ Church Bushmead,"logo, icon","Hancock Drive, Bushmead, Luton",LU2 7SF,https://www.achurchnearyou.com/church/7754/,logos/community/christchurch-bushmead/
 dunstable-tc,Dunstable Town Council,community,,"logo, icon",Dunstable town centre,LU5 4RB,https://www.dunstable.gov.uk,logos/community/dunstable-tc/
 elft,East London NHS Foundation Trust,community,ELFT; NHS,"logo, logo-white, logo-black, nhs, nhs-white, nhs-black",,,https://www.elft.nhs.uk,logos/community/elft/
@@ -282,6 +282,13 @@ we-are-marsh-farm,We Are Marsh Farm,community,Marsh Farm; WAMF,logo,,,,logos/com
 luton-wicketz,Wicketz (Lord's Taverners),community,Luton Wicketz; Wicketz cricket,logo,,,https://www.cricketeast.co.uk/page/diverse-communities/luton-wicketz/lords-taverners-wicketz-programme-14024/,logos/community/luton-wicketz/
 your-wellbeing-beds,Your Wellbeing Bedfordshire,community,Your Wellbeing; YWB,"logo, logo-white, logo-black, icon, icon-white, icon-black",,,,logos/community/your-wellbeing-beds/
 youthscape,Youthscape,community,,logo,"74 Bute Street, Luton",LU1 2EY,https://www.youthscape.co.uk,logos/community/youthscape/
+st-josephs-limbury,"St Joseph's Catholic Church, Limbury (St Josephs Parish Centre)",community,St Joseph's Catholic Church; St Josephs Parish Centre; St Joseph's Parish Centre; St Joseph's Luton; St Joseph's RC Church Luton,"logo, icon","68 Gardenia Avenue, Limbury, Luton",LU3 2NS,https://www.stjosephschurchluton.org.uk/,logos/community/st-josephs-limbury/
+st-lukes-leagrave,St Luke's Leagrave,community,"St Luke's, Leagrave; St Luke's Church Leagrave; St Lukes Leagrave","logo, logo-short, icon","Leagrave High Street, Leagrave, Luton",,https://www.stlukesleagrave.org,logos/community/st-lukes-leagrave/
+st-margaret-of-scotland-luton,"St Margaret of Scotland Catholic Church, Luton (SMR-made from their website header)",community,St Margaret of Scotland; St Margaret of Scotland Catholic Church; St Margaret's Luton,"logo, logo-stacked, icon","22a Bolingbroke Road, Luton",LU1 5JD,https://stmargaretsparishl.wixsite.com/home,logos/community/st-margaret-of-scotland-luton/
+cvs-bedfordshire,CVS Bedfordshire,community,CVS Bedfordshire; CVS Beds; CVS Luton; Community & Voluntary Service Bedfordshire,logo,,,,logos/community/cvs-bedfordshire/
+chaul-end-centre,Chaul End Centre (SMR-made from their sign),community,Chaul End Community Centre; Chaul End Centre; Chaul End,"logo, icon","Delphine Close, Luton",LU1 5QX,,logos/community/chaul-end-centre/
+abcd-in-luton,ABCD Luton (ABCD-in-Luton),community,ABCD-in-Luton; ABCD Luton; ABCD in Luton,"logo, icon",,,https://abcd-in-luton.org,logos/community/abcd-in-luton/
+bury-park-community-centre,Bury Park Community Centre (SMR-made text logo from the sign),community,Bury Park Community Centre; Bury Park Centre,"logo, icon","161-161b Dunstable Road, Luton",LU1 1BW,,logos/community/bury-park-community-centre/
 one-eid,1 Eid,campaigns,One Eid,"logo, icon",,,,logos/campaigns/one-eid/
 jummah-winter-campaign,Jummah Winter Campaign,campaigns,JWA; Jummah Winter Appeal,"logo, logo-white, logo-compact, icon",,,,logos/campaigns/jummah-winter-campaign/
 lets-eat-together,Let's Eat Together,campaigns,,wordmark,,,https://lutonfoodbank.org.uk/letseattogether,logos/campaigns/lets-eat-together/

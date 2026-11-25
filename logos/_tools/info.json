@@ -1181,7 +1181,7 @@
   "source": "owner (logo); redrawn as vector 25 Nov 2026"
  },
  "learning-with-jesus-badge": {
-  "note": "Sent by the owner for a Luton Catholic church still without a logo (Our Lady Help of Christians or St Joseph's, Limbury). Not assigned until confirmed.",
+  "note": "A Catholic primary school's badge (owner 25 Nov: it's a school, not a church). Which school not confirmed yet, so not assigned.",
   "source": "owner 25 Nov 2026; redrawn as vector"
  },
  "st-pauls-luton": {
@@ -1286,5 +1286,49 @@
   "website": "https://olhc.uk",
   "tagline": "A Roman Catholic Parish Church in the Heart of Luton",
   "source": "owner (crest; olhc.uk screenshot 25 Nov 2026)"
+ },
+ "st-josephs-limbury": {
+  "address": "68 Gardenia Avenue, Limbury, Luton",
+  "postcode": "LU3 2NS",
+  "website": "https://www.stjosephschurchluton.org.uk/",
+  "source": "owner (logo) 25 Nov 2026; vector redraw"
+ },
+ "st-lukes-leagrave": {
+  "address": "Leagrave High Street, Leagrave, Luton",
+  "website": "https://www.stlukesleagrave.org",
+  "tagline": "The Church that Cares, following the example of JESUS",
+  "source": "owner (logo) 25 Nov 2026; vector redraw"
+ },
+ "st-margaret-of-scotland-luton": {
+  "address": "22a Bolingbroke Road, Luton",
+  "postcode": "LU1 5JD",
+  "website": "https://stmargaretsparishl.wixsite.com/home",
+  "made_by": "SMR",
+  "note": "Made by SMR Digital from the parish website's header (title + round picture of the saint); not an official logo file. The portrait comes from a small image, so keep it under ~500px.",
+  "source": "SMR 25 Nov 2026"
+ },
+ "cvs-bedfordshire": {
+  "source": "owner (logo) 25 Nov 2026; vector redraw"
+ },
+ "chaul-end-centre": {
+  "address": "Delphine Close, Luton",
+  "postcode": "LU1 5QX",
+  "made_by": "SMR",
+  "note": "Remade by SMR Digital as a flat vector from a photo of the centre's sign; colours approximate.",
+  "source": "owner (sign photo) 25 Nov 2026"
+ },
+ "abcd-in-luton": {
+  "website": "https://abcd-in-luton.org",
+  "tagline": "Showcasing Luton's Strengths",
+  "made_by": "SMR",
+  "note": "Remade by SMR Digital from a small round crop of their logo; fonts are close matches.",
+  "source": "owner (logo) 25 Nov 2026"
+ },
+ "bury-park-community-centre": {
+  "address": "161-161b Dunstable Road, Luton",
+  "postcode": "LU1 1BW",
+  "made_by": "SMR",
+  "note": "Text logo made by SMR Digital to match the centre's fascia sign; not an official logo.",
+  "source": "owner (sign photo) 25 Nov 2026"
  }
 }
