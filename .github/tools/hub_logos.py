@@ -105,11 +105,41 @@ MAP = {
     "st matthew's primary school": 'st-matthews-primary',
     'richmond hill school east': 'richmond-hill-school',
     'richmond hill school west': 'richmond-hill-school',
+    # faith logos, owner 25 Nov (night)
+    'guru nanak gurdwara': 'guru-nanak-gurdwara-luton',
+    'shri guru ravidass bhawan': 'shri-guru-ravidass-sabha-luton',
+    'shree sanatan seva samaj (hindu mandir)': 'shree-sanatan-seva-samaj',
+    'baps shri swaminarayan mandir luton': 'baps-luton',
+    'luton central baptist church': 'luton-central-baptist',
+    'the salvation army luton': 'salvation-army',
+    'the salvation army, dunstable': 'salvation-army',
+    'the salvation army, eaton bray': 'salvation-army',
+    "st andrew's church luton": 'st-andrews-luton',
+    "st andrew's, luton": 'st-andrews-luton',
+    'luton united synagogue': 'luton-united-synagogue',
+    'luton central seventh-day adventist church': 'luton-central-sda',
+    'london luton airport chapel': 'luton-airport-chapel',
+    'romanian orthodox parish of st john the baptist and st alban': 'romanian-orthodox-luton',
+    'community church luton': 'community-church-luton',
+    'haven of glory international ministries': 'haven-of-glory',
+    'luton international church': 'luton-international-church',
+    'luton chinese christian church': 'luton-chinese-christian-church',
+    'lewsey pentecostal church (lewsey christian centre)': 'lewsey-pentecostal',
+    'the olive tree church': 'olive-tree-church',
+    'rccg victory centre for all nations': 'rccg',
+    'rccg new life assembly luton': 'rccg',
+    "rccg my father's house dunstable": 'rccg',
+    'foursquare gospel church luton': 'foursquare-gospel-luton',
+    "potter's house christian fellowship luton": 'potters-house-luton',
+    'sundon park baptist church': 'sundon-park-baptist',
+    'fellowship baptist church': 'fellowship-baptist-luton',
+    'bethel strict baptist chapel': 'bethel-strict-baptist',
+    'christ apostolic church - east of luton': 'christ-apostolic-church-luton',
+    'apostolic faith mission - luton': 'apostolic-faith-mission-luton',
+    'restoration revival fellowship': 'restoration-revival-fellowship',
 }
 # Never match these (listing name, normalised): the library logo belongs to someone else.
 BLOCK = {
-    "st andrew's church luton",     # St A & C logo is St Anne with St Christopher, not St Andrew's
-    "st andrew's, luton",
     'our lady polish catholic church',  # Dunstable: out of scope (owner 25 Nov)
 }
 
