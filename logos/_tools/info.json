@@ -1708,5 +1708,21 @@
   "website": "http://www.rrfluton.org.uk",
   "source": "owner 25 Nov 2026",
   "note": "Light version darkened to slate by SMR so the silver text reads on light backgrounds; original kept as on-dark."
+ },
+ "limbury-baptist": {
+  "source": "owner 25 Nov 2026",
+  "note": "Emblem (cross, trinity knot, doves) redrawn as a vector by SMR from a small image; name lockup made by SMR."
+ },
+ "stopsley-baptist": {
+  "source": "owner 25 Nov 2026",
+  "note": "sbc mark taken from their image; name lockup made by SMR."
+ },
+ "bramingham-park-church": {
+  "website": "https://www.bramingham.org",
+  "source": "owner 25 Nov 2026",
+  "note": "Original is white; navy version made by SMR for light backgrounds."
+ },
+ "stanton-road-baptist": {
+  "source": "SMR-made text logo, not the church's own (owner 25 Nov 2026)"
  }
 }

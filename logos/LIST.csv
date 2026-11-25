@@ -232,6 +232,7 @@ beds-hospitals,Bedfordshire Hospitals NHS Foundation Trust,community,Bedfordshir
 beds-police,Bedfordshire Police,community,,crest,,,,logos/community/beds-police/
 beds-pcc,Bedfordshire Police & Crime Commissioner,community,PCC,logo,,,,logos/community/beds-pcc/
 bethel-strict-baptist,Bethel Strict Baptist Chapel,community,Bethel Strict Baptist Chapel; Bethel Chapel Luton,"logo, icon",,,,logos/community/bethel-strict-baptist/
+bramingham-park-church,Bramingham Park Church,community,Bramingham Park Church; Bramingham Park Baptist Church,"logo, logo-white, logo-black, icon",,,https://www.bramingham.org,logos/community/bramingham-park-church/
 bury-park-community-centre,Bury Park Community Centre (SMR-made text logo from the sign),community,Bury Park Community Centre; Bury Park Centre,"logo, icon","161-161b Dunstable Road, Luton",LU1 1BW,,logos/community/bury-park-community-centre/
 cogic-calvary,Calvary Church of God in Christ (COGIC UK),community,COGIC UK; Calvary Church; BACCA,logo,,,,logos/community/cogic-calvary/
 care-homes,Care homes (general),community,Care home; Nursing home; Residential care,"logo, logo-white, icon",,,,logos/community/care-homes/
@@ -264,6 +265,7 @@ hope-church-luton,Hope Church Luton,community,Hope Church,logo,,,,logos/communit
 jobcentre-plus,Jobcentre Plus,community,DWP,"logo-tile, logo",,,,logos/community/jobcentre-plus/
 legends-mma,Legends MMA & Fitness Centre,community,Legends MMA; Legends Gym Luton,logo,,,https://www.legendsmma.uk,logos/community/legends-mma/
 lewsey-pentecostal,Lewsey Pentecostal Church,community,Lewsey Pentecostal Church (Lewsey Christian Centre); Lewsey Pentecostal Church; Lewsey Christian Centre; Lewsey Pentecostal,"logo, logo-white, logo-black, icon",,,,logos/community/lewsey-pentecostal/
+limbury-baptist,Limbury Baptist Church (emblem redrawn as vector + SMR lockup),community,Limbury Baptist Church; Limbury Baptist,"logo, logo-white, logo-black, icon",,,,logos/community/limbury-baptist/
 london-gliding-club,London Gliding Club,community,LGC; London Gliding Club Dunstable,logo,"Tring Road, Dunstable",LU6 2JP,https://www.londonglidingclub.co.uk,logos/community/london-gliding-club/
 luton-airport-chapel,London Luton Airport Chapel (SMR-made text logo),community,London Luton Airport Chapel; Airport Chapel; Luton Airport Chapel,"logo, icon","Terminal Building, Airport Way, Luton",LU2 9LR,,logos/community/luton-airport-chapel/
 l-and-d-hospital,Luton & Dunstable University Hospital,community,L&D; L and D Hospital,"logo, icon",,,,logos/community/l-and-d-hospital/
@@ -331,7 +333,9 @@ st-marys-youth,St Marys Youth,community,St Mary's Youth; St Mary's Church youth;
 st-pauls-luton,St Paul's Luton,community,"St Paul's, Luton; St Paul's Church Luton; St Paul's","logo, icon","New Town Street, Luton",LU1 3EB,http://www.stpaulsluton.org.uk,logos/community/st-pauls-luton/
 st-saviours-luton,"St Saviour's Church, Luton (SMR-made text logo)",community,St Saviour's; St Saviour's Church; St Saviour's Luton,"logo, icon","St Saviour's Crescent, Luton",LU1 5HG,,logos/community/st-saviours-luton/
 st-thomas-stopsley,"St Thomas' Church, Stopsley (SMR-made text logo)",community,"St Thomas', Stopsley; St Thomas' Church; St Thomas Stopsley","logo, icon","585a Hitchin Road, Stopsley, Luton",LU2 7UL,,logos/community/st-thomas-stopsley/
+stanton-road-baptist,Stanton Road Baptist Church (SMR-made text logo),community,Stanton Road Baptist Church; Stanton Road Baptist,"logo, logo-white, logo-black, icon",,,,logos/community/stanton-road-baptist/
 stockwood-park-rfc,Stockwood Park RFC,community,SPRFC; Stockwood Park Rugby Club,logo,London Road,LU1 3RN,https://stockwoodparkrfc.co.uk,logos/community/stockwood-park-rfc/
+stopsley-baptist,Stopsley Baptist Church (sbc mark + SMR lockup),community,Stopsley Baptist Church; Stopsley Baptist; SBC Luton,"logo, logo-white, logo-black, icon",,,,logos/community/stopsley-baptist/
 storm-gym,Storm Gym,community,Storm Gym Luton; Storm Gym Fitness & Martial Arts,"logo, icon","Unit 16, 141 New Bedford Road",LU3 1LF,https://www.stormgym.co.uk,logos/community/storm-gym/
 strathmore-avenue-methodist,Strathmore Avenue Methodist Church (SMR-made lockup),community,Strathmore Avenue Methodist; Strathmore Avenue Methodist Church,"logo, icon","43 Strathmore Avenue, Luton",LU1 3NY,https://www.southbedsmethodist.org.uk/strathmoreavenue.htm,logos/community/strathmore-avenue-methodist/
 suez,SUEZ,community,,logo,,,https://www.suez.co.uk/en-gb,logos/community/suez/

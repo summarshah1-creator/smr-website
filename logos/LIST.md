@@ -1,6 +1,6 @@
 # SMR logo list
 
-448 organisations. Full details in logos.json and LIST.csv.
+452 organisations. Full details in logos.json and LIST.csv.
 
 ## businesses (38)
 - AA Carpets and Furniture
@@ -152,7 +152,7 @@
 - Wildlife Trust BCN
 - Woodland Trust
 
-## community (137)
+## community (141)
 - ABCD Luton
 - ABCD Luton (ABCD-in-Luton)
 - Active Luton
@@ -168,6 +168,7 @@
 - Bedfordshire Police
 - Bedfordshire Police & Crime Commissioner
 - Bethel Strict Baptist Chapel
+- Bramingham Park Church
 - Bury Park Community Centre (SMR-made text logo from the sign)
 - Calvary Church of God in Christ (COGIC UK)
 - Care homes (general)
@@ -200,6 +201,7 @@
 - Jobcentre Plus
 - Legends MMA & Fitness Centre
 - Lewsey Pentecostal Church
+- Limbury Baptist Church (emblem redrawn as vector + SMR lockup)
 - London Gliding Club
 - London Luton Airport Chapel (SMR-made text logo)
 - Luton & Dunstable University Hospital
@@ -267,7 +269,9 @@
 - St Paul's Luton
 - St Saviour's Church, Luton (SMR-made text logo)
 - St Thomas' Church, Stopsley (SMR-made text logo)
+- Stanton Road Baptist Church (SMR-made text logo)
 - Stockwood Park RFC
+- Stopsley Baptist Church (sbc mark + SMR lockup)
 - Storm Gym
 - Strathmore Avenue Methodist Church (SMR-made lockup)
 - SUEZ

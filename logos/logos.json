@@ -22950,6 +22950,115 @@
    ]
   },
   {
+   "slug": "bramingham-park-church",
+   "name": "Bramingham Park Church",
+   "aliases": [
+    "Bramingham Park Church",
+    "Bramingham Park Baptist Church"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/bramingham-park-church/",
+   "styles": [
+    "logo",
+    "logo-white",
+    "logo-black",
+    "icon"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "website": "https://www.bramingham.org",
+    "source": "owner 25 Nov 2026",
+    "note": "Original is white; navy version made by SMR for light backgrounds."
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "bramingham-park-church-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "bramingham-park-church-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1581,
+     "h": 297
+    },
+    {
+     "file": "bramingham-park-church-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "vector": true
+    },
+    {
+     "file": "bramingham-park-church-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "w": 1581,
+     "h": 297
+    },
+    {
+     "file": "bramingham-park-church-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo-black",
+     "vector": true
+    },
+    {
+     "file": "bramingham-park-church-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo-black",
+     "w": 1581,
+     "h": 297
+    },
+    {
+     "file": "bramingham-park-church-icon.svg",
+     "variant": "icon",
+     "style": "icon",
+     "vector": true
+    },
+    {
+     "file": "bramingham-park-church-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 1204,
+     "h": 1482
+    },
+    {
+     "file": "bramingham-park-church-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon",
+     "w": 1204,
+     "h": 1482,
+     "made": true
+    },
+    {
+     "file": "bramingham-park-church-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 1204,
+     "h": 1482,
+     "made": true
+    },
+    {
+     "file": "bramingham-park-church-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "bramingham-park-church-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
    "slug": "bury-park-community-centre",
    "name": "Bury Park Community Centre (SMR-made text logo from the sign)",
    "aliases": [
@@ -25605,6 +25714,114 @@
     },
     {
      "file": "lewsey-pentecostal-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "limbury-baptist",
+   "name": "Limbury Baptist Church (emblem redrawn as vector + SMR lockup)",
+   "aliases": [
+    "Limbury Baptist Church",
+    "Limbury Baptist"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/limbury-baptist/",
+   "styles": [
+    "logo",
+    "logo-white",
+    "logo-black",
+    "icon"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "source": "owner 25 Nov 2026",
+    "note": "Emblem (cross, trinity knot, doves) redrawn as a vector by SMR from a small image; name lockup made by SMR."
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "limbury-baptist-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "limbury-baptist-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1565,
+     "h": 594
+    },
+    {
+     "file": "limbury-baptist-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "vector": true
+    },
+    {
+     "file": "limbury-baptist-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "w": 1565,
+     "h": 594
+    },
+    {
+     "file": "limbury-baptist-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo-black",
+     "vector": true
+    },
+    {
+     "file": "limbury-baptist-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo-black",
+     "w": 1565,
+     "h": 594
+    },
+    {
+     "file": "limbury-baptist-icon.svg",
+     "variant": "icon",
+     "style": "icon",
+     "vector": true
+    },
+    {
+     "file": "limbury-baptist-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 1472,
+     "h": 1557
+    },
+    {
+     "file": "limbury-baptist-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon",
+     "w": 1472,
+     "h": 1557,
+     "made": true
+    },
+    {
+     "file": "limbury-baptist-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 1472,
+     "h": 1557,
+     "made": true
+    },
+    {
+     "file": "limbury-baptist-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "limbury-baptist-icon-white.svg",
      "variant": "icon-white",
      "style": "icon",
      "vector": true,
@@ -31396,6 +31613,113 @@
    ]
   },
   {
+   "slug": "stanton-road-baptist",
+   "name": "Stanton Road Baptist Church (SMR-made text logo)",
+   "aliases": [
+    "Stanton Road Baptist Church",
+    "Stanton Road Baptist"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/stanton-road-baptist/",
+   "styles": [
+    "logo",
+    "logo-white",
+    "logo-black",
+    "icon"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "source": "SMR-made text logo, not the church's own (owner 25 Nov 2026)"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "stanton-road-baptist-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "stanton-road-baptist-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1562,
+     "h": 507
+    },
+    {
+     "file": "stanton-road-baptist-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "vector": true
+    },
+    {
+     "file": "stanton-road-baptist-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "w": 1562,
+     "h": 507
+    },
+    {
+     "file": "stanton-road-baptist-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo-black",
+     "vector": true
+    },
+    {
+     "file": "stanton-road-baptist-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo-black",
+     "w": 1562,
+     "h": 507
+    },
+    {
+     "file": "stanton-road-baptist-icon.svg",
+     "variant": "icon",
+     "style": "icon",
+     "vector": true
+    },
+    {
+     "file": "stanton-road-baptist-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 951,
+     "h": 1460
+    },
+    {
+     "file": "stanton-road-baptist-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon",
+     "w": 951,
+     "h": 1460,
+     "made": true
+    },
+    {
+     "file": "stanton-road-baptist-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 951,
+     "h": 1460,
+     "made": true
+    },
+    {
+     "file": "stanton-road-baptist-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "stanton-road-baptist-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
    "slug": "stockwood-park-rfc",
    "name": "Stockwood Park RFC",
    "aliases": [
@@ -31475,6 +31799,115 @@
      "style": "logo",
      "w": 1399,
      "h": 1600,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "stopsley-baptist",
+   "name": "Stopsley Baptist Church (sbc mark + SMR lockup)",
+   "aliases": [
+    "Stopsley Baptist Church",
+    "Stopsley Baptist",
+    "SBC Luton"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/stopsley-baptist/",
+   "styles": [
+    "logo",
+    "logo-white",
+    "logo-black",
+    "icon"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "source": "owner 25 Nov 2026",
+    "note": "sbc mark taken from their image; name lockup made by SMR."
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "stopsley-baptist-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "stopsley-baptist-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1588,
+     "h": 518
+    },
+    {
+     "file": "stopsley-baptist-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "vector": true
+    },
+    {
+     "file": "stopsley-baptist-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "w": 1588,
+     "h": 518
+    },
+    {
+     "file": "stopsley-baptist-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo-black",
+     "vector": true
+    },
+    {
+     "file": "stopsley-baptist-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo-black",
+     "w": 1588,
+     "h": 518
+    },
+    {
+     "file": "stopsley-baptist-icon.svg",
+     "variant": "icon",
+     "style": "icon",
+     "vector": true
+    },
+    {
+     "file": "stopsley-baptist-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 1567,
+     "h": 1202
+    },
+    {
+     "file": "stopsley-baptist-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon",
+     "w": 1567,
+     "h": 1202,
+     "made": true
+    },
+    {
+     "file": "stopsley-baptist-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 1567,
+     "h": 1202,
+     "made": true
+    },
+    {
+     "file": "stopsley-baptist-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "stopsley-baptist-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
+     "vector": true,
      "made": true
     }
    ]
