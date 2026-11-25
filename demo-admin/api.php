@@ -217,6 +217,21 @@ if (strpos($a, 'pl_') === 0) {
     case 'pl_newkey':
         pl_set('feed_key', rand_token(18));
         $out();
+    case 'pl_notes':
+        json_out(['ok' => true, 'notes' => pl_notes()]);
+    case 'pl_note_add':
+        $t = $str('t', 160);
+        if ($t === '') json_out(['error' => 'Write a note first.'], 400);
+        $n = pl_notes();
+        if (count($n) >= 30) json_out(['error' => 'Too many notes. Tick some off first.'], 400);
+        $n[] = ['id' => 'n' . $now . substr(rand_token(6), 0, 4), 't' => $t, 'c' => $now];
+        pl_notes_save($n);
+        json_out(['ok' => true, 'notes' => $n]);
+    case 'pl_note_del':
+        $id = $str('id', 40);
+        $n = array_values(array_filter(pl_notes(), function ($x) use ($id) { return ($x['id'] ?? '') !== $id; }));
+        pl_notes_save($n);
+        json_out(['ok' => true, 'notes' => $n]);
     case 'pl_tick':
         json_out(['ok' => true, 'log' => pl_tick(true)]);
     }

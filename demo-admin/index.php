@@ -300,6 +300,22 @@ html.cpopen,body.cpopen{overscroll-behavior:none}
 .drawer .cnt{margin-left:auto}
 .dft{margin-top:auto;padding:12px 6px 0;font-size:11.5px;color:var(--muted);opacity:.7}
 @media(min-width:1100px){.drawer{transform:none;box-shadow:none;width:250px}.drawer .tabs.dnav button{opacity:1;transform:none}.dscrim,#navbtn,#navx,.dft,.top>.logo{display:none}.top{justify-content:flex-end}body:has(#drawer){padding-left:250px}}
+/* Keep in mind notes ribbon (notes.js) */
+.kim{order:3;width:100%;display:flex;align-items:center;gap:6px;font-size:12px;margin-top:1px;min-width:0}.kim[hidden]{display:none}
+.kim-one{flex:1;min-width:0;display:flex;align-items:center;gap:7px;height:26px;padding:0 9px;border-radius:99px;background:rgba(255,196,90,.08);border:1px solid rgba(255,196,90,.24);color:#ffe0a3;text-align:left;cursor:pointer;font:inherit}
+.kim-lb{flex:none;font-size:9.5px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:#c9a866}
+.kim-one .kim-t{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:opacity .18s}.kim-one .kim-t.sw{opacity:0}
+.kim-ct{flex:none;font-size:10.5px;font-weight:800;color:#c9a866}
+.kim-add{flex:none;height:26px;min-width:26px;border-radius:99px;border:1px dashed rgba(255,255,255,.24);color:#a3a3bd;background:none;font-weight:800;font-size:14px;line-height:1;padding:0 8px;cursor:pointer}.kim-add.solo{font-size:11px;letter-spacing:.02em;margin-left:auto;opacity:.75}
+.kim.open{flex-direction:column;align-items:stretch;gap:5px;padding:8px 10px;border-radius:14px;background:rgba(255,196,90,.06);border:1px solid rgba(255,196,90,.2)}
+.kim-hd{display:flex;align-items:center;justify-content:space-between}.kim-fold{height:24px;padding:0 10px;border-radius:99px;border:1px solid rgba(255,255,255,.16);background:none;color:#cfcfe0;font-weight:800;font-size:11.5px;cursor:pointer}
+.kim-row{display:flex;align-items:flex-start;gap:8px;color:#ffe0a3;font-size:12.5px;line-height:1.4;padding:4px 0;border-top:1px solid rgba(255,196,90,.13);transition:opacity .18s}.kim-row.gone{opacity:0}.kim-row .kim-t{flex:1;min-width:0}
+.kim-x{width:22px;height:22px;border-radius:50%;flex:none;display:grid;place-items:center;background:rgba(255,255,255,.08);color:#ffe0a3;border:0;padding:0;cursor:pointer}.kim-x svg{width:12px;height:12px}.kim-x:hover{background:rgba(61,220,151,.25);color:#7ff0bd}
+.kim-none{color:#a3a3bd;font-size:12px;padding:2px 0}
+.kim-new{align-self:flex-start;height:26px;padding:0 11px;border-radius:99px;border:1px dashed rgba(255,255,255,.24);background:none;color:#cfcfe0;font-weight:800;font-size:11.5px;cursor:pointer}
+.kim-f{display:flex;gap:5px;min-width:0}.kim .kim-f input{flex:1;min-width:0;height:30px!important;padding:0 11px!important;border-radius:99px!important;font-size:13px!important;background:rgba(255,255,255,.07)!important;border:1px solid rgba(255,255,255,.16)!important;color:#f2f2fa!important}
+.kim-f button{flex:none;height:30px;padding:0 12px;border-radius:99px;border:0;font-weight:800;font-size:12px;background:rgba(214,59,255,.32);color:#fff;cursor:pointer}.kim-f .kim-c{background:rgba(255,255,255,.08);padding:0 10px;font-size:15px}
+@media(min-width:1100px){.kim:not(.open){max-width:760px}}
 #themebtn .sun{display:none}html.lt #themebtn .sun{display:block}html.lt #themebtn .moon{display:none}
 </style>
 <link rel="stylesheet" href="light.css?v=<?= @filemtime(__DIR__ . '/light.css') ?>">
@@ -350,6 +366,7 @@ document.addEventListener('keydown',function(e){if(/^\d$/.test(e.key))press(e.ke
       <button data-tab="live" role="tab">Live<span class="cnt" id="livecnt"></span></button>
       <button data-tab="designs" role="tab">Designs</button>
     </nav>
+    <div class="kim" id="kim" hidden aria-label="Keep in mind"></div>
   </div>
 
   <div class="dscrim" id="dscrim"></div>
@@ -1262,6 +1279,7 @@ window.SMRA={loadPdf:loadPdf,api:api,openSheet:openSheet,closeSheet:closeSheet,t
 <script src="clients.js?v=<?= @filemtime(__DIR__ . '/clients.js') ?>"></script>
 <script src="jobs.js?v=<?= @filemtime(__DIR__ . '/jobs.js') ?>"></script>
 <script src="planner.js?v=<?= @filemtime(__DIR__ . '/planner.js') ?>"></script>
+<script src="notes.js?v=<?= @filemtime(__DIR__ . '/notes.js') ?>"></script>
 <?php endif; ?>
 <script>/* app feel: no pinch or double-tap zoom */(function(){document.addEventListener('gesturestart',function(e){e.preventDefault()},{passive:false});document.addEventListener('gesturechange',function(e){e.preventDefault()},{passive:false});document.addEventListener('touchmove',function(e){if(e.touches&&e.touches.length>1)e.preventDefault()},{passive:false});})();</script>
 </body>
