@@ -350,7 +350,7 @@
     "faith-data.js",
     "logo-versions.js"
    ],
-   "sha256": "907941d251bf883ea5f836a5f39e6155fab302906f1df8c5311707811934c7ef",
+   "sha256": "b5b2f9d5a914cf053bf7e5e89de31b1165edd1f64f9cc3906e213f2dc0445ade",
    "tested": "2026-11-25",
    "result": "pass",
    "notes": "Re-checked after the 25 Nov row fix: directory at 390 and 1280, no JS errors."
