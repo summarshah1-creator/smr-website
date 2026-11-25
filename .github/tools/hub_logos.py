@@ -61,11 +61,44 @@ MAP = {
     'chaul end community centre': 'chaul-end-centre',
     'abcd-in-luton': 'abcd-in-luton',
     'bury park community centre': 'bury-park-community-centre',
+    # schools, owner 25 Nov (their own logos now in the library)
+    'beech hill primary school': 'beech-hill-primary',
+    'beechwood primary school': 'beechwood-primary',
+    'bramingham primary school': 'bramingham-primary',
+    'bushmead primary school': 'bushmead-primary',
+    'crawley green infant school': 'crawley-green-infant',
+    'cutenhoe hill primary school': 'cutenhoe-hill-primary',
+    'foxdell primary school': 'foxdell-primary',
+    'icknield primary school': 'icknield-primary',
+    'leagrave primary school': 'leagrave-primary',
+    'lime academy hartwell': 'lime-academy-hartwell',
+    'maidenhall primary school': 'maidenhall-primary',
+    'parklea primary school': 'parklea-primary',
+    'pirton hill primary school': 'pirton-hill-primary',
+    'putteridge primary school': 'putteridge-primary',
+    'ramridge primary school': 'ramridge-primary',
+    'river bank primary school': 'river-bank-primary',
+    'sacred heart primary school': 'sacred-heart-primary',
+    'southfield primary academy': 'southfield-primary',
+    "st joseph's catholic primary school": 'st-josephs-primary',
+    'st martin de porres primary school': 'st-martin-de-porres-primary',
+    'st margaret of scotland catholic primary school': 'st-margaret-of-scotland-primary',
+    'warden hill infant school': 'warden-hill-infant',
+    'warden hill junior school': 'warden-hill-junior',
+    'the meads primary school': 'the-meads-primary',
+    'the linden academy': 'the-linden-academy',
+    'tennyson road primary school': 'tennyson-road-primary',
+    'stopsley community primary school': 'stopsley-community-primary',
+    'whitefield primary academy': 'whitefield-primary',
+    'whipperley infant academy': 'whipperley-academy-trust',
+    'wenlock ce academy': 'wenlock-ce-academy',
+    'waulud primary school': 'waulud-primary',
+    "st matthew's primary school": 'st-matthews-primary',
+    'richmond hill school east': 'richmond-hill-school',
+    'richmond hill school west': 'richmond-hill-school',
 }
 # Never match these (listing name, normalised): the library logo belongs to someone else.
 BLOCK = {
-    'ramridge primary school',      # library ramridge-baptist = Ramridge Baptist Church
-    'icknield primary school',      # library icknield = Icknield High School
     "st andrew's church luton",     # St A & C logo is St Anne with St Christopher, not St Andrew's
     "st andrew's, luton",
     'our lady polish catholic church',  # Dunstable: out of scope (owner 25 Nov)

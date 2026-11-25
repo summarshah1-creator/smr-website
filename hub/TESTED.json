@@ -350,10 +350,10 @@
     "faith-data.js",
     "logo-versions.js"
    ],
-   "sha256": "865fda7a0425db9cda469f2dd044f3f4b58ba329e2c9bbaa3356282e4d1ec0a0",
+   "sha256": "ca5eeaadb3963d8a1c5030829ed5c2a5c581ec320c7f772f715ad35e3913b470",
    "tested": "2026-11-25",
    "result": "pass",
-   "notes": "25 Nov (late): Sub Tuum Praesidium crest moved to Our Lady Help of Christians (olhc.uk); new logos St Joseph's, St Luke's, St Margaret (SMR-made), CVS, Chaul End, ABCD, Bury Park (DIR 120->124, places of worship 29->32); St Augustine renamed 'with Holy Trinity'. Org pages at 390/1280: no JS errors, no broken images."
+   "notes": "25 Nov: 34 school logos added (directory 124 -> 158 of 173); phone 390px + desktop checked, no JS errors, no broken logo images"
   },
   {
    "id": "places-of-worship",
