@@ -2810,7 +2810,7 @@
    "original_vector": false,
    "quality": "hd",
    "details": {
-    "address": "126–130 Oak Road, Luton",
+    "address": "126\u2013130 Oak Road, Luton",
     "postcode": "LU4 8AD",
     "note": "UKIM logo is national; the lockups add the local name"
    },
@@ -3206,7 +3206,7 @@
    "original_vector": false,
    "quality": "hd",
    "details": {
-    "address": "12–16 Portland Road, Luton",
+    "address": "12\u201316 Portland Road, Luton",
     "postcode": "LU4 8AX"
    },
    "signed_off": false,
@@ -4929,6 +4929,321 @@
    ]
   },
   {
+   "slug": "beech-hill-primary",
+   "name": "Beech Hill Primary School",
+   "aliases": [
+    "Beech Hill",
+    "Beech Hill Primary"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/beech-hill-primary/",
+   "styles": [
+    "logo",
+    "icon"
+   ],
+   "original_vector": true,
+   "quality": "redrawn",
+   "details": {
+    "address": "Dunstable Road, Luton",
+    "postcode": "LU4 8BW",
+    "note": "Owner upload 25 Nov 2026; background removed and cleaned.",
+    "source": "owner 25 Nov 2026"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "beech-hill-primary-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true
+    },
+    {
+     "file": "beech-hill-primary-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1600,
+     "h": 617
+    },
+    {
+     "file": "beech-hill-primary-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 462,
+     "h": 617,
+     "made": true
+    },
+    {
+     "file": "beech-hill-primary-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1600,
+     "h": 617,
+     "made": true
+    },
+    {
+     "file": "beech-hill-primary-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1600,
+     "h": 617,
+     "made": true
+    },
+    {
+     "file": "beech-hill-primary-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "beech-hill-primary-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "beech-hill-primary-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon",
+     "w": 462,
+     "h": 617,
+     "made": true
+    },
+    {
+     "file": "beech-hill-primary-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 462,
+     "h": 617,
+     "made": true
+    },
+    {
+     "file": "beech-hill-primary-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "beech-hill-primary-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "beech-hill-primary-icon-on-dark.png",
+     "variant": "icon-on-dark",
+     "style": "icon",
+     "w": 462,
+     "h": 617,
+     "made": true
+    },
+    {
+     "file": "beech-hill-primary-icon-brand-colour.png",
+     "variant": "icon-brand-colour",
+     "style": "icon",
+     "w": 462,
+     "h": 617,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "beechwood-primary",
+   "name": "Beechwood Primary School",
+   "aliases": [
+    "Beechwood",
+    "Beechwood Primary"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/beechwood-primary/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": false,
+   "quality": "ok",
+   "details": {
+    "address": "Linden Road, Luton",
+    "postcode": "LU4 9RD",
+    "note": "Owner upload 25 Nov 2026; background removed and cleaned.",
+    "source": "owner 25 Nov 2026"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "beechwood-primary-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 668,
+     "h": 656
+    },
+    {
+     "file": "beechwood-primary-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 668,
+     "h": 656,
+     "made": true
+    },
+    {
+     "file": "beechwood-primary-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 668,
+     "h": 656,
+     "made": true
+    },
+    {
+     "file": "beechwood-primary-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "beechwood-primary-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "bramingham-primary",
+   "name": "Bramingham Primary School",
+   "aliases": [
+    "Bramingham",
+    "Bramingham Primary"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/bramingham-primary/",
+   "styles": [
+    "logo",
+    "logo-white",
+    "logo-black"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "address": "Freeman Avenue, Luton",
+    "postcode": "LU3 4BL",
+    "note": "Remade by SMR as a clean flat vector from a blurry upload (same design, colours and wording).",
+    "source": "owner 25 Nov 2026"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "bramingham-primary-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "bramingham-primary-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1588,
+     "h": 1588
+    },
+    {
+     "file": "bramingham-primary-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "vector": true
+    },
+    {
+     "file": "bramingham-primary-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "w": 1588,
+     "h": 1588
+    },
+    {
+     "file": "bramingham-primary-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo-black",
+     "vector": true
+    },
+    {
+     "file": "bramingham-primary-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo-black",
+     "w": 1588,
+     "h": 1588
+    }
+   ]
+  },
+  {
+   "slug": "bushmead-primary",
+   "name": "Bushmead Primary & Nursery School",
+   "aliases": [
+    "Bushmead Primary School",
+    "Bushmead Primary",
+    "Bushmead Primary and Nursery School"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/bushmead-primary/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {
+    "address": "Luton",
+    "postcode": "LU2 7YT",
+    "note": "Owner upload 25 Nov 2026; background removed and cleaned.",
+    "source": "owner 25 Nov 2026"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "bushmead-primary-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 971,
+     "h": 560
+    },
+    {
+     "file": "bushmead-primary-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 971,
+     "h": 560,
+     "made": true
+    },
+    {
+     "file": "bushmead-primary-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 971,
+     "h": 560,
+     "made": true
+    },
+    {
+     "file": "bushmead-primary-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "bushmead-primary-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
    "slug": "cardinal-newman",
    "name": "Cardinal Newman Catholic School",
    "aliases": [],
@@ -5914,6 +6229,137 @@
    ]
   },
   {
+   "slug": "crawley-green-infant",
+   "name": "Crawley Green Infant School",
+   "aliases": [
+    "Crawley Green",
+    "Crawley Green Infants"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/crawley-green-infant/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": true,
+   "quality": "redrawn",
+   "details": {
+    "address": "Crawley Green, Luton",
+    "postcode": "LU2 0RW",
+    "note": "Owner upload 25 Nov 2026; background removed and cleaned.",
+    "source": "owner 25 Nov 2026"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "crawley-green-infant-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true
+    },
+    {
+     "file": "crawley-green-infant-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1595,
+     "h": 1596
+    },
+    {
+     "file": "crawley-green-infant-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1595,
+     "h": 1596,
+     "made": true
+    },
+    {
+     "file": "crawley-green-infant-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1595,
+     "h": 1596,
+     "made": true
+    },
+    {
+     "file": "crawley-green-infant-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "crawley-green-infant-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "cutenhoe-hill-primary",
+   "name": "Cutenhoe Hill Primary School",
+   "aliases": [
+    "Cutenhoe Hill",
+    "Cutenhoe Hill Primary"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/cutenhoe-hill-primary/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": false,
+   "quality": "ok",
+   "details": {
+    "address": "Cutenhoe Road, Luton",
+    "postcode": "LU1 3NJ",
+    "note": "Owner upload 25 Nov 2026; background removed and cleaned.",
+    "source": "owner 25 Nov 2026"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "cutenhoe-hill-primary-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 882,
+     "h": 882
+    },
+    {
+     "file": "cutenhoe-hill-primary-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 882,
+     "h": 882,
+     "made": true
+    },
+    {
+     "file": "cutenhoe-hill-primary-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 882,
+     "h": 882,
+     "made": true
+    },
+    {
+     "file": "cutenhoe-hill-primary-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "cutenhoe-hill-primary-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
    "slug": "dallow",
    "name": "Dallow Primary School",
    "aliases": [],
@@ -6699,6 +7145,68 @@
    ]
   },
   {
+   "slug": "foxdell-primary",
+   "name": "Foxdell Primary School",
+   "aliases": [
+    "Foxdell",
+    "Foxdell Primary"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/foxdell-primary/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": false,
+   "quality": "ok",
+   "details": {
+    "address": "Dallow Road, Luton",
+    "postcode": "LU1 1UP",
+    "note": "Owner upload 25 Nov 2026; background removed and cleaned.",
+    "source": "owner 25 Nov 2026"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "foxdell-primary-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 758,
+     "h": 588
+    },
+    {
+     "file": "foxdell-primary-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 758,
+     "h": 588,
+     "made": true
+    },
+    {
+     "file": "foxdell-primary-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 758,
+     "h": 588,
+     "made": true
+    },
+    {
+     "file": "foxdell-primary-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "foxdell-primary-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
    "slug": "hillborough",
    "name": "Hillborough Junior School",
    "aliases": [
@@ -6993,6 +7501,75 @@
    ]
   },
   {
+   "slug": "icknield-primary",
+   "name": "Icknield Primary School",
+   "aliases": [
+    "Icknield Primary",
+    "Icknield Primary School Luton"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/icknield-primary/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": true,
+   "quality": "redrawn",
+   "details": {
+    "address": "Birdsfoot Lane, Luton",
+    "postcode": "LU3 2JB",
+    "note": "Owner upload 25 Nov 2026; background removed and cleaned.",
+    "source": "owner 25 Nov 2026"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "icknield-primary-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true
+    },
+    {
+     "file": "icknield-primary-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1597,
+     "h": 1583
+    },
+    {
+     "file": "icknield-primary-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1597,
+     "h": 1583,
+     "made": true
+    },
+    {
+     "file": "icknield-primary-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1597,
+     "h": 1583,
+     "made": true
+    },
+    {
+     "file": "icknield-primary-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "icknield-primary-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
    "slug": "lady-zia-wernher",
    "name": "Lady Zia Wernher School",
    "aliases": [],
@@ -7215,6 +7792,67 @@
    ]
   },
   {
+   "slug": "leagrave-primary",
+   "name": "Leagrave Primary School",
+   "aliases": [
+    "Leagrave Primary"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/leagrave-primary/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {
+    "address": "Strangers Way, Luton",
+    "postcode": "LU4 9ND",
+    "note": "Owner upload 25 Nov 2026; background removed and cleaned.",
+    "source": "owner 25 Nov 2026"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "leagrave-primary-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 926,
+     "h": 854
+    },
+    {
+     "file": "leagrave-primary-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 926,
+     "h": 854,
+     "made": true
+    },
+    {
+     "file": "leagrave-primary-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 926,
+     "h": 854,
+     "made": true
+    },
+    {
+     "file": "leagrave-primary-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "leagrave-primary-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
    "slug": "lealands",
    "name": "Lealands High School",
    "aliases": [],
@@ -7367,6 +8005,68 @@
      "style": "lockup-stacked",
      "w": 1400,
      "h": 1800,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "lime-academy-hartwell",
+   "name": "Lime Academy Hartwell",
+   "aliases": [
+    "Hartwell",
+    "Lime Hartwell"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/lime-academy-hartwell/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {
+    "address": "York Street, Luton",
+    "postcode": "LU2 0EZ",
+    "note": "Owner upload 25 Nov 2026; background removed and cleaned.",
+    "source": "owner 25 Nov 2026"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "lime-academy-hartwell-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1337,
+     "h": 383
+    },
+    {
+     "file": "lime-academy-hartwell-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1337,
+     "h": 383,
+     "made": true
+    },
+    {
+     "file": "lime-academy-hartwell-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1337,
+     "h": 383,
+     "made": true
+    },
+    {
+     "file": "lime-academy-hartwell-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "lime-academy-hartwell-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
      "made": true
     }
    ]
@@ -7562,6 +8262,60 @@
      "w": 1600,
      "h": 719,
      "made": true
+    }
+   ]
+  },
+  {
+   "slug": "maidenhall-primary",
+   "name": "Maidenhall Primary School",
+   "aliases": [
+    "Maidenhall",
+    "Maidenhall Primary"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/maidenhall-primary/",
+   "styles": [
+    "logo",
+    "logo-white"
+   ],
+   "original_vector": true,
+   "quality": "redrawn",
+   "details": {
+    "address": "Newark Road, Luton",
+    "postcode": "LU4 8LD",
+    "note": "Supplied as white text for dark backgrounds; the light version (dark grey text) was made by SMR.",
+    "source": "owner 25 Nov 2026"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "maidenhall-primary-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true
+    },
+    {
+     "file": "maidenhall-primary-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1600,
+     "h": 614
+    },
+    {
+     "file": "maidenhall-primary-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "vector": true,
+     "redrawn": true
+    },
+    {
+     "file": "maidenhall-primary-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "w": 1600,
+     "h": 614
     }
    ]
   },
@@ -7872,6 +8626,239 @@
    ]
   },
   {
+   "slug": "parklea-primary",
+   "name": "Parklea Primary School",
+   "aliases": [
+    "Parklea",
+    "Parklea Primary"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/parklea-primary/",
+   "styles": [
+    "logo",
+    "icon"
+   ],
+   "original_vector": true,
+   "quality": "redrawn",
+   "details": {
+    "address": "Cranbrook Drive, Luton",
+    "postcode": "LU3 3EW",
+    "note": "Owner upload 25 Nov 2026; background removed and cleaned.",
+    "source": "owner 25 Nov 2026"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "parklea-primary-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true
+    },
+    {
+     "file": "parklea-primary-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1300,
+     "h": 1600
+    },
+    {
+     "file": "parklea-primary-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 1293,
+     "h": 1110,
+     "made": true
+    },
+    {
+     "file": "parklea-primary-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1300,
+     "h": 1600,
+     "made": true
+    },
+    {
+     "file": "parklea-primary-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1300,
+     "h": 1600,
+     "made": true
+    },
+    {
+     "file": "parklea-primary-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "parklea-primary-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "parklea-primary-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon",
+     "w": 1293,
+     "h": 1110,
+     "made": true
+    },
+    {
+     "file": "parklea-primary-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 1293,
+     "h": 1110,
+     "made": true
+    },
+    {
+     "file": "parklea-primary-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "parklea-primary-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "parklea-primary-icon-on-dark.png",
+     "variant": "icon-on-dark",
+     "style": "icon",
+     "w": 1293,
+     "h": 1110,
+     "made": true
+    },
+    {
+     "file": "parklea-primary-icon-brand-colour.png",
+     "variant": "icon-brand-colour",
+     "style": "icon",
+     "w": 1293,
+     "h": 1110,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "pirton-hill-primary",
+   "name": "Pirton Hill Primary School",
+   "aliases": [
+    "Pirton Hill",
+    "Pirton Hill Primary"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/pirton-hill-primary/",
+   "styles": [
+    "logo",
+    "icon"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {
+    "address": "Butely Road, Luton",
+    "postcode": "LU4 9EX",
+    "note": "Owner upload 25 Nov 2026; background removed and cleaned.",
+    "source": "owner 25 Nov 2026"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "pirton-hill-primary-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1055,
+     "h": 508
+    },
+    {
+     "file": "pirton-hill-primary-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 406,
+     "h": 247,
+     "made": true
+    },
+    {
+     "file": "pirton-hill-primary-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1055,
+     "h": 508,
+     "made": true
+    },
+    {
+     "file": "pirton-hill-primary-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1055,
+     "h": 508,
+     "made": true
+    },
+    {
+     "file": "pirton-hill-primary-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "pirton-hill-primary-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "pirton-hill-primary-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon",
+     "w": 406,
+     "h": 247,
+     "made": true
+    },
+    {
+     "file": "pirton-hill-primary-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 406,
+     "h": 247,
+     "made": true
+    },
+    {
+     "file": "pirton-hill-primary-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "pirton-hill-primary-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "pirton-hill-primary-icon-brand-colour.png",
+     "variant": "icon-brand-colour",
+     "style": "icon",
+     "w": 406,
+     "h": 247,
+     "made": true
+    }
+   ]
+  },
+  {
    "slug": "putteridge",
    "name": "Putteridge High School",
    "aliases": [],
@@ -8024,6 +9011,74 @@
      "style": "lockup-stacked",
      "w": 1800,
      "h": 1686,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "putteridge-primary",
+   "name": "Putteridge Primary School",
+   "aliases": [
+    "Putteridge Primary"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/putteridge-primary/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": true,
+   "quality": "redrawn",
+   "details": {
+    "address": "Putteridge Road, Luton",
+    "postcode": "LU2 8HJ",
+    "note": "Owner upload 25 Nov 2026; background removed and cleaned.",
+    "source": "owner 25 Nov 2026"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "putteridge-primary-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true
+    },
+    {
+     "file": "putteridge-primary-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1290,
+     "h": 1600
+    },
+    {
+     "file": "putteridge-primary-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1290,
+     "h": 1600,
+     "made": true
+    },
+    {
+     "file": "putteridge-primary-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1290,
+     "h": 1600,
+     "made": true
+    },
+    {
+     "file": "putteridge-primary-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "putteridge-primary-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
      "made": true
     }
    ]
@@ -8212,7 +9267,7 @@
    "original_vector": false,
    "quality": "hd",
    "details": {
-    "address": "12–16 Portland Road, Luton",
+    "address": "12\u201316 Portland Road, Luton",
     "postcode": "LU4 8AX",
     "note": "Covers Rabia Girls' School, Rabia Boys' School and Madrasa Islamia Primary"
    },
@@ -8261,6 +9316,329 @@
      "style": "logo",
      "w": 945,
      "h": 282,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "ramridge-primary",
+   "name": "Ramridge Primary School",
+   "aliases": [
+    "Ramridge Primary",
+    "Ramridge"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/ramridge-primary/",
+   "styles": [
+    "logo",
+    "logo-on-dark",
+    "icon"
+   ],
+   "original_vector": true,
+   "quality": "redrawn",
+   "details": {
+    "address": "Turners Road North, Luton",
+    "postcode": "LU2 9AH",
+    "note": "Supplied with white \"Primary School\" for dark backgrounds; the light version (purple text) was made by SMR.",
+    "source": "owner 25 Nov 2026"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "ramridge-primary-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true
+    },
+    {
+     "file": "ramridge-primary-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1600,
+     "h": 1353
+    },
+    {
+     "file": "ramridge-primary-logo-on-dark.svg",
+     "variant": "logo-on-dark",
+     "style": "logo-on-dark",
+     "vector": true,
+     "redrawn": true
+    },
+    {
+     "file": "ramridge-primary-logo-on-dark.png",
+     "variant": "logo-on-dark",
+     "style": "logo-on-dark",
+     "w": 1600,
+     "h": 1353
+    },
+    {
+     "file": "ramridge-primary-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 1119,
+     "h": 716,
+     "made": true
+    },
+    {
+     "file": "ramridge-primary-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1600,
+     "h": 1353,
+     "made": true
+    },
+    {
+     "file": "ramridge-primary-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1600,
+     "h": 1353,
+     "made": true
+    },
+    {
+     "file": "ramridge-primary-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "ramridge-primary-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "ramridge-primary-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon",
+     "w": 1119,
+     "h": 716,
+     "made": true
+    },
+    {
+     "file": "ramridge-primary-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 1119,
+     "h": 716,
+     "made": true
+    },
+    {
+     "file": "ramridge-primary-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "ramridge-primary-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "ramridge-primary-icon-brand-colour.png",
+     "variant": "icon-brand-colour",
+     "style": "icon",
+     "w": 1119,
+     "h": 716,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "river-bank-primary",
+   "name": "River Bank Primary School",
+   "aliases": [
+    "River Bank",
+    "River Bank Primary"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/river-bank-primary/",
+   "styles": [
+    "logo",
+    "icon"
+   ],
+   "original_vector": true,
+   "quality": "redrawn",
+   "details": {
+    "address": "Bath Road, Luton",
+    "postcode": "LU3 1ES",
+    "note": "Owner upload 25 Nov 2026; background removed and cleaned.",
+    "source": "owner 25 Nov 2026"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "river-bank-primary-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true
+    },
+    {
+     "file": "river-bank-primary-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1600,
+     "h": 1600
+    },
+    {
+     "file": "river-bank-primary-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 1400,
+     "h": 1220,
+     "made": true
+    },
+    {
+     "file": "river-bank-primary-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1600,
+     "h": 1600,
+     "made": true
+    },
+    {
+     "file": "river-bank-primary-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1600,
+     "h": 1600,
+     "made": true
+    },
+    {
+     "file": "river-bank-primary-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "river-bank-primary-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "river-bank-primary-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon",
+     "w": 1400,
+     "h": 1220,
+     "made": true
+    },
+    {
+     "file": "river-bank-primary-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 1400,
+     "h": 1220,
+     "made": true
+    },
+    {
+     "file": "river-bank-primary-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "river-bank-primary-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "river-bank-primary-icon-on-dark.png",
+     "variant": "icon-on-dark",
+     "style": "icon",
+     "w": 1400,
+     "h": 1220,
+     "made": true
+    },
+    {
+     "file": "river-bank-primary-icon-brand-colour.png",
+     "variant": "icon-brand-colour",
+     "style": "icon",
+     "w": 1400,
+     "h": 1220,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "sacred-heart-primary",
+   "name": "Sacred Heart Primary School",
+   "aliases": [
+    "Sacred Heart Primary"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/sacred-heart-primary/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": true,
+   "quality": "redrawn",
+   "details": {
+    "address": "Langford Drive, Luton",
+    "postcode": "LU2 9AJ",
+    "note": "Owner upload 25 Nov 2026; background removed and cleaned.",
+    "source": "owner 25 Nov 2026"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "sacred-heart-primary-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true
+    },
+    {
+     "file": "sacred-heart-primary-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1525,
+     "h": 1598
+    },
+    {
+     "file": "sacred-heart-primary-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1525,
+     "h": 1598,
+     "made": true
+    },
+    {
+     "file": "sacred-heart-primary-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1525,
+     "h": 1598,
+     "made": true
+    },
+    {
+     "file": "sacred-heart-primary-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "sacred-heart-primary-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
      "made": true
     }
    ]
@@ -8382,6 +9760,335 @@
      "style": "logo",
      "vector": true,
      "made": true
+    }
+   ]
+  },
+  {
+   "slug": "southfield-primary",
+   "name": "Southfield Primary Academy",
+   "aliases": [
+    "Southfield",
+    "Southfield Primary"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/southfield-primary/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": true,
+   "quality": "redrawn",
+   "details": {
+    "address": "Pastures Way, Luton",
+    "postcode": "LU4 0PE",
+    "note": "Owner upload 25 Nov 2026; background removed and cleaned.",
+    "source": "owner 25 Nov 2026"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "southfield-primary-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true
+    },
+    {
+     "file": "southfield-primary-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1584,
+     "h": 1584
+    },
+    {
+     "file": "southfield-primary-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1584,
+     "h": 1584,
+     "made": true
+    },
+    {
+     "file": "southfield-primary-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1584,
+     "h": 1584,
+     "made": true
+    },
+    {
+     "file": "southfield-primary-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "southfield-primary-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "st-josephs-primary",
+   "name": "St Joseph's Catholic Primary School",
+   "aliases": [
+    "St Joseph's Primary",
+    "St Josephs Catholic Primary School"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/st-josephs-primary/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": false,
+   "quality": "low-res",
+   "details": {
+    "address": "Gardenia Avenue, Luton",
+    "postcode": "LU3 2NS",
+    "note": "Owner upload 25 Nov 2026; background removed and cleaned.",
+    "source": "owner 25 Nov 2026"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "st-josephs-primary-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 252,
+     "h": 266
+    },
+    {
+     "file": "st-josephs-primary-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 252,
+     "h": 266,
+     "made": true
+    },
+    {
+     "file": "st-josephs-primary-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 252,
+     "h": 266,
+     "made": true
+    },
+    {
+     "file": "st-josephs-primary-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "st-josephs-primary-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "st-margaret-of-scotland-primary",
+   "name": "St Margaret of Scotland Catholic Primary School",
+   "aliases": [
+    "St Margaret of Scotland Primary",
+    "St Margaret of Scotland Catholic Primary",
+    "Learning with Jesus in faith, hope and love"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/st-margaret-of-scotland-primary/",
+   "styles": [
+    "logo",
+    "logo-black",
+    "logo-white"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "address": "Rotheram Avenue, Luton",
+    "postcode": "LU1 5PP",
+    "note": "Badge \"Learning with Jesus in faith, hope and love\"; owner confirmed 25 Nov 2026 it is St Margaret of Scotland Catholic Primary School.",
+    "source": "owner 25 Nov 2026; redrawn as vector"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "st-margaret-of-scotland-primary-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "st-margaret-of-scotland-primary-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1312,
+     "h": 1557
+    },
+    {
+     "file": "st-margaret-of-scotland-primary-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo-black",
+     "vector": true
+    },
+    {
+     "file": "st-margaret-of-scotland-primary-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo-black",
+     "w": 1312,
+     "h": 1557
+    },
+    {
+     "file": "st-margaret-of-scotland-primary-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "vector": true
+    },
+    {
+     "file": "st-margaret-of-scotland-primary-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "w": 1312,
+     "h": 1557
+    }
+   ]
+  },
+  {
+   "slug": "st-martin-de-porres-primary",
+   "name": "St Martin de Porres Primary School",
+   "aliases": [
+    "St Martin de Porres Catholic Primary",
+    "Working together in the light of the Lord"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/st-martin-de-porres-primary/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": false,
+   "quality": "low-res",
+   "details": {
+    "address": "Pastures Way, Luton",
+    "postcode": "LU4 0PF",
+    "note": "Owner confirmed 25 Nov 2026. Source is a small image (about 130px), so it is soft when enlarged.",
+    "source": "owner 25 Nov 2026"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "st-martin-de-porres-primary-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 260,
+     "h": 306
+    },
+    {
+     "file": "st-martin-de-porres-primary-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 260,
+     "h": 306,
+     "made": true
+    },
+    {
+     "file": "st-martin-de-porres-primary-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 260,
+     "h": 306,
+     "made": true
+    },
+    {
+     "file": "st-martin-de-porres-primary-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "st-martin-de-porres-primary-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "stopsley-community-primary",
+   "name": "Stopsley Community Primary School",
+   "aliases": [
+    "Stopsley Community Primary",
+    "Stopsley Primary"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/stopsley-community-primary/",
+   "styles": [
+    "logo",
+    "logo-white",
+    "icon",
+    "icon-white"
+   ],
+   "original_vector": true,
+   "quality": "redrawn",
+   "details": {
+    "address": "Luton",
+    "note": "Navy box removed; navy version for light backgrounds and white version for dark, made by SMR.",
+    "source": "owner 25 Nov 2026"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "stopsley-community-primary-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1007,
+     "h": 236
+    },
+    {
+     "file": "stopsley-community-primary-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "w": 1007,
+     "h": 236
+    },
+    {
+     "file": "stopsley-community-primary-icon.svg",
+     "variant": "icon",
+     "style": "icon",
+     "vector": true,
+     "redrawn": true
+    },
+    {
+     "file": "stopsley-community-primary-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 922,
+     "h": 1597
+    },
+    {
+     "file": "stopsley-community-primary-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon-white",
+     "vector": true,
+     "redrawn": true
+    },
+    {
+     "file": "stopsley-community-primary-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon-white",
+     "w": 922,
+     "h": 1597
     }
    ]
   },
@@ -8552,6 +10259,74 @@
    ]
   },
   {
+   "slug": "tennyson-road-primary",
+   "name": "Tennyson Road Primary School",
+   "aliases": [
+    "Tennyson Road",
+    "Tennyson Road Primary"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/tennyson-road-primary/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": true,
+   "quality": "redrawn",
+   "details": {
+    "address": "Luton",
+    "note": "Supplied with white \"Primary School\"; light version recoloured blue-grey by SMR.",
+    "source": "owner 25 Nov 2026"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "tennyson-road-primary-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true
+    },
+    {
+     "file": "tennyson-road-primary-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1586,
+     "h": 1028
+    },
+    {
+     "file": "tennyson-road-primary-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1586,
+     "h": 1028,
+     "made": true
+    },
+    {
+     "file": "tennyson-road-primary-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1586,
+     "h": 1028,
+     "made": true
+    },
+    {
+     "file": "tennyson-road-primary-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "tennyson-road-primary-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
    "slug": "the-education-centre",
    "name": "The Education Centre by EAE",
    "aliases": [
@@ -8715,6 +10490,238 @@
      "variant": "logo-white",
      "style": "logo",
      "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "the-linden-academy",
+   "name": "The Linden Academy",
+   "aliases": [
+    "The Linden Academy",
+    "Linden Academy"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/the-linden-academy/",
+   "styles": [
+    "logo",
+    "logo-on-dark",
+    "icon"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {
+    "address": "Luton",
+    "note": "Black background and grey shapes removed; light (dark text) and on-dark (white text) versions made by SMR.",
+    "source": "owner 25 Nov 2026"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "the-linden-academy-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1024,
+     "h": 774
+    },
+    {
+     "file": "the-linden-academy-logo-on-dark.png",
+     "variant": "logo-on-dark",
+     "style": "logo-on-dark",
+     "w": 1024,
+     "h": 774
+    },
+    {
+     "file": "the-linden-academy-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 475,
+     "h": 465,
+     "made": true
+    },
+    {
+     "file": "the-linden-academy-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1024,
+     "h": 774,
+     "made": true
+    },
+    {
+     "file": "the-linden-academy-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1024,
+     "h": 774,
+     "made": true
+    },
+    {
+     "file": "the-linden-academy-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "the-linden-academy-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "the-linden-academy-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon",
+     "w": 475,
+     "h": 465,
+     "made": true
+    },
+    {
+     "file": "the-linden-academy-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 475,
+     "h": 465,
+     "made": true
+    },
+    {
+     "file": "the-linden-academy-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "the-linden-academy-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "the-meads-primary",
+   "name": "The Meads Primary School",
+   "aliases": [
+    "The Meads",
+    "The Meads Primary"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/the-meads-primary/",
+   "styles": [
+    "logo",
+    "logo-on-dark",
+    "icon"
+   ],
+   "original_vector": false,
+   "quality": "ok",
+   "details": {
+    "address": "Luton",
+    "note": "Supplied with white/silver text for dark backgrounds; light version (dark text) made by SMR.",
+    "source": "owner 25 Nov 2026"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "the-meads-primary-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 704,
+     "h": 596
+    },
+    {
+     "file": "the-meads-primary-logo-on-dark.png",
+     "variant": "logo-on-dark",
+     "style": "logo-on-dark",
+     "w": 704,
+     "h": 596
+    },
+    {
+     "file": "the-meads-primary-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 309,
+     "h": 378,
+     "made": true
+    },
+    {
+     "file": "the-meads-primary-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 704,
+     "h": 596,
+     "made": true
+    },
+    {
+     "file": "the-meads-primary-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 704,
+     "h": 596,
+     "made": true
+    },
+    {
+     "file": "the-meads-primary-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "the-meads-primary-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "the-meads-primary-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon",
+     "w": 309,
+     "h": 378,
+     "made": true
+    },
+    {
+     "file": "the-meads-primary-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 309,
+     "h": 378,
+     "made": true
+    },
+    {
+     "file": "the-meads-primary-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "the-meads-primary-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "the-meads-primary-icon-on-dark.png",
+     "variant": "icon-on-dark",
+     "style": "icon",
+     "w": 309,
+     "h": 378,
+     "made": true
+    },
+    {
+     "file": "the-meads-primary-icon-brand-colour.png",
+     "variant": "icon-brand-colour",
+     "style": "icon",
+     "w": 309,
+     "h": 378,
      "made": true
     }
    ]
@@ -9007,6 +11014,492 @@
      "style": "icon",
      "w": 1322,
      "h": 1059,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "warden-hill-infant",
+   "name": "Warden Hill Infant School (SMR-made lockup with the school's shield)",
+   "aliases": [
+    "Warden Hill Infant School",
+    "Warden Hill Infants"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/warden-hill-infant/",
+   "styles": [
+    "logo",
+    "logo-white",
+    "icon"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {
+    "address": "Warden Hill, Luton",
+    "note": "Lockup made by SMR (shield + name); the shield is the school badge the owner sent 25 Nov 2026.",
+    "source": "owner 25 Nov 2026",
+    "made_by": "SMR"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "warden-hill-infant-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1800,
+     "h": 527
+    },
+    {
+     "file": "warden-hill-infant-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "w": 1800,
+     "h": 527
+    },
+    {
+     "file": "warden-hill-infant-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 1452,
+     "h": 1530
+    },
+    {
+     "file": "warden-hill-infant-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon",
+     "w": 1452,
+     "h": 1530,
+     "made": true
+    },
+    {
+     "file": "warden-hill-infant-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 1452,
+     "h": 1530,
+     "made": true
+    },
+    {
+     "file": "warden-hill-infant-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "warden-hill-infant-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "warden-hill-junior",
+   "name": "Warden Hill Junior School (SMR-made lockup with the school's shield)",
+   "aliases": [
+    "Warden Hill Junior School",
+    "Warden Hill Juniors"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/warden-hill-junior/",
+   "styles": [
+    "logo",
+    "logo-white",
+    "icon"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {
+    "address": "Warden Hill, Luton",
+    "note": "Lockup made by SMR (shield + name); the shield is the school badge the owner sent 25 Nov 2026.",
+    "source": "owner 25 Nov 2026",
+    "made_by": "SMR"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "warden-hill-junior-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1800,
+     "h": 527
+    },
+    {
+     "file": "warden-hill-junior-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "w": 1800,
+     "h": 527
+    },
+    {
+     "file": "warden-hill-junior-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 1452,
+     "h": 1530
+    },
+    {
+     "file": "warden-hill-junior-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon",
+     "w": 1452,
+     "h": 1530,
+     "made": true
+    },
+    {
+     "file": "warden-hill-junior-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 1452,
+     "h": 1530,
+     "made": true
+    },
+    {
+     "file": "warden-hill-junior-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "warden-hill-junior-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "waulud-primary",
+   "name": "Waulud Primary School and Nursery",
+   "aliases": [
+    "Waulud Primary School",
+    "Waulud",
+    "Waulud Primary"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/waulud-primary/",
+   "styles": [
+    "logo",
+    "icon"
+   ],
+   "original_vector": true,
+   "quality": "redrawn",
+   "details": {
+    "address": "Luton",
+    "note": "Owner upload 25 Nov 2026.",
+    "source": "owner 25 Nov 2026"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "waulud-primary-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true
+    },
+    {
+     "file": "waulud-primary-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1599,
+     "h": 993
+    },
+    {
+     "file": "waulud-primary-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 659,
+     "h": 642,
+     "made": true
+    },
+    {
+     "file": "waulud-primary-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1599,
+     "h": 993,
+     "made": true
+    },
+    {
+     "file": "waulud-primary-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1599,
+     "h": 993,
+     "made": true
+    },
+    {
+     "file": "waulud-primary-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "waulud-primary-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "waulud-primary-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon",
+     "w": 659,
+     "h": 642,
+     "made": true
+    },
+    {
+     "file": "waulud-primary-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 659,
+     "h": 642,
+     "made": true
+    },
+    {
+     "file": "waulud-primary-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "waulud-primary-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "waulud-primary-icon-brand-colour.png",
+     "variant": "icon-brand-colour",
+     "style": "icon",
+     "w": 659,
+     "h": 642,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "wenlock-ce-academy",
+   "name": "Wenlock CE Academy",
+   "aliases": [
+    "Wenlock",
+    "Wenlock CE Academy",
+    "Wenlock Academy"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/wenlock-ce-academy/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": true,
+   "quality": "redrawn",
+   "details": {
+    "address": "Luton",
+    "note": "Owner upload 25 Nov 2026; background removed.",
+    "source": "owner 25 Nov 2026"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "wenlock-ce-academy-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true
+    },
+    {
+     "file": "wenlock-ce-academy-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1129,
+     "h": 1600
+    },
+    {
+     "file": "wenlock-ce-academy-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1129,
+     "h": 1600,
+     "made": true
+    },
+    {
+     "file": "wenlock-ce-academy-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1129,
+     "h": 1600,
+     "made": true
+    },
+    {
+     "file": "wenlock-ce-academy-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "wenlock-ce-academy-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "whipperley-academy-trust",
+   "name": "Whipperley Academy Trust (Whipperley Infant Academy)",
+   "aliases": [
+    "Whipperley Infant Academy",
+    "Whipperley Academy Trust",
+    "Whipperley"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/whipperley-academy-trust/",
+   "styles": [
+    "logo",
+    "logo-on-dark"
+   ],
+   "original_vector": true,
+   "quality": "redrawn",
+   "details": {
+    "address": "Luton",
+    "note": "This is the Whipperley Academy Trust's logo, used for Whipperley Infant Academy. Black background removed; on-light version with darker gold text made by SMR (the original gold text needs a dark background).",
+    "source": "owner 25 Nov 2026"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "whipperley-academy-trust-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true
+    },
+    {
+     "file": "whipperley-academy-trust-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1600,
+     "h": 1039
+    },
+    {
+     "file": "whipperley-academy-trust-logo-on-dark.svg",
+     "variant": "logo-on-dark",
+     "style": "logo-on-dark",
+     "vector": true,
+     "redrawn": true
+    },
+    {
+     "file": "whipperley-academy-trust-logo-on-dark.png",
+     "variant": "logo-on-dark",
+     "style": "logo-on-dark",
+     "w": 1600,
+     "h": 1039
+    },
+    {
+     "file": "whipperley-academy-trust-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1600,
+     "h": 1039,
+     "made": true
+    },
+    {
+     "file": "whipperley-academy-trust-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1600,
+     "h": 1039,
+     "made": true
+    },
+    {
+     "file": "whipperley-academy-trust-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "whipperley-academy-trust-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "whitefield-primary",
+   "name": "Whitefield Primary Academy",
+   "aliases": [
+    "Whitefield",
+    "Whitefield Primary"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/whitefield-primary/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": false,
+   "quality": "ok",
+   "details": {
+    "address": "Luton",
+    "note": "Owner upload 25 Nov 2026; background removed.",
+    "source": "owner 25 Nov 2026"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "whitefield-primary-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 798,
+     "h": 796
+    },
+    {
+     "file": "whitefield-primary-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 798,
+     "h": 796,
+     "made": true
+    },
+    {
+     "file": "whitefield-primary-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 798,
+     "h": 796,
+     "made": true
+    },
+    {
+     "file": "whitefield-primary-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "whitefield-primary-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
      "made": true
     }
    ]
@@ -13464,7 +15957,7 @@
   },
   {
    "slug": "lantern",
-   "name": "Lantern · Muslim Women's Voices",
+   "name": "Lantern \u00b7 Muslim Women's Voices",
    "aliases": [
     "Lantern"
    ],
@@ -19866,69 +22359,6 @@
    ]
   },
   {
-   "slug": "learning-with-jesus-badge",
-   "name": "Catholic school badge: \"Learning with Jesus in faith, hope and love\" (school not confirmed yet)",
-   "aliases": [],
-   "category": "community",
-   "category_name": "Council, public & youth",
-   "path": "community/learning-with-jesus-badge/",
-   "styles": [
-    "logo"
-   ],
-   "original_vector": true,
-   "quality": "vector",
-   "details": {
-    "note": "A Catholic primary school's badge (owner 25 Nov: it's a school, not a church). Which school not confirmed yet, so not assigned.",
-    "source": "owner 25 Nov 2026; redrawn as vector"
-   },
-   "signed_off": false,
-   "files": [
-    {
-     "file": "learning-with-jesus-badge-logo.svg",
-     "variant": "logo",
-     "style": "logo",
-     "vector": true
-    },
-    {
-     "file": "learning-with-jesus-badge-logo.png",
-     "variant": "logo",
-     "style": "logo",
-     "w": 1675,
-     "h": 1981
-    },
-    {
-     "file": "learning-with-jesus-badge-logo-black.svg",
-     "variant": "logo-black",
-     "style": "logo",
-     "vector": true,
-     "made": true
-    },
-    {
-     "file": "learning-with-jesus-badge-logo-black.png",
-     "variant": "logo-black",
-     "style": "logo",
-     "w": 1675,
-     "h": 1981,
-     "made": true
-    },
-    {
-     "file": "learning-with-jesus-badge-logo-white.svg",
-     "variant": "logo-white",
-     "style": "logo",
-     "vector": true,
-     "made": true
-    },
-    {
-     "file": "learning-with-jesus-badge-logo-white.png",
-     "variant": "logo-white",
-     "style": "logo",
-     "w": 1675,
-     "h": 1981,
-     "made": true
-    }
-   ]
-  },
-  {
    "slug": "chaul-end-centre",
    "name": "Chaul End Centre (SMR-made from their sign)",
    "aliases": [
@@ -20738,7 +23168,7 @@
   },
   {
    "slug": "girlguiding",
-   "name": "Girlguiding (Bedfordshire · Luton South)",
+   "name": "Girlguiding (Bedfordshire \u00b7 Luton South)",
    "aliases": [
     "Girlguiding Luton"
    ],
@@ -24234,7 +26664,7 @@
    "original_vector": true,
    "quality": "redrawn",
    "details": {
-    "address": "The Hat Factory Arts Centre, 65–67 Bute Street, Luton",
+    "address": "The Hat Factory Arts Centre, 65\u201367 Bute Street, Luton",
     "postcode": "LU1 2EY",
     "website": "https://ngyt.co.uk"
    },
@@ -29366,7 +31796,7 @@
    "original_vector": true,
    "quality": "vector",
    "details": {
-    "address": "Bennett’s Recreation Ground, Dunstable",
+    "address": "Bennett\u2019s Recreation Ground, Dunstable",
     "postcode": "LU6 1PJ",
     "website": "https://www.dunstable.gov.uk"
    },
@@ -31298,7 +33728,7 @@
    "original_vector": true,
    "quality": "vector",
    "details": {
-    "last_event_at": "Luton Library Theatre, St George’s Square LU1 2NG"
+    "last_event_at": "Luton Library Theatre, St George\u2019s Square LU1 2NG"
    },
    "signed_off": false,
    "files": [

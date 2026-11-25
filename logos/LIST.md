@@ -1,6 +1,6 @@
 # SMR logo list
 
-375 organisations. Full details in logos.json and LIST.csv.
+413 organisations. Full details in logos.json and LIST.csv.
 
 ## businesses (38)
 - AA Carpets and Furniture
@@ -152,8 +152,9 @@
 - Wildlife Trust BCN
 - Woodland Trust
 
-## community (104)
+## community (110)
 - ABCD Luton
+- ABCD Luton (ABCD-in-Luton)
 - Active Luton
 - All Saints Church (Parish of All Saints with St Peter), Luton
 - Anne Gale School of Dance
@@ -164,10 +165,12 @@
 - Bedfordshire Hospitals NHS Foundation Trust
 - Bedfordshire Police
 - Bedfordshire Police & Crime Commissioner
+- Bury Park Community Centre (SMR-made text logo from the sign)
 - Calvary Church of God in Christ (COGIC UK)
 - Care homes (general)
-- Catholic badge: "Learning with Jesus in faith, hope and love" (church not confirmed yet)
+- Chaul End Centre (SMR-made from their sign)
 - Christchurch Bushmead
+- CVS Bedfordshire
 - Dunstable Town Council
 - East London NHS Foundation Trust
 - East of England Community Health and Care NHS Trust
@@ -218,6 +221,7 @@
 - Next Generation Youth Theatre
 - NHS Healthy Start
 - NXT GEN Pathways
+- Our Lady Help of Christians, Luton
 - Pauline Quirke Academy (PQA Luton)
 - RAF Air Cadets
 - Ramridge Baptist Church
@@ -226,13 +230,15 @@
 - Sea Cadets (Luton Unit 226, TS Keyes)
 - SPA Gymnastics Academy
 - St Anne with St Christopher, Luton
-- St Augustine's Church, Limbury
+- St Augustine's Church with Holy Trinity, Limbury
 - St Francis' Church, Luton
 - St Hugh's, Lewsey
 - St John's Methodist Church, Luton (SMR-made lockup)
 - St Johns Farley Hill (St John the Baptist)
+- St Joseph's Catholic Church, Limbury (St Josephs Parish Centre)
 - St Joseph's RC Scouts, Icknield (Luton)
-- Our Lady Help of Christians, Luton
+- St Luke's Leagrave
+- St Margaret of Scotland Catholic Church, Luton (SMR-made from their website header)
 - St Martin de Porres Catholic Church, Luton
 - St Mary's Church Luton
 - St Marys Youth
@@ -307,11 +313,15 @@
 - Zakariya Masjid
 - Zuhri Academy
 
-## schools (37)
+## schools (68)
 - Active Support Education Centre
 - Al-Hikmah (Bury Park Educational Institute)
 - Avenue Centre for Education
 - Barnfield College
+- Beech Hill Primary School
+- Beechwood Primary School
+- Bramingham Primary School
+- Bushmead Primary & Nursery School
 - Cardinal Newman Catholic School
 - Chalk Hills Academy
 - Challney High School for Boys
@@ -319,35 +329,63 @@
 - Chantry Primary Academy
 - Chiltern Academy
 - Chiltern Learning Trust
+- Crawley Green Infant School
+- Cutenhoe Hill Primary School
 - Dallow Primary School
 - Denbigh High School
 - Denbigh Primary School
 - Downside Primary School (DPS)
 - Farley Junior Academy
+- Foxdell Primary School
 - Hillborough Junior School
 - Icknield High School
+- Icknield Primary School
 - Lady Zia Wernher School
 - Lea Manor High School
+- Leagrave Primary School
 - Lealands High School
+- Lime Academy Hartwell
 - Luton Adult Learning
 - Luton Sixth Form College
+- Maidenhall Primary School
 - Mehria Primary School
 - Norton Road Primary School
-- The Education Centre by EAE (redrawn)
 - Oakwood Primary School
+- Parklea Primary School
+- Pirton Hill Primary School
 - Putteridge High School
+- Putteridge Primary School
 - Queen Elizabeth School (QES)
 - Rabia Education Trust
+- Ramridge Primary School
+- River Bank Primary School
+- Sacred Heart Primary School
 - Someries Infant School
+- Southfield Primary Academy
+- St Joseph's Catholic Primary School
+- St Margaret of Scotland Catholic Primary School
+- St Martin de Porres Primary School
+- Stopsley Community Primary School
 - Stopsley High School (SHS)
+- Tennyson Road Primary School
+- The Education Centre by EAE
 - The Ferrars Academy
+- The Linden Academy
+- The Meads Primary School
 - The Stockwood Park Academy
 - University of Bedfordshire
+- Warden Hill Infant School (SMR-made lockup with the school's shield)
+- Warden Hill Junior School (SMR-made lockup with the school's shield)
+- Waulud Primary School and Nursery
+- Wenlock CE Academy
+- Whipperley Academy Trust (Whipperley Infant Academy)
+- Whitefield Primary Academy
 - Wigmore Primary School
 - Woodlands Secondary School
 
-## smr (1)
+## smr (2)
 - SMR Digital
+- SMR Plates
 
 ## venues (44)
 - Agent Brains

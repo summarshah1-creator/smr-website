@@ -1180,10 +1180,6 @@
   "website": "https://holyghostparish.co.uk/",
   "source": "owner (logo); redrawn as vector 25 Nov 2026"
  },
- "learning-with-jesus-badge": {
-  "note": "A Catholic primary school's badge (owner 25 Nov: it's a school, not a church). Which school not confirmed yet, so not assigned.",
-  "source": "owner 25 Nov 2026; redrawn as vector"
- },
  "st-pauls-luton": {
   "address": "New Town Street, Luton",
   "postcode": "LU1 3EB",
@@ -1330,5 +1326,183 @@
   "made_by": "SMR",
   "note": "Text logo made by SMR Digital to match the centre's fascia sign; not an official logo.",
   "source": "owner (sign photo) 25 Nov 2026"
+ },
+ "beech-hill-primary": {
+  "address": "Dunstable Road, Luton",
+  "postcode": "LU4 8BW",
+  "note": "Owner upload 25 Nov 2026; background removed and cleaned.",
+  "source": "owner 25 Nov 2026"
+ },
+ "beechwood-primary": {
+  "address": "Linden Road, Luton",
+  "postcode": "LU4 9RD",
+  "note": "Owner upload 25 Nov 2026; background removed and cleaned.",
+  "source": "owner 25 Nov 2026"
+ },
+ "bramingham-primary": {
+  "address": "Freeman Avenue, Luton",
+  "postcode": "LU3 4BL",
+  "note": "Remade by SMR as a clean flat vector from a blurry upload (same design, colours and wording).",
+  "source": "owner 25 Nov 2026"
+ },
+ "bushmead-primary": {
+  "address": "Luton",
+  "postcode": "LU2 7YT",
+  "note": "Owner upload 25 Nov 2026; background removed and cleaned.",
+  "source": "owner 25 Nov 2026"
+ },
+ "crawley-green-infant": {
+  "address": "Crawley Green, Luton",
+  "postcode": "LU2 0RW",
+  "note": "Owner upload 25 Nov 2026; background removed and cleaned.",
+  "source": "owner 25 Nov 2026"
+ },
+ "cutenhoe-hill-primary": {
+  "address": "Cutenhoe Road, Luton",
+  "postcode": "LU1 3NJ",
+  "note": "Owner upload 25 Nov 2026; background removed and cleaned.",
+  "source": "owner 25 Nov 2026"
+ },
+ "foxdell-primary": {
+  "address": "Dallow Road, Luton",
+  "postcode": "LU1 1UP",
+  "note": "Owner upload 25 Nov 2026; background removed and cleaned.",
+  "source": "owner 25 Nov 2026"
+ },
+ "icknield-primary": {
+  "address": "Birdsfoot Lane, Luton",
+  "postcode": "LU3 2JB",
+  "note": "Owner upload 25 Nov 2026; background removed and cleaned.",
+  "source": "owner 25 Nov 2026"
+ },
+ "leagrave-primary": {
+  "address": "Strangers Way, Luton",
+  "postcode": "LU4 9ND",
+  "note": "Owner upload 25 Nov 2026; background removed and cleaned.",
+  "source": "owner 25 Nov 2026"
+ },
+ "lime-academy-hartwell": {
+  "address": "York Street, Luton",
+  "postcode": "LU2 0EZ",
+  "note": "Owner upload 25 Nov 2026; background removed and cleaned.",
+  "source": "owner 25 Nov 2026"
+ },
+ "maidenhall-primary": {
+  "address": "Newark Road, Luton",
+  "postcode": "LU4 8LD",
+  "note": "Supplied as white text for dark backgrounds; the light version (dark grey text) was made by SMR.",
+  "source": "owner 25 Nov 2026"
+ },
+ "parklea-primary": {
+  "address": "Cranbrook Drive, Luton",
+  "postcode": "LU3 3EW",
+  "note": "Owner upload 25 Nov 2026; background removed and cleaned.",
+  "source": "owner 25 Nov 2026"
+ },
+ "pirton-hill-primary": {
+  "address": "Butely Road, Luton",
+  "postcode": "LU4 9EX",
+  "note": "Owner upload 25 Nov 2026; background removed and cleaned.",
+  "source": "owner 25 Nov 2026"
+ },
+ "putteridge-primary": {
+  "address": "Putteridge Road, Luton",
+  "postcode": "LU2 8HJ",
+  "note": "Owner upload 25 Nov 2026; background removed and cleaned.",
+  "source": "owner 25 Nov 2026"
+ },
+ "ramridge-primary": {
+  "address": "Turners Road North, Luton",
+  "postcode": "LU2 9AH",
+  "note": "Supplied with white \"Primary School\" for dark backgrounds; the light version (purple text) was made by SMR.",
+  "source": "owner 25 Nov 2026"
+ },
+ "river-bank-primary": {
+  "address": "Bath Road, Luton",
+  "postcode": "LU3 1ES",
+  "note": "Owner upload 25 Nov 2026; background removed and cleaned.",
+  "source": "owner 25 Nov 2026"
+ },
+ "sacred-heart-primary": {
+  "address": "Langford Drive, Luton",
+  "postcode": "LU2 9AJ",
+  "note": "Owner upload 25 Nov 2026; background removed and cleaned.",
+  "source": "owner 25 Nov 2026"
+ },
+ "southfield-primary": {
+  "address": "Pastures Way, Luton",
+  "postcode": "LU4 0PE",
+  "note": "Owner upload 25 Nov 2026; background removed and cleaned.",
+  "source": "owner 25 Nov 2026"
+ },
+ "st-josephs-primary": {
+  "address": "Gardenia Avenue, Luton",
+  "postcode": "LU3 2NS",
+  "note": "Owner upload 25 Nov 2026; background removed and cleaned.",
+  "source": "owner 25 Nov 2026"
+ },
+ "st-martin-de-porres-primary": {
+  "address": "Pastures Way, Luton",
+  "postcode": "LU4 0PF",
+  "note": "Owner confirmed 25 Nov 2026. Source is a small image (about 130px), so it is soft when enlarged.",
+  "source": "owner 25 Nov 2026"
+ },
+ "st-margaret-of-scotland-primary": {
+  "address": "Rotheram Avenue, Luton",
+  "postcode": "LU1 5PP",
+  "note": "Badge \"Learning with Jesus in faith, hope and love\"; owner confirmed 25 Nov 2026 it is St Margaret of Scotland Catholic Primary School.",
+  "source": "owner 25 Nov 2026; redrawn as vector"
+ },
+ "warden-hill-infant": {
+  "address": "Warden Hill, Luton",
+  "note": "Lockup made by SMR (shield + name); the shield is the school badge the owner sent 25 Nov 2026.",
+  "source": "owner 25 Nov 2026",
+  "made_by": "SMR"
+ },
+ "warden-hill-junior": {
+  "address": "Warden Hill, Luton",
+  "note": "Lockup made by SMR (shield + name); the shield is the school badge the owner sent 25 Nov 2026.",
+  "source": "owner 25 Nov 2026",
+  "made_by": "SMR"
+ },
+ "the-meads-primary": {
+  "address": "Luton",
+  "note": "Supplied with white/silver text for dark backgrounds; light version (dark text) made by SMR.",
+  "source": "owner 25 Nov 2026"
+ },
+ "the-linden-academy": {
+  "address": "Luton",
+  "note": "Black background and grey shapes removed; light (dark text) and on-dark (white text) versions made by SMR.",
+  "source": "owner 25 Nov 2026"
+ },
+ "tennyson-road-primary": {
+  "address": "Luton",
+  "note": "Supplied with white \"Primary School\"; light version recoloured blue-grey by SMR.",
+  "source": "owner 25 Nov 2026"
+ },
+ "stopsley-community-primary": {
+  "address": "Luton",
+  "note": "Navy box removed; navy version for light backgrounds and white version for dark, made by SMR.",
+  "source": "owner 25 Nov 2026"
+ },
+ "whitefield-primary": {
+  "address": "Luton",
+  "note": "Owner upload 25 Nov 2026; background removed.",
+  "source": "owner 25 Nov 2026"
+ },
+ "whipperley-academy-trust": {
+  "address": "Luton",
+  "note": "This is the Whipperley Academy Trust's logo, used for Whipperley Infant Academy. Black background removed; on-light version with darker gold text made by SMR (the original gold text needs a dark background).",
+  "source": "owner 25 Nov 2026"
+ },
+ "wenlock-ce-academy": {
+  "address": "Luton",
+  "note": "Owner upload 25 Nov 2026; background removed.",
+  "source": "owner 25 Nov 2026"
+ },
+ "waulud-primary": {
+  "address": "Luton",
+  "note": "Owner upload 25 Nov 2026.",
+  "source": "owner 25 Nov 2026"
  }
 }

@@ -46,6 +46,10 @@ active-support,Active Support Education Centre,schools,ASEC,"logo, logo-white, m
 al-hikmah,Al-Hikmah (Bury Park Educational Institute),schools,Al Hikmah; Bury Park Educational Institute,logo,,,,logos/schools/al-hikmah/
 avenue-centre,Avenue Centre for Education,schools,Avenue,"logo, icon","Cutenhoe Road, Luton",LU1 3NJ,,logos/schools/avenue-centre/
 barnfield-college,Barnfield College,schools,,"logo, logo-white, icon, lockup, lockup-stacked",Luton,LU2 7BF,https://www.barnfield.ac.uk,logos/schools/barnfield-college/
+beech-hill-primary,Beech Hill Primary School,schools,Beech Hill; Beech Hill Primary,"logo, icon","Dunstable Road, Luton",LU4 8BW,,logos/schools/beech-hill-primary/
+beechwood-primary,Beechwood Primary School,schools,Beechwood; Beechwood Primary,logo,"Linden Road, Luton",LU4 9RD,,logos/schools/beechwood-primary/
+bramingham-primary,Bramingham Primary School,schools,Bramingham; Bramingham Primary,"logo, logo-white, logo-black","Freeman Avenue, Luton",LU3 4BL,,logos/schools/bramingham-primary/
+bushmead-primary,Bushmead Primary & Nursery School,schools,Bushmead Primary School; Bushmead Primary; Bushmead Primary and Nursery School,logo,Luton,LU2 7YT,,logos/schools/bushmead-primary/
 cardinal-newman,Cardinal Newman Catholic School,schools,,"icon, lockup, lockup-stacked","Warden Hill Road, Luton",LU2 7AE,https://www.cardinalnewmanschool.net,logos/schools/cardinal-newman/
 chalk-hills,Chalk Hills Academy,schools,,"icon, lockup, lockup-stacked","Leagrave High Street, Luton",LU4 0NE,https://www.thechalkhillsacademy.co.uk,logos/schools/chalk-hills/
 challney-boys,Challney High School for Boys,schools,,"icon, lockup, lockup-stacked","Stoneygate Road, Luton",LU4 9TJ,http://www.challneyboys.co.uk,logos/schools/challney-boys/
@@ -53,30 +57,57 @@ challney-girls,Challney High School for Girls,schools,,"icon, lockup, lockup-sta
 chantry,Chantry Primary Academy,schools,,icon,"Tomlinson Avenue, Luton",LU4 0QP,https://www.chantryprimaryacademy.com,logos/schools/chantry/
 chiltern-academy,Chiltern Academy,schools,,"logo, logo-white, crest","Gipsy Lane, Luton",LU1 3GF,,logos/schools/chiltern-academy/
 chiltern-learning-trust,Chiltern Learning Trust,schools,CLT,"logo, logo-white, icon","Denbigh High School, Alexandra Avenue, Luton (registered office)",LU3 1HE,https://www.chilternlearningtrust.org,logos/schools/chiltern-learning-trust/
+crawley-green-infant,Crawley Green Infant School,schools,Crawley Green; Crawley Green Infants,logo,"Crawley Green, Luton",LU2 0RW,,logos/schools/crawley-green-infant/
+cutenhoe-hill-primary,Cutenhoe Hill Primary School,schools,Cutenhoe Hill; Cutenhoe Hill Primary,logo,"Cutenhoe Road, Luton",LU1 3NJ,,logos/schools/cutenhoe-hill-primary/
 dallow,Dallow Primary School,schools,,"icon, lockup, lockup-stacked","Dallow Road, Luton",LU1 1LZ,https://www.dallowprimary.net,logos/schools/dallow/
 denbigh,Denbigh High School,schools,,"icon, icon-white, icon-black, lockup, lockup-stacked","Alexandra Avenue, Luton",LU3 1HE,https://www.denbighhigh.co.uk,logos/schools/denbigh/
 denbigh-primary,Denbigh Primary School,schools,Denbigh Primary,"logo, icon",,,,logos/schools/denbigh-primary/
 downside,Downside Primary School (DPS),schools,DPS,"icon, lockup, lockup-stacked","Chaul End Lane, Luton",LU4 8EZ,,logos/schools/downside/
 farley-junior,Farley Junior Academy,schools,Farley,"logo, tagline, lockup, lockup-stacked","Northdrift Way, Luton",LU1 5JF,,logos/schools/farley-junior/
+foxdell-primary,Foxdell Primary School,schools,Foxdell; Foxdell Primary,logo,"Dallow Road, Luton",LU1 1UP,,logos/schools/foxdell-primary/
 hillborough,Hillborough Junior School,schools,,"icon, lockup, lockup-stacked","Hillborough Road, Luton",LU1 5EZ,,logos/schools/hillborough/
 icknield,Icknield High School,schools,Icknield,"logo, icon","Riddy Lane, Luton",LU3 2AH,https://www.icknield.beds.sch.uk,logos/schools/icknield/
+icknield-primary,Icknield Primary School,schools,Icknield Primary; Icknield Primary School Luton,logo,"Birdsfoot Lane, Luton",LU3 2JB,,logos/schools/icknield-primary/
 lady-zia-wernher,Lady Zia Wernher School,schools,,logo,"Ashcroft Road, Stopsley, Luton",LU2 9AY,,logos/schools/lady-zia-wernher/
 lea-manor,Lea Manor High School,schools,,"icon, lockup, lockup-stacked","Northwell Drive, Luton",LU3 3TL,,logos/schools/lea-manor/
+leagrave-primary,Leagrave Primary School,schools,Leagrave Primary,logo,"Strangers Way, Luton",LU4 9ND,,logos/schools/leagrave-primary/
 lealands,Lealands High School,schools,,"icon, lockup, lockup-stacked","Sundon Park Road, Luton",LU3 3AL,,logos/schools/lealands/
+lime-academy-hartwell,Lime Academy Hartwell,schools,Hartwell; Lime Hartwell,logo,"York Street, Luton",LU2 0EZ,,logos/schools/lime-academy-hartwell/
 luton-adult-learning,Luton Adult Learning,schools,Luton Adult & Community Learning; LACL; Luton ACL,logo,,,,logos/schools/luton-adult-learning/
 luton-sixth-form,Luton Sixth Form College,schools,LSFC,"logo, logo-white, icon","Bradgers Hill Road, Luton",LU2 7EW,https://www.lutonsfc.ac.uk,logos/schools/luton-sixth-form/
+maidenhall-primary,Maidenhall Primary School,schools,Maidenhall; Maidenhall Primary,"logo, logo-white","Newark Road, Luton",LU4 8LD,,logos/schools/maidenhall-primary/
 mehria,Mehria Primary School,schools,Mehria,logo,,,,logos/schools/mehria/
 norton-road,Norton Road Primary School,schools,,"logo, logo-white, crest, icon","Norton Road, Luton",LU3 2NX,,logos/schools/norton-road/
 oakwood,Oakwood Primary School,schools,,logo,,,,logos/schools/oakwood/
+parklea-primary,Parklea Primary School,schools,Parklea; Parklea Primary,"logo, icon","Cranbrook Drive, Luton",LU3 3EW,,logos/schools/parklea-primary/
+pirton-hill-primary,Pirton Hill Primary School,schools,Pirton Hill; Pirton Hill Primary,"logo, icon","Butely Road, Luton",LU4 9EX,,logos/schools/pirton-hill-primary/
 putteridge,Putteridge High School,schools,,"icon, lockup, lockup-stacked","Putteridge Road, Luton",LU2 8HJ,,logos/schools/putteridge/
+putteridge-primary,Putteridge Primary School,schools,Putteridge Primary,logo,"Putteridge Road, Luton",LU2 8HJ,,logos/schools/putteridge-primary/
 qes,Queen Elizabeth School (QES),schools,QES,"icon, lockup, lockup-stacked","Crawley Green Road, Luton",LU2 9AG,,logos/schools/qes/
 rabia,Rabia Education Trust,schools,Rabia Girls' School; Rabia Boys' School; Madrasa Islamia Primary; Rabia,logo,"12–16 Portland Road, Luton",LU4 8AX,,logos/schools/rabia/
+ramridge-primary,Ramridge Primary School,schools,Ramridge Primary; Ramridge,"logo, logo-on-dark, icon","Turners Road North, Luton",LU2 9AH,,logos/schools/ramridge-primary/
+river-bank-primary,River Bank Primary School,schools,River Bank; River Bank Primary,"logo, icon","Bath Road, Luton",LU3 1ES,,logos/schools/river-bank-primary/
+sacred-heart-primary,Sacred Heart Primary School,schools,Sacred Heart Primary,logo,"Langford Drive, Luton",LU2 9AJ,,logos/schools/sacred-heart-primary/
 someries-infant,Someries Infant School,schools,Someries; Someries Infants,"logo, icon",,,,logos/schools/someries-infant/
+southfield-primary,Southfield Primary Academy,schools,Southfield; Southfield Primary,logo,"Pastures Way, Luton",LU4 0PE,,logos/schools/southfield-primary/
+st-josephs-primary,St Joseph's Catholic Primary School,schools,St Joseph's Primary; St Josephs Catholic Primary School,logo,"Gardenia Avenue, Luton",LU3 2NS,,logos/schools/st-josephs-primary/
+st-margaret-of-scotland-primary,St Margaret of Scotland Catholic Primary School,schools,"St Margaret of Scotland Primary; St Margaret of Scotland Catholic Primary; Learning with Jesus in faith, hope and love","logo, logo-black, logo-white","Rotheram Avenue, Luton",LU1 5PP,,logos/schools/st-margaret-of-scotland-primary/
+st-martin-de-porres-primary,St Martin de Porres Primary School,schools,St Martin de Porres Catholic Primary; Working together in the light of the Lord,logo,"Pastures Way, Luton",LU4 0PF,,logos/schools/st-martin-de-porres-primary/
+stopsley-community-primary,Stopsley Community Primary School,schools,Stopsley Community Primary; Stopsley Primary,"logo, logo-white, icon, icon-white",Luton,,,logos/schools/stopsley-community-primary/
 stopsley,Stopsley High School (SHS),schools,SHS,"icon, lockup, lockup-stacked","St Thomas' Road, Luton",LU2 7UX,,logos/schools/stopsley/
+tennyson-road-primary,Tennyson Road Primary School,schools,Tennyson Road; Tennyson Road Primary,logo,Luton,,,logos/schools/tennyson-road-primary/
 the-education-centre,The Education Centre by EAE,schools,EAE; EAE Centre; The Education Centre; Education Centre,logo; icon,,,,logos/schools/the-education-centre/
 ferrars-academy,The Ferrars Academy,schools,Ferrars; Ferrars Academy,logo,,,,logos/schools/ferrars-academy/
+the-linden-academy,The Linden Academy,schools,The Linden Academy; Linden Academy,"logo, logo-on-dark, icon",Luton,,,logos/schools/the-linden-academy/
+the-meads-primary,The Meads Primary School,schools,The Meads; The Meads Primary,"logo, logo-on-dark, icon",Luton,,,logos/schools/the-meads-primary/
 stockwood-park,The Stockwood Park Academy,schools,,"icon, lockup, lockup-stacked","Rotheram Avenue, Luton",LU1 5PP,,logos/schools/stockwood-park/
 uni-beds,University of Bedfordshire,schools,UoB,"logo, icon","University of Bedfordshire, Luton campus",LU1 3JU,,logos/schools/uni-beds/
+warden-hill-infant,Warden Hill Infant School (SMR-made lockup with the school's shield),schools,Warden Hill Infant School; Warden Hill Infants,"logo, logo-white, icon","Warden Hill, Luton",,,logos/schools/warden-hill-infant/
+warden-hill-junior,Warden Hill Junior School (SMR-made lockup with the school's shield),schools,Warden Hill Junior School; Warden Hill Juniors,"logo, logo-white, icon","Warden Hill, Luton",,,logos/schools/warden-hill-junior/
+waulud-primary,Waulud Primary School and Nursery,schools,Waulud Primary School; Waulud; Waulud Primary,"logo, icon",Luton,,,logos/schools/waulud-primary/
+wenlock-ce-academy,Wenlock CE Academy,schools,Wenlock; Wenlock CE Academy; Wenlock Academy,logo,Luton,,,logos/schools/wenlock-ce-academy/
+whipperley-academy-trust,Whipperley Academy Trust (Whipperley Infant Academy),schools,Whipperley Infant Academy; Whipperley Academy Trust; Whipperley,"logo, logo-on-dark",Luton,,,logos/schools/whipperley-academy-trust/
+whitefield-primary,Whitefield Primary Academy,schools,Whitefield; Whitefield Primary,logo,Luton,,,logos/schools/whitefield-primary/
 wigmore,Wigmore Primary School,schools,,"icon, lockup, lockup-stacked","Twyford Drive, Luton",LU2 9TB,,logos/schools/wigmore/
 woodlands,Woodlands Secondary School,schools,,"icon, lockup, lockup-stacked","Northwell Drive, Luton",LU3 3SP,http://www.woodlands.luton.sch.uk,logos/schools/woodlands/
 action-for-humanity,Action For Humanity,charities,,logo,,,,logos/charities/action-for-humanity/
@@ -179,6 +210,7 @@ utilita-giving,Utilita Giving,charities,,logo,,,,logos/charities/utilita-giving/
 wildlife-trust,Wildlife Trust BCN,charities,"The Wildlife Trust for Beds, Cambs & Northants; Wildlife Trust; BCN Wildlife Trust","logo, roundel, icon",,,https://www.wildlifebcn.org,logos/charities/wildlife-trust/
 woodland-trust,Woodland Trust,charities,,"logo, icon",Between Bramingham and Marsh Farm,LU3 2RU,https://www.woodlandtrust.org.uk,logos/charities/woodland-trust/
 abcd-luton,ABCD Luton,community,ABCD; Asset Based Community Development Luton,"logo, logo-clear, logo-white, logo-black",,,,logos/community/abcd-luton/
+abcd-in-luton,ABCD Luton (ABCD-in-Luton),community,ABCD-in-Luton; ABCD Luton; ABCD in Luton,"logo, icon",,,https://abcd-in-luton.org,logos/community/abcd-in-luton/
 active-luton,Active Luton,community,,logo,Butterfield Green Road,LU2 8DD,https://activeluton.co.uk,logos/community/active-luton/
 all-saints-luton,"All Saints Church (Parish of All Saints with St Peter), Luton",community,All Saints Church; All Saints Church (Bury Park); All Saints (Parish of All Saints with St Peter); Parish of All Saints with St Peter; St Peter's (with All Saints); St Peter's Luton,logo,"Shaftesbury Road, Luton (All Saints) and Harefield Road, Luton (St Peter)",LU4 8AH,http://www.allsaintpeter.org.uk,logos/community/all-saints-luton/
 anne-gale-school-of-dance,Anne Gale School of Dance,community,Anne Gale; Anne Gale Dance,"logo, logo-on-dark, logo-white, logo-black, icon",2a Downs Road,LU1 1QR,https://www.annegale.co.uk,logos/community/anne-gale-school-of-dance/
@@ -189,10 +221,12 @@ beds-fire,Bedfordshire Fire & Rescue Service,community,Beds Fire; BFRS; Bedfords
 beds-hospitals,Bedfordshire Hospitals NHS Foundation Trust,community,Bedfordshire Hospitals; NHS,"logo, nhs, nhs-white, nhs-black",,,,logos/community/beds-hospitals/
 beds-police,Bedfordshire Police,community,,crest,,,,logos/community/beds-police/
 beds-pcc,Bedfordshire Police & Crime Commissioner,community,PCC,logo,,,,logos/community/beds-pcc/
+bury-park-community-centre,Bury Park Community Centre (SMR-made text logo from the sign),community,Bury Park Community Centre; Bury Park Centre,"logo, icon","161-161b Dunstable Road, Luton",LU1 1BW,,logos/community/bury-park-community-centre/
 cogic-calvary,Calvary Church of God in Christ (COGIC UK),community,COGIC UK; Calvary Church; BACCA,logo,,,,logos/community/cogic-calvary/
 care-homes,Care homes (general),community,Care home; Nursing home; Residential care,"logo, logo-white, icon",,,,logos/community/care-homes/
-learning-with-jesus-badge,"Catholic school badge: ""Learning with Jesus in faith, hope and love"" (school not confirmed yet)",community,,logo,,,,logos/community/learning-with-jesus-badge/
+chaul-end-centre,Chaul End Centre (SMR-made from their sign),community,Chaul End Community Centre; Chaul End Centre; Chaul End,"logo, icon","Delphine Close, Luton",LU1 5QX,,logos/community/chaul-end-centre/
 christchurch-bushmead,Christchurch Bushmead,community,Christchurch Bushmead; Christ Church Bushmead,"logo, icon","Hancock Drive, Bushmead, Luton",LU2 7SF,https://www.achurchnearyou.com/church/7754/,logos/community/christchurch-bushmead/
+cvs-bedfordshire,CVS Bedfordshire,community,CVS Bedfordshire; CVS Beds; CVS Luton; Community & Voluntary Service Bedfordshire,logo,,,,logos/community/cvs-bedfordshire/
 dunstable-tc,Dunstable Town Council,community,,"logo, icon",Dunstable town centre,LU5 4RB,https://www.dunstable.gov.uk,logos/community/dunstable-tc/
 elft,East London NHS Foundation Trust,community,ELFT; NHS,"logo, logo-white, logo-black, nhs, nhs-white, nhs-black",,,https://www.elft.nhs.uk,logos/community/elft/
 eechc,East of England Community Health and Care NHS Trust,community,EEC; EECHC; NHS; Cambridgeshire Community Services; CCS,"logo, logo-white, logo-black, nhs, nhs-white, nhs-black","Units 7-8, Meadow Lane, St Ives, Cambridgeshire",PE27 4LG,https://eastofenglandcommunityhealthandcare.nhs.uk,logos/community/eechc/
@@ -243,6 +277,7 @@ newland-church,"Newland Church (URC / Methodist, Luton & Dunstable)",community,N
 ngyt,Next Generation Youth Theatre,community,NGYT,"logo, logo-white, icon","The Hat Factory Arts Centre, 65–67 Bute Street, Luton",LU1 2EY,https://ngyt.co.uk,logos/community/ngyt/
 nhs-healthy-start,NHS Healthy Start,community,Healthy Start,logo,,,,logos/community/nhs-healthy-start/
 nxt-gen-pathways,NXT GEN Pathways,community,,logo,,,,logos/community/nxt-gen-pathways/
+our-lady-help-of-christians-luton,"Our Lady Help of Christians, Luton",community,St Margaret of Scotland; St Margaret of Scotland Catholic Church; St Margaret's Luton; Sub Tuum Praesidium,logo,"22a Bolingbroke Road, Luton",LU1 5JD,https://stmargaretsparishl.wixsite.com/home,logos/community/our-lady-help-of-christians-luton/
 pqa,Pauline Quirke Academy (PQA Luton),community,PQA; PQA Luton; Pauline Quirke Academy of Performing Arts,"logo, logo-on-dark, logo-tile-full","Beech Hill Community Primary School, Dunstable Road",LU4 8BW,https://pqacademy.com/academies/luton,logos/community/pqa/
 air-cadets,RAF Air Cadets,community,Air Cadets; RAF Air Cadets; 10F Luton Airport Squadron; Air Training Corps,"logo, icon",Cutenhoe Learning Centre,LU1 3NJ,https://www.raf.mod.uk/aircadets/,logos/community/air-cadets/
 ramridge-baptist,Ramridge Baptist Church,community,Ramridge; Tin Town,logo,,,,logos/community/ramridge-baptist/
@@ -256,8 +291,10 @@ st-francis-luton,"St Francis' Church, Luton",community,St Francis' Church; St Fr
 st-hughs-lewsey,"St Hugh's, Lewsey",community,"St Hugh's, Lewsey; St Hugh's Church; St Hughs Lewsey","logo, icon","Leagrave High Street, Luton",LU4 0ND,http://www.sthughs.org.uk,logos/community/st-hughs-lewsey/
 st-johns-methodist-luton,"St John's Methodist Church, Luton (SMR-made lockup)",community,St John's Methodist Church; St John's Methodist,"logo, icon","Birdsfoot Lane, off Barton Road, Luton",LU3 2DN,,logos/community/st-johns-methodist-luton/
 st-johns-farley-hill,St Johns Farley Hill (St John the Baptist),community,"St John the Baptist, Farley Hill; St Johns Farley Hill; St John's Farley Hill",logo,"Rotheram Avenue, Farley Hill, Luton",LU1 5PP,http://www.stjohn-luton.co.uk/,logos/community/st-johns-farley-hill/
+st-josephs-limbury,"St Joseph's Catholic Church, Limbury (St Josephs Parish Centre)",community,St Joseph's Catholic Church; St Josephs Parish Centre; St Joseph's Parish Centre; St Joseph's Luton; St Joseph's RC Church Luton,"logo, icon","68 Gardenia Avenue, Limbury, Luton",LU3 2NS,https://www.stjosephschurchluton.org.uk/,logos/community/st-josephs-limbury/
 scouts-st-josephs,"St Joseph's RC Scouts, Icknield (Luton)",community,Scouts; St Joseph's Scouts; Icknield Scouts,"logo, logo-white, logo-black, icon, icon-white, icon-black",,,,logos/community/scouts-st-josephs/
-our-lady-help-of-christians-luton,"Our Lady Help of Christians, Luton",community,St Margaret of Scotland; St Margaret of Scotland Catholic Church; St Margaret's Luton; Sub Tuum Praesidium,logo,"22a Bolingbroke Road, Luton",LU1 5JD,https://stmargaretsparishl.wixsite.com/home,logos/community/our-lady-help-of-christians-luton/
+st-lukes-leagrave,St Luke's Leagrave,community,"St Luke's, Leagrave; St Luke's Church Leagrave; St Lukes Leagrave","logo, logo-short, icon","Leagrave High Street, Leagrave, Luton",,https://www.stlukesleagrave.org,logos/community/st-lukes-leagrave/
+st-margaret-of-scotland-luton,"St Margaret of Scotland Catholic Church, Luton (SMR-made from their website header)",community,St Margaret of Scotland; St Margaret of Scotland Catholic Church; St Margaret's Luton,"logo, logo-stacked, icon","22a Bolingbroke Road, Luton",LU1 5JD,https://stmargaretsparishl.wixsite.com/home,logos/community/st-margaret-of-scotland-luton/
 st-martin-de-porres-luton,"St Martin de Porres Catholic Church, Luton",community,St Martin de Porres; St Martin de Porres Catholic Church,"logo, icon","366 Leagrave High Street, Luton",LU4 0NG,https://stmartindeporreschurch.org.uk/,logos/community/st-martin-de-porres-luton/
 st-marys,St Mary's Church Luton,community,,"logo, lockup, lockup-stacked",,,https://www.stmarysluton.org,logos/community/st-marys/
 st-marys-youth,St Marys Youth,community,St Mary's Youth; St Mary's Church youth; Impact Youth Group,logo,,,https://www.stmarysluton.org,logos/community/st-marys-youth/
@@ -282,13 +319,6 @@ we-are-marsh-farm,We Are Marsh Farm,community,Marsh Farm; WAMF,logo,,,,logos/com
 luton-wicketz,Wicketz (Lord's Taverners),community,Luton Wicketz; Wicketz cricket,logo,,,https://www.cricketeast.co.uk/page/diverse-communities/luton-wicketz/lords-taverners-wicketz-programme-14024/,logos/community/luton-wicketz/
 your-wellbeing-beds,Your Wellbeing Bedfordshire,community,Your Wellbeing; YWB,"logo, logo-white, logo-black, icon, icon-white, icon-black",,,,logos/community/your-wellbeing-beds/
 youthscape,Youthscape,community,,logo,"74 Bute Street, Luton",LU1 2EY,https://www.youthscape.co.uk,logos/community/youthscape/
-st-josephs-limbury,"St Joseph's Catholic Church, Limbury (St Josephs Parish Centre)",community,St Joseph's Catholic Church; St Josephs Parish Centre; St Joseph's Parish Centre; St Joseph's Luton; St Joseph's RC Church Luton,"logo, icon","68 Gardenia Avenue, Limbury, Luton",LU3 2NS,https://www.stjosephschurchluton.org.uk/,logos/community/st-josephs-limbury/
-st-lukes-leagrave,St Luke's Leagrave,community,"St Luke's, Leagrave; St Luke's Church Leagrave; St Lukes Leagrave","logo, logo-short, icon","Leagrave High Street, Leagrave, Luton",,https://www.stlukesleagrave.org,logos/community/st-lukes-leagrave/
-st-margaret-of-scotland-luton,"St Margaret of Scotland Catholic Church, Luton (SMR-made from their website header)",community,St Margaret of Scotland; St Margaret of Scotland Catholic Church; St Margaret's Luton,"logo, logo-stacked, icon","22a Bolingbroke Road, Luton",LU1 5JD,https://stmargaretsparishl.wixsite.com/home,logos/community/st-margaret-of-scotland-luton/
-cvs-bedfordshire,CVS Bedfordshire,community,CVS Bedfordshire; CVS Beds; CVS Luton; Community & Voluntary Service Bedfordshire,logo,,,,logos/community/cvs-bedfordshire/
-chaul-end-centre,Chaul End Centre (SMR-made from their sign),community,Chaul End Community Centre; Chaul End Centre; Chaul End,"logo, icon","Delphine Close, Luton",LU1 5QX,,logos/community/chaul-end-centre/
-abcd-in-luton,ABCD Luton (ABCD-in-Luton),community,ABCD-in-Luton; ABCD Luton; ABCD in Luton,"logo, icon",,,https://abcd-in-luton.org,logos/community/abcd-in-luton/
-bury-park-community-centre,Bury Park Community Centre (SMR-made text logo from the sign),community,Bury Park Community Centre; Bury Park Centre,"logo, icon","161-161b Dunstable Road, Luton",LU1 1BW,,logos/community/bury-park-community-centre/
 one-eid,1 Eid,campaigns,One Eid,"logo, icon",,,,logos/campaigns/one-eid/
 jummah-winter-campaign,Jummah Winter Campaign,campaigns,JWA; Jummah Winter Appeal,"logo, logo-white, logo-compact, icon",,,,logos/campaigns/jummah-winter-campaign/
 lets-eat-together,Let's Eat Together,campaigns,,wordmark,,,https://lutonfoodbank.org.uk/letseattogether,logos/campaigns/lets-eat-together/
