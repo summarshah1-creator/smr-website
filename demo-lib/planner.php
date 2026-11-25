@@ -333,7 +333,20 @@ function pl_seed(PDO $pdo): void {
 }
 
 /* One-off tasks added from chat (24 Nov afternoon): setup jobs for the jobs/payments + email AI build. */
+/* One-off reminders added from chat (25 Nov): supplier credits not to forget. */
+function pl_seed3(PDO $pdo): void {
+    if ($pdo->query("SELECT v FROM pl_kv WHERE k = 'seed3'")->fetchColumn()) return;
+    $pdo->prepare('INSERT OR REPLACE INTO pl_kv (k, v) VALUES (?, ?)')->execute(['seed3', (string) time()]);
+    $now = time();
+    $ins = $pdo->prepare('INSERT INTO pl_items (kind, title, person, platform, area, wait, what, pri, due, due_t, notes, owes, grp, created, updated) VALUES (\'task\',?,?,?,?,?,?,?,?,?,?,0,?,?,?)');
+    foreach ([
+        ['Chase credit / complaint reply on a previous job', 'Vinyl Banners Printing', 'vinylbannersprinting.co.uk', 'graphics', 'them', 'reply', 1, '2026-11-25 17:00', 0, 'You think you have credit owed, or a complaint you made that they still haven\'t answered. Check your emails with them and chase it.', 'Supplier credits'],
+        ['Use your £15 instantprint credit (late Kaya menus)', 'instantprint', 'instantprint.co.uk', 'graphics', 'me', 'order', 1, '2026-11-25 17:00', 0, '£15 credit on your instantprint account because the Kaya menus arrived late. Use it on the next order.', 'Supplier credits'],
+    ] as $i) $ins->execute([$i[0], $i[1], $i[2], $i[3], $i[4], $i[5], $i[6], (int) strtotime($i[7]), $i[8], $i[9], $i[10], $now, $now]);
+}
+
 function pl_seed2(PDO $pdo): void {
+    pl_seed3($pdo);
     if ($pdo->query("SELECT v FROM pl_kv WHERE k = 'seed2'")->fetchColumn()) return;
     $pdo->prepare('INSERT OR REPLACE INTO pl_kv (k, v) VALUES (?, ?)')->execute(['seed2', (string) time()]);
     $now = time();
