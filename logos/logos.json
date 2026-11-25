@@ -10322,37 +10322,43 @@
    "styles": [
     "logo"
    ],
-   "original_vector": false,
-   "quality": "low-res",
+   "original_vector": true,
+   "quality": "vector",
    "details": {
     "address": "Gardenia Avenue, Luton",
     "postcode": "LU3 2NS",
-    "note": "Owner upload 25 Nov 2026; background removed and cleaned.",
+    "note": "Redrawn as a vector by SMR from a small (266px) image, 25 Nov 2026.",
     "source": "owner 25 Nov 2026"
    },
    "signed_off": false,
    "files": [
     {
+     "file": "st-josephs-primary-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
      "file": "st-josephs-primary-logo.png",
      "variant": "logo",
      "style": "logo",
-     "w": 252,
-     "h": 266
+     "w": 1510,
+     "h": 1595
     },
     {
      "file": "st-josephs-primary-logo-black.png",
      "variant": "logo-black",
      "style": "logo",
-     "w": 252,
-     "h": 266,
+     "w": 1510,
+     "h": 1595,
      "made": true
     },
     {
      "file": "st-josephs-primary-logo-white.png",
      "variant": "logo-white",
      "style": "logo",
-     "w": 252,
-     "h": 266,
+     "w": 1510,
+     "h": 1595,
      "made": true
     },
     {
@@ -10456,7 +10462,7 @@
    "details": {
     "address": "Pastures Way, Luton",
     "postcode": "LU4 0PF",
-    "note": "Owner confirmed 25 Nov 2026. Source is a small image (about 130px), so it is soft when enlarged.",
+    "note": "Only a small (306px) image exists; the hand-drawn children do not survive auto-tracing. Ask the school for the original file for an HD version.",
     "source": "owner 25 Nov 2026"
    },
    "signed_off": false,

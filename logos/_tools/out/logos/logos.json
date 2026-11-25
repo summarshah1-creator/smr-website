@@ -8772,6 +8772,74 @@
    ]
   },
   {
+   "slug": "st-josephs-primary",
+   "name": "St Joseph's Catholic Primary School",
+   "aliases": [
+    "St Joseph's Primary",
+    "St Josephs Catholic Primary School"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/st-josephs-primary/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "address": "Gardenia Avenue, Luton",
+    "postcode": "LU3 2NS",
+    "note": "Owner upload 25 Nov 2026; background removed and cleaned.",
+    "source": "owner 25 Nov 2026"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "st-josephs-primary-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "st-josephs-primary-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1510,
+     "h": 1595
+    },
+    {
+     "file": "st-josephs-primary-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1510,
+     "h": 1595,
+     "made": true
+    },
+    {
+     "file": "st-josephs-primary-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1510,
+     "h": 1595,
+     "made": true
+    },
+    {
+     "file": "st-josephs-primary-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "st-josephs-primary-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
    "slug": "stopsley",
    "name": "Stopsley High School (SHS)",
    "aliases": [
