@@ -339,7 +339,7 @@
    "sha256": "82c86db6a8db7c86c9c284ae89a3d747fd21dcca715b0e89933170eda4ae1319",
    "tested": "2026-11-25",
    "result": "pass with notes",
-   "notes": "25 Nov: only the data files changed (logos). Re-ran directory (schools, places of worship, charities) and org pages at 390/1280: no JS errors, no broken images. Other routes unchanged since the 24 Nov crawl of 594 routes."
+   "notes": "25 Nov: only data/logo files changed. Directory + org pages re-run at 390/1280, no JS errors or broken images; other routes unchanged since the 24 Nov 594-route crawl."
   },
   {
    "id": "directory-logos",
@@ -350,10 +350,10 @@
     "faith-data.js",
     "logo-versions.js"
    ],
-   "sha256": "1f1f9025dc7cc4cbf1ad9429c7f2b197e2feaa64e394df5e1b2d37c3a9429dbe",
+   "sha256": "d25592992c4f815ca7a5d969e4c40c39a454619adec8f09d97397233fba02b23",
    "tested": "2026-11-25",
    "result": "pass",
-   "notes": "126 listings with logos (DIR 69->119, places of worship 4->7). Checked at 390 and 1280: schools, places of worship, charities grids and org pages, no broken images, logo-colour tint shows."
+   "notes": "126 listings with logos (DIR 69->119, places of worship 4->7) + Luton Foodbank now the new tagline logo. Checked at 390 and 1280: directory grids and org pages, no broken images, tint shows."
   }
  ]
 }
