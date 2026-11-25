@@ -336,10 +336,24 @@
     "guides.js",
     "legal.js"
    ],
-   "sha256": "477e4a3250c8814ec67646ceec88acf22ca2e9c89265e608c970dcd9d60364a1",
-   "tested": "2026-11-24",
+   "sha256": "82c86db6a8db7c86c9c284ae89a3d747fd21dcca715b0e89933170eda4ae1319",
+   "tested": "2026-11-25",
+   "result": "pass with notes",
+   "notes": "25 Nov: only the data files changed (logos). Re-ran directory (schools, places of worship, charities) and org pages at 390/1280: no JS errors, no broken images. Other routes unchanged since the 24 Nov crawl of 594 routes."
+  },
+  {
+   "id": "directory-logos",
+   "name": "Logos on directory and places-of-worship listings (from the logo library)",
+   "route": "#directory, #org-*",
+   "files": [
+    "data.js",
+    "faith-data.js",
+    "logo-versions.js"
+   ],
+   "sha256": "1f1f9025dc7cc4cbf1ad9429c7f2b197e2feaa64e394df5e1b2d37c3a9429dbe",
+   "tested": "2026-11-25",
    "result": "pass",
-   "notes": "See the crawl numbers in the report."
+   "notes": "126 listings with logos (DIR 69->119, places of worship 4->7). Checked at 390 and 1280: schools, places of worship, charities grids and org pages, no broken images, logo-colour tint shows."
   }
  ]
 }
