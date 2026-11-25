@@ -29,6 +29,15 @@ HUB = os.path.join(ROOT, 'hub')
 
 # Owner-approved matches (listing name, normalised -> library slug). 24-25 Nov 2026.
 MAP = {
+    # nurseries + Hockwell Ring (owner 25 Nov, late)
+    'pastures way nursery school': 'pastures-way-nursery',
+    'rothesay nursery school': 'rothesay-nursery',
+    'hart hill nursery school': 'hart-hill-nursery',
+    'grasmere nursery school': 'grasmere-nursery',
+    'chapel street nursery school': 'chapel-street-nursery',
+    'gill blowers nursery (leabank)': 'gill-blowers-nursery',
+    'gill blowers nursery (mossdale)': 'gill-blowers-nursery',
+    'hockwell ring community centre': 'hockwell-ring-community-centre',
     'farley community centre': 'farley-hill-cc',
     'farley hill community centre': 'farley-hill-cc',
     'farley community group': 'fcg',

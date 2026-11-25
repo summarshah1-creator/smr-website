@@ -350,7 +350,7 @@
     "faith-data.js",
     "logo-versions.js"
    ],
-   "sha256": "ca5eeaadb3963d8a1c5030829ed5c2a5c581ec320c7f772f715ad35e3913b470",
+   "sha256": "d933836a7de53f6e0ae310ff4ade43ddc94e511221764d155dfe8512c57da445",
    "tested": "2026-11-25",
    "result": "pass",
    "notes": "25 Nov: 34 school logos added (directory 124 -> 158 of 173); phone 390px + desktop checked, no JS errors, no broken logo images"
