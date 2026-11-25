@@ -381,6 +381,19 @@
    "tested": "2026-11-25",
    "result": "pass",
    "notes": "Playwright 390 + 1280: every Directory category renders all listings (All 254/254); on phones every row item is reachable by swipe and See all as a list stacks them; desktop keeps Show all (12 then all); 16 routes checked for hidden row items: none; no JS errors."
+  },
+  {
+   "id": "dropdown-picker",
+   "name": "One in-site picker for every dropdown (bottom sheet on phones, popover on desktop; the phone's own picker never opens; search only for lists over 8, no keyboard popping up by itself)",
+   "route": "all pages with a dropdown: #courses, #funding (+ fund pages), #calendar, #planner, #evplan, #captions, #tool-clash, #directory category, #bidcheck and other questionnaires",
+   "files": [
+    "ux.js",
+    "styles.css"
+   ],
+   "sha256": "4328878f7d1b7b0ac5beea7afee0f70d453d0008bbf6185a83de78c494825ef5",
+   "tested": "2026-11-25",
+   "result": "pass",
+   "notes": "Phone 390 (touch) + desktop 1280, Playwright: 260 routes crawled, 0 native selects left on screen (57 compact pickers + tiles/searchable lists); picked values save and change handlers fire (course finder filter, captions language, planner org via keyboard, directory category, fund quiz + bid checklist wizard); phone back closes the sheet without leaving the page; no keyboard pops up by itself on touch; no JS errors."
   }
  ]
 }

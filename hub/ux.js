@@ -43,6 +43,89 @@ const iconFor = t => { for (const [re, n] of ICON_RULES) if (re.test(t)) return 
 const textOf = el => (typeof el === 'string' ? el : el?.textContent || '').replace(/\s+/g, ' ').trim();
 
 /* =========================================================================
+   One picker for every dropdown (owner 25 Nov): bottom sheet on phones, popover on desktop.
+   The phone's own picker never opens; the search box only shows for long lists (>8) and never
+   pops the keyboard by itself on touch screens.
+   ========================================================================= */
+const PHONE = () => matchMedia('(max-width:640px)').matches, COARSE = () => matchMedia('(pointer:coarse)').matches;
+let PK = null;
+function pkClose(opts = {}) { if (!PK) return Promise.resolve(); const p = PK; PK = null;
+  p.el.classList.remove('on'); p.anchor?.setAttribute('aria-expanded', 'false'); setTimeout(() => p.el.remove(), 230);
+  if (opts.focus !== false && p.anchor?.isConnected) p.anchor.focus({ preventScroll: true });
+  if (p.hist && !opts.popped) return new Promise(res => { let done = false; const fin = () => { if (done) return; done = true; removeEventListener('popstate', fin); res(); }; addEventListener('popstate', fin); setTimeout(fin, 450); try { history.back(); } catch (e) { fin(); } });
+  return Promise.resolve(); }
+addEventListener('popstate', () => { if (PK && PK.hist) pkClose({ popped: true, focus: false }); });
+function uxPick({ anchor, title = '', options, isOn, onPick, multi = false, limit = 0 }) {
+  if (PK) { const same = PK.anchor === anchor; pkClose({ focus: false }); if (same) return; }
+  const opts = typeof options === 'function' ? options() : options, id = nid('pk'), phone = PHONE(), many = opts.length > 8;
+  const el = document.createElement('div'); el.className = 'pk' + (phone ? ' sheet' : ' pop'); el.dataset.ux = '1';
+  el.innerHTML = `<div class="pk-scrim"></div><div class="pk-box" role="dialog" aria-modal="${phone}" aria-label="${esc(title || 'Choose')}">
+  ${phone ? `<div class="pk-grab" aria-hidden="true"></div><div class="pk-head"><b>${esc(title || 'Choose one')}</b><button type="button" class="ib pk-x" aria-label="Close">${svg('x')}</button></div>` : ''}
+  ${many ? `<div class="pk-s">${svg('search')}<input class="pk-q" type="search" placeholder="Type to search" autocomplete="off" enterkeyhint="search" aria-controls="${id}" aria-label="Search ${esc(title || 'options')}"></div>` : ''}
+  <ul class="pk-ul" id="${id}" role="listbox" tabindex="-1" ${multi ? 'aria-multiselectable="true"' : ''} aria-label="${esc(title || 'Options')}"></ul>
+  ${multi ? `<div class="pk-foot"><span class="pk-n"></span><button type="button" class="btn p sm pk-done">Done</button></div>` : ''}</div>`;
+  document.body.append(el);
+  const box = $('.pk-box', el), ul = $('.pk-ul', el), q = $('.pk-q', el); let act = Math.max(0, opts.findIndex(o => isOn(o)));
+  const vis = () => { const t = (q?.value || '').trim().toLowerCase(); return opts.filter(o => !t || o.label.toLowerCase().includes(t)); };
+  const count = () => { const n = $('.pk-n', el); if (!n) return; const k = opts.filter(isOn).length; n.textContent = k ? `${k} chosen${limit ? ` (up to ${limit})` : ''}` : limit ? `Pick up to ${limit}` : 'Pick as many as you like'; };
+  const list = () => { const v = vis(); act = Math.min(act, Math.max(0, v.length - 1));
+    ul.innerHTML = v.length ? v.map((o, i) => `<li role="option" id="${id}-${i}" data-i="${opts.indexOf(o)}" aria-selected="${!!isOn(o)}" ${o.dis ? 'aria-disabled="true"' : ''} class="${i === act ? 'act' : ''}">${multi ? `<span class="tk">${svg('yes')}</span>` : ''}<span class="pk-l">${esc(o.label)}</span>${o.n != null ? `<small>${esc(o.n)}</small>` : ''}${!multi ? `<span class="pk-tick">${isOn(o) ? svg('yes') : ''}</span>` : ''}</li>`).join('') : '<li class="none" role="presentation">Nothing matches. Try another word.</li>';
+    ul.setAttribute('aria-activedescendant', v.length ? `${id}-${act}` : ''); count(); };
+  const place = () => { if (phone || !anchor?.isConnected) return; const r = anchor.getBoundingClientRect(), w = Math.min(Math.max(r.width, 260), 440, innerWidth - 16), below = innerHeight - r.bottom - 12, above = r.top - 12, up = below < 260 && above > below;
+    box.style.width = w + 'px'; box.style.left = Math.min(Math.max(8, r.left), innerWidth - w - 8) + 'px'; box.style.maxHeight = Math.max(180, Math.min(420, up ? above : below)) + 'px';
+    if (up) { box.style.top = ''; box.style.bottom = (innerHeight - r.top + 6) + 'px'; } else { box.style.bottom = ''; box.style.top = (r.bottom + 6) + 'px'; } };
+  const pick = async i => { const o = opts[i]; if (!o || o.dis) return;
+    if (multi) { if (limit && !isOn(o) && opts.filter(isOn).length >= limit) { toast(`Pick up to ${limit}`); return; } onPick(o); setTimeout(() => { if (el.isConnected) list(); }, 30); return; }
+    await pkClose(); onPick(o); };
+  PK = { el, anchor, hist: false, place };
+  if (phone) { try { history.pushState({ ...(history.state || {}), pk: 1 }, ''); PK.hist = true; } catch (e) { } }
+  anchor?.setAttribute('aria-expanded', 'true'); list(); place();
+  requestAnimationFrame(() => { el.classList.add('on'); if (q && !COARSE()) q.focus({ preventScroll: true }); else ul.focus({ preventScroll: true }); $('.act', ul)?.scrollIntoView({ block: 'nearest' }); });
+  $('.pk-scrim', el).addEventListener('click', () => pkClose());
+  $('.pk-x', el)?.addEventListener('click', () => pkClose());
+  $('.pk-done', el)?.addEventListener('click', () => pkClose());
+  q?.addEventListener('input', () => { act = 0; list(); });
+  ul.addEventListener('click', e => { const li = e.target.closest('li[role=option]'); if (li) pick(+li.dataset.i); });
+  box.addEventListener('keydown', e => { const n = $$('li[role=option]', ul).length;
+    if (e.key === 'ArrowDown') { e.preventDefault(); act = Math.min(n - 1, act + 1); list(); $('.act', ul)?.scrollIntoView({ block: 'nearest' }); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); act = Math.max(0, act - 1); list(); $('.act', ul)?.scrollIntoView({ block: 'nearest' }); }
+    else if (e.key === 'Home' && e.target !== q) { e.preventDefault(); act = 0; list(); }
+    else if (e.key === 'End' && e.target !== q) { e.preventDefault(); act = n - 1; list(); }
+    else if (e.key === 'Enter' || (e.key === ' ' && e.target !== q)) { e.preventDefault(); const li = $$('li[role=option]', ul)[act]; if (li) pick(+li.dataset.i); }
+    else if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); pkClose(); }
+    else if (e.key === 'Tab') { if (phone) { e.preventDefault(); (e.target === q ? ul : (q || ul)).focus(); } else pkClose({ focus: false }); }
+    else if (q && !e.ctrlKey && !e.metaKey && e.key.length === 1 && e.target !== q) { q.focus(); } });
+  // swipe the sheet down to close
+  if (phone) { let y0 = null; box.addEventListener('touchstart', e => { y0 = (e.target.closest('.pk-ul') && ul.scrollTop > 0) ? null : e.touches[0].clientY; }, { passive: true });
+    box.addEventListener('touchmove', e => { if (y0 == null) return; const dy = e.touches[0].clientY - y0; if (dy > 0) box.style.transform = `translateY(${dy}px)`; }, { passive: true });
+    box.addEventListener('touchend', e => { if (y0 == null) return; const dy = (e.changedTouches[0]?.clientY || y0) - y0; box.style.transform = ''; y0 = null; if (dy > 90) pkClose(); }); }
+  return el;
+}
+addEventListener('resize', () => { if (PK && !PK.el.classList.contains('sheet')) PK.place?.(); });
+addEventListener('scroll', e => { if (!PK || PK.el.classList.contains('sheet') || PK.el.contains(e.target)) return; const r = PK.anchor?.getBoundingClientRect(); if (!r || r.bottom < 0 || r.top > innerHeight) pkClose({ focus: false }); else PK.place?.(); }, true);
+
+/* A plain select the hub keeps compact (filters, tables, settings): same look as a field, opens the picker */
+const selList = s => [...s.options].filter(o => !o.hidden).map(o => ({ label: textOf(o), value: o.value, dis: o.disabled }));
+const selLabel = s => { const l = s.closest('label'); return s.getAttribute('aria-label') || (l ? textOf([...l.childNodes].filter(n => n.nodeType === 3).map(n => n.textContent).join(' ')) : '') || s.getAttribute('title') || ''; };
+function pkSync(s) { const b = s._pkb; if (!b) return; const o = s.selectedOptions?.[0], t = o ? textOf(o) : ''; const v = $('.pkb-v', b); if (v.textContent !== t) v.textContent = t || 'Choose'; v.classList.toggle('cbx-ph', !s.value); b.disabled = s.disabled; }
+function pickerFor(s) {
+  if (s._pkb || s.multiple) return; const b = document.createElement('button'); b.type = 'button';
+  b.className = 'pkb ' + [...s.classList].filter(c => c !== 'ux-native').join(' '); b.dataset.ux = '1';
+  b.setAttribute('aria-haspopup', 'listbox'); b.setAttribute('aria-expanded', 'false'); const lab = selLabel(s); if (lab) b.setAttribute('aria-label', lab + ': ' + (s.selectedOptions?.[0] ? textOf(s.selectedOptions[0]) : ''));
+  if (s.getAttribute('style')) b.setAttribute('style', s.getAttribute('style'));
+  b.innerHTML = `<span class="pkb-v"></span>${svg('chev', 'pkb-ch')}`;
+  s._pkb = b; s.dataset.pk = '1'; s.classList.add('ux-native'); s.tabIndex = -1; s.setAttribute('aria-hidden', 'true'); s.after(b); pkSync(s);
+  b.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); if (b.disabled) return;
+    uxPick({ anchor: b, title: lab, options: () => selList(s), isOn: o => s.value === o.value, onPick: o => { if (s.value !== o.value) { s.value = o.value; fire(s, 'input'); fire(s); } pkSync(s); if (lab) b.setAttribute('aria-label', lab + ': ' + o.label); } }); });
+  b.addEventListener('keydown', e => { if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); b.click(); } });
+  s.addEventListener('change', () => pkSync(s));
+}
+// backstops: a hidden select never gets focus, and any select we missed is converted the moment it's touched
+document.addEventListener('focusin', e => { const s = e.target; if (s?.tagName !== 'SELECT') return; if (!s._pkb && !s.classList.contains('ux-native')) pickerFor(s); const b = s._pkb || (s.nextElementSibling?.matches?.('.cbx,.tiles') ? s.nextElementSibling.querySelector('button') : null); s.blur(); b?.focus({ preventScroll: true }); }, true);
+['pointerdown', 'mousedown', 'touchstart'].forEach(t => document.addEventListener(t, e => { const s = e.target?.closest?.('select'); if (!s || s.multiple) return; e.preventDefault(); if (!s._pkb && !s.classList.contains('ux-native')) pickerFor(s); if (t !== 'touchstart') setTimeout(() => s._pkb?.click(), 0); }, { capture: true, passive: false }));
+document.addEventListener('click', e => { const l = e.target.closest?.('label'); if (!l || e.target.closest('button,a,input,textarea')) return; const s = l.control || $('select', l); if (s?.tagName === 'SELECT' && s.classList.contains('ux-native')) { e.preventDefault(); (s._pkb || l.querySelector('.cbx-btn,.tile2'))?.focus({ preventScroll: true }); } }, true);
+
+/* =========================================================================
    Dropdown with search (single + multi). Works with a native control or a list of actions.
    ========================================================================= */
 let openCbx = null;
@@ -60,13 +143,17 @@ function cbx({ label = '', placeholder = 'Choose', options, multi = false, onPic
   const list = () => { const s = q.value.trim().toLowerCase(); const vis = options.filter(o => !s || o.label.toLowerCase().includes(s)); act = Math.min(act, Math.max(0, vis.length - 1));
     ul.innerHTML = vis.length ? vis.map((o, i) => `<li role="option" id="${id}-${i}" data-i="${options.indexOf(o)}" aria-selected="${isOn(o)}" class="${i === act ? 'act' : ''}">${multi ? `<span class="tk">${svg('yes')}</span>` : ''}<span>${esc(o.label)}</span>${o.n != null ? `<small>${esc(o.n)}</small>` : ''}${!multi && isOn(o) ? svg('yes', 'sel') : ''}</li>`).join('') : '<li class="none" role="presentation">Nothing matches. Try another word.</li>';
     q.setAttribute('aria-activedescendant', vis.length ? `${id}-${act}` : ''); };
-  const open = () => { if (openCbx && openCbx !== w) closeCbx(); openCbx = w; pop.hidden = false; btn.setAttribute('aria-expanded', 'true'); q.value = ''; act = Math.max(0, options.findIndex(o => isOn(o))); list(); setTimeout(() => { q.focus({ preventScroll: true }); $('.act', ul)?.scrollIntoView({ block: 'nearest' }); }, 10); };
+  const inline = () => w.classList.contains('wz-cbx');
+  if (options.length <= 8) $('.cbx-s', w).hidden = true;
+  ul.tabIndex = -1;
+  const open = () => { if (!inline()) { uxPick({ anchor: btn, title: label || placeholder, options, multi, limit, isOn, onPick: o => { onPick(o); setTimeout(() => { if (w.isConnected) paintVal(); }, 30); } }); return; }
+    if (openCbx && openCbx !== w) closeCbx(); openCbx = w; pop.hidden = false; btn.setAttribute('aria-expanded', 'true'); q.value = ''; act = Math.max(0, options.findIndex(o => isOn(o))); list(); setTimeout(() => { if (options.length > 8 && !COARSE()) q.focus({ preventScroll: true }); else ul.focus({ preventScroll: true }); $('.act', ul)?.scrollIntoView({ block: 'nearest' }); }, 10); };
   const pick = i => { const o = options[i]; if (!o) return; if (multi && limit && !isOn(o) && options.filter(isOn).length >= limit) { toast(`Pick up to ${limit}`); return; }
     onPick(o); setTimeout(() => { if (!w.isConnected) return; paintVal(); if (multi) list(); }, 30); if (!multi) { closeCbx(); btn.focus({ preventScroll: true }); } };
-  btn.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); pop.hidden ? open() : closeCbx(); });
+  btn.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); if (!inline()) return open(); pop.hidden ? open() : closeCbx(); });
   btn.addEventListener('keydown', e => { if (e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
   q.addEventListener('input', () => { act = 0; list(); });
-  q.addEventListener('keydown', e => { const n = $$('li[role=option]', ul).length;
+  pop.addEventListener('keydown', e => { const n = $$('li[role=option]', ul).length;
     if (e.key === 'ArrowDown') { e.preventDefault(); act = Math.min(n - 1, act + 1); list(); $('.act', ul)?.scrollIntoView({ block: 'nearest' }); }
     else if (e.key === 'ArrowUp') { e.preventDefault(); act = Math.max(0, act - 1); list(); $('.act', ul)?.scrollIntoView({ block: 'nearest' }); }
     else if (e.key === 'Enter') { e.preventDefault(); const li = $$('li[role=option]', ul)[act]; if (li) pick(+li.dataset.i); }
@@ -102,8 +189,10 @@ const limitFrom = el => { const m = textOf(el.closest('fieldset') || el.parentEl
    ========================================================================= */
 const SKIP_SEL = '[data-ttsrate],[data-inbst],[data-ux-keep],table select,.ttsbar select,#lplay select';
 function enhanceSelect(s) {
-  if (s.dataset.uxd || s.matches(SKIP_SEL) || s.multiple || s.closest('.wz,.ux-hid') || WZ_FORMS[s.form?.id]) return;
-  const opts = selOpts(s); if (opts.length < 2) return; s.dataset.uxd = '1';
+  if (s._pkb || s.classList.contains('ux-native') || s.multiple) return;
+  const opts = selOpts(s);
+  if (s.dataset.uxd || s.matches(SKIP_SEL) || s.closest('.wz,.ux-hid') || WZ_FORMS[s.form?.id] || opts.length < 2) { if (!s.closest('.wz-hidnat')) pickerFor(s); return; }
+  s.dataset.uxd = '1';
   const lab = s.closest('label'), labelTxt = lab ? textOf([...lab.childNodes].filter(n => n.nodeType === 3).map(n => n.textContent).join(' ')) : '';
   const isOn = o => s.value === o.value, onPick = o => { s.value = o.value; fire(s, 'input'); fire(s); };
   let ui;
@@ -376,9 +465,12 @@ document.addEventListener('click', e => { const b = e.target.closest('[data-ttst
 
 /* ---------- boot ---------- */
 let busy = false, qd = false;
-const run = () => { qd = false; if (busy) return; busy = true; try { enhance(document.getElementById('main') || document.body); const m = $('#modal.open #mbox'); if (m) enhance(m); } catch (e) { console.warn('ux', e); } busy = false; };
+let wzObs = false;
+const run = () => { qd = false; if (busy) return; busy = true; try { enhance(document.getElementById('main') || document.body); const m = $('#modal.open #mbox'); if (m) enhance(m);
+  const wz = $('#wz'); if (wz) { if (!wzObs) { wzObs = true; new MutationObserver(queue).observe(wz, { childList: true, subtree: true }); } $$('select', wz).forEach(enhanceSelect); }
+  $$('select').forEach(s => { if (s._pkb) pkSync(s); else if (!s.classList.contains('ux-native') && !s.multiple && !s.closest('.wz-hidnat')) enhanceSelect(s); }); } catch (e) { console.warn('ux', e); } busy = false; };
 const queue = () => { if (qd) return; qd = true; requestAnimationFrame(run); };
-const start = () => { const m = $('#main'); if (!m) return setTimeout(start, 50); new MutationObserver(queue).observe(m, { childList: true, subtree: true }); const mb = $('#mbox'); if (mb) new MutationObserver(queue).observe(mb, { childList: true, subtree: true });
+const start = () => { const m = $('#main'); if (!m) return setTimeout(start, 50); new MutationObserver(queue).observe(m, { childList: true, subtree: true }); new MutationObserver(queue).observe(document.body, { childList: true }); const mb = $('#mbox'); if (mb) new MutationObserver(queue).observe(mb, { childList: true, subtree: true });
   const built = $('footer .built'); if (built && !$('[data-footlisten]', built.parentNode)) built.insertAdjacentHTML('beforebegin', `<p class="flisten"><button type="button" class="pgl" data-footlisten>${svg('listen')}<em>Listen to this page</em></button></p>`);
   queue(); };
 start();
