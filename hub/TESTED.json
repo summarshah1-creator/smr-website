@@ -350,10 +350,10 @@
     "faith-data.js",
     "logo-versions.js"
    ],
-   "sha256": "8e17ff760da484d38f32b2d26c20357e6faa2ba45987c41120e62f90a550c2cf",
+   "sha256": "d5d7ff2dbdec14fae707ca2b09203c7f294c75c44b9fddf310e3f2e2332693ed",
    "tested": "2026-11-25",
    "result": "pass",
-   "notes": "126 listings with logos (DIR 69->119, places of worship 4->7) + new Foodbank tagline. Checked at 390/1280, no broken images, tint shows."
+   "notes": "126 listings with logos (DIR 69->119, places of worship 4->7) + new Foodbank tagline. Checked at 390/1280, no broken images, tint shows. 25 Nov: 25 more church logos wired (places of worship 6 -> 29, directory 118 -> 120); St Andrew's no longer shows the St Anne & St Christopher logo; checked at 390 and 1280, no JS errors, no broken images."
   },
   {
    "id": "places-of-worship",
@@ -362,10 +362,10 @@
    "files": [
     "faith-data.js"
    ],
-   "sha256": "4bba7ee6b527cf2b07f886d161337f3a37987f855d0a7b66f1c182991d103b2f",
+   "sha256": "44428a20dfa2667f46c1332230b5ee172160c09977edca730138accad5c105a1",
    "tested": "2026-11-25",
    "result": "pass",
-   "notes": "25 Nov: 6 more verified churches added (82 listings), to-confirm list 72 -> 60 (6 duplicates removed). Faith filter counts and new org page checked at 390/1280, no errors."
+   "notes": "25 Nov: 6 more verified churches added (82 listings), to-confirm list 72 -> 60 (6 duplicates removed). Faith filter counts and new org page checked at 390/1280, no errors. 25 Nov: 25 more church logos wired (places of worship 6 -> 29, directory 118 -> 120); St Andrew's no longer shows the St Anne & St Christopher logo; checked at 390 and 1280, no JS errors, no broken images."
   }
  ]
 }

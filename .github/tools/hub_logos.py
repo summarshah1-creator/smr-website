@@ -35,9 +35,11 @@ MAP = {
     "st mary's (parish of luton)": 'st-marys',
     "st mary's church luton": 'st-marys',
     "st mary's catholic church": 'st-marys',
-    "st andrew's church luton": 'st-christophers-luton',
-    "st andrew's, luton": 'st-christophers-luton',
+    # st-christophers-luton = "St. A & C" = St Anne with St Christopher (owner 25 Nov), NOT St Andrew's
+    'st anne (parish of st anne with st christopher)': 'st-christophers-luton',
     'st christopher, round green': 'st-christophers-luton',
+    'newland church (wigmore site)': 'newland-church',
+    'newland church (dunstable site)': 'newland-church',
     'ferrars junior school': 'ferrars-academy',
     'the ferrars academy': 'ferrars-academy',
     'someries infant school': 'someries-infant',
@@ -54,6 +56,9 @@ MAP = {
 BLOCK = {
     'ramridge primary school',      # library ramridge-baptist = Ramridge Baptist Church
     'icknield primary school',      # library icknield = Icknield High School
+    "st andrew's church luton",     # St A & C logo is St Anne with St Christopher, not St Andrew's
+    "st andrew's, luton",
+    'our lady polish catholic church',  # Dunstable: out of scope (owner 25 Nov)
 }
 
 def lkey(s):
