@@ -1504,5 +1504,15 @@
   "address": "Luton",
   "note": "Owner upload 25 Nov 2026.",
   "source": "owner 25 Nov 2026"
+ },
+ "st-matthews-primary": {
+  "address": "Luton",
+  "note": "Owner upload 25 Nov 2026; background removed.",
+  "source": "owner 25 Nov 2026"
+ },
+ "richmond-hill-school": {
+  "address": "Luton",
+  "note": "Owner upload 25 Nov 2026; white filled in behind the badge so the text reads on any background. Used for both the East and West sites.",
+  "source": "owner 25 Nov 2026"
  }
 }

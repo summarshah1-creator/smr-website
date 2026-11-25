@@ -513,3 +513,5 @@ M['whitefield-primary']=('schools','Whitefield Primary Academy',['Whitefield', '
 M['whipperley-academy-trust']=('schools','Whipperley Academy Trust (Whipperley Infant Academy)',['Whipperley Infant Academy', 'Whipperley Academy Trust', 'Whipperley'],[('hand/whipperley-academy-trust-logo.png', 'logo'), ('hand/whipperley-academy-trust-logo-on-dark.png', 'logo-on-dark')])
 M['wenlock-ce-academy']=('schools','Wenlock CE Academy',['Wenlock', 'Wenlock CE Academy', 'Wenlock Academy'],[('hand/wenlock-ce-academy-logo.png', 'logo')])
 M['waulud-primary']=('schools','Waulud Primary School and Nursery',['Waulud Primary School', 'Waulud', 'Waulud Primary'],[('hand/waulud-primary-logo.png', 'logo')])
+M['st-matthews-primary']=('schools',"St Matthew's Primary School",["St Matthew's Primary", 'St Matthews Primary School'],[('hand/st-matthews-primary-logo.png','logo')])
+M['richmond-hill-school']=('schools','Richmond Hill School',['Richmond Hill School East', 'Richmond Hill School West', 'Richmond Hill'],[('hand/richmond-hill-school-logo.png','logo')])

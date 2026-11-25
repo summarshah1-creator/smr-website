@@ -1,6 +1,6 @@
 # SMR logo list
 
-413 organisations. Full details in logos.json and LIST.csv.
+415 organisations. Full details in logos.json and LIST.csv.
 
 ## businesses (38)
 - AA Carpets and Furniture
@@ -313,7 +313,7 @@
 - Zakariya Masjid
 - Zuhri Academy
 
-## schools (68)
+## schools (70)
 - Active Support Education Centre
 - Al-Hikmah (Bury Park Educational Institute)
 - Avenue Centre for Education
@@ -358,6 +358,7 @@
 - Queen Elizabeth School (QES)
 - Rabia Education Trust
 - Ramridge Primary School
+- Richmond Hill School
 - River Bank Primary School
 - Sacred Heart Primary School
 - Someries Infant School
@@ -365,6 +366,7 @@
 - St Joseph's Catholic Primary School
 - St Margaret of Scotland Catholic Primary School
 - St Martin de Porres Primary School
+- St Matthew's Primary School
 - Stopsley Community Primary School
 - Stopsley High School (SHS)
 - Tennyson Road Primary School

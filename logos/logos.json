@@ -9452,6 +9452,68 @@
    ]
   },
   {
+   "slug": "richmond-hill-school",
+   "name": "Richmond Hill School",
+   "aliases": [
+    "Richmond Hill School East",
+    "Richmond Hill School West",
+    "Richmond Hill"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/richmond-hill-school/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {
+    "address": "Luton",
+    "note": "Owner upload 25 Nov 2026; white filled in behind the badge so the text reads on any background. Used for both the East and West sites.",
+    "source": "owner 25 Nov 2026"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "richmond-hill-school-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1492,
+     "h": 1492
+    },
+    {
+     "file": "richmond-hill-school-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1492,
+     "h": 1492,
+     "made": true
+    },
+    {
+     "file": "richmond-hill-school-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1492,
+     "h": 1492,
+     "made": true
+    },
+    {
+     "file": "richmond-hill-school-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "richmond-hill-school-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
    "slug": "river-bank-primary",
    "name": "River Bank Primary School",
    "aliases": [
@@ -10016,6 +10078,74 @@
     },
     {
      "file": "st-martin-de-porres-primary-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "st-matthews-primary",
+   "name": "St Matthew's Primary School",
+   "aliases": [
+    "St Matthew's Primary",
+    "St Matthews Primary School"
+   ],
+   "category": "schools",
+   "category_name": "Schools & colleges",
+   "path": "schools/st-matthews-primary/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": true,
+   "quality": "redrawn",
+   "details": {
+    "address": "Luton",
+    "note": "Owner upload 25 Nov 2026; background removed.",
+    "source": "owner 25 Nov 2026"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "st-matthews-primary-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true
+    },
+    {
+     "file": "st-matthews-primary-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1600,
+     "h": 1506
+    },
+    {
+     "file": "st-matthews-primary-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1600,
+     "h": 1506,
+     "made": true
+    },
+    {
+     "file": "st-matthews-primary-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1600,
+     "h": 1506,
+     "made": true
+    },
+    {
+     "file": "st-matthews-primary-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "st-matthews-primary-logo-white.svg",
      "variant": "logo-white",
      "style": "logo",
      "vector": true,
