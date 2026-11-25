@@ -921,3 +921,7 @@ body.solo .hdr .brand{pointer-events:none}
 .lgi details{margin:6px 0 0 34px}.lgi summary{cursor:pointer;font-weight:700;color:var(--blue);min-height:32px;display:flex;align-items:center}.lgi details p{margin:6px 0;font-size:.93rem}
 .evd{font-size:.8rem;font-weight:800;color:var(--blue)}.evlist .msg{margin:8px 0}.evlink{margin:8px 0 12px}
 .langbar{display:none!important}.lstep{border:0;padding:0;margin:12px 0}.lstep legend{font-weight:800;margin-bottom:8px}.lset{grid-template-columns:1fr;align-items:center;min-height:52px}.lset input{position:absolute;opacity:0;width:1px;height:1px}.lset:has(input:focus-visible){outline:2px solid var(--blue);outline-offset:2px}.lsets{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}.langtip{margin:8px 0 12px}.langtip>.si:first-child{width:22px;height:22px;color:var(--blue);flex:none}
+
+/* show-more vs swipe rows (25 Nov): hidden extras only on wider screens; phones get the full row + See all as a list */
+@media(min-width:701px){.mhid{display:none!important}.seeall{display:none}}
+@media(max-width:700px){.seeall{width:100%;margin:8px 0 0}#main .grid.vlist,.band.group .board.vlist,.winter .grid.vlist{grid-auto-flow:row!important;grid-template-columns:1fr!important;grid-template-rows:none!important;grid-auto-columns:auto!important;overflow:visible!important;scroll-snap-type:none!important}}

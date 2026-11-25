@@ -239,7 +239,7 @@ V.directory = () => {
   <input class="in" id="dirQ" placeholder="Search by name, area or postcode" value="${esc(dirQ)}" aria-label="Search the directory">
   <div class="scroll" style="margin:12px 0">${[['all', 'All', all.length], ...Object.keys(CAT).map(c => [c, CAT[c], cnt(c)])].filter(x => x[2]).map(([c, t, n]) => `<button class="chip${dirCat === c ? ' on' : ''}" data-dircat="${c}">${t} · ${n}</button>`).join('')}</div>
   ${addBar('listing', 'a place')}
-  <div class="grid">${list.slice(0, 240).map(o => `<a class="card link" href="#org-${esc(o.id)}"><div class="row" style="justify-content:space-between;align-items:center">${o.lg ? logoImg('lg/' + o.lg + '.webp', o.n) : mono(o.n)}${o.added && isNewTs(o.added) ? '<span class="tag new">New</span>' : ''}${isVerified(o.id) ? '<span class="verified">✓ Verified</span>' : ''}</div><h3>${esc(o.n)}</h3><div class="meta"><span class="tag">${esc(o.sub)}</span><span>${esc(o.pc || o.a)}</span></div></a>`).join('') || '<div class="empty">No matches. Try another word, or recommend a place.</div>'}</div></div>`;
+  <div class="grid">${list.map(o => `<a class="card link" href="#org-${esc(o.id)}"><div class="row" style="justify-content:space-between;align-items:center">${o.lg ? logoImg('lg/' + o.lg + '.webp', o.n) : mono(o.n)}${o.added && isNewTs(o.added) ? '<span class="tag new">New</span>' : ''}${isVerified(o.id) ? '<span class="verified">✓ Verified</span>' : ''}</div><h3>${esc(o.n)}</h3><div class="meta"><span class="tag">${esc(o.sub)}</span><span>${esc(o.pc || o.a)}</span></div></a>`).join('') || '<div class="empty">No matches. Try another word, or recommend a place.</div>'}</div></div>`;
 };
 V.org = id => {
   const o = H.DIR.find(x => x.id === id);

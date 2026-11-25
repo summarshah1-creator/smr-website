@@ -350,10 +350,10 @@
     "faith-data.js",
     "logo-versions.js"
    ],
-   "sha256": "d933836a7de53f6e0ae310ff4ade43ddc94e511221764d155dfe8512c57da445",
+   "sha256": "b865b9cf24c52b6190cfb98a0b23fcd3d1aa272dbae7bf3ce01895b418694bc1",
    "tested": "2026-11-25",
    "result": "pass",
-   "notes": "25 Nov: 34 school logos added (directory 124 -> 158 of 173); phone 390px + desktop checked, no JS errors, no broken logo images"
+   "notes": "Re-checked after the 25 Nov row fix: directory at 390 and 1280, no JS errors."
   },
   {
    "id": "places-of-worship",
@@ -366,6 +366,21 @@
    "tested": "2026-11-25",
    "result": "pass",
    "notes": "25 Nov (late): Sub Tuum Praesidium crest moved to Our Lady Help of Christians (olhc.uk); new logos St Joseph's, St Luke's, St Margaret (SMR-made), CVS, Chaul End, ABCD, Bury Park (DIR 120->124, places of worship 29->32); St Augustine renamed 'with Holy Trinity'. Org pages at 390/1280: no JS errors, no broken images."
+  },
+  {
+   "id": "directory-rows",
+   "name": "Swipe rows show every item on phones (no cap at 8), See all as a list; Directory shows every listing (no 240 cap); Keech Hospice listed as a charity, not a venue",
+   "route": "#directory, #help, #volunteering, #events and other rows",
+   "files": [
+    "app.js",
+    "f2.js",
+    "styles.css",
+    "data.js"
+   ],
+   "sha256": "c87d5dd0bec1eaa8ef17fd064ba9b7b9ad0fda8705b3ff50fa98578fea78e0da",
+   "tested": "2026-11-25",
+   "result": "pass",
+   "notes": "Playwright 390 + 1280: every Directory category renders all listings (All 254/254); on phones every row item is reachable by swipe and See all as a list stacks them; desktop keeps Show all (12 then all); 16 routes checked for hidden row items: none; no JS errors."
   }
  ]
 }
