@@ -350,10 +350,10 @@
     "faith-data.js",
     "logo-versions.js"
    ],
-   "sha256": "d5d7ff2dbdec14fae707ca2b09203c7f294c75c44b9fddf310e3f2e2332693ed",
+   "sha256": "865fda7a0425db9cda469f2dd044f3f4b58ba329e2c9bbaa3356282e4d1ec0a0",
    "tested": "2026-11-25",
    "result": "pass",
-   "notes": "126 listings with logos (DIR 69->119, places of worship 4->7) + new Foodbank tagline. Checked at 390/1280, no broken images, tint shows. 25 Nov: 25 more church logos wired (places of worship 6 -> 29, directory 118 -> 120); St Andrew's no longer shows the St Anne & St Christopher logo; checked at 390 and 1280, no JS errors, no broken images."
+   "notes": "25 Nov (late): Sub Tuum Praesidium crest moved to Our Lady Help of Christians (olhc.uk); new logos St Joseph's, St Luke's, St Margaret (SMR-made), CVS, Chaul End, ABCD, Bury Park (DIR 120->124, places of worship 29->32); St Augustine renamed 'with Holy Trinity'. Org pages at 390/1280: no JS errors, no broken images."
   },
   {
    "id": "places-of-worship",
@@ -362,10 +362,10 @@
    "files": [
     "faith-data.js"
    ],
-   "sha256": "44428a20dfa2667f46c1332230b5ee172160c09977edca730138accad5c105a1",
+   "sha256": "8a33e0605b91d8483daf8fcfcd0f0496d2a278f3cad0f29ed804b09a5f1577bd",
    "tested": "2026-11-25",
    "result": "pass",
-   "notes": "25 Nov: 6 more verified churches added (82 listings), to-confirm list 72 -> 60 (6 duplicates removed). Faith filter counts and new org page checked at 390/1280, no errors. 25 Nov: 25 more church logos wired (places of worship 6 -> 29, directory 118 -> 120); St Andrew's no longer shows the St Anne & St Christopher logo; checked at 390 and 1280, no JS errors, no broken images."
+   "notes": "25 Nov (late): Sub Tuum Praesidium crest moved to Our Lady Help of Christians (olhc.uk); new logos St Joseph's, St Luke's, St Margaret (SMR-made), CVS, Chaul End, ABCD, Bury Park (DIR 120->124, places of worship 29->32); St Augustine renamed 'with Holy Trinity'. Org pages at 390/1280: no JS errors, no broken images."
   }
  ]
 }

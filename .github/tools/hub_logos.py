@@ -51,6 +51,16 @@ MAP = {
     'calvary church of god in christ': 'cogic-calvary',
     'masjid al madani': 'al-madani',
     'hope church luton': 'hope-church-luton',
+    # Sub Tuum Praesidium crest = Our Lady Help of Christians (olhc.uk, owner 25 Nov), NOT St Margaret of Scotland
+    'our lady help of christians': 'our-lady-help-of-christians-luton',
+    "st augustine's church with holy trinity": 'st-augustine-limbury',
+    'st margaret of scotland catholic church': 'st-margaret-of-scotland-luton',  # SMR-made from their website header
+    "st joseph's catholic church": 'st-josephs-limbury',
+    "st luke's, leagrave": 'st-lukes-leagrave',
+    'cvs bedfordshire': 'cvs-bedfordshire',
+    'chaul end community centre': 'chaul-end-centre',
+    'abcd-in-luton': 'abcd-in-luton',
+    'bury park community centre': 'bury-park-community-centre',
 }
 # Never match these (listing name, normalised): the library logo belongs to someone else.
 BLOCK = {
