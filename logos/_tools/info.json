@@ -1556,5 +1556,128 @@
   "made_by": "SMR",
   "note": "Text logo made by SMR Digital (no official logo found); not an official logo.",
   "source": "SMR 25 Nov 2026"
+ },
+ "st-andrews-luton": {
+  "address": "11 Blenheim Crescent, Luton",
+  "postcode": "LU3 1HA",
+  "website": "http://www.standrewsluton.church",
+  "note": "Shield (St Andrew: crossed fish and anchor) redrawn as a vector from the owner's upload; the name lockup is made by SMR Digital.",
+  "source": "upload 25 Nov 2026 (owner)"
+ },
+ "luton-central-baptist": {
+  "address": "52A Park Street, Luton",
+  "postcode": "LU1 3ET",
+  "website": "https://centralbaptist.org.uk",
+  "note": "Remade as a clean vector from a blurry screenshot (same layout and colours).",
+  "source": "upload 25 Nov 2026 (owner)"
+ },
+ "baps-luton": {
+  "address": "39 Crescent Road, Luton",
+  "postcode": "LU2 0AH",
+  "website": "https://www.baps.org/luton",
+  "note": "BAPS emblem with the BAPS wordmark; the light version has the wordmark in black (the supplied file has it in white, for dark backgrounds).",
+  "source": "upload 25 Nov 2026 (owner)"
+ },
+ "shri-guru-ravidass-sabha-luton": {
+  "address": "31 Cardigan Street, Luton",
+  "postcode": "LU1 1RP",
+  "website": "https://sgrsluton.co.uk",
+  "note": "Emblem cropped from the sgrsluton.co.uk screenshot the owner sent and redrawn as a vector.",
+  "source": "upload 25 Nov 2026 (owner)"
+ },
+ "shree-sanatan-seva-samaj": {
+  "address": "Hindu Community Centre, Hereford Road, Lewsey Farm, Luton",
+  "postcode": "LU4 0PS",
+  "website": "http://www.hindumandir-luton.org",
+  "note": "The supplied logo is white only; SMR added a deep saffron version for light backgrounds.",
+  "source": "upload 25 Nov 2026 (owner)"
+ },
+ "guru-nanak-gurdwara-luton": {
+  "address": "2a Dallow Road, Luton",
+  "postcode": "LU1 1LY",
+  "website": "http://www.gngluton.org",
+  "source": "upload 25 Nov 2026 (owner)"
+ },
+ "luton-united-synagogue": {
+  "address": "656 Dunstable Road, Luton",
+  "postcode": "LU4 8SE",
+  "website": "https://lutonsynagogue.org.uk",
+  "note": "Remade as a clean vector from the owner's screenshot (white star kept white).",
+  "source": "upload 25 Nov 2026 (owner)"
+ },
+ "salvation-army": {
+  "address": "1 Vicarage Street, Luton",
+  "postcode": "LU1 3HZ",
+  "website": "https://www.salvationarmy.org.uk",
+  "note": "National red shield, remade as a clean vector from an image-search screenshot; red set to the brand red #DA291C. Used for every local corps.",
+  "source": "upload 25 Nov 2026 (owner)"
+ },
+ "luton-airport-chapel": {
+  "address": "Terminal Building, Airport Way, Luton",
+  "postcode": "LU2 9LR",
+  "made_by": "SMR",
+  "note": "Text logo made by SMR Digital for the multi-faith chaplaincy (no official logo found); not an official logo. Neutral arch icon, no religion-specific symbol.",
+  "source": "SMR 25 Nov 2026"
+ },
+ "luton-central-sda": {
+  "address": "North Street, Luton",
+  "postcode": "LU2 7QD",
+  "website": "https://lutoncentral.adventistchurch.org.uk/",
+  "note": "Remade as a clean vector from a search-results screenshot; gold flattened to one colour. Not the Luton Central Mosque (slug luton-central).",
+  "source": "upload 25 Nov 2026 (owner)"
+ },
+ "romanian-orthodox-luton": {
+  "address": "St Matthew's Church, Wenlock Street, Luton",
+  "postcode": "LU2 0NN",
+  "website": "http://www.parohialuton.co.uk",
+  "made_by": "SMR",
+  "note": "Text logo made by SMR Digital (no official logo found); not an official logo. Three-bar Orthodox cross icon.",
+  "source": "SMR 25 Nov 2026"
+ },
+ "community-church-luton": {
+  "address": "Luton (meets in homes)",
+  "postcode": "",
+  "website": "http://www.ccluton.net",
+  "note": "Text logo made by SMR Digital (no official logo found); not an official logo. House-with-cross icon.",
+  "made_by": "SMR",
+  "source": "SMR 25 Nov 2026"
+ },
+ "haven-of-glory": {
+  "website": "http://www.havenofglory.com",
+  "source": "owner 25 Nov 2026",
+  "note": "Stray specks removed."
+ },
+ "luton-international-church": {
+  "website": "http://www.luton-intl-church.org",
+  "source": "owner 25 Nov 2026",
+  "note": "Tagline: Enlarging The Tent To Inherit The Nations. No-tagline version recomposed by SMR."
+ },
+ "luton-chinese-christian-church": {
+  "website": "http://www.lutonccc.org.uk",
+  "charity_number": "1123218",
+  "source": "owner 25 Nov 2026",
+  "note": "Remade cleanly by SMR from a small JPEG; founded-by and charity-number lines dropped from the logo."
+ },
+ "lewsey-pentecostal": {
+  "source": "owner 25 Nov 2026",
+  "note": "Remade as a vector by SMR (original on black)."
+ },
+ "olive-tree-church": {
+  "source": "owner 25 Nov 2026",
+  "note": "Remade by SMR from a 180px image: cross and circle redrawn, tree and leaves traced, lettering reset in Poppins Bold."
+ },
+ "rccg": {
+  "website": "https://www.rccg.org",
+  "source": "owner 25 Nov 2026",
+  "note": "National RCCG logo, used for the Luton parishes."
+ },
+ "foursquare-gospel-luton": {
+  "made_by": "SMR",
+  "source": "owner 25 Nov 2026",
+  "note": "Foursquare emblem remade by SMR from a screenshot (chalice redrawn); lockup text made by SMR."
+ },
+ "potters-house-luton": {
+  "source": "owner 25 Nov 2026",
+  "note": "Light version: white parts recoloured charcoal by SMR; original white version kept as on-dark."
  }
 }

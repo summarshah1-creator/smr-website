@@ -1,6 +1,6 @@
 # SMR logo list
 
-422 organisations. Full details in logos.json and LIST.csv.
+442 organisations. Full details in logos.json and LIST.csv.
 
 ## businesses (38)
 - AA Carpets and Furniture
@@ -152,13 +152,14 @@
 - Wildlife Trust BCN
 - Woodland Trust
 
-## community (111)
+## community (131)
 - ABCD Luton
 - ABCD Luton (ABCD-in-Luton)
 - Active Luton
 - All Saints Church (Parish of All Saints with St Peter), Luton
 - Anne Gale School of Dance
 - Army Cadets (Beds & Herts ACF)
+- BAPS Shri Swaminarayan Mandir Luton
 - Baylands Equestrian Centre
 - Bedfordshire Chamber of Commerce
 - Bedfordshire Fire & Rescue Service
@@ -170,6 +171,7 @@
 - Care homes (general)
 - Chaul End Centre (SMR-made from their sign)
 - Christchurch Bushmead
+- Community Church Luton (SMR-made text logo)
 - CVS Bedfordshire
 - Dunstable Town Council
 - East London NHS Foundation Trust
@@ -178,10 +180,13 @@
 - Falkes (Luton) Scout District
 - Farley Hill Methodist Church (SMR-made lockup)
 - Flying Start
+- Foursquare Gospel Church Luton (SMR-made lockup with the Foursquare emblem)
 - Girlguiding (Bedfordshire · Luton South)
 - Golden Arrow Archery
+- Guru Nanak Gurdwara Luton
 - Gymfinity Kids Clubs
 - Hangout Luton
+- Haven of Glory Church (Haven of Glory International Ministries)
 - High Town Methodist Church
 - Higher Ground
 - Hockwell Ring Amateur Boxing Club
@@ -190,10 +195,15 @@
 - Hope Church Luton
 - Jobcentre Plus
 - Legends MMA & Fitness Centre
+- Lewsey Pentecostal Church
 - London Gliding Club
+- London Luton Airport Chapel (SMR-made text logo)
 - Luton & Dunstable University Hospital
 - Luton Allstars Football Club (MTAC)
 - Luton BID (Step Forward Luton)
+- Luton Central Baptist Church
+- Luton Central Seventh-day Adventist Church
+- Luton Chinese Christian Church
 - Luton Christian Fellowship
 - Luton Council
 - Luton Council of Faiths
@@ -203,6 +213,7 @@
 - Luton Grappling Club
 - Luton Gymnastics Club
 - Luton Higashi Karate Kai
+- Luton International Church
 - Luton Irish Forum
 - Luton Karate Academy
 - Luton Libraries
@@ -212,6 +223,7 @@
 - Luton School of Judo
 - Luton Town Football Club
 - Luton Town Hockey Club
+- Luton United Synagogue
 - Luton Youth Council
 - Luton Youth Partnership Service
 - Marsh Farm Futures
@@ -226,10 +238,14 @@
 - Pauline Quirke Academy (PQA Luton)
 - RAF Air Cadets
 - Ramridge Baptist Church
+- Romanian Orthodox Parish, Luton (SMR-made text logo)
 - Rosebuds Luton Sisters
 - Sacred Heart of Jesus Parish, Stopsley, Luton
 - Sea Cadets (Luton Unit 226, TS Keyes)
+- Shree Sanatan Seva Samaj (Hindu Mandir Luton)
+- Shri Guru Ravidass Sabha Luton (Shri Guru Ravidass Bhawan)
 - SPA Gymnastics Academy
+- St Andrew's Church, Luton (SMR-made lockup with the church's shield)
 - St Anne with St Christopher, Luton
 - St Augustine's Church with Holy Trinity, Limbury
 - St Francis' Church, Luton
@@ -254,8 +270,12 @@
 - Sunshine Riding School
 - The Catholic Parish of The Holy Family and St John the Apostle, Luton
 - The Culture Trust Luton
+- The Olive Tree Church
 - The Parish Church of Holy Trinity, Biscot
 - The Parish Church of The Holy Cross, Marsh Farm
+- The Potter's House Luton
+- The Redeemed Christian Church of God (RCCG)
+- The Salvation Army
 - Tina's School of Dance
 - Tokko Youth Hub
 - UK Centre for Carnival Arts

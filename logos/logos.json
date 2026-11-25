@@ -2810,7 +2810,7 @@
    "original_vector": false,
    "quality": "hd",
    "details": {
-    "address": "126–130 Oak Road, Luton",
+    "address": "126\u2013130 Oak Road, Luton",
     "postcode": "LU4 8AD",
     "note": "UKIM logo is national; the lockups add the local name"
    },
@@ -3206,7 +3206,7 @@
    "original_vector": false,
    "quality": "hd",
    "details": {
-    "address": "12–16 Portland Road, Luton",
+    "address": "12\u201316 Portland Road, Luton",
     "postcode": "LU4 8AX"
    },
    "signed_off": false,
@@ -9634,7 +9634,7 @@
    "original_vector": false,
    "quality": "hd",
    "details": {
-    "address": "12–16 Portland Road, Luton",
+    "address": "12\u201316 Portland Road, Luton",
     "postcode": "LU4 8AX",
     "note": "Covers Rabia Girls' School, Rabia Boys' School and Madrasa Islamia Primary"
    },
@@ -16502,7 +16502,7 @@
   },
   {
    "slug": "lantern",
-   "name": "Lantern · Muslim Women's Voices",
+   "name": "Lantern \u00b7 Muslim Women's Voices",
    "aliases": [
     "Lantern"
    ],
@@ -21950,6 +21950,49 @@
    ]
   },
   {
+   "slug": "baps-luton",
+   "name": "BAPS Shri Swaminarayan Mandir Luton",
+   "aliases": [
+    "BAPS Shri Swaminarayan Mandir Luton",
+    "BAPS Luton",
+    "BAPS Mandir",
+    "BAPS"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/baps-luton/",
+   "styles": [
+    "logo",
+    "logo-on-dark"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {
+    "address": "39 Crescent Road, Luton",
+    "postcode": "LU2 0AH",
+    "website": "https://www.baps.org/luton",
+    "note": "BAPS emblem with the BAPS wordmark; the light version has the wordmark in black (the supplied file has it in white, for dark backgrounds).",
+    "source": "upload 25 Nov 2026 (owner)"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "baps-luton-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 866,
+     "h": 1109
+    },
+    {
+     "file": "baps-luton-logo-on-dark.png",
+     "variant": "logo-on-dark",
+     "style": "logo-on-dark",
+     "w": 866,
+     "h": 1109
+    }
+   ]
+  },
+  {
    "slug": "baylands-equestrian-centre",
    "name": "Baylands Equestrian Centre",
    "aliases": [
@@ -23070,6 +23113,119 @@
    ]
   },
   {
+   "slug": "community-church-luton",
+   "name": "Community Church Luton (SMR-made text logo)",
+   "aliases": [
+    "Community Church Luton",
+    "Community Church",
+    "CC Luton"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/community-church-luton/",
+   "styles": [
+    "logo",
+    "logo-white",
+    "logo-black",
+    "icon"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "address": "Luton (meets in homes)",
+    "postcode": "",
+    "website": "http://www.ccluton.net",
+    "note": "Text logo made by SMR Digital (no official logo found); not an official logo. House-with-cross icon.",
+    "made_by": "SMR",
+    "source": "SMR 25 Nov 2026"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "community-church-luton-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "community-church-luton-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1584,
+     "h": 366
+    },
+    {
+     "file": "community-church-luton-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "vector": true
+    },
+    {
+     "file": "community-church-luton-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "w": 1584,
+     "h": 366
+    },
+    {
+     "file": "community-church-luton-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo-black",
+     "vector": true
+    },
+    {
+     "file": "community-church-luton-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo-black",
+     "w": 1584,
+     "h": 366
+    },
+    {
+     "file": "community-church-luton-icon.svg",
+     "variant": "icon",
+     "style": "icon",
+     "vector": true
+    },
+    {
+     "file": "community-church-luton-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 1532,
+     "h": 1459
+    },
+    {
+     "file": "community-church-luton-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon",
+     "w": 1532,
+     "h": 1459,
+     "made": true
+    },
+    {
+     "file": "community-church-luton-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 1532,
+     "h": 1459,
+     "made": true
+    },
+    {
+     "file": "community-church-luton-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "community-church-luton-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
    "slug": "cvs-bedfordshire",
    "name": "CVS Bedfordshire",
    "aliases": [
@@ -23712,8 +23868,104 @@
    ]
   },
   {
+   "slug": "foursquare-gospel-luton",
+   "name": "Foursquare Gospel Church Luton (SMR-made lockup with the Foursquare emblem)",
+   "aliases": [
+    "Foursquare Gospel Church Luton",
+    "Foursquare Gospel Church",
+    "Foursquare Luton"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/foursquare-gospel-luton/",
+   "styles": [
+    "logo",
+    "logo-white",
+    "icon"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "made_by": "SMR",
+    "source": "owner 25 Nov 2026",
+    "note": "Foursquare emblem remade by SMR from a screenshot (chalice redrawn); lockup text made by SMR."
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "foursquare-gospel-luton-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "foursquare-gospel-luton-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1585,
+     "h": 442
+    },
+    {
+     "file": "foursquare-gospel-luton-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "vector": true
+    },
+    {
+     "file": "foursquare-gospel-luton-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "w": 1585,
+     "h": 442
+    },
+    {
+     "file": "foursquare-gospel-luton-icon.svg",
+     "variant": "icon",
+     "style": "icon",
+     "vector": true
+    },
+    {
+     "file": "foursquare-gospel-luton-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 1600,
+     "h": 1600
+    },
+    {
+     "file": "foursquare-gospel-luton-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon",
+     "w": 1600,
+     "h": 1600,
+     "made": true
+    },
+    {
+     "file": "foursquare-gospel-luton-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 1600,
+     "h": 1600,
+     "made": true
+    },
+    {
+     "file": "foursquare-gospel-luton-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "foursquare-gospel-luton-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
    "slug": "girlguiding",
-   "name": "Girlguiding (Bedfordshire · Luton South)",
+   "name": "Girlguiding (Bedfordshire \u00b7 Luton South)",
    "aliases": [
     "Girlguiding Luton"
    ],
@@ -23902,6 +24154,59 @@
      "w": 1592,
      "h": 1600,
      "made": true
+    }
+   ]
+  },
+  {
+   "slug": "guru-nanak-gurdwara-luton",
+   "name": "Guru Nanak Gurdwara Luton",
+   "aliases": [
+    "Guru Nanak Gurdwara",
+    "Guru Nanak Gurdwara Luton",
+    "GNG Luton"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/guru-nanak-gurdwara-luton/",
+   "styles": [
+    "logo",
+    "logo-on-dark"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "address": "2a Dallow Road, Luton",
+    "postcode": "LU1 1LY",
+    "website": "http://www.gngluton.org",
+    "source": "upload 25 Nov 2026 (owner)"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "guru-nanak-gurdwara-luton-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "guru-nanak-gurdwara-luton-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 2000,
+     "h": 1728
+    },
+    {
+     "file": "guru-nanak-gurdwara-luton-logo-on-dark.svg",
+     "variant": "logo-on-dark",
+     "style": "logo-on-dark",
+     "vector": true
+    },
+    {
+     "file": "guru-nanak-gurdwara-luton-logo-on-dark.png",
+     "variant": "logo-on-dark",
+     "style": "logo-on-dark",
+     "w": 2000,
+     "h": 1728
     }
    ]
   },
@@ -24099,6 +24404,76 @@
      "style": "icon",
      "w": 406,
      "h": 466,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "haven-of-glory",
+   "name": "Haven of Glory Church (Haven of Glory International Ministries)",
+   "aliases": [
+    "Haven of Glory International Ministries",
+    "Haven of Glory Church",
+    "Haven of Glory"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/haven-of-glory/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {
+    "website": "http://www.havenofglory.com",
+    "source": "owner 25 Nov 2026",
+    "note": "Stray specks removed."
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "haven-of-glory-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1390,
+     "h": 893
+    },
+    {
+     "file": "haven-of-glory-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1390,
+     "h": 893,
+     "made": true
+    },
+    {
+     "file": "haven-of-glory-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1390,
+     "h": 893,
+     "made": true
+    },
+    {
+     "file": "haven-of-glory-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "haven-of-glory-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "haven-of-glory-logo-brand-colour.png",
+     "variant": "logo-brand-colour",
+     "style": "logo",
+     "w": 1390,
+     "h": 893,
      "made": true
     }
    ]
@@ -24781,6 +25156,116 @@
    ]
   },
   {
+   "slug": "lewsey-pentecostal",
+   "name": "Lewsey Pentecostal Church",
+   "aliases": [
+    "Lewsey Pentecostal Church (Lewsey Christian Centre)",
+    "Lewsey Pentecostal Church",
+    "Lewsey Christian Centre",
+    "Lewsey Pentecostal"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/lewsey-pentecostal/",
+   "styles": [
+    "logo",
+    "logo-white",
+    "logo-black",
+    "icon"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "source": "owner 25 Nov 2026",
+    "note": "Remade as a vector by SMR (original on black)."
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "lewsey-pentecostal-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "lewsey-pentecostal-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1576,
+     "h": 134
+    },
+    {
+     "file": "lewsey-pentecostal-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "vector": true
+    },
+    {
+     "file": "lewsey-pentecostal-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "w": 1576,
+     "h": 134
+    },
+    {
+     "file": "lewsey-pentecostal-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo-black",
+     "vector": true
+    },
+    {
+     "file": "lewsey-pentecostal-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo-black",
+     "w": 1576,
+     "h": 134
+    },
+    {
+     "file": "lewsey-pentecostal-icon.svg",
+     "variant": "icon",
+     "style": "icon",
+     "vector": true
+    },
+    {
+     "file": "lewsey-pentecostal-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 764,
+     "h": 1455
+    },
+    {
+     "file": "lewsey-pentecostal-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon",
+     "w": 764,
+     "h": 1455,
+     "made": true
+    },
+    {
+     "file": "lewsey-pentecostal-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 764,
+     "h": 1455,
+     "made": true
+    },
+    {
+     "file": "lewsey-pentecostal-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "lewsey-pentecostal-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
    "slug": "london-gliding-club",
    "name": "London Gliding Club",
    "aliases": [
@@ -24844,6 +25329,90 @@
      "style": "logo",
      "vector": true,
      "made": true
+    }
+   ]
+  },
+  {
+   "slug": "luton-airport-chapel",
+   "name": "London Luton Airport Chapel (SMR-made text logo)",
+   "aliases": [
+    "London Luton Airport Chapel",
+    "Airport Chapel",
+    "Luton Airport Chapel"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/luton-airport-chapel/",
+   "styles": [
+    "logo",
+    "icon"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "address": "Terminal Building, Airport Way, Luton",
+    "postcode": "LU2 9LR",
+    "made_by": "SMR",
+    "note": "Text logo made by SMR Digital for the multi-faith chaplaincy (no official logo found); not an official logo. Neutral arch icon, no religion-specific symbol.",
+    "source": "SMR 25 Nov 2026"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "luton-airport-chapel-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "luton-airport-chapel-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 2000,
+     "h": 607
+    },
+    {
+     "file": "luton-airport-chapel-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "luton-airport-chapel-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 2000,
+     "h": 607,
+     "made": true
+    },
+    {
+     "file": "luton-airport-chapel-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "luton-airport-chapel-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 2000,
+     "h": 607,
+     "made": true
+    },
+    {
+     "file": "luton-airport-chapel-icon.svg",
+     "variant": "icon",
+     "style": "icon",
+     "vector": true
+    },
+    {
+     "file": "luton-airport-chapel-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 1600,
+     "h": 1860
     }
    ]
   },
@@ -25162,6 +25731,240 @@
      "style": "icon",
      "w": 469,
      "h": 457,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "luton-central-baptist",
+   "name": "Luton Central Baptist Church",
+   "aliases": [
+    "Luton Central Baptist Church",
+    "Central Baptist Church",
+    "Central Baptist Luton"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/luton-central-baptist/",
+   "styles": [
+    "logo",
+    "logo-no-box"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "address": "52A Park Street, Luton",
+    "postcode": "LU1 3ET",
+    "website": "https://centralbaptist.org.uk",
+    "note": "Remade as a clean vector from a blurry screenshot (same layout and colours).",
+    "source": "upload 25 Nov 2026 (owner)"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "luton-central-baptist-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "luton-central-baptist-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 2000,
+     "h": 517
+    },
+    {
+     "file": "luton-central-baptist-logo-no-box.svg",
+     "variant": "logo-no-box",
+     "style": "logo-no-box",
+     "vector": true
+    },
+    {
+     "file": "luton-central-baptist-logo-no-box.png",
+     "variant": "logo-no-box",
+     "style": "logo-no-box",
+     "w": 1898,
+     "h": 456
+    }
+   ]
+  },
+  {
+   "slug": "luton-central-sda",
+   "name": "Luton Central Seventh-day Adventist Church",
+   "aliases": [
+    "Luton Central Seventh-day Adventist Church",
+    "Luton Central SDA",
+    "Luton Central Adventist"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/luton-central-sda/",
+   "styles": [
+    "logo",
+    "icon"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "address": "North Street, Luton",
+    "postcode": "LU2 7QD",
+    "website": "https://lutoncentral.adventistchurch.org.uk/",
+    "note": "Remade as a clean vector from a search-results screenshot; gold flattened to one colour. Not the Luton Central Mosque (slug luton-central).",
+    "source": "upload 25 Nov 2026 (owner)"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "luton-central-sda-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "luton-central-sda-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 2000,
+     "h": 1740
+    },
+    {
+     "file": "luton-central-sda-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "luton-central-sda-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 2000,
+     "h": 1740,
+     "made": true
+    },
+    {
+     "file": "luton-central-sda-icon.svg",
+     "variant": "icon",
+     "style": "icon",
+     "vector": true
+    },
+    {
+     "file": "luton-central-sda-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 1983,
+     "h": 1788
+    }
+   ]
+  },
+  {
+   "slug": "luton-chinese-christian-church",
+   "name": "Luton Chinese Christian Church",
+   "aliases": [
+    "Luton Chinese Christian Church",
+    "LCCC",
+    "\u76e7\u6566\u83ef\u4eba\u57fa\u7763\u6559\u6703"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/luton-chinese-christian-church/",
+   "styles": [
+    "logo",
+    "logo-white",
+    "logo-black",
+    "icon"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "website": "http://www.lutonccc.org.uk",
+    "charity_number": "1123218",
+    "source": "owner 25 Nov 2026",
+    "note": "Remade cleanly by SMR from a small JPEG; founded-by and charity-number lines dropped from the logo."
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "luton-chinese-christian-church-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "luton-chinese-christian-church-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1579,
+     "h": 463
+    },
+    {
+     "file": "luton-chinese-christian-church-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "vector": true
+    },
+    {
+     "file": "luton-chinese-christian-church-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "w": 1579,
+     "h": 463
+    },
+    {
+     "file": "luton-chinese-christian-church-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo-black",
+     "vector": true
+    },
+    {
+     "file": "luton-chinese-christian-church-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo-black",
+     "w": 1579,
+     "h": 463
+    },
+    {
+     "file": "luton-chinese-christian-church-icon.svg",
+     "variant": "icon",
+     "style": "icon",
+     "vector": true
+    },
+    {
+     "file": "luton-chinese-christian-church-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 1562,
+     "h": 1527
+    },
+    {
+     "file": "luton-chinese-christian-church-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon",
+     "w": 1562,
+     "h": 1527,
+     "made": true
+    },
+    {
+     "file": "luton-chinese-christian-church-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 1562,
+     "h": 1527,
+     "made": true
+    },
+    {
+     "file": "luton-chinese-christian-church-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "luton-chinese-christian-church-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
+     "vector": true,
      "made": true
     }
    ]
@@ -26050,6 +26853,175 @@
    ]
   },
   {
+   "slug": "luton-international-church",
+   "name": "Luton International Church",
+   "aliases": [
+    "Luton International Church",
+    "LIC Luton",
+    "LIC"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/luton-international-church/",
+   "styles": [
+    "logo",
+    "logo-no-tagline",
+    "icon"
+   ],
+   "original_vector": true,
+   "quality": "redrawn",
+   "details": {
+    "website": "http://www.luton-intl-church.org",
+    "source": "owner 25 Nov 2026",
+    "note": "Tagline: Enlarging The Tent To Inherit The Nations. No-tagline version recomposed by SMR."
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "luton-international-church-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1800,
+     "h": 266
+    },
+    {
+     "file": "luton-international-church-logo-no-tagline.png",
+     "variant": "logo-no-tagline",
+     "style": "logo-no-tagline",
+     "w": 1800,
+     "h": 234
+    },
+    {
+     "file": "luton-international-church-icon.svg",
+     "variant": "icon",
+     "style": "icon",
+     "vector": true,
+     "redrawn": true
+    },
+    {
+     "file": "luton-international-church-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 1335,
+     "h": 1579
+    },
+    {
+     "file": "luton-international-church-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1800,
+     "h": 266,
+     "made": true
+    },
+    {
+     "file": "luton-international-church-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1800,
+     "h": 266,
+     "made": true
+    },
+    {
+     "file": "luton-international-church-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "luton-international-church-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "luton-international-church-logo-brand-colour.png",
+     "variant": "logo-brand-colour",
+     "style": "logo",
+     "w": 1800,
+     "h": 266,
+     "made": true
+    },
+    {
+     "file": "luton-international-church-logo-no-tagline-black.png",
+     "variant": "logo-no-tagline-black",
+     "style": "logo-no-tagline",
+     "w": 1800,
+     "h": 234,
+     "made": true
+    },
+    {
+     "file": "luton-international-church-logo-no-tagline-white.png",
+     "variant": "logo-no-tagline-white",
+     "style": "logo-no-tagline",
+     "w": 1800,
+     "h": 234,
+     "made": true
+    },
+    {
+     "file": "luton-international-church-logo-no-tagline-black.svg",
+     "variant": "logo-no-tagline-black",
+     "style": "logo-no-tagline",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "luton-international-church-logo-no-tagline-white.svg",
+     "variant": "logo-no-tagline-white",
+     "style": "logo-no-tagline",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "luton-international-church-logo-no-tagline-brand-colour.png",
+     "variant": "logo-no-tagline-brand-colour",
+     "style": "logo-no-tagline",
+     "w": 1800,
+     "h": 234,
+     "made": true
+    },
+    {
+     "file": "luton-international-church-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon",
+     "w": 1335,
+     "h": 1579,
+     "made": true
+    },
+    {
+     "file": "luton-international-church-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 1335,
+     "h": 1579,
+     "made": true
+    },
+    {
+     "file": "luton-international-church-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "luton-international-church-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "luton-international-church-icon-brand-colour.png",
+     "variant": "icon-brand-colour",
+     "style": "icon",
+     "w": 1335,
+     "h": 1579,
+     "made": true
+    }
+   ]
+  },
+  {
    "slug": "luton-irish-forum",
    "name": "Luton Irish Forum",
    "aliases": [],
@@ -26725,6 +27697,74 @@
    ]
   },
   {
+   "slug": "luton-united-synagogue",
+   "name": "Luton United Synagogue",
+   "aliases": [
+    "Luton United Synagogue",
+    "Luton Synagogue",
+    "LUS"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/luton-united-synagogue/",
+   "styles": [
+    "logo",
+    "logo-on-dark",
+    "icon"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "address": "656 Dunstable Road, Luton",
+    "postcode": "LU4 8SE",
+    "website": "https://lutonsynagogue.org.uk",
+    "note": "Remade as a clean vector from the owner's screenshot (white star kept white).",
+    "source": "upload 25 Nov 2026 (owner)"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "luton-united-synagogue-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "luton-united-synagogue-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 2000,
+     "h": 1513
+    },
+    {
+     "file": "luton-united-synagogue-logo-on-dark.svg",
+     "variant": "logo-on-dark",
+     "style": "logo-on-dark",
+     "vector": true
+    },
+    {
+     "file": "luton-united-synagogue-logo-on-dark.png",
+     "variant": "logo-on-dark",
+     "style": "logo-on-dark",
+     "w": 2000,
+     "h": 1513
+    },
+    {
+     "file": "luton-united-synagogue-icon.svg",
+     "variant": "icon",
+     "style": "icon",
+     "vector": true
+    },
+    {
+     "file": "luton-united-synagogue-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 988,
+     "h": 2000
+    }
+   ]
+  },
+  {
    "slug": "luton-youth-council",
    "name": "Luton Youth Council",
    "aliases": [
@@ -27292,7 +28332,7 @@
    "original_vector": true,
    "quality": "redrawn",
    "details": {
-    "address": "The Hat Factory Arts Centre, 65–67 Bute Street, Luton",
+    "address": "The Hat Factory Arts Centre, 65\u201367 Bute Street, Luton",
     "postcode": "LU1 2EY",
     "website": "https://ngyt.co.uk"
    },
@@ -27796,6 +28836,91 @@
    ]
   },
   {
+   "slug": "romanian-orthodox-luton",
+   "name": "Romanian Orthodox Parish, Luton (SMR-made text logo)",
+   "aliases": [
+    "Romanian Orthodox Parish of St John the Baptist and St Alban",
+    "Romanian Orthodox Parish Luton",
+    "Parohia Luton"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/romanian-orthodox-luton/",
+   "styles": [
+    "logo",
+    "icon"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "address": "St Matthew's Church, Wenlock Street, Luton",
+    "postcode": "LU2 0NN",
+    "website": "http://www.parohialuton.co.uk",
+    "made_by": "SMR",
+    "note": "Text logo made by SMR Digital (no official logo found); not an official logo. Three-bar Orthodox cross icon.",
+    "source": "SMR 25 Nov 2026"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "romanian-orthodox-luton-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "romanian-orthodox-luton-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 2000,
+     "h": 473
+    },
+    {
+     "file": "romanian-orthodox-luton-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "romanian-orthodox-luton-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 2000,
+     "h": 473,
+     "made": true
+    },
+    {
+     "file": "romanian-orthodox-luton-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "romanian-orthodox-luton-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 2000,
+     "h": 473,
+     "made": true
+    },
+    {
+     "file": "romanian-orthodox-luton-icon.svg",
+     "variant": "icon",
+     "style": "icon",
+     "vector": true
+    },
+    {
+     "file": "romanian-orthodox-luton-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 1108,
+     "h": 2000
+    }
+   ]
+  },
+  {
    "slug": "rosebuds",
    "name": "Rosebuds Luton Sisters",
    "aliases": [],
@@ -28056,6 +29181,117 @@
    ]
   },
   {
+   "slug": "shree-sanatan-seva-samaj",
+   "name": "Shree Sanatan Seva Samaj (Hindu Mandir Luton)",
+   "aliases": [
+    "Shree Sanatan Seva Samaj (Hindu Mandir)",
+    "Hindu Mandir Luton",
+    "Shree Sanatan Seva Samaj",
+    "SSS Hindu Mandir"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/shree-sanatan-seva-samaj/",
+   "styles": [
+    "logo",
+    "logo-white"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "address": "Hindu Community Centre, Hereford Road, Lewsey Farm, Luton",
+    "postcode": "LU4 0PS",
+    "website": "http://www.hindumandir-luton.org",
+    "note": "The supplied logo is white only; SMR added a deep saffron version for light backgrounds.",
+    "source": "upload 25 Nov 2026 (owner)"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "shree-sanatan-seva-samaj-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "shree-sanatan-seva-samaj-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1398,
+     "h": 2000
+    },
+    {
+     "file": "shree-sanatan-seva-samaj-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "vector": true
+    },
+    {
+     "file": "shree-sanatan-seva-samaj-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "w": 1398,
+     "h": 2000
+    }
+   ]
+  },
+  {
+   "slug": "shri-guru-ravidass-sabha-luton",
+   "name": "Shri Guru Ravidass Sabha Luton (Shri Guru Ravidass Bhawan)",
+   "aliases": [
+    "Shri Guru Ravidass Bhawan",
+    "Shri Guru Ravidass Sabha",
+    "SGRS Luton",
+    "Ravidass Bhawan"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/shri-guru-ravidass-sabha-luton/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "address": "31 Cardigan Street, Luton",
+    "postcode": "LU1 1RP",
+    "website": "https://sgrsluton.co.uk",
+    "note": "Emblem cropped from the sgrsluton.co.uk screenshot the owner sent and redrawn as a vector.",
+    "source": "upload 25 Nov 2026 (owner)"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "shri-guru-ravidass-sabha-luton-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "shri-guru-ravidass-sabha-luton-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1948,
+     "h": 1959
+    },
+    {
+     "file": "shri-guru-ravidass-sabha-luton-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "shri-guru-ravidass-sabha-luton-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1948,
+     "h": 1959,
+     "made": true
+    }
+   ]
+  },
+  {
    "slug": "spa-gymnastics",
    "name": "SPA Gymnastics Academy",
    "aliases": [
@@ -28117,6 +29353,76 @@
      "style": "logo",
      "vector": true,
      "made": true
+    }
+   ]
+  },
+  {
+   "slug": "st-andrews-luton",
+   "name": "St Andrew's Church, Luton (SMR-made lockup with the church's shield)",
+   "aliases": [
+    "St Andrew's, Luton",
+    "St Andrew's Church Luton",
+    "St Andrew\u2019s Church Luton",
+    "St Andrews Luton"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/st-andrews-luton/",
+   "styles": [
+    "logo",
+    "icon"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "address": "11 Blenheim Crescent, Luton",
+    "postcode": "LU3 1HA",
+    "website": "http://www.standrewsluton.church",
+    "note": "Shield (St Andrew: crossed fish and anchor) redrawn as a vector from the owner's upload; the name lockup is made by SMR Digital.",
+    "source": "upload 25 Nov 2026 (owner)"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "st-andrews-luton-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "st-andrews-luton-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 2000,
+     "h": 559
+    },
+    {
+     "file": "st-andrews-luton-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "st-andrews-luton-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 2000,
+     "h": 559,
+     "made": true
+    },
+    {
+     "file": "st-andrews-luton-icon.svg",
+     "variant": "icon",
+     "style": "icon",
+     "vector": true
+    },
+    {
+     "file": "st-andrews-luton-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 1343,
+     "h": 1981
     }
    ]
   },
@@ -30507,6 +31813,130 @@
    ]
   },
   {
+   "slug": "olive-tree-church",
+   "name": "The Olive Tree Church",
+   "aliases": [
+    "The Olive Tree Church",
+    "Olive Tree Church"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/olive-tree-church/",
+   "styles": [
+    "logo",
+    "logo-on-dark",
+    "icon"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "source": "owner 25 Nov 2026",
+    "note": "Remade by SMR from a 180px image: cross and circle redrawn, tree and leaves traced, lettering reset in Poppins Bold."
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "olive-tree-church-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "olive-tree-church-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1407,
+     "h": 1531
+    },
+    {
+     "file": "olive-tree-church-logo-on-dark.svg",
+     "variant": "logo-on-dark",
+     "style": "logo-on-dark",
+     "vector": true
+    },
+    {
+     "file": "olive-tree-church-logo-on-dark.png",
+     "variant": "logo-on-dark",
+     "style": "logo-on-dark",
+     "w": 1407,
+     "h": 1531
+    },
+    {
+     "file": "olive-tree-church-icon.svg",
+     "variant": "icon",
+     "style": "icon",
+     "vector": true
+    },
+    {
+     "file": "olive-tree-church-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 1473,
+     "h": 1560
+    },
+    {
+     "file": "olive-tree-church-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1407,
+     "h": 1531,
+     "made": true
+    },
+    {
+     "file": "olive-tree-church-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1407,
+     "h": 1531,
+     "made": true
+    },
+    {
+     "file": "olive-tree-church-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "olive-tree-church-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "olive-tree-church-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon",
+     "w": 1473,
+     "h": 1560,
+     "made": true
+    },
+    {
+     "file": "olive-tree-church-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 1473,
+     "h": 1560,
+     "made": true
+    },
+    {
+     "file": "olive-tree-church-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "olive-tree-church-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
    "slug": "holy-trinity-biscot",
    "name": "The Parish Church of Holy Trinity, Biscot",
    "aliases": [
@@ -30635,6 +32065,240 @@
      "variant": "logo-white",
      "style": "logo",
      "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "potters-house-luton",
+   "name": "The Potter's House Luton",
+   "aliases": [
+    "Potter's House Christian Fellowship Luton",
+    "The Potters House Luton",
+    "Potter's House Luton"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/potters-house-luton/",
+   "styles": [
+    "logo",
+    "logo-on-dark"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {
+    "source": "owner 25 Nov 2026",
+    "note": "Light version: white parts recoloured charcoal by SMR; original white version kept as on-dark."
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "potters-house-luton-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1462,
+     "h": 824
+    },
+    {
+     "file": "potters-house-luton-logo-on-dark.png",
+     "variant": "logo-on-dark",
+     "style": "logo-on-dark",
+     "w": 1462,
+     "h": 824
+    },
+    {
+     "file": "potters-house-luton-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1462,
+     "h": 824,
+     "made": true
+    },
+    {
+     "file": "potters-house-luton-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1462,
+     "h": 824,
+     "made": true
+    },
+    {
+     "file": "potters-house-luton-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "potters-house-luton-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "rccg",
+   "name": "The Redeemed Christian Church of God (RCCG)",
+   "aliases": [
+    "RCCG Victory Centre for All Nations",
+    "RCCG New Life Assembly Luton",
+    "RCCG My Father's House Dunstable",
+    "RCCG",
+    "Redeemed Christian Church of God"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/rccg/",
+   "styles": [
+    "logo",
+    "icon"
+   ],
+   "original_vector": true,
+   "quality": "redrawn",
+   "details": {
+    "website": "https://www.rccg.org",
+    "source": "owner 25 Nov 2026",
+    "note": "National RCCG logo, used for the Luton parishes."
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "rccg-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 900,
+     "h": 900
+    },
+    {
+     "file": "rccg-icon.svg",
+     "variant": "icon",
+     "style": "icon",
+     "vector": true,
+     "redrawn": true
+    },
+    {
+     "file": "rccg-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 1597,
+     "h": 1597
+    },
+    {
+     "file": "rccg-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 900,
+     "h": 900,
+     "made": true
+    },
+    {
+     "file": "rccg-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 900,
+     "h": 900,
+     "made": true
+    },
+    {
+     "file": "rccg-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "rccg-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "rccg-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon",
+     "w": 1597,
+     "h": 1597,
+     "made": true
+    },
+    {
+     "file": "rccg-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 1597,
+     "h": 1597,
+     "made": true
+    },
+    {
+     "file": "rccg-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "rccg-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "salvation-army",
+   "name": "The Salvation Army",
+   "aliases": [
+    "The Salvation Army Luton",
+    "The Salvation Army, Dunstable",
+    "The Salvation Army, Eaton Bray",
+    "Salvation Army"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/salvation-army/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "address": "1 Vicarage Street, Luton",
+    "postcode": "LU1 3HZ",
+    "website": "https://www.salvationarmy.org.uk",
+    "note": "National red shield, remade as a clean vector from an image-search screenshot; red set to the brand red #DA291C. Used for every local corps.",
+    "source": "upload 25 Nov 2026 (owner)"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "salvation-army-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "salvation-army-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1688,
+     "h": 2000
+    },
+    {
+     "file": "salvation-army-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "salvation-army-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1688,
+     "h": 2000,
      "made": true
     }
    ]
@@ -32424,7 +34088,7 @@
    "original_vector": true,
    "quality": "vector",
    "details": {
-    "address": "Bennett’s Recreation Ground, Dunstable",
+    "address": "Bennett\u2019s Recreation Ground, Dunstable",
     "postcode": "LU6 1PJ",
     "website": "https://www.dunstable.gov.uk"
    },
@@ -34356,7 +36020,7 @@
    "original_vector": true,
    "quality": "vector",
    "details": {
-    "last_event_at": "Luton Library Theatre, St George’s Square LU1 2NG"
+    "last_event_at": "Luton Library Theatre, St George\u2019s Square LU1 2NG"
    },
    "signed_off": false,
    "files": [
