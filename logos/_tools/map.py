@@ -50,7 +50,7 @@ M = {
 'chiltern-learning-trust':('schools','Chiltern Learning Trust',['CLT'],[('ngs/chiltern-trust.webp','logo'),('ngs/chiltern-trust-light.webp','logo-white'),('let/chiltern-tree.png','icon')]),
 'farley-junior':  ('schools','Farley Junior Academy',['Farley'],[('inline/farley-badge.png','logo'),('inline/farley-tagline.png','tagline')]),
 'norton-road':    ('schools','Norton Road Primary School',[],[('inline/norton-road-mark.webp','logo-compact'),('inline/norton-road-wordmark.webp','wordmark'),('inline/norton-road-intro.webp','logo')]),
-'luton-sixth-form':('schools','Luton Sixth Form College',['LSFC'],[('inline/lsfc-logo.webp','logo'),('inline/lsfc-logo-dark.webp','logo-white'),('let/luton-sixth-form.png','icon')]),
+'luton-sixth-form':('schools','Luton Sixth Form College',['LSFC'],[('hand/luton-sixth-form-logo.svg','logo'),('hand/luton-sixth-form-logo-on-dark.svg','logo-on-dark'),('hand/luton-sixth-form-logo-white.svg','logo-white'),('hand/luton-sixth-form-logo-black.svg','logo-black'),('hand/luton-sixth-form-icon.svg','icon')]),
 'barnfield-college':('schools','Barnfield College',[],[('ngs/barnfield-college.webp','logo'),('ngs/barnfield-college-light.webp','logo-white'),('let/barnfield.png','icon')]),
 'cardinal-newman':('schools','Cardinal Newman Catholic School',[],[('let/cardinal-newman.png','icon')]),
 'chalk-hills':    ('schools','Chalk Hills Academy',[],[('let/chalk-hills.png','icon')]),

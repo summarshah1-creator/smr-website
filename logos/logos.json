@@ -2810,7 +2810,7 @@
    "original_vector": false,
    "quality": "hd",
    "details": {
-    "address": "126\u2013130 Oak Road, Luton",
+    "address": "126–130 Oak Road, Luton",
     "postcode": "LU4 8AD",
     "note": "UKIM logo is national; the lockups add the local name"
    },
@@ -3206,7 +3206,7 @@
    "original_vector": false,
    "quality": "hd",
    "details": {
-    "address": "12\u201316 Portland Road, Luton",
+    "address": "12–16 Portland Road, Luton",
     "postcode": "LU4 8AX"
    },
    "signed_off": false,
@@ -8451,31 +8451,78 @@
    "path": "schools/luton-sixth-form/",
    "styles": [
     "logo",
-    "logo-white",
+    "logo-on-dark",
     "icon"
    ],
-   "original_vector": true,
-   "quality": "redrawn",
+   "original_vector": false,
+   "quality": "vector",
    "details": {
     "address": "Bradgers Hill Road, Luton",
     "postcode": "LU2 7EW",
-    "website": "https://www.lutonsfc.ac.uk"
+    "website": "https://www.lutonsfc.ac.uk",
+    "source": "owner 25 Nov 2026 (replaces the old logo); on-light version has \"Luton\" in the grey of SIXTH FORM"
    },
    "signed_off": false,
    "files": [
     {
+     "file": "luton-sixth-form-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true
+    },
+    {
      "file": "luton-sixth-form-logo.png",
      "variant": "logo",
      "style": "logo",
-     "w": 1103,
-     "h": 255
+     "w": 2000,
+     "h": 1513
+    },
+    {
+     "file": "luton-sixth-form-logo-on-dark.svg",
+     "variant": "logo-on-dark",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true
+    },
+    {
+     "file": "luton-sixth-form-logo-on-dark.png",
+     "variant": "logo-on-dark",
+     "style": "logo",
+     "w": 2000,
+     "h": 1513
+    },
+    {
+     "file": "luton-sixth-form-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true,
+     "made": true
     },
     {
      "file": "luton-sixth-form-logo-white.png",
      "variant": "logo-white",
-     "style": "logo-white",
-     "w": 1103,
-     "h": 255
+     "style": "logo",
+     "w": 2000,
+     "h": 1513,
+     "made": true
+    },
+    {
+     "file": "luton-sixth-form-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "redrawn": true,
+     "made": true
+    },
+    {
+     "file": "luton-sixth-form-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 2000,
+     "h": 1513,
+     "made": true
     },
     {
      "file": "luton-sixth-form-icon.svg",
@@ -8488,61 +8535,23 @@
      "file": "luton-sixth-form-icon.png",
      "variant": "icon",
      "style": "icon",
-     "w": 1600,
-     "h": 719
+     "w": 2000,
+     "h": 839
     },
     {
-     "file": "luton-sixth-form-logo-black.png",
-     "variant": "logo-black",
-     "style": "logo",
-     "w": 1103,
-     "h": 255,
-     "made": true
-    },
-    {
-     "file": "luton-sixth-form-logo-white.png",
-     "variant": "logo-white",
-     "style": "logo",
-     "w": 1103,
-     "h": 255,
-     "made": true
-    },
-    {
-     "file": "luton-sixth-form-logo-black.svg",
-     "variant": "logo-black",
-     "style": "logo",
-     "vector": true,
-     "made": true
-    },
-    {
-     "file": "luton-sixth-form-logo-white.svg",
-     "variant": "logo-white",
-     "style": "logo",
-     "vector": true,
-     "made": true
-    },
-    {
-     "file": "luton-sixth-form-logo-brand-colour.png",
-     "variant": "logo-brand-colour",
-     "style": "logo",
-     "w": 1103,
-     "h": 255,
-     "made": true
-    },
-    {
-     "file": "luton-sixth-form-icon-black.png",
-     "variant": "icon-black",
+     "file": "luton-sixth-form-icon-white.svg",
+     "variant": "icon-white",
      "style": "icon",
-     "w": 1600,
-     "h": 719,
+     "vector": true,
+     "redrawn": true,
      "made": true
     },
     {
      "file": "luton-sixth-form-icon-white.png",
      "variant": "icon-white",
      "style": "icon",
-     "w": 1600,
-     "h": 719,
+     "w": 2000,
+     "h": 839,
      "made": true
     },
     {
@@ -8550,21 +8559,15 @@
      "variant": "icon-black",
      "style": "icon",
      "vector": true,
+     "redrawn": true,
      "made": true
     },
     {
-     "file": "luton-sixth-form-icon-white.svg",
-     "variant": "icon-white",
+     "file": "luton-sixth-form-icon-black.png",
+     "variant": "icon-black",
      "style": "icon",
-     "vector": true,
-     "made": true
-    },
-    {
-     "file": "luton-sixth-form-icon-brand-colour.png",
-     "variant": "icon-brand-colour",
-     "style": "icon",
-     "w": 1600,
-     "h": 719,
+     "w": 2000,
+     "h": 839,
      "made": true
     }
    ]
@@ -9634,7 +9637,7 @@
    "original_vector": false,
    "quality": "hd",
    "details": {
-    "address": "12\u201316 Portland Road, Luton",
+    "address": "12–16 Portland Road, Luton",
     "postcode": "LU4 8AX",
     "note": "Covers Rabia Girls' School, Rabia Boys' School and Madrasa Islamia Primary"
    },
@@ -16508,7 +16511,7 @@
   },
   {
    "slug": "lantern",
-   "name": "Lantern \u00b7 Muslim Women's Voices",
+   "name": "Lantern · Muslim Women's Voices",
    "aliases": [
     "Lantern"
    ],
@@ -24427,7 +24430,7 @@
   },
   {
    "slug": "girlguiding",
-   "name": "Girlguiding (Bedfordshire \u00b7 Luton South)",
+   "name": "Girlguiding (Bedfordshire · Luton South)",
    "aliases": [
     "Girlguiding Luton"
    ],
@@ -26434,7 +26437,7 @@
    "aliases": [
     "Luton Chinese Christian Church",
     "LCCC",
-    "\u76e7\u6566\u83ef\u4eba\u57fa\u7763\u6559\u6703"
+    "盧敦華人基督教會"
    ],
    "category": "community",
    "category_name": "Council, public & youth",
@@ -28902,7 +28905,7 @@
    "original_vector": true,
    "quality": "redrawn",
    "details": {
-    "address": "The Hat Factory Arts Centre, 65\u201367 Bute Street, Luton",
+    "address": "The Hat Factory Arts Centre, 65–67 Bute Street, Luton",
     "postcode": "LU1 2EY",
     "website": "https://ngyt.co.uk"
    },
@@ -30001,7 +30004,7 @@
    "aliases": [
     "St Andrew's, Luton",
     "St Andrew's Church Luton",
-    "St Andrew\u2019s Church Luton",
+    "St Andrew’s Church Luton",
     "St Andrews Luton"
    ],
    "category": "community",
@@ -35038,7 +35041,7 @@
    "original_vector": true,
    "quality": "vector",
    "details": {
-    "address": "Bennett\u2019s Recreation Ground, Dunstable",
+    "address": "Bennett’s Recreation Ground, Dunstable",
     "postcode": "LU6 1PJ",
     "website": "https://www.dunstable.gov.uk"
    },
@@ -36970,7 +36973,7 @@
    "original_vector": true,
    "quality": "vector",
    "details": {
-    "last_event_at": "Luton Library Theatre, St George\u2019s Square LU1 2NG"
+    "last_event_at": "Luton Library Theatre, St George’s Square LU1 2NG"
    },
    "signed_off": false,
    "files": [
