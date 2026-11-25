@@ -1679,5 +1679,34 @@
  "potters-house-luton": {
   "source": "owner 25 Nov 2026",
   "note": "Light version: white parts recoloured charcoal by SMR; original white version kept as on-dark."
+ },
+ "sundon-park-baptist": {
+  "made_by": "SMR",
+  "source": "owner 25 Nov 2026",
+  "note": "Church emblem (hands round a cross) redrawn as a clean vector by SMR; name set underneath by SMR."
+ },
+ "fellowship-baptist-luton": {
+  "website": "https://www.fellowshipbaptistchurch.org.uk",
+  "source": "owner 25 Nov 2026"
+ },
+ "bethel-strict-baptist": {
+  "source": "owner 25 Nov 2026",
+  "note": "Photo of the 1906 stone panel kept as a photo."
+ },
+ "christ-apostolic-church-luton": {
+  "website": "http://www.cacluton.org",
+  "source": "owner 25 Nov 2026",
+  "note": "Cropped from a screenshot; painted centre stays raster."
+ },
+ "apostolic-faith-mission-luton": {
+  "website": "http://www.afmluton.org.uk",
+  "made_by": "SMR",
+  "source": "owner 25 Nov 2026",
+  "note": "AFM emblem; lockup with name made by SMR."
+ },
+ "restoration-revival-fellowship": {
+  "website": "http://www.rrfluton.org.uk",
+  "source": "owner 25 Nov 2026",
+  "note": "Light version darkened to slate by SMR so the silver text reads on light backgrounds; original kept as on-dark."
  }
 }

@@ -18753,6 +18753,93 @@
    ]
   },
   {
+   "slug": "apostolic-faith-mission-luton",
+   "name": "Apostolic Faith Mission, Luton",
+   "aliases": [
+    "Apostolic Faith Mission - Luton",
+    "Apostolic Faith Mission Luton",
+    "AFM Luton"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/apostolic-faith-mission-luton/",
+   "styles": [
+    "icon",
+    "logo",
+    "logo-white"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {
+    "website": "http://www.afmluton.org.uk",
+    "made_by": "SMR",
+    "source": "owner 25 Nov 2026",
+    "note": "AFM emblem; lockup with name made by SMR."
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "apostolic-faith-mission-luton-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 900,
+     "h": 900
+    },
+    {
+     "file": "apostolic-faith-mission-luton-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1800,
+     "h": 648
+    },
+    {
+     "file": "apostolic-faith-mission-luton-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "w": 1800,
+     "h": 648
+    },
+    {
+     "file": "apostolic-faith-mission-luton-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon",
+     "w": 900,
+     "h": 900,
+     "made": true
+    },
+    {
+     "file": "apostolic-faith-mission-luton-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 900,
+     "h": 900,
+     "made": true
+    },
+    {
+     "file": "apostolic-faith-mission-luton-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "apostolic-faith-mission-luton-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "apostolic-faith-mission-luton-icon-brand-colour.png",
+     "variant": "icon-brand-colour",
+     "style": "icon",
+     "w": 900,
+     "h": 900,
+     "made": true
+    }
+   ]
+  },
+  {
    "slug": "army-cadets",
    "name": "Army Cadets (Beds & Herts ACF)",
    "aliases": [
@@ -19613,6 +19700,128 @@
    ]
   },
   {
+   "slug": "bethel-strict-baptist",
+   "name": "Bethel Strict Baptist Chapel",
+   "aliases": [
+    "Bethel Strict Baptist Chapel",
+    "Bethel Chapel Luton"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/bethel-strict-baptist/",
+   "styles": [
+    "logo",
+    "icon"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {
+    "source": "owner 25 Nov 2026",
+    "note": "Photo of the 1906 stone panel kept as a photo."
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "bethel-strict-baptist-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1338,
+     "h": 332
+    },
+    {
+     "file": "bethel-strict-baptist-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 1062,
+     "h": 664
+    },
+    {
+     "file": "bethel-strict-baptist-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1338,
+     "h": 332,
+     "made": true
+    },
+    {
+     "file": "bethel-strict-baptist-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1338,
+     "h": 332,
+     "made": true
+    },
+    {
+     "file": "bethel-strict-baptist-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "bethel-strict-baptist-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "bethel-strict-baptist-logo-on-dark.png",
+     "variant": "logo-on-dark",
+     "style": "logo",
+     "w": 1338,
+     "h": 332,
+     "made": true
+    },
+    {
+     "file": "bethel-strict-baptist-logo-brand-colour.png",
+     "variant": "logo-brand-colour",
+     "style": "logo",
+     "w": 1338,
+     "h": 332,
+     "made": true
+    },
+    {
+     "file": "bethel-strict-baptist-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon",
+     "w": 1062,
+     "h": 664,
+     "made": true
+    },
+    {
+     "file": "bethel-strict-baptist-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 1062,
+     "h": 664,
+     "made": true
+    },
+    {
+     "file": "bethel-strict-baptist-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "bethel-strict-baptist-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "bethel-strict-baptist-icon-brand-colour.png",
+     "variant": "icon-brand-colour",
+     "style": "icon",
+     "w": 1062,
+     "h": 664,
+     "made": true
+    }
+   ]
+  },
+  {
    "slug": "cogic-calvary",
    "name": "Calvary Church of God in Christ (COGIC UK)",
    "aliases": [
@@ -19731,6 +19940,68 @@
      "style": "icon",
      "w": 1600,
      "h": 1477
+    }
+   ]
+  },
+  {
+   "slug": "christ-apostolic-church-luton",
+   "name": "Christ Apostolic Church (East of Luton)",
+   "aliases": [
+    "Christ Apostolic Church - East of Luton",
+    "Christ Apostolic Church Luton",
+    "CAC Luton"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/christ-apostolic-church-luton/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {
+    "website": "http://www.cacluton.org",
+    "source": "owner 25 Nov 2026",
+    "note": "Cropped from a screenshot; painted centre stays raster."
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "christ-apostolic-church-luton-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1021,
+     "h": 807
+    },
+    {
+     "file": "christ-apostolic-church-luton-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1021,
+     "h": 807,
+     "made": true
+    },
+    {
+     "file": "christ-apostolic-church-luton-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1021,
+     "h": 807,
+     "made": true
+    },
+    {
+     "file": "christ-apostolic-church-luton-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "christ-apostolic-church-luton-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
     }
    ]
   },
@@ -20280,6 +20551,82 @@
      "style": "logo",
      "w": 963,
      "h": 308,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "fellowship-baptist-luton",
+   "name": "Fellowship Baptist Church",
+   "aliases": [
+    "Fellowship Baptist Church",
+    "Fellowship Baptist Luton"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/fellowship-baptist-luton/",
+   "styles": [
+    "logo"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {
+    "website": "https://www.fellowshipbaptistchurch.org.uk",
+    "source": "owner 25 Nov 2026"
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "fellowship-baptist-luton-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 939,
+     "h": 279
+    },
+    {
+     "file": "fellowship-baptist-luton-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 939,
+     "h": 279,
+     "made": true
+    },
+    {
+     "file": "fellowship-baptist-luton-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 939,
+     "h": 279,
+     "made": true
+    },
+    {
+     "file": "fellowship-baptist-luton-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "fellowship-baptist-luton-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "fellowship-baptist-luton-logo-on-dark.png",
+     "variant": "logo-on-dark",
+     "style": "logo",
+     "w": 939,
+     "h": 279,
+     "made": true
+    },
+    {
+     "file": "fellowship-baptist-luton-logo-brand-colour.png",
+     "variant": "logo-brand-colour",
+     "style": "logo",
+     "w": 939,
+     "h": 279,
      "made": true
     }
    ]
@@ -24546,6 +24893,75 @@
    ]
   },
   {
+   "slug": "restoration-revival-fellowship",
+   "name": "Restoration Revival Fellowship",
+   "aliases": [
+    "Restoration Revival Fellowship",
+    "RRF Luton"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/restoration-revival-fellowship/",
+   "styles": [
+    "logo",
+    "logo-on-dark"
+   ],
+   "original_vector": false,
+   "quality": "hd",
+   "details": {
+    "website": "http://www.rrfluton.org.uk",
+    "source": "owner 25 Nov 2026",
+    "note": "Light version darkened to slate by SMR so the silver text reads on light backgrounds; original kept as on-dark."
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "restoration-revival-fellowship-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1454,
+     "h": 983
+    },
+    {
+     "file": "restoration-revival-fellowship-logo-on-dark.png",
+     "variant": "logo-on-dark",
+     "style": "logo-on-dark",
+     "w": 1454,
+     "h": 983
+    },
+    {
+     "file": "restoration-revival-fellowship-logo-black.png",
+     "variant": "logo-black",
+     "style": "logo",
+     "w": 1454,
+     "h": 983,
+     "made": true
+    },
+    {
+     "file": "restoration-revival-fellowship-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo",
+     "w": 1454,
+     "h": 983,
+     "made": true
+    },
+    {
+     "file": "restoration-revival-fellowship-logo-black.svg",
+     "variant": "logo-black",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "restoration-revival-fellowship-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo",
+     "vector": true,
+     "made": true
+    }
+   ]
+  },
+  {
    "slug": "rosebuds",
    "name": "Rosebuds Luton Sisters",
    "aliases": [],
@@ -25511,6 +25927,101 @@
      "style": "logo",
      "w": 1594,
      "h": 421,
+     "made": true
+    }
+   ]
+  },
+  {
+   "slug": "sundon-park-baptist",
+   "name": "Sundon Park Baptist Church (SMR lockup with the church emblem)",
+   "aliases": [
+    "Sundon Park Baptist Church",
+    "Sundon Park Baptist"
+   ],
+   "category": "community",
+   "category_name": "Council, public & youth",
+   "path": "community/sundon-park-baptist/",
+   "styles": [
+    "logo",
+    "logo-white",
+    "icon"
+   ],
+   "original_vector": true,
+   "quality": "vector",
+   "details": {
+    "made_by": "SMR",
+    "source": "owner 25 Nov 2026",
+    "note": "Church emblem (hands round a cross) redrawn as a clean vector by SMR; name set underneath by SMR."
+   },
+   "signed_off": false,
+   "files": [
+    {
+     "file": "sundon-park-baptist-logo.svg",
+     "variant": "logo",
+     "style": "logo",
+     "vector": true
+    },
+    {
+     "file": "sundon-park-baptist-logo.png",
+     "variant": "logo",
+     "style": "logo",
+     "w": 1194,
+     "h": 1577
+    },
+    {
+     "file": "sundon-park-baptist-logo-white.svg",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "vector": true
+    },
+    {
+     "file": "sundon-park-baptist-logo-white.png",
+     "variant": "logo-white",
+     "style": "logo-white",
+     "w": 1194,
+     "h": 1577
+    },
+    {
+     "file": "sundon-park-baptist-icon.svg",
+     "variant": "icon",
+     "style": "icon",
+     "vector": true
+    },
+    {
+     "file": "sundon-park-baptist-icon.png",
+     "variant": "icon",
+     "style": "icon",
+     "w": 1570,
+     "h": 1497
+    },
+    {
+     "file": "sundon-park-baptist-icon-black.png",
+     "variant": "icon-black",
+     "style": "icon",
+     "w": 1570,
+     "h": 1497,
+     "made": true
+    },
+    {
+     "file": "sundon-park-baptist-icon-white.png",
+     "variant": "icon-white",
+     "style": "icon",
+     "w": 1570,
+     "h": 1497,
+     "made": true
+    },
+    {
+     "file": "sundon-park-baptist-icon-black.svg",
+     "variant": "icon-black",
+     "style": "icon",
+     "vector": true,
+     "made": true
+    },
+    {
+     "file": "sundon-park-baptist-icon-white.svg",
+     "variant": "icon-white",
+     "style": "icon",
+     "vector": true,
      "made": true
     }
    ]

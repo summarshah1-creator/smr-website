@@ -1,6 +1,6 @@
 # SMR logo list
 
-442 organisations. Full details in logos.json and LIST.csv.
+448 organisations. Full details in logos.json and LIST.csv.
 
 ## businesses (38)
 - AA Carpets and Furniture
@@ -152,12 +152,13 @@
 - Wildlife Trust BCN
 - Woodland Trust
 
-## community (131)
+## community (137)
 - ABCD Luton
 - ABCD Luton (ABCD-in-Luton)
 - Active Luton
 - All Saints Church (Parish of All Saints with St Peter), Luton
 - Anne Gale School of Dance
+- Apostolic Faith Mission, Luton
 - Army Cadets (Beds & Herts ACF)
 - BAPS Shri Swaminarayan Mandir Luton
 - Baylands Equestrian Centre
@@ -166,10 +167,12 @@
 - Bedfordshire Hospitals NHS Foundation Trust
 - Bedfordshire Police
 - Bedfordshire Police & Crime Commissioner
+- Bethel Strict Baptist Chapel
 - Bury Park Community Centre (SMR-made text logo from the sign)
 - Calvary Church of God in Christ (COGIC UK)
 - Care homes (general)
 - Chaul End Centre (SMR-made from their sign)
+- Christ Apostolic Church (East of Luton)
 - Christchurch Bushmead
 - Community Church Luton (SMR-made text logo)
 - CVS Bedfordshire
@@ -179,6 +182,7 @@
 - Edible High Town
 - Falkes (Luton) Scout District
 - Farley Hill Methodist Church (SMR-made lockup)
+- Fellowship Baptist Church
 - Flying Start
 - Foursquare Gospel Church Luton (SMR-made lockup with the Foursquare emblem)
 - Girlguiding (Bedfordshire · Luton South)
@@ -238,6 +242,7 @@
 - Pauline Quirke Academy (PQA Luton)
 - RAF Air Cadets
 - Ramridge Baptist Church
+- Restoration Revival Fellowship
 - Romanian Orthodox Parish, Luton (SMR-made text logo)
 - Rosebuds Luton Sisters
 - Sacred Heart of Jesus Parish, Stopsley, Luton
@@ -266,6 +271,7 @@
 - Storm Gym
 - Strathmore Avenue Methodist Church (SMR-made lockup)
 - SUEZ
+- Sundon Park Baptist Church (SMR lockup with the church emblem)
 - Sunnah Archery Club
 - Sunshine Riding School
 - The Catholic Parish of The Holy Family and St John the Apostle, Luton
