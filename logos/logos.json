@@ -1109,7 +1109,9 @@
   {
    "slug": "farley-hill-cc",
    "name": "Farley Hill Community Centre",
-   "aliases": [],
+   "aliases": [
+    "Farley Community Centre"
+   ],
    "category": "mosques",
    "category_name": "Mosques & Islamic centres",
    "path": "mosques/farley-hill-cc/",
@@ -6596,7 +6598,10 @@
   {
    "slug": "hillborough",
    "name": "Hillborough Junior School",
-   "aliases": [],
+   "aliases": [
+    "Hillborough Infant and Nursery School",
+    "Hillborough Infant School"
+   ],
    "category": "schools",
    "category_name": "Schools & colleges",
    "path": "schools/hillborough/",
@@ -9011,7 +9016,8 @@
    "name": "The Ferrars Academy",
    "aliases": [
     "Ferrars",
-    "Ferrars Academy"
+    "Ferrars Academy",
+    "Ferrars Junior School"
    ],
    "category": "schools",
    "category_name": "Schools & colleges",
@@ -9133,7 +9139,8 @@
    "name": "Someries Infant School",
    "aliases": [
     "Someries",
-    "Someries Infants"
+    "Someries Infants",
+    "Someries Junior School"
    ],
    "category": "schools",
    "category_name": "Schools & colleges",
@@ -13402,8 +13409,8 @@
      "file": "luton-foodbank-logo-tagline.png",
      "variant": "logo-tagline",
      "style": "logo-tagline",
-     "w": 1594,
-     "h": 737
+     "w": 1800,
+     "h": 847
     },
     {
      "file": "luton-foodbank-gold.png",
@@ -13454,16 +13461,16 @@
      "file": "luton-foodbank-logo-tagline-black.png",
      "variant": "logo-tagline-black",
      "style": "logo-tagline",
-     "w": 1594,
-     "h": 737,
+     "w": 1800,
+     "h": 838,
      "made": true
     },
     {
      "file": "luton-foodbank-logo-tagline-white.png",
      "variant": "logo-tagline-white",
      "style": "logo-tagline",
-     "w": 1594,
-     "h": 737,
+     "w": 1800,
+     "h": 838,
      "made": true
     },
     {
@@ -13484,16 +13491,16 @@
      "file": "luton-foodbank-logo-tagline-on-dark.png",
      "variant": "logo-tagline-on-dark",
      "style": "logo-tagline",
-     "w": 1594,
-     "h": 737,
+     "w": 1800,
+     "h": 847,
      "made": true
     },
     {
      "file": "luton-foodbank-logo-tagline-brand-colour.png",
      "variant": "logo-tagline-brand-colour",
      "style": "logo-tagline",
-     "w": 1594,
-     "h": 737,
+     "w": 1800,
+     "h": 838,
      "made": true
     }
    ],
@@ -22727,7 +22734,10 @@
   {
    "slug": "st-marys",
    "name": "St Mary's Church Luton",
-   "aliases": [],
+   "aliases": [
+    "St Mary's (Parish of Luton)",
+    "St Mary's Catholic Church, Dunstable"
+   ],
    "category": "community",
    "category_name": "Council, public & youth",
    "path": "community/st-marys/",
@@ -25550,7 +25560,8 @@
    "name": "The Parish Church of The Holy Cross, Marsh Farm",
    "aliases": [
     "Holy Cross Church",
-    "Holy Cross Marsh Farm"
+    "Holy Cross Marsh Farm",
+    "Church of the Holy Cross, Marsh Farm"
    ],
    "category": "community",
    "category_name": "Council, public & youth",
@@ -25614,7 +25625,8 @@
    "aliases": [
     "COGIC UK",
     "Calvary Church",
-    "BACCA"
+    "BACCA",
+    "Calvary Church of God in Christ"
    ],
    "category": "community",
    "category_name": "Council, public & youth",
@@ -25672,7 +25684,11 @@
    "aliases": [
     "St Christopher's",
     "St A & C",
-    "St Christopher's Community Lunch"
+    "St Christopher's Community Lunch",
+    "St Andrew's Church Luton",
+    "St Andrew's, Luton",
+    "St Christopher, Round Green",
+    "St Andrew & St Christopher"
    ],
    "category": "community",
    "category_name": "Council, public & youth",
