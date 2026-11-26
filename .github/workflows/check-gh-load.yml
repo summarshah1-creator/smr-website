@@ -1,0 +1,8 @@
+name: check gh load
+on: { push: { branches: [check/gh-load] } }
+jobs:
+  c:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          curl -s -A "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Version/18.0 Mobile/15E148 Safari/604.1" "https://smrgraphics.co.uk/grillhouse/edit/api.php?a=load" | python3 -c "import sys,json;d=json.load(sys.stdin);print('VER',d.get('ver'));s=d.get('st');print('NONE' if not s else json.dumps(s,ensure_ascii=False))" | cut -c1-200000
