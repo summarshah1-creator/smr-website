@@ -32,7 +32,7 @@ M['inspire-fm'] = ('media', 'Inspire FM 105.1', ['Inspire', 'Inspire FM'], [
     ('ifm/logo-green.webp', 'logo-on-green'), ('ifm/logo-inv.png', 'logo-inverse'),
     ('ifm/wordmark-dark.webp', 'wordmark-on-dark'), ('gold/inspire-fm-gold.png', 'gold'),
     ('ifm/icon-512.png', 'app-icon'), ('ifm/maskable-512.png', 'app-icon-maskable')])
-M['luton-foodbank'][3].append(('gold/luton-foodbank-gold.png', 'gold'))
+M['luton-foodbank'][3].append(('hand/luton-foodbank-gold.png', 'gold'))  # owner 26 Nov: gold made from the latest logo (yolk centred)
 M['sunnah-charity'][3].append(('gold/sunnah-gold.png', 'gold'))
 M['smr-digital'][3].extend([('gold/smr-digital-gold.png', 'gold')])
 M['smr-digital'] = ('smr', 'SMR Digital', ['SMR'], [x for x in M['smr-digital'][3] if x[0] != 'winter/smr-digital-light.png'] + [('gold/smr-digital-light.png', 'logo-on-dark')])

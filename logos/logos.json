@@ -17008,7 +17008,7 @@
      "variant": "logo",
      "style": "logo",
      "w": 1600,
-     "h": 621
+     "h": 635
     },
     {
      "file": "luton-foodbank-logo-white.svg",
@@ -17021,7 +17021,7 @@
      "variant": "logo-white",
      "style": "logo-white",
      "w": 1600,
-     "h": 618
+     "h": 635
     },
     {
      "file": "luton-foodbank-logo-tagline.svg",
@@ -17041,15 +17041,15 @@
      "file": "luton-foodbank-gold.png",
      "variant": "gold",
      "style": "gold",
-     "w": 1057,
-     "h": 414
+     "w": 1600,
+     "h": 611
     },
     {
      "file": "luton-foodbank-logo-black.png",
      "variant": "logo-black",
      "style": "logo",
      "w": 1600,
-     "h": 618,
+     "h": 635,
      "made": true
     },
     {
@@ -17057,7 +17057,7 @@
      "variant": "logo-white",
      "style": "logo",
      "w": 1600,
-     "h": 618,
+     "h": 635,
      "made": true
     },
     {
@@ -17079,7 +17079,7 @@
      "variant": "logo-brand-colour",
      "style": "logo",
      "w": 1600,
-     "h": 621,
+     "h": 635,
      "made": true
     },
     {
