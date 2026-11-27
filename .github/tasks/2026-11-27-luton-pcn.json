@@ -1,0 +1,19 @@
+[
+ {
+  "title": "Chase Luton council about the PCN discount email",
+  "due": "2026-12-02 10:00",
+  "pri": 2,
+  "what": "fine",
+  "wait": "them",
+  "grp": "Luton PCN · £70",
+  "notes": "Luton Council PCN LU09689569 – AL51RAT, Leagrave Road, 07/11/26 (wheels on footpath). £70, or £35 if they accept the discount request (emailed 27/11: ticket only found by the garage in the engine bay). Must be paid or challenged within 28 days of 7 Nov = by Thu 4 Dec, after which it can go up."
+ },
+ {
+  "title": "LAST DAY: Luton PCN £70 (pay or challenge today)",
+  "due": "2026-12-04 09:00",
+  "pri": 1,
+  "what": "fine",
+  "grp": "Luton PCN · £70",
+  "notes": "Luton Council PCN LU09689569 – AL51RAT, Leagrave Road, 07/11/26 (wheels on footpath). £70, or £35 if they accept the discount request (emailed 27/11: ticket only found by the garage in the engine bay). Must be paid or challenged within 28 days of 7 Nov = by Thu 4 Dec, after which it can go up."
+ }
+]

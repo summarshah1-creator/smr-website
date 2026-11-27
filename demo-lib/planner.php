@@ -6,7 +6,7 @@ if (!defined('SMR_DEMO')) { http_response_code(404); exit; }
 require_once __DIR__ . '/push.php';
 
 const PL_WHAT = ['quote' => 'Quote', 'pricing' => 'Pricing', 'demo' => 'Demo', 'mockup' => 'Mock-up', 'deck' => 'Deck', 'info' => 'More info',
-    'work' => 'The work', 'reply' => 'A reply', 'call' => 'A call', 'meeting' => 'A meeting', 'payment' => 'Payment', 'order' => 'Order / buy', 'other' => 'Something'];
+    'work' => 'The work', 'reply' => 'A reply', 'call' => 'A call', 'meeting' => 'A meeting', 'payment' => 'Payment', 'fine' => 'Fine', 'order' => 'Order / buy', 'other' => 'Something'];
 const PL_AREAS = ['digital' => 'Digital', 'graphics' => 'Graphics', 'marketing' => 'Marketing', 'plates' => 'Plates', 'direct' => 'SMR Direct', 'personal' => 'Personal'];
 
 function pl_db(): PDO {
@@ -332,6 +332,13 @@ function pl_seed(PDO $pdo): void {
     }
 }
 
+/* 27 Nov: fines get their own type (what = fine) and a group each, for the "Fines due" box at the top of Today. */
+function pl_seed4(PDO $pdo): void {
+    if ($pdo->query("SELECT v FROM pl_kv WHERE k = 'seed4'")->fetchColumn()) return;
+    $pdo->prepare('INSERT OR REPLACE INTO pl_kv (k, v) VALUES (?, ?)')->execute(['seed4', (string) time()]);
+    $pdo->exec("UPDATE pl_items SET what = 'fine', grp = 'Herts fixed penalty · £100' WHERE kind = 'task' AND title LIKE '%Herts fixed penalty%'");
+    $pdo->exec("UPDATE pl_items SET what = 'fine', grp = 'Ealing PCN · £160' WHERE kind = 'task' AND (title LIKE '%Ealing PCN%' OR title LIKE '%Ealing council about the PCN%')");
+}
 /* One-off tasks added from chat (24 Nov afternoon): setup jobs for the jobs/payments + email AI build. */
 /* 25 Nov: supplier credits moved from Today tasks to the "Keep in mind" notes ribbon (pl_kv notes). */
 function pl_seed3(PDO $pdo): void {
@@ -349,6 +356,7 @@ function pl_notes_save(array $n): void { pl_set('notes', json_encode(array_value
 
 function pl_seed2(PDO $pdo): void {
     pl_seed3($pdo);
+    pl_seed4($pdo);
     if ($pdo->query("SELECT v FROM pl_kv WHERE k = 'seed2'")->fetchColumn()) return;
     $pdo->prepare('INSERT OR REPLACE INTO pl_kv (k, v) VALUES (?, ?)')->execute(['seed2', (string) time()]);
     $now = time();

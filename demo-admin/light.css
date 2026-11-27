@@ -145,10 +145,29 @@ html.lt .drawer .tabs.dnav button svg{color:#2306db}
 html.lt .drawer .tabs.dnav button:active{background:#fbf9f4;color:#1d1b26}
 html.lt .drawer .tabs.dnav button.on{background:linear-gradient(110deg,#afaef9,#edb2f8);color:#1d1b26}
 html.lt .drawer .tabs.dnav button.on svg{color:#1d1b26}
+html.lt .kim-one{background:#fcf2df;color:#db9306}
+html.lt .kim-lb{color:#947538}
+html.lt .kim-ct{color:#947538}
+html.lt .kim-add{border:1px dashed rgba(40,32,70,0.20);color:#565676}
+html.lt .kim.open{background:#fbf4e4;color:#1d1b26}
+html.lt .kim-fold{border:1px solid rgba(40,32,70,0.20);color:#51517b}
+html.lt .kim-row{color:#db9306}
+html.lt .kim-x{background:rgba(40,32,70,0.072);color:#db9306}
+html.lt .kim-x:hover{background:#aaedcc;color:#1cc478}
+html.lt .kim-none{color:#565676}
+html.lt .kim-new{border:1px dashed rgba(40,32,70,0.20);color:#51517b}
+html.lt .kim .kim-f input{background:rgba(40,32,70,0.063)!important;border:1px solid rgba(40,32,70,0.20)!important;color:#3b3b91 !important}
+html.lt .kim-f button{background:#e792fa;color:#1d1b26}
+html.lt .kim-f .kim-c{background:rgba(40,32,70,0.072)}
 html.lt .plstat button{background:#fbf9f4;color:#1d1b26}
 html.lt .plstat .r b{color:#db0629}
 html.lt .plstat .a b{color:#db8606}
 html.lt .plstat .g b{color:#1cc478}
+html.lt .plfines{background:#fce3e2;color:#1d1b26}
+html.lt .plfines .k{color:#db062f}
+html.lt .plfine{background:#fbf9f4}
+html.lt .plfine.r .dd span{color:#db062f}
+html.lt .plfine.a .dd span{color:#db8506}
 html.lt .plnext{background:linear-gradient(160deg,#c5c3f8,#f2ccf7);color:#1d1b26}
 html.lt .plnext .k{color:#6e06db}
 html.lt .plnext .who{color:#4a4a82}

@@ -35,7 +35,7 @@ jobs:
           echo "### Tasks added" >> $GITHUB_STEP_SUMMARY
           jq -c '.[]' all.json | while read -r t; do
             due=$(echo "$t" | jq -r '.due // ""'); ts=0; [ -n "$due" ] && ts=$(date -d "$due" +%s)
-            echo "$t" | jq --argjson ts "$ts" '{kind:"task", title, notes:(.notes//""), person:(.person//""), area:(.area//"personal"), what:(.what//"other"), wait:(.wait//"me"), pri:(.pri//2), due:$ts, due_t:($ts>0), owes:0}' > body.json
+            echo "$t" | jq --argjson ts "$ts" '{kind:"task", title, notes:(.notes//""), person:(.person//""), grp:(.grp//""), area:(.area//"personal"), what:(.what//"other"), wait:(.wait//"me"), pri:(.pri//2), due:$ts, due_t:($ts>0), owes:0}' > body.json
             curl -s -b c.txt -H "Origin: $H" -H "X-CSRF: $CSRF" -H "Content-Type: application/json" -d @body.json "$A?a=pl_save" | jq -c '{ok,id,error}' | tee -a out.txt
             echo "- $(echo "$t" | jq -r .title) ($due)" >> $GITHUB_STEP_SUMMARY
           done

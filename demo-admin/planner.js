@@ -18,6 +18,7 @@
   css.textContent = [
     '#pl .plh{display:flex;align-items:center;gap:10px;margin-bottom:14px}#pl .plh h1{flex:1;margin:0}#pl .plh small{display:block;color:var(--muted);font:600 13px Manrope,sans-serif;letter-spacing:0;margin-top:2px}',
     '.plstat{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}.plstat button{padding:10px 6px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.03);text-align:center}.plstat b{display:block;font:800 22px Sora,sans-serif}.plstat span{font-size:11.5px;color:var(--muted);font-weight:700}.plstat .r b{color:#ff7a90}.plstat .a b{color:#ffc061}.plstat .g b{color:#7ff0bd}',
+    '.plfines{padding:14px;border-radius:20px;margin-bottom:14px;background:rgba(255,84,112,.08);border:1px solid rgba(255,84,112,.35)}.plfines .k{font-size:11px;font-weight:800;letter-spacing:.12em;color:#ff9db0;margin-bottom:8px}.plfine{display:flex;gap:10px;align-items:center;width:100%;color:inherit;font:inherit;text-align:left;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid var(--line);margin-top:6px}.plfine .tx{flex:1;min-width:0}.plfine b{display:block;font:700 15px Sora,sans-serif}.plfine .tx span{display:block;font-size:12.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.plfine .dd{text-align:right;flex:none}.plfine .dd b{font-size:14px}.plfine .dd span{font-size:11.5px;font-weight:800;color:var(--muted)}.plfine.r .dd span{color:#ff9db0}.plfine.a .dd span{color:#ffd08a}.plfine.r{border-color:rgba(255,84,112,.55)}',
     '.plnext{position:relative;padding:16px;border-radius:20px;margin-bottom:16px;background:linear-gradient(160deg,rgba(91,91,255,.2),rgba(214,59,255,.14));border:1px solid rgba(214,59,255,.45);box-shadow:0 20px 40px -24px rgba(214,59,255,.7)}',
     '.plnext .k{font-size:11px;font-weight:800;letter-spacing:.12em;color:#e3c8ff}.plnext h2{font:700 20px/1.25 Sora,sans-serif;margin:6px 0 4px}.plnext .who{color:#d9d9ea;font-size:14px;font-weight:600}.plnext .nt{color:var(--muted);font-size:13px;margin-top:6px}',
     '.plnext .bt{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:14px}.plnext .bt .btn{height:44px}.plnext .bt .done{background:#3ddc97;color:#062b14;border:0}',
@@ -51,12 +52,32 @@
   var whyCls = function (t) { return /^Overdue/.test(t.why) ? 'r' : /^Due today/.test(t.why) ? 'a' : ''; };
   var oweTag = function (t) { return (t.owes || owesName(t.person)) ? '<span class="owe">£ Payment due' + (t.owes_amt ? ' · ' + esc(t.owes_amt) : '') + '</span>' : ''; };
 
+  /* Fines due: open fine tasks grouped per fine, final deadline + next step, shown at the very top of Today. */
+  var finesBox = function () {
+    var now = Date.now() / 1000, g = {}, order = [];
+    P.items.forEach(function (t) {
+      if (t.kind !== 'task' || t.what !== 'fine' || t.status === 'done') return;
+      var k = t.grp || ('#' + t.id); if (!g[k]) { g[k] = []; order.push(k); } g[k].push(t);
+    });
+    if (!order.length) return '';
+    var rows = order.map(function (k) {
+      var ts = g[k].filter(function (t) { return t.due; }).sort(function (a, b) { return a.due - b.due; });
+      var last = ts.length ? ts[ts.length - 1] : g[k][0], next = ts.filter(function (t) { return t.due >= now - 86400; })[0] || last;
+      var dl = last.due ? Math.ceil((last.due - now) / 86400) : null;
+      var cls = dl === null ? '' : dl <= 3 ? 'r' : dl <= 10 ? 'a' : '';
+      var when = last.due ? new Date(last.due * 1000).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }) : 'No date';
+      var left = dl === null ? '' : dl < 0 ? 'Overdue' : dl === 0 ? 'Last day today' : dl + ' day' + (dl === 1 ? '' : 's') + ' left';
+      return '<button class="plfine ' + cls + '" data-ed="' + next.id + '"><div class="tx"><b>' + esc(k.charAt(0) === '#' ? last.title : k) + '</b><span>Next: ' + esc(next.title) + '</span></div><div class="dd"><b>' + esc(when) + '</b><span>' + esc(left) + '</span></div></button>';
+    });
+    return '<div class="plfines"><div class="k">FINES DUE</div>' + rows.join('') + '</div>';
+  };
   /* ---------- render ---------- */
   var render = function () {
     var S = P.sum, el = $('pl'); if (!S) return;
     var d = new Date(), h = d.getHours();
     var html = '<div class="plh"><h1>' + (h < 12 ? 'Morning' : h < 18 ? 'Afternoon' : 'Evening') + ', Summar<small>' + d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' }) + '</small></h1>'
       + '<button class="btn sm" data-pl="wid" style="margin-right:6px">Widgets</button><button class="btn sm icon" data-pl="cfg" aria-label="Today settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button></div>';
+    html += finesBox();
     html += '<div class="plstat"><button class="r" data-f="over"><b>' + S.overdue + '</b><span>Overdue</span></button><button class="a" data-f="today"><b>' + S.due_today + '</b><span>Due today</span></button>'
       + '<button class="r" data-f="money"><b>' + Object.keys(S.owing).length + '</b><span>Owe you</span></button><button class="g" data-f="done"><b>' + S.done_today + '</b><span>Cleared</span></button></div>';
     if (window.SMRJobs) html += SMRJobs.todayHtml();
