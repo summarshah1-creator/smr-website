@@ -332,6 +332,15 @@ function pl_seed(PDO $pdo): void {
     }
 }
 
+/* 27 Nov 15:07: Luton Council reset the PCN to the £35 discount (goodwill), pay by 4 Dec or it goes back to £70. */
+function pl_seed5(PDO $pdo): void {
+    if ($pdo->query("SELECT v FROM pl_kv WHERE k = 'seed5'")->fetchColumn()) return;
+    $pdo->prepare('INSERT OR REPLACE INTO pl_kv (k, v) VALUES (?, ?)')->execute(['seed5', (string) time()]);
+    $n = "Luton Council PCN LU09689569 (AL51RAT, Leagrave Road, 7 Nov). Council agreed by email on 27 Nov to reset it to the £35 discount as goodwill. Pay £35 by Fri 4 Dec 2026, or the offer is withdrawn and £70 is due. Pay: luton.gov.uk > Pay it > Parking PCN, or 0300 456 2725 (24 hours).";
+    $up = $pdo->prepare("UPDATE pl_items SET title = ?, due = ?, due_t = 1, wait = 'me', pri = ?, notes = ?, grp = 'Luton PCN · £35', what = 'fine', n_due = 0, n_over = 0, n_overc = 0, n_day = 0, n_soon = 0, snooze = 0, updated = ? WHERE kind = 'task' AND title = ?");
+    $up->execute(['Pay Luton PCN £35 (discount agreed)', (int) strtotime('2026-12-01 10:00 Europe/London'), 2, $n, time(), 'Chase Luton council about the PCN discount email']);
+    $up->execute(['LAST DAY: Luton PCN £35 (after today it goes back to £70)', (int) strtotime('2026-12-04 09:00 Europe/London'), 1, $n, time(), 'LAST DAY: Luton PCN £70 (pay or challenge today)']);
+}
 /* 27 Nov: fines get their own type (what = fine) and a group each, for the "Fines due" box at the top of Today. */
 function pl_seed4(PDO $pdo): void {
     if ($pdo->query("SELECT v FROM pl_kv WHERE k = 'seed4'")->fetchColumn()) return;
@@ -357,6 +366,7 @@ function pl_notes_save(array $n): void { pl_set('notes', json_encode(array_value
 function pl_seed2(PDO $pdo): void {
     pl_seed3($pdo);
     pl_seed4($pdo);
+    pl_seed5($pdo);
     if ($pdo->query("SELECT v FROM pl_kv WHERE k = 'seed2'")->fetchColumn()) return;
     $pdo->prepare('INSERT OR REPLACE INTO pl_kv (k, v) VALUES (?, ?)')->execute(['seed2', (string) time()]);
     $now = time();
