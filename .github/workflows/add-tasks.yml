@@ -1,0 +1,42 @@
+name: Add tasks to SMR Admin
+# From any Claude chat: commit a JSON file to .github/tasks/<name>.json on main (array of {title, due "YYYY-MM-DD HH:MM" London time, notes, pri 1-3, area, what, wait, person})
+# and push. Each task is added to SMR Admin -> Today through the admin API (pl_save). Or run it by hand with the json input.
+on:
+  workflow_dispatch:
+    inputs:
+      json:
+        description: JSON array of tasks
+        required: true
+  push:
+    branches: [main]
+    paths: ['.github/tasks/*.json']
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 2 }
+      - name: Collect the tasks
+        env: { IN: "${{ inputs.json }}" }
+        run: |
+          if [ -n "$IN" ]; then echo "$IN" > all.json
+          else
+            files=$(git diff --name-only --diff-filter=AM HEAD~1 HEAD -- '.github/tasks/*.json')
+            jq -s 'add' $files > all.json
+          fi
+          jq length all.json
+      - name: Add them through the admin API
+        env:
+          PIN: ${{ secrets.ADMIN_PIN || '1275' }}
+          TZ: Europe/London
+        run: |
+          H=https://smrgraphics.co.uk; A=$H/demo-admin/api.php
+          CSRF=$(curl -sf -c c.txt -b c.txt -H "Origin: $H" -H 'Content-Type: application/json' -d "{\"pin\":\"$PIN\"}" "$A?a=login" | jq -r .csrf)
+          echo "### Tasks added" >> $GITHUB_STEP_SUMMARY
+          jq -c '.[]' all.json | while read -r t; do
+            due=$(echo "$t" | jq -r '.due // ""'); ts=0; [ -n "$due" ] && ts=$(date -d "$due" +%s)
+            echo "$t" | jq --argjson ts "$ts" '{kind:"task", title, notes:(.notes//""), person:(.person//""), area:(.area//"personal"), what:(.what//"other"), wait:(.wait//"me"), pri:(.pri//2), due:$ts, due_t:($ts>0), owes:0}' > body.json
+            curl -s -b c.txt -H "Origin: $H" -H "X-CSRF: $CSRF" -H "Content-Type: application/json" -d @body.json "$A?a=pl_save" | jq -c '{ok,id,error}' | tee -a out.txt
+            echo "- $(echo "$t" | jq -r .title) ($due)" >> $GITHUB_STEP_SUMMARY
+          done
+          ! grep -q '"ok":null' out.txt

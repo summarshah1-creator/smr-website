@@ -1,0 +1,38 @@
+[
+ {
+  "title": "Chase Ealing council about the PCN discount email",
+  "due": "2026-12-04 10:00",
+  "pri": 2,
+  "what": "reply",
+  "wait": "them",
+  "notes": "Ealing Notice to Owner £160 – PCN AO11803373 (AL51RAT, The Broadway, 24/10, wheels on footpath). Pay or challenge within 28 days of the notice (25/11) = by 22 Dec, or it can go up to £240. Discount asked by email 27/11."
+ },
+ {
+  "title": "Herts fixed penalty: pay £100 or ask for a court hearing",
+  "due": "2026-12-07 10:00",
+  "pri": 1,
+  "what": "payment",
+  "notes": "Herts police fixed penalty £100 – notice 0412550039547120 (AL51RAT number plate, Hitchin 12/09). Respond within 28 days of 16/11 = by 14 Dec. Pay on 0300 123 1481, or write to Camera and Tickets Office, PO Box 486, Stevenage SG1 9JB to ask for a court hearing."
+ },
+ {
+  "title": "LAST DAY: Herts fixed penalty £100 (respond today)",
+  "due": "2026-12-14 09:00",
+  "pri": 1,
+  "what": "payment",
+  "notes": "Herts police fixed penalty £100 – notice 0412550039547120 (AL51RAT number plate, Hitchin 12/09). Respond within 28 days of 16/11 = by 14 Dec. Pay on 0300 123 1481, or write to Camera and Tickets Office, PO Box 486, Stevenage SG1 9JB to ask for a court hearing."
+ },
+ {
+  "title": "Ealing PCN £160: pay or challenge before 22 Dec",
+  "due": "2026-12-18 10:00",
+  "pri": 1,
+  "what": "payment",
+  "notes": "Ealing Notice to Owner £160 – PCN AO11803373 (AL51RAT, The Broadway, 24/10, wheels on footpath). Pay or challenge within 28 days of the notice (25/11) = by 22 Dec, or it can go up to £240. Discount asked by email 27/11."
+ },
+ {
+  "title": "LAST DAY: Ealing PCN £160 (pay or challenge today)",
+  "due": "2026-12-22 09:00",
+  "pri": 1,
+  "what": "payment",
+  "notes": "Ealing Notice to Owner £160 – PCN AO11803373 (AL51RAT, The Broadway, 24/10, wheels on footpath). Pay or challenge within 28 days of the notice (25/11) = by 22 Dec, or it can go up to £240. Discount asked by email 27/11."
+ }
+]
