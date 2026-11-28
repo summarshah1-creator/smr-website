@@ -63,7 +63,7 @@ function buildTex(){
 }
 
 /* ---------- placeholder art ---------- */
-function placeholder(){if(tex.ph)return tex.ph;return mkTex('ph',1000,1000,(c,w,h)=>{const g=c.createLinearGradient(0,0,w,h);g.addColorStop(0,'#2f6bff');g.addColorStop(1,'#a43bff');c.fillStyle=g;c.fillRect(0,0,w,h);
+function placeholder(){if(tex.ph)return tex.ph;return mkTex('ph',1000,1000,(c,w,h)=>{const g=c.createLinearGradient(0,0,w,h);g.addColorStop(0,'#7bdc3c');g.addColorStop(1,'#10b981');c.fillStyle=g;c.fillRect(0,0,w,h);
   c.fillStyle='rgba(255,255,255,.12)';for(let i=0;i<7;i++){c.beginPath();c.arc(w*.85,h*.15,120+i*110,0,7);c.lineWidth=2;c.strokeStyle='rgba(255,255,255,.08)';c.stroke()}
   c.fillStyle='#fff';c.textAlign='center';c.font='800 112px Sora,system-ui,sans-serif';c.fillText('YOUR',w/2,h*.46);c.fillText('DESIGN',w/2,h*.58);
   c.font='600 40px Manrope,system-ui,sans-serif';c.fillStyle='rgba(255,255,255,.8)';c.fillText('Upload it to see it here',w/2,h*.7)})}
@@ -213,7 +213,7 @@ const CSS=`
 .mk *{box-sizing:border-box}
 .mk-top{flex:none;display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.08);background:#0b0b12}
 .mk-top b{font:700 17px/1.1 Sora,system-ui,sans-serif}.mk-top small{display:block;font-size:11.5px;font-weight:700;color:#9a9ab0;letter-spacing:.03em}
-.mk-top .mk-g{background:linear-gradient(110deg,#2f6bff,#a43bff);-webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:2px}
+.mk-top .mk-g{background:linear-gradient(110deg,#7bdc3c,#10b981);-webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:2px}
 .mk-x{margin-left:auto;width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);color:#fff;font-size:22px;line-height:1;cursor:pointer}
 .mk-body{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden}
 .mk-stage{flex:none;position:relative;background:#14141e;display:flex;align-items:center;justify-content:center;padding:10px}
@@ -224,7 +224,7 @@ const CSS=`
 .mk-busy{position:absolute;inset:10px;border-radius:14px;background:rgba(11,11,18,.6);display:none;align-items:center;justify-content:center;font:700 15px Sora,system-ui,sans-serif}.mk.busy .mk-busy{display:flex}
 .mk-panel{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 14px 28px}
 .mk-step{margin-bottom:18px}.mk-step>h4{margin:0 0 9px;font:700 13px/1 Sora,system-ui,sans-serif;letter-spacing:.02em;color:#c9c9dc;display:flex;align-items:center;gap:8px}
-.mk-step>h4 i{font-style:normal;width:21px;height:21px;border-radius:50%;display:grid;place-items:center;font-size:11px;background:linear-gradient(110deg,#2f6bff,#a43bff);color:#fff}
+.mk-step>h4 i{font-style:normal;width:21px;height:21px;border-radius:50%;display:grid;place-items:center;font-size:11px;background:linear-gradient(110deg,#7bdc3c,#10b981);color:#fff}
 .mk-up{display:flex;align-items:center;gap:12px;width:100%;padding:14px;border-radius:16px;border:1.5px dashed rgba(160,140,255,.55);background:rgba(120,100,255,.08);color:#fff;cursor:pointer;text-align:left}
 .mk-up svg{flex:none;width:30px;height:30px}
 .mk-up b{display:block;font:700 15px Sora,system-ui,sans-serif}.mk-up span{display:block;font-size:12.5px;color:#a8a8c0;margin-top:2px}
@@ -237,7 +237,7 @@ const CSS=`
 .mk-prods{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .mk-pr{display:flex;flex-direction:column;align-items:center;gap:6px;padding:11px 4px 9px;border-radius:14px;border:1.5px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03);color:#e8e8f2;cursor:pointer;font:700 12px/1.15 Manrope,system-ui,sans-serif;text-align:center}
 .mk-pr svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
-.mk-pr.on{border-color:transparent;background:linear-gradient(#17142b,#17142b) padding-box,linear-gradient(110deg,#2f6bff,#a43bff) border-box;color:#fff}
+.mk-pr.on{border-color:transparent;background:linear-gradient(#17142b,#17142b) padding-box,linear-gradient(110deg,#7bdc3c,#10b981) border-box;color:#fff}
 .mk-chips{display:flex;flex-wrap:wrap;gap:7px}
 .mk-c{padding:9px 13px;border-radius:999px;border:1.5px solid rgba(255,255,255,.12);background:rgba(255,255,255,.03);color:#e8e8f2;font:700 13px Manrope,system-ui,sans-serif;cursor:pointer}
 .mk-c.on{background:#fff;color:#111;border-color:#fff}
@@ -250,7 +250,7 @@ const CSS=`
 .mk-act{display:grid;gap:9px}
 .mk-btn{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;padding:15px;border-radius:16px;border:0;font:700 15px Sora,system-ui,sans-serif;cursor:pointer;color:#fff;text-decoration:none}
 .mk-btn svg{width:19px;height:19px}
-.mk-dl{background:linear-gradient(110deg,#2f6bff,#a43bff)}
+.mk-dl{background:linear-gradient(110deg,#7bdc3c,#10b981)}
 .mk-wa{background:#25d366;color:#06351a}
 .mk-sh{background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.16)}
 .mk-share{display:none;padding:12px;border-radius:14px;background:rgba(255,255,255,.05);font-size:13px}.mk-share.on{display:block}

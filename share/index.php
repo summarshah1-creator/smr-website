@@ -24,13 +24,13 @@ $mark = @file_get_contents(SITE_ROOT . '/assets/smr-mark.svg') ?: '';
 *{box-sizing:border-box}html,body{margin:0;background:#0b0b12;color:#f2f2f7;font-family:Manrope,system-ui,-apple-system,sans-serif}
 .top{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid rgba(255,255,255,.08)}
 .top a{display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none}.top svg{height:22px;width:auto}
-.top span{font:300 22px/1 Poppins,system-ui,sans-serif;background:linear-gradient(110deg,<?= $plate ? '#ffd23f,#ff7a2f' : '#2f6bff,#a43bff' ?>);-webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:3px}
+.top span{font:300 22px/1 Poppins,system-ui,sans-serif;background:linear-gradient(110deg,<?= $plate ? '#ffd23f,#ff7a2f' : '#7bdc3c,#10b981' ?>);-webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:3px}
 main{max-width:1100px;margin:0 auto;padding:18px 16px 40px}
 h1{font:700 22px/1.2 Sora,system-ui,sans-serif;margin:4px 0 4px}p.sub{margin:0 0 14px;color:#9a9ab0;font-size:13.5px}
 .pic{border-radius:16px;overflow:hidden;background:#14141e;box-shadow:0 24px 60px -24px rgba(0,0,0,.8)}.pic img{display:block;width:100%;height:auto;-webkit-user-drag:none;user-select:none}
 .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
 .b{flex:1 1 220px;display:flex;align-items:center;justify-content:center;gap:9px;padding:15px;border-radius:16px;font:700 15px Sora,system-ui,sans-serif;text-decoration:none}
-.b.pri{background:linear-gradient(110deg,<?= $plate ? '#ffd23f,#ff7a2f' : '#2f6bff,#a43bff' ?>);color:<?= $plate ? '#1a0f00' : '#fff' ?>}.b.wa{background:#25d366;color:#06351a}
+.b.pri{background:linear-gradient(110deg,<?= $plate ? '#ffd23f,#ff7a2f' : '#7bdc3c,#10b981' ?>);color:<?= $plate ? '#1a0f00' : '#fff' ?>}.b.wa{background:#25d366;color:#06351a}
 .note{margin-top:14px;font-size:12px;color:#7d7d95;text-align:center}
 .gone{padding:60px 10px;text-align:center}.gone p{color:#9a9ab0}
 </style></head><body>

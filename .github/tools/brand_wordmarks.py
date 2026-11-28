@@ -6,7 +6,7 @@ import re
 F=TTFont('/usr/share/fonts/truetype/google-fonts/Poppins-Light.ttf'); gs=F.getGlyphSet(); cmap=F.getBestCmap(); upm=F['head'].unitsPerEm
 mark=open('/home/claude/smr-website/assets/smr-mark.svg').read()
 md=re.search(r' d="([^"]+)"',mark).group(1)
-WORDS={'digital':('Digital','#5b5bff','#d63bff'),'graphics':('Graphics','#2f6bff','#a43bff'),'marketing':('Marketing','#ff3d8b','#ff8a3d'),'plates':('Plates','#ffd23f','#ff7a2f'),'player':('Player','#5b5bff','#d63bff'),'studio':('Studio','#5b5bff','#d63bff'),'admin':('Admin','#5b5bff','#d63bff')}
+WORDS={'digital':('Digital','#5b5bff','#d63bff'),'graphics':('Graphics','#7bdc3c','#10b981'),'marketing':('Marketing','#ff3d8b','#ff8a3d'),'plates':('Plates','#ffd23f','#ff7a2f'),'player':('Player','#5b5bff','#d63bff'),'studio':('Studio','#5b5bff','#d63bff'),'admin':('Admin','#5b5bff','#d63bff'),'printing':('Printing','#7bdc3c','#10b981')}
 EM=240.0   # word size in mark units (mark is 1000 x 256.4 = 76 x 19.5 px at 24 px text)
 s=EM/upm*(19.5/ (EM/24*19.5/ (1000*19.5/76/ (EM/24))) ) if False else None
 # mark px->units: 76px = 1000 units -> 1px = 13.158 units; text 24px = 315.8 units
