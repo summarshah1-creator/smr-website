@@ -14,6 +14,9 @@ DirectoryIndex index.html
 # Private app demo links: /app-demo/<app-name>/<token> (handled by the demo showroom)
 <IfModule mod_rewrite.c>
   RewriteEngine On
+  # smrstudios.uk (parked on this site, owner 28 Nov) → smrgraphics.co.uk, same page. 302 for now: flip when smrstudios.uk becomes the main address
+  RewriteCond %{HTTP_HOST} ^(www\.)?smrstudios\.uk$ [NC]
+  RewriteRule ^(.*)$ https://smrgraphics.co.uk/$1 [R=302,L]
   RewriteRule ^app-demo/[a-z0-9-]+/([A-Za-z0-9_-]{16,64})/?$ demo/index.php?k=$1 [L,QSA]
   # Shared mock-ups (view only): /m/<id>
   RewriteRule ^m/([A-Za-z0-9]{10})/?$ share/index.php?id=$1 [L,QSA]
