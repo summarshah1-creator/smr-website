@@ -1,7 +1,7 @@
 # SMR Studio, bars version (owner 28 Nov): white "Studio" beside the SMR mark with the three brand
 # gradient bars under it. The top of the S sits level with the top of the SMR mark and the bars'
 # bottom edge sits level with the bottom of the mark, so word + bars together fill the mark's height.
-# Writes assets/brand/smr-studio-bars(.svg|-dark.svg). Usage: python3 .github/tools/brand_studio_bars.py [d]
+# Writes assets/brand/smr-studio-bars(.svg|-dark.svg). Usage: python3 .github/tools/brand_studio_bars.py [d] [studios]
 #   (pass "d" to line up the tallest letter, the d, with the mark top instead of the S)
 import re,sys
 from fontTools.ttLib import TTFont
@@ -15,11 +15,12 @@ MH=256.4; BH=19.0; BGAP=52.0; GAP=100.0; SEP=14.0
 def bounds(ch):
     bp=BoundsPen(gs); gs[cmap[ord(ch)]].draw(bp); return bp.bounds
 top_ref='d' if 'd' in sys.argv[1:] else 'S'
+WORD='Studios' if 'studios' in sys.argv[1:] else 'Studio'   # owner 28 Nov: the brand is now SMR Studios
 yMax=bounds(top_ref)[3]
 base=MH-BH-BGAP                       # baseline in mark units
 sc=base/yMax                          # font units -> mark units
 x=0; d=''; xmin=1e9; xmax=-1e9; ytop=1e9
-for ch in 'Studio':
+for ch in WORD:
     g=gs[cmap[ord(ch)]]; sp=SVGPathPen(gs); g.draw(TransformPen(sp,(sc,0,0,-sc,x,0))); d+=sp.getCommands()
     bp=BoundsPen(gs); g.draw(TransformPen(bp,(sc,0,0,-sc,x,0)))
     a,b,c,e=bp.bounds; xmin=min(xmin,a); xmax=max(xmax,c); ytop=min(ytop,b)
@@ -32,7 +33,7 @@ bars=''.join(f'<rect x="{1000+GAP+i*(bw+SEP):.1f}" y="{MH-BH:.1f}" width="{bw:.1
 top=min(0,base+ytop); pad=48; right=1000+GAP+W
 vb=f"{-pad} {top-pad:.1f} {right+2*pad:.1f} {MH-top+2*pad:.1f}"
 for v,fill in (('','#fff'),('-dark','#0b0b12')):
-    open(R+f'assets/brand/smr-studio-bars{v}.svg','w').write(f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="{vb}" role="img" aria-label="SMR Studio">
+    open(R+f'assets/brand/smr-{WORD.lower()}-bars{v}.svg','w').write(f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="{vb}" role="img" aria-label="SMR {WORD}">
 <!-- SMR Studio, bars version: S top level with the mark top, bars' bottom level with the mark bottom. Built by .github/tools/brand_studio_bars.py -->
 <defs>{defs}</defs>
 <path fill="{fill}" fill-rule="evenodd" d="{md}"/>
