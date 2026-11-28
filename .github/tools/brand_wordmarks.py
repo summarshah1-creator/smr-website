@@ -25,10 +25,10 @@ def word(txt):
         if bp.bounds: a,b,c,e=bp.bounds; xmin=min(xmin,a);ymin=min(ymin,b);xmax=max(xmax,c);ymax=max(ymax,e)
         x+=hm[gn][0]*sc
     return d,(xmin,ymin,xmax,ymax)
-# SPECTRUM = all three brand gradients in one smooth diagonal fade (owner 28 Nov): Digital purple→pink, Graphics lime→emerald, Marketing orange→yellow, mixed in OKLab so the joins stay clean
+# SPECTRUM = all three brand gradients in one smooth diagonal fade (owner 28 Nov, spectrum order picked): purple→pink→orange→yellow→lime→emerald, mixed in OKLab so the joins stay clean
 def spec(n=24):
   import math
-  C=['#8b5cf6','#ec4899','#7bdc3c','#10b981','#ff9a1f','#ffd23f']
+  C=['#8b5cf6','#ec4899','#ff9a1f','#ffd23f','#7bdc3c','#10b981']
   def lin(c): c/=255; return c/12.92 if c<=.04045 else ((c+.055)/1.055)**2.4
   def dl(c): return 255*(12.92*c if c<=.0031308 else 1.055*c**(1/2.4)-.055)
   def tolab(h):
