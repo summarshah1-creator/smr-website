@@ -11,7 +11,7 @@ from fontTools.pens.transformPen import TransformPen
 R='/home/claude/smr-website/'
 F=TTFont('/usr/share/fonts/truetype/google-fonts/Poppins-Light.ttf'); gs=F.getGlyphSet(); cmap=F.getBestCmap(); hm=F['hmtx']
 md=re.search(r' d="([^"]+)"',open(R+'assets/smr-mark.svg').read()).group(1)
-MH=256.4; BH=19.0; BGAP=26.0; GAP=100.0; SEP=14.0
+MH=256.4; BH=19.0; BGAP=52.0; GAP=100.0; SEP=14.0
 def bounds(ch):
     bp=BoundsPen(gs); gs[cmap[ord(ch)]].draw(bp); return bp.bounds
 top_ref='d' if 'd' in sys.argv[1:] else 'S'
